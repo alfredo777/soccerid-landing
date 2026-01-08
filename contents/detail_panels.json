@@ -1,0 +1,455 @@
+{
+  "render": "detail-panels",
+  "type": "json",
+  "whatsappNumber": "12315158991",
+  "panels": {
+    "quienes": {
+      "tag": "Nosotros",
+      "title": "Quiénes Somos",
+      "description": "Somos amantes del deporte y por eso reinventamos la forma de vivirlo. Creamos la app que todo atleta necesita, organizamos partidos internacionales en Estados Unidos, te damos la mejor asesoría para que disfrutes la experiencia mundialista al máximo y te llevamos a cualquier evento deportivo del mundo, siempre asegurándote una experiencia única y exclusiva.",
+      "stats": [
+        {
+          "value": "50K+",
+          "label": "Usuarios Activos"
+        },
+        {
+          "value": "100+",
+          "label": "Eventos Organizados"
+        },
+        {
+          "value": "15+",
+          "label": "Países"
+        },
+        {
+          "value": "98%",
+          "label": "Satisfacción"
+        }
+      ],
+      "team": [
+        {
+          "initials": "JG",
+          "name": "Juan García",
+          "role": "CEO & Fundador"
+        },
+        {
+          "initials": "MR",
+          "name": "María Rodríguez",
+          "role": "Directora de Operaciones"
+        },
+        {
+          "initials": "CP",
+          "name": "Carlos Pérez",
+          "role": "Director Comercial"
+        },
+        {
+          "initials": "AL",
+          "name": "Ana López",
+          "role": "Directora de Marketing"
+        }
+      ],
+      "values": [
+        {
+          "icon": "🎯",
+          "title": "Excelencia",
+          "description": "Nos esforzamos por superar las expectativas en cada experiencia que creamos.",
+          "gradient": "linear-gradient(135deg, #667eea, #764ba2)"
+        },
+        {
+          "icon": "🤝",
+          "title": "Compromiso",
+          "description": "Estamos dedicados al éxito de nuestros clientes y socios comerciales.",
+          "gradient": "linear-gradient(135deg, #11998e, #38ef7d)"
+        },
+        {
+          "icon": "💡",
+          "title": "Innovación",
+          "description": "Buscamos constantemente nuevas formas de mejorar la experiencia deportiva.",
+          "gradient": "linear-gradient(135deg, #fc4a1a, #f7b733)"
+        }
+      ]
+    },
+    "soccer": {
+      "tag": "Eventos",
+      "title": "SOCCER iD CUP",
+      "description": "Organizamos partidos internacionales en Estados Unidos con equipos de primera división de las ligas más importantes de Latinoamérica. En 2024 llevamos a la cancha un Pumas vs Comunicaciones en San José, California, y un Club América vs Atlético Nacional en Orlando; y en 2025 sumamos otro eventazo con el Tigres vs Pumas en Austin.",
+      "matches": [
+        {
+          "date": "15 de Marzo, 2025 • 7:00 PM",
+          "team1": "Tigres UANL",
+          "team1Icon": "🐯",
+          "team2": "Pumas UNAM",
+          "team2Icon": "🦁",
+          "venue": "📍 Q2 Stadium, Austin, TX",
+          "status": "available"
+        },
+        {
+          "date": "22 de Junio, 2025 • 8:00 PM",
+          "team1": "Club América",
+          "team1Icon": "🦅",
+          "team2": "Boca Juniors",
+          "team2Icon": "⚽",
+          "venue": "📍 Hard Rock Stadium, Miami, FL",
+          "status": "available"
+        }
+      ],
+      "gallery": [
+        "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=800",
+        "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400",
+        "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=400",
+        "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=400",
+        "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=400"
+      ]
+    },
+    "seguros": {
+      "tag": "App",
+      "title": "SEGUROS iD",
+      "description": "Creamos la app que todo deportista necesita. Ofrecemos un seguro deportivo al mejor precio del mercado, donde nuestros clientes pueden elegir cuándo y cómo activar su protección mientras entrenan o compiten en su deporte favorito.",
+      "features": [
+        {
+          "icon": "shield",
+          "title": "Protección On-Demand",
+          "description": "Activa tu seguro solo cuando lo necesites, por horas o por evento."
+        },
+        {
+          "icon": "clock",
+          "title": "Activación Instantánea",
+          "description": "Tu cobertura comienza en segundos con solo un toque."
+        },
+        {
+          "icon": "layers",
+          "title": "Multi-Deporte",
+          "description": "Cobertura para más de 50 deportes diferentes."
+        },
+        {
+          "icon": "chat",
+          "title": "Soporte 24/7",
+          "description": "Asistencia disponible en todo momento cuando más lo necesitas."
+        }
+      ],
+      "plans": [
+        {
+          "icon": "⚡",
+          "title": "Plan Básico",
+          "description": "Cobertura esencial para entrenamientos casuales. Desde $49 MXN/mes.",
+          "gradient": "linear-gradient(135deg, #667eea, #764ba2)"
+        },
+        {
+          "icon": "🏆",
+          "title": "Plan Pro",
+          "description": "Para atletas serios con cobertura ampliada. Desde $149 MXN/mes.",
+          "gradient": "linear-gradient(135deg, #fc4a1a, #f7b733)"
+        },
+        {
+          "icon": "👑",
+          "title": "Plan Elite",
+          "description": "Máxima protección para profesionales. Desde $299 MXN/mes.",
+          "gradient": "linear-gradient(135deg, #11998e, #38ef7d)"
+        }
+      ]
+    },
+    "vip": {
+      "tag": "Premium",
+      "title": "EXPERIENCIAS VIP",
+      "description": "Llevamos a nuestros clientes a cualquier evento deportivo del mundo. Contamos con palcos en todos los estadios de la Liga MX, incluyendo las suites más exclusivas del Estadio Banorte, y ofrecemos asientos en los eventos más atractivos del planeta, como la UEFA Champions League.",
+      "includes": [
+        {
+          "icon": "🎫",
+          "title": "Acceso Exclusivo",
+          "description": "Palcos y suites privadas en los mejores estadios del mundo."
+        },
+        {
+          "icon": "🍽️",
+          "title": "Catering Premium",
+          "description": "Servicio de alimentos y bebidas de primera calidad incluido."
+        },
+        {
+          "icon": "🚗",
+          "title": "Transporte VIP",
+          "description": "Traslados en vehículos de lujo desde tu hotel al evento."
+        },
+        {
+          "icon": "🤝",
+          "title": "Meet & Greet",
+          "description": "Oportunidad de conocer a tus ídolos deportivos en persona."
+        }
+      ]
+    },
+    "copa": {
+      "tag": "Mundial",
+      "title": "ASESORÍA COPA DEL MUNDO 2026",
+      "description": "Guiamos a nuestros clientes paso a paso en la compra de boletos para el torneo más atractivo y cotizado de la historia. Les ayudamos a conseguir los mejores lugares al mejor precio para el partido inaugural y para los encuentros de su selección, ya sea en México, Estados Unidos o Canadá.",
+      "stats": [
+        {
+          "value": "48",
+          "label": "Equipos"
+        },
+        {
+          "value": "16",
+          "label": "Sedes"
+        },
+        {
+          "value": "3",
+          "label": "Países"
+        },
+        {
+          "value": "104",
+          "label": "Partidos"
+        }
+      ],
+      "venues": [
+        {
+          "icon": "🇲🇽",
+          "title": "México",
+          "description": "Estadio Azteca (CDMX) y Estadio Akron (Guadalajara). Sede del partido inaugural.",
+          "gradient": "linear-gradient(135deg, #006847, #ce1126)"
+        },
+        {
+          "icon": "🇺🇸",
+          "title": "Estados Unidos",
+          "description": "11 ciudades incluyendo Miami, Los Ángeles, Nueva York y Dallas. Sede de la final.",
+          "gradient": "linear-gradient(135deg, #002868, #bf0a30)"
+        },
+        {
+          "icon": "🇨🇦",
+          "title": "Canadá",
+          "description": "Toronto y Vancouver. Primera vez que Canadá es sede mundialista.",
+          "gradient": "linear-gradient(135deg, #ff0000, #ffffff)"
+        }
+      ],
+      "services": [
+        {
+          "icon": "camera",
+          "title": "Registro FIFA ID",
+          "description": "Te ayudamos con todo el proceso de registro en la plataforma oficial."
+        },
+        {
+          "icon": "calendar",
+          "title": "Compra de Boletos",
+          "description": "Asesoría completa en cada fase de venta de FIFA."
+        },
+        {
+          "icon": "location",
+          "title": "Hospedaje",
+          "description": "Conexión con hoteles certificados cerca de los estadios."
+        },
+        {
+          "icon": "users",
+          "title": "Paquetes Grupales",
+          "description": "Descuentos especiales para grupos de 10 o más personas."
+        }
+      ]
+    },
+    "fan": {
+      "tag": "Club",
+      "title": "FAN EXPERIENCE",
+      "description": "A los usuarios de nuestra app les ofrecemos promociones exclusivas, acceso a torneos, meet & greets, sorteos y regalos especiales, además de experiencias pensadas para premiar su pasión por el deporte y mantenerlos siempre cerca de los mejores eventos.",
+      "promos": [
+        {
+          "image": "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=600",
+          "badge": "-30%",
+          "title": "Descuento en Boletos",
+          "description": "30% off en tu próximo evento deportivo"
+        },
+        {
+          "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600",
+          "badge": "GRATIS",
+          "title": "Jersey Autografiado",
+          "description": "Participa y gana jerseys oficiales"
+        },
+        {
+          "image": "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=600",
+          "badge": "VIP",
+          "title": "Meet & Greet",
+          "description": "Conoce a tus jugadores favoritos"
+        }
+      ],
+      "raffles": [
+        {
+          "icon": "🎁",
+          "title": "Viaje a la Champions",
+          "description": "Gana un viaje todo pagado para ver la final de la UEFA Champions League."
+        },
+        {
+          "icon": "👟",
+          "title": "Kit Deportivo Completo",
+          "description": "Tenis, ropa deportiva y accesorios de las mejores marcas."
+        },
+        {
+          "icon": "📱",
+          "title": "1 Año de Seguro Gratis",
+          "description": "Suscripción premium de SEGUROS iD por 12 meses."
+        }
+      ]
+    },
+    "media": {
+      "tag": "Prensa",
+      "title": "MEDIA",
+      "description": "Los medios más importantes del país nos han ayudado a dar a conocer nuestros productos y servicios, y han hecho eco de todo lo que hemos logrado a lo largo de los años, respaldando nuestro crecimiento y nuestra propuesta en el mundo del deporte.",
+      "articles": [
+        {
+          "image": "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=400",
+          "source": "ESPN Deportes",
+          "title": "SOCCER iD CUP trae el mejor fútbol latinoamericano a Estados Unidos",
+          "excerpt": "La empresa mexicana organiza partidos de alto nivel con equipos de primera división..."
+        },
+        {
+          "image": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400",
+          "source": "Expansión",
+          "title": "SEGUROS iD revoluciona el mercado de seguros deportivos en México",
+          "excerpt": "La startup ofrece un modelo de seguro on-demand que ha captado la atención de miles..."
+        },
+        {
+          "image": "https://images.unsplash.com/photo-1588681664899-f142ff2dc9b1?w=400",
+          "source": "Reforma",
+          "title": "EXPERIENCIAS VIP: El nuevo lujo en el deporte mexicano",
+          "excerpt": "Palcos exclusivos y servicios premium redefinen la forma de vivir el deporte..."
+        }
+      ],
+      "tvAppearances": [
+        {
+          "channel": "TV Azteca Deportes",
+          "description": "Entrevista sobre el futuro de los eventos deportivos internacionales."
+        },
+        {
+          "channel": "TUDN",
+          "description": "Cobertura especial del partido América vs Atlético Nacional."
+        },
+        {
+          "channel": "ESPN México",
+          "description": "Análisis de la experiencia fan en eventos deportivos premium."
+        }
+      ]
+    },
+    "socios": {
+      "tag": "Partners",
+      "title": "SOCIOS COMERCIALES",
+      "description": "Hemos colaborado con creadores de contenido, líderes de opinión, marcas y empresas más importantes del país, construyendo relaciones a largo plazo que se traducen en mejores beneficios y experiencias para nuestros clientes.",
+      "brands": [
+        "Nike",
+        "Adidas",
+        "Gatorade",
+        "Banorte",
+        "Telcel",
+        "Corona",
+        "Uber",
+        "Marriott",
+        "American Express",
+        "Coca-Cola",
+        "Heineken",
+        "Mastercard"
+      ],
+      "creators": [
+        {
+          "icon": "🎬",
+          "handle": "@FutbolTotal",
+          "followers": "2.5M seguidores"
+        },
+        {
+          "icon": "🎤",
+          "handle": "@DeportesEnVivo",
+          "followers": "1.8M seguidores"
+        },
+        {
+          "icon": "📱",
+          "handle": "@LaAficionMX",
+          "followers": "950K seguidores"
+        },
+        {
+          "icon": "⚽",
+          "handle": "@GolesYMas",
+          "followers": "1.2M seguidores"
+        }
+      ],
+      "benefits": [
+        {
+          "icon": "📈",
+          "title": "Alcance Masivo",
+          "description": "Acceso a nuestra base de más de 50,000 usuarios activos."
+        },
+        {
+          "icon": "🎯",
+          "title": "Público Objetivo",
+          "description": "Audiencia segmentada de amantes del deporte con alto poder adquisitivo."
+        },
+        {
+          "icon": "🤝",
+          "title": "Co-branding",
+          "description": "Oportunidades de colaboración en eventos exclusivos."
+        }
+      ]
+    },
+    "opiniones": {
+      "tag": "Testimonios",
+      "title": "OPINIONES",
+      "description": "Nuestros clientes comparten su opinión sobre los servicios que reciben y la recomiendan dentro de sus círculos. Escuchamos activamente cada comentario para seguir mejorando y fortalecer nuestras áreas de oportunidad.",
+      "stats": [
+        {
+          "value": "4.9",
+          "label": "Calificación Promedio"
+        },
+        {
+          "value": "2,500+",
+          "label": "Reseñas"
+        },
+        {
+          "value": "98%",
+          "label": "Recomendarían"
+        }
+      ],
+      "testimonials": [
+        {
+          "initials": "RM",
+          "name": "Roberto Martínez",
+          "since": "Cliente desde 2022",
+          "stars": 5,
+          "text": "La EXPERIENCIA VIP en el Estadio Azteca fue increíble. El servicio, la atención y la vista fueron de otro nivel. Totalmente recomendado."
+        },
+        {
+          "initials": "LG",
+          "name": "Laura González",
+          "since": "Cliente desde 2023",
+          "stars": 5,
+          "text": "SEGUROS iD me salvó cuando me lesioné jugando fútbol. El proceso de reclamación fue super sencillo y rápido. Excelente servicio."
+        },
+        {
+          "initials": "CP",
+          "name": "Carlos Pérez",
+          "since": "Cliente desde 2021",
+          "stars": 5,
+          "text": "Asistí al América vs Atlético Nacional en Orlando gracias a SOCCER iD CUP. Una organización impecable desde el boleto hasta el regreso."
+        },
+        {
+          "initials": "MH",
+          "name": "María Hernández",
+          "since": "Cliente desde 2024",
+          "stars": 5,
+          "text": "La asesoría para el Mundial 2026 ha sido invaluable. Ya tengo mis boletos para ver a México gracias a su guía paso a paso."
+        },
+        {
+          "initials": "JR",
+          "name": "Jorge Ramírez",
+          "since": "Cliente desde 2022",
+          "stars": 5,
+          "text": "El FAN EXPERIENCE es genial. He ganado varios premios y las promociones exclusivas valen mucho la pena. ¡Gran comunidad!"
+        }
+      ],
+      "ratings": [
+        {
+          "service": "EXPERIENCIAS VIP",
+          "rating": "4.9/5",
+          "quote": "Servicio excepcional y atención personalizada"
+        },
+        {
+          "service": "SOCCER iD CUP",
+          "rating": "4.8/5",
+          "quote": "Eventos increíbles y bien organizados"
+        },
+        {
+          "service": "SEGUROS iD",
+          "rating": "4.9/5",
+          "quote": "Rápido, fácil y confiable"
+        }
+      ]
+    }
+  }
+}
