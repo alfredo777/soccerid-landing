@@ -1,5 +1,5 @@
 /**
- * JavaScript Principal - Generado automáticamente
+ * JavaScript Principal
  * Proyecto: landing-soccerid-v2_0
  */
 
@@ -30,64 +30,59 @@ let currentSlide = 0;
 let cachedData = {};
 
 // ==========================================================================
+// DETECTAR BASE URL
+// ==========================================================================
+function getBaseUrl() {
+  // Detectar si estamos en producción o local
+  const scripts = document.querySelectorAll('script[src*="main.js"]');
+  if (scripts.length > 0) {
+    const src = scripts[0].getAttribute('src');
+    const basePath = src.replace(/assets\/js\/main\.js.*$/, '');
+    return basePath;
+  }
+  return './';
+}
+
+const BASE_URL = getBaseUrl();
+console.log('[SOCCER iD] Base URL detectada:', BASE_URL);
+
+// ==========================================================================
 // UTILIDADES DE CARGA DE DATOS
 // ==========================================================================
 
 async function loadJSONData(filename) {
   // Si ya está en cache, retornarlo
   if (cachedData[filename]) {
+    console.log(`[SOCCER iD] Cache hit: ${filename}`);
     return cachedData[filename];
   }
   
-  try {
-    const response = await fetch(`/contents/${filename}.json`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    cachedData[filename] = data;
-    return data;
-  } catch (error) {
-    console.error(`Error cargando ${filename}.json:`, error);
-    return null;
-  }
-}
-
-// Versión síncrona para compatibilidad con código existente
-function getJSONData(filename) {
-  return cachedData[filename] || null;
-}
-
-function renderTemplate(templateId, data, targetId) {
-  const templateEl = document.getElementById(templateId);
-  const targetEl = document.getElementById(targetId);
+  // Intentar múltiples rutas
+  const possiblePaths = [
+    `${BASE_URL}contents/${filename}.json`,
+    `./contents/${filename}.json`,
+    `/contents/${filename}.json`,
+    `contents/${filename}.json`
+  ];
   
-  if (!templateEl || !targetEl) {
-    console.error(`Template o target no encontrado: ${templateId} -> ${targetId}`);
-    return;
+  for (const path of possiblePaths) {
+    try {
+      console.log(`[SOCCER iD] Intentando cargar: ${path}`);
+      const response = await fetch(path);
+      
+      if (response.ok) {
+        const data = await response.json();
+        cachedData[filename] = data;
+        console.log(`[SOCCER iD] ✓ Cargado exitosamente desde: ${path}`);
+        return data;
+      }
+    } catch (error) {
+      console.log(`[SOCCER iD] ✗ Falló: ${path}`, error.message);
+    }
   }
   
-  try {
-    const template = Handlebars.compile(templateEl.innerHTML);
-    targetEl.innerHTML = template(data);
-  } catch (error) {
-    console.error(`Error renderizando template ${templateId}:`, error);
-  }
-}
-
-async function loadPartial(name) {
-  try {
-    const response = await fetch(`/partials/${name}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const content = await response.text();
-    Handlebars.registerPartial(name, content);
-    return content;
-  } catch (error) {
-    console.error(`Error cargando partial ${name}:`, error);
-    return '';
-  }
+  console.error(`[SOCCER iD] ✗ No se pudo cargar ${filename}.json desde ninguna ruta`);
+  return null;
 }
 
 // ==========================================================================
@@ -97,13 +92,13 @@ async function loadPartial(name) {
 async function renderBentoGrid() {
   const data = await loadJSONData('bento_grid');
   if (!data) {
-    console.error('No se pudo cargar bento_grid');
+    console.error('[Bento Grid] No hay datos');
     return;
   }
   
   const grid = document.getElementById('bentoGrid');
   if (!grid) {
-    console.error('Elemento bentoGrid no encontrado');
+    console.error('[Bento Grid] Elemento #bentoGrid no encontrado');
     return;
   }
   
@@ -125,19 +120,19 @@ async function renderBentoGrid() {
     }); 
   });
   
-  console.log('[Bento Grid] Renderizado correctamente');
+  console.log('[Bento Grid] ✓ Renderizado correctamente');
 }
 
 async function renderUpcomingEvents() {
   const data = await loadJSONData('events_grid');
   if (!data) {
-    console.error('No se pudo cargar events_grid');
+    console.error('[Events Grid] No hay datos');
     return;
   }
   
   const grid = document.getElementById('eventsGrid');
   if (!grid) {
-    console.error('Elemento eventsGrid no encontrado');
+    console.error('[Events Grid] Elemento #eventsGrid no encontrado');
     return;
   }
   
@@ -186,19 +181,19 @@ async function renderUpcomingEvents() {
     </div>
   `).join('');
   
-  console.log('[Events Grid] Renderizado correctamente');
+  console.log('[Events Grid] ✓ Renderizado correctamente');
 }
 
 async function renderAllEvents() {
   const data = await loadJSONData('all_events_modal');
   if (!data) {
-    console.error('No se pudo cargar all_events_modal');
+    console.error('[All Events] No hay datos');
     return;
   }
   
   const grid = document.getElementById('allEventsGrid');
   if (!grid) {
-    console.error('Elemento allEventsGrid no encontrado');
+    console.error('[All Events] Elemento #allEventsGrid no encontrado');
     return;
   }
   
@@ -247,7 +242,7 @@ async function renderAllEvents() {
     </div>
   `).join('');
   
-  console.log('[All Events] Renderizado correctamente');
+  console.log('[All Events] ✓ Renderizado correctamente');
 }
 
 // ==========================================================================
@@ -257,8 +252,8 @@ async function renderAllEvents() {
 async function generatePanelContent(panelId) {
   const allData = await loadJSONData('detail_panels');
   if (!allData || !allData.panels || !allData.panels[panelId]) {
-    console.error(`Panel ${panelId} no encontrado`);
-    return '<p>Error cargando contenido del panel</p>';
+    console.error(`[Panel] ${panelId} no encontrado`);
+    return '<div class="panel-body"><p>Error cargando contenido del panel</p></div>';
   }
   
   const panel = allData.panels[panelId];
@@ -493,12 +488,12 @@ async function openPanel(panelId) {
   const detailContent = document.getElementById('detailContent');
   
   if (!mainContainer || !detailPanel || !detailContent) {
-    console.error('Elementos del panel no encontrados');
+    console.error('[Panel] Elementos del DOM no encontrados');
     return;
   }
   
   // Mostrar loading
-  detailContent.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:200px;"><p>Cargando...</p></div>';
+  detailContent.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:200px;color:#fff;"><p>Cargando...</p></div>';
   
   // Remove all panel classes
   Object.values(panelClasses).forEach(cls => { 
@@ -522,8 +517,13 @@ async function openPanel(panelId) {
   document.body.style.overflow = 'hidden';
   
   // Generate and set content (async)
-  const content = await generatePanelContent(panelId);
-  detailContent.innerHTML = content;
+  try {
+    const content = await generatePanelContent(panelId);
+    detailContent.innerHTML = content;
+  } catch (error) {
+    console.error('[Panel] Error generando contenido:', error);
+    detailContent.innerHTML = '<div class="panel-body"><p>Error cargando el contenido</p></div>';
+  }
   
   // Reset scroll position to top AFTER content is loaded
   resetPanelScroll();
@@ -535,7 +535,6 @@ async function openPanel(panelId) {
 function closePanel() {
   const mainContainer = document.getElementById('mainContainer');
   const detailPanel = document.getElementById('detailPanel');
-  const detailContent = document.getElementById('detailContent');
   
   if (!detailPanel) return;
   
@@ -597,7 +596,7 @@ function handleFormSubmit(event, formType) {
     submitBtn.disabled = false; 
   }, 3000); 
   
-  console.log(`Form ${formType} submitted:`, data); 
+  console.log(`[Form] ${formType} submitted:`, data); 
 }
 
 function contactForEvent(eventName) { 
@@ -611,7 +610,7 @@ function openEventsModal() {
   const grid = document.getElementById('allEventsGrid'); 
   
   if (!modal) {
-    console.error('Modal de eventos no encontrado');
+    console.error('[Modal] eventsModal no encontrado');
     return;
   }
   
@@ -649,21 +648,13 @@ function closeEventsModal() {
 // ==========================================================================
 
 document.addEventListener('DOMContentLoaded', async function() {
+  console.log('='.repeat(50));
   console.log('[SOCCER iD] Inicializando aplicación...');
+  console.log('[SOCCER iD] URL actual:', window.location.href);
+  console.log('[SOCCER iD] Pathname:', window.location.pathname);
+  console.log('='.repeat(50));
   
   try {
-    // Pre-cargar todos los datos JSON
-    const dataFiles = ['bento_grid', 'events_grid', 'all_events_modal', 'detail_panels'];
-    
-    for (const file of dataFiles) {
-      const data = await loadJSONData(file);
-      if (data) {
-        console.log(`[SOCCER iD] ✓ Datos cargados: ${file}`);
-      } else {
-        console.warn(`[SOCCER iD] ⚠ No se pudo cargar: ${file}`);
-      }
-    }
-    
     // Renderizar componentes principales
     await renderBentoGrid();
     await renderUpcomingEvents();
@@ -690,10 +681,12 @@ document.addEventListener('DOMContentLoaded', async function() {
       }); 
     });
     
+    console.log('='.repeat(50));
     console.log('[SOCCER iD] ✓ Inicialización completada.');
+    console.log('='.repeat(50));
     
   } catch (error) {
-    console.error('[SOCCER iD] Error durante la inicialización:', error);
+    console.error('[SOCCER iD] ✗ Error durante la inicialización:', error);
   }
 });
 
