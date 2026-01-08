@@ -6,7 +6,7 @@
 module.exports = {
   port: process.env.PORT || 3000,
   debug: process.env.NODE_ENV !== 'production',
-  staticMaxAge: process.env.NODE_ENV === 'production' ? '7d' : '0',
+  staticMaxAge: process.env.NODE_ENV === 'production' ? '0' : '0',
   project: {
     name: 'landing-soccerid-v2_0',
     version: '1.0.0',
