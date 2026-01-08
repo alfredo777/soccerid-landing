@@ -212,8 +212,8 @@ app.get('/partials/:name', (req, res) => {
 
 function loadViewData() {
   const data = {
-    title: 'landing-soccerid-v2_0',
-    description: 'Sitio web generado con Handlebars',
+    title: 'SOCCER iD',
+    description: 'Amamos tanto el deporte que nos atrevimos a reinventarlo',
     year: new Date().getFullYear(),
     // Agregar timestamp para cache-busting en assets
     cacheBuster: isProduction ? Date.now() : 'dev'
