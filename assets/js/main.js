@@ -1,5 +1,5 @@
 /**
- * JavaScript Principal
+ * JavaScript Principal - Generado automáticamente
  * Proyecto: landing-soccerid-v2_0
  */
 
@@ -7,6 +7,7 @@
 // CONFIGURACIÓN GLOBAL
 // ==========================================================================
 const CONFIG = {
+  API_BASE: '',
   WHATSAPP_NUMBER: '12315158991',
   DEBUG: true
 };
@@ -24,6 +25,8 @@ const panelClasses = {
   opiniones: 'panel-opiniones' 
 };
 let currentSlide = 0;
+
+// Cache de datos cargados
 let cachedData = {};
 
 // ==========================================================================
@@ -31,46 +34,59 @@ let cachedData = {};
 // ==========================================================================
 
 async function loadJSONData(filename) {
+  // Si ya está en cache, retornarlo
   if (cachedData[filename]) {
-    console.log(`[SOCCER iD] Cache hit: ${filename}`);
     return cachedData[filename];
   }
   
-  // Ruta absoluta que coincide con tu servidor Express
-  const url = `/contents/${filename}.json`;
+  try {
+    const response = await fetch(`/contents/${filename}.json`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    cachedData[filename] = data;
+    return data;
+  } catch (error) {
+    console.error(`Error cargando ${filename}.json:`, error);
+    return null;
+  }
+}
+
+// Versión síncrona para compatibilidad con código existente
+function getJSONData(filename) {
+  return cachedData[filename] || null;
+}
+
+function renderTemplate(templateId, data, targetId) {
+  const templateEl = document.getElementById(templateId);
+  const targetEl = document.getElementById(targetId);
   
-  console.log(`[SOCCER iD] Cargando: ${url}`);
+  if (!templateEl || !targetEl) {
+    console.error(`Template o target no encontrado: ${templateId} -> ${targetId}`);
+    return;
+  }
   
   try {
-    const response = await fetch(url);
-    
-    console.log(`[SOCCER iD] Response status: ${response.status}`);
-    console.log(`[SOCCER iD] Response ok: ${response.ok}`);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-    
-    const text = await response.text();
-    console.log(`[SOCCER iD] Response text (primeros 200 chars):`, text.substring(0, 200));
-    
-    // Intentar parsear JSON
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (parseError) {
-      console.error(`[SOCCER iD] Error parseando JSON:`, parseError);
-      console.error(`[SOCCER iD] Contenido recibido:`, text.substring(0, 500));
-      throw parseError;
-    }
-    
-    cachedData[filename] = data;
-    console.log(`[SOCCER iD] ✓ Cargado exitosamente: ${filename}`);
-    return data;
-    
+    const template = Handlebars.compile(templateEl.innerHTML);
+    targetEl.innerHTML = template(data);
   } catch (error) {
-    console.error(`[SOCCER iD] ✗ Error cargando ${filename}:`, error);
-    return null;
+    console.error(`Error renderizando template ${templateId}:`, error);
+  }
+}
+
+async function loadPartial(name) {
+  try {
+    const response = await fetch(`/partials/${name}`);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const content = await response.text();
+    Handlebars.registerPartial(name, content);
+    return content;
+  } catch (error) {
+    console.error(`Error cargando partial ${name}:`, error);
+    return '';
   }
 }
 
@@ -79,30 +95,19 @@ async function loadJSONData(filename) {
 // ==========================================================================
 
 async function renderBentoGrid() {
-  console.log('[Bento Grid] Iniciando render...');
+  const data = await loadJSONData('bento_grid');
+  if (!data) {
+    console.error('No se pudo cargar bento_grid');
+    return;
+  }
   
   const grid = document.getElementById('bentoGrid');
   if (!grid) {
-    console.error('[Bento Grid] ✗ Elemento #bentoGrid no encontrado en el DOM');
-    return;
-  }
-  console.log('[Bento Grid] ✓ Elemento #bentoGrid encontrado');
-  
-  const data = await loadJSONData('bento_grid');
-  if (!data) {
-    console.error('[Bento Grid] ✗ No se pudieron cargar los datos');
-    grid.innerHTML = '<p style="color: red; padding: 20px;">Error cargando datos del grid</p>';
+    console.error('Elemento bentoGrid no encontrado');
     return;
   }
   
   const items = data.items || data;
-  console.log('[Bento Grid] Items a renderizar:', items.length);
-  
-  if (!Array.isArray(items) || items.length === 0) {
-    console.error('[Bento Grid] ✗ No hay items para renderizar');
-    return;
-  }
-  
   grid.innerHTML = items.map(item => `
     <div class="bento-item ${item.class || ''}" data-panel="${item.id}">
       <div class="bento-content">
@@ -120,38 +125,27 @@ async function renderBentoGrid() {
     }); 
   });
   
-  console.log('[Bento Grid] ✓ Renderizado correctamente');
+  console.log('[Bento Grid] Renderizado correctamente');
 }
 
 async function renderUpcomingEvents() {
-  console.log('[Events Grid] Iniciando render...');
+  const data = await loadJSONData('events_grid');
+  if (!data) {
+    console.error('No se pudo cargar events_grid');
+    return;
+  }
   
   const grid = document.getElementById('eventsGrid');
   if (!grid) {
-    console.error('[Events Grid] ✗ Elemento #eventsGrid no encontrado en el DOM');
-    return;
-  }
-  console.log('[Events Grid] ✓ Elemento #eventsGrid encontrado');
-  
-  const data = await loadJSONData('events_grid');
-  if (!data) {
-    console.error('[Events Grid] ✗ No se pudieron cargar los datos');
-    grid.innerHTML = '<p style="color: red; padding: 20px;">Error cargando eventos</p>';
+    console.error('Elemento eventsGrid no encontrado');
     return;
   }
   
   const events = data.events || data;
-  console.log('[Events Grid] Eventos a renderizar:', events.length);
-  
-  if (!Array.isArray(events) || events.length === 0) {
-    console.error('[Events Grid] ✗ No hay eventos para renderizar');
-    return;
-  }
-  
   grid.innerHTML = events.map(event => `
     <div class="event-card" onclick="contactForEvent('${event.team1} vs ${event.team2} - ${event.date}')">
       <div class="event-image">
-        <img src="${event.image}" alt="${event.team1} vs ${event.team2}" onerror="this.style.display='none'">
+        <img src="${event.image}" alt="${event.team1} vs ${event.team2}">
         <span class="event-badge ${event.badgeClass || ''}">${event.badge || ''}</span>
       </div>
       <div class="event-body">
@@ -192,21 +186,19 @@ async function renderUpcomingEvents() {
     </div>
   `).join('');
   
-  console.log('[Events Grid] ✓ Renderizado correctamente');
+  console.log('[Events Grid] Renderizado correctamente');
 }
 
 async function renderAllEvents() {
-  console.log('[All Events] Iniciando render...');
-  
-  const grid = document.getElementById('allEventsGrid');
-  if (!grid) {
-    console.error('[All Events] ✗ Elemento #allEventsGrid no encontrado');
+  const data = await loadJSONData('all_events_modal');
+  if (!data) {
+    console.error('No se pudo cargar all_events_modal');
     return;
   }
   
-  const data = await loadJSONData('all_events_modal');
-  if (!data) {
-    console.error('[All Events] ✗ No hay datos');
+  const grid = document.getElementById('allEventsGrid');
+  if (!grid) {
+    console.error('Elemento allEventsGrid no encontrado');
     return;
   }
   
@@ -255,7 +247,7 @@ async function renderAllEvents() {
     </div>
   `).join('');
   
-  console.log('[All Events] ✓ Renderizado correctamente');
+  console.log('[All Events] Renderizado correctamente');
 }
 
 // ==========================================================================
@@ -265,8 +257,8 @@ async function renderAllEvents() {
 async function generatePanelContent(panelId) {
   const allData = await loadJSONData('detail_panels');
   if (!allData || !allData.panels || !allData.panels[panelId]) {
-    console.error(`[Panel] ${panelId} no encontrado`);
-    return '<div class="panel-body"><p>Error cargando contenido del panel</p></div>';
+    console.error(`Panel ${panelId} no encontrado`);
+    return '<p>Error cargando contenido del panel</p>';
   }
   
   const panel = allData.panels[panelId];
@@ -501,55 +493,66 @@ async function openPanel(panelId) {
   const detailContent = document.getElementById('detailContent');
   
   if (!mainContainer || !detailPanel || !detailContent) {
-    console.error('[Panel] Elementos del DOM no encontrados');
+    console.error('Elementos del panel no encontrados');
     return;
   }
   
-  detailContent.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:200px;color:#fff;"><p>Cargando...</p></div>';
+  // Mostrar loading
+  detailContent.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:200px;"><p>Cargando...</p></div>';
   
+  // Remove all panel classes
   Object.values(panelClasses).forEach(cls => { 
     detailPanel.classList.remove(cls); 
   });
   
+  // Add the specific panel class
   if (panelClasses[panelId]) {
     detailPanel.classList.add(panelClasses[panelId]);
   }
   
+  // Animate main container out
   mainContainer.classList.add('slide-out');
   
+  // Show panel
   requestAnimationFrame(() => { 
     detailPanel.classList.add('active'); 
   });
   
+  // Lock body scroll
   document.body.style.overflow = 'hidden';
   
-  try {
-    const content = await generatePanelContent(panelId);
-    detailContent.innerHTML = content;
-  } catch (error) {
-    console.error('[Panel] Error generando contenido:', error);
-    detailContent.innerHTML = '<div class="panel-body"><p>Error cargando el contenido</p></div>';
-  }
+  // Generate and set content (async)
+  const content = await generatePanelContent(panelId);
+  detailContent.innerHTML = content;
   
+  // Reset scroll position to top AFTER content is loaded
   resetPanelScroll();
+  
+  // Reset testimonials slider
   currentSlide = 0;
 }
 
 function closePanel() {
   const mainContainer = document.getElementById('mainContainer');
   const detailPanel = document.getElementById('detailPanel');
+  const detailContent = document.getElementById('detailContent');
   
   if (!detailPanel) return;
   
+  // Hide panel
   detailPanel.classList.remove('active');
+  
+  // Reset scroll position when closing
   resetPanelScroll();
   
+  // Show main container after animation
   setTimeout(() => { 
     if (mainContainer) {
       mainContainer.classList.remove('slide-out'); 
     }
   }, 300);
   
+  // Unlock body scroll
   document.body.style.overflow = '';
 }
 
@@ -594,7 +597,7 @@ function handleFormSubmit(event, formType) {
     submitBtn.disabled = false; 
   }, 3000); 
   
-  console.log(`[Form] ${formType} submitted:`, data); 
+  console.log(`Form ${formType} submitted:`, data); 
 }
 
 function contactForEvent(eventName) { 
@@ -608,7 +611,7 @@ function openEventsModal() {
   const grid = document.getElementById('allEventsGrid'); 
   
   if (!modal) {
-    console.error('[Modal] eventsModal no encontrado');
+    console.error('Modal de eventos no encontrado');
     return;
   }
   
@@ -646,26 +649,26 @@ function closeEventsModal() {
 // ==========================================================================
 
 document.addEventListener('DOMContentLoaded', async function() {
-  console.log('='.repeat(50));
   console.log('[SOCCER iD] Inicializando aplicación...');
-  console.log('[SOCCER iD] URL actual:', window.location.href);
-  console.log('[SOCCER iD] Origin:', window.location.origin);
-  console.log('='.repeat(50));
-  
-  // Test directo del endpoint
-  console.log('[SOCCER iD] Probando endpoint de contenidos...');
-  try {
-    const testResponse = await fetch('/api/contents');
-    const testData = await testResponse.json();
-    console.log('[SOCCER iD] Contenidos disponibles:', testData);
-  } catch (e) {
-    console.error('[SOCCER iD] Error probando /api/contents:', e);
-  }
   
   try {
+    // Pre-cargar todos los datos JSON
+    const dataFiles = ['bento_grid', 'events_grid', 'all_events_modal', 'detail_panels'];
+    
+    for (const file of dataFiles) {
+      const data = await loadJSONData(file);
+      if (data) {
+        console.log(`[SOCCER iD] ✓ Datos cargados: ${file}`);
+      } else {
+        console.warn(`[SOCCER iD] ⚠ No se pudo cargar: ${file}`);
+      }
+    }
+    
+    // Renderizar componentes principales
     await renderBentoGrid();
     await renderUpcomingEvents();
     
+    // Event listeners globales
     document.addEventListener('keydown', function(e) { 
       if (e.key === 'Escape') { 
         closePanel(); 
@@ -673,6 +676,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       } 
     });
     
+    // Smooth scroll para enlaces internos
     document.querySelectorAll('a[href^="#"]').forEach(anchor => { 
       anchor.addEventListener('click', function(e) { 
         const href = this.getAttribute('href'); 
@@ -686,16 +690,14 @@ document.addEventListener('DOMContentLoaded', async function() {
       }); 
     });
     
-    console.log('='.repeat(50));
     console.log('[SOCCER iD] ✓ Inicialización completada.');
-    console.log('='.repeat(50));
     
   } catch (error) {
-    console.error('[SOCCER iD] ✗ Error durante la inicialización:', error);
+    console.error('[SOCCER iD] Error durante la inicialización:', error);
   }
 });
 
-// Exponer funciones globalmente
+// Exponer funciones globalmente para onclick en HTML
 window.openPanel = openPanel;
 window.closePanel = closePanel;
 window.openEventsModal = openEventsModal;
