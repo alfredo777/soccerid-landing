@@ -13,6 +13,12 @@ const app = express();
 const PORT = process.env.PORT || config.port || 3000;
 
 // ==========================================================================
+// CONFIGURACIÓN DE ENTORNO
+// ==========================================================================
+
+const isProduction = process.env.NODE_ENV === 'production';
+
+// ==========================================================================
 // CONFIGURACIÓN DE HANDLEBARS
 // ==========================================================================
 
@@ -46,15 +52,95 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ==========================================================================
+// MIDDLEWARE DE CONTROL DE CACHE (PRODUCCIÓN)
+// ==========================================================================
+
+/**
+ * En producción, deshabilita el cache para archivos JS, CSS, JSON y HTML
+ * Esto asegura que Heroku siempre sirva la versión más reciente
+ * Para habilitar cache en archivos específicos, usa el parámetro ?cache=true
+ */
+const noCacheMiddleware = (req, res, next) => {
+  if (!isProduction) {
+    return next();
+  }
+
+  // Si el request tiene ?cache=true, permitir cache
+  if (req.query.cache === 'true') {
+    return next();
+  }
+
+  const url = req.url.toLowerCase();
+  
+  // Archivos que NO deben cachearse en producción
+  const noCacheExtensions = ['.js', '.css', '.json', '.html', '.hbs'];
+  const shouldDisableCache = noCacheExtensions.some(ext => url.split('?')[0].endsWith(ext));
+  
+  // También deshabilitar cache para rutas de vistas (sin extensión)
+  const isViewRoute = !url.includes('.') || url === '/';
+  
+  if (shouldDisableCache || isViewRoute) {
+    res.set({
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+      'Surrogate-Control': 'no-store'
+    });
+  }
+  
+  next();
+};
+
+// Aplicar middleware de no-cache
+app.use(noCacheMiddleware);
+
+// ==========================================================================
 // ARCHIVOS ESTÁTICOS
 // ==========================================================================
 
-app.use('/assets', express.static(path.join(__dirname, 'assets'), {
-  maxAge: config.staticMaxAge || '1d',
-  etag: true
-}));
+// Configuración de cache para archivos estáticos
+const getStaticOptions = (customOptions = {}) => {
+  if (isProduction) {
+    // En producción: sin cache por defecto
+    return {
+      etag: false,
+      lastModified: false,
+      maxAge: 0,
+      setHeaders: (res, filePath) => {
+        const ext = path.extname(filePath).toLowerCase();
+        
+        // Imágenes y fuentes pueden tener cache corto (1 hora)
+        // ya que cambian menos frecuentemente
+        const cacheableExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.ico', '.woff', '.woff2', '.ttf', '.eot'];
+        
+        if (cacheableExtensions.includes(ext)) {
+          res.set({
+            'Cache-Control': 'public, max-age=3600', // 1 hora
+          });
+        } else {
+          // JS, CSS y otros: sin cache
+          res.set({
+            'Cache-Control': 'no-store, no-cache, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          });
+        }
+      },
+      ...customOptions
+    };
+  } else {
+    // En desarrollo: usar configuración del config
+    return {
+      maxAge: config.staticMaxAge || '1d',
+      etag: true,
+      ...customOptions
+    };
+  }
+};
 
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/assets', express.static(path.join(__dirname, 'assets'), getStaticOptions()));
+
+app.use('/public', express.static(path.join(__dirname, 'public'), getStaticOptions()));
 
 // ==========================================================================
 // API: DATOS JSON
@@ -67,7 +153,16 @@ app.get('/contents/:filename', (req, res) => {
   
   if (fs.existsSync(jsonPath)) {
     res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Cache-Control', 'public, max-age=300');
+    
+    // Cache control basado en entorno
+    if (isProduction) {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=300');
+    }
+    
     res.sendFile(jsonPath);
   } else {
     res.status(404).json({ error: 'Archivo no encontrado', file: filename });
@@ -99,6 +194,12 @@ app.get('/partials/:name', (req, res) => {
   
   if (fs.existsSync(partialPath)) {
     res.setHeader('Content-Type', 'text/plain');
+    
+    // Sin cache en producción
+    if (isProduction) {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    }
+    
     res.sendFile(partialPath);
   } else {
     res.status(404).send('Partial no encontrado');
@@ -113,7 +214,9 @@ function loadViewData() {
   const data = {
     title: 'landing-soccerid-v2_0',
     description: 'Sitio web generado con Handlebars',
-    year: new Date().getFullYear()
+    year: new Date().getFullYear(),
+    // Agregar timestamp para cache-busting en assets
+    cacheBuster: isProduction ? Date.now() : 'dev'
   };
   
   const contentsDir = path.join(__dirname, 'contents');
@@ -185,7 +288,8 @@ app.listen(PORT, () => {
   console.log('');
   console.log(`  🌐 URL Local:    http://localhost:${PORT}`);
   console.log(`  📁 Proyecto:     ${__dirname}`);
-  console.log(`  🔧 Modo:         ${config.debug ? 'Desarrollo' : 'Producción'}`);
+  console.log(`  🔧 Modo:         ${isProduction ? 'Producción (NO CACHE)' : 'Desarrollo'}`);
+  console.log(`  💾 Cache:        ${isProduction ? 'Deshabilitado para JS/CSS/JSON' : 'Habilitado'}`);
   console.log('');
   console.log('  Endpoints disponibles:');
   console.log('    GET /              → Página principal');
@@ -193,6 +297,12 @@ app.listen(PORT, () => {
   console.log('    GET /partials/*    → Templates parciales');
   console.log('    GET /assets/*      → Archivos estáticos');
   console.log('');
+  if (isProduction) {
+    console.log('  ⚠️  Cache deshabilitado en producción para:');
+    console.log('      .js, .css, .json, .html, rutas de vistas');
+    console.log('      Imágenes y fuentes tienen cache de 1 hora');
+    console.log('');
+  }
   console.log('='.repeat(60));
   console.log('');
 });
