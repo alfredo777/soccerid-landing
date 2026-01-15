@@ -1,37 +1,99 @@
 /**
- * Servidor Node.js con Express y Handlebars
- * Proyecto: landing-soccerid-v2_0
+ * GKrakenCMS - Servidor Node.js
+ * Proyecto: soccerid-v4-landing
  */
 
 const express = require('express');
 const { engine } = require('express-handlebars');
+const session = require('express-session');
 const path = require('path');
 const fs = require('fs');
-const config = require('./config');
 
 const app = express();
-const PORT = process.env.PORT || config.port || 3000;
-
-// ==========================================================================
-// CONFIGURACIÓN DE ENTORNO
-// ==========================================================================
-
+const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
 
-// ==========================================================================
-// CONFIGURACIÓN DE HANDLEBARS
-// ==========================================================================
+// ============================================================
+// LIMPIEZA DE CACHÉ AL INICIAR
+// ============================================================
+function clearCache() {
+  console.log('🧹 Limpiando caché del servidor...');
+  
+  // 1. Limpiar caché de require de Node.js para módulos del proyecto
+  Object.keys(require.cache).forEach(key => {
+    // Solo limpiar módulos del proyecto, no node_modules
+    if (key.includes(__dirname) && !key.includes('node_modules')) {
+      delete require.cache[key];
+      console.log('   ✓ Cache eliminado:', path.basename(key));
+    }
+  });
+  
+  // 2. Limpiar carpeta de caché temporal si existe
+  const tempCacheDir = path.join(__dirname, '.cache');
+  if (fs.existsSync(tempCacheDir)) {
+    fs.rmSync(tempCacheDir, { recursive: true, force: true });
+    console.log('   ✓ Carpeta .cache eliminada');
+  }
+  
+  // 3. Limpiar carpeta tmp si existe
+  const tmpDir = path.join(__dirname, 'tmp');
+  if (fs.existsSync(tmpDir)) {
+    fs.readdirSync(tmpDir).forEach(file => {
+      const filePath = path.join(tmpDir, file);
+      fs.unlinkSync(filePath);
+    });
+    console.log('   ✓ Carpeta tmp limpiada');
+  }
+  
+  console.log('✅ Caché limpiado correctamente\n');
+}
 
-// Crear instancia de Handlebars con helpers
+// Ejecutar limpieza al iniciar
+clearCache();
+
+// ============================================================
+// GENERAR VERSION ÚNICA PARA CACHE BUSTING
+// ============================================================
+const APP_VERSION = Date.now(); // Cambia en cada reinicio
+
+// Sesión
+app.use(session({
+  secret: process.env.SESSION_SECRET || '9f80e68fee77eaad72fe630b5fa1631c1156fcc2f6c54421c62ea356eaf5be94',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: isProduction, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }
+}));
+
+// Handlebars
 const hbs = require('express-handlebars').create({
   extname: '.hbs',
   defaultLayout: 'main',
   layoutsDir: path.join(__dirname, 'views/layouts'),
   partialsDir: path.join(__dirname, 'views/partials'),
-  helpers: {}
+  helpers: {
+    formatDate: d => d ? new Date(d).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) : '',
+    timeAgo: d => {
+      if (!d) return '';
+      const s = Math.floor((new Date() - new Date(d)) / 1000);
+      if (s < 60) return 'hace un momento';
+      if (s < 3600) return `hace ${Math.floor(s/60)} min`;
+      if (s < 86400) return `hace ${Math.floor(s/3600)} horas`;
+      if (s < 604800) return `hace ${Math.floor(s/86400)} días`;
+      return new Date(d).toLocaleDateString('es-MX');
+    },
+    truncate: (s, l) => s && s.length > l ? s.substring(0, l) + '...' : s || '',
+    year: () => new Date().getFullYear(),
+    eq: (a, b) => a === b,
+    json: o => JSON.stringify(o, null, 2),
+    join: (a, s) => Array.isArray(a) ? a.join(s || ', ') : '',
+    default: (v, d) => v || d,
+    // Helper para cache busting en assets
+    version: () => APP_VERSION,
+    asset: (url) => `${url}?v=${APP_VERSION}`
+  }
 });
 
-// Registrar helpers personalizados
+// Helpers adicionales
 const registerHelpers = require('./helpers');
 registerHelpers(hbs.handlebars);
 
@@ -39,47 +101,24 @@ app.engine('.hbs', hbs.engine);
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-// ==========================================================================
-// MIDDLEWARE
-// ==========================================================================
+// Deshabilitar caché de vistas en desarrollo
+if (!isProduction) {
+  app.set('view cache', false);
+}
 
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  next();
-});
-
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ==========================================================================
-// MIDDLEWARE DE CONTROL DE CACHE (PRODUCCIÓN)
-// ==========================================================================
-
-/**
- * En producción, deshabilita el cache para archivos JS, CSS, JSON y HTML
- * Esto asegura que Heroku siempre sirva la versión más reciente
- * Para habilitar cache en archivos específicos, usa el parámetro ?cache=true
- */
-const noCacheMiddleware = (req, res, next) => {
+// ============================================================
+// MIDDLEWARE ANTI-CACHÉ PARA DESARROLLO
+// ============================================================
+app.use((req, res, next) => {
+  res.locals.year = new Date().getFullYear();
+  res.locals.version = APP_VERSION; // Disponible en todas las vistas
+  
+  // Headers anti-caché en desarrollo
   if (!isProduction) {
-    return next();
-  }
-
-  // Si el request tiene ?cache=true, permitir cache
-  if (req.query.cache === 'true') {
-    return next();
-  }
-
-  const url = req.url.toLowerCase();
-  
-  // Archivos que NO deben cachearse en producción
-  const noCacheExtensions = ['.js', '.css', '.json', '.html', '.hbs'];
-  const shouldDisableCache = noCacheExtensions.some(ext => url.split('?')[0].endsWith(ext));
-  
-  // También deshabilitar cache para rutas de vistas (sin extensión)
-  const isViewRoute = !url.includes('.') || url === '/';
-  
-  if (shouldDisableCache || isViewRoute) {
     res.set({
       'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
       'Pragma': 'no-cache',
@@ -89,222 +128,158 @@ const noCacheMiddleware = (req, res, next) => {
   }
   
   next();
-};
+});
 
-// Aplicar middleware de no-cache
-app.use(noCacheMiddleware);
-
-// ==========================================================================
-// ARCHIVOS ESTÁTICOS
-// ==========================================================================
-
-// Configuración de cache para archivos estáticos
-const getStaticOptions = (customOptions = {}) => {
-  if (isProduction) {
-    // En producción: sin cache por defecto
-    return {
+// ============================================================
+// ESTÁTICOS CON CONTROL DE CACHÉ
+// ============================================================
+const staticOptions = isProduction 
+  ? { maxAge: '1d' } // 1 día en producción
+  : { 
+      maxAge: 0,
       etag: false,
       lastModified: false,
-      maxAge: 0,
-      setHeaders: (res, filePath) => {
-        const ext = path.extname(filePath).toLowerCase();
-        
-        // Imágenes y fuentes pueden tener cache corto (1 hora)
-        // ya que cambian menos frecuentemente
-        const cacheableExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.ico', '.woff', '.woff2', '.ttf', '.eot'];
-        
-        if (cacheableExtensions.includes(ext)) {
-          res.set({
-            'Cache-Control': 'public, max-age=3600', // 1 hora
-          });
-        } else {
-          // JS, CSS y otros: sin cache
-          res.set({
-            'Cache-Control': 'no-store, no-cache, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-          });
-        }
-      },
-      ...customOptions
+      setHeaders: (res) => {
+        res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+        res.set('Pragma', 'no-cache');
+      }
     };
-  } else {
-    // En desarrollo: usar configuración del config
-    return {
-      maxAge: config.staticMaxAge || '1d',
-      etag: true,
-      ...customOptions
-    };
-  }
-};
 
-app.use('/assets', express.static(path.join(__dirname, 'assets'), getStaticOptions()));
+app.use('/assets', express.static(path.join(__dirname, 'assets'), staticOptions));
+app.use('/public', express.static(path.join(__dirname, 'public'), staticOptions));
 
-app.use('/public', express.static(path.join(__dirname, 'public'), getStaticOptions()));
+// Rutas
+const adminRoutes = require('./routes/admin');
+const blogRoutes = require('./routes/blog');
 
-// ==========================================================================
-// API: DATOS JSON
-// ==========================================================================
+app.use('/admin', adminRoutes);
+app.use('/blog', blogRoutes);
 
+// ============================================================
+// API - SERVIR ARCHIVOS JSON (SIN CACHÉ)
+// ============================================================
 app.get('/contents/:filename', (req, res) => {
-  const filename = req.params.filename;
-  const filePath = path.join(__dirname, 'contents', filename);
-  const jsonPath = filePath.endsWith('.json') ? filePath : `${filePath}.json`;
+  // Headers anti-caché para JSON
+  res.set({
+    'Cache-Control': 'no-store, no-cache, must-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0'
+  });
+  
+  let filename = req.params.filename;
+  if (filename.endsWith('.json')) {
+    filename = filename.slice(0, -5);
+  }
+  
+  const jsonPath = path.join(__dirname, 'contents', filename + '.json');
   
   if (fs.existsSync(jsonPath)) {
-    res.setHeader('Content-Type', 'application/json');
-    
-    // Cache control basado en entorno
-    if (isProduction) {
-      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', '0');
-    } else {
-      res.setHeader('Cache-Control', 'public, max-age=300');
+    try {
+      // Leer siempre fresco del disco, sin caché
+      const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+      res.json(data);
+    } catch (err) {
+      console.error(`Error parsing ${filename}.json:`, err);
+      res.status(500).json({ error: 'Error al parsear JSON' });
     }
-    
-    res.sendFile(jsonPath);
   } else {
-    res.status(404).json({ error: 'Archivo no encontrado', file: filename });
+    console.log(`[404] Archivo no encontrado: ${jsonPath}`);
+    res.status(404).json({ error: 'No encontrado', file: filename });
   }
 });
 
 app.get('/api/contents', (req, res) => {
-  const contentsDir = path.join(__dirname, 'contents');
-  try {
-    const files = fs.readdirSync(contentsDir)
-      .filter(file => file.endsWith('.json'))
-      .map(file => ({
-        name: file.replace('.json', ''),
-        url: `/contents/${file}`
-      }));
-    res.json({ contents: files });
-  } catch (error) {
-    res.status(500).json({ error: 'Error leyendo directorio de contenidos' });
-  }
-});
-
-// ==========================================================================
-// PARTIALS
-// ==========================================================================
-
-app.get('/partials/:name', (req, res) => {
-  const partialName = req.params.name;
-  const partialPath = path.join(__dirname, 'views/partials', `${partialName}.hbs`);
+  res.set('Cache-Control', 'no-store');
   
-  if (fs.existsSync(partialPath)) {
-    res.setHeader('Content-Type', 'text/plain');
-    
-    // Sin cache en producción
-    if (isProduction) {
-      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
-    }
-    
-    res.sendFile(partialPath);
+  const dir = path.join(__dirname, 'contents');
+  const files = fs.readdirSync(dir)
+    .filter(f => f.endsWith('.json') && !f.includes('blog'))
+    .map(f => ({ name: f.replace('.json', ''), url: '/contents/' + f.replace('.json', '') }));
+  res.json({ contents: files, version: APP_VERSION });
+});
+
+app.get('/api/info', (req, res) => {
+  res.json({ 
+    nodeVersion: process.version, 
+    project: 'soccerid-v4-landing',
+    version: APP_VERSION,
+    uptime: process.uptime()
+  });
+});
+
+// Endpoint para forzar limpieza de caché (útil para desarrollo)
+app.post('/api/clear-cache', (req, res) => {
+  if (!isProduction) {
+    clearCache();
+    res.json({ success: true, message: 'Caché limpiado', newVersion: Date.now() });
   } else {
-    res.status(404).send('Partial no encontrado');
+    res.status(403).json({ error: 'No disponible en producción' });
   }
 });
 
-// ==========================================================================
-// RUTAS DE VISTAS
-// ==========================================================================
+// Páginas legales
+app.get('/terms', (req, res) => res.render('legal/terms', { layout: 'legal', title: 'Términos' }));
+app.get('/privacy', (req, res) => res.render('legal/privacy', { layout: 'legal', title: 'Privacidad' }));
 
+// Cargar datos para vistas (siempre fresco)
 function loadViewData() {
-  const data = {
-    title: 'SOCCER iD',
-    description: 'Amamos tanto el deporte que nos atrevimos a reinventarlo',
+  const data = { 
+    title: 'SOCCER iD', 
     year: new Date().getFullYear(),
-    // Agregar timestamp para cache-busting en assets
-    cacheBuster: isProduction ? Date.now() : 'dev'
+    version: APP_VERSION // Para cache busting en vistas
   };
   
-  const contentsDir = path.join(__dirname, 'contents');
-  if (fs.existsSync(contentsDir)) {
-    fs.readdirSync(contentsDir)
-      .filter(file => file.endsWith('.json'))
-      .forEach(file => {
+  const dir = path.join(__dirname, 'contents');
+  if (fs.existsSync(dir)) {
+    fs.readdirSync(dir)
+      .filter(f => f.endsWith('.json') && !f.startsWith('blog'))
+      .forEach(f => {
         try {
-          const content = fs.readFileSync(path.join(contentsDir, file), 'utf8');
-          const key = file.replace('.json', '').replace(/-/g, '_');
-          data[key] = JSON.parse(content);
+          // Leer siempre del disco
+          data[f.replace('.json', '').replace(/-/g, '_')] = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
         } catch (e) {
-          console.error(`Error cargando ${file}:`, e.message);
+          console.error(`Error cargando ${f}:`, e.message);
         }
       });
   }
-  
   return data;
 }
 
-app.get('/', (req, res) => {
-  const data = loadViewData();
-  res.render('index', data);
-});
+// Página principal
+app.get('/', (req, res) => res.render('index', loadViewData()));
 
+// Otras páginas
 app.get('/:page', (req, res) => {
-  const page = req.params.page;
-  const viewPath = path.join(__dirname, 'views', `${page}.hbs`);
-  
+  const viewPath = path.join(__dirname, 'views', req.params.page + '.hbs');
   if (fs.existsSync(viewPath)) {
-    const data = loadViewData();
-    res.render(page, data);
+    res.render(req.params.page, loadViewData());
   } else {
-    res.status(404).render('index', { 
-      ...loadViewData(),
-      error: 'Página no encontrada' 
-    });
+    res.status(404).render('index', { ...loadViewData(), error: 'Página no encontrada' });
   }
 });
 
-// ==========================================================================
-// MANEJO DE ERRORES
-// ==========================================================================
-
-app.use((req, res, next) => {
-  res.status(404).json({ 
-    error: 'Recurso no encontrado',
-    path: req.path 
-  });
-});
-
+// Errores
+app.use((req, res) => res.status(404).json({ error: 'No encontrado' }));
 app.use((err, req, res, next) => {
-  console.error('[ERROR]', err);
-  res.status(500).json({ 
-    error: 'Error interno del servidor',
-    message: config.debug ? err.message : 'Contacte al administrador'
-  });
+  console.error(err);
+  res.status(500).json({ error: 'Error del servidor' });
 });
 
-// ==========================================================================
-// INICIAR SERVIDOR
-// ==========================================================================
-
+// Iniciar
 app.listen(PORT, () => {
   console.log('');
   console.log('='.repeat(60));
-  console.log('  LANDING-SOCCERID-V2_0 - SERVIDOR INICIADO');
+  console.log('  GKRAKEN CMS - SERVIDOR INICIADO');
   console.log('='.repeat(60));
-  console.log('');
-  console.log(`  🌐 URL Local:    http://localhost:${PORT}`);
-  console.log(`  📁 Proyecto:     ${__dirname}`);
-  console.log(`  🔧 Modo:         ${isProduction ? 'Producción (NO CACHE)' : 'Desarrollo'}`);
-  console.log(`  💾 Cache:        ${isProduction ? 'Deshabilitado para JS/CSS/JSON' : 'Habilitado'}`);
-  console.log('');
-  console.log('  Endpoints disponibles:');
-  console.log('    GET /              → Página principal');
-  console.log('    GET /contents/*    → Datos JSON');
-  console.log('    GET /partials/*    → Templates parciales');
-  console.log('    GET /assets/*      → Archivos estáticos');
-  console.log('');
-  if (isProduction) {
-    console.log('  ⚠️  Cache deshabilitado en producción para:');
-    console.log('      .js, .css, .json, .html, rutas de vistas');
-    console.log('      Imágenes y fuentes tienen cache de 1 hora');
-    console.log('');
+  console.log(`  🆔 Versión:  ${APP_VERSION}`);
+  console.log(`  🌐 URL:      http://localhost:${PORT}`);
+  console.log(`  🔐 Admin:    http://localhost:${PORT}/admin`);
+  console.log(`  📝 Blog:     http://localhost:${PORT}/blog`);
+  console.log(`  🔧 Entorno:  ${isProduction ? 'PRODUCCIÓN' : 'DESARROLLO'}`);
+  console.log('='.repeat(60));
+  if (!isProduction) {
+    console.log('  ⚠️  Caché deshabilitado (modo desarrollo)');
+    console.log('='.repeat(60));
   }
-  console.log('='.repeat(60));
   console.log('');
 });
-
-module.exports = app;

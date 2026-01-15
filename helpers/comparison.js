@@ -1,5 +1,5 @@
 /**
- * Helpers de comparación para Handlebars
+ * Helpers de comparación
  */
 module.exports = {
   eq: function(a, b, options) {
@@ -11,11 +11,11 @@ module.exports = {
   gt: function(a, b, options) {
     return a > b ? options.fn(this) : options.inverse(this);
   },
-  lt: function(a, b, options) {
-    return a < b ? options.fn(this) : options.inverse(this);
-  },
   gte: function(a, b, options) {
     return a >= b ? options.fn(this) : options.inverse(this);
+  },
+  lt: function(a, b, options) {
+    return a < b ? options.fn(this) : options.inverse(this);
   },
   lte: function(a, b, options) {
     return a <= b ? options.fn(this) : options.inverse(this);
@@ -25,8 +25,5 @@ module.exports = {
   },
   or: function(a, b, options) {
     return a || b ? options.fn(this) : options.inverse(this);
-  },
-  not: function(a, options) {
-    return !a ? options.fn(this) : options.inverse(this);
   }
 };

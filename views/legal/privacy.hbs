@@ -1,0 +1,243 @@
+{{!-- Política de Privacidad --}}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidad - SOCCER iD</title>
+          <link rel="icon" href="/assets/images/iconsoccerid.png" type="image/x-icon">
+
+    <style>
+        /* --- Configuración General y Reset --- */
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;900&display=swap');
+
+        :root {
+            --color-purple: #2a0f4a;
+            --color-background: #0a0a0a;
+            --color-surface: rgba(26, 26, 26, 0.85); /* Un poco más opaco para legibilidad */
+            --color-primary-text: #ffffff;
+            --color-secondary-text: #c0c0c0; /* Ligeramente más brillante para el texto */
+            --color-border: #333333;
+            --color-accent: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            color: var(--color-primary-text);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Alineado arriba para documentos largos */
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 4rem 0; /* Espacio vertical */
+            /* Fondo de gradiente animado */
+            background: radial-gradient(ellipse at center, var(--color-purple), var(--color-background));
+            background-size: 200% 200%;
+            animation: background-pan 25s linear infinite;
+        }
+
+        /* --- Contenedor Principal --- */
+        .main-container {
+            background-color: var(--color-surface);
+            padding: 2.5rem 3rem;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            max-width: 90vw;
+            width: 800px; /* Más ancho para texto largo */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px); /* Efecto de desenfoque para el fondo */
+            text-align: justify; /* Alineación a la izquierda para el contenido */
+        }
+
+        /* --- Placeholder del Logo --- */
+        .logo-placeholder {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 0.4rem;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            text-align: center;
+            display: block;
+        }
+
+        /* --- Estilos de Texto para la Política --- */
+        .policy-content h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .policy-content p.effective-date {
+            text-align: center;
+            color: var(--color-secondary-text);
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+
+        .policy-content h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .policy-content h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-primary-text);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .policy-content p, .policy-content li {
+            font-size: 1rem;
+            color: var(--color-secondary-text);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        
+        .policy-content ul {
+            list-style-position: inside;
+            padding-left: 1rem;
+        }
+
+        .policy-content a {
+            color: var(--color-accent);
+            font-weight: 700;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .policy-content a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        .policy-content strong {
+            font-weight: 700;
+            color: var(--color-primary-text);
+        }
+
+        /* --- Pie de Página --- */
+        footer {
+            font-size: 0.9rem;
+            color: var(--color-secondary-text);
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        /* --- Animaciones (Keyframes) --- */
+        @keyframes background-pan {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Diseño Responsivo para Móviles --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+            .main-container {
+                padding: 2rem 1.5rem;
+                border: none;
+                background: none;
+                box-shadow: none;
+                backdrop-filter: none;
+                width: 100%;
+                max-width: 100%;
+                border-radius: 0;
+            }
+
+            .policy-content h1 {
+                font-size: 1.8rem;
+            }
+
+            .policy-content h2 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div class="logo-placeholder">SOCCER iD</div>
+        
+        <div class="policy-content">
+            <h1>Política de Privacidad</h1>
+            <p class="effective-date">Fecha de entrada en vigor: 8 de enero de 2026</p>
+
+            <h2>1. Introducción</h2>
+            <p>Bienvenido a SOCCER iD. En SOCCER iD ("nosotros", "nuestro", "la Plataforma"), operando a través del sitio web <strong>soccerid.co</strong> (el "Sitio"), estamos profundamente comprometidos con la protección de su privacidad y sus datos personales. Esta Política de Privacidad tiene como objetivo informarle de manera clara y transparente sobre cómo recopilamos, utilizamos, protegemos y compartimos su información personal cuando utiliza nuestros servicios.</p>
+            <p>Al acceder o utilizar nuestro Sitio, usted reconoce que ha leído, entendido y aceptado las prácticas descritas en esta Política de Privacidad. Si no está de acuerdo con esta política, por favor, no utilice nuestros servicios.</p>
+
+            <h2>2. Información que Recopilamos</h2>
+            <p>Recopilamos diferentes tipos de información para proporcionar y mejorar nuestro servicio. Esta información se puede clasificar de la siguiente manera:</p>
+            
+            <h3>a) Información que usted nos proporciona directamente:</h3>
+            <ul>
+                <li><strong>Información de Registro y Perfil:</strong> Cuando crea una cuenta en SOCCER iD, recopilamos información como su nombre, dirección de correo electrónico, contraseña, fecha de nacimiento y nombre de usuario. Opcionalmente, puede proporcionar información adicional para enriquecer su perfil, como su equipo de fútbol favorito, posición en el campo, biografía, foto de perfil y enlaces a sus redes sociales.</li>
+                <li><strong>Contenido Generado por el Usuario:</strong> Recopilamos la información que usted crea y comparte en nuestra plataforma, incluyendo publicaciones, comentarios, fotos, videos, mensajes directos y cualquier otro contenido que suba al Sitio.</li>
+                <li><strong>Comunicaciones con Nosotros:</strong> Si se pone en contacto con nuestro equipo de soporte o nos envía un correo electrónico, guardaremos un registro de esa comunicación, incluyendo su dirección de correo electrónico y el contenido del mensaje, para poder resolver su consulta.</li>
+            </ul>
+
+            <h3>b) Información que recopilamos automáticamente:</h3>
+            <ul>
+                <li><strong>Información de Uso y Dispositivo:</strong> Cuando accede a nuestro Sitio, recopilamos automáticamente cierta información sobre su dispositivo y su actividad. Esto incluye su dirección IP, tipo de navegador, sistema operativo, identificadores únicos de dispositivo, páginas que visita en nuestro Sitio, tiempo de permanencia en esas páginas y las fechas y horas de su acceso.</li>
+                <li><strong>Cookies y Tecnologías Similares:</strong> Utilizamos cookies, balizas web y tecnologías de seguimiento similares para recopilar información sobre su interacción con nuestro servicio, recordar sus preferencias y personalizar su experiencia. Puede gestionar sus preferencias de cookies a través de la configuración de su navegador.</li>
+            </ul>
+
+            <h2>3. Cómo Utilizamos su Información</h2>
+            <p>Utilizamos la información recopilada para los siguientes propósitos:</p>
+            <ul>
+                <li><strong>Para Proporcionar y Mantener el Servicio:</strong> Para crear y gestionar su cuenta, permitirle interactuar con otros usuarios y acceder a todas las funcionalidades de la Plataforma.</li>
+                <li><strong>Para Personalizar su Experiencia:</strong> Para mostrarle contenido relevante, como noticias de sus equipos favoritos, publicaciones de usuarios que sigue o sugerencias de perfiles a seguir.</li>
+                <li><strong>Para Comunicarnos con Usted:</strong> Para enviarle notificaciones importantes sobre el servicio, responder a sus preguntas y enviarle boletines informativos o material de marketing (siempre con la opción de darse de baja).</li>
+                <li><strong>Para Mejorar Nuestro Servicio:</strong> Para analizar cómo los usuarios interactúan con el Sitio, identificar tendencias, corregir errores y desarrollar nuevas características y funcionalidades.</li>
+                <li><strong>Para Seguridad y Prevención de Fraude:</strong> Para proteger la seguridad de nuestros usuarios y de la Plataforma, detectar y prevenir actividades fraudulentas o que violen nuestros Términos de Servicio.</li>
+            </ul>
+
+            <h2>4. Cómo Compartimos su Información</h2>
+            <p>No vendemos ni alquilamos su información personal a terceros. Solo compartimos su información en las siguientes circunstancias:</p>
+            <ul>
+                <li><strong>Con Otros Usuarios:</strong> Su nombre de usuario, foto de perfil y el contenido que publica de forma pública son visibles para otros usuarios de la Plataforma.</li>
+                <li><strong>Proveedores de Servicios:</strong> Compartimos información con terceros que nos prestan servicios, como alojamiento web (hosting), análisis de datos y servicios de marketing. Estos proveedores solo tienen acceso a la información necesaria para realizar sus funciones y están obligados contractualmente a protegerla.</li>
+                <li><strong>Por Requisitos Legales:</strong> Podemos divulgar su información si creemos de buena fe que es necesario para cumplir con una obligación legal, una orden judicial, o para proteger nuestros derechos, seguridad, o la de nuestros usuarios.</li>
+                <li><strong>Transferencias Comerciales:</strong> En caso de una fusión, adquisición o venta de activos, su información personal puede ser transferida a la entidad sucesora.</li>
+            </ul>
+
+            <h2>5. Sus Derechos y Opciones sobre sus Datos</h2>
+            <p>Respetamos sus derechos sobre su información personal. Dependiendo de su ubicación, puede tener los siguientes derechos: Acceso, Rectificación, Supresión ("Derecho al Olvido"), Portabilidad de los Datos y Oposición o Restricción del Procesamiento. Para ejercer cualquiera de estos derechos, puede gestionar la información de su perfil directamente desde la configuración de su cuenta o contactarnos en <a href="mailto:privacidad@soccerid.co">privacidad@soccerid.co</a>.</p>
+
+            <h2>6. Seguridad de los Datos</h2>
+            <p>Implementamos medidas de seguridad técnicas y organizativas razonables para proteger su información personal. Sin embargo, ningún método de transmisión por Internet o de almacenamiento electrónico es 100% seguro, por lo que no podemos garantizar una seguridad absoluta.</p>
+
+            <h2>7. Retención de Datos</h2>
+            <p>Conservaremos su información personal solo durante el tiempo que sea necesario para los fines establecidos en esta Política de Privacidad, a menos que la ley exija o permita un período de retención más largo.</p>
+
+            <h2>8. Privacidad de los Menores de Edad</h2>
+            <p>Nuestro servicio no está dirigido a personas menores de 16 años. No recopilamos intencionadamente información personal de menores. Si descubre que su hijo nos ha proporcionado información personal sin su consentimiento, póngase en contacto con nosotros para que podamos eliminarla.</p>
+
+            <h2>9. Cambios a esta Política de Privacidad</h2>
+            <p>Nos reservamos el derecho de actualizar esta Política de Privacidad en cualquier momento. Le notificaremos de cualquier cambio publicando la nueva política en esta página y actualizando la "Fecha de entrada en vigor".</p>
+
+            <h2>10. Contacto</h2>
+            <p>Si tiene alguna pregunta, comentario o inquietud sobre esta Política de Privacidad o nuestras prácticas de datos, no dude en ponerse en contacto con nosotros a través de la siguiente dirección de correo electrónico: <a href="mailto:privacidad@soccerid.co">privacidad@soccerid.co</a>.</p>
+        </div>
+
+        <footer>
+            &copy; 2026 SOCCER iD. Todos los derechos reservados.
+        </footer>
+    </div>
+
+</body>

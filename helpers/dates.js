@@ -1,60 +1,50 @@
 /**
- * Helpers de fechas para Handlebars
+ * Helpers de fechas
  */
 module.exports = {
-  formatDate: function(date, locale) {
-    if (!date) return '';
-    locale = typeof locale === 'string' ? locale : 'es-MX';
-    try {
-      const d = new Date(date);
-      return d.toLocaleDateString(locale, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-    } catch (e) {
-      return date;
-    }
-  },
-  formatDateTime: function(date, locale) {
-    if (!date) return '';
-    locale = typeof locale === 'string' ? locale : 'es-MX';
-    try {
-      const d = new Date(date);
-      return d.toLocaleString(locale, {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    } catch (e) {
-      return date;
-    }
-  },
-  now: function() {
-    return new Date().toISOString();
-  },
   year: function() {
     return new Date().getFullYear();
   },
+  formatDate: function(date, format) {
+    if (!date) return '';
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return '';
+    
+    const options = { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    };
+    return d.toLocaleDateString('es-MX', options);
+  },
+  formatDateTime: function(date) {
+    if (!date) return '';
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return '';
+    
+    return d.toLocaleString('es-MX', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  },
   timeAgo: function(date) {
     if (!date) return '';
-    try {
-      const d = new Date(date);
-      const now = new Date();
-      const diff = now - d;
-      const seconds = Math.floor(diff / 1000);
-      const minutes = Math.floor(seconds / 60);
-      const hours = Math.floor(minutes / 60);
-      const days = Math.floor(hours / 24);
-      
-      if (days > 0) return `hace ${days} día${days > 1 ? 's' : ''}`;
-      if (hours > 0) return `hace ${hours} hora${hours > 1 ? 's' : ''}`;
-      if (minutes > 0) return `hace ${minutes} minuto${minutes > 1 ? 's' : ''}`;
-      return 'hace un momento';
-    } catch (e) {
-      return date;
-    }
+    const d = new Date(date);
+    const now = new Date();
+    const seconds = Math.floor((now - d) / 1000);
+    
+    if (seconds < 60) return 'hace un momento';
+    if (seconds < 3600) return `hace ${Math.floor(seconds / 60)} minutos`;
+    if (seconds < 86400) return `hace ${Math.floor(seconds / 3600)} horas`;
+    if (seconds < 604800) return `hace ${Math.floor(seconds / 86400)} días`;
+    
+    return d.toLocaleDateString('es-MX');
+  },
+  isoDate: function(date) {
+    if (!date) return new Date().toISOString();
+    return new Date(date).toISOString();
   }
 };

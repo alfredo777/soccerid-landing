@@ -1,0 +1,22 @@
+[
+  {
+    "id": "quienes",
+    "class": "item-quienes",
+    "title": "QUIÉNES SOMOS"
+  },
+  {
+    "id": "soccer",
+    "class": "item-soccer",
+    "title": "SOCCER iD CUP"
+  },
+  {
+    "id": "vip",
+    "class": "item-vip",
+    "title": "EXPERIENCIAS VIP"
+  },
+  {
+    "id": "seguros",
+    "class": "item-seguros",
+    "title": "SEGUROS iD"
+  }
+]

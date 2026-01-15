@@ -1,0 +1,22 @@
+[
+  {
+    "id": "copa",
+    "class": "item-copa",
+    "title": "ASESORÍA COPA 2026"
+  },
+  {
+    "id": "fan",
+    "class": "item-fan",
+    "title": "FAN EXPERIENCE"
+  },
+  {
+    "id": "media",
+    "class": "item-media",
+    "title": "MEDIA"
+  },
+  {
+    "id": "opiniones",
+    "class": "item-opiniones",
+    "title": "OPINIONES"
+  }
+]

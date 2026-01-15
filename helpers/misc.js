@@ -1,44 +1,44 @@
 /**
- * Helpers misceláneos para Handlebars
+ * Helpers misceláneos
  */
 module.exports = {
   json: function(obj) {
     return JSON.stringify(obj, null, 2);
   },
-  uuid: function() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      const r = Math.random() * 16 | 0;
-      const v = c === 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
+  debug: function(obj) {
+    console.log('DEBUG:', obj);
+    return JSON.stringify(obj, null, 2);
   },
-  repeat: function(count, options) {
+  default: function(value, defaultValue) {
+    return value || defaultValue;
+  },
+  times: function(n, options) {
     let result = '';
-    for (let i = 0; i < count; i++) {
-      result += options.fn({ index: i, count: count, first: i === 0, last: i === count - 1 });
+    for (let i = 0; i < n; i++) {
+      result += options.fn({ index: i, num: i + 1 });
     }
     return result;
   },
-  ternary: function(condition, ifTrue, ifFalse) {
-    return condition ? ifTrue : ifFalse;
+  range: function(from, to, options) {
+    let result = '';
+    for (let i = from; i <= to; i++) {
+      result += options.fn({ value: i });
+    }
+    return result;
   },
-  default: function(value, defaultValue) {
-    return value != null && value !== '' ? value : defaultValue;
-  },
-  log: function(value) {
-    console.log('[HBS Debug]:', value);
-    return '';
-  },
-  encodeURI: function(str) {
-    return encodeURIComponent(str || '');
-  },
-  raw: function(content) {
-    return content;
-  },
-  // Helper section para contenido opcional
-  section: function(name, options) {
-    if (!this._sections) this._sections = {};
-    this._sections[name] = options.fn(this);
-    return null;
+  ifCond: function(v1, operator, v2, options) {
+    switch (operator) {
+      case '==': return v1 == v2 ? options.fn(this) : options.inverse(this);
+      case '===': return v1 === v2 ? options.fn(this) : options.inverse(this);
+      case '!=': return v1 != v2 ? options.fn(this) : options.inverse(this);
+      case '!==': return v1 !== v2 ? options.fn(this) : options.inverse(this);
+      case '<': return v1 < v2 ? options.fn(this) : options.inverse(this);
+      case '<=': return v1 <= v2 ? options.fn(this) : options.inverse(this);
+      case '>': return v1 > v2 ? options.fn(this) : options.inverse(this);
+      case '>=': return v1 >= v2 ? options.fn(this) : options.inverse(this);
+      case '&&': return v1 && v2 ? options.fn(this) : options.inverse(this);
+      case '||': return v1 || v2 ? options.fn(this) : options.inverse(this);
+      default: return options.inverse(this);
+    }
   }
 };

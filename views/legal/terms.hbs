@@ -1,0 +1,238 @@
+{{!-- Términos y Condiciones --}}
+ <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Términos y Condiciones - SOCCER iD</title>
+          <link rel="icon" href="/assets/images/iconsoccerid.png" type="image/x-icon">
+
+    
+    <style>
+        /* --- Importación de la Fuente --- */
+        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;900&display=swap');
+
+        /* --- Variables de Color y Configuración General --- */
+        :root {
+            --color-purple: #2a0f4a;
+            --color-background: #0a0a0a;
+            --color-surface: rgba(26, 26, 26, 0.85); /* Ligeramente más opaco para legibilidad */
+            --color-primary-text: #ffffff;
+            --color-secondary-text: #a0a0a0;
+            --color-border: #333333;
+            --color-accent: #ffffff;
+            --color-link: #8c70e0; /* Un color de enlace que resalte */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Raleway', sans-serif;
+            color: var(--color-primary-text);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Alinear al inicio para documentos largos */
+            min-height: 100vh;
+            padding: 4rem 0; /* Espacio vertical para scroll */
+            overflow-x: hidden;
+            background: radial-gradient(ellipse at center, var(--color-purple), var(--color-background));
+            background-size: 200% 200%;
+            animation: background-pan 25s linear infinite;
+        }
+
+        /* --- Contenedor Principal --- */
+        .main-container {
+            background-color: var(--color-surface);
+            padding: 3rem 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            width: 90vw;
+            max-width: 800px; /* Más ancho para texto largo */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            text-align: justify; /* Centrado para los elementos principales */
+        }
+
+        /* --- Logo --- */
+        .logo-placeholder {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 0.5rem;
+            padding: 1rem 2rem;
+            margin: 0 auto 2.5rem auto;
+            display: inline-block;
+            color: var(--color-accent);
+        }
+
+        /* --- Títulos y Subtítulos --- */
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--color-secondary-text);
+            margin: 0 auto 2.5rem auto;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+        
+        hr {
+            border: none;
+            height: 1px;
+            background-color: var(--color-border);
+            margin-bottom: 2.5rem;
+        }
+
+        /* --- Contenido de los Términos --- */
+        .terms-content {
+            text-align: left; /* Alineación a la izquierda para mejor legibilidad */
+            line-height: 1.7;
+        }
+
+        .terms-content h2 {
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: var(--color-primary-text);
+        }
+        
+        .terms-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .terms-content p {
+            margin-bottom: 1rem;
+            color: var(--color-secondary-text);
+            font-weight: 400;
+        }
+        
+        .terms-content ul {
+            list-style-position: inside;
+            padding-left: 1rem;
+            margin-bottom: 1rem;
+            color: var(--color-secondary-text);
+        }
+        
+        .terms-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .terms-content a {
+            color: var(--color-link);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .terms-content a:hover {
+            color: var(--color-accent);
+            text-decoration: underline;
+        }
+
+        /* --- Pie de Página --- */
+        footer {
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            color: var(--color-secondary-text);
+        }
+
+        /* --- Animaciones --- */
+        @keyframes background-pan {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Diseño Responsivo --- */
+        @media (max-width: 640px) {
+            body {
+                padding: 0;
+                align-items: center; /* Centrar verticalmente en móvil si el contenido es corto */
+            }
+            .main-container {
+                width: 100vw;
+                height: 100vh;
+                padding: 3rem 1.5rem;
+                border: none;
+                border-radius: 0;
+                background: none;
+                box-shadow: none;
+                backdrop-filter: none;
+                overflow-y: auto; /* Permitir scroll dentro del contenedor */
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+            }
+
+            .logo-placeholder {
+                font-size: 1.5rem;
+                padding: 0.8rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <header>
+            <div class="logo-placeholder">SOCCER iD</div>
+            <h1>Términos y Condiciones de Uso</h1>
+            <p class="subtitle">Última actualización: 08 de Enero de 2026</p>
+            <hr>
+        </header>
+
+        <main class="terms-content">
+            <p>Bienvenido a SOCCER iD. Al acceder y utilizar nuestro sitio web y servicios (en adelante, "el Servicio"), usted acepta cumplir y estar sujeto a los siguientes términos y condiciones. Por favor, léalos detenidamente. Si no está de acuerdo con estos términos, no debe utilizar nuestro Servicio.</p>
+
+            <h2>1. Aceptación de los Términos</h2>
+            <p>Al crear una cuenta o utilizar el Servicio, usted confirma que ha leído, entendido y aceptado estos Términos y Condiciones en su totalidad. Estos términos constituyen un acuerdo legalmente vinculante entre usted y SOCCER iD.</p>
+
+            <h2>2. Descripción del Servicio</h2>
+            <p>SOCCER iD es una plataforma digital diseñada para conectar y potenciar a la comunidad del fútbol. El Servicio puede incluir, entre otros, la creación de perfiles de jugador, gestión de equipos, seguimiento de estadísticas, y acceso a contenido relacionado con el fútbol.</p>
+
+            <h2>3. Obligaciones del Usuario</h2>
+            <p>Usted se compromete a utilizar el Servicio de manera responsable y a:</p>
+            <ul>
+                <li>Proporcionar información veraz, precisa y actualizada al crear su cuenta.</li>
+                <li>Mantener la confidencialidad de su contraseña, cuenta o datos y ser responsable de toda la actividad que ocurra en el uso o mediante el uso del Servicio.</li>
+                <li>No utilizar el Servicio para fines ilegales, fraudulentos o no autorizados.</li>
+                <li>No publicar contenido que sea ofensivo, difamatorio, obsceno o que infrinja los derechos de terceros.</li>
+            </ul>
+
+            <h2>4. Propiedad Intelectual</h2>
+            <p>Todo el contenido presente en el Servicio, incluyendo textos, gráficos, logos, iconos, imágenes, y el software utilizado, es propiedad de SOCCER iD o de sus licenciantes y está protegido por las leyes de derechos de autor y propiedad intelectual. No se le concede ningún derecho o licencia sobre dicho contenido, excepto para el uso personal y no comercial del Servicio.</p>
+
+            <h2>5. Política de Privacidad</h2>
+            <p>El uso del Servicio también se rige por nuestra Política de Privacidad, la cual describe cómo recopilamos, usamos y protegemos sus datos personales. Al aceptar estos Términos, usted también acepta nuestra Política de Privacidad.</p>
+
+            <h2>6. Limitación de Responsabilidad</h2>
+            <p>El Servicio se proporciona "tal cual" y "según disponibilidad". SOCCER iD no garantiza que el Servicio sea ininterrumpido, seguro o libre de errores. En la máxima medida permitida por la ley, SOCCER iD no será responsable de ningún daño directo, indirecto, incidental o consecuente que resulte del uso o la imposibilidad de uso del Servicio.</p>
+            
+            <h2>7. Modificaciones a los Términos</h2>
+            <p>SOCCER iD se reserva el derecho de modificar estos Términos y Condiciones en cualquier momento. Le notificaremos sobre cambios importantes publicando los nuevos términos en esta página y actualizando la fecha de "Última actualización". El uso continuado del Servicio después de dichos cambios constituirá su aceptación de los nuevos términos.</p>
+
+            <h2>8. Ley Aplicable y Jurisdicción</h2>
+            <p>Estos términos se regirán e interpretarán de acuerdo con las leyes de la República de Colombia. Cualquier disputa que surja en relación con estos términos será sometida a la jurisdicción exclusiva de los tribunales competentes.</p>
+
+            <h2>9. Contacto</h2>
+            <p>Si tiene alguna pregunta o duda sobre estos Términos y Condiciones, puede contactarnos a través del siguiente correo electrónico: <a href="mailto:contacto@soccerid.co">contacto@soccerid.co</a>.</p>
+        </main>
+
+        <footer>
+            <p>© 2026 SOCCER iD. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+
+
+
+</body>

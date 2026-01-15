@@ -4,34 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{#if title}}{{title}}{{else}}SOCCER iD{{/if}}</title>
-  
-  <meta name="description" content="{{#if description}}{{description}}{{else}} | Amamos tanto el deporte que nos atrevimos a reinventarlo. {{/if}}">
-  
-  {{#each externalCSS}}
-  <link rel="stylesheet" href="{{this}}">
-  {{/each}}
-  
-  <link rel="stylesheet" href="/assets/css/main2.css">
+  <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="icon" href="/assets/images/iconsoccerid.png" type="image/x-icon">
-
-  {{#each additionalCSS}}
-  <link rel="stylesheet" href="{{this}}">
-  {{/each}}
 </head>
 <body>
   {{{body}}}
-  
-  <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.8/dist/handlebars.min.js"></script>
-  <script src="/assets/js/hbs-utils.js"></script>
-  
-  {{#each externalScripts}}
-  <script src="{{this}}"></script>
-  {{/each}}
-  
-  <script src="/assets/js/main3.js"></script>
-  
-  {{#each additionalScripts}}
-  <script src="{{this}}"></script>
-  {{/each}}
+  <script src="/assets/js/main.js"></script>
 </body>
 </html>

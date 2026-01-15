@@ -1,5 +1,5 @@
 /**
- * Helpers de manipulación de strings para Handlebars
+ * Helpers de strings
  */
 module.exports = {
   uppercase: function(str) {
@@ -12,22 +12,25 @@ module.exports = {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1);
   },
-  truncate: function(str, len, suffix) {
+  truncate: function(str, len) {
     if (!str) return '';
-    suffix = typeof suffix === 'string' ? suffix : '...';
     if (str.length <= len) return str;
-    return str.substring(0, len) + suffix;
+    return str.substring(0, len) + '...';
   },
-  replace: function(str, search, replace) {
+  replace: function(str, find, replace) {
     if (!str) return '';
-    return str.split(search).join(replace);
+    return str.replace(new RegExp(find, 'g'), replace);
   },
-  concat: function(...args) {
-    args.pop();
-    return args.join('');
-  },
-  contains: function(str, search, options) {
-    if (!str || !search) return options.inverse(this);
-    return str.includes(search) ? options.fn(this) : options.inverse(this);
+  slugify: function(str) {
+    if (!str) return '';
+    return str.toLowerCase()
+      .replace(/[áàäâ]/g, 'a')
+      .replace(/[éèëê]/g, 'e')
+      .replace(/[íìïî]/g, 'i')
+      .replace(/[óòöô]/g, 'o')
+      .replace(/[úùüû]/g, 'u')
+      .replace(/ñ/g, 'n')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
   }
 };

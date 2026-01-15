@@ -1,35 +1,28 @@
 /**
- * Helpers de arrays para Handlebars
+ * Helpers de arrays
  */
 module.exports = {
   length: function(arr) {
     return Array.isArray(arr) ? arr.length : 0;
   },
-  first: function(arr) {
-    return Array.isArray(arr) && arr.length > 0 ? arr[0] : null;
+  first: function(arr, n) {
+    if (!Array.isArray(arr)) return [];
+    return n ? arr.slice(0, n) : arr[0];
   },
-  last: function(arr) {
-    return Array.isArray(arr) && arr.length > 0 ? arr[arr.length - 1] : null;
+  last: function(arr, n) {
+    if (!Array.isArray(arr)) return [];
+    return n ? arr.slice(-n) : arr[arr.length - 1];
   },
-  at: function(arr, index) {
-    return Array.isArray(arr) ? arr[index] : null;
-  },
-  join: function(arr, separator) {
-    if (!Array.isArray(arr)) return '';
-    separator = typeof separator === 'string' ? separator : ', ';
-    return arr.join(separator);
-  },
-  limit: function(arr, count, options) {
-    if (!Array.isArray(arr)) return options.inverse(this);
-    const limited = arr.slice(0, count);
-    let result = '';
-    limited.forEach((item, index) => {
-      result += options.fn({ ...item, '@index': index, '@first': index === 0, '@last': index === limited.length - 1 });
-    });
-    return result;
+  slice: function(arr, start, end) {
+    if (!Array.isArray(arr)) return [];
+    return arr.slice(start, end);
   },
   includes: function(arr, value, options) {
     if (!Array.isArray(arr)) return options.inverse(this);
     return arr.includes(value) ? options.fn(this) : options.inverse(this);
+  },
+  join: function(arr, separator) {
+    if (!Array.isArray(arr)) return '';
+    return arr.join(separator || ', ');
   }
 };

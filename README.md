@@ -1,50 +1,27 @@
-# landing-soccerid-v2_0
+# soccerid-v4-landing - GKrakenCMS
 
-Proyecto Handlebars generado automáticamente.
-
-## 🚀 Inicio Rápido
-
+## Inicio Rápido
 ```bash
 npm install
 npm start
 ```
 
-Servidor disponible en: `http://localhost:3000`
+## Acceso Admin
+- URL: http://localhost:3000/admin
+- Usuario: admin
+- Contraseña: 1#eozvu%bR#M
 
-## 📁 Estructura
+## Estructura
+- `/admin` - Panel de administración
+- `/blog` - Sistema de blog
+- `/contents` - Archivos JSON de datos
+- `/assets/images/myimages` - Imágenes subidas
 
-```
-landing-soccerid-v2_0/
-├── assets/
-│   ├── css/
-│   ├── js/
-│   ├── images/
-│   └── fonts/
-├── contents/          # Datos JSON
-├── helpers/           # Helpers de Handlebars
-├── views/
-│   ├── layouts/
-│   ├── partials/
-│   └── index.hbs
-├── index.js           # Servidor
-└── package.json
-```
-
-## 📊 Datos
-
-- `contents/bento_grid.json`
-- `contents/events_grid.json`
-- `contents/all_events_modal.json`
-- `contents/detail_panels.json`
-
-## 🔧 Helpers
-
-- `eq`, `neq`, `gt`, `lt`, `and`, `or`
-- `uppercase`, `lowercase`, `capitalize`, `truncate`
-- `length`, `first`, `last`, `join`
-- `add`, `subtract`, `multiply`, `currency`
-- `formatDate`, `now`, `year`
-- `json`, `default`, `ternary`
-
----
-Generado por **HandlebarsProjectOrganizer** 🚀
+## Contenidos Extraídos
+Los siguientes datos fueron extraídos del JavaScript original:
+- `bento_items_first.json` (array)
+- `bento_items_second.json` (array)
+- `upcoming_events.json` (array)
+- `observer_options.json` (object)
+- `panel_templates.json` (object)
+- `panel_classes.json` (object)

@@ -1,5 +1,5 @@
 /**
- * Helpers matemáticos para Handlebars
+ * Helpers matemáticos
  */
 module.exports = {
   add: function(a, b) {
@@ -17,31 +17,14 @@ module.exports = {
   mod: function(a, b) {
     return Number(a) % Number(b);
   },
-  round: function(num, decimals) {
-    decimals = typeof decimals === 'number' ? decimals : 0;
-    return Number(Math.round(num + 'e' + decimals) + 'e-' + decimals);
+  floor: function(n) {
+    return Math.floor(Number(n));
   },
-  abs: function(num) {
-    return Math.abs(Number(num));
+  ceil: function(n) {
+    return Math.ceil(Number(n));
   },
-  currency: function(amount, currency, locale) {
-    currency = typeof currency === 'string' ? currency : 'MXN';
-    locale = typeof locale === 'string' ? locale : 'es-MX';
-    try {
-      return new Intl.NumberFormat(locale, {
-        style: 'currency',
-        currency: currency
-      }).format(amount);
-    } catch (e) {
-      return amount;
-    }
-  },
-  formatNumber: function(num, locale) {
-    locale = typeof locale === 'string' ? locale : 'es-MX';
-    try {
-      return new Intl.NumberFormat(locale).format(num);
-    } catch (e) {
-      return num;
-    }
+  round: function(n, decimals) {
+    const factor = Math.pow(10, decimals || 0);
+    return Math.round(Number(n) * factor) / factor;
   }
 };
