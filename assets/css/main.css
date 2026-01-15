@@ -265,7 +265,7 @@
             z-index: 2;
         }
 
-        .item-quienes::before { background: url('/assets/images/somos.jpg?w=800') center/cover; }
+        .item-quienes::before { background: url('/assets/images/somoss.jpg?w=800') center/cover; }
         .item-soccer::before { background: url('/assets/images/idcup.jpg?w=600') center/cover; }
         .item-seguros::before { background: url('/assets/images/segurosidlogoblack.png?w=600') center/cover; }
         .item-vip::before { background: url('/assets/images/vip.jpg?w=600') center/cover; }
