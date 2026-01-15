@@ -2,7 +2,9 @@
  * GKrakenCMS - Servidor Node.js
  * Proyecto: soccerid-v4-landing
  * 
- * ⚠️ CACHÉ COMPLETAMENTE DESHABILITADO - Recarga todo en cada reinicio
+ * Sistema de caché inteligente:
+ * - Limpia todo al reiniciar
+ * - Reactiva caché con versión única
  */
 
 const express = require('express');
@@ -18,17 +20,17 @@ const isProduction = process.env.NODE_ENV === 'production';
 // ============================================================
 // VERSIÓN ÚNICA - CAMBIA EN CADA REINICIO
 // ============================================================
-const APP_VERSION = Date.now();
+const APP_VERSION = Date.now().toString(36); // Más corto: "m5abc123"
 
 // ============================================================
-// LIMPIEZA TOTAL DE CACHÉ AL INICIAR (SIEMPRE)
+// LIMPIEZA TOTAL DE CACHÉ AL INICIAR
 // ============================================================
 function clearAllCache() {
   console.log('');
-  console.log('🧹 LIMPIANDO TODO EL CACHÉ DEL SERVIDOR...');
+  console.log('🧹 LIMPIANDO TODO EL CACHÉ...');
   console.log('-'.repeat(50));
   
-  // 1. Limpiar TODOS los módulos del proyecto del caché de require
+  // 1. Limpiar módulos del caché de require
   let modulesCleared = 0;
   Object.keys(require.cache).forEach(key => {
     if (key.includes(__dirname) && !key.includes('node_modules')) {
@@ -36,45 +38,59 @@ function clearAllCache() {
       modulesCleared++;
     }
   });
-  console.log(`   ✓ ${modulesCleared} módulos eliminados del caché de require`);
+  console.log(`   ✓ ${modulesCleared} módulos eliminados del caché`);
   
-  // 2. Limpiar carpeta .cache
-  const cacheDir = path.join(__dirname, '.cache');
-  if (fs.existsSync(cacheDir)) {
-    fs.rmSync(cacheDir, { recursive: true, force: true });
-    console.log('   ✓ Carpeta .cache eliminada');
-  }
-  
-  // 3. Limpiar carpeta tmp
-  const tmpDir = path.join(__dirname, 'tmp');
-  if (fs.existsSync(tmpDir)) {
-    const files = fs.readdirSync(tmpDir);
-    files.forEach(file => {
-      try {
-        fs.unlinkSync(path.join(tmpDir, file));
-      } catch (e) {}
-    });
-    console.log(`   ✓ Carpeta tmp limpiada (${files.length} archivos)`);
-  }
-  
-  // 4. Limpiar cualquier carpeta de caché común
-  const cacheFolders = ['.tmp', 'cache', '.parcel-cache', '.webpack-cache'];
+  // 2. Limpiar carpetas de caché
+  const cacheFolders = ['.cache', 'tmp', '.tmp', 'cache', '.parcel-cache'];
   cacheFolders.forEach(folder => {
     const folderPath = path.join(__dirname, folder);
     if (fs.existsSync(folderPath)) {
-      fs.rmSync(folderPath, { recursive: true, force: true });
-      console.log(`   ✓ Carpeta ${folder} eliminada`);
+      try {
+        fs.rmSync(folderPath, { recursive: true, force: true });
+        console.log(`   ✓ Carpeta ${folder} eliminada`);
+      } catch (e) {
+        console.log(`   ⚠ No se pudo eliminar ${folder}`);
+      }
     }
   });
   
+  // 3. Crear carpeta de caché procesado
+  const processedCacheDir = path.join(__dirname, '.processed-cache');
+  if (fs.existsSync(processedCacheDir)) {
+    fs.rmSync(processedCacheDir, { recursive: true, force: true });
+  }
+  fs.mkdirSync(processedCacheDir, { recursive: true });
+  
   console.log('-'.repeat(50));
-  console.log('✅ CACHÉ LIMPIADO - Todo se recargará desde cero');
-  console.log(`🆔 Nueva versión: ${APP_VERSION}`);
+  console.log(`✅ CACHÉ LIMPIADO - Nueva versión: ${APP_VERSION}`);
   console.log('');
 }
 
-// EJECUTAR LIMPIEZA SIEMPRE AL INICIAR
+// EJECUTAR LIMPIEZA AL INICIAR
 clearAllCache();
+
+// ============================================================
+// PROCESAR CSS - AGREGAR VERSIÓN A URLS DE ASSETS
+// ============================================================
+function processCSSWithVersion(cssContent, version) {
+  // Agregar versión a todas las url() en el CSS
+  return cssContent.replace(
+    /url\s*\(\s*['"]?([^'")]+)['"]?\s*\)/gi,
+    (match, url) => {
+      // No procesar data URIs, URLs externas o que ya tienen versión
+      if (url.startsWith('data:') || 
+          url.startsWith('http://') || 
+          url.startsWith('https://') ||
+          url.includes('?v=')) {
+        return match;
+      }
+      
+      // Agregar versión
+      const separator = url.includes('?') ? '&' : '?';
+      return `url('${url}${separator}v=${version}')`;
+    }
+  );
+}
 
 // ============================================================
 // SESIÓN
@@ -87,7 +103,7 @@ app.use(session({
 }));
 
 // ============================================================
-// HANDLEBARS - SIN CACHÉ DE VISTAS
+// HANDLEBARS
 // ============================================================
 const hbs = require('express-handlebars').create({
   extname: '.hbs',
@@ -114,21 +130,19 @@ const hbs = require('express-handlebars').create({
     // Helpers para cache busting
     version: () => APP_VERSION,
     asset: (url) => `${url}?v=${APP_VERSION}`,
-    // Helper para imágenes con versión
-    img: (url) => `${url}?v=${APP_VERSION}`
+    img: (url) => `${url}?v=${APP_VERSION}`,
+    css: (url) => `${url}?v=${APP_VERSION}`,
+    js: (url) => `${url}?v=${APP_VERSION}`
   }
 });
 
-// Helpers adicionales
 const registerHelpers = require('./helpers');
 registerHelpers(hbs.handlebars);
 
 app.engine('.hbs', hbs.engine);
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
-
-// SIEMPRE deshabilitar caché de vistas (desarrollo Y producción)
-app.set('view cache', false);
+app.set('view cache', false); // Siempre deshabilitado
 
 // ============================================================
 // MIDDLEWARE
@@ -136,46 +150,119 @@ app.set('view cache', false);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ============================================================
-// MIDDLEWARE ANTI-CACHÉ GLOBAL (SIEMPRE ACTIVO)
-// ============================================================
+// Variables globales para vistas
 app.use((req, res, next) => {
   res.locals.year = new Date().getFullYear();
   res.locals.version = APP_VERSION;
-  
-  // Headers anti-caché para TODAS las respuestas
-  res.set({
-    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
-    'Pragma': 'no-cache',
-    'Expires': '0',
-    'Surrogate-Control': 'no-store',
-    'Clear-Site-Data': '"cache"'
-  });
-  
   next();
 });
 
 // ============================================================
-// ARCHIVOS ESTÁTICOS - SIN CACHÉ (SIEMPRE)
+// SERVIR CSS CON VERSIÓN EN LAS URLS INTERNAS
 // ============================================================
-const staticOptions = {
-  maxAge: 0,
-  etag: false,
-  lastModified: false,
-  cacheControl: false,
-  setHeaders: (res, filePath) => {
+app.get('/assets/css/:filename', (req, res) => {
+  const cssPath = path.join(__dirname, 'assets/css', req.params.filename);
+  
+  if (!fs.existsSync(cssPath)) {
+    return res.status(404).send('CSS not found');
+  }
+  
+  // Verificar si hay versión procesada en caché
+  const cacheDir = path.join(__dirname, '.processed-cache');
+  const cachedFile = path.join(cacheDir, `${req.params.filename}.${APP_VERSION}`);
+  
+  let processedCSS;
+  
+  if (fs.existsSync(cachedFile)) {
+    // Usar versión cacheada
+    processedCSS = fs.readFileSync(cachedFile, 'utf8');
+  } else {
+    // Procesar y cachear
+    const originalCSS = fs.readFileSync(cssPath, 'utf8');
+    processedCSS = processCSSWithVersion(originalCSS, APP_VERSION);
+    
+    // Guardar en caché procesado
+    if (!fs.existsSync(cacheDir)) {
+      fs.mkdirSync(cacheDir, { recursive: true });
+    }
+    fs.writeFileSync(cachedFile, processedCSS);
+  }
+  
+  // Headers de caché: inmutable por esta versión (1 año)
+  res.set({
+    'Content-Type': 'text/css; charset=utf-8',
+    'Cache-Control': 'public, max-age=31536000, immutable',
+    'ETag': `"${APP_VERSION}"`,
+    'X-CSS-Version': APP_VERSION
+  });
+  
+  res.send(processedCSS);
+});
+
+// ============================================================
+// ARCHIVOS ESTÁTICOS CON CACHÉ INTELIGENTE
+// ============================================================
+// Si la URL tiene ?v=VERSION, cachear por mucho tiempo
+// Si no tiene versión, no cachear
+
+app.use('/assets', (req, res, next) => {
+  // Saltar si es CSS (ya procesado arriba)
+  if (req.path.startsWith('/css/')) {
+    return next('route');
+  }
+  
+  const hasVersion = req.query.v === APP_VERSION;
+  
+  if (hasVersion) {
+    // Versión correcta: cachear por 1 año (inmutable)
     res.set({
-      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
-      'Pragma': 'no-cache',
-      'Expires': '0'
+      'Cache-Control': 'public, max-age=31536000, immutable',
+      'ETag': `"${APP_VERSION}"`
+    });
+  } else if (req.query.v) {
+    // Versión incorrecta (vieja): no cachear, forzar recarga
+    res.set({
+      'Cache-Control': 'no-store, must-revalidate',
+      'X-Outdated-Version': 'true'
+    });
+  } else {
+    // Sin versión: caché corto
+    res.set({
+      'Cache-Control': 'no-cache, must-revalidate',
+      'ETag': `"${APP_VERSION}"`
     });
   }
-};
+  
+  next();
+}, express.static(path.join(__dirname, 'assets')));
 
-app.use('/assets', express.static(path.join(__dirname, 'assets'), staticOptions));
-app.use('/public', express.static(path.join(__dirname, 'public'), staticOptions));
-app.use('/images', express.static(path.join(__dirname, 'images'), staticOptions));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'), staticOptions));
+// Otros estáticos
+app.use('/public', (req, res, next) => {
+  const hasVersion = req.query.v === APP_VERSION;
+  res.set({
+    'Cache-Control': hasVersion ? 'public, max-age=31536000, immutable' : 'no-cache',
+    'ETag': `"${APP_VERSION}"`
+  });
+  next();
+}, express.static(path.join(__dirname, 'public')));
+
+app.use('/uploads', (req, res, next) => {
+  const hasVersion = req.query.v === APP_VERSION;
+  res.set({
+    'Cache-Control': hasVersion ? 'public, max-age=31536000, immutable' : 'no-cache',
+    'ETag': `"${APP_VERSION}"`
+  });
+  next();
+}, express.static(path.join(__dirname, 'uploads')));
+
+app.use('/images', (req, res, next) => {
+  const hasVersion = req.query.v === APP_VERSION;
+  res.set({
+    'Cache-Control': hasVersion ? 'public, max-age=31536000, immutable' : 'no-cache',
+    'ETag': `"${APP_VERSION}"`
+  });
+  next();
+}, express.static(path.join(__dirname, 'images')));
 
 // ============================================================
 // RUTAS
@@ -187,9 +274,11 @@ app.use('/admin', adminRoutes);
 app.use('/blog', blogRoutes);
 
 // ============================================================
-// API - ARCHIVOS JSON (SIN CACHÉ)
+// API
 // ============================================================
 app.get('/contents/:filename', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  
   let filename = req.params.filename;
   if (filename.endsWith('.json')) {
     filename = filename.slice(0, -5);
@@ -199,8 +288,6 @@ app.get('/contents/:filename', (req, res) => {
   
   if (fs.existsSync(jsonPath)) {
     try {
-      // SIEMPRE leer fresco del disco
-      delete require.cache[jsonPath]; // Por si acaso
       const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
       res.json({ ...data, _version: APP_VERSION });
     } catch (err) {
@@ -208,12 +295,12 @@ app.get('/contents/:filename', (req, res) => {
       res.status(500).json({ error: 'Error al parsear JSON' });
     }
   } else {
-    console.log(`[404] Archivo no encontrado: ${jsonPath}`);
     res.status(404).json({ error: 'No encontrado', file: filename });
   }
 });
 
 app.get('/api/contents', (req, res) => {
+  res.set('Cache-Control', 'no-store');
   const dir = path.join(__dirname, 'contents');
   const files = fs.readdirSync(dir)
     .filter(f => f.endsWith('.json') && !f.includes('blog'))
@@ -226,20 +313,18 @@ app.get('/api/info', (req, res) => {
     nodeVersion: process.version, 
     project: 'soccerid-v4-landing',
     version: APP_VERSION,
-    uptime: process.uptime(),
-    cacheDisabled: true
+    uptime: process.uptime()
   });
 });
 
-// Endpoint para forzar limpieza de caché manual
-app.post('/api/clear-cache', (req, res) => {
-  clearAllCache();
-  res.json({ success: true, message: 'Caché limpiado', newVersion: APP_VERSION });
+app.get('/api/version', (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  res.json({ version: APP_VERSION });
 });
 
-// Endpoint para verificar versión actual
-app.get('/api/version', (req, res) => {
-  res.json({ version: APP_VERSION, timestamp: new Date(APP_VERSION).toISOString() });
+app.post('/api/clear-cache', (req, res) => {
+  clearAllCache();
+  res.json({ success: true, newVersion: APP_VERSION });
 });
 
 // ============================================================
@@ -249,14 +334,13 @@ app.get('/terms', (req, res) => res.render('legal/terms', { layout: 'legal', tit
 app.get('/privacy', (req, res) => res.render('legal/privacy', { layout: 'legal', title: 'Privacidad' }));
 
 // ============================================================
-// CARGAR DATOS PARA VISTAS (SIEMPRE FRESCO)
+// CARGAR DATOS PARA VISTAS
 // ============================================================
 function loadViewData() {
   const data = { 
     title: 'SOCCER iD', 
     year: new Date().getFullYear(),
-    version: APP_VERSION,
-    _nocache: Date.now() // Extra para asegurar que siempre es único
+    version: APP_VERSION
   };
   
   const dir = path.join(__dirname, 'contents');
@@ -265,11 +349,7 @@ function loadViewData() {
       .filter(f => f.endsWith('.json') && !f.startsWith('blog'))
       .forEach(f => {
         try {
-          const filePath = path.join(dir, f);
-          // Eliminar del caché de require si existe
-          delete require.cache[filePath];
-          // Leer siempre del disco
-          data[f.replace('.json', '').replace(/-/g, '_')] = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+          data[f.replace('.json', '').replace(/-/g, '_')] = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
         } catch (e) {
           console.error(`Error cargando ${f}:`, e.message);
         }
@@ -293,7 +373,7 @@ app.get('/:page', (req, res) => {
 });
 
 // ============================================================
-// MANEJO DE ERRORES
+// ERRORES
 // ============================================================
 app.use((req, res) => res.status(404).json({ error: 'No encontrado' }));
 app.use((err, req, res, next) => {
@@ -310,14 +390,16 @@ app.listen(PORT, () => {
   console.log('  GKRAKEN CMS - SERVIDOR INICIADO');
   console.log('='.repeat(60));
   console.log(`  🆔 Versión:     ${APP_VERSION}`);
-  console.log(`  📅 Fecha:       ${new Date(APP_VERSION).toLocaleString('es-MX')}`);
   console.log(`  🌐 URL:         http://localhost:${PORT}`);
   console.log(`  🔐 Admin:       http://localhost:${PORT}/admin`);
   console.log(`  📝 Blog:        http://localhost:${PORT}/blog`);
   console.log(`  🔧 Entorno:     ${isProduction ? 'PRODUCCIÓN' : 'DESARROLLO'}`);
   console.log('='.repeat(60));
-  console.log('  🚫 CACHÉ:       COMPLETAMENTE DESHABILITADO');
-  console.log('  🔄 TODO se recarga desde cero en cada reinicio');
+  console.log('  📦 SISTEMA DE CACHÉ:');
+  console.log('      ✓ Limpieza completa al reiniciar');
+  console.log('      ✓ CSS procesado con versiones en URLs');
+  console.log('      ✓ Assets con versión: caché 1 año');
+  console.log('      ✓ Assets sin versión: sin caché');
   console.log('='.repeat(60));
   console.log('');
 });

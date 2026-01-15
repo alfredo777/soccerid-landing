@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{#if title}}{{title}}{{else}}SOCCER iD{{/if}}</title>
-  <link rel="stylesheet" href="/assets/css/main.css">
+   <link href="/assets/css/main.css?v={{version}}" rel="stylesheet">
+
   <link rel="icon" href="/assets/images/iconsoccerid.png" type="image/x-icon">
 </head>
 <body>
   {{{body}}}
-  <script src="/assets/js/main.js"></script>
+  <script src="{{js '/assets/js/main.js'}}"></script>
 </body>
 </html>
