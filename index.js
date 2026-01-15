@@ -289,7 +289,12 @@ app.get('/contents/:filename', (req, res) => {
   if (fs.existsSync(jsonPath)) {
     try {
       const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
-      res.json({ ...data, _version: APP_VERSION });
+      
+      // Siempre devolver en formato { data: ..., _version: ... }
+      res.json({ 
+        data: data,  // Puede ser array u objeto
+        _version: APP_VERSION 
+      });
     } catch (err) {
       console.error(`Error parsing ${filename}.json:`, err);
       res.status(500).json({ error: 'Error al parsear JSON' });

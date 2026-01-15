@@ -116,6 +116,51 @@ const GKraken = {
     const data = await this.loadAllData();
     assignGlobalData(data);
     return data;
+  },
+  
+  // ==========================================================================
+  // NORMALIZAR DATOS - Extraer arrays de objetos envolventes
+  // ==========================================================================
+  
+  normalizeToArray(data, possibleKeys = ['data', 'items', 'events', 'list', 'records']) {
+    // Si ya es un array, devolverlo
+    if (Array.isArray(data)) {
+      return data;
+    }
+    
+    // Si es null o undefined, devolver array vacío
+    if (data == null) {
+      return [];
+    }
+    
+    // Si es un objeto, buscar una propiedad que sea array
+    if (typeof data === 'object') {
+      // Primero buscar en las claves comunes
+      for (const key of possibleKeys) {
+        if (Array.isArray(data[key])) {
+          if (this.config.DEBUG) console.log(`[GKraken] Normalizado: extraído array de propiedad "${key}"`);
+          return data[key];
+        }
+      }
+      
+      // Si no encontró, buscar cualquier propiedad que sea array
+      for (const key of Object.keys(data)) {
+        if (Array.isArray(data[key])) {
+          if (this.config.DEBUG) console.log(`[GKraken] Normalizado: extraído array de propiedad "${key}"`);
+          return data[key];
+        }
+      }
+      
+      // Si el objeto tiene propiedades numéricas, podría ser array-like
+      const keys = Object.keys(data);
+      if (keys.length > 0 && keys.every(k => !isNaN(parseInt(k)))) {
+        return Object.values(data);
+      }
+    }
+    
+    // En último caso, devolver array vacío
+    console.warn('[GKraken] No se pudo normalizar a array:', data);
+    return [];
   }
 };
 
@@ -140,22 +185,59 @@ const WHATSAPP_NUMBER = '12315158991';
 
 // Función para asignar datos a variables globales
 function assignGlobalData(allData) {
-  if (allData.bentoItemsFirst) { bentoItemsFirst = allData.bentoItemsFirst; }
-  if (allData.bentoItemsSecond) { bentoItemsSecond = allData.bentoItemsSecond; }
-  if (allData.upcomingEvents) { upcomingEvents = allData.upcomingEvents; }
-  if (allData.observerOptions) { observerOptions = allData.observerOptions; }
-  if (allData.panelTemplates) { panelTemplates = allData.panelTemplates; }
-  if (allData.panelClasses) { panelClasses = allData.panelClasses; }
+  
+  // Helper para extraer datos del wrapper {data: {...}, _version: "..."}
+  function unwrapData(obj) {
+    if (obj && typeof obj === 'object' && 'data' in obj) {
+      return obj.data;
+    }
+    return obj;
+  }
+  
+  // Normalizar arrays (primero desenvuelve, luego normaliza)
+  if (allData.bentoItemsFirst) { 
+    bentoItemsFirst = GKraken.normalizeToArray(unwrapData(allData.bentoItemsFirst)); 
+  }
+  if (allData.bentoItemsSecond) { 
+    bentoItemsSecond = GKraken.normalizeToArray(unwrapData(allData.bentoItemsSecond)); 
+  }
+  if (allData.upcomingEvents) { 
+    upcomingEvents = GKraken.normalizeToArray(unwrapData(allData.upcomingEvents)); 
+  }
+  
+  // Estos deberían ser objetos - desenvolver primero
+  if (allData.observerOptions) { 
+    const unwrapped = unwrapData(allData.observerOptions);
+    observerOptions = typeof unwrapped === 'object' && !Array.isArray(unwrapped) 
+      ? unwrapped 
+      : {}; 
+  }
+  if (allData.panelTemplates) { 
+    const unwrapped = unwrapData(allData.panelTemplates);
+    panelTemplates = typeof unwrapped === 'object' && !Array.isArray(unwrapped) 
+      ? unwrapped 
+      : {}; 
+  }
+  if (allData.panelClasses) { 
+    const unwrapped = unwrapData(allData.panelClasses);
+    panelClasses = typeof unwrapped === 'object' && !Array.isArray(unwrapped) 
+      ? unwrapped 
+      : {}; 
+  }
   
   if (GKraken.config.DEBUG) {
     console.log('[GKraken] Variables globales asignadas:', {
-      bentoItemsFirst: Array.isArray(bentoItemsFirst) ? bentoItemsFirst.length + ' items' : 'N/A',
-      bentoItemsSecond: Array.isArray(bentoItemsSecond) ? bentoItemsSecond.length + ' items' : 'N/A',
-      upcomingEvents: Array.isArray(upcomingEvents) ? upcomingEvents.length + ' items' : 'N/A',
-      observerOptions: typeof observerOptions === 'object' ? Object.keys(observerOptions).length + ' keys' : 'N/A',
-      panelTemplates: typeof panelTemplates === 'object' ? Object.keys(panelTemplates).length + ' keys' : 'N/A',
-      panelClasses: typeof panelClasses === 'object' ? Object.keys(panelClasses).length + ' keys' : 'N/A'
+      bentoItemsFirst: `${bentoItemsFirst.length} items`,
+      bentoItemsSecond: `${bentoItemsSecond.length} items`,
+      upcomingEvents: `${upcomingEvents.length} items`,
+      observerOptions: `${Object.keys(observerOptions).length} keys`,
+      panelTemplates: `${Object.keys(panelTemplates).length} keys`,
+      panelClasses: `${Object.keys(panelClasses).length} keys`
     });
+    
+    // Debug adicional para verificar
+    console.log('[GKraken] panelClasses contenido:', panelClasses);
+    console.log('[GKraken] panelTemplates contenido:', panelTemplates);
   }
 }
 
@@ -283,12 +365,18 @@ if (document.readyState === 'loading') {
 // ==========================================================================
 
 function openLightbox(images, index) {
-  lightboxImages = images;
-  lightboxIndex = index;
+  // Normalizar images a array
+  lightboxImages = GKraken.normalizeToArray(images);
+  if (lightboxImages.length === 0) return;
+  
+  lightboxIndex = index || 0;
   const lightbox = document.getElementById('lightbox');
   const img = document.getElementById('lightboxImage');
+  
+  if (!lightbox || !img) return;
+  
   img.src = lightboxImages[lightboxIndex].src;
-  img.alt = lightboxImages[lightboxIndex].alt;
+  img.alt = lightboxImages[lightboxIndex].alt || '';
   lightbox.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
@@ -307,9 +395,9 @@ function navigateLightbox(direction) {
   if (lightboxIndex < 0) lightboxIndex = lightboxImages.length - 1;
   if (lightboxIndex >= lightboxImages.length) lightboxIndex = 0;
   const img = document.getElementById('lightboxImage');
-  if (img) {
+  if (img && lightboxImages[lightboxIndex]) {
     img.src = lightboxImages[lightboxIndex].src;
-    img.alt = lightboxImages[lightboxIndex].alt;
+    img.alt = lightboxImages[lightboxIndex].alt || '';
   }
 }
 
@@ -323,9 +411,9 @@ function renderBentoGrids() {
   
   if (gridFirst && bentoItemsFirst.length > 0) {
     gridFirst.innerHTML = bentoItemsFirst.map(item => `
-      <div class="bento-item ${item.class}" data-panel="${item.id}">
+      <div class="bento-item ${item.class || ''}" data-panel="${item.id || ''}">
         <div class="bento-content">
-          <h3>${item.title}</h3>
+          <h3>${item.title || ''}</h3>
         </div>
       </div>
     `).join('');
@@ -333,9 +421,9 @@ function renderBentoGrids() {
   
   if (gridSecond && bentoItemsSecond.length > 0) {
     gridSecond.innerHTML = bentoItemsSecond.map(item => `
-      <div class="bento-item ${item.class}" data-panel="${item.id}">
+      <div class="bento-item ${item.class || ''}" data-panel="${item.id || ''}">
         <div class="bento-content">
-          <h3>${item.title}</h3>
+          <h3>${item.title || ''}</h3>
         </div>
       </div>
     `).join('');
@@ -352,6 +440,11 @@ function renderBentoGrids() {
 }
 
 function observeBentoItems() {
+  // Configuración por defecto si observerOptions está vacío
+  const options = Object.keys(observerOptions).length > 0 
+    ? observerOptions 
+    : { root: null, rootMargin: '0px', threshold: 0.1 };
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -364,7 +457,7 @@ function observeBentoItems() {
         observer.unobserve(entry.target);
       }
     });
-  }, observerOptions);
+  }, options);
 
   const gridFirst = document.getElementById('bentoGridFirst');
   const gridSecond = document.getElementById('bentoGridSecond');
@@ -375,13 +468,24 @@ function observeBentoItems() {
 
 function renderUpcomingEvents() {
   const grid = document.getElementById('eventsGrid');
-  if (!grid || upcomingEvents.length === 0) return;
+  if (!grid) {
+    console.log('[GKraken] No se encontró #eventsGrid');
+    return;
+  }
+  
+  if (!Array.isArray(upcomingEvents) || upcomingEvents.length === 0) {
+    console.log('[GKraken] upcomingEvents está vacío o no es un array:', upcomingEvents);
+    grid.innerHTML = '<p class="no-events">No hay eventos próximos disponibles.</p>';
+    return;
+  }
+  
+  console.log(`[GKraken] Renderizando ${upcomingEvents.length} eventos`);
   
   grid.innerHTML = upcomingEvents.map(event => `
-    <div class="event-card" onclick="contactForEvent('${event.team1} vs ${event.team2} - ${event.date}')">
+    <div class="event-card" onclick="contactForEvent('${event.team1 || ''} vs ${event.team2 || ''} - ${event.date || ''}')">
       <div class="event-image">
-        <img src="${event.image}" alt="${event.team1} vs ${event.team2}">
-        <span class="event-badge ${event.badgeClass}">${event.badge}</span>
+        <img src="${event.image || ''}" alt="${event.team1 || ''} vs ${event.team2 || ''}">
+        <span class="event-badge ${event.badgeClass || ''}">${event.badge || ''}</span>
       </div>
       <div class="event-body">
         <div class="event-date">
@@ -391,17 +495,17 @@ function renderUpcomingEvents() {
             <line x1="8" y1="2" x2="8" y2="6"/>
             <line x1="3" y1="10" x2="21" y2="10"/>
           </svg>
-          ${event.date} • ${event.time}
+          ${event.date || ''} • ${event.time || ''}
         </div>
         <div class="event-teams">
           <div class="event-team">
-            <div class="team-shield">${event.team1Icon}</div>
-            <div class="team-name">${event.team1}</div>
+            <div class="team-shield">${event.team1Icon || ''}</div>
+            <div class="team-name">${event.team1 || ''}</div>
           </div>
           <span class="event-vs">VS</span>
           <div class="event-team">
-            <div class="team-shield">${event.team2Icon}</div>
-            <div class="team-name">${event.team2}</div>
+            <div class="team-shield">${event.team2Icon || ''}</div>
+            <div class="team-name">${event.team2 || ''}</div>
           </div>
         </div>
         <div class="event-venue">
@@ -409,7 +513,7 @@ function renderUpcomingEvents() {
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
             <circle cx="12" cy="10" r="3"/>
           </svg>
-          ${event.venue}
+          ${event.venue || ''}
         </div>
         <button class="event-cta">
           Reservar Boletos
@@ -424,13 +528,18 @@ function renderUpcomingEvents() {
 
 function renderAllEvents() {
   const grid = document.getElementById('allEventsGrid');
-  if (!grid || upcomingEvents.length === 0) return;
+  if (!grid) return;
+  
+  if (!Array.isArray(upcomingEvents) || upcomingEvents.length === 0) {
+    grid.innerHTML = '<p class="no-events">No hay eventos disponibles.</p>';
+    return;
+  }
   
   grid.innerHTML = upcomingEvents.map(event => `
-    <div class="event-card" onclick="contactForEvent('${event.team1} vs ${event.team2} - ${event.date}')">
+    <div class="event-card" onclick="contactForEvent('${event.team1 || ''} vs ${event.team2 || ''} - ${event.date || ''}')">
       <div class="event-image">
-        <img src="${event.image}" alt="${event.team1} vs ${event.team2}">
-        <span class="event-badge ${event.badgeClass || ''}">${event.badge}</span>
+        <img src="${event.image || ''}" alt="${event.team1 || ''} vs ${event.team2 || ''}">
+        <span class="event-badge ${event.badgeClass || ''}">${event.badge || ''}</span>
       </div>
       <div class="event-body">
         <div class="event-date">
@@ -440,17 +549,17 @@ function renderAllEvents() {
             <line x1="8" y1="2" x2="8" y2="6"/>
             <line x1="3" y1="10" x2="21" y2="10"/>
           </svg>
-          ${event.date} • ${event.time}
+          ${event.date || ''} • ${event.time || ''}
         </div>
         <div class="event-teams">
           <div class="event-team">
-            <div class="team-shield">${event.team1Icon}</div>
-            <div class="team-name">${event.team1}</div>
+            <div class="team-shield">${event.team1Icon || ''}</div>
+            <div class="team-name">${event.team1 || ''}</div>
           </div>
           <span class="event-vs">VS</span>
           <div class="event-team">
-            <div class="team-shield">${event.team2Icon}</div>
-            <div class="team-name">${event.team2}</div>
+            <div class="team-shield">${event.team2Icon || ''}</div>
+            <div class="team-name">${event.team2 || ''}</div>
           </div>
         </div>
         <div class="event-venue">
@@ -458,7 +567,7 @@ function renderAllEvents() {
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
             <circle cx="12" cy="10" r="3"/>
           </svg>
-          ${event.venue}
+          ${event.venue || ''}
         </div>
         <button class="event-cta">
           Contactar Asesor
@@ -477,7 +586,10 @@ function renderAllEvents() {
 
 function generatePanelContent(panelId) {
   const panel = panelTemplates[panelId];
-  if (!panel) return '';
+  if (!panel) {
+    console.warn(`[GKraken] No se encontró template para panel: ${panelId}`);
+    return '<p>Contenido no disponible</p>';
+  }
   
   let content = `
     <div class="panel-header">
@@ -487,22 +599,25 @@ function generatePanelContent(panelId) {
         </svg>
         Volver
       </button>
-      <span class="panel-tag">${panel.tag}</span>
+      <span class="panel-tag">${panel.tag || ''}</span>
     </div>
     <div class="panel-body">
-      <h1 class="panel-title">${panel.title}</h1>
-      <p class="panel-description">${panel.description}</p>
+      <h1 class="panel-title">${panel.title || ''}</h1>
+      <p class="panel-description">${panel.description || ''}</p>
   `;
+  
+  // Normalizar gallery a array si existe
+  const gallery = panel.gallery ? GKraken.normalizeToArray(panel.gallery) : [];
   
   switch(panelId) {
     case 'quienes':
-      content += generatePinterestGallery(panel.gallery, 'quienes');
+      content += generatePinterestGallery(gallery, 'quienes');
       break;
     case 'soccer':
-      content += generateCollageGallery(panel.gallery, 'soccer');
+      content += generateCollageGallery(gallery, 'soccer');
       break;
     case 'vip':
-      content += generateCollageGallery(panel.gallery, 'vip', true);
+      content += generateCollageGallery(gallery, 'vip', true);
       break;
     case 'seguros':
       content += generateSegurosContent();
@@ -511,7 +626,7 @@ function generatePanelContent(panelId) {
       content += generateCopaContent();
       break;
     case 'fan':
-      content += generateCollageGallery(panel.gallery, 'fan');
+      content += generateCollageGallery(gallery, 'fan');
       break;
     case 'media':
       content += generateMediaContent(panel);
@@ -526,12 +641,14 @@ function generatePanelContent(panelId) {
 }
 
 function generatePinterestGallery(gallery, id) {
-  if (!gallery || !Array.isArray(gallery)) return '';
+  const items = GKraken.normalizeToArray(gallery);
+  if (items.length === 0) return '';
+  
   return `
     <div class="pinterest-gallery">
-      ${gallery.map((img, i) => `
-        <div class="pinterest-item" onclick='openLightbox(${JSON.stringify(gallery)}, ${i})'>
-          <img src="${img.src}" alt="${img.alt}">
+      ${items.map((img, i) => `
+        <div class="pinterest-item" onclick='openLightbox(${JSON.stringify(items)}, ${i})'>
+          <img src="${img.src || ''}" alt="${img.alt || ''}">
           <div class="overlay">
             <span>Ver imagen</span>
           </div>
@@ -542,12 +659,14 @@ function generatePinterestGallery(gallery, id) {
 }
 
 function generateCollageGallery(gallery, id, fourCols = false) {
-  if (!gallery || !Array.isArray(gallery)) return '';
+  const items = GKraken.normalizeToArray(gallery);
+  if (items.length === 0) return '';
+  
   return `
     <div class="collage-gallery ${fourCols ? 'cols-4' : ''}">
-      ${gallery.map((img, i) => `
-        <div class="collage-item" onclick='openLightbox(${JSON.stringify(gallery)}, ${i})'>
-          <img src="${img.src}" alt="${img.alt}">
+      ${items.map((img, i) => `
+        <div class="collage-item" onclick='openLightbox(${JSON.stringify(items)}, ${i})'>
+          <img src="${img.src || ''}" alt="${img.alt || ''}">
         </div>
       `).join('')}
     </div>
@@ -660,55 +779,70 @@ function generateCopaContent() {
 }
 
 function generateMediaContent(panel) {
-  if (!panel.articles || !Array.isArray(panel.articles)) return '';
-  return `
-    <div class="media-articles-container">
-      ${panel.articles.map(a => `
-        <a href="${a.url}" target="_blank" class="media-article-card">
-          <div class="media-article-image">
-            <img src="${a.image}" alt="${a.title}">
-          </div>
-          <div class="media-article-body">
-            <span class="media-article-source">${a.source}</span>
-            <h4>${a.title}</h4>
-            <p>${a.excerpt}</p>
-          </div>
-          <div class="media-article-arrow">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </div>
-        </a>
-      `).join('')}
-    </div>
-    <h3 class="video-section-title">Video Destacado</h3>
-    <div class="video-embed-wrapper">
-      <iframe 
-        src="https://www.youtube.com/embed/${panel.videoId}" 
-        title="Soccer ID Video"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen>
-      </iframe>
-    </div>
-  `;
+  const articles = panel.articles ? GKraken.normalizeToArray(panel.articles) : [];
+  if (articles.length === 0 && !panel.videoId) return '<p>No hay contenido de media disponible.</p>';
+  
+  let html = '';
+  
+  if (articles.length > 0) {
+    html += `
+      <div class="media-articles-container">
+        ${articles.map(a => `
+          <a href="${a.url || '#'}" target="_blank" class="media-article-card">
+            <div class="media-article-image">
+              <img src="${a.image || ''}" alt="${a.title || ''}">
+            </div>
+            <div class="media-article-body">
+              <span class="media-article-source">${a.source || ''}</span>
+              <h4>${a.title || ''}</h4>
+              <p>${a.excerpt || ''}</p>
+            </div>
+            <div class="media-article-arrow">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </a>
+        `).join('')}
+      </div>
+    `;
+  }
+  
+  if (panel.videoId) {
+    html += `
+      <h3 class="video-section-title">Video Destacado</h3>
+      <div class="video-embed-wrapper">
+        <iframe 
+          src="https://www.youtube.com/embed/${panel.videoId}" 
+          title="Soccer ID Video"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      </div>
+    `;
+  }
+  
+  return html;
 }
 
 function generateOpinionesContent(panel) {
-  if (!panel.testimonials || !Array.isArray(panel.testimonials)) return '';
+  const testimonials = panel.testimonials ? GKraken.normalizeToArray(panel.testimonials) : [];
+  if (testimonials.length === 0) return '<p>No hay testimonios disponibles.</p>';
+  
   return `
     <div class="testimonials-container">
       <div class="testimonials-track" id="testimonialsTrack">
-        ${panel.testimonials.map(t => `
+        ${testimonials.map(t => `
           <div class="testimonial-card">
             <div class="testimonial-header">
-              <div class="testimonial-avatar">${t.initials}</div>
+              <div class="testimonial-avatar">${t.initials || ''}</div>
               <div class="testimonial-info">
-                <h4>${t.name}</h4>
-                <p>${t.since}</p>
+                <h4>${t.name || ''}</h4>
+                <p>${t.since || ''}</p>
               </div>
             </div>
-            <div class="testimonial-stars">${'★'.repeat(t.stars)}</div>
-            <p class="testimonial-text">"${t.text}"</p>
+            <div class="testimonial-stars">${'★'.repeat(t.stars || 5)}</div>
+            <p class="testimonial-text">"${t.text || ''}"</p>
           </div>
         `).join('')}
       </div>
@@ -739,19 +873,42 @@ function resetPanelScroll() {
   }
 }
 
+// Helper para extraer nombre de clase de cualquier formato
+function extractClassName(value) {
+  if (!value) return '';
+  if (typeof value === 'string') return value.trim();
+  if (typeof value === 'object') {
+    return (value.class || value.className || value.name || '').toString().trim();
+  }
+  return '';
+}
+
 function openPanel(panelId) {
+
+  console.log('[DEBUG] panelClasses:', panelClasses);
+  console.log('[DEBUG] panelClasses values:', Object.values(panelClasses));
+  console.log('[DEBUG] panelClasses[panelId]:', panelClasses[panelId]);
   const mainContainer = document.getElementById('mainContainer');
   const detailPanel = document.getElementById('detailPanel');
   const detailContent = document.getElementById('detailContent');
   
+  if (!detailPanel || !detailContent) {
+    console.warn('[GKraken] No se encontraron elementos del panel');
+    return;
+  }
+  
   // Remover todas las clases de panel
   Object.values(panelClasses).forEach(cls => { 
-    detailPanel.classList.remove(cls); 
+    const className = extractClassName(cls);
+    if (className) {
+      detailPanel.classList.remove(className);
+    }
   });
   
   // Agregar la clase del panel actual
-  if (panelClasses[panelId]) {
-    detailPanel.classList.add(panelClasses[panelId]);
+  const newClassName = extractClassName(panelClasses[panelId]);
+  if (newClassName) {
+    detailPanel.classList.add(newClassName);
   }
   
   const content = generatePanelContent(panelId);
@@ -759,7 +916,7 @@ function openPanel(panelId) {
   
   resetPanelScroll();
   
-  mainContainer.classList.add('slide-out');
+  if (mainContainer) mainContainer.classList.add('slide-out');
   
   requestAnimationFrame(() => { 
     detailPanel.classList.add('active'); 
@@ -767,7 +924,7 @@ function openPanel(panelId) {
   
   document.body.style.overflow = 'hidden';
   currentSlide = 0;
-}
+ }
 
 function closePanel() {
   const mainContainer = document.getElementById('mainContainer');
