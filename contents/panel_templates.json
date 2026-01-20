@@ -29,6 +29,10 @@
       {
         "src": "/assets/images/gallery/somos/6.jpg?w=600",
         "alt": "Deportistas"
+      },
+      {
+        "src": "/assets/images/gallery/somos/7.jpg?w=600",
+        "alt": "Deportistas"
       }
     ]
   },
@@ -48,9 +52,10 @@
         "alt": "Soccer ID Cup"
       },
       {
-        "src": "/assets/images/gallery/socceridcup/2.jpg?w=600",
-        "alt": "Partido internacional"
+        "src": "/assets/images/gallery/socceridcup/6.jpg?w=600",
+        "alt": "Equipos"
       },
+     
       {
         "src": "/assets/images/gallery/socceridcup/3.jpg?w=600",
         "alt": "Celebración gol"
@@ -61,7 +66,12 @@
         "alt": "Campo profesional"
       },
       {
-        "src": "/assets/images/gallery/socceridcup/6.jpg?w=600",
+        "src": "/assets/images/gallery/socceridcup/2.jpg?w=600",
+        "alt": "Partido internacional"
+      },
+      
+      {
+        "src": "/assets/images/gallery/socceridcup/7.jpeg?w=600",
         "alt": "Equipos"
       }
     ]
@@ -112,7 +122,7 @@
   },
   "copa": {
     "tag": "Mundial",
-    "title": "ASESORÍA COPA DEL MUNDO 2026",
+    "title": "ASESORÍA COPA 2026",
     "description": "Guiamos a nuestros clientes paso a paso en la compra de boletos para el torneo más atractivo y cotizado de la historia. Les ayudamos a conseguir los mejores lugares al mejor precio para el partido inaugural y para los encuentros de su selección, ya sea en México, Estados Unidos o Canadá."
   },
   "fan": {

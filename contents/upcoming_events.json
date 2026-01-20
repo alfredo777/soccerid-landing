@@ -1,50 +1,50 @@
 [
   {
     "team1": "México",
-    "team1Icon": "🇲🇽",
+    "team1Icon": "/assets/images/myimages/teams/MEX.png",
     "team2": "Portugal",
-    "team2Icon": "🇵🇹",
+    "team2Icon": "/assets/images/myimages/teams/PORT.png",
     "date": "28 de Marzo, 2025",
     "time": "8:00 PM",
     "venue": "Estadio Azteca, CDMX",
     "badge": "INTERNACIONAL",
     "badgeClass": "",
-    "image": "/assets/images/myimages/mexportu2026.jpg"
+    "image": "/assets/images/myimages/mexvsport.png"
   },
   {
     "team1": "América",
-    "team1Icon": "🦅",
+    "team1Icon": "/assets/images/myimages/teams/AME.png",
     "team2": "Cruz Azul",
-    "team2Icon": "🔵",
+    "team2Icon": "/assets/images/myimages/teams/CAZ.png",
     "date": "11 de Abril, 2025",
     "time": "9:00 PM",
     "venue": "Estadio Azteca, CDMX",
     "badge": "CLÁSICO JOVEN",
     "badgeClass": "",
-    "image": "/assets/images/myimages/maevscruz.jpeg"
+    "image": "/assets/images/myimages/amevscruz.png"
   },
   {
     "team1": "América",
-    "team1Icon": "🦅",
+    "team1Icon": "/assets/images/myimages/teams/AME.png",
     "team2": "Toluca",
-    "team2Icon": "🔴",
+    "team2Icon": "/assets/images/myimages/teams/TOL.png",
     "date": "18 de Abril, 2025",
     "time": "7:00 PM",
     "venue": "Estadio Azteca, CDMX",
     "badge": "LIGA MX",
     "badgeClass": "",
-    "image": "/assets/images/myimages/amevstol.jpg"
+    "image": "/assets/images/myimages/amevstol.png"
   },
   {
     "team1": "América",
-    "team1Icon": "🦅",
+    "team1Icon": "/assets/images/myimages/teams/AME.png",
     "team2": "Atlas",
-    "team2Icon": "🔴⚫",
+    "team2Icon": "/assets/images/myimages/teams/ATL.png",
     "date": "25 de Abril, 2025",
     "time": "8:00 PM",
     "venue": "Estadio Azteca, CDMX",
     "badge": "LIGA MX",
     "badgeClass": "",
-    "image": "/assets/images/myimages/amevsatlas.jpg"
+    "image": "/assets/images/myimages/amevsatl.png"
   }
 ]

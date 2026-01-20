@@ -431,12 +431,12 @@ function renderUpcomingEvents() {
         </div>
         <div class="event-teams">
           <div class="event-team">
-            <div class="team-shield">${e.team1Icon}</div>
+            <div class="team-shield"><img src="${e.team1Icon}" width="30px" /></div>
             <div class="team-name">${e.team1}</div>
           </div>
           <span class="event-vs">VS</span>
           <div class="event-team">
-            <div class="team-shield">${e.team2Icon}</div>
+            <div class="team-shield"><img src="${e.team2Icon}" width="30px" /></div>
             <div class="team-name">${e.team2}</div>
           </div>
         </div>
@@ -480,12 +480,12 @@ function renderAllEvents() {
         </div>
         <div class="event-teams">
           <div class="event-team">
-            <div class="team-shield">${e.team1Icon}</div>
+            <div class="team-shield"><img src="${e.team1Icon}" width="30px" /></div>
             <div class="team-name">${e.team1}</div>
           </div>
           <span class="event-vs">VS</span>
           <div class="event-team">
-            <div class="team-shield">${e.team2Icon}</div>
+            <div class="team-shield"><img src="${e.team2Icon}" width="30px" /></div>
             <div class="team-name">${e.team2}</div>
           </div>
         </div>
@@ -634,12 +634,12 @@ function generateCopaContent(panel) {
         </div>
       </div>
       <div class="copa-banner-section">
-        <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200" alt="Copa del Mundo 2026">
-        <div class="copa-banner-overlay">
-          <span class="banner-tag">Mundial 2026</span>
+        <img src="/assets/images/copa26.jpg" alt="Copa 2026">
+        <!--<div class="copa-banner-overlay">
+          <span class="banner-tag">Copa 2026</span>
           <h3>Vive la experiencia</h3>
           <p>México, Estados Unidos y Canadá te esperan para el torneo más grande del mundo.</p>
-        </div>
+        </div>-->
       </div>
     </div>
   `;

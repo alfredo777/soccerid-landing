@@ -517,12 +517,12 @@ body {
 /* Imágenes de fondo para cada item */
 .item-quienes::before { background-image: url('/assets/images/somoss.jpg'); }
 .item-soccer::before { background-image: url('/assets/images/idcup.jpg'); }
-.item-seguros::before { background-image: url('/assets/images/segurosidlogoblack.png'); }
-.item-vip::before { background-image: url('/assets/images/vip.jpg'); }
+.item-seguros::before { background-image: url('/assets/images/seg.png'); }
+.item-vip::before { background-image: url('/assets/images/vip2.jpg'); }
 .item-copa::before { background-image: url('/assets/images/copa26.jpg'); }
 .item-fan::before { background-image: url('/assets/images/fan.png'); }
 .item-media::before { background-image: url('/assets/images/media.png'); }
-.item-opiniones::before { background-image: url('/assets/images/opi.png'); }
+.item-opiniones::before { background-image: url('/assets/images/opi2.jpg'); }
 
 /* Contenido del bento item */
 .bento-content {
