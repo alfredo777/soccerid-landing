@@ -3,7 +3,7 @@
   "title": "Bienvenido al Blog",
   "slug": "bienvenida",
   "excerpt": "Este es el primer post de nuestro blog. ¡Bienvenido!",
-  "content": "<p>Bienvenido al blog de soccerid-v4-landing. Este es un post de ejemplo que puedes editar o eliminar desde el panel de administración.</p><p>Desde aquí podrás compartir noticias, actualizaciones y contenido relevante para tu audiencia.</p>",
+  "content": "<p>Bienvenido al blog de soccerid-v5-new-landing. Este es un post de ejemplo que puedes editar o eliminar desde el panel de administración.</p><p>Desde aquí podrás compartir noticias, actualizaciones y contenido relevante para tu audiencia.</p>",
   "author": "Admin",
   "category": "General",
   "tags": [
@@ -12,6 +12,6 @@
   ],
   "image": "/assets/images/myimages/blog-default.jpg",
   "published": true,
-  "created_at": "2026-01-15T05:53:52-06:00",
-  "updated_at": "2026-01-15T05:53:52-06:00"
+  "created_at": "2026-01-20T06:03:45-06:00",
+  "updated_at": "2026-01-20T06:03:45-06:00"
 }

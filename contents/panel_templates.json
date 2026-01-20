@@ -122,29 +122,33 @@
     "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=550",
     "alt": "Comunidad",
     "gallery": [
-      {
-        "src": "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=600",
-        "alt": "Fan experience"
+       {
+        "src": "/assets/images/gallery/fan/1@2x.png?w=600",
+        "alt": "vip"
       },
-      {
-        "src": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=500",
-        "alt": "Meet and greet"
+       {
+        "src": "/assets/images/gallery/fan/2@2x.png?w=600",
+        "alt": "vip"
       },
-      {
-        "src": "https://images.unsplash.com/photo-1489944440615-453fc2b6a9a9?w=450",
-        "alt": "Sorteos"
+       {
+        "src": "/assets/images/gallery/fan/3@2x.png?w=600",
+        "alt": "vip"
       },
-      {
-        "src": "https://images.unsplash.com/photo-1522778119026-d647f0596c20?w=520",
-        "alt": "Promociones"
+       {
+        "src": "/assets/images/gallery/fan/4@2x.png?w=600",
+        "alt": "vip"
       },
-      {
-        "src": "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=480",
-        "alt": "Regalos"
+       {
+        "src": "/assets/images/gallery/fan/5@2x.png?w=600",
+        "alt": "vip"
       },
-      {
-        "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=550",
-        "alt": "Comunidad"
+       {
+        "src": "/assets/images/gallery/fan/6@2x.png?w=600",
+        "alt": "vip"
+      },
+       {
+        "src": "/assets/images/gallery/fan/7@2x.png?w=600",
+        "alt": "vip"
       }
     ]
   },

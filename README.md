@@ -1,4 +1,4 @@
-# soccerid-v4-landing - GKrakenCMS
+# soccerid-v5-new-landing - GKrakenCMS
 
 ## Inicio Rápido
 ```bash
@@ -9,7 +9,7 @@ npm start
 ## Acceso Admin
 - URL: http://localhost:3000/admin
 - Usuario: admin
-- Contraseña: 1#eozvu%bR#M
+- Contraseña: 7ilY94znAWn&
 
 ## Estructura
 - `/admin` - Panel de administración
@@ -22,6 +22,5 @@ Los siguientes datos fueron extraídos del JavaScript original:
 - `bento_items_first.json` (array)
 - `bento_items_second.json` (array)
 - `upcoming_events.json` (array)
-- `observer_options.json` (object)
 - `panel_templates.json` (object)
 - `panel_classes.json` (object)
