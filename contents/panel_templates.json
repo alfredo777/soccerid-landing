@@ -166,21 +166,21 @@
     "tag": "Prensa",
     "title": "MEDIA",
     "description": "Los medios más importantes del país nos han ayudado a dar a conocer nuestros productos y servicios, y han hecho eco de todo lo que hemos logrado a lo largo de los años, respaldando nuestro crecimiento y nuestra propuesta en el mundo del deporte.",
-    "image": "https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=400",
+    "image": "/assets/images/news2.jpg",
     "source": "Record",
     "excerpt": "Una iniciativa que busca brindar atención médica de primer nivel a deportistas amateur...",
     "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division",
     "videoId": "9cqn_j9XzH4",
     "articles": [
       {
-        "image": "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400",
+        "image": "/assets/images/news1.jpg",
         "source": "Esto.com.mx",
         "title": "Pumas y Tigres juegan la Soccer ID Cup el 22 de marzo en Estados Unidos",
         "excerpt": "El encuentro entre los felinos mexicanos se llevará a cabo en territorio estadounidense como parte de la Soccer ID Cup...",
         "url": "https://esto.com.mx/871667-pumas-y-tigres-juegan-la-soccer-id-cup-el-22-de-marzo-en-estados-unidos/"
       },
       {
-        "image": "https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=400",
+        "image": "/assets/images/news2.jpg",
         "source": "Record",
         "title": "Jugadores amateur son atendidos de lesiones por doctores de primera división",
         "excerpt": "Una iniciativa que busca brindar atención médica de primer nivel a deportistas amateur...",
