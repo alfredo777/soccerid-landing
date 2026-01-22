@@ -34,6 +34,48 @@
 </head>
 <body>
   {{{body}}}
+
+
+  <!-- Magazine Reader Modal -->
+
+<div id="magazineReaderModal" class="magazine-reader-modal">
+  <div class="magazine-reader-container">
+    <div class="magazine-reader-header">
+      <h2 id="magazineReaderTitle">Revista</h2>
+      <button class="magazine-reader-close" onclick="MagazineReader.close()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="magazine-reader-content">
+      <div class="magazine-reader-controls">
+        <button class="magazine-nav-btn" id="magazinePrevBtn" onclick="MagazineReader.prevPage()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+        <span class="magazine-page-info">
+          <span id="magazineCurrentPage">1</span> / <span id="magazineTotalPages">1</span>
+        </span>
+        <button class="magazine-nav-btn" id="magazineNextBtn" onclick="MagazineReader.nextPage()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 18l6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+      <div class="magazine-reader-viewport" id="magazineViewport">
+        <div class="magazine-pages-wrapper" id="magazinePagesWrapper">
+          <!-- Las páginas se insertan dinámicamente -->
+        </div>
+      </div>
+      <div class="magazine-thumbnails" id="magazineThumbnails">
+        <!-- Miniaturas se insertan dinámicamente -->
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="{{js '/assets/js/mreader.js'}}"></script>
   <script src="{{js '/assets/js/main.js'}}"></script>
 </body>
 </html>

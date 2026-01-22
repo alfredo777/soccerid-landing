@@ -162,6 +162,22 @@ function assignGlobalData(allData) {
   if (allData.panelTemplates) {
     const unwrapped = unwrapData(allData.panelTemplates);
     panelTemplates = typeof unwrapped === 'object' && !Array.isArray(unwrapped) ? unwrapped : {};
+    
+    // =====================================================================
+    // REGISTRO DE MAGAZINES PARA EL READER
+    // =====================================================================
+    // Registrar los magazines del panel media en el MagazineReader
+    if (panelTemplates.media && panelTemplates.media.articles) {
+      const articles = GKraken.normalizeToArray(panelTemplates.media.articles);
+      if (typeof MagazineReader !== 'undefined' && MagazineReader.registerFromArticles) {
+        MagazineReader.registerFromArticles(articles);
+        if (GKraken.config.DEBUG) {
+          const magazineCount = articles.filter(a => a.type === 'magazine').length;
+          console.log(`[GKraken] MagazineReader: ${magazineCount} revista(s) registrada(s)`);
+        }
+      }
+    }
+    // =====================================================================
   }
   if (allData.panelClasses) {
     const unwrapped = unwrapData(allData.panelClasses);
@@ -652,21 +668,44 @@ function generateMediaContent(panel) {
   
   if (articles.length > 0) {
     html += `<div class="media-articles-container">`;
-    html += articles.map(a => `
-      <a href="${a.url}" target="_blank" class="media-article-card">
-        <div class="media-article-image"><img src="${a.image}" alt="${a.title}"></div>
-        <div class="media-article-body">
-          <span class="media-article-source">${a.source}</span>
-          <h4>${a.title}</h4>
-          <p>${a.excerpt}</p>
-        </div>
-        <div class="media-article-arrow">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </div>
-      </a>
-    `).join('');
+    html += articles.map(a => {
+      const isMagazine = a.type === 'magazine';
+      const clickHandler = isMagazine 
+        ? `onclick="MagazineReader.openFromData('${a.id}'); return false;"` 
+        : '';
+      const href = isMagazine ? '#' : a.url;
+      const target = isMagazine ? '' : 'target="_blank"';
+      const badgeHtml = isMagazine 
+        ? `<span class="article-type-badge magazine-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
+              <path d="M7 7h10v2H7zm0 4h10v2H7zm0 4h7v2H7z"/>
+            </svg>
+            Revista
+           </span>` 
+        : '';
+      
+      return `
+        <a href="${href}" ${target} class="media-article-card${isMagazine ? ' magazine-article' : ''}" ${clickHandler} data-article-id="${a.id || ''}">
+          <div class="media-article-image">
+            <img src="${a.image}" alt="${a.title}">
+            ${badgeHtml}
+          </div>
+          <div class="media-article-body">
+            <span class="media-article-source">${a.source}</span>
+            <h4>${a.title}</h4>
+            <p>${a.excerpt}</p>
+          </div>
+          <div class="media-article-arrow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              ${isMagazine 
+                ? '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/><path d="M12 8l4 4-4 4M8 12h8"/>'
+                : '<path d="M5 12h14M12 5l7 7-7 7"/>'}
+            </svg>
+          </div>
+        </a>
+      `;
+    }).join('');
     html += `</div>`;
   }
   
@@ -693,10 +732,15 @@ function generateOpinionesContent(panel) {
         ${testimonials.map(t => `
           <div class="testimonial-card">
             <div class="testimonial-header">
-              <div class="testimonial-avatar">${t.initials}</div>
+              <div class="testimonial-avatar-wrapper">
+                ${t.image 
+                  ? `<img src="${t.image}" alt="${t.name}" class="testimonial-avatar-img" onerror="this.parentElement.innerHTML='<div class=\\'testimonial-avatar-fallback\\'>${t.name.split(' ').map(n => n[0]).join('').substring(0,2)}</div>'">`
+                  : `<div class="testimonial-avatar-fallback">${t.name.split(' ').map(n => n[0]).join('').substring(0,2)}</div>`
+                }
+              </div>
               <div class="testimonial-info">
                 <h4>${t.name}</h4>
-                <p>${t.since}</p>
+                <p class="testimonial-handle">${t.handle || ''}</p>
               </div>
             </div>
             <div class="testimonial-stars">${'★'.repeat(t.stars)}</div>
@@ -721,7 +765,6 @@ function generateOpinionesContent(panel) {
   
   return html;
 }
-
 // ==========================================================================
 // PANEL FUNCTIONS
 // ==========================================================================
