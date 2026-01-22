@@ -1,19 +1,46 @@
 /**
+ * ==========================================================================
  * JavaScript Principal - GKrakenCMS
  * Proyecto: soccerid-v5-new-landing
+ * ==========================================================================
+ * 
+ * Este archivo contiene toda la lógica principal de la aplicación:
+ * - Sistema de carga de datos JSON con caché
+ * - Renderizado de componentes (Bento Grids, Eventos, Paneles)
+ * - Sistema de Lightbox para galerías
+ * - Modales y paneles deslizantes
+ * - Integración con WhatsApp para contacto
+ * 
+ * @author GKraken
+ * @version 2.0.0
  */
 
 // ==========================================================================
 // CONFIGURACIÓN GLOBAL
 // ==========================================================================
 
+/**
+ * Objeto principal de configuración y utilidades de GKraken
+ * Maneja la carga de datos JSON, caché y normalización de datos
+ */
 const GKraken = {
+  /**
+   * Configuración de la aplicación
+   * @property {string} API_BASE - URL base para las APIs (vacío = mismo dominio)
+   * @property {boolean} DEBUG - Activa/desactiva logs de depuración
+   * @property {number} CACHE_DURATION - Duración del caché en milisegundos (5 minutos)
+   */
   config: {
     API_BASE: '',
     DEBUG: true,
-    CACHE_DURATION: 5 * 60 * 1000
+    CACHE_DURATION: 5 * 60 * 1000 // 5 minutos en milisegundos
   },
   
+  /**
+   * Mapeo de nombres de variables a archivos JSON
+   * Clave: nombre de la variable global
+   * Valor: nombre del archivo JSON (sin extensión)
+   */
   dataFiles: {
     'bentoItemsFirst': 'bento_items_first',
     'bentoItemsSecond': 'bento_items_second',
@@ -22,19 +49,34 @@ const GKraken = {
     'panelClasses': 'panel_classes'
   },
   
+  /**
+   * Caché en memoria para datos JSON cargados
+   * Almacena datos con timestamp para expiración
+   */
   cache: new Map(),
+  
+  /**
+   * Flag para evitar inicializaciones múltiples
+   */
   initialized: false,
   
+  /**
+   * Carga un archivo JSON desde el servidor con soporte de caché
+   * @param {string} filename - Nombre del archivo JSON (sin extensión)
+   * @returns {Promise<Object|null>} - Datos JSON o null si hay error
+   */
   async loadJSON(filename) {
     const cacheKey = `json_${filename}`;
     const cached = this.cache.get(cacheKey);
     
+    // Verificar si existe en caché y no ha expirado
     if (cached && Date.now() - cached.timestamp < this.config.CACHE_DURATION) {
       if (this.config.DEBUG) console.log(`[GKraken] Cache hit: ${filename}`);
       return cached.data;
     }
     
     try {
+      // Agregar timestamp para evitar caché del navegador
       const url = `/contents/${filename}.json?t=${Date.now()}`;
       if (this.config.DEBUG) console.log(`[GKraken] Fetching: ${url}`);
       
@@ -44,6 +86,8 @@ const GKraken = {
       }
       
       const data = await response.json();
+      
+      // Guardar en caché con timestamp
       this.cache.set(cacheKey, { data, timestamp: Date.now() });
       
       if (this.config.DEBUG) console.log(`[GKraken] Loaded: ${filename}`, data);
@@ -54,12 +98,18 @@ const GKraken = {
     }
   },
   
+  /**
+   * Carga todos los archivos de datos definidos en dataFiles
+   * Utiliza Promise.allSettled para manejar errores individuales
+   * @returns {Promise<Object>} - Objeto con todos los datos cargados
+   */
   async loadAllData() {
     const data = {};
     const entries = Object.entries(this.dataFiles);
     
     if (this.config.DEBUG) console.log(`[GKraken] Cargando ${entries.length} archivos de datos...`);
     
+    // Cargar todos los archivos en paralelo
     const results = await Promise.allSettled(
       entries.map(async ([varName, filename]) => {
         const result = await this.loadJSON(filename);
@@ -67,6 +117,7 @@ const GKraken = {
       })
     );
     
+    // Procesar resultados, ignorando los fallidos
     results.forEach((result) => {
       if (result.status === 'fulfilled' && result.value.result !== null) {
         data[result.value.varName] = result.value.result;
@@ -76,6 +127,10 @@ const GKraken = {
     return data;
   },
   
+  /**
+   * Invalida el caché para un archivo específico o todo el caché
+   * @param {string|null} filename - Nombre del archivo o null para limpiar todo
+   */
   invalidateCache(filename) {
     if (filename) {
       this.cache.delete(`json_${filename}`);
@@ -84,11 +139,20 @@ const GKraken = {
     }
   },
   
+  /**
+   * Normaliza datos a formato array
+   * Maneja diferentes estructuras de JSON (objeto con .data, .items, etc.)
+   * @param {any} data - Datos a normalizar
+   * @param {string[]} possibleKeys - Claves posibles donde buscar el array
+   * @returns {Array} - Array normalizado
+   */
   normalizeToArray(data, possibleKeys = ['data', 'items', 'events', 'list', 'records']) {
+    // Si ya es array, retornarlo
     if (Array.isArray(data)) return data;
     if (data == null) return [];
     
     if (typeof data === 'object') {
+      // Buscar en claves conocidas primero
       for (const key of possibleKeys) {
         if (Array.isArray(data[key])) {
           if (this.config.DEBUG) console.log(`[GKraken] Normalizado: extraído array de propiedad "${key}"`);
@@ -96,6 +160,7 @@ const GKraken = {
         }
       }
       
+      // Buscar en cualquier clave que contenga un array
       for (const key of Object.keys(data)) {
         if (Array.isArray(data[key])) {
           if (this.config.DEBUG) console.log(`[GKraken] Normalizado: extraído array de propiedad "${key}"`);
@@ -109,24 +174,48 @@ const GKraken = {
   }
 };
 
+// Exponer GKraken globalmente para acceso desde otros scripts
 window.GKraken = GKraken;
 
 // ==========================================================================
 // VARIABLES GLOBALES
 // ==========================================================================
 
-let bentoItemsFirst = [];
-let bentoItemsSecond = [];
-let upcomingEvents = [];
-let panelTemplates = {};
-let panelClasses = {};
-let currentSlide = 0;
-let lightboxImages = [];
-let lightboxIndex = 0;
+/**
+ * Arrays de datos para los componentes
+ * Se llenan después de cargar los JSON
+ */
+let bentoItemsFirst = [];   // Items del primer grid Bento
+let bentoItemsSecond = [];  // Items del segundo grid Bento
+let upcomingEvents = [];    // Lista de eventos próximos
 
+/**
+ * Objetos de configuración para paneles
+ */
+let panelTemplates = {};    // Plantillas de contenido para cada panel
+let panelClasses = {};      // Clases CSS para cada tipo de panel
+
+/**
+ * Variables de estado para sliders y lightbox
+ */
+let currentSlide = 0;       // Índice del slide actual en carruseles
+let lightboxImages = [];    // Array de imágenes para el lightbox
+let lightboxIndex = 0;      // Índice de imagen actual en lightbox
+
+/**
+ * Número de WhatsApp para contacto (formato internacional sin +)
+ */
 const WHATSAPP_NUMBER = '12315158991';
 
-// Fallback para panelClasses si no se carga del JSON
+/**
+ * Número inicial de eventos a mostrar antes de "Ver todos"
+ * @constant {number}
+ */
+const INITIAL_EVENTS_COUNT = 3;
+
+/**
+ * Clases CSS por defecto para los paneles (fallback si no carga el JSON)
+ */
 const DEFAULT_PANEL_CLASSES = {
   quienes: 'panel-quienes',
   soccer: 'panel-soccer',
@@ -142,6 +231,12 @@ const DEFAULT_PANEL_CLASSES = {
 // ASIGNAR DATOS GLOBALES
 // ==========================================================================
 
+/**
+ * Desenvuelve datos que vienen encapsulados en una propiedad "data"
+ * Común en respuestas de APIs REST
+ * @param {Object} obj - Objeto a desenvolver
+ * @returns {any} - Datos desenvueltos o el objeto original
+ */
 function unwrapData(obj) {
   if (obj && typeof obj === 'object' && 'data' in obj) {
     return obj.data;
@@ -149,16 +244,26 @@ function unwrapData(obj) {
   return obj;
 }
 
+/**
+ * Asigna los datos cargados a las variables globales
+ * También registra magazines en el MagazineReader si está disponible
+ * @param {Object} allData - Objeto con todos los datos cargados
+ */
 function assignGlobalData(allData) {
+  // Asignar arrays de bento items
   if (allData.bentoItemsFirst) {
     bentoItemsFirst = GKraken.normalizeToArray(unwrapData(allData.bentoItemsFirst));
   }
   if (allData.bentoItemsSecond) {
     bentoItemsSecond = GKraken.normalizeToArray(unwrapData(allData.bentoItemsSecond));
   }
+  
+  // Asignar eventos
   if (allData.upcomingEvents) {
     upcomingEvents = GKraken.normalizeToArray(unwrapData(allData.upcomingEvents));
   }
+  
+  // Asignar plantillas de paneles
   if (allData.panelTemplates) {
     const unwrapped = unwrapData(allData.panelTemplates);
     panelTemplates = typeof unwrapped === 'object' && !Array.isArray(unwrapped) ? unwrapped : {};
@@ -166,7 +271,7 @@ function assignGlobalData(allData) {
     // =====================================================================
     // REGISTRO DE MAGAZINES PARA EL READER
     // =====================================================================
-    // Registrar los magazines del panel media en el MagazineReader
+    // Si existe el panel media con artículos, registrarlos en MagazineReader
     if (panelTemplates.media && panelTemplates.media.articles) {
       const articles = GKraken.normalizeToArray(panelTemplates.media.articles);
       if (typeof MagazineReader !== 'undefined' && MagazineReader.registerFromArticles) {
@@ -179,6 +284,8 @@ function assignGlobalData(allData) {
     }
     // =====================================================================
   }
+  
+  // Asignar clases de paneles
   if (allData.panelClasses) {
     const unwrapped = unwrapData(allData.panelClasses);
     panelClasses = typeof unwrapped === 'object' && !Array.isArray(unwrapped) ? unwrapped : {};
@@ -190,6 +297,7 @@ function assignGlobalData(allData) {
     console.log('[GKraken] Usando panelClasses por defecto');
   }
   
+  // Log de depuración con resumen de datos cargados
   if (GKraken.config.DEBUG) {
     console.log('[GKraken] Variables globales asignadas:', {
       bentoItemsFirst: `${bentoItemsFirst.length} items`,
@@ -205,7 +313,13 @@ function assignGlobalData(allData) {
 // INICIALIZACIÓN PRINCIPAL
 // ==========================================================================
 
+/**
+ * Función principal de inicialización de la aplicación
+ * Carga datos, renderiza componentes y configura event listeners
+ * @async
+ */
 async function initializeGKraken() {
+  // Evitar inicializaciones múltiples
   if (GKraken.initialized) {
     console.warn('[GKraken] Ya inicializado');
     return;
@@ -216,21 +330,21 @@ async function initializeGKraken() {
   console.log('[GKraken] ═══════════════════════════════════════');
   
   try {
-    // 1. Cargar todos los datos
+    // 1. Cargar todos los datos JSON en paralelo
     const allData = await GKraken.loadAllData();
     
-    // 2. Asignar a variables globales
+    // 2. Asignar datos a variables globales
     assignGlobalData(allData);
     
-    // 3. Guardar referencia global
+    // 3. Guardar referencia global para debugging
     window.appData = allData;
     
     console.log('[GKraken] Datos cargados:', Object.keys(allData));
     
-    // 4. Renderizar componentes
+    // 4. Renderizar componentes iniciales
     renderInitial();
     
-    // 5. Configurar event listeners
+    // 5. Configurar event listeners globales
     setupEventListeners();
     
     // 6. Ocultar preloader
@@ -241,7 +355,7 @@ async function initializeGKraken() {
     
   } catch (error) {
     console.error('[GKraken] ✗ Error en inicialización:', error);
-    // Aún así ocultar preloader para no bloquear la UI
+    // Ocultar preloader incluso si hay error para no bloquear la UI
     hidePreloader();
   }
 }
@@ -250,9 +364,14 @@ async function initializeGKraken() {
 // RENDERIZADO INICIAL
 // ==========================================================================
 
+/**
+ * Renderiza los componentes iniciales de la página
+ * Solo renderiza si los contenedores existen en el DOM
+ */
 function renderInitial() {
   console.log('[GKraken] Renderizando componentes iniciales...');
   
+  // Renderizar grids Bento si existen
   const gridFirst = document.getElementById('bentoGridFirst');
   const gridSecond = document.getElementById('bentoGridSecond');
   if (gridFirst || gridSecond) {
@@ -260,6 +379,7 @@ function renderInitial() {
     renderBentoGrids();
   }
   
+  // Renderizar eventos si existe el contenedor
   const eventsGrid = document.getElementById('eventsGrid');
   if (eventsGrid) {
     console.log('[GKraken] → renderUpcomingEvents()');
@@ -273,19 +393,25 @@ function renderInitial() {
 // EVENT LISTENERS
 // ==========================================================================
 
+/**
+ * Configura todos los event listeners globales de la aplicación
+ * Incluye navegación por teclado, scroll suave y clics en lightbox
+ */
 function setupEventListeners() {
-  // Keyboard navigation
+  // Navegación por teclado
   document.addEventListener('keydown', function(e) {
+    // ESC cierra modales y paneles
     if (e.key === 'Escape') {
       closeLightbox();
       closePanel();
       closeEventsModal();
     }
+    // Flechas navegan el lightbox
     if (e.key === 'ArrowLeft') navigateLightbox(-1);
     if (e.key === 'ArrowRight') navigateLightbox(1);
   });
   
-  // Smooth scroll for anchor links
+  // Scroll suave para enlaces ancla
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       const href = this.getAttribute('href');
@@ -299,7 +425,7 @@ function setupEventListeners() {
     });
   });
   
-  // Lightbox background click
+  // Cerrar lightbox al hacer clic en el fondo
   const lightbox = document.getElementById('lightbox');
   if (lightbox) {
     lightbox.addEventListener('click', function(e) {
@@ -312,6 +438,10 @@ function setupEventListeners() {
 // PRELOADER
 // ==========================================================================
 
+/**
+ * Oculta el preloader de carga inicial
+ * Agrega clase 'hidden' para animación CSS
+ */
 function hidePreloader() {
   const preloader = document.getElementById('preloader');
   if (preloader) {
@@ -323,6 +453,11 @@ function hidePreloader() {
 // LIGHTBOX
 // ==========================================================================
 
+/**
+ * Abre el lightbox con un array de imágenes
+ * @param {Array} images - Array de objetos con {src, alt}
+ * @param {number} index - Índice de la imagen a mostrar inicialmente
+ */
 function openLightbox(images, index) {
   lightboxImages = GKraken.normalizeToArray(images);
   if (lightboxImages.length === 0) return;
@@ -333,12 +468,18 @@ function openLightbox(images, index) {
   
   if (!lightbox || !img) return;
   
+  // Establecer imagen actual
   img.src = lightboxImages[lightboxIndex].src;
   img.alt = lightboxImages[lightboxIndex].alt || '';
+  
+  // Mostrar lightbox y bloquear scroll
   lightbox.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
 
+/**
+ * Cierra el lightbox y restaura el scroll
+ */
 function closeLightbox() {
   const lightbox = document.getElementById('lightbox');
   if (lightbox) {
@@ -347,9 +488,16 @@ function closeLightbox() {
   }
 }
 
+/**
+ * Navega a la imagen anterior o siguiente en el lightbox
+ * @param {number} direction - Dirección (-1 = anterior, 1 = siguiente)
+ */
 function navigateLightbox(direction) {
   if (lightboxImages.length === 0) return;
+  
+  // Navegación circular
   lightboxIndex = (lightboxIndex + direction + lightboxImages.length) % lightboxImages.length;
+  
   const img = document.getElementById('lightboxImage');
   if (img && lightboxImages[lightboxIndex]) {
     img.src = lightboxImages[lightboxIndex].src;
@@ -361,10 +509,15 @@ function navigateLightbox(direction) {
 // BENTO GRIDS
 // ==========================================================================
 
+/**
+ * Renderiza los grids tipo Bento con los items cargados
+ * Cada item es clickeable y abre su panel correspondiente
+ */
 function renderBentoGrids() {
   const gridFirst = document.getElementById('bentoGridFirst');
   const gridSecond = document.getElementById('bentoGridSecond');
   
+  // Renderizar primer grid
   if (gridFirst && bentoItemsFirst.length > 0) {
     gridFirst.innerHTML = bentoItemsFirst.map(item => `
       <div class="bento-item ${item.class || ''}" data-panel="${item.id || ''}">
@@ -375,6 +528,7 @@ function renderBentoGrids() {
     `).join('');
   }
   
+  // Renderizar segundo grid
   if (gridSecond && bentoItemsSecond.length > 0) {
     gridSecond.innerHTML = bentoItemsSecond.map(item => `
       <div class="bento-item ${item.class || ''}" data-panel="${item.id || ''}">
@@ -385,7 +539,7 @@ function renderBentoGrids() {
     `).join('');
   }
   
-  // Agregar click listeners
+  // Agregar event listeners para abrir paneles
   document.querySelectorAll('.bento-item').forEach(item => {
     item.addEventListener('click', function() {
       const panelId = this.dataset.panel;
@@ -393,17 +547,24 @@ function renderBentoGrids() {
     });
   });
   
+  // Configurar observer para animaciones de entrada
   observeBentoItems();
 }
 
+/**
+ * Configura Intersection Observer para animar items al entrar en viewport
+ * Los items aparecen con delay escalonado
+ */
 function observeBentoItems() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         const items = entry.target.querySelectorAll('.bento-item');
+        // Animar cada item con delay incremental
         items.forEach((item, i) => {
           setTimeout(() => item.classList.add('animated'), i * 150);
         });
+        // Dejar de observar después de animar
         observer.unobserve(entry.target);
       }
     });
@@ -417,19 +578,17 @@ function observeBentoItems() {
 }
 
 // ==========================================================================
-// EVENTS
+// EVENTS - UPCOMING EVENTS
 // ==========================================================================
 
-function renderUpcomingEvents() {
-  const grid = document.getElementById('eventsGrid');
-  if (!grid) return;
-  
-  if (!Array.isArray(upcomingEvents) || upcomingEvents.length === 0) {
-    grid.innerHTML = '<p class="no-events">No hay eventos próximos disponibles.</p>';
-    return;
-  }
-  
-  grid.innerHTML = upcomingEvents.map(e => `
+/**
+ * Genera el HTML para una tarjeta de evento individual
+ * Función auxiliar para evitar duplicación de código
+ * @param {Object} e - Objeto del evento con propiedades (team1, team2, image, etc.)
+ * @returns {string} - HTML de la tarjeta de evento
+ */
+function renderEventCard(e) {
+  return `
     <div class="event-card" onclick="contactForEvent('${e.team1} vs ${e.team2}')">
       <div class="event-image">
         <img src="${e.image}" alt="${e.team1} vs ${e.team2}">
@@ -466,9 +625,94 @@ function renderUpcomingEvents() {
         <button class="event-cta">Reservar Boletos</button>
       </div>
     </div>
-  `).join('');
+  `;
 }
 
+/**
+ * Renderiza los eventos próximos en el grid principal
+ * Muestra solo INITIAL_EVENTS_COUNT (3) eventos inicialmente
+ * Si hay más eventos, muestra un botón para ver todos
+ */
+function renderUpcomingEvents() {
+  const grid = document.getElementById('eventsGrid');
+  const showAllBtn = document.getElementById('showAllEventsBtn');
+  
+  if (!grid) return;
+  
+  // Si no hay eventos, mostrar mensaje
+  if (!Array.isArray(upcomingEvents) || upcomingEvents.length === 0) {
+    grid.innerHTML = '<p class="no-events">No hay eventos próximos disponibles.</p>';
+    if (showAllBtn) showAllBtn.style.display = 'none';
+    return;
+  }
+  
+  // Mostrar solo los primeros N eventos (definido por INITIAL_EVENTS_COUNT)
+  const eventsToShow = upcomingEvents.slice(0, INITIAL_EVENTS_COUNT);
+  
+  // Renderizar las tarjetas de eventos
+  grid.innerHTML = eventsToShow.map(e => renderEventCard(e)).join('');
+  
+  // Configurar el botón "Mostrar todos" según la cantidad de eventos
+  if (showAllBtn) {
+    const remainingEvents = upcomingEvents.length - INITIAL_EVENTS_COUNT;
+    
+    if (remainingEvents > 0) {
+      // Hay más eventos: mostrar botón con contador
+      showAllBtn.style.display = 'flex';
+      showAllBtn.innerHTML = `
+        <span>Mostrar todos los eventos</span>
+        <span class="events-count">(${remainingEvents} más)</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
+      `;
+    } else {
+      // No hay más eventos: ocultar botón
+      showAllBtn.style.display = 'none';
+    }
+  }
+}
+
+/**
+ * Muestra todos los eventos próximos con animación de entrada
+ * Se ejecuta al hacer clic en el botón "Mostrar todos"
+ */
+function showAllUpcomingEvents() {
+  const grid = document.getElementById('eventsGrid');
+  const showAllBtn = document.getElementById('showAllEventsBtn');
+  
+  if (!grid) return;
+  
+  // Renderizar todos los eventos
+  grid.innerHTML = upcomingEvents.map(e => renderEventCard(e)).join('');
+  
+  // Ocultar el botón después de mostrar todos
+  if (showAllBtn) {
+    showAllBtn.style.display = 'none';
+  }
+  
+  // Animar los nuevos eventos que aparecen (los que estaban ocultos)
+  const cards = grid.querySelectorAll('.event-card');
+  cards.forEach((card, index) => {
+    // Solo animar las tarjetas nuevas (después de INITIAL_EVENTS_COUNT)
+    if (index >= INITIAL_EVENTS_COUNT) {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      
+      // Aplicar animación con delay escalonado
+      setTimeout(() => {
+        card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, (index - INITIAL_EVENTS_COUNT) * 100);
+    }
+  });
+}
+
+/**
+ * Renderiza todos los eventos en el modal de eventos
+ * Usado para la vista completa en el modal
+ */
 function renderAllEvents() {
   const grid = document.getElementById('allEventsGrid');
   if (!grid) return;
@@ -478,6 +722,7 @@ function renderAllEvents() {
     return;
   }
   
+  // Renderizar todas las tarjetas con botón diferente
   grid.innerHTML = upcomingEvents.map(e => `
     <div class="event-card" onclick="contactForEvent('${e.team1} vs ${e.team2}')">
       <div class="event-image">
@@ -518,11 +763,18 @@ function renderAllEvents() {
   `).join('');
 }
 
+/**
+ * Abre WhatsApp con mensaje pre-escrito para consultar sobre un evento
+ * @param {string} eventName - Nombre del evento (ej: "Team1 vs Team2")
+ */
 function contactForEvent(eventName) {
   const message = encodeURIComponent(`Hola SOCCER iD, me interesa: ${eventName}`);
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
 }
 
+/**
+ * Abre el modal de todos los eventos con animación de carga
+ */
 function openEventsModal() {
   const modal = document.getElementById('eventsModal');
   const loading = document.getElementById('loadingContainer');
@@ -530,12 +782,15 @@ function openEventsModal() {
   
   if (!modal) return;
   
+  // Mostrar modal y bloquear scroll
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
   
+  // Mostrar loading
   if (loading) loading.style.display = 'flex';
   if (grid) grid.classList.remove('loaded');
   
+  // Simular carga y luego mostrar eventos
   setTimeout(() => {
     if (loading) loading.style.display = 'none';
     renderAllEvents();
@@ -543,6 +798,9 @@ function openEventsModal() {
   }, 1500);
 }
 
+/**
+ * Cierra el modal de eventos
+ */
 function closeEventsModal() {
   const modal = document.getElementById('eventsModal');
   if (modal) {
@@ -552,16 +810,32 @@ function closeEventsModal() {
 }
 
 // ==========================================================================
-// PANEL CONTENT
+// PANEL CONTENT - GENERADORES DE CONTENIDO
 // ==========================================================================
 
+/**
+ * Genera el contenido HTML completo para un panel
+ * Detecta el tipo de panel y llama al generador correspondiente
+ * @param {string} panelId - ID del panel a generar
+ * @returns {string} - HTML del contenido del panel
+ */
 function generatePanelContent(panelId) {
   const panel = panelTemplates[panelId];
+  
+  // Si no existe el template, mostrar mensaje de error
   if (!panel) {
     console.warn(`[GKraken] No se encontró template para panel: ${panelId}`);
-    return '<div class="panel-header"><button class="back-btn" onclick="closePanel()">Volver</button></div><div class="panel-body"><p>Contenido no disponible</p></div>';
+    return `
+      <div class="panel-header">
+        <button class="back-btn" onclick="closePanel()">Volver</button>
+      </div>
+      <div class="panel-body">
+        <p>Contenido no disponible</p>
+      </div>
+    `;
   }
   
+  // Header común para todos los paneles
   let content = `
     <div class="panel-header">
       <button class="back-btn" onclick="closePanel()">
@@ -574,12 +848,14 @@ function generatePanelContent(panelId) {
     </div>
   `;
   
+  // Panel Copa tiene layout especial (fullscreen)
   if (panelId === 'copa') {
     return content + `<div class="panel-body fx-padding">${generateCopaContent(panel)}</div>`;
   }
   
   content += '<div class="panel-body">';
   
+  // Seleccionar generador según el tipo de panel
   if (['quienes', 'soccer', 'vip', 'fan'].includes(panelId)) {
     content += generateGalleryContent(panel);
   } else if (panelId === 'seguros') {
@@ -593,21 +869,36 @@ function generatePanelContent(panelId) {
   return content + '</div>';
 }
 
+/**
+ * Genera contenido de galería masonry para paneles con imágenes
+ * @param {Object} panel - Datos del panel
+ * @returns {string} - HTML de la galería
+ */
 function generateGalleryContent(panel) {
   const gallery = panel.gallery ? GKraken.normalizeToArray(panel.gallery) : [];
   
   let html = `<div class="masonry-grid">`;
+  // Tarjeta de texto introductoria
   html += `<div class="masonry-text-card"><h2>${panel.title}</h2><p>${panel.description}</p></div>`;
+  
+  // Imágenes de la galería
   html += gallery.map((img, i) => `
     <div class="masonry-item${img.tall ? ' tall' : ''}" onclick='openLightbox(${JSON.stringify(gallery)}, ${i})'>
       <img src="${img.src}" alt="${img.alt}">
       ${img.caption ? `<div class="masonry-caption">${img.caption}</div>` : ''}
     </div>
   `).join('');
+  
   html += `</div>`;
   return html;
 }
 
+/**
+ * Genera contenido para el panel de Seguros iD
+ * Incluye video en frame de iPhone
+ * @param {Object} panel - Datos del panel
+ * @returns {string} - HTML del contenido
+ */
 function generateSegurosContent(panel) {
   return `
     <div class="seguros-container">
@@ -636,6 +927,12 @@ function generateSegurosContent(panel) {
   `;
 }
 
+/**
+ * Genera contenido para el panel de Copa del Mundo 2026
+ * Layout fullscreen con imagen de banner
+ * @param {Object} panel - Datos del panel
+ * @returns {string} - HTML del contenido
+ */
 function generateCopaContent(panel) {
   return `
     <div class="copa-fullscreen-wrapper">
@@ -651,16 +948,17 @@ function generateCopaContent(panel) {
       </div>
       <div class="copa-banner-section">
         <img src="/assets/images/copa26.jpg" alt="Copa 2026">
-        <!--<div class="copa-banner-overlay">
-          <span class="banner-tag">Copa 2026</span>
-          <h3>Vive la experiencia</h3>
-          <p>México, Estados Unidos y Canadá te esperan para el torneo más grande del mundo.</p>
-        </div>-->
       </div>
     </div>
   `;
 }
 
+/**
+ * Genera contenido para el panel de Media/Prensa
+ * Lista de artículos con soporte para revistas interactivas
+ * @param {Object} panel - Datos del panel
+ * @returns {string} - HTML del contenido
+ */
 function generateMediaContent(panel) {
   const articles = panel.articles ? GKraken.normalizeToArray(panel.articles) : [];
   
@@ -668,13 +966,18 @@ function generateMediaContent(panel) {
   
   if (articles.length > 0) {
     html += `<div class="media-articles-container">`;
+    
     html += articles.map(a => {
       const isMagazine = a.type === 'magazine';
+      
+      // Handler diferente para revistas vs artículos externos
       const clickHandler = isMagazine 
         ? `onclick="MagazineReader.openFromData('${a.id}'); return false;"` 
         : '';
       const href = isMagazine ? '#' : a.url;
       const target = isMagazine ? '' : 'target="_blank"';
+      
+      // Badge especial para revistas
       const badgeHtml = isMagazine 
         ? `<span class="article-type-badge magazine-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -706,9 +1009,11 @@ function generateMediaContent(panel) {
         </a>
       `;
     }).join('');
+    
     html += `</div>`;
   }
   
+  // Sección de video destacado (opcional)
   if (panel.videoId) {
     html += `
       <h3 class="video-section-title">Video Destacado</h3>
@@ -721,6 +1026,12 @@ function generateMediaContent(panel) {
   return html;
 }
 
+/**
+ * Genera contenido para el panel de Opiniones/Testimonios
+ * Carrusel horizontal de tarjetas de testimonios
+ * @param {Object} panel - Datos del panel
+ * @returns {string} - HTML del contenido
+ */
 function generateOpinionesContent(panel) {
   const testimonials = panel.testimonials ? GKraken.normalizeToArray(panel.testimonials) : [];
   
@@ -765,10 +1076,16 @@ function generateOpinionesContent(panel) {
   
   return html;
 }
+
 // ==========================================================================
-// PANEL FUNCTIONS
+// PANEL FUNCTIONS - APERTURA Y CIERRE
 // ==========================================================================
 
+/**
+ * Extrae el nombre de clase CSS de un valor que puede ser string u objeto
+ * @param {string|Object} value - Valor a procesar
+ * @returns {string} - Nombre de clase CSS
+ */
 function extractClassName(value) {
   if (!value) return '';
   if (typeof value === 'string') return value.trim();
@@ -778,6 +1095,10 @@ function extractClassName(value) {
   return '';
 }
 
+/**
+ * Abre un panel deslizante con el contenido especificado
+ * @param {string} panelId - ID del panel a abrir
+ */
 function openPanel(panelId) {
   if (!panelId) return;
   
@@ -790,7 +1111,7 @@ function openPanel(panelId) {
     return;
   }
   
-  // Remover todas las clases de panel
+  // Remover todas las clases de panel anteriores
   Object.values(panelClasses).forEach(cls => {
     const className = extractClassName(cls);
     if (className) {
@@ -808,39 +1129,54 @@ function openPanel(panelId) {
   detailContent.innerHTML = generatePanelContent(panelId);
   detailContent.scrollTop = 0;
   
-  // Animaciones
+  // Animación de salida del contenedor principal
   if (mainContainer) mainContainer.classList.add('slide-out');
   
+  // Activar panel con requestAnimationFrame para mejor rendimiento
   requestAnimationFrame(() => {
     detailPanel.classList.add('active');
   });
   
+  // Bloquear scroll del body
   document.body.style.overflow = 'hidden';
+  
+  // Resetear slide para testimonios
   currentSlide = 0;
 }
 
+/**
+ * Cierra el panel deslizante actual
+ */
 function closePanel() {
   const mainContainer = document.getElementById('mainContainer');
   const detailPanel = document.getElementById('detailPanel');
   const detailContent = document.getElementById('detailContent');
   
+  // Desactivar panel
   if (detailPanel) {
     detailPanel.classList.remove('active');
   }
   
+  // Resetear scroll del contenido
   if (detailContent) {
     detailContent.scrollTop = 0;
   }
   
+  // Reactivar contenedor principal después de la animación
   setTimeout(() => {
     if (mainContainer) {
       mainContainer.classList.remove('slide-out');
     }
   }, 300);
   
+  // Restaurar scroll del body
   document.body.style.overflow = '';
 }
 
+/**
+ * Navega el carrusel de testimonios
+ * @param {number} direction - Dirección (-1 = izquierda, 1 = derecha)
+ */
 function slideTestimonials(direction) {
   const track = document.getElementById('testimonialsTrack');
   if (!track) return;
@@ -848,19 +1184,31 @@ function slideTestimonials(direction) {
   const cards = track.querySelectorAll('.testimonial-card');
   if (cards.length === 0) return;
   
+  // Calcular ancho de tarjeta incluyendo gap
   const cardWidth = cards[0].offsetWidth + 24;
+  
+  // Calcular máximo slide posible
   const maxSlide = Math.max(0, cards.length - Math.floor(track.parentElement.offsetWidth / cardWidth));
   
+  // Actualizar slide con límites
   currentSlide = Math.max(0, Math.min(currentSlide + direction, maxSlide));
+  
+  // Aplicar transformación
   track.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
 }
 
 // ==========================================================================
-// INICIAR
+// INICIAR APLICACIÓN
 // ==========================================================================
 
+/**
+ * Punto de entrada de la aplicación
+ * Espera a que el DOM esté listo antes de inicializar
+ */
 if (document.readyState === 'loading') {
+  // DOM aún cargando, esperar evento
   document.addEventListener('DOMContentLoaded', initializeGKraken);
 } else {
+  // DOM ya listo, inicializar inmediatamente
   initializeGKraken();
 }
