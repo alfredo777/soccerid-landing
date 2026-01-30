@@ -1,22 +1,46 @@
-[
-  {
-    "id": "copa",
-    "class": "item-copa",
-    "title": "ASESORÍA COPA 2026"
-  },
-  {
-    "id": "fan",
-    "class": "item-fan",
-    "title": "FAN EXPERIENCE"
-  },
-  {
-    "id": "media",
-    "class": "item-media",
-    "title": "MEDIA"
-  },
-  {
-    "id": "opiniones",
-    "class": "item-opiniones",
-    "title": "REVIEWS"
-  }
-]
+{
+  "es": [
+    {
+      "id": "copa",
+      "class": "item-copa",
+      "title": "ASESORÍA COPA 2026"
+    },
+    {
+      "id": "fan",
+      "class": "item-fan",
+      "title": "FAN EXPERIENCE"
+    },
+    {
+      "id": "media",
+      "class": "item-media",
+      "title": "MEDIA"
+    },
+    {
+      "id": "opiniones",
+      "class": "item-opiniones",
+      "title": "REVIEWS"
+    }
+  ],
+  "en": [
+    {
+      "id": "copa",
+      "class": "item-copa",
+      "title": "WORLD CUP 2026 ADVISORY"
+    },
+    {
+      "id": "fan",
+      "class": "item-fan",
+      "title": "FAN EXPERIENCE"
+    },
+    {
+      "id": "media",
+      "class": "item-media",
+      "title": "MEDIA"
+    },
+    {
+      "id": "opiniones",
+      "class": "item-opiniones",
+      "title": "REVIEWS"
+    }
+  ]
+}

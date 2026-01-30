@@ -2,81 +2,341 @@
  * ==========================================================================
  * JavaScript Principal - GKrakenCMS
  * Proyecto: soccerid-v5-new-landing
+ * Con soporte de internacionalización (i18n)
  * ==========================================================================
- * 
- * Este archivo contiene toda la lógica principal de la aplicación:
- * - Sistema de carga de datos JSON con caché
- * - Renderizado de componentes (Bento Grids, Eventos, Paneles)
- * - Sistema de Lightbox para galerías
- * - Modales y paneles deslizantes
- * - Integración con WhatsApp para contacto
- * 
- * @author GKraken
- * @version 2.0.0
  */
 
 // ==========================================================================
 // CONFIGURACIÓN GLOBAL
 // ==========================================================================
 
-/**
- * Objeto principal de configuración y utilidades de GKraken
- * Maneja la carga de datos JSON, caché y normalización de datos
- */
 const GKraken = {
-  /**
-   * Configuración de la aplicación
-   * @property {string} API_BASE - URL base para las APIs (vacío = mismo dominio)
-   * @property {boolean} DEBUG - Activa/desactiva logs de depuración
-   * @property {number} CACHE_DURATION - Duración del caché en milisegundos (5 minutos)
-   */
   config: {
     API_BASE: '',
     DEBUG: true,
-    CACHE_DURATION: 5 * 60 * 1000 // 5 minutos en milisegundos
+    CACHE_DURATION: 5 * 60 * 1000,
+    DEFAULT_LANG: 'es',
+    SUPPORTED_LANGS: ['es', 'en'],
+    LANG_STORAGE_KEY: 'gkraken_lang'
   },
   
-  /**
-   * Mapeo de nombres de variables a archivos JSON
-   * Clave: nombre de la variable global
-   * Valor: nombre del archivo JSON (sin extensión)
-   */
   dataFiles: {
     'bentoItemsFirst': 'bento_items_first',
     'bentoItemsSecond': 'bento_items_second',
     'upcomingEvents': 'upcoming_events',
     'panelTemplates': 'panel_templates',
-    'panelClasses': 'panel_classes'
+    'panelClasses': 'panel_classes',
+    'uiTranslations': 'ui_translations'
+  },
+  
+  cache: new Map(),
+  initialized: false,
+  
+  // ========================================================================
+  // SISTEMA DE IDIOMAS (i18n)
+  // ========================================================================
+  
+  /**
+   * Idioma actual de la aplicación
+   */
+  currentLang: 'es',
+  
+  /**
+   * Traducciones de UI cargadas
+   */
+  translations: {},
+  
+  /**
+   * Datos crudos con todos los idiomas
+   */
+  rawData: {},
+  
+  /**
+   * Obtiene el idioma guardado o detecta del navegador
+   * @returns {string} - Código de idioma ('es' o 'en')
+   */
+  getSavedLanguage() {
+    // 1. Revisar localStorage
+    const saved = localStorage.getItem(this.config.LANG_STORAGE_KEY);
+    if (saved && this.config.SUPPORTED_LANGS.includes(saved)) {
+      return saved;
+    }
+    
+    // 2. Detectar del navegador
+    const browserLang = navigator.language || navigator.userLanguage;
+    const shortLang = browserLang.split('-')[0].toLowerCase();
+    
+    if (this.config.SUPPORTED_LANGS.includes(shortLang)) {
+      return shortLang;
+    }
+    
+    // 3. Fallback al idioma por defecto
+    return this.config.DEFAULT_LANG;
   },
   
   /**
-   * Caché en memoria para datos JSON cargados
-   * Almacena datos con timestamp para expiración
+   * Guarda el idioma seleccionado
+   * @param {string} lang - Código de idioma
    */
-  cache: new Map(),
+  saveLanguage(lang) {
+    if (this.config.SUPPORTED_LANGS.includes(lang)) {
+      localStorage.setItem(this.config.LANG_STORAGE_KEY, lang);
+      this.currentLang = lang;
+    }
+  },
   
   /**
-   * Flag para evitar inicializaciones múltiples
+   * Obtiene una traducción de UI por su clave
+   * @param {string} key - Clave en formato "seccion.subseccion.clave"
+   * @returns {string} - Texto traducido o la clave si no existe
    */
-  initialized: false,
+  t(key) {
+    const keys = key.split('.');
+    let value = this.translations[this.currentLang];
+    
+    for (const k of keys) {
+      if (value && typeof value === 'object' && k in value) {
+        value = value[k];
+      } else {
+        console.warn(`[GKraken i18n] Traducción no encontrada: ${key}`);
+        return key;
+      }
+    }
+    
+    return value;
+  },
   
   /**
-   * Carga un archivo JSON desde el servidor con soporte de caché
-   * @param {string} filename - Nombre del archivo JSON (sin extensión)
-   * @returns {Promise<Object|null>} - Datos JSON o null si hay error
+   * Extrae datos del idioma actual de un objeto con estructura multilengua
+   * @param {Object} data - Objeto con claves 'es' y 'en'
+   * @returns {any} - Datos del idioma actual
    */
+  getLocalizedData(data) {
+    if (!data) return data;
+    
+    // Si tiene estructura de idiomas
+    if (data[this.currentLang] !== undefined) {
+      return data[this.currentLang];
+    }
+    
+    // Si es array o no tiene estructura de idiomas, retornar tal cual
+    return data;
+  },
+  
+  /**
+   * Cambia el idioma de la aplicación y re-renderiza
+   * @param {string} lang - Código de idioma ('es' o 'en')
+   */
+  async changeLanguage(lang) {
+    if (!this.config.SUPPORTED_LANGS.includes(lang)) {
+      console.warn(`[GKraken] Idioma no soportado: ${lang}`);
+      return;
+    }
+    
+    if (lang === this.currentLang) return;
+    
+    console.log(`[GKraken] Cambiando idioma: ${this.currentLang} → ${lang}`);
+    
+    this.saveLanguage(lang);
+    
+    // Actualizar datos globales con el nuevo idioma
+    assignGlobalData(this.rawData);
+    
+    // Re-renderizar componentes
+    renderInitial();
+    
+    // Actualizar UI estática
+    this.updateStaticUI();
+    
+    // Actualizar selector de idioma
+    this.updateLanguageSelector();
+    
+    // Disparar evento personalizado
+    document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
+  },
+  
+  /**
+   * Actualiza elementos de UI estáticos (textos en HTML)
+   */
+  updateStaticUI() {
+    // Preloader
+    const preloaderSubtext = document.querySelector('.preloader-subtext');
+    if (preloaderSubtext) {
+      preloaderSubtext.textContent = this.t('preloader.loading');
+    }
+    
+    // Hero
+    const heroTagline = document.querySelector('.hero-tagline');
+    if (heroTagline) {
+      heroTagline.innerHTML = this.t('hero.tagline');
+    }
+    
+    const scrollText = document.querySelector('.scroll-text');
+    if (scrollText) {
+      scrollText.textContent = this.t('hero.scroll');
+    }
+    
+    // Sección de eventos
+    const eventsHeader = document.querySelector('.events-section .section-header h2');
+    if (eventsHeader) {
+      eventsHeader.textContent = this.t('events.title');
+    }
+    
+    const eventsSubtitle = document.querySelector('.events-section .section-header p');
+    if (eventsSubtitle) {
+      eventsSubtitle.textContent = this.t('events.subtitle');
+    }
+    
+    const viewAllBtn = document.querySelector('.view-all-btn');
+    if (viewAllBtn) {
+      viewAllBtn.innerHTML = `
+        ${this.t('events.viewAll')}
+        <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"></path>
+        </svg>
+      `;
+    }
+    
+    // Sección de contacto
+    const contactTitle = document.querySelector('.contact-card h2');
+    if (contactTitle) {
+      contactTitle.textContent = this.t('contact.title');
+    }
+    
+    const contactDesc = document.querySelector('.contact-card p');
+    if (contactDesc) {
+      contactDesc.textContent = this.t('contact.description');
+    }
+    
+    const whatsappBtn = document.querySelector('.contact-card .whatsapp-btn');
+    if (whatsappBtn) {
+      const msg = encodeURIComponent(this.t('contact.whatsappMessage'));
+      whatsappBtn.href = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+      whatsappBtn.innerHTML = `
+        <svg viewbox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+        ${this.t('contact.whatsappBtn')}
+      `;
+    }
+    
+    // Footer
+    const footerTagline = document.querySelector('.footer-tagline');
+    if (footerTagline) {
+      footerTagline.textContent = this.t('footer.tagline');
+    }
+    
+    const followTitle = document.querySelector('.footer-social h4');
+    if (followTitle) {
+      followTitle.textContent = this.t('footer.followUs');
+    }
+    
+    const navTitle = document.querySelector('.footer-actions h4');
+    if (navTitle) {
+      navTitle.textContent = this.t('footer.navigation');
+    }
+    
+    const backToTop = document.querySelector('.back-to-top');
+    if (backToTop) {
+      backToTop.innerHTML = `
+        <svg width="18" height="18" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 19V5M5 12l7-7 7 7"></path>
+        </svg>
+        ${this.t('footer.backToTop')}
+      `;
+    }
+    
+    const privacyLink = document.querySelector('.footer-link[href="/privacy"]');
+    if (privacyLink) {
+      privacyLink.textContent = this.t('footer.privacy');
+    }
+    
+    const termsLink = document.querySelector('.footer-link[href="/terms"]');
+    if (termsLink) {
+      termsLink.textContent = this.t('footer.terms');
+    }
+    
+    const copyright = document.querySelector('.footer-copyright');
+    if (copyright) {
+      copyright.textContent = this.t('footer.copyright');
+    }
+    
+    // Modal de eventos
+    const modalTitle = document.querySelector('.events-modal-header h2');
+    if (modalTitle) {
+      modalTitle.textContent = this.t('events.allEvents');
+    }
+    
+    const closeModalBtn = document.querySelector('.close-modal-btn');
+    if (closeModalBtn) {
+      closeModalBtn.innerHTML = `
+        <svg width="20" height="20" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 6L6 18M6 6l12 12"></path>
+        </svg>
+        ${this.t('events.close')}
+      `;
+    }
+    
+    const loadingText = document.querySelector('.loading-text');
+    if (loadingText) {
+      loadingText.textContent = this.t('events.loadingEvents');
+    }
+    
+    // Atributo lang en el HTML
+    document.documentElement.lang = this.currentLang;
+  },
+  
+  /**
+   * Actualiza el estado visual del selector de idioma
+   */
+  updateLanguageSelector() {
+    const selector = document.getElementById('languageSelector');
+    if (selector) {
+      selector.value = this.currentLang;
+    }
+    
+    // Actualizar botones si existen
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === this.currentLang);
+    });
+  },
+  
+  /**
+   * Crea el selector de idioma en el DOM
+   */
+  createLanguageSelector() {
+    const existingSelector = document.getElementById('languageSelectorContainer');    
+    const container = document.createElement('div');
+    container.id = 'languageSelectorContainer';
+    container.className = 'language-selector-container';
+    container.innerHTML = `
+      <div class="language-selector">
+        <button class="lang-btn ${this.currentLang === 'es' ? 'active' : ''}" data-lang="es" onclick="GKraken.changeLanguage('es')">
+          <span class="lang-flag">🇲🇽</span>
+          <span class="lang-text">ES</span>
+        </button>
+        <button class="lang-btn ${this.currentLang === 'en' ? 'active' : ''}" data-lang="en" onclick="GKraken.changeLanguage('en')">
+          <span class="lang-flag">🇺🇸</span>
+          <span class="lang-text">EN</span>
+        </button>
+      </div>
+    `;
+    
+    document.body.appendChild(container);
+  },
+  
+  // ========================================================================
+  // CARGA DE DATOS
+  // ========================================================================
+  
   async loadJSON(filename) {
     const cacheKey = `json_${filename}`;
     const cached = this.cache.get(cacheKey);
     
-    // Verificar si existe en caché y no ha expirado
     if (cached && Date.now() - cached.timestamp < this.config.CACHE_DURATION) {
       if (this.config.DEBUG) console.log(`[GKraken] Cache hit: ${filename}`);
       return cached.data;
     }
     
     try {
-      // Agregar timestamp para evitar caché del navegador
       const url = `/contents/${filename}.json?t=${Date.now()}`;
       if (this.config.DEBUG) console.log(`[GKraken] Fetching: ${url}`);
       
@@ -86,8 +346,6 @@ const GKraken = {
       }
       
       const data = await response.json();
-      
-      // Guardar en caché con timestamp
       this.cache.set(cacheKey, { data, timestamp: Date.now() });
       
       if (this.config.DEBUG) console.log(`[GKraken] Loaded: ${filename}`, data);
@@ -98,18 +356,12 @@ const GKraken = {
     }
   },
   
-  /**
-   * Carga todos los archivos de datos definidos en dataFiles
-   * Utiliza Promise.allSettled para manejar errores individuales
-   * @returns {Promise<Object>} - Objeto con todos los datos cargados
-   */
   async loadAllData() {
     const data = {};
     const entries = Object.entries(this.dataFiles);
     
     if (this.config.DEBUG) console.log(`[GKraken] Cargando ${entries.length} archivos de datos...`);
     
-    // Cargar todos los archivos en paralelo
     const results = await Promise.allSettled(
       entries.map(async ([varName, filename]) => {
         const result = await this.loadJSON(filename);
@@ -117,7 +369,6 @@ const GKraken = {
       })
     );
     
-    // Procesar resultados, ignorando los fallidos
     results.forEach((result) => {
       if (result.status === 'fulfilled' && result.value.result !== null) {
         data[result.value.varName] = result.value.result;
@@ -127,10 +378,6 @@ const GKraken = {
     return data;
   },
   
-  /**
-   * Invalida el caché para un archivo específico o todo el caché
-   * @param {string|null} filename - Nombre del archivo o null para limpiar todo
-   */
   invalidateCache(filename) {
     if (filename) {
       this.cache.delete(`json_${filename}`);
@@ -139,20 +386,11 @@ const GKraken = {
     }
   },
   
-  /**
-   * Normaliza datos a formato array
-   * Maneja diferentes estructuras de JSON (objeto con .data, .items, etc.)
-   * @param {any} data - Datos a normalizar
-   * @param {string[]} possibleKeys - Claves posibles donde buscar el array
-   * @returns {Array} - Array normalizado
-   */
   normalizeToArray(data, possibleKeys = ['data', 'items', 'events', 'list', 'records']) {
-    // Si ya es array, retornarlo
     if (Array.isArray(data)) return data;
     if (data == null) return [];
     
     if (typeof data === 'object') {
-      // Buscar en claves conocidas primero
       for (const key of possibleKeys) {
         if (Array.isArray(data[key])) {
           if (this.config.DEBUG) console.log(`[GKraken] Normalizado: extraído array de propiedad "${key}"`);
@@ -160,7 +398,6 @@ const GKraken = {
         }
       }
       
-      // Buscar en cualquier clave que contenga un array
       for (const key of Object.keys(data)) {
         if (Array.isArray(data[key])) {
           if (this.config.DEBUG) console.log(`[GKraken] Normalizado: extraído array de propiedad "${key}"`);
@@ -174,48 +411,26 @@ const GKraken = {
   }
 };
 
-// Exponer GKraken globalmente para acceso desde otros scripts
+// Exponer GKraken globalmente
 window.GKraken = GKraken;
 
 // ==========================================================================
 // VARIABLES GLOBALES
 // ==========================================================================
 
-/**
- * Arrays de datos para los componentes
- * Se llenan después de cargar los JSON
- */
-let bentoItemsFirst = [];   // Items del primer grid Bento
-let bentoItemsSecond = [];  // Items del segundo grid Bento
-let upcomingEvents = [];    // Lista de eventos próximos
+let bentoItemsFirst = [];
+let bentoItemsSecond = [];
+let upcomingEvents = [];
+let panelTemplates = {};
+let panelClasses = {};
 
-/**
- * Objetos de configuración para paneles
- */
-let panelTemplates = {};    // Plantillas de contenido para cada panel
-let panelClasses = {};      // Clases CSS para cada tipo de panel
+let currentSlide = 0;
+let lightboxImages = [];
+let lightboxIndex = 0;
 
-/**
- * Variables de estado para sliders y lightbox
- */
-let currentSlide = 0;       // Índice del slide actual en carruseles
-let lightboxImages = [];    // Array de imágenes para el lightbox
-let lightboxIndex = 0;      // Índice de imagen actual en lightbox
-
-/**
- * Número de WhatsApp para contacto (formato internacional sin +)
- */
 const WHATSAPP_NUMBER = '12315158991';
-
-/**
- * Número inicial de eventos a mostrar antes de "Ver todos"
- * @constant {number}
- */
 const INITIAL_EVENTS_COUNT = 3;
 
-/**
- * Clases CSS por defecto para los paneles (fallback si no carga el JSON)
- */
 const DEFAULT_PANEL_CLASSES = {
   quienes: 'panel-quienes',
   soccer: 'panel-soccer',
@@ -231,12 +446,6 @@ const DEFAULT_PANEL_CLASSES = {
 // ASIGNAR DATOS GLOBALES
 // ==========================================================================
 
-/**
- * Desenvuelve datos que vienen encapsulados en una propiedad "data"
- * Común en respuestas de APIs REST
- * @param {Object} obj - Objeto a desenvolver
- * @returns {any} - Datos desenvueltos o el objeto original
- */
 function unwrapData(obj) {
   if (obj && typeof obj === 'object' && 'data' in obj) {
     return obj.data;
@@ -244,34 +453,37 @@ function unwrapData(obj) {
   return obj;
 }
 
-/**
- * Asigna los datos cargados a las variables globales
- * También registra magazines en el MagazineReader si está disponible
- * @param {Object} allData - Objeto con todos los datos cargados
- */
 function assignGlobalData(allData) {
-  // Asignar arrays de bento items
+  // Guardar datos crudos para cambios de idioma
+  GKraken.rawData = allData;
+  
+  // Cargar traducciones de UI
+  if (allData.uiTranslations) {
+    GKraken.translations = unwrapData(allData.uiTranslations);
+  }
+  
+  // Extraer datos del idioma actual
   if (allData.bentoItemsFirst) {
-    bentoItemsFirst = GKraken.normalizeToArray(unwrapData(allData.bentoItemsFirst));
+    const localizedData = GKraken.getLocalizedData(unwrapData(allData.bentoItemsFirst));
+    bentoItemsFirst = GKraken.normalizeToArray(localizedData);
   }
+  
   if (allData.bentoItemsSecond) {
-    bentoItemsSecond = GKraken.normalizeToArray(unwrapData(allData.bentoItemsSecond));
+    const localizedData = GKraken.getLocalizedData(unwrapData(allData.bentoItemsSecond));
+    bentoItemsSecond = GKraken.normalizeToArray(localizedData);
   }
   
-  // Asignar eventos
   if (allData.upcomingEvents) {
-    upcomingEvents = GKraken.normalizeToArray(unwrapData(allData.upcomingEvents));
+    const localizedData = GKraken.getLocalizedData(unwrapData(allData.upcomingEvents));
+    upcomingEvents = GKraken.normalizeToArray(localizedData);
   }
   
-  // Asignar plantillas de paneles
   if (allData.panelTemplates) {
     const unwrapped = unwrapData(allData.panelTemplates);
-    panelTemplates = typeof unwrapped === 'object' && !Array.isArray(unwrapped) ? unwrapped : {};
+    const localizedData = GKraken.getLocalizedData(unwrapped);
+    panelTemplates = typeof localizedData === 'object' && !Array.isArray(localizedData) ? localizedData : {};
     
-    // =====================================================================
-    // REGISTRO DE MAGAZINES PARA EL READER
-    // =====================================================================
-    // Si existe el panel media con artículos, registrarlos en MagazineReader
+    // Registrar magazines
     if (panelTemplates.media && panelTemplates.media.articles) {
       const articles = GKraken.normalizeToArray(panelTemplates.media.articles);
       if (typeof MagazineReader !== 'undefined' && MagazineReader.registerFromArticles) {
@@ -282,23 +494,20 @@ function assignGlobalData(allData) {
         }
       }
     }
-    // =====================================================================
   }
   
-  // Asignar clases de paneles
   if (allData.panelClasses) {
     const unwrapped = unwrapData(allData.panelClasses);
     panelClasses = typeof unwrapped === 'object' && !Array.isArray(unwrapped) ? unwrapped : {};
   }
   
-  // Usar fallback si panelClasses está vacío
   if (Object.keys(panelClasses).length === 0) {
     panelClasses = DEFAULT_PANEL_CLASSES;
     console.log('[GKraken] Usando panelClasses por defecto');
   }
   
-  // Log de depuración con resumen de datos cargados
   if (GKraken.config.DEBUG) {
+    console.log(`[GKraken] Idioma actual: ${GKraken.currentLang}`);
     console.log('[GKraken] Variables globales asignadas:', {
       bentoItemsFirst: `${bentoItemsFirst.length} items`,
       bentoItemsSecond: `${bentoItemsSecond.length} items`,
@@ -313,13 +522,7 @@ function assignGlobalData(allData) {
 // INICIALIZACIÓN PRINCIPAL
 // ==========================================================================
 
-/**
- * Función principal de inicialización de la aplicación
- * Carga datos, renderiza componentes y configura event listeners
- * @async
- */
 async function initializeGKraken() {
-  // Evitar inicializaciones múltiples
   if (GKraken.initialized) {
     console.warn('[GKraken] Ya inicializado');
     return;
@@ -330,24 +533,34 @@ async function initializeGKraken() {
   console.log('[GKraken] ═══════════════════════════════════════');
   
   try {
-    // 1. Cargar todos los datos JSON en paralelo
+    // 1. Determinar idioma inicial
+    GKraken.currentLang = GKraken.getSavedLanguage();
+    console.log(`[GKraken] Idioma detectado: ${GKraken.currentLang}`);
+    
+    // 2. Cargar todos los datos JSON
     const allData = await GKraken.loadAllData();
     
-    // 2. Asignar datos a variables globales
+    // 3. Asignar datos a variables globales
     assignGlobalData(allData);
     
-    // 3. Guardar referencia global para debugging
+    // 4. Guardar referencia global para debugging
     window.appData = allData;
     
     console.log('[GKraken] Datos cargados:', Object.keys(allData));
     
-    // 4. Renderizar componentes iniciales
+    // 5. Crear selector de idioma
+    GKraken.createLanguageSelector();
+    
+    // 6. Renderizar componentes iniciales
     renderInitial();
     
-    // 5. Configurar event listeners globales
+    // 7. Actualizar UI estática con traducciones
+    GKraken.updateStaticUI();
+    
+    // 8. Configurar event listeners globales
     setupEventListeners();
     
-    // 6. Ocultar preloader
+    // 9. Ocultar preloader
     hidePreloader();
     
     GKraken.initialized = true;
@@ -355,7 +568,6 @@ async function initializeGKraken() {
     
   } catch (error) {
     console.error('[GKraken] ✗ Error en inicialización:', error);
-    // Ocultar preloader incluso si hay error para no bloquear la UI
     hidePreloader();
   }
 }
@@ -364,14 +576,9 @@ async function initializeGKraken() {
 // RENDERIZADO INICIAL
 // ==========================================================================
 
-/**
- * Renderiza los componentes iniciales de la página
- * Solo renderiza si los contenedores existen en el DOM
- */
 function renderInitial() {
   console.log('[GKraken] Renderizando componentes iniciales...');
   
-  // Renderizar grids Bento si existen
   const gridFirst = document.getElementById('bentoGridFirst');
   const gridSecond = document.getElementById('bentoGridSecond');
   if (gridFirst || gridSecond) {
@@ -379,7 +586,6 @@ function renderInitial() {
     renderBentoGrids();
   }
   
-  // Renderizar eventos si existe el contenedor
   const eventsGrid = document.getElementById('eventsGrid');
   if (eventsGrid) {
     console.log('[GKraken] → renderUpcomingEvents()');
@@ -393,25 +599,17 @@ function renderInitial() {
 // EVENT LISTENERS
 // ==========================================================================
 
-/**
- * Configura todos los event listeners globales de la aplicación
- * Incluye navegación por teclado, scroll suave y clics en lightbox
- */
 function setupEventListeners() {
-  // Navegación por teclado
   document.addEventListener('keydown', function(e) {
-    // ESC cierra modales y paneles
     if (e.key === 'Escape') {
       closeLightbox();
       closePanel();
       closeEventsModal();
     }
-    // Flechas navegan el lightbox
     if (e.key === 'ArrowLeft') navigateLightbox(-1);
     if (e.key === 'ArrowRight') navigateLightbox(1);
   });
   
-  // Scroll suave para enlaces ancla
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       const href = this.getAttribute('href');
@@ -425,7 +623,6 @@ function setupEventListeners() {
     });
   });
   
-  // Cerrar lightbox al hacer clic en el fondo
   const lightbox = document.getElementById('lightbox');
   if (lightbox) {
     lightbox.addEventListener('click', function(e) {
@@ -438,10 +635,6 @@ function setupEventListeners() {
 // PRELOADER
 // ==========================================================================
 
-/**
- * Oculta el preloader de carga inicial
- * Agrega clase 'hidden' para animación CSS
- */
 function hidePreloader() {
   const preloader = document.getElementById('preloader');
   if (preloader) {
@@ -453,11 +646,6 @@ function hidePreloader() {
 // LIGHTBOX
 // ==========================================================================
 
-/**
- * Abre el lightbox con un array de imágenes
- * @param {Array} images - Array de objetos con {src, alt}
- * @param {number} index - Índice de la imagen a mostrar inicialmente
- */
 function openLightbox(images, index) {
   lightboxImages = GKraken.normalizeToArray(images);
   if (lightboxImages.length === 0) return;
@@ -468,18 +656,13 @@ function openLightbox(images, index) {
   
   if (!lightbox || !img) return;
   
-  // Establecer imagen actual
   img.src = lightboxImages[lightboxIndex].src;
   img.alt = lightboxImages[lightboxIndex].alt || '';
   
-  // Mostrar lightbox y bloquear scroll
   lightbox.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
 
-/**
- * Cierra el lightbox y restaura el scroll
- */
 function closeLightbox() {
   const lightbox = document.getElementById('lightbox');
   if (lightbox) {
@@ -488,14 +671,9 @@ function closeLightbox() {
   }
 }
 
-/**
- * Navega a la imagen anterior o siguiente en el lightbox
- * @param {number} direction - Dirección (-1 = anterior, 1 = siguiente)
- */
 function navigateLightbox(direction) {
   if (lightboxImages.length === 0) return;
   
-  // Navegación circular
   lightboxIndex = (lightboxIndex + direction + lightboxImages.length) % lightboxImages.length;
   
   const img = document.getElementById('lightboxImage');
@@ -509,15 +687,10 @@ function navigateLightbox(direction) {
 // BENTO GRIDS
 // ==========================================================================
 
-/**
- * Renderiza los grids tipo Bento con los items cargados
- * Cada item es clickeable y abre su panel correspondiente
- */
 function renderBentoGrids() {
   const gridFirst = document.getElementById('bentoGridFirst');
   const gridSecond = document.getElementById('bentoGridSecond');
   
-  // Renderizar primer grid
   if (gridFirst && bentoItemsFirst.length > 0) {
     gridFirst.innerHTML = bentoItemsFirst.map(item => `
       <div class="bento-item ${item.class || ''}" data-panel="${item.id || ''}">
@@ -528,7 +701,6 @@ function renderBentoGrids() {
     `).join('');
   }
   
-  // Renderizar segundo grid
   if (gridSecond && bentoItemsSecond.length > 0) {
     gridSecond.innerHTML = bentoItemsSecond.map(item => `
       <div class="bento-item ${item.class || ''}" data-panel="${item.id || ''}">
@@ -539,7 +711,6 @@ function renderBentoGrids() {
     `).join('');
   }
   
-  // Agregar event listeners para abrir paneles
   document.querySelectorAll('.bento-item').forEach(item => {
     item.addEventListener('click', function() {
       const panelId = this.dataset.panel;
@@ -547,24 +718,17 @@ function renderBentoGrids() {
     });
   });
   
-  // Configurar observer para animaciones de entrada
   observeBentoItems();
 }
 
-/**
- * Configura Intersection Observer para animar items al entrar en viewport
- * Los items aparecen con delay escalonado
- */
 function observeBentoItems() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         const items = entry.target.querySelectorAll('.bento-item');
-        // Animar cada item con delay incremental
         items.forEach((item, i) => {
           setTimeout(() => item.classList.add('animated'), i * 150);
         });
-        // Dejar de observar después de animar
         observer.unobserve(entry.target);
       }
     });
@@ -581,13 +745,9 @@ function observeBentoItems() {
 // EVENTS - UPCOMING EVENTS
 // ==========================================================================
 
-/**
- * Genera el HTML para una tarjeta de evento individual
- * Función auxiliar para evitar duplicación de código
- * @param {Object} e - Objeto del evento con propiedades (team1, team2, image, etc.)
- * @returns {string} - HTML de la tarjeta de evento
- */
 function renderEventCard(e) {
+  const bookText = GKraken.t('events.bookTickets');
+  
   return `
     <div class="event-card" onclick="contactForEvent('${e.team1} vs ${e.team2}')">
       <div class="event-image">
@@ -622,84 +782,63 @@ function renderEventCard(e) {
           </svg>
           ${e.venue}
         </div>
-        <button class="event-cta">Reservar Boletos</button>
+        <button class="event-cta">${bookText}</button>
       </div>
     </div>
   `;
 }
 
-/**
- * Renderiza los eventos próximos en el grid principal
- * Muestra solo INITIAL_EVENTS_COUNT (3) eventos inicialmente
- * Si hay más eventos, muestra un botón para ver todos
- */
 function renderUpcomingEvents() {
   const grid = document.getElementById('eventsGrid');
   const showAllBtn = document.getElementById('showAllEventsBtn');
   
   if (!grid) return;
   
-  // Si no hay eventos, mostrar mensaje
   if (!Array.isArray(upcomingEvents) || upcomingEvents.length === 0) {
-    grid.innerHTML = '<p class="no-events">No hay eventos próximos disponibles.</p>';
+    grid.innerHTML = `<p class="no-events">${GKraken.t('events.noEvents')}</p>`;
     if (showAllBtn) showAllBtn.style.display = 'none';
     return;
   }
   
-  // Mostrar solo los primeros N eventos (definido por INITIAL_EVENTS_COUNT)
   const eventsToShow = upcomingEvents.slice(0, INITIAL_EVENTS_COUNT);
-  
-  // Renderizar las tarjetas de eventos
   grid.innerHTML = eventsToShow.map(e => renderEventCard(e)).join('');
   
-  // Configurar el botón "Mostrar todos" según la cantidad de eventos
   if (showAllBtn) {
     const remainingEvents = upcomingEvents.length - INITIAL_EVENTS_COUNT;
     
     if (remainingEvents > 0) {
-      // Hay más eventos: mostrar botón con contador
       showAllBtn.style.display = 'flex';
       showAllBtn.innerHTML = `
-        <span>Mostrar todos los eventos</span>
-        <span class="events-count">(${remainingEvents} más)</span>
+        <span>${GKraken.t('events.showAll')}</span>
+        <span class="events-count">(${remainingEvents} ${GKraken.t('events.more')})</span>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M6 9l6 6 6-6"/>
         </svg>
       `;
     } else {
-      // No hay más eventos: ocultar botón
       showAllBtn.style.display = 'none';
     }
   }
 }
 
-/**
- * Muestra todos los eventos próximos con animación de entrada
- * Se ejecuta al hacer clic en el botón "Mostrar todos"
- */
 function showAllUpcomingEvents() {
   const grid = document.getElementById('eventsGrid');
   const showAllBtn = document.getElementById('showAllEventsBtn');
   
   if (!grid) return;
   
-  // Renderizar todos los eventos
   grid.innerHTML = upcomingEvents.map(e => renderEventCard(e)).join('');
   
-  // Ocultar el botón después de mostrar todos
   if (showAllBtn) {
     showAllBtn.style.display = 'none';
   }
   
-  // Animar los nuevos eventos que aparecen (los que estaban ocultos)
   const cards = grid.querySelectorAll('.event-card');
   cards.forEach((card, index) => {
-    // Solo animar las tarjetas nuevas (después de INITIAL_EVENTS_COUNT)
     if (index >= INITIAL_EVENTS_COUNT) {
       card.style.opacity = '0';
       card.style.transform = 'translateY(20px)';
       
-      // Aplicar animación con delay escalonado
       setTimeout(() => {
         card.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
         card.style.opacity = '1';
@@ -709,20 +848,17 @@ function showAllUpcomingEvents() {
   });
 }
 
-/**
- * Renderiza todos los eventos en el modal de eventos
- * Usado para la vista completa en el modal
- */
 function renderAllEvents() {
   const grid = document.getElementById('allEventsGrid');
   if (!grid) return;
   
   if (!Array.isArray(upcomingEvents) || upcomingEvents.length === 0) {
-    grid.innerHTML = '<p class="no-events">No hay eventos disponibles.</p>';
+    grid.innerHTML = `<p class="no-events">${GKraken.t('events.noEvents')}</p>`;
     return;
   }
   
-  // Renderizar todas las tarjetas con botón diferente
+  const contactText = GKraken.t('events.contactAdvisor');
+  
   grid.innerHTML = upcomingEvents.map(e => `
     <div class="event-card" onclick="contactForEvent('${e.team1} vs ${e.team2}')">
       <div class="event-image">
@@ -757,24 +893,18 @@ function renderAllEvents() {
           </svg>
           ${e.venue}
         </div>
-        <button class="event-cta">Contactar Asesor</button>
+        <button class="event-cta">${contactText}</button>
       </div>
     </div>
   `).join('');
 }
 
-/**
- * Abre WhatsApp con mensaje pre-escrito para consultar sobre un evento
- * @param {string} eventName - Nombre del evento (ej: "Team1 vs Team2")
- */
 function contactForEvent(eventName) {
-  const message = encodeURIComponent(`Hola SOCCER iD, me interesa: ${eventName}`);
+  const messageTemplate = GKraken.t('contact.eventMessage');
+  const message = encodeURIComponent(`${messageTemplate} ${eventName}`);
   window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${message}`, '_blank');
 }
 
-/**
- * Abre el modal de todos los eventos con animación de carga
- */
 function openEventsModal() {
   const modal = document.getElementById('eventsModal');
   const loading = document.getElementById('loadingContainer');
@@ -782,15 +912,12 @@ function openEventsModal() {
   
   if (!modal) return;
   
-  // Mostrar modal y bloquear scroll
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
   
-  // Mostrar loading
   if (loading) loading.style.display = 'flex';
   if (grid) grid.classList.remove('loaded');
   
-  // Simular carga y luego mostrar eventos
   setTimeout(() => {
     if (loading) loading.style.display = 'none';
     renderAllEvents();
@@ -798,9 +925,6 @@ function openEventsModal() {
   }, 1500);
 }
 
-/**
- * Cierra el modal de eventos
- */
 function closeEventsModal() {
   const modal = document.getElementById('eventsModal');
   if (modal) {
@@ -813,21 +937,14 @@ function closeEventsModal() {
 // PANEL CONTENT - GENERADORES DE CONTENIDO
 // ==========================================================================
 
-/**
- * Genera el contenido HTML completo para un panel
- * Detecta el tipo de panel y llama al generador correspondiente
- * @param {string} panelId - ID del panel a generar
- * @returns {string} - HTML del contenido del panel
- */
 function generatePanelContent(panelId) {
   const panel = panelTemplates[panelId];
   
-  // Si no existe el template, mostrar mensaje de error
   if (!panel) {
     console.warn(`[GKraken] No se encontró template para panel: ${panelId}`);
     return `
       <div class="panel-header">
-        <button class="back-btn" onclick="closePanel()">Volver</button>
+        <button class="back-btn" onclick="closePanel()">${GKraken.t('panel.back')}</button>
       </div>
       <div class="panel-body">
         <p>Contenido no disponible</p>
@@ -835,27 +952,24 @@ function generatePanelContent(panelId) {
     `;
   }
   
-  // Header común para todos los paneles
   let content = `
     <div class="panel-header">
       <button class="back-btn" onclick="closePanel()">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M19 12H5M12 19l-7-7 7-7"/>
         </svg>
-        Volver
+        ${GKraken.t('panel.back')}
       </button>
       <span class="panel-tag">${panel.tag || ''}</span>
     </div>
   `;
   
-  // Panel Copa tiene layout especial (fullscreen)
   if (panelId === 'copa') {
     return content + `<div class="panel-body fx-padding">${generateCopaContent(panel)}</div>`;
   }
   
   content += '<div class="panel-body">';
   
-  // Seleccionar generador según el tipo de panel
   if (['quienes', 'soccer', 'vip', 'fan'].includes(panelId)) {
     content += generateGalleryContent(panel);
   } else if (panelId === 'seguros') {
@@ -869,19 +983,12 @@ function generatePanelContent(panelId) {
   return content + '</div>';
 }
 
-/**
- * Genera contenido de galería masonry para paneles con imágenes
- * @param {Object} panel - Datos del panel
- * @returns {string} - HTML de la galería
- */
 function generateGalleryContent(panel) {
   const gallery = panel.gallery ? GKraken.normalizeToArray(panel.gallery) : [];
   
   let html = `<div class="masonry-grid">`;
-  // Tarjeta de texto introductoria
   html += `<div class="masonry-text-card"><h2>${panel.title}</h2><p>${panel.description}</p></div>`;
   
-  // Imágenes de la galería
   html += gallery.map((img, i) => `
     <div class="masonry-item${img.tall ? ' tall' : ''}" onclick='openLightbox(${JSON.stringify(gallery)}, ${i})'>
       <img src="${img.src}" alt="${img.alt}">
@@ -893,13 +1000,9 @@ function generateGalleryContent(panel) {
   return html;
 }
 
-/**
- * Genera contenido para el panel de Seguros iD
- * Incluye video en frame de iPhone
- * @param {Object} panel - Datos del panel
- * @returns {string} - HTML del contenido
- */
 function generateSegurosContent(panel) {
+  const learnMore = GKraken.t('panel.learnMore');
+  
   return `
     <div class="seguros-container">
       <div class="seguros-header">
@@ -917,7 +1020,7 @@ function generateSegurosContent(panel) {
           <div class="iphone-home-indicator"></div>
         </div>
         <a href="https://segurosid.com" target="_blank" class="cta-conoce-mas">
-          Conoce más
+          ${learnMore}
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
@@ -927,22 +1030,21 @@ function generateSegurosContent(panel) {
   `;
 }
 
-/**
- * Genera contenido para el panel de Copa del Mundo 2026
- * Layout fullscreen con imagen de banner
- * @param {Object} panel - Datos del panel
- * @returns {string} - HTML del contenido
- */
 function generateCopaContent(panel) {
+  const requestAdvisory = GKraken.t('panel.requestAdvisory');
+  const whatsappMessage = GKraken.currentLang === 'es' 
+    ? 'Hola%20SOCCER%20iD%2C%20me%20interesa%20la%20asesoría%20para%20la%20Copa%20del%20Mundo%202026'
+    : 'Hello%20SOCCER%20iD%2C%20I%27m%20interested%20in%20World%20Cup%202026%20advisory';
+  
   return `
     <div class="copa-fullscreen-wrapper">
       <div class="copa-text-section">
         <div class="copa-text-content">
           <h1>${panel.title}</h1>
           <p>${panel.description}</p>
-          <a href="https://wa.me/${WHATSAPP_NUMBER}?text=Hola%20SOCCER%20iD%2C%20me%20interesa%20la%20asesoría%20para%20la%20Copa%20del%20Mundo%202026" target="_blank" class="whatsapp-contact-btn">
+          <a href="https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMessage}" target="_blank" class="whatsapp-contact-btn">
             <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
-            Solicitar Asesoría
+            ${requestAdvisory}
           </a>
         </div>
       </div>
@@ -953,14 +1055,10 @@ function generateCopaContent(panel) {
   `;
 }
 
-/**
- * Genera contenido para el panel de Media/Prensa
- * Lista de artículos con soporte para revistas interactivas
- * @param {Object} panel - Datos del panel
- * @returns {string} - HTML del contenido
- */
 function generateMediaContent(panel) {
   const articles = panel.articles ? GKraken.normalizeToArray(panel.articles) : [];
+  const magazineText = GKraken.t('panel.magazine');
+  const featuredVideo = GKraken.t('panel.featuredVideo');
   
   let html = `<h1 class="panel-title">${panel.title}</h1><p class="panel-description">${panel.description}</p>`;
   
@@ -970,21 +1068,19 @@ function generateMediaContent(panel) {
     html += articles.map(a => {
       const isMagazine = a.type === 'magazine';
       
-      // Handler diferente para revistas vs artículos externos
       const clickHandler = isMagazine 
         ? `onclick="MagazineReader.openFromData('${a.id}'); return false;"` 
         : '';
       const href = isMagazine ? '#' : a.url;
       const target = isMagazine ? '' : 'target="_blank"';
       
-      // Badge especial para revistas
       const badgeHtml = isMagazine 
         ? `<span class="article-type-badge magazine-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
               <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
               <path d="M7 7h10v2H7zm0 4h10v2H7zm0 4h7v2H7z"/>
             </svg>
-            Revista
+            ${magazineText}
            </span>` 
         : '';
       
@@ -1013,10 +1109,9 @@ function generateMediaContent(panel) {
     html += `</div>`;
   }
   
-  // Sección de video destacado (opcional)
   if (panel.videoId) {
     html += `
-      <h3 class="video-section-title">Video Destacado</h3>
+      <h3 class="video-section-title">${featuredVideo}</h3>
       <div class="video-embed-wrapper">
         <iframe src="https://www.youtube.com/embed/${panel.videoId}" title="Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
@@ -1026,12 +1121,6 @@ function generateMediaContent(panel) {
   return html;
 }
 
-/**
- * Genera contenido para el panel de Opiniones/Testimonios
- * Carrusel horizontal de tarjetas de testimonios
- * @param {Object} panel - Datos del panel
- * @returns {string} - HTML del contenido
- */
 function generateOpinionesContent(panel) {
   const testimonials = panel.testimonials ? GKraken.normalizeToArray(panel.testimonials) : [];
   
@@ -1081,11 +1170,6 @@ function generateOpinionesContent(panel) {
 // PANEL FUNCTIONS - APERTURA Y CIERRE
 // ==========================================================================
 
-/**
- * Extrae el nombre de clase CSS de un valor que puede ser string u objeto
- * @param {string|Object} value - Valor a procesar
- * @returns {string} - Nombre de clase CSS
- */
 function extractClassName(value) {
   if (!value) return '';
   if (typeof value === 'string') return value.trim();
@@ -1095,10 +1179,6 @@ function extractClassName(value) {
   return '';
 }
 
-/**
- * Abre un panel deslizante con el contenido especificado
- * @param {string} panelId - ID del panel a abrir
- */
 function openPanel(panelId) {
   if (!panelId) return;
   
@@ -1111,7 +1191,6 @@ function openPanel(panelId) {
     return;
   }
   
-  // Remover todas las clases de panel anteriores
   Object.values(panelClasses).forEach(cls => {
     const className = extractClassName(cls);
     if (className) {
@@ -1119,64 +1198,46 @@ function openPanel(panelId) {
     }
   });
   
-  // Agregar la clase del panel actual
   const newClassName = extractClassName(panelClasses[panelId]);
   if (newClassName) {
     detailPanel.classList.add(newClassName);
   }
   
-  // Generar y asignar contenido
   detailContent.innerHTML = generatePanelContent(panelId);
   detailContent.scrollTop = 0;
   
-  // Animación de salida del contenedor principal
   if (mainContainer) mainContainer.classList.add('slide-out');
   
-  // Activar panel con requestAnimationFrame para mejor rendimiento
   requestAnimationFrame(() => {
     detailPanel.classList.add('active');
   });
   
-  // Bloquear scroll del body
   document.body.style.overflow = 'hidden';
-  
-  // Resetear slide para testimonios
   currentSlide = 0;
 }
 
-/**
- * Cierra el panel deslizante actual
- */
 function closePanel() {
   const mainContainer = document.getElementById('mainContainer');
   const detailPanel = document.getElementById('detailPanel');
   const detailContent = document.getElementById('detailContent');
   
-  // Desactivar panel
   if (detailPanel) {
     detailPanel.classList.remove('active');
   }
   
-  // Resetear scroll del contenido
   if (detailContent) {
     detailContent.scrollTop = 0;
   }
   
-  // Reactivar contenedor principal después de la animación
   setTimeout(() => {
     if (mainContainer) {
       mainContainer.classList.remove('slide-out');
     }
   }, 300);
   
-  // Restaurar scroll del body
   document.body.style.overflow = '';
 }
 
-/**
- * Navega el carrusel de testimonios
- * @param {number} direction - Dirección (-1 = izquierda, 1 = derecha)
- */
 function slideTestimonials(direction) {
   const track = document.getElementById('testimonialsTrack');
   if (!track) return;
@@ -1184,31 +1245,22 @@ function slideTestimonials(direction) {
   const cards = track.querySelectorAll('.testimonial-card');
   if (cards.length === 0) return;
   
-  // Calcular ancho de tarjeta incluyendo gap
   const cardWidth = cards[0].offsetWidth + 24;
-  
-  // Calcular máximo slide posible
   const maxSlide = Math.max(0, cards.length - Math.floor(track.parentElement.offsetWidth / cardWidth));
   
-  // Actualizar slide con límites
   currentSlide = Math.max(0, Math.min(currentSlide + direction, maxSlide));
   
-  // Aplicar transformación
   track.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
 }
+
+
 
 // ==========================================================================
 // INICIAR APLICACIÓN
 // ==========================================================================
 
-/**
- * Punto de entrada de la aplicación
- * Espera a que el DOM esté listo antes de inicializar
- */
 if (document.readyState === 'loading') {
-  // DOM aún cargando, esperar evento
   document.addEventListener('DOMContentLoaded', initializeGKraken);
 } else {
-  // DOM ya listo, inicializar inmediatamente
   initializeGKraken();
 }

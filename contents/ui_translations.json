@@ -1,0 +1,108 @@
+{
+  "es": {
+    "preloader": {
+      "loading": "Cargando..."
+    },
+    "hero": {
+      "tagline": "AMAMOS TANTO EL DEPORTE<br>QUE NOS ATREVIMOS A REINVENTARLO",
+      "scroll": "Desliza"
+    },
+    "events": {
+      "title": "Próximos Eventos",
+      "subtitle": "Asegura tu lugar en tu evento favorito",
+      "bookTickets": "Reservar Boletos",
+      "contactAdvisor": "Contactar Asesor",
+      "viewAll": "Ver Todos los Eventos",
+      "showAll": "Mostrar todos los eventos",
+      "more": "más",
+      "noEvents": "No hay eventos próximos disponibles.",
+      "allEvents": "Todos los Eventos",
+      "close": "Cerrar",
+      "loadingEvents": "Cargando eventos..."
+    },
+    "contact": {
+      "title": "¿Tienes dudas?",
+      "description": "Nuestro equipo está listo para ayudarte. Contáctanos por WhatsApp y recibe atención personalizada al instante.",
+      "whatsappBtn": "Contactar por WhatsApp",
+      "whatsappMessage": "Hola SOCCER iD, me gustaría obtener más información",
+      "eventMessage": "Hola SOCCER iD, me interesa:"
+    },
+    "footer": {
+      "tagline": "Amamos tanto el deporte que nos atrevimos a reinventarlo.",
+      "followUs": "Síguenos",
+      "navigation": "Navegación",
+      "backToTop": "Volver al Inicio",
+      "privacy": "Política de Privacidad",
+      "terms": "Términos y Condiciones",
+      "copyright": "© 2026 SOCCER iD. Todos los derechos reservados."
+    },
+    "panel": {
+      "back": "Volver",
+      "learnMore": "Conoce más",
+      "requestAdvisory": "Solicitar Asesoría",
+      "featuredVideo": "Video Destacado",
+      "magazine": "Revista"
+    },
+    "lightbox": {
+      "close": "Cerrar"
+    },
+    "language": {
+      "es": "Español",
+      "en": "English",
+      "select": "Idioma"
+    }
+  },
+  "en": {
+    "preloader": {
+      "loading": "Loading..."
+    },
+    "hero": {
+      "tagline": "WE LOVE SPORTS SO MUCH<br>THAT WE DARED TO REINVENT IT",
+      "scroll": "Scroll"
+    },
+    "events": {
+      "title": "Upcoming Events",
+      "subtitle": "Secure your spot at your favorite event",
+      "bookTickets": "Book Tickets",
+      "contactAdvisor": "Contact Advisor",
+      "viewAll": "View All Events",
+      "showAll": "Show all events",
+      "more": "more",
+      "noEvents": "No upcoming events available.",
+      "allEvents": "All Events",
+      "close": "Close",
+      "loadingEvents": "Loading events..."
+    },
+    "contact": {
+      "title": "Have questions?",
+      "description": "Our team is ready to help you. Contact us via WhatsApp and receive personalized attention instantly.",
+      "whatsappBtn": "Contact via WhatsApp",
+      "whatsappMessage": "Hello SOCCER iD, I would like more information",
+      "eventMessage": "Hello SOCCER iD, I'm interested in:"
+    },
+    "footer": {
+      "tagline": "We love sports so much that we dared to reinvent it.",
+      "followUs": "Follow Us",
+      "navigation": "Navigation",
+      "backToTop": "Back to Top",
+      "privacy": "Privacy Policy",
+      "terms": "Terms and Conditions",
+      "copyright": "© 2026 SOCCER iD. All rights reserved."
+    },
+    "panel": {
+      "back": "Back",
+      "learnMore": "Learn more",
+      "requestAdvisory": "Request Advisory",
+      "featuredVideo": "Featured Video",
+      "magazine": "Magazine"
+    },
+    "lightbox": {
+      "close": "Close"
+    },
+    "language": {
+      "es": "Español",
+      "en": "English",
+      "select": "Language"
+    }
+  }
+}

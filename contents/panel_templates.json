@@ -1,168 +1,338 @@
 {
-  "quienes": {
-    "tag": "Nosotros",
-    "title": "Quiénes Somos",
-    "description": "<p style=\"text-align: justify;\">Somos <b>amantes del deporte</b> y por eso <b>reinventamos la forma de vivirlo</b>. Creamos <b>la app que todo atleta necesita</b>, <b>organizamos partidos internacionales en Estados Unidos</b>, te damos <b>la mejor asesoría para que disfrutes la experiencia mundialista al máximo</b> y te <b>llevamos a cualquier evento deportivo del mundo</b>, siempre asegurándote <b>una experiencia única y exclusiva</b>.</p>",
-    "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=550",
-    "alt": "Deportistas",
-    "gallery": [
-      { "src": "/assets/images/gallery/somos/1.PNG?w=600", "alt": "Estadio lleno" },
-      { "src": "/assets/images/gallery/somos/2.png?w=600", "alt": "Partido de fútbol" },
-      { "src": "/assets/images/gallery/somos/3.png?w=600", "alt": "Aficionados celebrando" },
-      { "src": "/assets/images/gallery/somos/4.JPG?w=600", "alt": "Campo de juego" },
-      { "src": "/assets/images/gallery/somos/5.JPG?w=600", "alt": "Gol celebración" },
-      { "src": "/assets/images/gallery/somos/6.jpg?w=600", "alt": "Deportistas" },
-      { "src": "/assets/images/gallery/somos/7.jpg?w=600", "alt": "Deportistas" }
-    ]
-  },
-  "soccer": {
-    "tag": "Eventos",
-    "title": "SOCCER iD CUP",
-    "description": "<p style=\"text-align: justify;\"><b>Organizamos partidos internacionales en Estados Unidos</b> con <b>equipos de primera división de las ligas más importantes de Latinoamérica</b>. En <b>2024</b> llevamos a la cancha un <b>Pumas vs Comunicaciones en San José, California</b>, y un <b>Club América vs Atlético Nacional en Orlando</b>; y en <b>2025</b> sumamos <b>otro eventazo</b> con el <b>Tigres vs Pumas en Austin</b>.</p>",
-    "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=520",
-    "alt": "Equipos",
-    "gallery": [
-      { "src": "/assets/images/gallery/socceridcup/4.jpg?w=600", "alt": "Estadio USA" },
-      { "src": "/assets/images/gallery/socceridcup/1.jpg?w=600", "alt": "Soccer ID Cup" },
-      { "src": "/assets/images/gallery/socceridcup/6.jpg?w=600", "alt": "Equipos" },
-      { "src": "/assets/images/gallery/socceridcup/3.jpg?w=600", "alt": "Celebración gol" },
-      { "src": "/assets/images/gallery/socceridcup/5.jpg?w=600", "alt": "Campo profesional" },
-      { "src": "/assets/images/gallery/socceridcup/2.jpg?w=600", "alt": "Partido internacional" },
-      { "src": "/assets/images/gallery/socceridcup/7.jpeg?w=600", "alt": "Equipos" }
-    ]
-  },
-  "vip": {
-    "tag": "Premium",
-    "title": "EXPERIENCIAS VIP",
-    "description": "<p style=\"text-align: justify;\"><b>Llevamos a nuestros clientes a cualquier evento deportivo del mundo</b>. Contamos con <b>palcos en todos los estadios de la Liga MX</b>, incluyendo <b>las suites más exclusivas del Estadio Banorte</b>, y ofrecemos <b>asientos en los eventos más atractivos del planeta</b>, como la <b>UEFA Champions League</b>.</p>",
-    "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=470",
-    "alt": "Eventos mundiales",
-    "gallery": [
-      { "src": "/assets/images/gallery/vip/1.jpg?w=600", "alt": "Suite VIP" },
-      { "src": "/assets/images/gallery/vip/3.jpg?w=600", "alt": "Palco exclusivo" },
-      { "src": "/assets/images/gallery/vip/4.jpg?w=600", "alt": "Experiencia única" },
-      { "src": "/assets/images/gallery/vip/7.jpg?w=600", "alt": "Eventos mundiales" },
-      { "src": "/assets/images/gallery/vip/5.jpg?w=600", "alt": "Servicio VIP" },
-      { "src": "/assets/images/gallery/vip/6.jpg?w=600", "alt": "Champions League" },
-      { "src": "/assets/images/gallery/vip/2.jpg?w=600", "alt": "Vista premium" }
-    ]
-  },
-  "seguros": {
-    "tag": "App",
-    "title": "SEGUROS iD",
-    "description": "<p style=\"text-align: justify;\"><b>Creamos la app que todo deportista necesita</b>. Ofrecemos <b>un seguro deportivo al mejor precio del mercado</b>, donde nuestros clientes pueden <b>elegir cuándo y cómo activar su protección</b> mientras <b>entrenan o compiten en su deporte favorito</b>.</p>"
-  },
-  "copa": {
-    "tag": "Mundial",
-    "title": "ASESORÍA COPA 2026",
-    "description": "<p style=\"text-align: justify;\"><b>Guiamos a nuestros clientes paso a paso</b> en la <b>compra de boletos para el torneo más atractivo y cotizado de la historia</b>. Les ayudamos a <b>conseguir los mejores lugares al mejor precio</b> para <b>el partido inaugural</b> y para <b>los encuentros de su selección</b>, ya sea <b>en México</b>, <b>Estados Unidos o Canadá</b>.</p>"
-  },
-  "fan": {
-    "tag": "Club",
-    "title": "FAN EXPERIENCE",
-    "description": "<p style=\"text-align: justify;\">A los <b>usuarios de nuestra app</b> les ofrecemos <b>promociones exclusivas</b>, <b>acceso a torneos</b>, <b>meet & greets</b>, <b>sorteos y regalos especiales</b>, además de <b>experiencias pensadas para premiar su pasión por el deporte</b> y <b>mantenerlos siempre cerca de los mejores eventos</b>.</p>",
-    "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=550",
-    "alt": "Comunidad",
-    "gallery": [
-      { "src": "/assets/images/gallery/fan/1@2x.png?w=600", "alt": "vip" },
-      { "src": "/assets/images/gallery/fan/2@2x.png?w=600", "alt": "vip" },
-      { "src": "/assets/images/gallery/fan/3@2x.png?w=600", "alt": "vip" },
-      { "src": "/assets/images/gallery/fan/4@2x.png?w=600", "alt": "vip" },
-      { "src": "/assets/images/gallery/fan/5@2x.png?w=600", "alt": "vip" },
-      { "src": "/assets/images/gallery/fan/6@2x.png?w=600", "alt": "vip" },
-      { "src": "/assets/images/gallery/fan/7@2x.png?w=600", "alt": "vip" }
-    ]
-  },
-  "media": {
-    "tag": "Prensa",
-    "title": "MEDIA",
-    "description": "<p style=\"text-align: justify;\"><b>Los medios más importantes del país</b> nos han ayudado a <b>dar a conocer nuestros productos y servicios</b>, y han hecho <b>eco de todo lo que hemos logrado a lo largo de los años</b>, <b>respaldando nuestro crecimiento</b> y <b>nuestra propuesta en el mundo del deporte</b>.</p><br/>",
-    "image": "/assets/images/news2.jpg",
-    "source": "Record",
-    "excerpt": "Una iniciativa que busca brindar atención médica de primer nivel a deportistas amateur...",
-    "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division",
-    "videoId": "9cqn_j9XzH4",
-    "articles": [
-      {
-        "id": "impulso-social-2025",
-        "image": "/assets/images/news/a1/portada.jpg",
-        "source": "Trascendentales 2025",
-        "title": "Portada Impulso Social México 2025",
-        "excerpt": "Portada y artículo principal de la revista \"Trascendentales 2025\"",
-        "type": "magazine",
-        "magazineData": {
-          "title": "Impulso Social México 2025",
-          "pages": [
-            { "url": "/assets/images/news/a1/1.png", "alt": "Página 1" },
-            { "url": "/assets/images/news/a1/2.png", "alt": "Página 2" },
-            { "url": "/assets/images/news/a1/3.png", "alt": "Página 3" },
-            { "url": "/assets/images/news/a1/4.png", "alt": "Página 4" },
-            { "url": "/assets/images/news/a1/5.png", "alt": "Página 5" },
-            { "url": "/assets/images/news/a1/6.png", "alt": "Página 6" },
-            { "url": "/assets/images/news/a1/7.png", "alt": "Página 7" }
-          ]
+  "es": {
+    "quienes": {
+      "tag": "Nosotros",
+      "title": "Quiénes Somos",
+      "description": "<p style=\"text-align: justify;\">Somos <b>amantes del deporte</b> y por eso <b>reinventamos la forma de vivirlo</b>. Creamos <b>la app que todo atleta necesita</b>, <b>organizamos partidos internacionales en Estados Unidos</b>, te damos <b>la mejor asesoría para que disfrutes la experiencia mundialista al máximo</b> y te <b>llevamos a cualquier evento deportivo del mundo</b>, siempre asegurándote <b>una experiencia única y exclusiva</b>.</p>",
+      "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=550",
+      "alt": "Deportistas",
+      "gallery": [
+        { "src": "/assets/images/gallery/somos/1.PNG?w=600", "alt": "Estadio lleno" },
+        { "src": "/assets/images/gallery/somos/2.png?w=600", "alt": "Partido de fútbol" },
+        { "src": "/assets/images/gallery/somos/3.png?w=600", "alt": "Aficionados celebrando" },
+        { "src": "/assets/images/gallery/somos/4.JPG?w=600", "alt": "Campo de juego" },
+        { "src": "/assets/images/gallery/somos/5.JPG?w=600", "alt": "Gol celebración" },
+        { "src": "/assets/images/gallery/somos/6.jpg?w=600", "alt": "Deportistas" },
+        { "src": "/assets/images/gallery/somos/7.jpg?w=600", "alt": "Deportistas" }
+      ]
+    },
+    "soccer": {
+      "tag": "Eventos",
+      "title": "SOCCER iD CUP",
+      "description": "<p style=\"text-align: justify;\"><b>Organizamos partidos internacionales en Estados Unidos</b> con <b>equipos de primera división de las ligas más importantes de Latinoamérica</b>. En <b>2024</b> llevamos a la cancha un <b>Pumas vs Comunicaciones en San José, California</b>, y un <b>Club América vs Atlético Nacional en Orlando</b>; y en <b>2025</b> sumamos <b>otro eventazo</b> con el <b>Tigres vs Pumas en Austin</b>.</p>",
+      "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=520",
+      "alt": "Equipos",
+      "gallery": [
+        { "src": "/assets/images/gallery/socceridcup/4.jpg?w=600", "alt": "Estadio USA" },
+        { "src": "/assets/images/gallery/socceridcup/1.jpg?w=600", "alt": "Soccer ID Cup" },
+        { "src": "/assets/images/gallery/socceridcup/6.jpg?w=600", "alt": "Equipos" },
+        { "src": "/assets/images/gallery/socceridcup/3.jpg?w=600", "alt": "Celebración gol" },
+        { "src": "/assets/images/gallery/socceridcup/5.jpg?w=600", "alt": "Campo profesional" },
+        { "src": "/assets/images/gallery/socceridcup/2.jpg?w=600", "alt": "Partido internacional" },
+        { "src": "/assets/images/gallery/socceridcup/7.jpeg?w=600", "alt": "Equipos" }
+      ]
+    },
+    "vip": {
+      "tag": "Premium",
+      "title": "EXPERIENCIAS VIP",
+      "description": "<p style=\"text-align: justify;\"><b>Llevamos a nuestros clientes a cualquier evento deportivo del mundo</b>. Contamos con <b>palcos en todos los estadios de la Liga MX</b>, incluyendo <b>las suites más exclusivas del Estadio Banorte</b>, y ofrecemos <b>asientos en los eventos más atractivos del planeta</b>, como la <b>UEFA Champions League</b>.</p>",
+      "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=470",
+      "alt": "Eventos mundiales",
+      "gallery": [
+        { "src": "/assets/images/gallery/vip/1.jpg?w=600", "alt": "Suite VIP" },
+        { "src": "/assets/images/gallery/vip/3.jpg?w=600", "alt": "Palco exclusivo" },
+        { "src": "/assets/images/gallery/vip/4.jpg?w=600", "alt": "Experiencia única" },
+        { "src": "/assets/images/gallery/vip/7.jpg?w=600", "alt": "Eventos mundiales" },
+        { "src": "/assets/images/gallery/vip/5.jpg?w=600", "alt": "Servicio VIP" },
+        { "src": "/assets/images/gallery/vip/6.jpg?w=600", "alt": "Champions League" },
+        { "src": "/assets/images/gallery/vip/2.jpg?w=600", "alt": "Vista premium" }
+      ]
+    },
+    "seguros": {
+      "tag": "App",
+      "title": "SEGUROS iD",
+      "description": "<p style=\"text-align: justify;\"><b>Creamos la app que todo deportista necesita</b>. Ofrecemos <b>un seguro deportivo al mejor precio del mercado</b>, donde nuestros clientes pueden <b>elegir cuándo y cómo activar su protección</b> mientras <b>entrenan o compiten en su deporte favorito</b>.</p>"
+    },
+    "copa": {
+      "tag": "Mundial",
+      "title": "ASESORÍA COPA 2026",
+      "description": "<p style=\"text-align: justify;\"><b>Guiamos a nuestros clientes paso a paso</b> en la <b>compra de boletos para el torneo más atractivo y cotizado de la historia</b>. Les ayudamos a <b>conseguir los mejores lugares al mejor precio</b> para <b>el partido inaugural</b> y para <b>los encuentros de su selección</b>, ya sea <b>en México</b>, <b>Estados Unidos o Canadá</b>.</p>"
+    },
+    "fan": {
+      "tag": "Club",
+      "title": "FAN EXPERIENCE",
+      "description": "<p style=\"text-align: justify;\">A los <b>usuarios de nuestra app</b> les ofrecemos <b>promociones exclusivas</b>, <b>acceso a torneos</b>, <b>meet & greets</b>, <b>sorteos y regalos especiales</b>, además de <b>experiencias pensadas para premiar su pasión por el deporte</b> y <b>mantenerlos siempre cerca de los mejores eventos</b>.</p>",
+      "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=550",
+      "alt": "Comunidad",
+      "gallery": [
+        { "src": "/assets/images/gallery/fan/1@2x.png?w=600", "alt": "vip" },
+        { "src": "/assets/images/gallery/fan/2@2x.png?w=600", "alt": "vip" },
+        { "src": "/assets/images/gallery/fan/3@2x.png?w=600", "alt": "vip" },
+        { "src": "/assets/images/gallery/fan/4@2x.png?w=600", "alt": "vip" },
+        { "src": "/assets/images/gallery/fan/5@2x.png?w=600", "alt": "vip" },
+        { "src": "/assets/images/gallery/fan/6@2x.png?w=600", "alt": "vip" },
+        { "src": "/assets/images/gallery/fan/7@2x.png?w=600", "alt": "vip" }
+      ]
+    },
+    "media": {
+      "tag": "Prensa",
+      "title": "MEDIA",
+      "description": "<p style=\"text-align: justify;\"><b>Los medios más importantes del país</b> nos han ayudado a <b>dar a conocer nuestros productos y servicios</b>, y han hecho <b>eco de todo lo que hemos logrado a lo largo de los años</b>, <b>respaldando nuestro crecimiento</b> y <b>nuestra propuesta en el mundo del deporte</b>.</p><br/>",
+      "image": "/assets/images/news2.jpg",
+      "source": "Record",
+      "excerpt": "Una iniciativa que busca brindar atención médica de primer nivel a deportistas amateur...",
+      "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division",
+      "videoId": "9cqn_j9XzH4",
+      "articles": [
+        {
+          "id": "impulso-social-2025",
+          "image": "/assets/images/news/a1/portada.jpg",
+          "source": "Trascendentales 2025",
+          "title": "Portada Impulso Social México 2025",
+          "excerpt": "Portada y artículo principal de la revista \"Trascendentales 2025\"",
+          "type": "magazine",
+          "magazineData": {
+            "title": "Impulso Social México 2025",
+            "pages": [
+              { "url": "/assets/images/news/a1/1.png", "alt": "Página 1" },
+              { "url": "/assets/images/news/a1/2.png", "alt": "Página 2" },
+              { "url": "/assets/images/news/a1/3.png", "alt": "Página 3" },
+              { "url": "/assets/images/news/a1/4.png", "alt": "Página 4" },
+              { "url": "/assets/images/news/a1/5.png", "alt": "Página 5" },
+              { "url": "/assets/images/news/a1/6.png", "alt": "Página 6" },
+              { "url": "/assets/images/news/a1/7.png", "alt": "Página 7" }
+            ]
+          }
+        },
+        {
+          "id": "soccer-id-cup",
+          "image": "/assets/images/news1.jpg",
+          "source": "Esto.com.mx",
+          "title": "Pumas y Tigres juegan la Soccer ID Cup el 22 de marzo en Estados Unidos",
+          "excerpt": "El encuentro entre los felinos mexicanos se llevará a cabo en territorio estadounidense como parte de la Soccer ID Cup...",
+          "type": "link",
+          "url": "https://esto.com.mx/871667-pumas-y-tigres-juegan-la-soccer-id-cup-el-22-de-marzo-en-estados-unidos/"
+        },
+        {
+          "id": "doctores-primera-division",
+          "image": "/assets/images/news2.jpg",
+          "source": "Record",
+          "title": "Jugadores amateur son atendidos de lesiones por doctores de primera división",
+          "excerpt": "Una iniciativa que busca brindar atención médica de primer nivel a deportistas amateur...",
+          "type": "link",
+          "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division"
         }
-      },
-      {
-        "id": "soccer-id-cup",
-        "image": "/assets/images/news1.jpg",
-        "source": "Esto.com.mx",
-        "title": "Pumas y Tigres juegan la Soccer ID Cup el 22 de marzo en Estados Unidos",
-        "excerpt": "El encuentro entre los felinos mexicanos se llevará a cabo en territorio estadounidense como parte de la Soccer ID Cup...",
-        "type": "link",
-        "url": "https://esto.com.mx/871667-pumas-y-tigres-juegan-la-soccer-id-cup-el-22-de-marzo-en-estados-unidos/"
-      },
-      {
-        "id": "doctores-primera-division",
-        "image": "/assets/images/news2.jpg",
-        "source": "Record",
-        "title": "Jugadores amateur son atendidos de lesiones por doctores de primera división",
-        "excerpt": "Una iniciativa que busca brindar atención médica de primer nivel a deportistas amateur...",
-        "type": "link",
-        "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division"
-      }
-    ]
+      ]
+    },
+    "opiniones": {
+      "tag": "Testimonios",
+      "title": "REVIEWS",
+      "description": "<p style=\"text-align: justify;\"><b>Nuestros clientes comparten su opinión</b> sobre los <b>servicios que reciben</b> y los <b>recomiendan dentro de sus círculos</b>. <b>Escuchamos activamente cada comentario</b> para <b>seguir mejorando</b> y <b>fortalecer nuestras áreas de oportunidad</b>.</p><br/>",
+      "testimonials": [
+        {
+          "image": "/assets/images/reviews/alexmontiel.png",
+          "name": "Alex Montiel",
+          "handle": "@alexmonthy",
+          "stars": 5,
+          "text": "Vivimos una experiencia increíble en el mejor palco del Estadio Azteca, con Soccer iD. Compartir ese momento con varias generaciones de mi familia y ver a nuestro equipo coronarse campeón lo hizo simplemente inolvidable. Totalmente recomendado."
+        },
+        {
+          "image": "/assets/images/reviews/mercedesroa.png",
+          "name": "Mercedes Roa",
+          "handle": "@mercedes_roa",
+          "stars": 5,
+          "text": "Viví una experiencia única en La Bombonera junto a La 12. Fue algo simplemente inolvidable. Gracias, Soccer iD."
+        },
+        {
+          "image": "/assets/images/reviews/miguelvazquez.png",
+          "name": "Miguel Vázquez",
+          "handle": "@michoficial",
+          "stars": 5,
+          "text": "Son los mejores. He ido con ellos a la Champions League y al Mundial, siempre disfrutando de los mejores lugares. Una experiencia de primer nivel en cada evento."
+        },
+        {
+          "image": "/assets/images/reviews/angeldavila.png",
+          "name": "Angel Dávila",
+          "handle": "@angel_d._carmona",
+          "stars": 5,
+          "text": "Llevo un par de años dentro del mundo runner y en cada carrera voy protegido con Seguros iD. La mejor opción a un precio super accesible."
+        },
+        {
+          "image": "/assets/images/reviews/gerardojimenez.png",
+          "name": "Gerardo Jiménez",
+          "handle": "@jerrycj17",
+          "stars": 5,
+          "text": "Fui a Rusia 2018 y Qatar 2022 con ellos. Y con su asesoría ya tengo mis boletos para todos los partidos de México en 2026. Están muy por encima de la competencia."
+        }
+      ]
+    }
   },
-  "opiniones": {
-    "tag": "Testimonios",
-    "title": "REVIEWS",
-    "description": "<p style=\"text-align: justify;\"><b>Nuestros clientes comparten su opinión</b> sobre los <b>servicios que reciben</b> y los <b>recomiendan dentro de sus círculos</b>. <b>Escuchamos activamente cada comentario</b> para <b>seguir mejorando</b> y <b>fortalecer nuestras áreas de oportunidad</b>.</p><br/>",
-    "testimonials": [
-      {
-        "image": "/assets/images/reviews/alexmontiel.png",
-        "name": "Alex Montiel",
-        "handle": "@alexmonthy",
-        "stars": 5,
-        "text": "Vivimos una experiencia increíble en el mejor palco del Estadio Azteca, con Soccer iD. Compartir ese momento con varias generaciones de mi familia y ver a nuestro equipo coronarse campeón lo hizo simplemente inolvidable. Totalmente recomendado."
-      },
-      {
-        "image": "/assets/images/reviews/mercedesroa.png",
-        "name": "Mercedes Roa",
-        "handle": "@mercedes_roa",
-        "stars": 5,
-        "text": "Viví una experiencia única en La Bombonera junto a La 12. Fue algo simplemente inolvidable. Gracias, Soccer iD."
-      },
-      {
-        "image": "/assets/images/reviews/miguelvazquez.png",
-        "name": "Miguel Vázquez",
-        "handle": "@michoficial",
-        "stars": 5,
-        "text": "Son los mejores. He ido con ellos a la Champions League y al Mundial, siempre disfrutando de los mejores lugares. Una experiencia de primer nivel en cada evento."
-      },
-      {
-        "image": "/assets/images/reviews/angeldavila.png",
-        "name": "Angel Dávila",
-        "handle": "@angel_d._carmona",
-        "stars": 5,
-        "text": "Llevo un par de años dentro del mundo runner y en cada carrera voy protegido con Seguros iD. La mejor opción a un precio super accesible."
-      },
-      {
-        "image": "/assets/images/reviews/gerardojimenez.png",
-        "name": "Gerardo Jiménez",
-        "handle": "@jerrycj17",
-        "stars": 5,
-        "text": "Fui a Rusia 2018 y Qatar 2022 con ellos. Y con su asesoría ya tengo mis boletos para todos los partidos de México en 2026. Están muy por encima de la competencia."
-      }
-    ]
+  "en": {
+    "quienes": {
+      "tag": "About Us",
+      "title": "Who We Are",
+      "description": "<p style=\"text-align: justify;\">We are <b>sports lovers</b> and that's why we <b>reinvented the way to experience it</b>. We created <b>the app every athlete needs</b>, <b>we organize international matches in the United States</b>, we give you <b>the best advice to enjoy the World Cup experience to the fullest</b> and we <b>take you to any sporting event in the world</b>, always ensuring <b>a unique and exclusive experience</b>.</p>",
+      "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=550",
+      "alt": "Athletes",
+      "gallery": [
+        { "src": "/assets/images/gallery/somos/1.PNG?w=600", "alt": "Full stadium" },
+        { "src": "/assets/images/gallery/somos/2.png?w=600", "alt": "Soccer match" },
+        { "src": "/assets/images/gallery/somos/3.png?w=600", "alt": "Fans celebrating" },
+        { "src": "/assets/images/gallery/somos/4.JPG?w=600", "alt": "Playing field" },
+        { "src": "/assets/images/gallery/somos/5.JPG?w=600", "alt": "Goal celebration" },
+        { "src": "/assets/images/gallery/somos/6.jpg?w=600", "alt": "Athletes" },
+        { "src": "/assets/images/gallery/somos/7.jpg?w=600", "alt": "Athletes" }
+      ]
+    },
+    "soccer": {
+      "tag": "Events",
+      "title": "SOCCER iD CUP",
+      "description": "<p style=\"text-align: justify;\"><b>We organize international matches in the United States</b> with <b>first division teams from the most important leagues in Latin America</b>. In <b>2024</b> we brought to the field a <b>Pumas vs Comunicaciones in San José, California</b>, and a <b>Club América vs Atlético Nacional in Orlando</b>; and in <b>2025</b> we added <b>another big event</b> with <b>Tigres vs Pumas in Austin</b>.</p>",
+      "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=520",
+      "alt": "Teams",
+      "gallery": [
+        { "src": "/assets/images/gallery/socceridcup/4.jpg?w=600", "alt": "USA Stadium" },
+        { "src": "/assets/images/gallery/socceridcup/1.jpg?w=600", "alt": "Soccer ID Cup" },
+        { "src": "/assets/images/gallery/socceridcup/6.jpg?w=600", "alt": "Teams" },
+        { "src": "/assets/images/gallery/socceridcup/3.jpg?w=600", "alt": "Goal celebration" },
+        { "src": "/assets/images/gallery/socceridcup/5.jpg?w=600", "alt": "Professional field" },
+        { "src": "/assets/images/gallery/socceridcup/2.jpg?w=600", "alt": "International match" },
+        { "src": "/assets/images/gallery/socceridcup/7.jpeg?w=600", "alt": "Teams" }
+      ]
+    },
+    "vip": {
+      "tag": "Premium",
+      "title": "VIP EXPERIENCES",
+      "description": "<p style=\"text-align: justify;\"><b>We take our clients to any sporting event in the world</b>. We have <b>boxes in all Liga MX stadiums</b>, including <b>the most exclusive suites at Banorte Stadium</b>, and we offer <b>seats at the most attractive events on the planet</b>, such as the <b>UEFA Champions League</b>.</p>",
+      "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=470",
+      "alt": "World events",
+      "gallery": [
+        { "src": "/assets/images/gallery/vip/1.jpg?w=600", "alt": "VIP Suite" },
+        { "src": "/assets/images/gallery/vip/3.jpg?w=600", "alt": "Exclusive box" },
+        { "src": "/assets/images/gallery/vip/4.jpg?w=600", "alt": "Unique experience" },
+        { "src": "/assets/images/gallery/vip/7.jpg?w=600", "alt": "World events" },
+        { "src": "/assets/images/gallery/vip/5.jpg?w=600", "alt": "VIP Service" },
+        { "src": "/assets/images/gallery/vip/6.jpg?w=600", "alt": "Champions League" },
+        { "src": "/assets/images/gallery/vip/2.jpg?w=600", "alt": "Premium view" }
+      ]
+    },
+    "seguros": {
+      "tag": "App",
+      "title": "SEGUROS iD",
+      "description": "<p style=\"text-align: justify;\"><b>We created the app every athlete needs</b>. We offer <b>sports insurance at the best price on the market</b>, where our clients can <b>choose when and how to activate their protection</b> while <b>training or competing in their favorite sport</b>.</p>"
+    },
+    "copa": {
+      "tag": "World Cup",
+      "title": "WORLD CUP 2026 ADVISORY",
+      "description": "<p style=\"text-align: justify;\"><b>We guide our clients step by step</b> in <b>purchasing tickets for the most attractive and sought-after tournament in history</b>. We help them <b>get the best seats at the best price</b> for <b>the opening match</b> and for <b>their national team's games</b>, whether <b>in Mexico</b>, <b>United States or Canada</b>.</p>"
+    },
+    "fan": {
+      "tag": "Club",
+      "title": "FAN EXPERIENCE",
+      "description": "<p style=\"text-align: justify;\">To <b>our app users</b> we offer <b>exclusive promotions</b>, <b>access to tournaments</b>, <b>meet & greets</b>, <b>raffles and special gifts</b>, as well as <b>experiences designed to reward their passion for sports</b> and <b>keep them always close to the best events</b>.</p>",
+      "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=550",
+      "alt": "Community",
+      "gallery": [
+        { "src": "/assets/images/gallery/fan/1@2x.png?w=600", "alt": "vip" },
+        { "src": "/assets/images/gallery/fan/2@2x.png?w=600", "alt": "vip" },
+        { "src": "/assets/images/gallery/fan/3@2x.png?w=600", "alt": "vip" },
+        { "src": "/assets/images/gallery/fan/4@2x.png?w=600", "alt": "vip" },
+        { "src": "/assets/images/gallery/fan/5@2x.png?w=600", "alt": "vip" },
+        { "src": "/assets/images/gallery/fan/6@2x.png?w=600", "alt": "vip" },
+        { "src": "/assets/images/gallery/fan/7@2x.png?w=600", "alt": "vip" }
+      ]
+    },
+    "media": {
+      "tag": "Press",
+      "title": "MEDIA",
+      "description": "<p style=\"text-align: justify;\"><b>The most important media in the country</b> have helped us <b>make our products and services known</b>, and have <b>echoed everything we have achieved over the years</b>, <b>supporting our growth</b> and <b>our proposal in the sports world</b>.</p><br/>",
+      "image": "/assets/images/news2.jpg",
+      "source": "Record",
+      "excerpt": "An initiative that seeks to provide first-class medical attention to amateur athletes...",
+      "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division",
+      "videoId": "9cqn_j9XzH4",
+      "articles": [
+        {
+          "id": "impulso-social-2025",
+          "image": "/assets/images/news/a1/portada.jpg",
+          "source": "Trascendentales 2025",
+          "title": "Cover Social Impulse Mexico 2025",
+          "excerpt": "Cover and main article of the magazine \"Trascendentales 2025\"",
+          "type": "magazine",
+          "magazineData": {
+            "title": "Social Impulse Mexico 2025",
+            "pages": [
+              { "url": "/assets/images/news/a1/1.png", "alt": "Page 1" },
+              { "url": "/assets/images/news/a1/2.png", "alt": "Page 2" },
+              { "url": "/assets/images/news/a1/3.png", "alt": "Page 3" },
+              { "url": "/assets/images/news/a1/4.png", "alt": "Page 4" },
+              { "url": "/assets/images/news/a1/5.png", "alt": "Page 5" },
+              { "url": "/assets/images/news/a1/6.png", "alt": "Page 6" },
+              { "url": "/assets/images/news/a1/7.png", "alt": "Page 7" }
+            ]
+          }
+        },
+        {
+          "id": "soccer-id-cup",
+          "image": "/assets/images/news1.jpg",
+          "source": "Esto.com.mx",
+          "title": "Pumas and Tigres play the Soccer ID Cup on March 22 in the United States",
+          "excerpt": "The match between the Mexican felines will take place on American soil as part of the Soccer ID Cup...",
+          "type": "link",
+          "url": "https://esto.com.mx/871667-pumas-y-tigres-juegan-la-soccer-id-cup-el-22-de-marzo-en-estados-unidos/"
+        },
+        {
+          "id": "doctores-primera-division",
+          "image": "/assets/images/news2.jpg",
+          "source": "Record",
+          "title": "Amateur players receive injury treatment from first division doctors",
+          "excerpt": "An initiative that seeks to provide first-class medical attention to amateur athletes...",
+          "type": "link",
+          "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division"
+        }
+      ]
+    },
+    "opiniones": {
+      "tag": "Testimonials",
+      "title": "REVIEWS",
+      "description": "<p style=\"text-align: justify;\"><b>Our clients share their opinions</b> about the <b>services they receive</b> and <b>recommend them within their circles</b>. <b>We actively listen to every comment</b> to <b>continue improving</b> and <b>strengthen our areas of opportunity</b>.</p><br/>",
+      "testimonials": [
+        {
+          "image": "/assets/images/reviews/alexmontiel.png",
+          "name": "Alex Montiel",
+          "handle": "@alexmonthy",
+          "stars": 5,
+          "text": "We had an incredible experience in the best box at Azteca Stadium with Soccer iD. Sharing that moment with several generations of my family and watching our team become champions made it simply unforgettable. Totally recommended."
+        },
+        {
+          "image": "/assets/images/reviews/mercedesroa.png",
+          "name": "Mercedes Roa",
+          "handle": "@mercedes_roa",
+          "stars": 5,
+          "text": "I had a unique experience at La Bombonera with La 12. It was simply unforgettable. Thank you, Soccer iD."
+        },
+        {
+          "image": "/assets/images/reviews/miguelvazquez.png",
+          "name": "Miguel Vázquez",
+          "handle": "@michoficial",
+          "stars": 5,
+          "text": "They are the best. I've gone with them to the Champions League and the World Cup, always enjoying the best seats. A first-class experience at every event."
+        },
+        {
+          "image": "/assets/images/reviews/angeldavila.png",
+          "name": "Angel Dávila",
+          "handle": "@angel_d._carmona",
+          "stars": 5,
+          "text": "I've been in the running world for a couple of years and in every race I'm protected with Seguros iD. The best option at a super affordable price."
+        },
+        {
+          "image": "/assets/images/reviews/gerardojimenez.png",
+          "name": "Gerardo Jiménez",
+          "handle": "@jerrycj17",
+          "stars": 5,
+          "text": "I went to Russia 2018 and Qatar 2022 with them. And with their advice I already have my tickets for all of Mexico's matches in 2026. They are way above the competition."
+        }
+      ]
+    }
   }
 }
