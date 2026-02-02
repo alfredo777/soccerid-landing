@@ -17,7 +17,15 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
-const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
+
+// ============================================================
+// URL BASE - PRODUCCIÓN vs DESARROLLO
+// ============================================================
+const PRODUCTION_URL = 'https://soccerid.co';
+const DEVELOPMENT_URL = `http://localhost:${PORT}`;
+
+// Prioridad: Variable de entorno > URL según entorno
+const BASE_URL = process.env.BASE_URL || (isProduction ? PRODUCTION_URL : DEVELOPMENT_URL);
 
 // ============================================================
 // CONFIGURACIÓN DE IDIOMAS
@@ -49,7 +57,7 @@ function t(lang, key) {
     if (value && typeof value === 'object' && k in value) {
       value = value[k];
     } else {
-      return key; // Retornar la clave si no se encuentra
+      return key;
     }
   }
   
@@ -130,7 +138,13 @@ app.use(session({
   secret: process.env.SESSION_SECRET || '9f80e68fee77eaad72fe630b5fa1631c1156fcc2f6c54421c62ea356eaf5be94',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: isProduction, httpOnly: true, maxAge: 24 * 60 * 60 * 1000 }
+  cookie: { 
+    secure: isProduction, 
+    httpOnly: true, 
+    maxAge: 24 * 60 * 60 * 1000,
+    // Configurar dominio en producción
+    domain: isProduction ? '.soccerid.co' : undefined
+  }
 }));
 
 // ============================================================
@@ -193,6 +207,20 @@ const hbs = require('express-handlebars').create({
       const currentPath = options.data.root.currentPath || '/';
       const baseUrl = options.data.root.baseUrl || BASE_URL;
       return `${baseUrl}/${targetLang}${currentPath}`;
+    },
+    
+    // Helper para URL canónica completa
+    canonicalUrl: function(options) {
+      const lang = options.data.root.lang || DEFAULT_LANG;
+      const currentPath = options.data.root.currentPath || '/';
+      const baseUrl = options.data.root.baseUrl || BASE_URL;
+      return `${baseUrl}/${lang}${currentPath === '/' ? '' : currentPath}`;
+    },
+    
+    // Helper para URL de imagen con dominio completo (para Open Graph)
+    absoluteImg: function(url, options) {
+      const baseUrl = options.data.root.baseUrl || BASE_URL;
+      return `${baseUrl}${url}?v=${APP_VERSION}`;
     }
   }
 });
@@ -203,7 +231,7 @@ registerHelpers(hbs.handlebars);
 app.engine('.hbs', hbs.engine);
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
-app.set('view cache', false);
+app.set('view cache', isProduction); // Habilitar cache de vistas solo en producción
 
 // ============================================================
 // MIDDLEWARE
@@ -211,11 +239,17 @@ app.set('view cache', false);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Trust proxy para obtener IP real detrás de reverse proxy (producción)
+if (isProduction) {
+  app.set('trust proxy', 1);
+}
+
 // Variables globales para vistas
 app.use((req, res, next) => {
   res.locals.year = new Date().getFullYear();
   res.locals.version = APP_VERSION;
   res.locals.baseUrl = BASE_URL;
+  res.locals.isProduction = isProduction;
   next();
 });
 
@@ -385,7 +419,9 @@ app.get('/api/info', (req, res) => {
     version: APP_VERSION,
     uptime: process.uptime(),
     supportedLangs: SUPPORTED_LANGS,
-    defaultLang: DEFAULT_LANG
+    defaultLang: DEFAULT_LANG,
+    baseUrl: BASE_URL,
+    environment: isProduction ? 'production' : 'development'
   });
 });
 
@@ -403,7 +439,11 @@ app.get('/api/lang', (req, res) => {
 app.post('/api/lang', (req, res) => {
   const { lang } = req.body;
   if (SUPPORTED_LANGS.includes(lang)) {
-    res.cookie('lang', lang, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: false });
+    res.cookie('lang', lang, { 
+      maxAge: 365 * 24 * 60 * 60 * 1000, 
+      httpOnly: false,
+      domain: isProduction ? '.soccerid.co' : undefined
+    });
     res.json({ success: true, lang });
   } else {
     res.status(400).json({ error: 'Idioma no soportado' });
@@ -412,7 +452,7 @@ app.post('/api/lang', (req, res) => {
 
 app.post('/api/clear-cache', (req, res) => {
   clearAllCache();
-  loadTranslations(); // Recargar traducciones
+  loadTranslations();
   res.json({ success: true, newVersion: APP_VERSION });
 });
 
@@ -437,6 +477,7 @@ function loadViewData(lang = DEFAULT_LANG, currentPath = '/') {
     supportedLangs: SUPPORTED_LANGS,
     isEs: lang === 'es',
     isEn: lang === 'en',
+    isProduction: isProduction,
     translations: translations
   };
   
@@ -449,7 +490,6 @@ function loadViewData(lang = DEFAULT_LANG, currentPath = '/') {
           const content = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
           const varName = f.replace('.json', '').replace(/-/g, '_');
           
-          // Si el contenido tiene estructura de idiomas, extraer el idioma actual
           if (content[lang]) {
             data[varName] = content[lang];
           } else if (content[DEFAULT_LANG]) {
@@ -510,13 +550,15 @@ app.get('/', (req, res) => {
 app.get('/:lang', (req, res, next) => {
   const lang = req.params.lang;
   
-  // Verificar si es un idioma soportado
   if (!SUPPORTED_LANGS.includes(lang)) {
-    return next(); // Pasar al siguiente middleware
+    return next();
   }
   
-  // Establecer cookie de idioma
-  res.cookie('lang', lang, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: false });
+  res.cookie('lang', lang, { 
+    maxAge: 365 * 24 * 60 * 60 * 1000, 
+    httpOnly: false,
+    domain: isProduction ? '.soccerid.co' : undefined
+  });
   
   res.render('index', loadViewData(lang, '/'));
 });
@@ -525,12 +567,10 @@ app.get('/:lang', (req, res, next) => {
 app.get('/:lang/:page', (req, res, next) => {
   const { lang, page } = req.params;
   
-  // Verificar si es un idioma soportado
   if (!SUPPORTED_LANGS.includes(lang)) {
     return next();
   }
   
-  // Ignorar rutas especiales
   if (['admin', 'blog', 'api', 'assets', 'public', 'uploads', 'images', 'contents'].includes(page)) {
     return next();
   }
@@ -538,7 +578,11 @@ app.get('/:lang/:page', (req, res, next) => {
   const viewPath = path.join(__dirname, 'views', page + '.hbs');
   
   if (fs.existsSync(viewPath)) {
-    res.cookie('lang', lang, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: false });
+    res.cookie('lang', lang, { 
+      maxAge: 365 * 24 * 60 * 60 * 1000, 
+      httpOnly: false,
+      domain: isProduction ? '.soccerid.co' : undefined
+    });
     res.render(page, loadViewData(lang, `/${page}`));
   } else {
     res.status(404).render('index', { 
@@ -552,7 +596,6 @@ app.get('/:lang/:page', (req, res, next) => {
 app.get('/:page', (req, res, next) => {
   const page = req.params.page;
   
-  // Ignorar rutas especiales
   if (['admin', 'blog', 'api', 'assets', 'public', 'uploads', 'images', 'contents', 'favicon.ico', 'robots.txt', 'sitemap.xml'].includes(page)) {
     return next();
   }
@@ -589,15 +632,23 @@ app.listen(PORT, () => {
   console.log('  GKRAKEN CMS - SERVIDOR INICIADO');
   console.log('='.repeat(60));
   console.log(`  🆔 Versión:     ${APP_VERSION}`);
-  console.log(`  🌐 URL:         ${BASE_URL}`);
+  console.log(`  🌐 URL Local:   http://localhost:${PORT}`);
+  console.log(`  🌐 URL Base:    ${BASE_URL}`);
   console.log(`  🌍 Idiomas:     ${SUPPORTED_LANGS.join(', ')} (default: ${DEFAULT_LANG})`);
   console.log(`  🔐 Admin:       ${BASE_URL}/admin`);
   console.log(`  📝 Blog:        ${BASE_URL}/blog`);
-  console.log(`  🔧 Entorno:     ${isProduction ? 'PRODUCCIÓN' : 'DESARROLLO'}`);
+  console.log(`  🔧 Entorno:     ${isProduction ? '🔴 PRODUCCIÓN' : '🟢 DESARROLLO'}`);
   console.log('='.repeat(60));
   console.log('  📦 RUTAS DE IDIOMA:');
   console.log(`      ${BASE_URL}/es  → Español`);
   console.log(`      ${BASE_URL}/en  → English`);
+  console.log('='.repeat(60));
+  if (isProduction) {
+    console.log('  ⚠️  MODO PRODUCCIÓN ACTIVO');
+    console.log('      - Cookies con dominio .soccerid.co');
+    console.log('      - Cache de vistas habilitado');
+    console.log('      - Trust proxy activado');
+  }
   console.log('='.repeat(60));
   console.log('');
 });
