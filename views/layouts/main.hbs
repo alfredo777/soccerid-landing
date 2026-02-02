@@ -1,90 +1,108 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{lang}}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{#if title}}{{title}}{{else}}SOCCER iD{{/if}}</title>
   
   <!-- Meta descripción -->
-  <meta name="description" content="SOCCER iD - AMAMOS TANTO EL DEPORTE QUE NOS ATREVIMOS A REINVENTARLO">
+  <meta name="description" content="{{description}}">
+  
+  <!-- Canonical y alternate para SEO multiidioma -->
+  <link rel="canonical" href="{{baseUrl}}/{{lang}}{{currentPath}}">
+  <link rel="alternate" hreflang="es" href="{{baseUrl}}/es{{currentPath}}">
+  <link rel="alternate" hreflang="en" href="{{baseUrl}}/en{{currentPath}}">
+  <link rel="alternate" hreflang="x-default" href="{{baseUrl}}/es{{currentPath}}">
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="{{url}}">
-  <meta property="og:title" content="{{#if title}}{{title}}{{else}}SOCCER iD{{/if}}">
-  <meta property="og:description" content="SOCCER iD - AMAMOS TANTO EL DEPORTE QUE NOS ATREVIMOS A REINVENTARLO">
-  <meta property="og:image" content="{{img '/assets/images/share.jpg'}}">
+  <meta property="og:url" content="{{baseUrl}}/{{lang}}{{currentPath}}">
+  <meta property="og:title" content="{{ogTitle}}">
+  <meta property="og:description" content="{{ogDescription}}">
+  <meta property="og:image" content="{{baseUrl}}{{img '/assets/images/share.jpg'}}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="SOCCER iD">
-  <meta property="og:locale" content="es_ES">
+  <meta property="og:locale" content="{{ogLocale}}">
+  {{#if isEs}}
+  <meta property="og:locale:alternate" content="en_US">
+  {{else}}
+  <meta property="og:locale:alternate" content="es_ES">
+  {{/if}}
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="{{url}}">
-  <meta name="twitter:title" content="{{#if title}}{{title}}{{else}}SOCCER iD{{/if}}">
-  <meta name="twitter:description" content="SOCCER iD - AMAMOS TANTO EL DEPORTE QUE NOS ATREVIMOS A REINVENTARLO">
-  <meta name="twitter:image" content="{{img '/assets/images/share.jpg'}}">
+  <meta name="twitter:url" content="{{baseUrl}}/{{lang}}{{currentPath}}">
+  <meta name="twitter:title" content="{{twitterTitle}}">
+  <meta name="twitter:description" content="{{twitterDescription}}">
+  <meta name="twitter:image" content="{{baseUrl}}{{img '/assets/images/share.jpg'}}">
   
   <!-- CSS -->
   <link href="/assets/css/main.css?v={{version}}" rel="stylesheet">
   
   <!-- Favicon -->
   <link rel="icon" href="/assets/images/iconsoccerid.png" type="image/x-icon">
-
   
-  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <!-- Datos para JavaScript -->
+  <script>
+    window.__GKRAKEN_CONFIG__ = {
+      lang: '{{lang}}',
+      supportedLangs: {{{json supportedLangs}}},
+      baseUrl: '{{baseUrl}}',
+      currentPath: '{{currentPath}}',
+      version: '{{version}}'
+    };
+  </script>
+  
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-90272633-2"></script>
   <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'UA-90272633-2');
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-90272633-2');
   </script>
 </head>
-<body>
+<body data-lang="{{lang}}">
   {{{body}}}
 
-
   <!-- Magazine Reader Modal -->
-
-<div id="magazineReaderModal" class="magazine-reader-modal">
-  <div class="magazine-reader-container">
-    <div class="magazine-reader-header">
-      <h2 id="magazineReaderTitle">Revista</h2>
-      <button class="magazine-reader-close" onclick="MagazineReader.close()">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M18 6L6 18M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
-    <div class="magazine-reader-content">
-      <div class="magazine-reader-controls">
-        <button class="magazine-nav-btn" id="magazinePrevBtn" onclick="MagazineReader.prevPage()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M15 18l-6-6 6-6"/>
-          </svg>
-        </button>
-        <span class="magazine-page-info">
-          <span id="magazineCurrentPage">1</span> / <span id="magazineTotalPages">1</span>
-        </span>
-        <button class="magazine-nav-btn" id="magazineNextBtn" onclick="MagazineReader.nextPage()">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M9 18l6-6-6-6"/>
+  <div id="magazineReaderModal" class="magazine-reader-modal">
+    <div class="magazine-reader-container">
+      <div class="magazine-reader-header">
+        <h2 id="magazineReaderTitle">{{t "panel.magazine"}}</h2>
+        <button class="magazine-reader-close" onclick="MagazineReader.close()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
           </svg>
         </button>
       </div>
-      <div class="magazine-reader-viewport" id="magazineViewport">
-        <div class="magazine-pages-wrapper" id="magazinePagesWrapper">
-          <!-- Las páginas se insertan dinámicamente -->
+      <div class="magazine-reader-content">
+        <div class="magazine-reader-controls">
+          <button class="magazine-nav-btn" id="magazinePrevBtn" onclick="MagazineReader.prevPage()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+          <span class="magazine-page-info">
+            <span id="magazineCurrentPage">1</span> / <span id="magazineTotalPages">1</span>
+          </span>
+          <button class="magazine-nav-btn" id="magazineNextBtn" onclick="MagazineReader.nextPage()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
         </div>
-      </div>
-      <div class="magazine-thumbnails" id="magazineThumbnails">
-        <!-- Miniaturas se insertan dinámicamente -->
+        <div class="magazine-reader-viewport" id="magazineViewport">
+          <div class="magazine-pages-wrapper" id="magazinePagesWrapper">
+          </div>
+        </div>
+        <div class="magazine-thumbnails" id="magazineThumbnails">
+        </div>
       </div>
     </div>
   </div>
-</div>
+
   <script src="{{js '/assets/js/mreader.js'}}"></script>
   <script src="{{js '/assets/js/main.js'}}"></script>
 </body>

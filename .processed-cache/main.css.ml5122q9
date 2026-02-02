@@ -30,42 +30,42 @@
 
 @font-face {
     font-family: 'Raleway';
-    src: url('../fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaooCP.ttf?v=ml1djri3') format('truetype');
+    src: url('../fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaooCP.ttf?v=ml5122q9') format('truetype');
     font-weight: 400;
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Raleway';
-    src: url('../fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvoooCP.ttf?v=ml1djri3') format('truetype');
+    src: url('../fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvoooCP.ttf?v=ml5122q9') format('truetype');
     font-weight: 500;
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Raleway';
-    src: url('../fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVsEpYCP.ttf?v=ml1djri3') format('truetype');
+    src: url('../fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVsEpYCP.ttf?v=ml5122q9') format('truetype');
     font-weight: 600;
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Raleway';
-    src: url('../fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVs9pYCP.ttf?v=ml1djri3') format('truetype');
+    src: url('../fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVs9pYCP.ttf?v=ml5122q9') format('truetype');
     font-weight: 700;
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Raleway';
-    src: url('../fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtapYCP.ttf?v=ml1djri3') format('truetype');
+    src: url('../fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtapYCP.ttf?v=ml5122q9') format('truetype');
     font-weight: 800;
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Raleway';
-    src: url('../fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtzpYCP.ttf?v=ml1djri3') format('truetype');
+    src: url('../fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtzpYCP.ttf?v=ml5122q9') format('truetype');
     font-weight: 900;
     font-display: swap;
 }
@@ -418,6 +418,7 @@ body {
   color: rgba(255, 255, 255, 0.6);
   font-size: 14px;
   font-weight: 500;
+  text-decoration: none;
 }
 
 .lang-btn:hover {
@@ -619,14 +620,14 @@ body {
 }
 
 /* Imágenes de fondo para cada item */
-.item-quienes::before { background-image: url('/assets/images/somoss.jpg?v=ml1djri3'); }
-.item-soccer::before { background-image: url('/assets/images/idcup.jpg?v=ml1djri3'); }
-.item-seguros::before { background-image: url('/assets/images/news3.png?v=ml1djri3'); }
-.item-vip::before { background-image: url('/assets/images/vip2.jpg?v=ml1djri3'); }
-.item-copa::before { background-image: url('/assets/images/copa26.jpg?v=ml1djri3'); }
-.item-fan::before { background-image: url('/assets/images/fan.png?v=ml1djri3'); }
-.item-media::before { background-image: url('/assets/images/media.png?v=ml1djri3'); }
-.item-opiniones::before { background-image: url('/assets/images/opi2.jpg?v=ml1djri3'); }
+.item-quienes::before { background-image: url('/assets/images/somoss.jpg?v=ml5122q9'); }
+.item-soccer::before { background-image: url('/assets/images/idcup.jpg?v=ml5122q9'); }
+.item-seguros::before { background-image: url('/assets/images/news3.png?v=ml5122q9'); }
+.item-vip::before { background-image: url('/assets/images/vip2.jpg?v=ml5122q9'); }
+.item-copa::before { background-image: url('/assets/images/copa26.jpg?v=ml5122q9'); }
+.item-fan::before { background-image: url('/assets/images/fan.png?v=ml5122q9'); }
+.item-media::before { background-image: url('/assets/images/media.png?v=ml5122q9'); }
+.item-opiniones::before { background-image: url('/assets/images/opi2.jpg?v=ml5122q9'); }
 
 /* Contenido del bento item */
 .bento-content {
@@ -2703,7 +2704,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 24px;
+    padding: 16px 204px 16px 24px;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);

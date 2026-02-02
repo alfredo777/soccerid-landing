@@ -1,5 +1,14 @@
 {
   "es": {
+    "meta": {
+      "title": "SOCCER iD",
+      "description": "AMAMOS TANTO EL DEPORTE QUE NOS ATREVIMOS A REINVENTARLO",
+      "ogTitle": "SOCCER iD - Tu experiencia deportiva premium",
+      "ogDescription": "Vive el deporte como nunca antes. Eventos exclusivos, experiencias VIP y mucho más.",
+      "twitterTitle": "SOCCER iD - Tu experiencia deportiva premium",
+      "twitterDescription": "Vive el deporte como nunca antes. Eventos exclusivos, experiencias VIP y mucho más.",
+      "ogImage": "/assets/images/share.jpg"
+    },
     "preloader": {
       "loading": "Cargando..."
     },
@@ -53,6 +62,16 @@
     }
   },
   "en": {
+    "meta": {
+      "title": "SOCCER iD",
+      "description": "WE LOVE SPORTS SO MUCH THAT WE DARED TO REINVENT IT",
+      "ogTitle": "SOCCER iD - Your premium sports experience",
+      "ogDescription": "Experience sports like never before. Exclusive events, VIP experiences and much more.",
+      "twitterTitle": "SOCCER iD - Your premium sports experience",
+      "twitterDescription": "Experience sports like never before. Exclusive events, VIP experiences and much more.",
+      "ogImage": "/assets/images/share.jpg"
+
+    },
     "preloader": {
       "loading": "Loading..."
     },

@@ -2,7 +2,7 @@
  * ==========================================================================
  * JavaScript Principal - GKrakenCMS
  * Proyecto: soccerid-v5-new-landing
- * Con soporte de internacionalización (i18n)
+ * Con soporte de internacionalización (i18n) y rutas de idioma
  * ==========================================================================
  */
 
@@ -17,7 +17,9 @@ const GKraken = {
     CACHE_DURATION: 5 * 60 * 1000,
     DEFAULT_LANG: 'es',
     SUPPORTED_LANGS: ['es', 'en'],
-    LANG_STORAGE_KEY: 'gkraken_lang'
+    LANG_STORAGE_KEY: 'gkraken_lang',
+    // Se sobrescribe con datos del servidor
+    ...(window.__GKRAKEN_CONFIG__ || {})
   },
   
   dataFiles: {
@@ -33,36 +35,35 @@ const GKraken = {
   initialized: false,
   
   // ========================================================================
-  // SISTEMA DE IDIOMAS (i18n)
+  // SISTEMA DE IDIOMAS (i18n) CON RUTAS
   // ========================================================================
   
-  /**
-   * Idioma actual de la aplicación
-   */
   currentLang: 'es',
-  
-  /**
-   * Traducciones de UI cargadas
-   */
   translations: {},
-  
-  /**
-   * Datos crudos con todos los idiomas
-   */
   rawData: {},
   
   /**
-   * Obtiene el idioma guardado o detecta del navegador
-   * @returns {string} - Código de idioma ('es' o 'en')
+   * Obtiene el idioma desde múltiples fuentes
    */
   getSavedLanguage() {
-    // 1. Revisar localStorage
+    // 1. Prioridad: Idioma del servidor (de la URL)
+    if (this.config.lang && this.config.SUPPORTED_LANGS.includes(this.config.lang)) {
+      return this.config.lang;
+    }
+    
+    // 2. Revisar atributo data-lang del body
+    const bodyLang = document.body.dataset.lang;
+    if (bodyLang && this.config.SUPPORTED_LANGS.includes(bodyLang)) {
+      return bodyLang;
+    }
+    
+    // 3. Revisar localStorage
     const saved = localStorage.getItem(this.config.LANG_STORAGE_KEY);
     if (saved && this.config.SUPPORTED_LANGS.includes(saved)) {
       return saved;
     }
     
-    // 2. Detectar del navegador
+    // 4. Detectar del navegador
     const browserLang = navigator.language || navigator.userLanguage;
     const shortLang = browserLang.split('-')[0].toLowerCase();
     
@@ -70,25 +71,25 @@ const GKraken = {
       return shortLang;
     }
     
-    // 3. Fallback al idioma por defecto
     return this.config.DEFAULT_LANG;
   },
   
   /**
    * Guarda el idioma seleccionado
-   * @param {string} lang - Código de idioma
    */
   saveLanguage(lang) {
     if (this.config.SUPPORTED_LANGS.includes(lang)) {
       localStorage.setItem(this.config.LANG_STORAGE_KEY, lang);
+      
+      // También guardar en cookie para el servidor
+      document.cookie = `lang=${lang};path=/;max-age=${365 * 24 * 60 * 60}`;
+      
       this.currentLang = lang;
     }
   },
   
   /**
    * Obtiene una traducción de UI por su clave
-   * @param {string} key - Clave en formato "seccion.subseccion.clave"
-   * @returns {string} - Texto traducido o la clave si no existe
    */
   t(key) {
     const keys = key.split('.');
@@ -108,26 +109,29 @@ const GKraken = {
   
   /**
    * Extrae datos del idioma actual de un objeto con estructura multilengua
-   * @param {Object} data - Objeto con claves 'es' y 'en'
-   * @returns {any} - Datos del idioma actual
    */
   getLocalizedData(data) {
     if (!data) return data;
     
-    // Si tiene estructura de idiomas
     if (data[this.currentLang] !== undefined) {
       return data[this.currentLang];
     }
     
-    // Si es array o no tiene estructura de idiomas, retornar tal cual
     return data;
   },
   
   /**
-   * Cambia el idioma de la aplicación y re-renderiza
-   * @param {string} lang - Código de idioma ('es' o 'en')
+   * Genera la URL para un idioma específico
    */
-  async changeLanguage(lang) {
+  getLangUrl(lang) {
+    const currentPath = this.config.currentPath || '/';
+    return `/${lang}${currentPath === '/' ? '' : currentPath}`;
+  },
+  
+  /**
+   * Cambia el idioma navegando a la nueva URL
+   */
+  changeLanguage(lang) {
     if (!this.config.SUPPORTED_LANGS.includes(lang)) {
       console.warn(`[GKraken] Idioma no soportado: ${lang}`);
       return;
@@ -136,6 +140,27 @@ const GKraken = {
     if (lang === this.currentLang) return;
     
     console.log(`[GKraken] Cambiando idioma: ${this.currentLang} → ${lang}`);
+    
+    // Guardar preferencia
+    this.saveLanguage(lang);
+    
+    // Navegar a la nueva URL
+    const newUrl = this.getLangUrl(lang);
+    window.location.href = newUrl;
+  },
+  
+  /**
+   * Cambia el idioma sin recargar (para SPAs o actualización dinámica)
+   */
+  async changeLanguageInPlace(lang) {
+    if (!this.config.SUPPORTED_LANGS.includes(lang)) {
+      console.warn(`[GKraken] Idioma no soportado: ${lang}`);
+      return;
+    }
+    
+    if (lang === this.currentLang) return;
+    
+    console.log(`[GKraken] Cambiando idioma in-place: ${this.currentLang} → ${lang}`);
     
     this.saveLanguage(lang);
     
@@ -150,6 +175,14 @@ const GKraken = {
     
     // Actualizar selector de idioma
     this.updateLanguageSelector();
+    
+    // Actualizar URL sin recargar (history API)
+    const newUrl = this.getLangUrl(lang);
+    window.history.pushState({ lang }, '', newUrl);
+    
+    // Actualizar atributo lang del HTML
+    document.documentElement.lang = lang;
+    document.body.dataset.lang = lang;
     
     // Disparar evento personalizado
     document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
@@ -244,14 +277,17 @@ const GKraken = {
       `;
     }
     
-    const privacyLink = document.querySelector('.footer-link[href="/privacy"]');
+    // Actualizar enlaces legales con idioma
+    const privacyLink = document.querySelector('.footer-link[href*="privacy"]');
     if (privacyLink) {
       privacyLink.textContent = this.t('footer.privacy');
+      privacyLink.href = `/${this.currentLang}/privacy`;
     }
     
-    const termsLink = document.querySelector('.footer-link[href="/terms"]');
+    const termsLink = document.querySelector('.footer-link[href*="terms"]');
     if (termsLink) {
       termsLink.textContent = this.t('footer.terms');
+      termsLink.href = `/${this.currentLang}/terms`;
     }
     
     const copyright = document.querySelector('.footer-copyright');
@@ -293,9 +329,18 @@ const GKraken = {
       selector.value = this.currentLang;
     }
     
-    // Actualizar botones si existen
+    // Actualizar botones
     document.querySelectorAll('.lang-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.lang === this.currentLang);
+    });
+    
+    // Actualizar enlaces
+    document.querySelectorAll('.lang-link').forEach(link => {
+      const targetLang = link.dataset.lang;
+      if (targetLang) {
+        link.href = this.getLangUrl(targetLang);
+        link.classList.toggle('active', targetLang === this.currentLang);
+      }
     });
   },
   
@@ -303,24 +348,53 @@ const GKraken = {
    * Crea el selector de idioma en el DOM
    */
   createLanguageSelector() {
-    const existingSelector = document.getElementById('languageSelectorContainer');    
+    const existingSelector = document.getElementById('languageSelectorContainer');
+    if (existingSelector) {
+      existingSelector.remove();
+    }
+    
     const container = document.createElement('div');
     container.id = 'languageSelectorContainer';
     container.className = 'language-selector-container';
+    
+    // Generar URLs para cada idioma
+    const esUrl = this.getLangUrl('es');
+    const enUrl = this.getLangUrl('en');
+    
     container.innerHTML = `
       <div class="language-selector">
-        <button class="lang-btn ${this.currentLang === 'es' ? 'active' : ''}" data-lang="es" onclick="GKraken.changeLanguage('es')">
+        <a href="${esUrl}" 
+           class="lang-btn lang-link ${this.currentLang === 'es' ? 'active' : ''}" 
+           data-lang="es"
+           onclick="return GKraken.handleLangClick(event, 'es')">
           <span class="lang-flag">🇲🇽</span>
           <span class="lang-text">ES</span>
-        </button>
-        <button class="lang-btn ${this.currentLang === 'en' ? 'active' : ''}" data-lang="en" onclick="GKraken.changeLanguage('en')">
+        </a>
+        <a href="${enUrl}" 
+           class="lang-btn lang-link ${this.currentLang === 'en' ? 'active' : ''}" 
+           data-lang="en"
+           onclick="return GKraken.handleLangClick(event, 'en')">
           <span class="lang-flag">🇺🇸</span>
           <span class="lang-text">EN</span>
-        </button>
+        </a>
       </div>
     `;
     
     document.body.appendChild(container);
+  },
+  
+  /**
+   * Maneja el clic en el selector de idioma
+   */
+  handleLangClick(event, lang) {
+    // Permitir navegación normal (con Ctrl/Cmd para nueva pestaña)
+    if (event.ctrlKey || event.metaKey || event.shiftKey) {
+      return true;
+    }
+    
+    event.preventDefault();
+    this.changeLanguage(lang);
+    return false;
   },
   
   // ========================================================================
@@ -533,9 +607,11 @@ async function initializeGKraken() {
   console.log('[GKraken] ═══════════════════════════════════════');
   
   try {
-    // 1. Determinar idioma inicial
+    // 1. Determinar idioma inicial (prioridad: servidor > localStorage > navegador)
     GKraken.currentLang = GKraken.getSavedLanguage();
-    console.log(`[GKraken] Idioma detectado: ${GKraken.currentLang}`);
+    console.log(`[GKraken] Idioma inicial: ${GKraken.currentLang}`);
+    console.log(`[GKraken] Base URL: ${GKraken.config.baseUrl || 'no definido'}`);
+    console.log(`[GKraken] Path actual: ${GKraken.config.currentPath || '/'}`);
     
     // 2. Cargar todos los datos JSON
     const allData = await GKraken.loadAllData();
@@ -629,6 +705,22 @@ function setupEventListeners() {
       if (e.target === this) closeLightbox();
     });
   }
+  
+  // Listener para navegación del historial (botón atrás/adelante)
+  window.addEventListener('popstate', function(e) {
+    if (e.state && e.state.lang) {
+      // Si el estado tiene idioma, actualizar sin recargar
+      const newLang = e.state.lang;
+      if (newLang !== GKraken.currentLang) {
+        GKraken.currentLang = newLang;
+        GKraken.saveLanguage(newLang);
+        assignGlobalData(GKraken.rawData);
+        renderInitial();
+        GKraken.updateStaticUI();
+        GKraken.updateLanguageSelector();
+      }
+    }
+  });
 }
 
 // ==========================================================================
@@ -1252,8 +1344,6 @@ function slideTestimonials(direction) {
   
   track.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
 }
-
-
 
 // ==========================================================================
 // INICIAR APLICACIÓN

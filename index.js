@@ -2,9 +2,10 @@
  * GKrakenCMS - Servidor Node.js
  * Proyecto: soccerid-v4-landing
  * 
- * Sistema de caché inteligente:
- * - Limpia todo al reiniciar
- * - Reactiva caché con versión única
+ * Sistema con:
+ * - Rutas de idioma (/es/, /en/)
+ * - Meta tags traducidas
+ * - Caché inteligente
  */
 
 const express = require('express');
@@ -16,11 +17,49 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
+const BASE_URL = process.env.BASE_URL || `http://localhost:${PORT}`;
+
+// ============================================================
+// CONFIGURACIÓN DE IDIOMAS
+// ============================================================
+const SUPPORTED_LANGS = ['es', 'en'];
+const DEFAULT_LANG = 'es';
+
+// Cargar traducciones al inicio
+let uiTranslations = {};
+function loadTranslations() {
+  const translationsPath = path.join(__dirname, 'contents', 'ui_translations.json');
+  if (fs.existsSync(translationsPath)) {
+    try {
+      uiTranslations = JSON.parse(fs.readFileSync(translationsPath, 'utf8'));
+      console.log('✓ Traducciones cargadas');
+    } catch (e) {
+      console.error('Error cargando traducciones:', e);
+    }
+  }
+}
+loadTranslations();
+
+// Función helper para obtener traducción
+function t(lang, key) {
+  const keys = key.split('.');
+  let value = uiTranslations[lang] || uiTranslations[DEFAULT_LANG];
+  
+  for (const k of keys) {
+    if (value && typeof value === 'object' && k in value) {
+      value = value[k];
+    } else {
+      return key; // Retornar la clave si no se encuentra
+    }
+  }
+  
+  return value;
+}
 
 // ============================================================
 // VERSIÓN ÚNICA - CAMBIA EN CADA REINICIO
 // ============================================================
-const APP_VERSION = Date.now().toString(36); // Más corto: "m5abc123"
+const APP_VERSION = Date.now().toString(36);
 
 // ============================================================
 // LIMPIEZA TOTAL DE CACHÉ AL INICIAR
@@ -30,7 +69,6 @@ function clearAllCache() {
   console.log('🧹 LIMPIANDO TODO EL CACHÉ...');
   console.log('-'.repeat(50));
   
-  // 1. Limpiar módulos del caché de require
   let modulesCleared = 0;
   Object.keys(require.cache).forEach(key => {
     if (key.includes(__dirname) && !key.includes('node_modules')) {
@@ -40,7 +78,6 @@ function clearAllCache() {
   });
   console.log(`   ✓ ${modulesCleared} módulos eliminados del caché`);
   
-  // 2. Limpiar carpetas de caché
   const cacheFolders = ['.cache', 'tmp', '.tmp', 'cache', '.parcel-cache'];
   cacheFolders.forEach(folder => {
     const folderPath = path.join(__dirname, folder);
@@ -54,7 +91,6 @@ function clearAllCache() {
     }
   });
   
-  // 3. Crear carpeta de caché procesado
   const processedCacheDir = path.join(__dirname, '.processed-cache');
   if (fs.existsSync(processedCacheDir)) {
     fs.rmSync(processedCacheDir, { recursive: true, force: true });
@@ -66,26 +102,21 @@ function clearAllCache() {
   console.log('');
 }
 
-// EJECUTAR LIMPIEZA AL INICIAR
 clearAllCache();
 
 // ============================================================
-// PROCESAR CSS - AGREGAR VERSIÓN A URLS DE ASSETS
+// PROCESAR CSS
 // ============================================================
 function processCSSWithVersion(cssContent, version) {
-  // Agregar versión a todas las url() en el CSS
   return cssContent.replace(
     /url\s*\(\s*['"]?([^'")]+)['"]?\s*\)/gi,
     (match, url) => {
-      // No procesar data URIs, URLs externas o que ya tienen versión
       if (url.startsWith('data:') || 
           url.startsWith('http://') || 
           url.startsWith('https://') ||
           url.includes('?v=')) {
         return match;
       }
-      
-      // Agregar versión
       const separator = url.includes('?') ? '&' : '?';
       return `url('${url}${separator}v=${version}')`;
     }
@@ -103,7 +134,7 @@ app.use(session({
 }));
 
 // ============================================================
-// HANDLEBARS
+// HANDLEBARS CON HELPERS DE IDIOMA
 // ============================================================
 const hbs = require('express-handlebars').create({
   extname: '.hbs',
@@ -111,6 +142,7 @@ const hbs = require('express-handlebars').create({
   layoutsDir: path.join(__dirname, 'views/layouts'),
   partialsDir: path.join(__dirname, 'views/partials'),
   helpers: {
+    // Helpers existentes
     formatDate: d => d ? new Date(d).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' }) : '',
     timeAgo: d => {
       if (!d) return '';
@@ -124,15 +156,44 @@ const hbs = require('express-handlebars').create({
     truncate: (s, l) => s && s.length > l ? s.substring(0, l) + '...' : s || '',
     year: () => new Date().getFullYear(),
     eq: (a, b) => a === b,
+    neq: (a, b) => a !== b,
     json: o => JSON.stringify(o, null, 2),
     join: (a, s) => Array.isArray(a) ? a.join(s || ', ') : '',
     default: (v, d) => v || d,
+    
     // Helpers para cache busting
     version: () => APP_VERSION,
     asset: (url) => `${url}?v=${APP_VERSION}`,
     img: (url) => `${url}?v=${APP_VERSION}`,
     css: (url) => `${url}?v=${APP_VERSION}`,
-    js: (url) => `${url}?v=${APP_VERSION}`
+    js: (url) => `${url}?v=${APP_VERSION}`,
+    
+    // Helpers de idioma
+    t: function(key, options) {
+      const lang = options.data.root.lang || DEFAULT_LANG;
+      return t(lang, key);
+    },
+    
+    langUrl: function(targetLang, options) {
+      const currentPath = options.data.root.currentPath || '/';
+      return `/${targetLang}${currentPath}`;
+    },
+    
+    isLang: function(targetLang, options) {
+      const currentLang = options.data.root.lang || DEFAULT_LANG;
+      return currentLang === targetLang;
+    },
+    
+    ogLocale: function(options) {
+      const lang = options.data.root.lang || DEFAULT_LANG;
+      return lang === 'es' ? 'es_ES' : 'en_US';
+    },
+    
+    alternateUrl: function(targetLang, options) {
+      const currentPath = options.data.root.currentPath || '/';
+      const baseUrl = options.data.root.baseUrl || BASE_URL;
+      return `${baseUrl}/${targetLang}${currentPath}`;
+    }
   }
 });
 
@@ -142,7 +203,7 @@ registerHelpers(hbs.handlebars);
 app.engine('.hbs', hbs.engine);
 app.set('view engine', '.hbs');
 app.set('views', path.join(__dirname, 'views'));
-app.set('view cache', false); // Siempre deshabilitado
+app.set('view cache', false);
 
 // ============================================================
 // MIDDLEWARE
@@ -154,11 +215,53 @@ app.use(express.urlencoded({ extended: true }));
 app.use((req, res, next) => {
   res.locals.year = new Date().getFullYear();
   res.locals.version = APP_VERSION;
+  res.locals.baseUrl = BASE_URL;
   next();
 });
 
 // ============================================================
-// SERVIR CSS CON VERSIÓN EN LAS URLS INTERNAS
+// MIDDLEWARE DE DETECCIÓN DE IDIOMA
+// ============================================================
+function detectLanguage(req) {
+  // 1. Verificar si hay idioma en la URL
+  const urlLang = req.params.lang;
+  if (urlLang && SUPPORTED_LANGS.includes(urlLang)) {
+    return urlLang;
+  }
+  
+  // 2. Verificar cookie de idioma
+  const cookieLang = req.cookies?.lang;
+  if (cookieLang && SUPPORTED_LANGS.includes(cookieLang)) {
+    return cookieLang;
+  }
+  
+  // 3. Detectar del header Accept-Language
+  const acceptLang = req.headers['accept-language'];
+  if (acceptLang) {
+    const browserLang = acceptLang.split(',')[0].split('-')[0].toLowerCase();
+    if (SUPPORTED_LANGS.includes(browserLang)) {
+      return browserLang;
+    }
+  }
+  
+  return DEFAULT_LANG;
+}
+
+// Middleware para parsear cookies (simple)
+app.use((req, res, next) => {
+  req.cookies = {};
+  const cookieHeader = req.headers.cookie;
+  if (cookieHeader) {
+    cookieHeader.split(';').forEach(cookie => {
+      const [name, value] = cookie.trim().split('=');
+      req.cookies[name] = value;
+    });
+  }
+  next();
+});
+
+// ============================================================
+// SERVIR CSS CON VERSIÓN
 // ============================================================
 app.get('/assets/css/:filename', (req, res) => {
   const cssPath = path.join(__dirname, 'assets/css', req.params.filename);
@@ -167,28 +270,23 @@ app.get('/assets/css/:filename', (req, res) => {
     return res.status(404).send('CSS not found');
   }
   
-  // Verificar si hay versión procesada en caché
   const cacheDir = path.join(__dirname, '.processed-cache');
   const cachedFile = path.join(cacheDir, `${req.params.filename}.${APP_VERSION}`);
   
   let processedCSS;
   
   if (fs.existsSync(cachedFile)) {
-    // Usar versión cacheada
     processedCSS = fs.readFileSync(cachedFile, 'utf8');
   } else {
-    // Procesar y cachear
     const originalCSS = fs.readFileSync(cssPath, 'utf8');
     processedCSS = processCSSWithVersion(originalCSS, APP_VERSION);
     
-    // Guardar en caché procesado
     if (!fs.existsSync(cacheDir)) {
       fs.mkdirSync(cacheDir, { recursive: true });
     }
     fs.writeFileSync(cachedFile, processedCSS);
   }
   
-  // Headers de caché: inmutable por esta versión (1 año)
   res.set({
     'Content-Type': 'text/css; charset=utf-8',
     'Cache-Control': 'public, max-age=31536000, immutable',
@@ -200,13 +298,9 @@ app.get('/assets/css/:filename', (req, res) => {
 });
 
 // ============================================================
-// ARCHIVOS ESTÁTICOS CON CACHÉ INTELIGENTE
+// ARCHIVOS ESTÁTICOS
 // ============================================================
-// Si la URL tiene ?v=VERSION, cachear por mucho tiempo
-// Si no tiene versión, no cachear
-
 app.use('/assets', (req, res, next) => {
-  // Saltar si es CSS (ya procesado arriba)
   if (req.path.startsWith('/css/')) {
     return next('route');
   }
@@ -214,19 +308,16 @@ app.use('/assets', (req, res, next) => {
   const hasVersion = req.query.v === APP_VERSION;
   
   if (hasVersion) {
-    // Versión correcta: cachear por 1 año (inmutable)
     res.set({
       'Cache-Control': 'public, max-age=31536000, immutable',
       'ETag': `"${APP_VERSION}"`
     });
   } else if (req.query.v) {
-    // Versión incorrecta (vieja): no cachear, forzar recarga
     res.set({
       'Cache-Control': 'no-store, must-revalidate',
       'X-Outdated-Version': 'true'
     });
   } else {
-    // Sin versión: caché corto
     res.set({
       'Cache-Control': 'no-cache, must-revalidate',
       'ETag': `"${APP_VERSION}"`
@@ -236,36 +327,12 @@ app.use('/assets', (req, res, next) => {
   next();
 }, express.static(path.join(__dirname, 'assets')));
 
-// Otros estáticos
-app.use('/public', (req, res, next) => {
-  const hasVersion = req.query.v === APP_VERSION;
-  res.set({
-    'Cache-Control': hasVersion ? 'public, max-age=31536000, immutable' : 'no-cache',
-    'ETag': `"${APP_VERSION}"`
-  });
-  next();
-}, express.static(path.join(__dirname, 'public')));
-
-app.use('/uploads', (req, res, next) => {
-  const hasVersion = req.query.v === APP_VERSION;
-  res.set({
-    'Cache-Control': hasVersion ? 'public, max-age=31536000, immutable' : 'no-cache',
-    'ETag': `"${APP_VERSION}"`
-  });
-  next();
-}, express.static(path.join(__dirname, 'uploads')));
-
-app.use('/images', (req, res, next) => {
-  const hasVersion = req.query.v === APP_VERSION;
-  res.set({
-    'Cache-Control': hasVersion ? 'public, max-age=31536000, immutable' : 'no-cache',
-    'ETag': `"${APP_VERSION}"`
-  });
-  next();
-}, express.static(path.join(__dirname, 'images')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // ============================================================
-// RUTAS
+// RUTAS DE ADMIN Y BLOG (sin idioma)
 // ============================================================
 const adminRoutes = require('./routes/admin');
 const blogRoutes = require('./routes/blog');
@@ -274,7 +341,7 @@ app.use('/admin', adminRoutes);
 app.use('/blog', blogRoutes);
 
 // ============================================================
-// API
+// API ENDPOINTS
 // ============================================================
 app.get('/contents/:filename', (req, res) => {
   res.set('Cache-Control', 'no-store');
@@ -289,10 +356,8 @@ app.get('/contents/:filename', (req, res) => {
   if (fs.existsSync(jsonPath)) {
     try {
       const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
-      
-      // Siempre devolver en formato { data: ..., _version: ... }
       res.json({ 
-        data: data,  // Puede ser array u objeto
+        data: data,
         _version: APP_VERSION 
       });
     } catch (err) {
@@ -318,7 +383,9 @@ app.get('/api/info', (req, res) => {
     nodeVersion: process.version, 
     project: 'soccerid-v4-landing',
     version: APP_VERSION,
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    supportedLangs: SUPPORTED_LANGS,
+    defaultLang: DEFAULT_LANG
   });
 });
 
@@ -327,25 +394,50 @@ app.get('/api/version', (req, res) => {
   res.json({ version: APP_VERSION });
 });
 
+// API para obtener/establecer idioma
+app.get('/api/lang', (req, res) => {
+  const lang = detectLanguage(req);
+  res.json({ lang, supported: SUPPORTED_LANGS, default: DEFAULT_LANG });
+});
+
+app.post('/api/lang', (req, res) => {
+  const { lang } = req.body;
+  if (SUPPORTED_LANGS.includes(lang)) {
+    res.cookie('lang', lang, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: false });
+    res.json({ success: true, lang });
+  } else {
+    res.status(400).json({ error: 'Idioma no soportado' });
+  }
+});
+
 app.post('/api/clear-cache', (req, res) => {
   clearAllCache();
+  loadTranslations(); // Recargar traducciones
   res.json({ success: true, newVersion: APP_VERSION });
 });
 
 // ============================================================
-// PÁGINAS LEGALES
-// ============================================================
-app.get('/terms', (req, res) => res.render('legal/terms', { layout: 'legal', title: 'Términos' }));
-app.get('/privacy', (req, res) => res.render('legal/privacy', { layout: 'legal', title: 'Privacidad' }));
-
-// ============================================================
 // CARGAR DATOS PARA VISTAS
 // ============================================================
-function loadViewData() {
+function loadViewData(lang = DEFAULT_LANG, currentPath = '/') {
+  const translations = uiTranslations[lang] || uiTranslations[DEFAULT_LANG];
+  
   const data = { 
-    title: 'SOCCER iD', 
+    title: translations?.meta?.title || 'SOCCER iD',
+    description: translations?.meta?.description || '',
+    ogTitle: translations?.meta?.ogTitle || translations?.meta?.title || 'SOCCER iD',
+    ogDescription: translations?.meta?.ogDescription || translations?.meta?.description || '',
+    twitterTitle: translations?.meta?.twitterTitle || translations?.meta?.title || 'SOCCER iD',
+    twitterDescription: translations?.meta?.twitterDescription || translations?.meta?.description || '',
     year: new Date().getFullYear(),
-    version: APP_VERSION
+    version: APP_VERSION,
+    lang: lang,
+    currentPath: currentPath,
+    baseUrl: BASE_URL,
+    supportedLangs: SUPPORTED_LANGS,
+    isEs: lang === 'es',
+    isEn: lang === 'en',
+    translations: translations
   };
   
   const dir = path.join(__dirname, 'contents');
@@ -354,33 +446,135 @@ function loadViewData() {
       .filter(f => f.endsWith('.json') && !f.startsWith('blog'))
       .forEach(f => {
         try {
-          data[f.replace('.json', '').replace(/-/g, '_')] = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+          const content = JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'));
+          const varName = f.replace('.json', '').replace(/-/g, '_');
+          
+          // Si el contenido tiene estructura de idiomas, extraer el idioma actual
+          if (content[lang]) {
+            data[varName] = content[lang];
+          } else if (content[DEFAULT_LANG]) {
+            data[varName] = content[DEFAULT_LANG];
+          } else {
+            data[varName] = content;
+          }
         } catch (e) {
           console.error(`Error cargando ${f}:`, e.message);
         }
       });
   }
+  
   return data;
 }
 
 // ============================================================
-// RUTAS DE PÁGINAS
+// PÁGINAS LEGALES CON IDIOMA
 // ============================================================
-app.get('/', (req, res) => res.render('index', loadViewData()));
+app.get('/:lang/terms', (req, res) => {
+  const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
+  res.render('legal/terms', { 
+    layout: 'legal', 
+    ...loadViewData(lang, '/terms')
+  });
+});
 
-app.get('/:page', (req, res) => {
-  const viewPath = path.join(__dirname, 'views', req.params.page + '.hbs');
+app.get('/:lang/privacy', (req, res) => {
+  const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
+  res.render('legal/privacy', { 
+    layout: 'legal', 
+    ...loadViewData(lang, '/privacy')
+  });
+});
+
+// Rutas legales sin idioma (redirigen)
+app.get('/terms', (req, res) => {
+  const lang = detectLanguage(req);
+  res.redirect(301, `/${lang}/terms`);
+});
+
+app.get('/privacy', (req, res) => {
+  const lang = detectLanguage(req);
+  res.redirect(301, `/${lang}/privacy`);
+});
+
+// ============================================================
+// RUTAS PRINCIPALES CON IDIOMA
+// ============================================================
+
+// Ruta raíz - redirige al idioma detectado
+app.get('/', (req, res) => {
+  const lang = detectLanguage(req);
+  res.redirect(302, `/${lang}`);
+});
+
+// Página principal con idioma
+app.get('/:lang', (req, res, next) => {
+  const lang = req.params.lang;
+  
+  // Verificar si es un idioma soportado
+  if (!SUPPORTED_LANGS.includes(lang)) {
+    return next(); // Pasar al siguiente middleware
+  }
+  
+  // Establecer cookie de idioma
+  res.cookie('lang', lang, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: false });
+  
+  res.render('index', loadViewData(lang, '/'));
+});
+
+// Otras páginas con idioma
+app.get('/:lang/:page', (req, res, next) => {
+  const { lang, page } = req.params;
+  
+  // Verificar si es un idioma soportado
+  if (!SUPPORTED_LANGS.includes(lang)) {
+    return next();
+  }
+  
+  // Ignorar rutas especiales
+  if (['admin', 'blog', 'api', 'assets', 'public', 'uploads', 'images', 'contents'].includes(page)) {
+    return next();
+  }
+  
+  const viewPath = path.join(__dirname, 'views', page + '.hbs');
+  
   if (fs.existsSync(viewPath)) {
-    res.render(req.params.page, loadViewData());
+    res.cookie('lang', lang, { maxAge: 365 * 24 * 60 * 60 * 1000, httpOnly: false });
+    res.render(page, loadViewData(lang, `/${page}`));
   } else {
-    res.status(404).render('index', { ...loadViewData(), error: 'Página no encontrada' });
+    res.status(404).render('index', { 
+      ...loadViewData(lang, '/'), 
+      error: 'Página no encontrada' 
+    });
+  }
+});
+
+// Páginas sin prefijo de idioma - redirigen
+app.get('/:page', (req, res, next) => {
+  const page = req.params.page;
+  
+  // Ignorar rutas especiales
+  if (['admin', 'blog', 'api', 'assets', 'public', 'uploads', 'images', 'contents', 'favicon.ico', 'robots.txt', 'sitemap.xml'].includes(page)) {
+    return next();
+  }
+  
+  const viewPath = path.join(__dirname, 'views', page + '.hbs');
+  
+  if (fs.existsSync(viewPath)) {
+    const lang = detectLanguage(req);
+    res.redirect(302, `/${lang}/${page}`);
+  } else {
+    next();
   }
 });
 
 // ============================================================
 // ERRORES
 // ============================================================
-app.use((req, res) => res.status(404).json({ error: 'No encontrado' }));
+app.use((req, res) => {
+  const lang = detectLanguage(req);
+  res.status(404).json({ error: 'No encontrado', lang });
+});
+
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: 'Error del servidor' });
@@ -395,16 +589,15 @@ app.listen(PORT, () => {
   console.log('  GKRAKEN CMS - SERVIDOR INICIADO');
   console.log('='.repeat(60));
   console.log(`  🆔 Versión:     ${APP_VERSION}`);
-  console.log(`  🌐 URL:         http://localhost:${PORT}`);
-  console.log(`  🔐 Admin:       http://localhost:${PORT}/admin`);
-  console.log(`  📝 Blog:        http://localhost:${PORT}/blog`);
+  console.log(`  🌐 URL:         ${BASE_URL}`);
+  console.log(`  🌍 Idiomas:     ${SUPPORTED_LANGS.join(', ')} (default: ${DEFAULT_LANG})`);
+  console.log(`  🔐 Admin:       ${BASE_URL}/admin`);
+  console.log(`  📝 Blog:        ${BASE_URL}/blog`);
   console.log(`  🔧 Entorno:     ${isProduction ? 'PRODUCCIÓN' : 'DESARROLLO'}`);
   console.log('='.repeat(60));
-  console.log('  📦 SISTEMA DE CACHÉ:');
-  console.log('      ✓ Limpieza completa al reiniciar');
-  console.log('      ✓ CSS procesado con versiones en URLs');
-  console.log('      ✓ Assets con versión: caché 1 año');
-  console.log('      ✓ Assets sin versión: sin caché');
+  console.log('  📦 RUTAS DE IDIOMA:');
+  console.log(`      ${BASE_URL}/es  → Español`);
+  console.log(`      ${BASE_URL}/en  → English`);
   console.log('='.repeat(60));
   console.log('');
 });
