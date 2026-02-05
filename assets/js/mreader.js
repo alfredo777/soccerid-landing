@@ -1,6 +1,7 @@
 /**
  * Magazine Reader - GKrakenCMS
  * Visor de revistas digitales con navegación por páginas
+ * VERSIÓN FINAL CORREGIDA
  */
 
 const MagazineReader = {
@@ -10,367 +11,253 @@ const MagazineReader = {
     totalPages: 0,
     isOpen: false,
     initialized: false,
-    swipeHintShown: false,
-    isAnimating: false, // Nuevo: prevenir acciones durante animación
     
-    touch: {
-        startX: 0,
-        startY: 0,
-        currentX: 0,
-        isDragging: false,
-        startTime: 0,
-        threshold: 50,
-        velocityThreshold: 0.3,
-        resistance: 0.25,
-        isHorizontalSwipe: null // null = no determinado, true/false después
+    // Touch state
+    touchStartX: 0,
+    isDragging: false,
+    
+    /**
+     * Obtiene el idioma actual
+     */
+    getLang() {
+        if (typeof GKraken !== 'undefined' && GKraken.currentLang) {
+            return GKraken.currentLang;
+        }
+        return document.documentElement.lang || 'es';
     },
     
-    elements: {
-        modal: null,
-        title: null,
-        viewport: null,
-        pagesWrapper: null,
-        thumbnails: null,
-        currentPageEl: null,
-        totalPagesEl: null,
-        prevBtn: null,
-        nextBtn: null,
-        leftIndicator: null,
-        rightIndicator: null
+    /**
+     * Traducciones
+     */
+    t(key) {
+        const translations = {
+            es: {
+                viewSource: 'Ver fuente original',
+                page: 'Página',
+                error: 'Error al cargar'
+            },
+            en: {
+                viewSource: 'View original source',
+                page: 'Page',
+                error: 'Error loading'
+            }
+        };
+        const lang = this.getLang();
+        return translations[lang]?.[key] || translations['es'][key] || key;
     },
     
+    /**
+     * Inicializa el reader
+     */
     init() {
         if (this.initialized) return;
         
-        this.elements.modal = document.getElementById('magazineReaderModal');
-        if (!this.elements.modal) {
-            console.warn('MagazineReader: Modal no encontrado.');
+        // SIEMPRE eliminar modal existente y crear uno nuevo
+        const existingModal = document.getElementById('magazineReaderModal');
+        if (existingModal) {
+            console.log('MagazineReader: Eliminando modal existente');
+            existingModal.remove();
+        }
+        
+        // Crear modal fresco
+        this.createModal();
+        
+        // Verificar que se creó correctamente
+        const modal = document.getElementById('magazineReaderModal');
+        const sourceBtn = document.getElementById('magazineSourceBtn');
+        
+        console.log('MagazineReader: Verificación post-creación', {
+            modal: !!modal,
+            sourceBtn: !!sourceBtn
+        });
+        
+        if (!modal) {
+            console.error('MagazineReader: No se pudo crear el modal');
             return;
         }
         
-        this.elements.title = document.getElementById('magazineReaderTitle');
-        this.elements.viewport = document.getElementById('magazineViewport');
-        this.elements.pagesWrapper = document.getElementById('magazinePagesWrapper');
-        this.elements.thumbnails = document.getElementById('magazineThumbnails');
-        this.elements.currentPageEl = document.getElementById('magazineCurrentPage');
-        this.elements.totalPagesEl = document.getElementById('magazineTotalPages');
-        this.elements.prevBtn = document.getElementById('magazinePrevBtn');
-        this.elements.nextBtn = document.getElementById('magazineNextBtn');
+        this.setupEvents();
+        this.initialized = true;
+        console.log('MagazineReader: Inicializado correctamente');
+    },
+    
+    /**
+     * Crea el modal HTML - VERSIÓN LIMPIA
+     */
+    createModal() {
+        const html = `
+        <div id="magazineReaderModal" class="magazine-reader-modal">
+            <div class="magazine-reader-container">
+                <div class="magazine-reader-header">
+                    <h2 id="magazineReaderTitle">Revista</h2>
+                    <div class="magazine-header-actions">
+                        <a id="magazineSourceBtn" 
+                           class="magazine-source-btn" 
+                           href="#" 
+                           target="_blank" 
+                           rel="noopener noreferrer">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                            <span>Ver fuente</span>
+                        </a>
+                        <button id="magazineCloseBtn" class="magazine-reader-close" type="button">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="magazine-reader-content">
+                    <div class="magazine-reader-controls">
+                        <button class="magazine-nav-btn" id="magazinePrevBtn" type="button">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M15 18l-6-6 6-6"></path>
+                            </svg>
+                        </button>
+                        <span class="magazine-page-info">
+                            <span id="magazineCurrentPage">1</span> / <span id="magazineTotalPages">1</span>
+                        </span>
+                        <button class="magazine-nav-btn" id="magazineNextBtn" type="button">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 18l6-6-6-6"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="magazine-reader-viewport" id="magazineViewport">
+                        <div class="magazine-pages-wrapper" id="magazinePagesWrapper"></div>
+                    </div>
+                    <div class="magazine-thumbnails" id="magazineThumbnails"></div>
+                </div>
+            </div>
+        </div>`;
         
-        if (this.elements.viewport) {
-            this.elements.leftIndicator = this.elements.viewport.querySelector('.swipe-indicator-left');
-            this.elements.rightIndicator = this.elements.viewport.querySelector('.swipe-indicator-right');
+        document.body.insertAdjacentHTML('beforeend', html);
+        console.log('MagazineReader: Modal HTML insertado');
+        
+        // Verificar inmediatamente
+        const btn = document.getElementById('magazineSourceBtn');
+        console.log('MagazineReader: Botón sourceBtn después de insertar:', !!btn);
+    },
+    
+    /**
+     * Configura eventos
+     */
+    setupEvents() {
+        const modal = document.getElementById('magazineReaderModal');
+        const viewport = document.getElementById('magazineViewport');
+        const prevBtn = document.getElementById('magazinePrevBtn');
+        const nextBtn = document.getElementById('magazineNextBtn');
+        const closeBtn = document.getElementById('magazineCloseBtn');
+        
+        // Cerrar al click en overlay
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) this.close();
+            });
         }
         
-        this.elements.modal.addEventListener('click', (e) => {
-            if (e.target === this.elements.modal) this.close();
-        });
+        // Botón cerrar
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => this.close());
+        }
         
+        // Navegación
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => this.prevPage());
+        }
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => this.nextPage());
+        }
+        
+        // Teclado
         document.addEventListener('keydown', (e) => {
-            if (!this.isOpen || this.isAnimating) return;
+            if (!this.isOpen) return;
             if (e.key === 'Escape') this.close();
             if (e.key === 'ArrowLeft') this.prevPage();
             if (e.key === 'ArrowRight') this.nextPage();
         });
         
-        this.setupTouchNavigation();
-        this.initialized = true;
-    },
-    
-    createModal() {
-        if (document.getElementById('magazineReaderModal')) {
-            this.init();
-            return;
+        // Touch/Swipe en viewport
+        if (viewport) {
+            viewport.addEventListener('touchstart', (e) => {
+                this.touchStartX = e.touches[0].clientX;
+                this.isDragging = true;
+            }, { passive: true });
+            
+            viewport.addEventListener('touchend', (e) => {
+                if (!this.isDragging) return;
+                this.isDragging = false;
+                
+                const touchEndX = e.changedTouches[0].clientX;
+                const diff = this.touchStartX - touchEndX;
+                
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) {
+                        this.nextPage();
+                    } else {
+                        this.prevPage();
+                    }
+                }
+            }, { passive: true });
         }
         
-        const modalHTML = `
-            <div id="magazineReaderModal" class="magazine-reader-modal">
-                <div class="magazine-reader-container">
-                    <div class="magazine-reader-header">
-                        <h2 id="magazineReaderTitle">Revista</h2>
-                        <button class="magazine-reader-close" onclick="MagazineReader.close()">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M18 6L6 18M6 6l12 12"/>
-                            </svg>
-                        </button>
-                    </div>
-                    <div class="magazine-reader-content">
-                        <div class="magazine-reader-controls">
-                            <button class="magazine-nav-btn" id="magazinePrevBtn" onclick="MagazineReader.prevPage()">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M15 18l-6-6 6-6"/>
-                                </svg>
-                            </button>
-                            <span class="magazine-page-info">
-                                <span id="magazineCurrentPage">1</span> / <span id="magazineTotalPages">1</span>
-                            </span>
-                            <button class="magazine-nav-btn" id="magazineNextBtn" onclick="MagazineReader.nextPage()">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M9 18l6-6-6-6"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="magazine-reader-viewport" id="magazineViewport">
-                            <div class="magazine-pages-wrapper" id="magazinePagesWrapper"></div>
-                            <div class="swipe-indicator swipe-indicator-left">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M15 18l-6-6 6-6"/>
-                                </svg>
-                            </div>
-                            <div class="swipe-indicator swipe-indicator-right">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M9 18l6-6-6-6"/>
-                                </svg>
-                            </div>
-                        </div>
-                        <div class="magazine-thumbnails" id="magazineThumbnails"></div>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-        this.initialized = false;
-        this.init();
+        console.log('MagazineReader: Eventos configurados');
     },
     
-    setupTouchNavigation() {
-        const viewport = this.elements.viewport;
-        if (!viewport) return;
+    /**
+     * Registra una revista
+     */
+    register(id, data) {
+        this.magazines[id] = data;
+    },
+    
+    /**
+     * Registra revistas desde artículos
+     */
+    registerFromArticles(articles) {
+        if (!Array.isArray(articles)) return;
         
-        // Touch events
-        viewport.addEventListener('touchstart', (e) => this.handleDragStart(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
-        viewport.addEventListener('touchmove', (e) => {
-            const result = this.handleDragMove(e.touches[0].clientX, e.touches[0].clientY);
-            if (result === 'horizontal') e.preventDefault();
-        }, { passive: false });
-        viewport.addEventListener('touchend', (e) => this.handleDragEnd(e.changedTouches[0].clientX), { passive: true });
-        viewport.addEventListener('touchcancel', () => this.handleDragCancel(), { passive: true });
-        
-        // Mouse events
-        let isMouseDown = false;
-        viewport.addEventListener('mousedown', (e) => {
-            if (e.target.closest('button')) return;
-            isMouseDown = true;
-            this.handleDragStart(e.clientX, e.clientY);
-            e.preventDefault();
-        });
-        
-        document.addEventListener('mousemove', (e) => {
-            if (isMouseDown) this.handleDragMove(e.clientX, e.clientY);
-        });
-        
-        document.addEventListener('mouseup', (e) => {
-            if (isMouseDown) {
-                isMouseDown = false;
-                this.handleDragEnd(e.clientX);
+        articles.forEach(article => {
+            if (article.type === 'magazine' && article.id && article.magazineData) {
+                this.register(article.id, {
+                    title: article.title || 'Revista',
+                    sourceUrl: article.url || null,
+                    pages: article.magazineData.pages || []
+                });
             }
         });
     },
     
-    handleDragStart(x, y) {
-        if (!this.isOpen || this.isAnimating) return;
-        
-        this.touch.startX = x;
-        this.touch.startY = y;
-        this.touch.currentX = x;
-        this.touch.startTime = Date.now();
-        this.touch.isDragging = true;
-        this.touch.isHorizontalSwipe = null;
-        
-        this.elements.viewport?.classList.add('is-dragging');
-        
-        // Remover clase de animación del inner
-        const pageInner = this.getActivePageInner();
-        if (pageInner) {
-            pageInner.classList.remove('animating');
-        }
-    },
-    
-    handleDragMove(x, y) {
-        if (!this.touch.isDragging || !this.isOpen) return;
-        
-        this.touch.currentX = x;
-        const diffX = x - this.touch.startX;
-        const diffY = y - this.touch.startY;
-        
-        // Determinar dirección del swipe (solo una vez)
-        if (this.touch.isHorizontalSwipe === null && (Math.abs(diffX) > 10 || Math.abs(diffY) > 10)) {
-            this.touch.isHorizontalSwipe = Math.abs(diffX) > Math.abs(diffY);
-        }
-        
-        if (!this.touch.isHorizontalSwipe) return 'vertical';
-        
-        this.updateDragVisuals(diffX);
-        return 'horizontal';
-    },
-    
-    handleDragEnd(endX) {
-        if (!this.touch.isDragging) return;
-        
-        const diffX = this.touch.startX - endX;
-        const elapsed = Date.now() - this.touch.startTime;
-        const velocity = Math.abs(diffX) / elapsed;
-        const wasHorizontal = this.touch.isHorizontalSwipe;
-        
-        this.touch.isDragging = false;
-        this.touch.isHorizontalSwipe = null;
-        this.elements.viewport?.classList.remove('is-dragging');
-        
-        // Animar el retorno a posición original
-        const pageInner = this.getActivePageInner();
-        if (pageInner) {
-            pageInner.classList.add('animating');
-            pageInner.style.transform = '';
-            pageInner.style.opacity = '';
-        }
-        
-        this.hideIndicators();
-        
-        if (!wasHorizontal) return;
-        
-        const shouldChangePage = Math.abs(diffX) > this.touch.threshold || velocity > this.touch.velocityThreshold;
-        
-        if (shouldChangePage) {
-            if (diffX > 0) {
-                if (this.currentPage < this.totalPages - 1) {
-                    this.goToPage(this.currentPage + 1, 'next');
-                } else {
-                    this.showBounce('right');
-                }
-            } else {
-                if (this.currentPage > 0) {
-                    this.goToPage(this.currentPage - 1, 'prev');
-                } else {
-                    this.showBounce('left');
-                }
-            }
-        }
-    },
-    
-    handleDragCancel() {
-        this.touch.isDragging = false;
-        this.touch.isHorizontalSwipe = null;
-        this.elements.viewport?.classList.remove('is-dragging');
-        
-        const pageInner = this.getActivePageInner();
-        if (pageInner) {
-            pageInner.classList.add('animating');
-            pageInner.style.transform = '';
-            pageInner.style.opacity = '';
-        }
-        
-        this.hideIndicators();
-    },
-    
-    updateDragVisuals(diffX) {
-        const pageInner = this.getActivePageInner();
-        if (!pageInner) return;
-        
-        // Resistencia en los límites
-        let adjustedDiff = diffX;
-        const atStart = this.currentPage === 0 && diffX > 0;
-        const atEnd = this.currentPage === this.totalPages - 1 && diffX < 0;
-        
-        if (atStart || atEnd) {
-            adjustedDiff = diffX * this.touch.resistance;
-        }
-        
-        const maxTranslate = 120;
-        const clampedDiff = Math.max(-maxTranslate, Math.min(maxTranslate, adjustedDiff));
-        const opacityReduction = Math.abs(clampedDiff / maxTranslate) * 0.25;
-        
-        pageInner.style.transform = `translateX(${clampedDiff}px)`;
-        pageInner.style.opacity = 1 - opacityReduction;
-        
-        this.updateIndicators(diffX);
-    },
-    
-    updateIndicators(diffX) {
-        const { leftIndicator, rightIndicator } = this.elements;
-        if (!leftIndicator || !rightIndicator) return;
-        
-        const canGoPrev = this.currentPage > 0;
-        const canGoNext = this.currentPage < this.totalPages - 1;
-        const triggered = Math.abs(diffX) > this.touch.threshold;
-        
-        // Indicador izquierdo (prev)
-        if (diffX > 0 && canGoPrev) {
-            leftIndicator.classList.add('visible');
-            leftIndicator.classList.toggle('triggered', triggered);
-        } else {
-            leftIndicator.classList.remove('visible', 'triggered');
-        }
-        
-        // Indicador derecho (next)
-        if (diffX < 0 && canGoNext) {
-            rightIndicator.classList.add('visible');
-            rightIndicator.classList.toggle('triggered', triggered);
-        } else {
-            rightIndicator.classList.remove('visible', 'triggered');
-        }
-    },
-    
-    hideIndicators() {
-        this.elements.leftIndicator?.classList.remove('visible', 'triggered');
-        this.elements.rightIndicator?.classList.remove('visible', 'triggered');
-    },
-    
-    showBounce(direction) {
-        const pageInner = this.getActivePageInner();
-        if (!pageInner) return;
-        
-        pageInner.classList.remove('animating');
-        pageInner.classList.add(`bounce-${direction}`);
-        
-        setTimeout(() => {
-            pageInner.classList.remove(`bounce-${direction}`);
-        }, 400);
-    },
-    
-    getActivePage() {
-        return this.elements.pagesWrapper?.querySelector('.magazine-page.active');
-    },
-    
-    getActivePageInner() {
-        return this.getActivePage()?.querySelector('.magazine-page-inner');
-    },
-    
-    getPageImageUrl(page) {
+    /**
+     * Obtiene la URL de imagen de una página
+     */
+    getImageUrl(page) {
         if (typeof page === 'string') return page;
         return page.url || page.image || page.src || page.img || null;
     },
     
-    getPageAlt(page, index) {
-        if (typeof page === 'string') return `Página ${index + 1}`;
-        return page.alt || page.title || `Página ${index + 1}`;
-    },
-    
-    getPageThumbnail(page) {
-        if (typeof page === 'string') return page;
-        return page.thumbnail || page.thumb || this.getPageImageUrl(page);
-    },
-    
-    register(id, magazineData) {
-        this.magazines[id] = magazineData;
-    },
-    
-    registerFromArticles(articles) {
-        if (!Array.isArray(articles)) return;
-        articles.forEach(article => {
-            if (article.type === 'magazine' && article.id && article.magazineData) {
-                this.register(article.id, { title: article.title || 'Revista', ...article.magazineData });
-            }
-        });
-    },
-    
+    /**
+     * Abre una revista
+     */
     openFromData(magazineId) {
-        if (!this.elements.modal) this.createModal();
-        
         const magazine = this.magazines[magazineId];
         if (!magazine) {
             console.error(`MagazineReader: Revista "${magazineId}" no encontrada`);
             return;
+        }
+        
+        console.log('MagazineReader: Abriendo revista', magazineId, magazine);
+        
+        // Asegurar que el modal existe
+        let modal = document.getElementById('magazineReaderModal');
+        if (!modal) {
+            console.log('MagazineReader: Modal no existe, creando...');
+            this.createModal();
+            this.setupEvents();
+            modal = document.getElementById('magazineReaderModal');
         }
         
         this.currentMagazine = magazine;
@@ -382,183 +269,204 @@ const MagazineReader = {
             return;
         }
         
-        if (this.elements.title) {
-            this.elements.title.textContent = magazine.title || 'Revista';
+        // Actualizar título
+        const title = document.getElementById('magazineReaderTitle');
+        if (title) {
+            title.textContent = magazine.title || 'Revista';
         }
         
+        // *** ACTUALIZAR BOTÓN DE FUENTE ***
+        this.updateSourceButton(magazine.sourceUrl);
+        
+        // Renderizar páginas
         this.renderPages();
         this.renderThumbnails();
         this.updateNavigation();
         
-        this.elements.modal?.classList.add('active');
+        // Mostrar modal
+        if (modal) {
+            modal.classList.add('active');
+        }
         this.isOpen = true;
         document.body.style.overflow = 'hidden';
-        
-        this.showSwipeHint();
     },
     
-    showSwipeHint() {
-        if (this.swipeHintShown || !('ontouchstart' in window)) return;
+    /**
+     * Actualiza el botón de fuente
+     */
+    updateSourceButton(url) {
+        const btn = document.getElementById('magazineSourceBtn');
         
-        const hint = document.createElement('div');
-        hint.className = 'magazine-swipe-hint';
-        hint.innerHTML = `
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M14 4l6 6m0 0l-6 6m6-6H3"/>
-            </svg>
-            <span>Desliza para navegar</span>
-        `;
+        console.log('MagazineReader: updateSourceButton', {
+            url: url,
+            btnFound: !!btn,
+            btnHTML: btn ? btn.outerHTML.substring(0, 100) : 'N/A'
+        });
         
-        this.elements.viewport?.appendChild(hint);
-        this.swipeHintShown = true;
+        if (!btn) {
+            console.error('MagazineReader: BOTÓN NO ENCONTRADO - Verificar HTML del modal');
+            return;
+        }
         
-        setTimeout(() => {
-            hint.classList.add('hiding');
-            setTimeout(() => hint.remove(), 400);
-        }, 2500);
+        if (url && typeof url === 'string' && url.trim() !== '' && url !== '#') {
+            btn.href = url;
+            btn.style.cssText = 'display: inline-flex !important; visibility: visible !important; opacity: 1 !important;';
+            
+            const textSpan = btn.querySelector('span');
+            if (textSpan) {
+                textSpan.textContent = this.t('viewSource');
+            }
+            
+            console.log('MagazineReader: Botón VISIBLE con URL:', url);
+        } else {
+            btn.style.cssText = 'display: none !important;';
+            console.log('MagazineReader: Botón OCULTO (sin URL válida)');
+        }
     },
     
+    /**
+     * Renderiza las páginas
+     */
     renderPages() {
-        if (!this.elements.pagesWrapper || !this.currentMagazine) return;
+        const wrapper = document.getElementById('magazinePagesWrapper');
+        if (!wrapper || !this.currentMagazine) return;
         
         const pages = this.currentMagazine.pages || [];
         
-        this.elements.pagesWrapper.innerHTML = pages.map((page, index) => {
-            const imageSrc = this.getPageImageUrl(page);
-            const altText = this.getPageAlt(page, index);
+        wrapper.innerHTML = pages.map((page, index) => {
+            const imageUrl = this.getImageUrl(page);
+            const alt = (typeof page === 'object' && page.alt) || `${this.t('page')} ${index + 1}`;
             
-            const content = imageSrc
-                ? `<img src="${imageSrc}" alt="${altText}" loading="${index < 3 ? 'eager' : 'lazy'}" draggable="false"
-                       onerror="this.parentElement.innerHTML='<div class=\\'magazine-page-error\\'><p>Error cargando página ${index + 1}</p></div>'">`
-                : `<div class="magazine-page-error"><p>Página ${index + 1} no disponible</p></div>`;
+            if (!imageUrl) {
+                return `
+                    <div class="magazine-page ${index === 0 ? 'active' : ''}" data-page="${index}">
+                        <div class="magazine-page-inner">
+                            <div class="magazine-page-error">
+                                <p>${this.t('error')} ${index + 1}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
             
             return `
                 <div class="magazine-page ${index === 0 ? 'active' : ''}" data-page="${index}">
-                    <div class="magazine-page-inner">${content}</div>
+                    <div class="magazine-page-inner">
+                        <img src="${imageUrl}" 
+                             alt="${alt}" 
+                             loading="${index < 2 ? 'eager' : 'lazy'}"
+                             draggable="false"
+                             onerror="this.parentElement.innerHTML='<div class=\\'magazine-page-error\\'><p>Error</p></div>'">
+                    </div>
                 </div>
             `;
         }).join('');
     },
     
+    /**
+     * Renderiza miniaturas
+     */
     renderThumbnails() {
-        if (!this.elements.thumbnails || !this.currentMagazine) return;
+        const container = document.getElementById('magazineThumbnails');
+        if (!container || !this.currentMagazine) return;
         
         const pages = this.currentMagazine.pages || [];
         
-        this.elements.thumbnails.innerHTML = pages.map((page, index) => {
-            const thumbSrc = this.getPageThumbnail(page);
-            const content = thumbSrc
-                ? `<img src="${thumbSrc}" alt="Página ${index + 1}" draggable="false"><span class="thumbnail-number">${index + 1}</span>`
-                : `<div class="thumbnail-placeholder">${index + 1}</div>`;
+        container.innerHTML = pages.map((page, index) => {
+            const imageUrl = this.getImageUrl(page);
             
             return `
-                <div class="magazine-thumbnail ${index === 0 ? 'active' : ''}" data-page="${index}" onclick="MagazineReader.goToPage(${index})">
-                    ${content}
+                <div class="magazine-thumbnail ${index === 0 ? 'active' : ''}" 
+                     data-page="${index}" 
+                     onclick="MagazineReader.goToPage(${index})">
+                    ${imageUrl 
+                        ? `<img src="${imageUrl}" alt="Page ${index + 1}" draggable="false">`
+                        : `<span>${index + 1}</span>`
+                    }
+                    <span class="thumbnail-number">${index + 1}</span>
                 </div>
             `;
         }).join('');
     },
     
-    goToPage(pageIndex, direction = null) {
-        if (pageIndex < 0 || pageIndex >= this.totalPages) return;
-        if (pageIndex === this.currentPage) return;
-        if (this.isAnimating) return;
+    /**
+     * Va a una página específica
+     */
+    goToPage(index) {
+        if (index < 0 || index >= this.totalPages) return;
+        if (index === this.currentPage) return;
         
-        this.isAnimating = true;
+        const wrapper = document.getElementById('magazinePagesWrapper');
+        const thumbsContainer = document.getElementById('magazineThumbnails');
         
-        const pages = this.elements.pagesWrapper?.querySelectorAll('.magazine-page');
-        if (!pages) return;
-        
-        const currentPageEl = pages[this.currentPage];
-        const nextPageEl = pages[pageIndex];
-        
-        // Determinar dirección si no se especificó
-        if (!direction) {
-            direction = pageIndex > this.currentPage ? 'next' : 'prev';
+        if (wrapper) {
+            const pages = wrapper.querySelectorAll('.magazine-page');
+            pages.forEach((page, i) => {
+                page.classList.toggle('active', i === index);
+            });
         }
         
-        const enterClass = direction === 'next' ? 'from-right' : 'from-left';
-        const exitClass = direction === 'next' ? 'to-left' : 'to-right';
-        
-        // Limpiar estilos inline del arrastre
-        const currentInner = currentPageEl?.querySelector('.magazine-page-inner');
-        if (currentInner) {
-            currentInner.style.transform = '';
-            currentInner.style.opacity = '';
-            currentInner.classList.remove('animating');
-        }
-        
-        // Configurar página saliente
-        currentPageEl.classList.remove('active');
-        currentPageEl.classList.add('exiting', exitClass);
-        
-        // Configurar página entrante
-        nextPageEl.classList.add('entering', enterClass);
-        
-        // Limpiar después de la animación
-        setTimeout(() => {
-            currentPageEl.classList.remove('exiting', exitClass);
-            nextPageEl.classList.remove('entering', enterClass);
-            nextPageEl.classList.add('active');
+        if (thumbsContainer) {
+            const thumbs = thumbsContainer.querySelectorAll('.magazine-thumbnail');
+            thumbs.forEach((thumb, i) => {
+                thumb.classList.toggle('active', i === index);
+            });
             
-            this.isAnimating = false;
-        }, 300);
-        
-        this.currentPage = pageIndex;
-        
-        // Actualizar thumbnails
-        const thumbs = this.elements.thumbnails?.querySelectorAll('.magazine-thumbnail');
-        thumbs?.forEach((thumb, i) => thumb.classList.toggle('active', i === pageIndex));
-        
-        // Scroll thumbnail a la vista
-        const activeThumb = this.elements.thumbnails?.querySelector('.magazine-thumbnail.active');
-        activeThumb?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        
-        this.updateNavigation();
-    },
-    
-    nextPage() {
-        if (this.currentPage < this.totalPages - 1) {
-            this.goToPage(this.currentPage + 1, 'next');
+            const activeThumb = thumbs[index];
+            if (activeThumb) {
+                activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
         }
+        
+        this.currentPage = index;
+        this.updateNavigation();
     },
     
     prevPage() {
         if (this.currentPage > 0) {
-            this.goToPage(this.currentPage - 1, 'prev');
+            this.goToPage(this.currentPage - 1);
+        }
+    },
+    
+    nextPage() {
+        if (this.currentPage < this.totalPages - 1) {
+            this.goToPage(this.currentPage + 1);
         }
     },
     
     updateNavigation() {
-        if (this.elements.currentPageEl) {
-            this.elements.currentPageEl.textContent = this.currentPage + 1;
-        }
-        if (this.elements.totalPagesEl) {
-            this.elements.totalPagesEl.textContent = this.totalPages;
-        }
-        if (this.elements.prevBtn) {
-            this.elements.prevBtn.disabled = this.currentPage === 0;
-        }
-        if (this.elements.nextBtn) {
-            this.elements.nextBtn.disabled = this.currentPage === this.totalPages - 1;
-        }
+        const currentPageEl = document.getElementById('magazineCurrentPage');
+        const totalPagesEl = document.getElementById('magazineTotalPages');
+        const prevBtn = document.getElementById('magazinePrevBtn');
+        const nextBtn = document.getElementById('magazineNextBtn');
+        
+        if (currentPageEl) currentPageEl.textContent = this.currentPage + 1;
+        if (totalPagesEl) totalPagesEl.textContent = this.totalPages;
+        if (prevBtn) prevBtn.disabled = this.currentPage === 0;
+        if (nextBtn) nextBtn.disabled = this.currentPage === this.totalPages - 1;
     },
     
     close() {
-        this.elements.modal?.classList.remove('active');
+        const modal = document.getElementById('magazineReaderModal');
+        const sourceBtn = document.getElementById('magazineSourceBtn');
+        
+        if (modal) modal.classList.remove('active');
+        
         this.isOpen = false;
-        this.isAnimating = false;
         this.currentMagazine = null;
-        this.touch.isDragging = false;
         document.body.style.overflow = '';
+        
+        if (sourceBtn) {
+            sourceBtn.style.cssText = 'display: none !important;';
+        }
     }
 };
 
-// Inicializar
+window.MagazineReader = MagazineReader;
+
+// Inicializar cuando el DOM esté listo
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => MagazineReader.init());
 } else {
     MagazineReader.init();
 }
-
-window.MagazineReader = MagazineReader;

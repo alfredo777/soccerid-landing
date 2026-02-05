@@ -71,6 +71,18 @@
     <div class="magazine-reader-container">
       <div class="magazine-reader-header">
         <h2 id="magazineReaderTitle">{{t "panel.magazine"}}</h2>
+        <a id="magazineSourceBtn" 
+           class="magazine-source-btn" 
+           href="#" 
+           target="_blank" 
+           rel="noopener noreferrer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+            <span>Ver fuente</span>
+        </a>
         <button class="magazine-reader-close" onclick="MagazineReader.close()">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M18 6L6 18M6 6l12 12"/>

@@ -569,6 +569,15 @@ function assignGlobalData(allData) {
       }
     }
   }
+
+  // En assignGlobalData, después de cargar panelTemplates:
+  if (panelTemplates.media && panelTemplates.media.articles) {
+      const articles = GKraken.normalizeToArray(panelTemplates.media.articles);
+      if (typeof MagazineReader !== 'undefined' && MagazineReader.registerFromArticles) {
+          MagazineReader.registerFromArticles(articles);
+      }
+  }
+
   
   if (allData.panelClasses) {
     const unwrapped = unwrapData(allData.panelClasses);
@@ -686,14 +695,33 @@ function setupEventListeners() {
     if (e.key === 'ArrowRight') navigateLightbox(1);
   });
   
+  // CORREGIDO: Solo para enlaces internos de navegación (anclas)
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
+      // Ignorar si tiene target="_blank" (enlaces externos)
+      if (this.getAttribute('target') === '_blank') {
+        return; // Permitir comportamiento normal
+      }
+      
+      // Ignorar si es parte del magazine reader
+      if (this.closest('.magazine-reader-modal') || this.id === 'magazineSourceBtn') {
+        return; // Permitir comportamiento normal
+      }
+      
       const href = this.getAttribute('href');
-      if (href !== '#') {
-        e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
+      
+      // Solo procesar si es un ancla válida (# seguido de un ID)
+      if (href && href !== '#' && href.startsWith('#') && href.length > 1) {
+        // Verificar que sea un selector CSS válido (ID)
+        try {
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        } catch (error) {
+          // Si el selector no es válido, permitir comportamiento normal
+          console.warn('Selector no válido:', href);
         }
       }
     });
@@ -709,7 +737,6 @@ function setupEventListeners() {
   // Listener para navegación del historial (botón atrás/adelante)
   window.addEventListener('popstate', function(e) {
     if (e.state && e.state.lang) {
-      // Si el estado tiene idioma, actualizar sin recargar
       const newLang = e.state.lang;
       if (newLang !== GKraken.currentLang) {
         GKraken.currentLang = newLang;
@@ -722,6 +749,7 @@ function setupEventListeners() {
     }
   });
 }
+
 
 // ==========================================================================
 // PRELOADER
