@@ -1233,6 +1233,9 @@ function generateMediaContent(panel) {
     html += `
       <h3 class="video-section-title">${featuredVideo}</h3>
       <div class="video-embed-wrapper">
+        <iframe src="https://www.youtube.com/embed/g1_GukOgCZI" title="Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div> <br/>
+      <div class="video-embed-wrapper">
         <iframe src="https://www.youtube.com/embed/${panel.videoId}" title="Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
     `;

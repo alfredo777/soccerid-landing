@@ -86,6 +86,49 @@
         </div>
     </section>
 
+    <!-- ================================================
+     EMBED VIDEO — MINI PLAYER FLOTANTE
+     ================================================ -->
+    <div class="embed-video-float" id="embedVideoFloat" onclick="embedVideoOpenLightbox()">
+
+      <!-- Botón cerrar mini -->
+      <button class="embed-video-close-mini" id="embedVideoCloseMini"
+        onclick="event.stopPropagation(); embedVideoCloseMini();" title="Cerrar">✕</button>
+
+      <!-- Iframe embed silenciado en loop -->
+      <iframe
+        id="embedVideoMiniIframe"
+        src="https://www.youtube.com/embed/g1_GukOgCZI?autoplay=1&mute=1&loop=1&playlist=g1_GukOgCZI&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
+        title="SOCCER iD Embed Video"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+
+      <!-- Overlay con ícono play -->
+      <div class="embed-video-play-overlay">
+        <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="40" r="38" fill="#a96bef"/>
+          <polygon points="32,24 60,40 32,56" fill="#0a0a0a"/>
+        </svg>
+      </div>
+
+      <!-- Badge -->
+      <div class="embed-video-badge">▶ Ver Video</div>
+    </div>
+
+    <!-- ================================================
+         EMBED VIDEO — LIGHTBOX OVERLAY
+         ================================================ -->
+    <div class="embed-video-lightbox-overlay" id="embedVideoLightboxOverlay"
+      onclick="embedVideoCloseLightbox(event)">
+      <div class="embed-video-lightbox-content" id="embedVideoLightboxContent">
+        <button class="embed-video-lightbox-close" id="embedVideoLightboxClose"
+          onclick="embedVideoCloseLightbox(event)" title="Cerrar">✕</button>
+        <!-- El iframe embed con sonido se inyecta dinámicamente -->
+      </div>
+    </div>
+
+
     <footer class="footer" id="footer">
         <div class="footer-content">
             <div class="footer-main">
@@ -146,3 +189,5 @@
             <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)"><svg width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"></path></svg></button>
         </div>
     </div>
+
+
