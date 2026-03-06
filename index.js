@@ -465,8 +465,10 @@ function loadViewData(lang = DEFAULT_LANG, currentPath = '/') {
   const data = { 
     title: translations?.meta?.title || 'SOCCER iD',
     description: translations?.meta?.description || '',
+    keywords: translations?.meta?.keywords || 'soccer id, soccerid, soccer id cup, experiencias vip, seguros id, copa 2026, deportes, fútbol',
     ogTitle: translations?.meta?.ogTitle || translations?.meta?.title || 'SOCCER iD',
     ogDescription: translations?.meta?.ogDescription || translations?.meta?.description || '',
+    ogLocale: lang === 'es' ? 'es_ES' : 'en_US',
     twitterTitle: translations?.meta?.twitterTitle || translations?.meta?.title || 'SOCCER iD',
     twitterDescription: translations?.meta?.twitterDescription || translations?.meta?.description || '',
     year: new Date().getFullYear(),

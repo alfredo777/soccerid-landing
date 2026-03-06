@@ -8,6 +8,12 @@
   <!-- Meta descripción -->
   <meta name="description" content="{{description}}">
   
+  <!-- Keywords -->
+  <meta name="keywords" content="{{#if keywords}}{{keywords}}{{else}}soccer id, soccerid, soccer id cup, experiencias vip, seguros id, copa 2026, deportes, fútbol{{/if}}">
+  
+  <!-- Robots -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  
   <!-- Canonical y alternate para SEO multiidioma -->
   <link rel="canonical" href="{{baseUrl}}/{{lang}}{{currentPath}}">
   <link rel="alternate" hreflang="es" href="{{baseUrl}}/es{{currentPath}}">
@@ -36,6 +42,47 @@
   <meta name="twitter:title" content="{{twitterTitle}}">
   <meta name="twitter:description" content="{{twitterDescription}}">
   <meta name="twitter:image" content="{{baseUrl}}{{img '/assets/images/share.jpg'}}">
+  
+  <!-- Schema.org JSON-LD: Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "SOCCER iD",
+    "alternateName": ["SocceriD", "Soccer iD", "Soccer ID", "soccer id"],
+    "url": "{{baseUrl}}",
+    "logo": "{{baseUrl}}/assets/images/iconsoccerid.png",
+    "description": "{{description}}",
+    "sameAs": [
+      "https://www.instagram.com/soccerid.co",
+      "https://www.facebook.com/soccerid",
+      "https://www.tiktok.com/@soccerid"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer service",
+      "availableLanguage": ["Spanish", "English"]
+    }
+  }
+  </script>
+
+  <!-- Schema.org JSON-LD: WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "SOCCER iD",
+    "alternateName": ["SocceriD", "Soccer iD", "Soccer ID"],
+    "url": "{{baseUrl}}",
+    "description": "{{description}}",
+    "inLanguage": ["es", "en"],
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "{{baseUrl}}/{{lang}}?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
   
   <!-- CSS -->
   <link href="/assets/css/main.css?v={{version}}" rel="stylesheet">
