@@ -1561,7 +1561,7 @@ body {
 .social-links {
     display: flex;
     justify-content: center;
-    gap: 16px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
@@ -3381,3 +3381,349 @@ body {
 /* ==========================================================================
    FIN DEL ARCHIVO
    ========================================================================== */
+
+
+/* Variables del Widget */
+.soccer-id-widget {
+    --color-primary: #667eea;
+    --color-secondary: #764ba2;
+    --color-accent: #f093fb;
+    --bg-dark-1: #0f0f1a;
+    --bg-dark-2: #1a1a2e;
+    --bg-dark-3: #16213e;
+    --bg-card: rgba(255, 255, 255, 0.05);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.8);
+    --text-muted: rgba(255, 255, 255, 0.5);
+    --border-light: rgba(255, 255, 255, 0.08);
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 40px;
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 20px;
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.5);
+
+    /* Configuración del contenedor del widget */
+    width: 100%;
+    max-width: 1200px; /* Ancho máximo */
+    height: 550px; /* Alto fijo para el widget */
+    margin: 0 auto;
+    margin-top: 40px !important;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(circle at top right, var(--bg-dark-3), var(--bg-dark-1));
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    color: var(--text-primary);
+    box-sizing: border-box;
+}
+
+.soccer-id-widget * {
+    box-sizing: border-box;
+}
+
+/* Imagen de fondo con opacidad */
+.soccer-id-widget::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url('/assets/images/copa26.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.15;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Cabecera */
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    height: 80px;
+    position: relative;
+    z-index: 1;
+}
+
+.widget-logo {
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    background: linear-gradient(to right, var(--color-primary), var(--color-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.widget-tabs {
+    display: flex;
+    gap: var(--spacing-sm);
+    background: var(--bg-dark-2);
+    padding: 6px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+    backdrop-filter: blur(10px);
+}
+
+.widget-tab-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    transition: var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.widget-tab-btn svg { width: 20px; height: 20px; fill: currentColor; }
+.widget-tab-btn:hover { color: var(--text-primary); background: var(--bg-card); }
+.widget-tab-btn.active {
+    color: var(--text-primary);
+    background: var(--color-primary);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Contenido Principal */
+.widget-main-content {
+    display: flex;
+    flex: 1;
+    padding: 0 var(--spacing-xl) var(--spacing-xl);
+    gap: var(--spacing-xl);
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+/* Columna Izquierda: Playlist */
+.widget-playlist-section {
+    flex: 0 0 35%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-right: var(--spacing-md);
+    background: rgba(26, 26, 46, 0.6);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-sm);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-light);
+}
+
+.widget-playlist-section::-webkit-scrollbar { width: 6px; }
+.widget-playlist-section::-webkit-scrollbar-track { background: transparent; }
+.widget-playlist-section::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 10px; }
+
+.widget-playlist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--border-light);
+}
+
+.widget-section-subtitle {
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #b3b3b3;
+    font-weight: 600;
+}
+
+.widget-mobile-toggle-btn {
+    display: none;
+    background: var(--bg-dark-2);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-normal);
+}
+
+.widget-mobile-toggle-btn svg {
+    width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; transition: transform 0.3s ease;
+}
+.widget-mobile-toggle-btn.open svg { transform: rotate(180deg); }
+
+.widget-playlist-items-wrapper { display: flex; flex-direction: column; width: 100%; min-height: 0px !important;}
+.widget-playlist-items { display: flex; flex-direction: column; }
+
+.widget-playlist-item {
+    display: flex;
+    align-items: center;
+    padding: var(--spacing-md) var(--spacing-sm);
+    background: transparent;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    border-bottom: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+}
+.widget-playlist-item:last-child { border-bottom: none; }
+.widget-playlist-item:hover { background: rgba(255, 255, 255, 0.05); padding-left: var(--spacing-lg); }
+
+.widget-item-thumb {
+    width: 64px; height: 48px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-dark-3);
+    margin-right: var(--spacing-md);
+    background-size: cover; background-position: center;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; position: relative; overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+.widget-item-thumb svg { width: 20px; height: 20px; fill: rgba(255,255,255,0.8); z-index: 2; }
+.widget-item-thumb::after {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4);
+}
+
+.widget-item-info { flex: 1; overflow: hidden; }
+.widget-item-title {
+    font-size: 15px; font-weight: 600; color: var(--text-primary);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;
+}
+.widget-item-subtitle { font-size: 13px; color: var(--text-muted); }
+
+.widget-play-icon {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--text-primary); color: var(--bg-dark-1);
+    opacity: 0; transform: scale(0.8); transition: all var(--transition-fast);
+}
+.widget-play-icon svg { width: 12px; height: 12px; fill: currentColor; margin-left: 2px; }
+.widget-playlist-item:hover .widget-play-icon { opacity: 1; transform: scale(1); }
+
+/* Columna Derecha: Reproductor Destacado */
+.widget-featured-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(26, 26, 46, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
+    position: relative;
+    padding: var(--spacing-lg);
+}
+
+.widget-featured-container {
+    width: 100%;
+    max-width: 800px;
+    aspect-ratio: 16/9;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    background: #000;
+    transition: var(--transition-normal);
+}
+
+.widget-featured-container.audio-mode {
+    aspect-ratio: auto;
+    height: 352px;
+    max-width: 500px;
+}
+
+.widget-featured-container iframe { width: 100%; height: 100%; border: none; display: block; }
+
+
+/* =========================================
+   CANALES SOCIALES (Adaptado al diseño)
+========================================= */
+.widget-social-channels {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    margin-top: var(--spacing-md);
+    justify-content: end;
+    margin-right: 4%;
+}
+
+/* Estilos base del botón usando variables del sistema */
+.widget-social-channels .social-link-w {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--bg-dark-2); /* Fondo oscuro del widget */
+    border: 1px solid var(--border-light); /* Borde sutil */
+    transition: var(--transition-normal);
+    text-decoration: none;
+    backdrop-filter: blur(5px);
+}
+
+/* Estilos del icono SVG */
+.widget-social-channels .social-link-w svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--text-muted); /* Color apagado por defecto */
+    transition: var(--transition-normal);
+}
+
+/* Efectos Hover generales */
+.widget-social-channels .social-link-w:hover {
+    transform: translateY(-4px); /* Salto hacia arriba suave */
+    border-color: transparent;
+}
+
+.widget-social-channels .social-link-w:hover svg {
+    transform: scale(1.15); /* Crece un poco el icono */
+    fill: var(--text-primary); /* Se ilumina el icono a blanco */
+}
+
+/* Colores específicos por marca al hacer hover (con resplandor) */
+.widget-social-channels .social-link-w[title="YouTube"]:hover {
+    background-color: #FF0000;
+    box-shadow: 0 6px 15px rgba(255, 0, 0, 0.4);
+}
+
+.widget-social-channels .social-link-w[title="Spotify"]:hover {
+    background-color: #1DB954;
+    box-shadow: 0 6px 15px rgba(29, 185, 84, 0.4);
+}
+
+
+
+
+/* Responsividad */
+@media (max-width: 900px) {
+    .soccer-id-widget { height: auto; min-height: 400px; }
+    .widget-main-content { flex-direction: column; padding: 0 var(--spacing-md) var(--spacing-xl); overflow: visible; }
+    .widget-featured-section { flex: none; order: 1; padding: var(--spacing-sm); margin-bottom: var(--spacing-md); }
+    .widget-playlist-section { flex: none; order: 2; padding-right: 0; overflow: visible; padding: var(--spacing-sm); }
+    
+    .widget-playlist-header { 
+        align-items: center; 
+        border-bottom: none; 
+        margin-bottom: 0; 
+        padding-bottom: 0; 
+    }
+    
+    .widget-mobile-toggle-btn { display: flex; }
+    .widget-playlist-items-wrapper { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.3s ease-out; }
+    .widget-playlist-items-wrapper.open { grid-template-rows: 1fr; }
+    .widget-playlist-items { overflow: hidden; }
+
+    .widget-social-channels {
+        margin-right: 9%;
+    }
+}
