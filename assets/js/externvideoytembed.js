@@ -19,7 +19,7 @@
     var embedIframe = document.createElement('iframe');
     embedIframe.setAttribute('id', 'embedVideoLightboxIframe');
     embedIframe.setAttribute('src',
-      'https://www.youtube.com/embed/6be3c9Q0aNI?si=5weGQ8oXTyygY-bl?autoplay=1&mute=0&rel=0&modestbranding=1&playsinline=1&si=uDHJfnVqZKo-_qYR'
+      'https://www.youtube.com/embed/g1_GukOgCZI?autoplay=1&mute=0&rel=0&modestbranding=1&playsinline=1&si=uDHJfnVqZKo-_qYR'
     );
     embedIframe.setAttribute('title', 'SOCCER iD Embed Video – Lightbox');
     embedIframe.setAttribute('frameborder', '0');
@@ -53,7 +53,7 @@
     document.body.style.overflow = 'hidden';
   }
 
-
+  
 
   // Cerrar Lightbox del embed
   function embedVideoCloseLightbox(e) {
