@@ -1,11 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 1. DATOS INICIALES
     const videosData = [
-        "https://www.youtube.com/watch?v=6be3c9Q0aNI"
+        "https://www.youtube.com/watch?v=6be3c9Q0aNI",
+        "https://www.youtube.com/watch?v=D9_J0BIaqiM"
     ];
 
     const audiosData = [
-        "https://open.spotify.com/episode/04hzI0itW5HeaBSkpNmK7V"
+        "https://open.spotify.com/episode/04hzI0itW5HeaBSkpNmK7V",
+        "https://open.spotify.com/episode/2xvz2ocadzxSXmyVmXhrI3"
     ];
 
     
