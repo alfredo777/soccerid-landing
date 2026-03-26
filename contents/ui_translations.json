@@ -51,10 +51,18 @@
       "learnMore": "Conoce más",
       "requestAdvisory": "Solicitar Asesoría",
       "featuredVideo": "Videos Destacados",
-      "magazine": "Revista"
+      "magazine": "Revista",
+      "video": "Video",
+      "featuredVideo": "Video Destacado"
     },
     "lightbox": {
-      "close": "Cerrar"
+      "close": "Cerrar",
+      "notSupported": "Tu navegador no soporta la reproducción de video."
+
+    },
+    "video": {
+      "close": "Cerrar",
+      "notSupported": "Tu navegador no soporta la reproducción de video."
     },
     "language": {
       "es": "Español",
@@ -115,10 +123,18 @@
       "learnMore": "Learn more",
       "requestAdvisory": "Request Advisory",
       "featuredVideo": "Featured Videos",
-      "magazine": "Magazine"
+      "magazine": "Magazine",
+      "video": "Video",
+      "featuredVideo": "Featured Video"
     },
     "lightbox": {
-      "close": "Close"
+      "close": "Close",
+      "notSupported": "Your browser does not support video playback."
+
+    },
+    "video": {
+      "close": "Close",
+      "notSupported": "Your browser does not support video playback."
     },
     "language": {
       "es": "Español",

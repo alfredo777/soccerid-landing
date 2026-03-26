@@ -85,6 +85,17 @@
       "videoId": "9cqn_j9XzH4",
       "articles": [
         {
+          "id": "video-noticia-reporte-indigo",
+          "image": "/assets/images/news/reporte-indigo-logo.png",
+          "source": "Reporte Índigo",
+          "title": "Reporte Índigo datos sobre la Copa del Mundo 2026",
+          "excerpt": "Entrevista exclusiva con Reporte Índigo, sobre la experiencia deportiva y preparando a los aficionados mexicanos para el Mundial 2026, el evento más grande en la historia del fútbol.",
+          "type": "video",
+          "videoUrl": "https://soccerid-content.s3.us-east-2.amazonaws.com/SoccerID_ReporteI%CC%81ndigo_240326.mp4",
+          "url": "https://soccerid-content.s3.us-east-2.amazonaws.com/SoccerID_ReporteI%CC%81ndigo_240326.mp4"
+        },
+
+        {
           "id": "impulso-social-2025",
           "image": "/assets/images/news/a1/portada.jpg",
           "source": "Trascendentales 2025",
@@ -253,6 +264,18 @@
       "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division",
       "videoId": "9cqn_j9XzH4",
       "articles": [
+        {
+          "id": "video-noticia-reporte-indigo",
+          "image": "/assets/images/news/reporte-indigo-logo.png",
+          "source": "Reporte Índigo",
+          "title": "Reporte Índigo the 2026 World Cup",
+          "excerpt": "An exclusive interview with Reporte Índigo.",
+          "type": "video",
+          "videoUrl": "https://soccerid-content.s3.us-east-2.amazonaws.com/SoccerID_ReporteI%CC%81ndigo_240326.mp4",
+          "url": "https://soccerid-content.s3.us-east-2.amazonaws.com/SoccerID_ReporteI%CC%81ndigo_240326.mp4"
+        },
+
+
         {
           "id": "impulso-social-2025",
           "image": "/assets/images/news/a1/portada.jpg",

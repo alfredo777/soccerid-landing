@@ -690,6 +690,7 @@ function setupEventListeners() {
       closeLightbox();
       closePanel();
       closeEventsModal();
+      closeVideoLightbox();
     }
     if (e.key === 'ArrowLeft') navigateLightbox(-1);
     if (e.key === 'ArrowRight') navigateLightbox(1);
@@ -802,6 +803,179 @@ function navigateLightbox(direction) {
     img.alt = lightboxImages[lightboxIndex].alt || '';
   }
 }
+
+// ==========================================================================
+// VIDEO LIGHTBOX
+// ==========================================================================
+
+/**
+ * Abre el lightbox de video con una URL de video directo
+ * @param {string} videoUrl - URL del video (mp4, webm, etc.)
+ * @param {string} title - Título del video
+ */
+function openVideoLightbox(videoUrl, title = '') {
+  // Crear el lightbox si no existe
+  let videoLightbox = document.getElementById('videoLightbox');
+  
+  if (!videoLightbox) {
+    videoLightbox = createVideoLightbox();
+    document.body.appendChild(videoLightbox);
+  }
+  
+  const videoElement = document.getElementById('lightboxVideo');
+  const titleElement = document.getElementById('videoLightboxTitle');
+  
+  if (videoElement) {
+    // Limpiar fuentes anteriores
+    videoElement.innerHTML = '';
+    
+    // Detectar el tipo de video por extensión
+    const extension = videoUrl.split('.').pop().toLowerCase().split('?')[0];
+    let mimeType = 'video/mp4';
+    
+    switch (extension) {
+      case 'webm':
+        mimeType = 'video/webm';
+        break;
+      case 'ogg':
+      case 'ogv':
+        mimeType = 'video/ogg';
+        break;
+      case 'mov':
+        mimeType = 'video/quicktime';
+        break;
+      case 'm3u8':
+        mimeType = 'application/x-mpegURL';
+        break;
+      default:
+        mimeType = 'video/mp4';
+    }
+    
+    // Crear source element
+    const source = document.createElement('source');
+    source.src = videoUrl;
+    source.type = mimeType;
+    videoElement.appendChild(source);
+    
+    // Fallback text
+    const fallback = document.createTextNode(
+      GKraken.t('video.notSupported') || 'Tu navegador no soporta la reproducción de video.'
+    );
+    videoElement.appendChild(fallback);
+    
+    // Cargar el video
+    videoElement.load();
+  }
+  
+  if (titleElement) {
+    titleElement.textContent = title;
+    titleElement.style.display = title ? 'block' : 'none';
+  }
+  
+  // Mostrar el lightbox
+  videoLightbox.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  
+  // Auto-reproducir después de un breve delay
+  setTimeout(() => {
+    if (videoElement) {
+      videoElement.play().catch(e => {
+        console.log('[GKraken] Auto-play bloqueado:', e);
+      });
+    }
+  }, 300);
+}
+
+/**
+ * Crea el elemento del lightbox de video
+ * @returns {HTMLElement}
+ */
+function createVideoLightbox() {
+  const lightbox = document.createElement('div');
+  lightbox.id = 'videoLightbox';
+  lightbox.className = 'video-lightbox';
+  
+  const closeText = GKraken.t('video.close') || 'Cerrar';
+  
+  lightbox.innerHTML = `
+    <div class="video-lightbox-overlay" onclick="closeVideoLightbox()"></div>
+    <div class="video-lightbox-container">
+      <div class="video-lightbox-header">
+        <h3 id="videoLightboxTitle" class="video-lightbox-title"></h3>
+        <button class="video-lightbox-close" onclick="closeVideoLightbox()" aria-label="${closeText}">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <div class="video-lightbox-content">
+        <video 
+          id="lightboxVideo" 
+          class="video-lightbox-player"
+          controls
+          playsinline
+          preload="metadata"
+        >
+        </video>
+      </div>
+      <div class="video-lightbox-footer">
+        <button class="video-lightbox-fullscreen" onclick="toggleVideoFullscreen()" aria-label="Pantalla completa">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  `;
+  
+  // Event listener para cerrar con Escape
+  lightbox.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeVideoLightbox();
+    }
+  });
+  
+  return lightbox;
+}
+
+/**
+ * Cierra el lightbox de video
+ */
+function closeVideoLightbox() {
+  const videoLightbox = document.getElementById('videoLightbox');
+  const videoElement = document.getElementById('lightboxVideo');
+  
+  if (videoElement) {
+    videoElement.pause();
+    videoElement.currentTime = 0;
+  }
+  
+  if (videoLightbox) {
+    videoLightbox.classList.remove('active');
+  }
+  
+  document.body.style.overflow = '';
+}
+
+/**
+ * Alterna el modo pantalla completa del video
+ */
+function toggleVideoFullscreen() {
+  const videoElement = document.getElementById('lightboxVideo');
+  
+  if (!videoElement) return;
+  
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  } else if (videoElement.requestFullscreen) {
+    videoElement.requestFullscreen();
+  } else if (videoElement.webkitRequestFullscreen) {
+    videoElement.webkitRequestFullscreen();
+  } else if (videoElement.msRequestFullscreen) {
+    videoElement.msRequestFullscreen();
+  }
+}
+
 
 // ==========================================================================
 // BENTO GRIDS
@@ -1178,6 +1352,7 @@ function generateCopaContent(panel) {
 function generateMediaContent(panel) {
   const articles = panel.articles ? GKraken.normalizeToArray(panel.articles) : [];
   const magazineText = GKraken.t('panel.magazine');
+  const videoText = GKraken.t('panel.video') || 'Video';
   const featuredVideo = GKraken.t('panel.featuredVideo');
   
   let html = `<h1 class="panel-title">${panel.title}</h1><p class="panel-description">${panel.description}</p>`;
@@ -1187,28 +1362,55 @@ function generateMediaContent(panel) {
     
     html += articles.map(a => {
       const isMagazine = a.type === 'magazine';
+      const isVideo = a.type === 'video';
       
-      const clickHandler = isMagazine 
-        ? `onclick="MagazineReader.openFromData('${a.id}'); return false;"` 
-        : '';
-      const href = isMagazine ? '#' : a.url;
-      const target = isMagazine ? '' : 'target="_blank"';
+      let clickHandler = '';
+      let href = a.url;
+      let target = 'target="_blank"';
       
-      const badgeHtml = isMagazine 
-        ? `<span class="article-type-badge magazine-badge">
+      if (isMagazine) {
+        clickHandler = `onclick="MagazineReader.openFromData('${a.id}'); return false;"`;
+        href = '#';
+        target = '';
+      } else if (isVideo) {
+        clickHandler = `onclick="openVideoLightbox('${a.videoUrl || a.url}', '${a.title.replace(/'/g, "\\'")}'); return false;"`;
+        href = '#';
+        target = '';
+      }
+      
+      let badgeHtml = '';
+      if (isMagazine) {
+        badgeHtml = `<span class="article-type-badge magazine-badge">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
               <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
               <path d="M7 7h10v2H7zm0 4h10v2H7zm0 4h7v2H7z"/>
             </svg>
             ${magazineText}
-           </span>` 
-        : '';
+           </span>`;
+      } else if (isVideo) {
+        badgeHtml = `<span class="article-type-badge video-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            ${videoText}
+           </span>`;
+      }
+      
+      // Icono de play overlay para videos
+      const playOverlay = isVideo ? `
+        <div class="video-play-overlay">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="white">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+        </div>
+      ` : '';
       
       return `
-        <a href="${href}" ${target} class="media-article-card${isMagazine ? ' magazine-article' : ''}" ${clickHandler} data-article-id="${a.id || ''}">
+        <a href="${href}" ${target} class="media-article-card${isMagazine ? ' magazine-article' : ''}${isVideo ? ' video-article' : ''}" ${clickHandler} data-article-id="${a.id || ''}">
           <div class="media-article-image">
             <img src="${a.image}" alt="${a.title}">
             ${badgeHtml}
+            ${playOverlay}
           </div>
           <div class="media-article-body">
             <span class="media-article-source">${a.source}</span>
@@ -1219,7 +1421,9 @@ function generateMediaContent(panel) {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               ${isMagazine 
                 ? '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/><path d="M12 8l4 4-4 4M8 12h8"/>'
-                : '<path d="M5 12h14M12 5l7 7-7 7"/>'}
+                : isVideo
+                  ? '<polygon points="5 3 19 12 5 21 5 3"/>'
+                  : '<path d="M5 12h14M12 5l7 7-7 7"/>'}
             </svg>
           </div>
         </a>
@@ -1243,6 +1447,7 @@ function generateMediaContent(panel) {
   
   return html;
 }
+
 
 function generateOpinionesContent(panel) {
   const testimonials = panel.testimonials ? GKraken.normalizeToArray(panel.testimonials) : [];
