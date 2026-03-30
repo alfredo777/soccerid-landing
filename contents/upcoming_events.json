@@ -1,18 +1,6 @@
 {
   "es": [
     {
-      "team1": "México",
-      "team1Icon": "/assets/images/myimages/teams/MEX.png",
-      "team2": "Portugal",
-      "team2Icon": "/assets/images/myimages/teams/PORT.png",
-      "date": "28 de Marzo, 2025",
-      "time": "8:00 PM",
-      "venue": "Estadio Azteca, CDMX",
-      "badge": "INTERNACIONAL",
-      "badgeClass": "",
-      "image": "/assets/images/myimages/mexvsport.png"
-    },
-    {
       "team1": "América",
       "team1Icon": "/assets/images/myimages/teams/AME.png",
       "team2": "Cruz Azul",
@@ -50,18 +38,6 @@
     }
   ],
   "en": [
-    {
-      "team1": "Mexico",
-      "team1Icon": "/assets/images/myimages/teams/MEX.png",
-      "team2": "Portugal",
-      "team2Icon": "/assets/images/myimages/teams/PORT.png",
-      "date": "March 28, 2025",
-      "time": "8:00 PM",
-      "venue": "Azteca Stadium, Mexico City",
-      "badge": "INTERNATIONAL",
-      "badgeClass": "",
-      "image": "/assets/images/myimages/mexvsport.png"
-    },
     {
       "team1": "América",
       "team1Icon": "/assets/images/myimages/teams/AME.png",
