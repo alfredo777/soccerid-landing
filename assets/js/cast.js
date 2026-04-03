@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const videosData = [
         "https://www.youtube.com/watch?v=6be3c9Q0aNI",
         "https://www.youtube.com/watch?v=D9_J0BIaqiM",
-        "https://www.youtube.com/watch?v=aM7MoWc11hE"
+        "https://www.youtube.com/watch?v=aM7MoWc11hE",
+        "https://www.youtube.com/watch?v=BfI0EsOZUwE"
     ];
 
     const audiosData = [
