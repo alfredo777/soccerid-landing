@@ -9,7 +9,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const audiosData = [
         "https://open.spotify.com/episode/04hzI0itW5HeaBSkpNmK7V",
-        "https://open.spotify.com/episode/2xvz2ocadzxSXmyVmXhrI3"
+        "https://open.spotify.com/episode/2xvz2ocadzxSXmyVmXhrI3",
+        "https://open.spotify.com/episode/176fZ2TrOAL0dEQnGIm11w"
     ];
 
     
