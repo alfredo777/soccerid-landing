@@ -85,6 +85,17 @@
       "videoId": "9cqn_j9XzH4",
       "articles": [
         {
+          "id": "soccer-id-dmexico",
+          "image": "/assets/images/news/dmexico.png",
+          "source": "www.diariodemexico.com",
+          "title": "Boletos para el Mundial; anzuelo para estafar aficionados",
+          "excerpt": "El Mundial 2026 introduce cambios sin precedentes: un formato de 48 selecciones y una sede compartida entre México, Estados Unidos y Canadá. Con la venta de boletos completamente digital, los aficionados deben tener precaución para no caer en estafas.",
+          "type": "link",
+          "url": "https://www.diariodemexico.com/arena-deportiva/boletos-para-el-mundial-anzuelo-para-estafar-aficionados"
+        },
+
+
+        {
           "id": "video-noticia-reporte-indigo",
           "image": "/assets/images/news/reporte-indigo-logo.png",
           "source": "Reporte Índigo",
@@ -264,6 +275,17 @@
       "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division",
       "videoId": "9cqn_j9XzH4",
       "articles": [
+
+        {
+          "id": "soccer-id-dmexico",
+          "image": "/assets/images/news/dmexico.png",
+          "source": "www.diariodemexico.com",
+          "title": "World Cup tickets: bait to scam fans",
+          "excerpt": "The 2026 World Cup introduces unprecedented changes: a 48-team format and a tri-nation host between Mexico, the United States, and Canada. With fully digital ticket sales, fans must be cautious to avoid falling victim to scams.",
+          "type": "link",
+          "url": "https://www.diariodemexico.com/arena-deportiva/boletos-para-el-mundial-anzuelo-para-estafar-aficionados"
+        },
+
         {
           "id": "video-noticia-reporte-indigo",
           "image": "/assets/images/news/reporte-indigo-logo.png",
