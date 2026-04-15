@@ -86,12 +86,12 @@
       "articles": [
         {
           "id": "soccer-id-cup-2",
-          "image": "/assets/images/fifa2026.png",
-          "source": "www.espn.com.mx",
-          "title": "FIFA advierte sobre sitios falsos de reventa de boletos",
-          "excerpt": "A pocos meses del Mundial 2026, la FIFA emitió un comunicado alertando a los aficionados sobre páginas fraudulentas que ofrecen entradas a precios inflados. Se recomienda comprar únicamente a través del portal oficial para evitar fraudes.",
+          "image": "/assets/images/news/hackingfifa2026.png",
+          "source": "www.publimetro.com.mx",
+          "title": "Ciberfraudes por boletos del Mundial 2026 crecen: sitios clonados y redes falsas",
+          "excerpt": "Especialistas advierten que el problema no solo radica en el número de víctimas, sino en la sofisticación de los esquemas, que operan bajo estructuras organizadas y con apariencia de legalidad.",
           "type": "link",
-          "url": "https://www.espn.com.mx/futbol/mundial/nota/_/id/12345678/fifa-advierte-sitios-falsos-reventa-boletos"
+          "url": "https://www.publimetro.com.mx/deportes/2026/04/14/ciberfraudes-por-boletos-del-mundial-2026-crecen-sitios-clonados-y-redes-falsas/"
         },
 
         {
@@ -287,15 +287,13 @@
       "articles": [
         {
           "id": "soccer-id-cup-2",
-          "image": "/assets/images/fifa2026.png",
-          "source": "www.espn.com.mx",
-          "title": "FIFA warns about fake ticket resale websites",
-          "excerpt": "With the 2026 World Cup just months away, FIFA issued a statement alerting fans about fraudulent websites offering tickets at inflated prices. Fans are advised to purchase only through the official portal to avoid scams.",
+          "image": "/assets/images/news/hackingfifa2026.png",
+          "source": "www.publimetro.com.mx",
+          "title": "Cyber fraud for 2026 World Cup tickets on the rise: cloned sites and fake networks",
+          "excerpt": "Experts warn that the problem lies not only in the number of victims, but in the sophistication of the schemes, which operate under organized structures with an appearance of legitimacy.",
           "type": "link",
-          "url": "https://www.espn.com.mx/futbol/mundial/nota/_/id/12345678/fifa-advierte-sitios-falsos-reventa-boletos"
+          "url": "https://www.publimetro.com.mx/deportes/2026/04/14/ciberfraudes-por-boletos-del-mundial-2026-crecen-sitios-clonados-y-redes-falsas/"
         },
-
-
         {
           "id": "soccer-id-dmexico",
           "image": "/assets/images/news/dmexico.png",
