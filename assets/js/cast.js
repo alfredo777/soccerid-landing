@@ -4,13 +4,16 @@ document.addEventListener('DOMContentLoaded', () => {
         "https://www.youtube.com/watch?v=6be3c9Q0aNI",
         "https://www.youtube.com/watch?v=D9_J0BIaqiM",
         "https://www.youtube.com/watch?v=aM7MoWc11hE",
-        "https://www.youtube.com/watch?v=BfI0EsOZUwE"
+        "https://www.youtube.com/watch?v=BfI0EsOZUwE",
+        "https://www.youtube.com/watch?v=8veHWVVAPp4"
     ];
 
     const audiosData = [
         "https://open.spotify.com/episode/04hzI0itW5HeaBSkpNmK7V",
         "https://open.spotify.com/episode/2xvz2ocadzxSXmyVmXhrI3",
-        "https://open.spotify.com/episode/176fZ2TrOAL0dEQnGIm11w"
+        "https://open.spotify.com/episode/176fZ2TrOAL0dEQnGIm11w",
+        "https://open.spotify.com/episode/0B8qlsZ4YcQfYFoV1p62rg",
+        "https://open.spotify.com/episode/67cQaOKPyD6HCamJQIZ1oh"
     ];
 
     

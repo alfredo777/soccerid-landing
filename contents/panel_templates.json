@@ -85,6 +85,16 @@
       "videoId": "9cqn_j9XzH4",
       "articles": [
         {
+          "id": "soccer-id-cup-2",
+          "image": "/assets/images/fifa2026.png",
+          "source": "www.espn.com.mx",
+          "title": "FIFA advierte sobre sitios falsos de reventa de boletos",
+          "excerpt": "A pocos meses del Mundial 2026, la FIFA emitió un comunicado alertando a los aficionados sobre páginas fraudulentas que ofrecen entradas a precios inflados. Se recomienda comprar únicamente a través del portal oficial para evitar fraudes.",
+          "type": "link",
+          "url": "https://www.espn.com.mx/futbol/mundial/nota/_/id/12345678/fifa-advierte-sitios-falsos-reventa-boletos"
+        },
+
+        {
           "id": "soccer-id-dmexico",
           "image": "/assets/images/news/dmexico.png",
           "source": "www.diariodemexico.com",
@@ -275,6 +285,16 @@
       "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division",
       "videoId": "9cqn_j9XzH4",
       "articles": [
+        {
+          "id": "soccer-id-cup-2",
+          "image": "/assets/images/fifa2026.png",
+          "source": "www.espn.com.mx",
+          "title": "FIFA warns about fake ticket resale websites",
+          "excerpt": "With the 2026 World Cup just months away, FIFA issued a statement alerting fans about fraudulent websites offering tickets at inflated prices. Fans are advised to purchase only through the official portal to avoid scams.",
+          "type": "link",
+          "url": "https://www.espn.com.mx/futbol/mundial/nota/_/id/12345678/fifa-advierte-sitios-falsos-reventa-boletos"
+        },
+
 
         {
           "id": "soccer-id-dmexico",
