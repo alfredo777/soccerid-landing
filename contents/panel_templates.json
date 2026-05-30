@@ -84,6 +84,15 @@
       "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division",
       "videoId": "9cqn_j9XzH4",
       "articles": [
+          {
+          "id": "soccer-id-venta-voleto-mundial",
+          "image": "/assets/images/news/fifaplay2.png",
+          "source": "www.heraldodeportes.com.mx",
+          "title": "¿Cómo funciona la venta de boletos para el Mundial 2026? Experto lo aclara",
+          "excerpt": "La euforia por la Copa del mundo está al máximo, por lo que León Rangel ofreció ciertas recomendaciones para evitar los fraudes en el Mundial.",
+          "type": "link",
+          "url": "https://www.heraldodeportes.com.mx/futbol/2026/5/28/como-funciona-la-venta-de-boletos-para-el-mundial-2026-experto-lo-aclara-92619.html"
+        },
         {
           "id": "soccer-id-cup-2",
           "image": "/assets/images/news/hackingfifa2026.png",
@@ -285,6 +294,16 @@
       "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division",
       "videoId": "9cqn_j9XzH4",
       "articles": [
+        {
+          "id": "soccer-id-world-cup-ticket-sales",
+          "image": "/assets/images/news/fifaplay2.png",
+          "source": "www.heraldodeportes.com.mx",
+          "title": "How does ticket sales for the 2026 World Cup work? Expert clarifies",
+          "excerpt": "The excitement for the World Cup is at its peak, so León Rangel offered certain recommendations to avoid scams during the World Cup.",
+          "type": "link",
+          "url": "https://www.heraldodeportes.com.mx/futbol/2026/5/28/como-funciona-la-venta-de-boletos-para-el-mundial-2026-experto-lo-aclara-92619.html"
+        },
+
         {
           "id": "soccer-id-cup-2",
           "image": "/assets/images/news/hackingfifa2026.png",
