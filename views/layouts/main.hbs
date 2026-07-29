@@ -162,6 +162,185 @@
     </div>
   </div>
 
+  {{#if upcoming_events.[0]}}
+  <!-- Upcoming Match Notification -->
+  <div class="match-notif-overlay" id="matchNotifOverlay"></div>
+  <div class="match-notif" id="matchNotif">
+    <div class="match-notif-handle"></div>
+    <div class="match-notif-card">
+      <div class="match-notif-preview">
+        <img src="{{upcoming_events.[0].team1Icon}}" alt="{{upcoming_events.[0].team1}}" class="match-notif-icon">
+        <div class="match-notif-vs-badge">VS</div>
+        <img src="{{upcoming_events.[0].team2Icon}}" alt="{{upcoming_events.[0].team2}}" class="match-notif-icon">
+      </div>
+      <h3 class="match-notif-title">{{#if isEs}}Próximo Partido{{else}}Upcoming Match{{/if}}</h3>
+      <p class="match-notif-desc">
+        <strong>{{upcoming_events.[0].team1}} vs {{upcoming_events.[0].team2}}</strong><br>
+        {{upcoming_events.[0].date}} &middot; {{upcoming_events.[0].time}}<br>
+        <span class="match-notif-venue">{{upcoming_events.[0].venue}}</span>
+      </p>
+    </div>
+    <a href="/{{lang}}/evento/{{upcoming_events.[0].id}}" class="match-notif-btn">
+      {{#if isEs}}Ver Boletos VIP{{else}}View VIP Tickets{{/if}}
+    </a>
+    <button class="match-notif-dismiss" id="matchNotifDismiss">
+      {{#if isEs}}Ahora no{{else}}Maybe later{{/if}}
+    </button>
+  </div>
+
+  <style>
+    .match-notif-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 9998;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+    }
+    .match-notif-overlay.active { display: block; opacity: 1; }
+
+    .match-notif {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      background: #fff;
+      border-radius: 20px 20px 0 0;
+      padding: 12px 20px max(20px, env(safe-area-inset-bottom));
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+      max-width: 500px;
+      margin: 0 auto;
+      box-shadow: 0 -4px 32px rgba(0,0,0,0.2);
+    }
+    .match-notif.active { transform: translateY(0); }
+
+    .match-notif-handle {
+      width: 36px;
+      height: 5px;
+      background: #d1d5db;
+      border-radius: 3px;
+      margin: 0 auto 16px;
+    }
+
+    .match-notif-card {
+      background: #f3f4f6;
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .match-notif-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .match-notif-icon {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #fff;
+      padding: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .match-notif-vs-badge {
+      font-size: 13px;
+      font-weight: 800;
+      color: #fff;
+      background: linear-gradient(135deg, #6c3ce0, #9b59f0);
+      border-radius: 8px;
+      padding: 4px 10px;
+      letter-spacing: 1px;
+    }
+
+    .match-notif-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 6px;
+    }
+
+    .match-notif-desc {
+      font-size: 14px;
+      color: #444;
+      line-height: 1.5;
+    }
+
+    .match-notif-venue {
+      color: #888;
+      font-size: 13px;
+    }
+
+    .match-notif-btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: background 0.2s;
+    }
+    .match-notif-btn:active { background: #333; }
+
+    .match-notif-dismiss {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+  </style>
+
+  <script>
+  (function() {
+    var NOTIF_KEY = 'matchNotifDismissed_{{upcoming_events.[0].id}}';
+    if (sessionStorage.getItem(NOTIF_KEY)) return;
+
+    var overlay = document.getElementById('matchNotifOverlay');
+    var notif = document.getElementById('matchNotif');
+    var dismiss = document.getElementById('matchNotifDismiss');
+
+    function show() {
+      overlay.classList.add('active');
+      setTimeout(function() { notif.classList.add('active'); }, 50);
+    }
+
+    function hide() {
+      notif.classList.remove('active');
+      setTimeout(function() { overlay.classList.remove('active'); }, 300);
+      sessionStorage.setItem(NOTIF_KEY, '1');
+    }
+
+    dismiss.addEventListener('click', hide);
+    overlay.addEventListener('click', hide);
+
+    setTimeout(show, 3000);
+  })();
+  </script>
+  {{/if}}
+
   <script src="{{js '/assets/js/mreader.js'}}"></script>
   <script src="{{js '/assets/js/main.js'}}"></script>
   <!--<script src="{{js '/assets/js/externvideoytembed.js'}}"></script>-->
