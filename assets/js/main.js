@@ -1043,11 +1043,14 @@ function renderEventCard(e) {
   const bookText = GKraken.t('events.bookTickets');
   const lang = GKraken.currentLang || 'es';
   const eventUrl = e.id ? `/${lang}/evento/${e.id}` : '#';
+  const imageHtml = e.image
+    ? `<img src="${e.image}" alt="${e.team1} vs ${e.team2}">`
+    : `<div style="width:100%;height:180px;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;gap:12px"><img src="${e.team1Icon}" style="width:48px;height:48px;object-fit:contain" onerror="this.style.display='none'"><span style="color:#9b59f0;font-weight:800;font-size:18px">VS</span><img src="${e.team2Icon}" style="width:48px;height:48px;object-fit:contain" onerror="this.style.display='none'"></div>`;
 
   return `
     <div class="event-card" onclick="window.location.href='${eventUrl}'">
       <div class="event-image">
-        <img src="${e.image}" alt="${e.team1} vs ${e.team2}">
+        ${imageHtml}
         <span class="event-badge">${e.badge}</span>
       </div>
       <div class="event-body">
@@ -1158,10 +1161,13 @@ function renderAllEvents() {
   const lang = GKraken.currentLang || 'es';
   grid.innerHTML = upcomingEvents.map(e => {
     const eventUrl = e.id ? `/${lang}/evento/${e.id}` : '#';
+    const imgHtml = e.image
+      ? `<img src="${e.image}" alt="${e.team1} vs ${e.team2}">`
+      : `<div style="width:100%;height:180px;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;gap:12px"><img src="${e.team1Icon}" style="width:48px;height:48px;object-fit:contain" onerror="this.style.display='none'"><span style="color:#9b59f0;font-weight:800;font-size:18px">VS</span><img src="${e.team2Icon}" style="width:48px;height:48px;object-fit:contain" onerror="this.style.display='none'"></div>`;
     return `
     <div class="event-card" onclick="window.location.href='${eventUrl}'">
       <div class="event-image">
-        <img src="${e.image}" alt="${e.team1} vs ${e.team2}">
+        ${imgHtml}
         <span class="event-badge">${e.badge}</span>
       </div>
       <div class="event-body">
