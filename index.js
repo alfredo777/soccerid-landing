@@ -527,6 +527,56 @@ app.get('/:lang/privacy', (req, res) => {
   });
 });
 
+// ============================================================
+// PÁGINA DE PROMO POR EVENTO
+// ============================================================
+app.get('/:lang/evento/:id', (req, res, next) => {
+  const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
+  const eventId = req.params.id;
+
+  const eventsPath = path.join(__dirname, 'contents', 'upcoming_events.json');
+  if (!fs.existsSync(eventsPath)) return next();
+
+  try {
+    const events = JSON.parse(fs.readFileSync(eventsPath, 'utf8'));
+    const langEvents = events[lang] || events[DEFAULT_LANG] || [];
+    const evento = langEvents.find(e => e.id === eventId);
+
+    if (!evento) return next();
+
+    const isEs = lang === 'es';
+    const ogTitle = `${evento.team1} vs ${evento.team2} | ${isEs ? 'Boletos VIP' : 'VIP Tickets'} | SOCCER iD`;
+    const ogDesc = isEs
+      ? `${evento.date} - ${evento.time} | ${evento.venue} | ${evento.badge} ${evento.torneo}`
+      : `${evento.date} - ${evento.time} | ${evento.venue} | ${evento.badge} ${evento.torneo}`;
+
+    res.render('evento', {
+      layout: 'promo',
+      title: ogTitle,
+      description: ogDesc,
+      ogTitle: ogTitle,
+      ogDescription: ogDesc,
+      ogLocale: lang === 'es' ? 'es_ES' : 'en_US',
+      lang: lang,
+      baseUrl: BASE_URL,
+      currentPath: `/evento/${eventId}`,
+      isEs: isEs,
+      isEn: lang === 'en',
+      evento: evento,
+      year: new Date().getFullYear(),
+      version: APP_VERSION
+    });
+  } catch (e) {
+    console.error('Error cargando evento:', e);
+    next();
+  }
+});
+
+app.get('/evento/:id', (req, res) => {
+  const lang = detectLanguage(req);
+  res.redirect(302, `/${lang}/evento/${req.params.id}`);
+});
+
 // Rutas legales sin idioma (redirigen)
 app.get('/terms', (req, res) => {
   const lang = detectLanguage(req);

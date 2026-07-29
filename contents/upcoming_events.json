@@ -1,6 +1,7 @@
 {
   "es": [
     {
+      "id": "cruz-azul-vs-atlante",
       "team1": "Cruz Azul",
       "team1Icon": "/assets/images/myimages/teams/CAZ.png",
       "team2": "Atlante",
@@ -10,9 +11,12 @@
       "venue": "Estadio Azteca, CDMX",
       "badge": "LIGA MX",
       "badgeClass": "",
-      "image": "/assets/images/myimages/cazvsatlante.png"
+      "image": "/assets/images/myimages/cazvsatlante.png",
+      "jornada": "Jornada 3",
+      "torneo": "Apertura 2026"
     },
     {
+      "id": "america-vs-santos",
       "team1": "América",
       "team1Icon": "/assets/images/myimages/teams/AME.png",
       "team2": "Santos",
@@ -22,11 +26,14 @@
       "venue": "Estadio Azteca, CDMX",
       "badge": "LIGA MX",
       "badgeClass": "",
-      "image": "/assets/images/myimages/amevssantos.png"
+      "image": "/assets/images/myimages/amevssantos.png",
+      "jornada": "Jornada 3",
+      "torneo": "Apertura 2026"
     }
   ],
   "en": [
     {
+      "id": "cruz-azul-vs-atlante",
       "team1": "Cruz Azul",
       "team1Icon": "/assets/images/myimages/teams/CAZ.png",
       "team2": "Atlante",
@@ -36,9 +43,12 @@
       "venue": "Azteca Stadium, Mexico City",
       "badge": "LIGA MX",
       "badgeClass": "",
-      "image": "/assets/images/myimages/cazvsatlante.png"
+      "image": "/assets/images/myimages/cazvsatlante.png",
+      "jornada": "Matchday 3",
+      "torneo": "Apertura 2026"
     },
     {
+      "id": "america-vs-santos",
       "team1": "América",
       "team1Icon": "/assets/images/myimages/teams/AME.png",
       "team2": "Santos",
@@ -48,7 +58,9 @@
       "venue": "Azteca Stadium, Mexico City",
       "badge": "LIGA MX",
       "badgeClass": "",
-      "image": "/assets/images/myimages/amevssantos.png"
+      "image": "/assets/images/myimages/amevssantos.png",
+      "jornada": "Matchday 3",
+      "torneo": "Apertura 2026"
     }
   ]
 }
