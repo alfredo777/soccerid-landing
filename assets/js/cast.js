@@ -41,7 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         "https://open.spotify.com/episode/2UJrjXZcaHwnJCZnxNblmL",
         "https://open.spotify.com/episode/1hwyNJSd0MGl29Neor0WUl",
         "https://open.spotify.com/episode/7HPcEQMOA7b0e5Rj5N6dSf",
-        "https://open.spotify.com/episode/6yhmwBOJVnCCHvT1whij6e"
+        "https://open.spotify.com/episode/6yhmwBOJVnCCHvT1whij6e",
+        "https://open.spotify.com/episode/7LfGeO15aAJeAbqAidsfHQ"
     ];
 
     
