@@ -1,54 +1,54 @@
 {
   "es": [
     {
-      "team1": "América",
-      "team1Icon": "/assets/images/myimages/teams/AME.png",
-      "team2": "Toluca",
-      "team2Icon": "/assets/images/myimages/teams/TOL.png",
-      "date": "18 de Abril, 2025",
-      "time": "7:00 PM",
+      "team1": "Cruz Azul",
+      "team1Icon": "/assets/images/myimages/teams/CAZ.png",
+      "team2": "Atlante",
+      "team2Icon": "/assets/images/myimages/teams/ATLANTE.png",
+      "date": "1 de Agosto, 2026",
+      "time": "9:00 PM",
       "venue": "Estadio Azteca, CDMX",
       "badge": "LIGA MX",
       "badgeClass": "",
-      "image": "/assets/images/myimages/amevstol.png"
+      "image": "/assets/images/myimages/cazvsatlante.png"
     },
     {
       "team1": "América",
       "team1Icon": "/assets/images/myimages/teams/AME.png",
-      "team2": "Atlas",
-      "team2Icon": "/assets/images/myimages/teams/ATL.png",
-      "date": "25 de Abril, 2025",
-      "time": "8:00 PM",
+      "team2": "Santos",
+      "team2Icon": "/assets/images/myimages/teams/SANTOS.png",
+      "date": "2 de Agosto, 2026",
+      "time": "5:00 PM",
       "venue": "Estadio Azteca, CDMX",
       "badge": "LIGA MX",
       "badgeClass": "",
-      "image": "/assets/images/myimages/amevsatl.png"
+      "image": "/assets/images/myimages/amevssantos.png"
     }
   ],
   "en": [
     {
-      "team1": "América",
-      "team1Icon": "/assets/images/myimages/teams/AME.png",
-      "team2": "Toluca",
-      "team2Icon": "/assets/images/myimages/teams/TOL.png",
-      "date": "April 18, 2025",
-      "time": "7:00 PM",
+      "team1": "Cruz Azul",
+      "team1Icon": "/assets/images/myimages/teams/CAZ.png",
+      "team2": "Atlante",
+      "team2Icon": "/assets/images/myimages/teams/ATLANTE.png",
+      "date": "August 1, 2026",
+      "time": "9:00 PM",
       "venue": "Azteca Stadium, Mexico City",
       "badge": "LIGA MX",
       "badgeClass": "",
-      "image": "/assets/images/myimages/amevstol.png"
+      "image": "/assets/images/myimages/cazvsatlante.png"
     },
     {
       "team1": "América",
       "team1Icon": "/assets/images/myimages/teams/AME.png",
-      "team2": "Atlas",
-      "team2Icon": "/assets/images/myimages/teams/ATL.png",
-      "date": "April 25, 2025",
-      "time": "8:00 PM",
+      "team2": "Santos",
+      "team2Icon": "/assets/images/myimages/teams/SANTOS.png",
+      "date": "August 2, 2026",
+      "time": "5:00 PM",
       "venue": "Azteca Stadium, Mexico City",
       "badge": "LIGA MX",
       "badgeClass": "",
-      "image": "/assets/images/myimages/amevsatl.png"
+      "image": "/assets/images/myimages/amevssantos.png"
     }
   ]
 }
