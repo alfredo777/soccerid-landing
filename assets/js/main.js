@@ -1041,9 +1041,11 @@ function observeBentoItems() {
 
 function renderEventCard(e) {
   const bookText = GKraken.t('events.bookTickets');
-  
+  const lang = GKraken.currentLang || 'es';
+  const eventUrl = e.id ? `/${lang}/evento/${e.id}` : '#';
+
   return `
-    <div class="event-card" onclick="contactForEvent('${e.team1} vs ${e.team2}')">
+    <div class="event-card" onclick="window.location.href='${eventUrl}'">
       <div class="event-image">
         <img src="${e.image}" alt="${e.team1} vs ${e.team2}">
         <span class="event-badge">${e.badge}</span>
@@ -1153,8 +1155,11 @@ function renderAllEvents() {
   
   const contactText = GKraken.t('events.contactAdvisor');
   
-  grid.innerHTML = upcomingEvents.map(e => `
-    <div class="event-card" onclick="contactForEvent('${e.team1} vs ${e.team2}')">
+  const lang = GKraken.currentLang || 'es';
+  grid.innerHTML = upcomingEvents.map(e => {
+    const eventUrl = e.id ? `/${lang}/evento/${e.id}` : '#';
+    return `
+    <div class="event-card" onclick="window.location.href='${eventUrl}'">
       <div class="event-image">
         <img src="${e.image}" alt="${e.team1} vs ${e.team2}">
         <span class="event-badge">${e.badge}</span>
@@ -1190,7 +1195,7 @@ function renderAllEvents() {
         <button class="event-cta">${contactText}</button>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 function contactForEvent(eventName) {
