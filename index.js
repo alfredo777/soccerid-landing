@@ -550,10 +550,14 @@ app.get('/:lang/evento/:id', (req, res, next) => {
     if (!evento) return next();
 
     const isEs = lang === 'es';
-    const ogTitle = `${evento.team1} vs ${evento.team2} | ${isEs ? 'Boletos VIP' : 'VIP Tickets'} | SOCCER iD`;
+    const ogTitle = `${evento.team1} vs ${evento.team2} | ${isEs ? 'Accesos VIP' : 'VIP Access'} | SOCCER iD`;
     const ogDesc = isEs
       ? `${evento.date} - ${evento.time} | ${evento.venue} | ${evento.badge} ${evento.torneo}`
       : `${evento.date} - ${evento.time} | ${evento.venue} | ${evento.badge} ${evento.torneo}`;
+
+    const ogImage = evento.image
+      ? '/assets/images/og/' + path.basename(evento.image).replace(/\.\w+$/, '.jpg')
+      : '/assets/images/og/photo-1489944440615-453fc2b6a9a9.jpg';
 
     res.render('evento', {
       layout: 'promo',
@@ -561,6 +565,7 @@ app.get('/:lang/evento/:id', (req, res, next) => {
       description: ogDesc,
       ogTitle: ogTitle,
       ogDescription: ogDesc,
+      ogImage: ogImage,
       ogLocale: lang === 'es' ? 'es_ES' : 'en_US',
       lang: lang,
       baseUrl: BASE_URL,
