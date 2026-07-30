@@ -1522,9 +1522,6 @@ body {
     .mm-card--video .mm-image::after {
         background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
     }
-    .video-grid {
-        grid-template-columns: 1fr;
-    }
 }
 
 /* Video Section */
@@ -1564,6 +1561,13 @@ body {
     border-color: rgba(229, 62, 62, 0.3);
     box-shadow: 0 8px 32px rgba(229, 62, 62, 0.15);
     transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+    .video-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
 }
 
 .video-embed-wrapper {
