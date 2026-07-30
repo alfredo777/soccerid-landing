@@ -1446,63 +1446,63 @@ body {
    ========================================================================== */
 
 .contact-section {
-    padding: 80px 20px;
+    padding: 40px 20px;
     text-align: center;
 }
 
 .contact-card {
-    max-width: 700px;
+    max-width: 560px;
     margin: 0 auto;
     background: linear-gradient(
-        135deg, 
-        rgba(37, 211, 102, 0.1) 0%, 
+        135deg,
+        rgba(37, 211, 102, 0.1) 0%,
         rgba(37, 211, 102, 0.05) 100%
     );
     border: 1px solid rgba(37, 211, 102, 0.3);
-    border-radius: 30px;
-    padding: 60px 40px;
+    border-radius: 24px;
+    padding: 36px 32px;
 }
 
 .contact-icon {
-    width: 80px;
-    height: 80px;
+    width: 56px;
+    height: 56px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--color-whatsapp), var(--color-whatsapp-dark));
-    margin: 0 auto 24px;
+    margin: 0 auto 16px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .contact-icon svg {
-    width: 40px;
-    height: 40px;
+    width: 28px;
+    height: 28px;
     fill: white;
 }
 
 .contact-card h2 {
-    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    font-size: clamp(1.3rem, 3vw, 1.6rem);
     font-weight: 800;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 }
 
 .contact-card p {
     color: var(--text-muted);
-    font-size: 1.1rem;
-    margin-bottom: 30px;
-    line-height: 1.6;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
 }
 
 .whatsapp-btn {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 18px 40px;
+    gap: 10px;
+    padding: 14px 32px;
     background: linear-gradient(135deg, var(--color-whatsapp), var(--color-whatsapp-dark));
     border: none;
     border-radius: var(--radius-full);
     color: white;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
     transition: all var(--transition-normal);
