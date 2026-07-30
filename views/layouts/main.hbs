@@ -350,7 +350,6 @@
       overflow-x:auto;overflow-y:hidden;
       -webkit-overflow-scrolling:touch;
       scroll-snap-type:x mandatory;
-      scroll-behavior:smooth;
       scrollbar-width:none;
       padding:0 20px 8px;
     }
@@ -451,28 +450,29 @@
       flex-shrink:0;border-radius:14px;
     }
 
-    .mc-dots {
-      display:flex;justify-content:center;align-items:center;gap:6px;
-      padding:16px 0 0;
+    .mc-progress {
+      display:flex;align-items:center;gap:10px;
+      padding:16px 24px 0;
+      max-width:400px;margin:0 auto;
     }
-    .mc-dot {
-      width:6px;height:6px;border-radius:50%;
-      background:rgba(255,255,255,0.15);
-      transition:all .35s cubic-bezier(.4,0,.2,1);
-      cursor:pointer;
-      transform:scale(0);
-      opacity:0;
+    .mc-counter {
+      font-size:12px;font-weight:600;color:rgba(255,255,255,0.4);
+      font-variant-numeric:tabular-nums;
+      white-space:nowrap;min-width:36px;
     }
-    .mc-dot.visible {
-      transform:scale(1);opacity:1;
+    .mc-bar {
+      flex:1;height:3px;border-radius:2px;
+      background:rgba(255,255,255,0.08);
+      overflow:hidden;
     }
-    .mc-dot.near {
-      transform:scale(.7);opacity:.5;
+    .mc-bar-fill {
+      height:100%;border-radius:2px;
+      background:linear-gradient(90deg,#6c3ce0,#9b59f0);
+      width:0%;
+      transition:width .3s ease;
     }
-    .mc-dot.active {
-      background:#9b59f0;
-      width:20px;border-radius:3px;
-      transform:scale(1);opacity:1;
+    .mc-bar-fill.animating {
+      transition:width linear;
     }
   </style>
 
@@ -512,67 +512,55 @@
   <script>
   (function() {
     var track = document.getElementById('matchCarouselTrack');
-    var dotsContainer = document.getElementById('matchCarouselDots');
-    if (!track || !dotsContainer) return;
+    var progressEl = document.getElementById('matchCarouselProgress');
+    if (!track || !progressEl) return;
     var cards = track.querySelectorAll('.mc-card');
     if (!cards.length) return;
     var wrapper = track.parentElement;
+    var bar = document.getElementById('matchCarouselBar');
+    var counter = document.getElementById('matchCarouselCounter');
+    var total = cards.length;
     var current = 0;
     var autoTimer = null;
     var AUTO_INTERVAL = 4000;
     var userInteracting = false;
 
-    cards.forEach(function(_, i) {
-      var dot = document.createElement('div');
-      dot.addEventListener('click', function() {
-        goTo(i);
-        resetAuto();
-      });
-      dotsContainer.appendChild(dot);
-    });
-
-    var dots = dotsContainer.querySelectorAll('.mc-dot');
-
-    function goTo(idx) {
+    function updateUI(idx) {
       current = idx;
+      counter.textContent = (idx + 1) + ' / ' + total;
+    }
+
+    function scrollTo(idx) {
       cards[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
-      updateDots(idx);
     }
 
-    function updateDots(idx) {
-      dots.forEach(function(d, i) {
-        d.className = 'mc-dot';
-        if (i === idx) {
-          d.classList.add('active');
-        } else if (Math.abs(i - idx) === 1) {
-          d.classList.add('visible');
-        } else if (Math.abs(i - idx) === 2) {
-          d.classList.add('near');
-        }
-      });
+    function startBar() {
+      bar.classList.remove('animating');
+      bar.style.width = '0%';
+      bar.offsetWidth;
+      bar.classList.add('animating');
+      bar.style.transitionDuration = AUTO_INTERVAL + 'ms';
+      bar.style.width = '100%';
     }
 
-    updateDots(0);
-
-    function getClosest() {
-      var wrapperCenter = wrapper.scrollLeft + wrapper.offsetWidth / 2;
-      var closest = 0;
-      var minDist = Infinity;
-      cards.forEach(function(c, i) {
-        var dist = Math.abs(c.offsetLeft + c.offsetWidth / 2 - wrapperCenter);
-        if (dist < minDist) { minDist = dist; closest = i; }
-      });
-      return closest;
+    function stopBar() {
+      var w = bar.getBoundingClientRect().width;
+      var parentW = bar.parentElement.getBoundingClientRect().width;
+      bar.classList.remove('animating');
+      bar.style.width = (parentW > 0 ? (w / parentW * 100) : 0) + '%';
     }
 
     function advance() {
       if (userInteracting) return;
-      var next = (current + 1) % cards.length;
-      goTo(next);
+      var next = (current + 1) % total;
+      scrollTo(next);
+      updateUI(next);
+      startBar();
     }
 
     function startAuto() {
       stopAuto();
+      startBar();
       autoTimer = setInterval(advance, AUTO_INTERVAL);
     }
 
@@ -585,17 +573,28 @@
       startAuto();
     }
 
+    function getClosest() {
+      var wc = wrapper.scrollLeft + wrapper.offsetWidth / 2;
+      var closest = 0, minD = Infinity;
+      cards.forEach(function(c, i) {
+        var d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - wc);
+        if (d < minD) { minD = d; closest = i; }
+      });
+      return closest;
+    }
+
     var scrollTimeout;
     wrapper.addEventListener('scroll', function() {
-      current = getClosest();
-      updateDots(current);
+      var c = getClosest();
+      if (c !== current) updateUI(c);
       clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(function() { current = getClosest(); }, 100);
+      scrollTimeout = setTimeout(function() { updateUI(getClosest()); }, 80);
     }, { passive: true });
 
     wrapper.addEventListener('touchstart', function() {
       userInteracting = true;
       stopAuto();
+      stopBar();
     }, { passive: true });
 
     wrapper.addEventListener('touchend', function() {
@@ -605,12 +604,12 @@
     wrapper.addEventListener('mouseenter', function() {
       userInteracting = true;
       stopAuto();
+      stopBar();
     });
 
-    wrapper.addEventListener('mouseleave', function() {
-      resetAuto();
-    });
+    wrapper.addEventListener('mouseleave', function() { resetAuto(); });
 
+    updateUI(0);
     startAuto();
   })();
   </script>

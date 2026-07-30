@@ -95,7 +95,12 @@
           {{/each}}
         </div>
       </div>
-      <div class="mc-dots" id="matchCarouselDots"></div>
+      <div class="mc-progress" id="matchCarouselProgress">
+        <span class="mc-counter" id="matchCarouselCounter">1 / 1</span>
+        <div class="mc-bar">
+          <div class="mc-bar-fill" id="matchCarouselBar"></div>
+        </div>
+      </div>
     </section>
     <script>
     document.querySelectorAll('.mc-team-icon img').forEach(function(img) {
