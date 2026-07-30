@@ -331,6 +331,7 @@
       overflow-x:auto;overflow-y:hidden;
       -webkit-overflow-scrolling:touch;
       scroll-snap-type:x mandatory;
+      scroll-behavior:smooth;
       scrollbar-width:none;
       padding:0 16px 8px;
     }
@@ -339,6 +340,7 @@
     .mc-track {
       display:flex;gap:14px;
       width:max-content;
+      padding-right:16px;
     }
 
     .mc-card {
@@ -434,10 +436,12 @@
     .mc-dot {
       width:8px;height:8px;border-radius:50%;
       background:rgba(255,255,255,0.15);
-      transition:background .3s,transform .3s;
+      transition:background .3s,transform .3s,width .3s;
+      cursor:pointer;
     }
     .mc-dot.active {
-      background:#9b59f0;transform:scale(1.25);
+      background:#9b59f0;
+      width:24px;border-radius:4px;
     }
   </style>
 
@@ -477,31 +481,91 @@
     var cards = track.querySelectorAll('.mc-card');
     if (!cards.length) return;
     var wrapper = track.parentElement;
+    var current = 0;
+    var autoTimer = null;
+    var AUTO_INTERVAL = 4000;
+    var userInteracting = false;
 
     cards.forEach(function(_, i) {
       var dot = document.createElement('div');
       dot.className = 'mc-dot' + (i === 0 ? ' active' : '');
       dot.addEventListener('click', function() {
-        cards[i].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+        goTo(i);
+        resetAuto();
       });
       dotsContainer.appendChild(dot);
     });
 
     var dots = dotsContainer.querySelectorAll('.mc-dot');
-    wrapper.addEventListener('scroll', function() {
-      var wrapperLeft = wrapper.scrollLeft;
-      var wrapperCenter = wrapperLeft + wrapper.offsetWidth / 2;
+
+    function goTo(idx) {
+      current = idx;
+      cards[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+      updateDots(idx);
+    }
+
+    function updateDots(idx) {
+      dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
+    }
+
+    function getClosest() {
+      var wrapperCenter = wrapper.scrollLeft + wrapper.offsetWidth / 2;
       var closest = 0;
       var minDist = Infinity;
       cards.forEach(function(c, i) {
-        var cardCenter = c.offsetLeft + c.offsetWidth / 2;
-        var dist = Math.abs(cardCenter - wrapperCenter);
+        var dist = Math.abs(c.offsetLeft + c.offsetWidth / 2 - wrapperCenter);
         if (dist < minDist) { minDist = dist; closest = i; }
       });
-      dots.forEach(function(d, i) {
-        d.classList.toggle('active', i === closest);
-      });
+      return closest;
+    }
+
+    function advance() {
+      if (userInteracting) return;
+      var next = (current + 1) % cards.length;
+      goTo(next);
+    }
+
+    function startAuto() {
+      stopAuto();
+      autoTimer = setInterval(advance, AUTO_INTERVAL);
+    }
+
+    function stopAuto() {
+      if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+    }
+
+    function resetAuto() {
+      userInteracting = false;
+      startAuto();
+    }
+
+    var scrollTimeout;
+    wrapper.addEventListener('scroll', function() {
+      current = getClosest();
+      updateDots(current);
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(function() { current = getClosest(); }, 100);
+    }, { passive: true });
+
+    wrapper.addEventListener('touchstart', function() {
+      userInteracting = true;
+      stopAuto();
+    }, { passive: true });
+
+    wrapper.addEventListener('touchend', function() {
+      setTimeout(resetAuto, 3000);
+    }, { passive: true });
+
+    wrapper.addEventListener('mouseenter', function() {
+      userInteracting = true;
+      stopAuto();
     });
+
+    wrapper.addEventListener('mouseleave', function() {
+      resetAuto();
+    });
+
+    startAuto();
   })();
   </script>
 
