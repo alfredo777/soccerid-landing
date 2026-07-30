@@ -346,6 +346,33 @@
       font-size:14px;color:rgba(255,255,255,0.45);margin:0;font-weight:400;
     }
 
+    .mc-filters {
+      display:flex;gap:8px;padding:0 20px 16px;
+      overflow-x:auto;scrollbar-width:none;
+    }
+    .mc-filters::-webkit-scrollbar{display:none}
+    .mc-filter {
+      flex-shrink:0;
+      padding:8px 16px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.1);
+      background:rgba(255,255,255,0.04);
+      color:rgba(255,255,255,0.5);
+      font-size:13px;font-weight:600;
+      cursor:pointer;
+      transition:all .25s;
+      white-space:nowrap;
+    }
+    .mc-filter.active {
+      background:linear-gradient(135deg,#6c3ce0,#9b59f0);
+      color:#fff;
+      border-color:transparent;
+      box-shadow:0 2px 12px rgba(108,60,224,0.3);
+    }
+    .mc-card.mc-hidden {
+      display:none;
+    }
+
     .mc-track-wrapper {
       overflow-x:auto;overflow-y:hidden;
       -webkit-overflow-scrolling:touch;
@@ -533,26 +560,64 @@
   (function() {
     var track = document.getElementById('matchCarouselTrack');
     var progressEl = document.getElementById('matchCarouselProgress');
+    var filtersEl = document.getElementById('matchCarouselFilters');
     if (!track || !progressEl) return;
-    var cards = track.querySelectorAll('.mc-card');
-    if (!cards.length) return;
+    var allCards = [].slice.call(track.querySelectorAll('.mc-card'));
+    if (!allCards.length) return;
     var wrapper = track.parentElement;
     var bar = document.getElementById('matchCarouselBar');
     var counter = document.getElementById('matchCarouselCounter');
-    var total = cards.length;
+    var visible = allCards.slice();
     var current = 0;
     var autoTimer = null;
     var AUTO_INTERVAL = 4000;
     var userInteracting = false;
+    var activeFilter = 'all';
+
+    function applyFilter(filter) {
+      activeFilter = filter;
+      stopAuto();
+      allCards.forEach(function(c) {
+        var tipo = c.getAttribute('data-tipo') || '';
+        var show = filter === 'all' ||
+          (filter === 'clasico' && tipo === 'clasico') ||
+          (filter === 'rivalidad' && (tipo === 'rivalidad' || tipo === 'clasico'));
+        c.classList.toggle('mc-hidden', !show);
+      });
+      visible = allCards.filter(function(c) { return !c.classList.contains('mc-hidden'); });
+      if (visible.length) {
+        current = 0;
+        wrapper.scrollTo({ left: 0, behavior: 'instant' });
+        updateUI(0);
+        userInteracting = false;
+        startAuto();
+      } else {
+        counter.textContent = '0 / 0';
+        bar.style.width = '0%';
+      }
+    }
+
+    if (filtersEl) {
+      var filterBtns = filtersEl.querySelectorAll('.mc-filter');
+      filterBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          filterBtns.forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          applyFilter(btn.getAttribute('data-filter'));
+        });
+      });
+    }
 
     function updateUI(idx) {
       current = idx;
-      counter.textContent = (idx + 1) + ' / ' + total;
+      counter.textContent = (idx + 1) + ' / ' + visible.length;
     }
 
-    function scrollTo(idx) {
-      var cardLeft = cards[idx].offsetLeft;
-      var cardW = cards[idx].offsetWidth;
+    function scrollToCard(idx) {
+      var card = visible[idx];
+      if (!card) return;
+      var cardLeft = card.offsetLeft;
+      var cardW = card.offsetWidth;
       var wrapperW = wrapper.offsetWidth;
       wrapper.scrollTo({ left: cardLeft - (wrapperW - cardW) / 2, behavior: 'smooth' });
     }
@@ -574,15 +639,16 @@
     }
 
     function advance() {
-      if (userInteracting) return;
-      var next = (current + 1) % total;
-      scrollTo(next);
+      if (userInteracting || !visible.length) return;
+      var next = (current + 1) % visible.length;
+      scrollToCard(next);
       updateUI(next);
       startBar();
     }
 
     function startAuto() {
       stopAuto();
+      if (!visible.length) return;
       startBar();
       autoTimer = setInterval(advance, AUTO_INTERVAL);
     }
@@ -599,7 +665,7 @@
     function getClosest() {
       var wc = wrapper.scrollLeft + wrapper.offsetWidth / 2;
       var closest = 0, minD = Infinity;
-      cards.forEach(function(c, i) {
+      visible.forEach(function(c, i) {
         var d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - wc);
         if (d < minD) { minD = d; closest = i; }
       });

@@ -52,10 +52,15 @@
         <h2 class="mc-title">{{#if isEs}}Próximos Partidos{{else}}Upcoming Matches{{/if}}</h2>
         <p class="mc-subtitle">{{#if isEs}}Asegura tus accesos VIP{{else}}Get your VIP access{{/if}}</p>
       </div>
+      <div class="mc-filters" id="matchCarouselFilters">
+        <button class="mc-filter active" data-filter="all">{{#if isEs}}Todos{{else}}All{{/if}}</button>
+        <button class="mc-filter" data-filter="clasico">{{#if isEs}}Clásicos{{else}}Clásicos{{/if}}</button>
+        <button class="mc-filter" data-filter="rivalidad">{{#if isEs}}Rivalidades{{else}}Rivalries{{/if}}</button>
+      </div>
       <div class="mc-track-wrapper">
         <div class="mc-track" id="matchCarouselTrack">
           {{#each upcoming_events}}
-          <div class="mc-card">
+          <div class="mc-card" data-tipo="{{this.tipo}}">
             <div class="mc-card-badge">{{this.badge}} &middot; {{this.torneo}}</div>
             {{#if this.clasico}}<div class="mc-clasico">{{this.clasico}}</div>{{/if}}
             <div class="mc-matchup">

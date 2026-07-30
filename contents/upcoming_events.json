@@ -14,7 +14,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Jornada 1",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "atlante-vs-america-j2-apertura-2026",
@@ -30,7 +31,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Jornada 2",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "cruz-azul-vs-atlante-j3-apertura-2026",
@@ -46,7 +48,8 @@
       "badgeClass": "",
       "image": "/assets/images/myimages/cazvsatlante.png",
       "jornada": "Jornada 3",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "america-vs-santos-j4-apertura-2026",
@@ -62,7 +65,8 @@
       "badgeClass": "",
       "image": "/assets/images/myimages/amevssantos.png",
       "jornada": "Jornada 4",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "america-vs-san-diego-fc-leaguescup-2026",
@@ -78,7 +82,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Fase de Grupos",
-      "torneo": "Leagues Cup 2026"
+      "torneo": "Leagues Cup 2026",
+      "tipo": ""
     },
     {
       "id": "atlante-vs-toluca-j5-apertura-2026",
@@ -94,7 +99,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Jornada 5",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "america-vs-san-luis-j6-apertura-2026",
@@ -110,7 +116,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Jornada 6",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "cruz-azul-vs-atlas-j7-apertura-2026",
@@ -126,7 +133,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Jornada 7",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "atlante-vs-leon-j8-apertura-2026",
@@ -142,7 +150,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Jornada 8",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "america-vs-puebla-j9-apertura-2026",
@@ -158,7 +167,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Jornada 9",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "america-vs-tijuana-j10-apertura-2026",
@@ -174,7 +184,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Jornada 10",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "cruz-azul-vs-santos-j11-apertura-2026",
@@ -190,7 +201,9 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Jornada 11",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": "rivalidad",
+      "clasico": "Rivalidad"
     },
     {
       "id": "atlante-vs-pachuca-j12-apertura-2026",
@@ -206,7 +219,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Jornada 12",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "cruz-azul-vs-america-j13-apertura-2026",
@@ -223,7 +237,8 @@
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Jornada 13",
       "torneo": "Apertura 2026",
-      "clasico": "Clásico Joven"
+      "clasico": "Clásico Joven",
+      "tipo": "clasico"
     },
     {
       "id": "america-vs-guadalajara-j14-apertura-2026",
@@ -240,7 +255,8 @@
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Jornada 14",
       "torneo": "Apertura 2026",
-      "clasico": "Clásico Nacional"
+      "clasico": "Clásico Nacional",
+      "tipo": "clasico"
     },
     {
       "id": "atlante-vs-monterrey-j15-apertura-2026",
@@ -256,7 +272,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Jornada 15",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "cruz-azul-vs-toluca-j16-apertura-2026",
@@ -272,7 +289,9 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Jornada 16",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": "rivalidad",
+      "clasico": "Rivalidad"
     },
     {
       "id": "america-vs-monterrey-j17-apertura-2026",
@@ -288,7 +307,9 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Jornada 17",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": "rivalidad",
+      "clasico": "Rivalidad"
     },
     {
       "id": "atlante-vs-unam-j18-apertura-2026",
@@ -304,7 +325,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Jornada 18",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "cruz-azul-vs-fc-juarez-j19-apertura-2026",
@@ -320,7 +342,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Jornada 19",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "atlante-vs-san-luis-j20-apertura-2026",
@@ -336,7 +359,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Jornada 20",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "america-vs-pachuca-j21-apertura-2026",
@@ -352,7 +376,9 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Jornada 21",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": "rivalidad",
+      "clasico": "Rivalidad"
     },
     {
       "id": "america-vs-toluca-j22-apertura-2026",
@@ -368,7 +394,9 @@
       "badgeClass": "",
       "image": "/assets/images/myimages/amevstol.png",
       "jornada": "Jornada 22",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": "rivalidad",
+      "clasico": "Rivalidad"
     },
     {
       "id": "cruz-azul-vs-leon-j23-apertura-2026",
@@ -384,7 +412,9 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Jornada 23",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": "rivalidad",
+      "clasico": "Rivalidad"
     },
     {
       "id": "atlante-vs-santos-j24-apertura-2026",
@@ -400,7 +430,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Jornada 24",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     }
   ],
   "en": [
@@ -418,7 +449,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Matchday 1",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "atlante-vs-america-j2-apertura-2026",
@@ -434,7 +466,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Matchday 2",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "cruz-azul-vs-atlante-j3-apertura-2026",
@@ -450,7 +483,8 @@
       "badgeClass": "",
       "image": "/assets/images/myimages/cazvsatlante.png",
       "jornada": "Matchday 3",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "america-vs-santos-j4-apertura-2026",
@@ -466,7 +500,8 @@
       "badgeClass": "",
       "image": "/assets/images/myimages/amevssantos.png",
       "jornada": "Matchday 4",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "america-vs-san-diego-fc-leaguescup-2026",
@@ -482,7 +517,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Group Stage",
-      "torneo": "Leagues Cup 2026"
+      "torneo": "Leagues Cup 2026",
+      "tipo": ""
     },
     {
       "id": "atlante-vs-toluca-j5-apertura-2026",
@@ -498,7 +534,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Matchday 5",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "america-vs-san-luis-j6-apertura-2026",
@@ -514,7 +551,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Matchday 6",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "cruz-azul-vs-atlas-j7-apertura-2026",
@@ -530,7 +568,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Matchday 7",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "atlante-vs-leon-j8-apertura-2026",
@@ -546,7 +585,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Matchday 8",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "america-vs-puebla-j9-apertura-2026",
@@ -562,7 +602,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Matchday 9",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "america-vs-tijuana-j10-apertura-2026",
@@ -578,7 +619,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Matchday 10",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "cruz-azul-vs-santos-j11-apertura-2026",
@@ -594,7 +636,9 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Matchday 11",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": "rivalidad",
+      "clasico": "Rivalry"
     },
     {
       "id": "atlante-vs-pachuca-j12-apertura-2026",
@@ -610,7 +654,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Matchday 12",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "cruz-azul-vs-america-j13-apertura-2026",
@@ -627,7 +672,8 @@
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Matchday 13",
       "torneo": "Apertura 2026",
-      "clasico": "Clásico Joven"
+      "clasico": "Clásico Joven",
+      "tipo": "clasico"
     },
     {
       "id": "america-vs-guadalajara-j14-apertura-2026",
@@ -644,7 +690,8 @@
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Matchday 14",
       "torneo": "Apertura 2026",
-      "clasico": "Clásico Nacional"
+      "clasico": "Clásico Nacional",
+      "tipo": "clasico"
     },
     {
       "id": "atlante-vs-monterrey-j15-apertura-2026",
@@ -660,7 +707,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Matchday 15",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "cruz-azul-vs-toluca-j16-apertura-2026",
@@ -676,7 +724,9 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Matchday 16",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": "rivalidad",
+      "clasico": "Rivalry"
     },
     {
       "id": "america-vs-monterrey-j17-apertura-2026",
@@ -692,7 +742,9 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Matchday 17",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": "rivalidad",
+      "clasico": "Rivalry"
     },
     {
       "id": "atlante-vs-unam-j18-apertura-2026",
@@ -708,7 +760,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Matchday 18",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "cruz-azul-vs-fc-juarez-j19-apertura-2026",
@@ -724,7 +777,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Matchday 19",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "atlante-vs-san-luis-j20-apertura-2026",
@@ -740,7 +794,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Matchday 20",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     },
     {
       "id": "america-vs-pachuca-j21-apertura-2026",
@@ -756,7 +811,9 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Matchday 21",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": "rivalidad",
+      "clasico": "Rivalry"
     },
     {
       "id": "america-vs-toluca-j22-apertura-2026",
@@ -772,7 +829,9 @@
       "badgeClass": "",
       "image": "/assets/images/myimages/amevstol.png",
       "jornada": "Matchday 22",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": "rivalidad",
+      "clasico": "Rivalry"
     },
     {
       "id": "cruz-azul-vs-leon-j23-apertura-2026",
@@ -788,7 +847,9 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Matchday 23",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": "rivalidad",
+      "clasico": "Rivalry"
     },
     {
       "id": "atlante-vs-santos-j24-apertura-2026",
@@ -804,7 +865,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Matchday 24",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "tipo": ""
     }
   ]
 }
