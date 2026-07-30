@@ -1093,17 +1093,20 @@ function renderUpcomingEvents() {
   
   if (!grid) return;
   
-  if (!Array.isArray(upcomingEvents) || upcomingEvents.length === 0) {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const futureEvts = (upcomingEvents || []).filter(e => !e.dateISO || e.dateISO >= todayStr);
+
+  if (futureEvts.length === 0) {
     grid.innerHTML = `<p class="no-events">${GKraken.t('events.noEvents')}</p>`;
     if (showAllBtn) showAllBtn.style.display = 'none';
     return;
   }
-  
-  const eventsToShow = upcomingEvents.slice(0, INITIAL_EVENTS_COUNT);
+
+  const eventsToShow = futureEvts.slice(0, INITIAL_EVENTS_COUNT);
   grid.innerHTML = eventsToShow.map(e => renderEventCard(e)).join('');
-  
+
   if (showAllBtn) {
-    const remainingEvents = upcomingEvents.length - INITIAL_EVENTS_COUNT;
+    const remainingEvents = futureEvts.length - INITIAL_EVENTS_COUNT;
     
     if (remainingEvents > 0) {
       showAllBtn.style.display = 'flex';
@@ -1126,8 +1129,10 @@ function showAllUpcomingEvents() {
   
   if (!grid) return;
   
-  grid.innerHTML = upcomingEvents.map(e => renderEventCard(e)).join('');
-  
+  const todayAll = new Date().toISOString().slice(0, 10);
+  const futureAll = (upcomingEvents || []).filter(e => !e.dateISO || e.dateISO >= todayAll);
+  grid.innerHTML = futureAll.map(e => renderEventCard(e)).join('');
+
   if (showAllBtn) {
     showAllBtn.style.display = 'none';
   }
@@ -1155,11 +1160,19 @@ function renderAllEvents() {
     grid.innerHTML = `<p class="no-events">${GKraken.t('events.noEvents')}</p>`;
     return;
   }
-  
+
+  const today = new Date().toISOString().slice(0, 10);
+  const futureEvents = upcomingEvents.filter(e => !e.dateISO || e.dateISO >= today);
+
+  if (futureEvents.length === 0) {
+    grid.innerHTML = `<p class="no-events">${GKraken.t('events.noEvents')}</p>`;
+    return;
+  }
+
   const contactText = GKraken.t('events.contactAdvisor');
-  
+
   const lang = GKraken.currentLang || 'es';
-  grid.innerHTML = upcomingEvents.map(e => {
+  grid.innerHTML = futureEvents.map(e => {
     const eventUrl = e.id ? `/${lang}/evento/${e.id}` : '#';
     const imgHtml = e.image
       ? `<img src="${e.image}" alt="${e.team1} vs ${e.team2}">`
