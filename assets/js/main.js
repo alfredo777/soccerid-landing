@@ -1377,92 +1377,65 @@ function generateCopaContent(panel) {
 
 function generateMediaContent(panel) {
   const articles = panel.articles ? GKraken.normalizeToArray(panel.articles) : [];
+  const lang = GKraken.currentLang || 'es';
   const magazineText = GKraken.t('panel.magazine');
   const videoText = GKraken.t('panel.video') || 'Video';
   const featuredVideo = GKraken.t('panel.featuredVideo');
-  
+
   let html = `<h1 class="panel-title">${panel.title}</h1><p class="panel-description">${panel.description}</p>`;
-  
+
   if (articles.length > 0) {
-    html += `<div class="media-articles-container">`;
-    
+    html += `<div class="media-masonry">`;
+
     html += articles.map(a => {
       const isMagazine = a.type === 'magazine';
       const isVideo = a.type === 'video';
-      
-      let clickHandler = '';
-      let href = a.url;
-      let target = 'target="_blank"';
-      
-      if (isMagazine) {
-        clickHandler = `onclick="MagazineReader.openFromData('${a.id}'); return false;"`;
-        href = '#';
-        target = '';
-      } else if (isVideo) {
-        clickHandler = `onclick="openVideoLightbox('${a.videoUrl || a.url}', '${a.title.replace(/'/g, "\\'")}'); return false;"`;
-        href = '#';
-        target = '';
-      }
-      
+      const articleUrl = a.id ? `/${lang}/articulo/${a.id}` : a.url;
+
       let badgeHtml = '';
       if (isMagazine) {
-        badgeHtml = `<span class="article-type-badge magazine-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/>
-              <path d="M7 7h10v2H7zm0 4h10v2H7zm0 4h7v2H7z"/>
-            </svg>
+        badgeHtml = `<span class="mm-badge mm-badge--magazine">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/><path d="M7 7h10v2H7zm0 4h10v2H7zm0 4h7v2H7z"/></svg>
             ${magazineText}
            </span>`;
       } else if (isVideo) {
-        badgeHtml = `<span class="article-type-badge video-badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z"/>
-            </svg>
+        badgeHtml = `<span class="mm-badge mm-badge--video">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             ${videoText}
            </span>`;
       }
-      
-      // Icono de play overlay para videos
+
       const playOverlay = isVideo ? `
-        <div class="video-play-overlay">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="white">
-            <path d="M8 5v14l11-7z"/>
-          </svg>
+        <div class="mm-play">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
         </div>
       ` : '';
-      
+
+      const cardClass = isVideo ? ' mm-card--video' : isMagazine ? ' mm-card--magazine' : '';
+
       return `
-        <a href="${href}" ${target} class="media-article-card${isMagazine ? ' magazine-article' : ''}${isVideo ? ' video-article' : ''}" ${clickHandler} data-article-id="${a.id || ''}">
-          <div class="media-article-image">
-            <img src="${a.image}" alt="${a.title}">
+        <a href="${articleUrl}" class="mm-card${cardClass}" data-article-id="${a.id || ''}">
+          <div class="mm-image">
+            <img src="${a.image}" alt="${a.title}" loading="lazy">
             ${badgeHtml}
             ${playOverlay}
           </div>
-          <div class="media-article-body">
-            <span class="media-article-source">${a.source}</span>
+          <div class="mm-body">
+            <span class="mm-source">${a.source}</span>
             <h4>${a.title}</h4>
             <p>${a.excerpt}</p>
-          </div>
-          <div class="media-article-arrow">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              ${isMagazine 
-                ? '<path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/><path d="M12 8l4 4-4 4M8 12h8"/>'
-                : isVideo
-                  ? '<polygon points="5 3 19 12 5 21 5 3"/>'
-                  : '<path d="M5 12h14M12 5l7 7-7 7"/>'}
-            </svg>
           </div>
         </a>
       `;
     }).join('');
-    
+
     html += `</div>`;
   }
-  
+
   if (panel.videoId) {
     html += `
       <h3 class="video-section-title">${featuredVideo}</h3>
-      
+
       <div class="video-embed-wrapper">
       <iframe src="https://www.youtube.com/embed/wpRwFqjHSiw?si=ktilEv4_cNysB8ba&amp;start=6568" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       </div> <br/>
@@ -1473,11 +1446,9 @@ function generateMediaContent(panel) {
       <div class="video-embed-wrapper">
         <iframe src="https://www.youtube.com/embed/${panel.videoId}" title="Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
-
-
     `;
   }
-  
+
   return html;
 }
 
