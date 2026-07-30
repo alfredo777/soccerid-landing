@@ -3,7 +3,7 @@
     "quienes": {
       "tag": "Nosotros",
       "title": "Quiénes Somos",
-      "description": "<p style=\"text-align: justify;\">Somos <b>amantes del deporte</b> y por eso <b>reinventamos la forma de vivirlo</b>. Creamos <b>la app que todo atleta necesita</b>, <b>organizamos partidos internacionales en Estados Unidos</b>, te damos <b>la mejor asesoría para que disfrutes la experiencia mundialista al máximo</b> y te <b>llevamos a cualquier evento deportivo del mundo</b>, siempre asegurándote <b>una experiencia única y exclusiva</b>.</p>",
+      "description": "<p style=\"text-align: justify;\">Somos <b>amantes del deporte</b> y por eso <b>reinventamos la forma de vivirlo</b>. Creamos <b>la app que todo atleta necesita</b>, <b>organizamos partidos internacionales en Estados Unidos</b>, te damos <b>la mejor asesoría para que disfrutes la experiencia deportiva al máximo</b> y te <b>llevamos a cualquier evento deportivo del mundo</b>, siempre asegurándote <b>una experiencia única y exclusiva</b>.</p>",
       "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=550",
       "alt": "Deportistas",
       "gallery": [
@@ -54,9 +54,9 @@
       "description": "<p style=\"text-align: justify;\"><b>Creamos la app que todo deportista necesita</b>. Ofrecemos <b>un seguro deportivo al mejor precio del mercado</b>, donde nuestros clientes pueden <b>elegir cuándo y cómo activar su protección</b> mientras <b>entrenan o compiten en su deporte favorito</b>.</p>"
     },
     "copa": {
-      "tag": "Mundial",
-      "title": "ASESORÍA COPA 2026",
-      "description": "<p style=\"text-align: justify;\"><b>Guiamos a nuestros clientes paso a paso</b> en la <b>compra de boletos para el torneo más atractivo y cotizado de la historia</b>. Les ayudamos a <b>conseguir los mejores lugares al mejor precio</b> para <b>el partido inaugural</b> y para <b>los encuentros de su selección</b>, ya sea <b>en México</b>, <b>Estados Unidos o Canadá</b>.</p>"
+      "tag": "Liga MX",
+      "title": "EXPERIENCIA LIGA MX",
+      "description": "<p style=\"text-align: justify;\"><b>Vive la Liga MX como nunca antes</b>. Te llevamos a los <b>mejores partidos del fútbol mexicano</b> con <b>accesos VIP</b>, <b>palcos exclusivos</b> y <b>experiencias premium</b> en los <b>estadios más importantes del país</b>. Disfruta los <b>clásicos, las rivalidades</b> y cada jornada con la <b>mejor atención y los mejores lugares</b>.</p>"
     },
     "fan": {
       "tag": "Club",
@@ -213,7 +213,7 @@
     "quienes": {
       "tag": "About Us",
       "title": "Who We Are",
-      "description": "<p style=\"text-align: justify;\">We are <b>sports lovers</b> and that's why we <b>reinvented the way to experience it</b>. We created <b>the app every athlete needs</b>, <b>we organize international matches in the United States</b>, we give you <b>the best advice to enjoy the World Cup experience to the fullest</b> and we <b>take you to any sporting event in the world</b>, always ensuring <b>a unique and exclusive experience</b>.</p>",
+      "description": "<p style=\"text-align: justify;\">We are <b>sports lovers</b> and that's why we <b>reinvented the way to experience it</b>. We created <b>the app every athlete needs</b>, <b>we organize international matches in the United States</b>, we give you <b>the best advice to enjoy the sports experience to the fullest</b> and we <b>take you to any sporting event in the world</b>, always ensuring <b>a unique and exclusive experience</b>.</p>",
       "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=550",
       "alt": "Athletes",
       "gallery": [
@@ -264,9 +264,9 @@
       "description": "<p style=\"text-align: justify;\"><b>We created the app every athlete needs</b>. We offer <b>sports insurance at the best price on the market</b>, where our clients can <b>choose when and how to activate their protection</b> while <b>training or competing in their favorite sport</b>.</p>"
     },
     "copa": {
-      "tag": "World Cup",
-      "title": "WORLD CUP 2026 ADVISORY",
-      "description": "<p style=\"text-align: justify;\"><b>We guide our clients step by step</b> in <b>purchasing tickets for the most attractive and sought-after tournament in history</b>. We help them <b>get the best seats at the best price</b> for <b>the opening match</b> and for <b>their national team's games</b>, whether <b>in Mexico</b>, <b>United States or Canada</b>.</p>"
+      "tag": "Liga MX",
+      "title": "LIGA MX EXPERIENCE",
+      "description": "<p style=\"text-align: justify;\"><b>Experience Liga MX like never before</b>. We take you to the <b>best matches in Mexican football</b> with <b>VIP access</b>, <b>exclusive suites</b> and <b>premium experiences</b> at the <b>most important stadiums in the country</b>. Enjoy the <b>clásicos, rivalries</b> and every matchday with the <b>best service and the best seats</b>.</p>"
     },
     "fan": {
       "tag": "Club",
