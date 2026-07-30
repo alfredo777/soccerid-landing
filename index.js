@@ -587,6 +587,63 @@ app.get('/evento/:id', (req, res) => {
   res.redirect(302, `/${lang}/evento/${req.params.id}`);
 });
 
+// Ruta artículo con idioma
+app.get('/:lang/articulo/:id', (req, res, next) => {
+  const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
+  const articleId = req.params.id;
+
+  const panelsPath = path.join(__dirname, 'contents', 'panel_templates.json');
+  if (!fs.existsSync(panelsPath)) return next();
+
+  try {
+    const panels = JSON.parse(fs.readFileSync(panelsPath, 'utf8'));
+    const langPanels = panels[lang] || panels[DEFAULT_LANG] || {};
+    const media = langPanels.media;
+    if (!media || !media.articles) return next();
+
+    const articulo = media.articles.find(a => a.id === articleId);
+    if (!articulo) return next();
+
+    const isEs = lang === 'es';
+    const ogTitle = `${articulo.title} | SOCCER iD`;
+    const ogDesc = articulo.excerpt;
+    const ogImage = articulo.image || '/assets/images/share.jpg';
+
+    let typeBadge = '';
+    if (articulo.type === 'video') typeBadge = isEs ? 'Video' : 'Video';
+    else if (articulo.type === 'magazine') typeBadge = isEs ? 'Revista' : 'Magazine';
+    else typeBadge = isEs ? 'Artículo' : 'Article';
+
+    articulo.typeBadge = typeBadge;
+
+    res.render('articulo', {
+      layout: 'promo',
+      title: ogTitle,
+      description: ogDesc,
+      ogTitle: ogTitle,
+      ogDescription: ogDesc,
+      ogImage: ogImage,
+      ogLocale: lang === 'es' ? 'es_ES' : 'en_US',
+      lang: lang,
+      baseUrl: BASE_URL,
+      currentPath: `/articulo/${articleId}`,
+      isEs: isEs,
+      isEn: lang === 'en',
+      articulo: articulo,
+      year: new Date().getFullYear(),
+      version: APP_VERSION
+    });
+  } catch (e) {
+    console.error('Error cargando artículo:', e);
+    next();
+  }
+});
+
+app.get('/articulo/:id', (req, res) => {
+  const lang = detectLanguage(req);
+  res.redirect(302, `/${lang}/articulo/${req.params.id}`);
+});
+
 // Rutas legales sin idioma (redirigen)
 app.get('/terms', (req, res) => {
   const lang = detectLanguage(req);
