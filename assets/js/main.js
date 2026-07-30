@@ -1352,9 +1352,9 @@ function generateSegurosContent(panel) {
 
 function generateCopaContent(panel) {
   const requestAdvisory = GKraken.t('panel.requestAdvisory');
-  const whatsappMessage = GKraken.currentLang === 'es' 
-    ? 'Hola%20SOCCER%20iD%2C%20me%20interesa%20la%20asesoría%20para%20la%20Copa%20del%20Mundo%202026'
-    : 'Hello%20SOCCER%20iD%2C%20I%27m%20interested%20in%20World%20Cup%202026%20advisory';
+  const whatsappMessage = GKraken.currentLang === 'es'
+    ? 'Hola%20SOCCER%20iD%2C%20me%20interesa%20la%20experiencia%20VIP%20de%20la%20Liga%20MX'
+    : 'Hello%20SOCCER%20iD%2C%20I%27m%20interested%20in%20the%20Liga%20MX%20VIP%20experience';
   
   return `
     <div class="copa-fullscreen-wrapper">
@@ -1369,7 +1369,7 @@ function generateCopaContent(panel) {
         </div>
       </div>
       <div class="copa-banner-section">
-        <img src="/assets/images/copa26.jpg" alt="Copa 2026">
+        <img src="/assets/images/ligamx.png" alt="Experiencia Liga MX">
       </div>
     </div>
   `;
