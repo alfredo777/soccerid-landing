@@ -212,20 +212,22 @@
       {{#if isEs}}Boletos VIP{{else}}VIP Tickets{{/if}}
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
-    <button class="mn-dismiss" id="matchNotifDismiss">{{#if isEs}}Ahora no{{else}}Maybe later{{/if}}</button>
+    <div class="mn-timer-row" id="matchNotifDismiss">
+      <div class="mn-timer-bar" id="matchNotifBar"></div>
+      <span class="mn-timer-text" id="matchNotifCountdown">10s</span>
+    </div>
   </div>
 
   <style>
     .mn-overlay {
       display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9998;
-      opacity:0;transition:opacity .3s;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+      opacity:0;transition:opacity .3s;
     }
     .mn-overlay.active{display:block;opacity:1}
 
     .mn-sheet {
       position:fixed;bottom:0;left:0;right:0;z-index:9999;
       background:rgba(22,22,34,0.97);
-      -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
       border-radius:24px 24px 0 0;
       padding:10px 20px max(20px,env(safe-area-inset-bottom));
       transform:translateY(100%);
@@ -306,11 +308,28 @@
     }
     .mn-cta:active{transform:scale(.97)}
 
-    .mn-dismiss {
-      display:block;width:100%;padding:10px;
-      background:none;border:none;
-      color:rgba(255,255,255,0.35);font-size:13px;
-      cursor:pointer;letter-spacing:.3px;
+    .mn-timer-row {
+      display:flex;align-items:center;gap:8px;
+      padding:6px 0 2px;cursor:pointer;
+    }
+    .mn-timer-bar {
+      flex:1;height:3px;border-radius:2px;
+      background:rgba(255,255,255,0.08);
+      overflow:hidden;position:relative;
+    }
+    .mn-timer-bar::after {
+      content:'';position:absolute;inset:0;
+      background:rgba(167,139,250,0.5);border-radius:2px;
+      transform-origin:left;
+      animation:mnTimerShrink 10s linear forwards;
+    }
+    @keyframes mnTimerShrink {
+      from{transform:scaleX(1)} to{transform:scaleX(0)}
+    }
+    .mn-timer-text {
+      font-size:11px;color:rgba(255,255,255,0.3);
+      font-variant-numeric:tabular-nums;
+      min-width:20px;text-align:right;
     }
 
     /* ===== Match Carousel ===== */
@@ -447,22 +466,27 @@
 
   <script>
   (function() {
-    var NOTIF_KEY = 'matchNotifDismissed_{{upcoming_events.[0].id}}';
-    if (sessionStorage.getItem(NOTIF_KEY)) return;
-
     var overlay = document.getElementById('matchNotifOverlay');
     var notif = document.getElementById('matchNotif');
     var dismiss = document.getElementById('matchNotifDismiss');
+    var countdown = document.getElementById('matchNotifCountdown');
+    var remaining = 10;
+    var timer = null;
 
     function show() {
       overlay.classList.add('active');
       setTimeout(function() { notif.classList.add('active'); }, 50);
+      timer = setInterval(function() {
+        remaining--;
+        if (countdown) countdown.textContent = remaining + 's';
+        if (remaining <= 0) hide();
+      }, 1000);
     }
 
     function hide() {
+      if (timer) { clearInterval(timer); timer = null; }
       notif.classList.remove('active');
       setTimeout(function() { overlay.classList.remove('active'); }, 300);
-      sessionStorage.setItem(NOTIF_KEY, '1');
     }
 
     dismiss.addEventListener('click', hide);
