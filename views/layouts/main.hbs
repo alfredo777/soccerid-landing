@@ -531,7 +531,10 @@
     }
 
     function scrollTo(idx) {
-      cards[idx].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+      var cardLeft = cards[idx].offsetLeft;
+      var cardW = cards[idx].offsetWidth;
+      var wrapperW = wrapper.offsetWidth;
+      wrapper.scrollTo({ left: cardLeft - (wrapperW - cardW) / 2, behavior: 'smooth' });
     }
 
     function startBar() {
