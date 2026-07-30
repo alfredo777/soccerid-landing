@@ -1316,6 +1316,20 @@ body {
     text-transform: uppercase;
 }
 
+.event-clasico {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(251,191,36,0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(251,191,36,0.25);
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
 .event-body {
     padding: var(--spacing-lg);
 }

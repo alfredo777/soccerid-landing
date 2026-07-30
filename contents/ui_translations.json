@@ -20,8 +20,8 @@
     "events": {
       "title": "Próximos Eventos",
       "subtitle": "Asegura tu lugar en tu evento favorito",
-      "bookTickets": "Reservar Boletos",
-      "contactAdvisor": "Contactar Asesor",
+      "bookTickets": "Accesos VIP",
+      "contactAdvisor": "Accesos VIP",
       "viewAll": "Ver Todos los Eventos",
       "showAll": "Mostrar todos los eventos",
       "more": "más",
@@ -92,8 +92,8 @@
     "events": {
       "title": "Upcoming Events",
       "subtitle": "Secure your spot at your favorite event",
-      "bookTickets": "Book Tickets",
-      "contactAdvisor": "Contact Advisor",
+      "bookTickets": "VIP Access",
+      "contactAdvisor": "VIP Access",
       "viewAll": "View All Events",
       "showAll": "Show all events",
       "more": "more",

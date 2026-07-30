@@ -222,7 +222,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Jornada 13",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "clasico": "Clásico Joven"
     },
     {
       "id": "america-vs-guadalajara-j14-apertura-2026",
@@ -238,7 +239,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Jornada 14",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "clasico": "Clásico Nacional"
     },
     {
       "id": "atlante-vs-monterrey-j15-apertura-2026",
@@ -624,7 +626,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1522778119026-d647f0596c20.jpg",
       "jornada": "Matchday 13",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "clasico": "Clásico Joven"
     },
     {
       "id": "america-vs-guadalajara-j14-apertura-2026",
@@ -640,7 +643,8 @@
       "badgeClass": "",
       "image": "/assets/images/photo-1489944440615-453fc2b6a9a9.jpg",
       "jornada": "Matchday 14",
-      "torneo": "Apertura 2026"
+      "torneo": "Apertura 2026",
+      "clasico": "Clásico Nacional"
     },
     {
       "id": "atlante-vs-monterrey-j15-apertura-2026",

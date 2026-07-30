@@ -1052,6 +1052,7 @@ function renderEventCard(e) {
       <div class="event-image">
         ${imageHtml}
         <span class="event-badge">${e.badge}</span>
+        ${e.clasico ? `<span class="event-clasico">${e.clasico}</span>` : ''}
       </div>
       <div class="event-body">
         <div class="event-date">
@@ -1182,6 +1183,7 @@ function renderAllEvents() {
       <div class="event-image">
         ${imgHtml}
         <span class="event-badge">${e.badge}</span>
+        ${e.clasico ? `<span class="event-clasico">${e.clasico}</span>` : ''}
       </div>
       <div class="event-body">
         <div class="event-date">
