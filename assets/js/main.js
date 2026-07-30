@@ -1415,6 +1415,10 @@ function generateMediaContent(panel) {
 
       const cardClass = isVideo ? ' mm-card--video' : isMagazine ? ' mm-card--magazine' : '';
 
+      const ctaHtml = isVideo
+        ? `<span class="mm-cta">${GKraken.currentLang === 'es' ? 'Ver Video' : 'Watch Video'} <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>`
+        : '';
+
       return `
         <a href="${articleUrl}" class="mm-card${cardClass}" data-article-id="${a.id || ''}">
           <div class="mm-image">
@@ -1426,6 +1430,7 @@ function generateMediaContent(panel) {
             <span class="mm-source">${a.source}</span>
             <h4>${a.title}</h4>
             <p>${a.excerpt}</p>
+            ${ctaHtml}
           </div>
         </a>
       `;

@@ -169,8 +169,6 @@ const hbs = require('express-handlebars').create({
     },
     truncate: (s, l) => s && s.length > l ? s.substring(0, l) + '...' : s || '',
     year: () => new Date().getFullYear(),
-    eq: (a, b) => a === b,
-    neq: (a, b) => a !== b,
     json: o => JSON.stringify(o, null, 2),
     join: (a, s) => Array.isArray(a) ? a.join(s || ', ') : '',
     default: (v, d) => v || d,

@@ -27,7 +27,7 @@
 
     {{#eq articulo.type "video"}}
     <div class="article-video-wrapper">
-      <video controls playsinline preload="metadata">
+      <video controls playsinline preload="metadata" poster="{{articulo.image}}">
         <source src="{{articulo.videoUrl}}" type="video/mp4">
         {{#if isEs}}Tu navegador no soporta video.{{else}}Your browser does not support video.{{/if}}
       </video>
@@ -36,21 +36,21 @@
 
     <div class="promo-cta">
       {{#eq articulo.type "video"}}
-      <a href="{{articulo.videoUrl}}" target="_blank">
+      <a href="{{articulo.videoUrl}}" target="_blank" class="cta-video">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         {{#if isEs}}Ver Video Completo{{else}}Watch Full Video{{/if}}
       </a>
       {{/eq}}
       {{#eq articulo.type "magazine"}}
-      <a href="{{articulo.url}}" target="_blank">
+      <a href="{{articulo.url}}" target="_blank" class="cta-magazine">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/><path d="M7 7h10v2H7zm0 4h10v2H7zm0 4h7v2H7z"/></svg>
         {{#if isEs}}Leer Revista{{else}}Read Magazine{{/if}}
       </a>
       {{/eq}}
       {{#eq articulo.type "link"}}
-      <a href="{{articulo.url}}" target="_blank">
+      <a href="{{articulo.url}}" target="_blank" class="cta-link">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        {{#if isEs}}Leer Artículo Completo{{else}}Read Full Article{{/if}}
+        {{#if isEs}}Leer Articulo Completo{{else}}Read Full Article{{/if}}
       </a>
       {{/eq}}
     </div>
@@ -82,8 +82,8 @@
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    padding: 5px 12px;
-    border-radius: 10px;
+    padding: 6px 14px;
+    border-radius: 20px;
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
@@ -93,10 +93,12 @@
   .article-badge--video {
     background: linear-gradient(135deg, #e53e3e, #c53030);
     color: #fff;
+    box-shadow: 0 4px 12px rgba(229,62,62,0.4);
   }
   .article-badge--magazine {
     background: linear-gradient(135deg, #6c3ce0, #9b59f0);
     color: #fff;
+    box-shadow: 0 4px 12px rgba(108,60,224,0.4);
   }
   .article-badge--link {
     background: rgba(0,0,0,0.55);
@@ -110,25 +112,25 @@
   }
 
   .article-title {
-    font-size: clamp(1.3rem, 5vw, 1.8rem);
+    font-size: clamp(1.4rem, 4vw, 2rem);
     font-weight: 800;
     line-height: 1.3;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     text-align: center;
   }
 
   .article-excerpt {
     color: rgba(255,255,255,0.6);
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 1rem;
+    line-height: 1.7;
     text-align: center;
-    margin-bottom: 24px;
-    max-width: 500px;
+    margin-bottom: 28px;
+    max-width: 600px;
   }
 
   .article-video-wrapper {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     border-radius: 16px;
     overflow: hidden;
     background: #000;
@@ -138,5 +140,32 @@
   .article-video-wrapper video {
     width: 100%;
     display: block;
+    max-height: 440px;
+    object-fit: contain;
+    background: #000;
+  }
+
+  .promo-cta a.cta-video {
+    background: linear-gradient(135deg, #e53e3e, #c53030);
+    box-shadow: 0 8px 24px rgba(229,62,62,0.3);
+  }
+  .promo-cta a.cta-video:hover {
+    box-shadow: 0 12px 32px rgba(229,62,62,0.45);
+  }
+
+  .promo-cta a.cta-magazine {
+    background: linear-gradient(135deg, #6c3ce0, #9b59f0);
+    box-shadow: 0 8px 24px rgba(108,60,224,0.3);
+  }
+  .promo-cta a.cta-magazine:hover {
+    box-shadow: 0 12px 32px rgba(108,60,224,0.45);
+  }
+
+  .promo-cta a.cta-link {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    box-shadow: 0 8px 24px rgba(102,126,234,0.3);
+  }
+  .promo-cta a.cta-link:hover {
+    box-shadow: 0 12px 32px rgba(102,126,234,0.45);
   }
 </style>
