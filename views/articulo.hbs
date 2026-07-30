@@ -34,6 +34,34 @@
     </div>
     {{/eq}}
 
+    {{#eq articulo.type "magazine"}}
+    {{#if articulo.magazineData.pages}}
+    <div class="mag-viewer" id="magViewer">
+      <div class="mag-viewer__display">
+        <button class="mag-viewer__arrow mag-viewer__arrow--prev" id="magPrev" type="button" disabled>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="mag-viewer__page" id="magPage">
+          <img src="{{articulo.magazineData.pages.[0].url}}" alt="{{articulo.magazineData.pages.[0].alt}}" draggable="false">
+        </div>
+        <button class="mag-viewer__arrow mag-viewer__arrow--next" id="magNext" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+      <div class="mag-viewer__counter">
+        <span id="magCurrent">1</span> / <span id="magTotal">{{articulo.pageCount}}</span>
+      </div>
+      <div class="mag-viewer__thumbs" id="magThumbs">
+        {{#each articulo.magazineData.pages}}
+        <div class="mag-thumb{{#if @first}} active{{/if}}" data-idx="{{@index}}">
+          <img src="{{this.url}}" alt="{{this.alt}}" draggable="false">
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+    {{/eq}}
+
     <div class="promo-cta">
       {{#eq articulo.type "video"}}
       <a href="{{articulo.videoUrl}}" target="_blank" class="cta-video">
@@ -168,4 +196,159 @@
   .promo-cta a.cta-link:hover {
     box-shadow: 0 12px 32px rgba(102,126,234,0.45);
   }
+
+  /* Magazine Inline Viewer */
+  .mag-viewer {
+    width: 100%;
+    margin-bottom: 28px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .mag-viewer__display {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+    min-height: 300px;
+  }
+  .mag-viewer__page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    width: 100%;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .mag-viewer__page img {
+    max-width: 100%;
+    max-height: 520px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+  .mag-viewer__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .mag-viewer__arrow:hover:not(:disabled) {
+    background: rgba(108,60,224,0.6);
+    border-color: rgba(155,89,240,0.5);
+  }
+  .mag-viewer__arrow:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+  }
+  .mag-viewer__arrow--prev { left: 8px; }
+  .mag-viewer__arrow--next { right: 8px; }
+  .mag-viewer__counter {
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    background: rgba(0,0,0,0.4);
+  }
+  .mag-viewer__thumbs {
+    display: flex;
+    gap: 6px;
+    padding: 10px 12px;
+    overflow-x: auto;
+    background: rgba(0,0,0,0.3);
+    scrollbar-width: thin;
+    scrollbar-color: rgba(155,89,240,0.4) transparent;
+  }
+  .mag-viewer__thumbs::-webkit-scrollbar { height: 4px; }
+  .mag-viewer__thumbs::-webkit-scrollbar-thumb { background: rgba(155,89,240,0.4); border-radius: 2px; }
+  .mag-thumb {
+    flex-shrink: 0;
+    width: 60px;
+    height: 80px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: all 0.2s;
+  }
+  .mag-thumb.active {
+    border-color: #9b59f0;
+    opacity: 1;
+    box-shadow: 0 0 12px rgba(155,89,240,0.4);
+  }
+  .mag-thumb:hover { opacity: 0.8; }
+  .mag-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 </style>
+
+{{#eq articulo.type "magazine"}}
+{{#if articulo.magazineData.pages}}
+<script>
+(function() {
+  var pages = [{{#each articulo.magazineData.pages}}"{{this.url}}"{{#unless @last}},{{/unless}}{{/each}}];
+  var alts = [{{#each articulo.magazineData.pages}}"{{this.alt}}"{{#unless @last}},{{/unless}}{{/each}}];
+  var cur = 0;
+  var img = document.querySelector('#magPage img');
+  var prev = document.getElementById('magPrev');
+  var next = document.getElementById('magNext');
+  var counter = document.getElementById('magCurrent');
+  var thumbs = document.querySelectorAll('.mag-thumb');
+
+  function go(i) {
+    if (i < 0 || i >= pages.length || i === cur) return;
+    cur = i;
+    img.style.opacity = '0';
+    setTimeout(function() {
+      img.src = pages[cur];
+      img.alt = alts[cur] || '';
+      img.style.opacity = '1';
+    }, 150);
+    counter.textContent = cur + 1;
+    prev.disabled = cur === 0;
+    next.disabled = cur === pages.length - 1;
+    thumbs.forEach(function(t, idx) {
+      t.classList.toggle('active', idx === cur);
+      if (idx === cur) t.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
+    });
+  }
+
+  prev.addEventListener('click', function() { go(cur - 1); });
+  next.addEventListener('click', function() { go(cur + 1); });
+  thumbs.forEach(function(t) {
+    t.addEventListener('click', function() { go(parseInt(t.dataset.idx)); });
+  });
+
+  var startX = 0;
+  var display = document.querySelector('.mag-viewer__display');
+  display.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, {passive:true});
+  display.addEventListener('touchend', function(e) {
+    var diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) go(diff > 0 ? cur + 1 : cur - 1);
+  }, {passive:true});
+})();
+</script>
+{{/if}}
+{{/eq}}

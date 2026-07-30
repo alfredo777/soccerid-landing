@@ -567,46 +567,40 @@ body {
   transform: translateY(-50%) translateX(0);
 }
 
-/* Mobile: dots only, no icons, no tooltips */
+/* Mobile: icons visible, no tooltips */
 @media (max-width: 768px) {
   .dot-nav {
-    right: 10px;
-    padding: 10px 6px;
-    gap: 4px;
-    border-radius: 20px;
-    background: rgba(0, 0, 0, 0.45);
+    right: 8px;
+    padding: 8px 7px;
+    gap: 6px;
+    border-radius: 22px;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
   }
 
   .dot-nav__item {
-    width: 24px;
-    height: 24px;
+    width: 34px;
+    height: 34px;
+    color: rgba(255, 255, 255, 0.6);
   }
 
   .dot-nav__icon {
-    display: none;
+    display: flex;
+  }
+
+  .dot-nav__icon svg {
+    width: 16px;
+    height: 16px;
   }
 
   .dot-nav__dot {
-    display: block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.35);
-    transition: all 0.3s ease;
-  }
-
-  .dot-nav__item:hover .dot-nav__dot {
-    background: rgba(255, 255, 255, 0.7);
-  }
-
-  .dot-nav__item.active .dot-nav__dot {
-    background: #fff;
-    width: 10px;
-    height: 10px;
-    box-shadow: 0 0 8px rgba(102, 126, 234, 0.6);
+    display: none;
   }
 
   .dot-nav__item.active {
+    color: #fff;
     background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
     box-shadow: 0 0 12px rgba(102, 126, 234, 0.4);
   }
@@ -1528,6 +1522,9 @@ body {
     .mm-card--video .mm-image::after {
         background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
     }
+    .video-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Video Section */
@@ -1548,10 +1545,31 @@ body {
     border-radius: 2px;
 }
 
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.video-grid__item {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+.video-grid__item:hover {
+    border-color: rgba(229, 62, 62, 0.3);
+    box-shadow: 0 8px 32px rgba(229, 62, 62, 0.15);
+    transform: translateY(-2px);
+}
+
 .video-embed-wrapper {
     position: relative;
     width: 100%;
-    padding-bottom: 56.25%; /* Aspect ratio 16:9 */
+    padding-bottom: 56.25%;
     border-radius: var(--radius-lg);
     overflow: hidden;
     background: #000;
