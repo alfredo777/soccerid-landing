@@ -18,7 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
         "https://www.youtube.com/watch?v=TYpYyXJ63pM",
         "https://www.youtube.com/watch?v=i3p1JV_LMmI",
         "https://www.youtube.com/watch?v=n5GotLj0iH8",
-        "https://www.youtube.com/watch?v=fiZVQ1-86hc"
+        "https://www.youtube.com/watch?v=fiZVQ1-86hc",
+        "https://www.youtube.com/watch?v=6Hu-jZrxQ6g",
+        "https://www.youtube.com/watch?v=MJPHOQufNlM"
     ];
 
     const audiosData = [
@@ -39,7 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         "https://open.spotify.com/episode/2UJrjXZcaHwnJCZnxNblmL",
         "https://open.spotify.com/episode/1hwyNJSd0MGl29Neor0WUl",
         "https://open.spotify.com/episode/7HPcEQMOA7b0e5Rj5N6dSf",
-        "https://open.spotify.com/episode/6yhmwBOJVnCCHvT1whij6e"
+        "https://open.spotify.com/episode/6yhmwBOJVnCCHvT1whij6e",
+        "https://open.spotify.com/episode/7LfGeO15aAJeAbqAidsfHQ"
     ];
 
     
