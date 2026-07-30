@@ -2085,6 +2085,11 @@ body {
     margin-bottom: 40px;
     flex-wrap: wrap;
     gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.95);
+    padding: 16px 0;
 }
 
 .events-modal-header h2 {
