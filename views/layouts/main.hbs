@@ -334,12 +334,12 @@
 
     /* ===== Match Carousel ===== */
     .mc-section {
-      padding:40px 0 24px;
+      padding:40px 0 28px;
       background:linear-gradient(180deg,#0a0a1a 0%,#0f0f2e 50%,#0a0a1a 100%);
     }
-    .mc-header {text-align:center;margin-bottom:20px;padding:0 16px}
+    .mc-header {text-align:center;margin-bottom:24px;padding:0 20px}
     .mc-title {
-      font-size:22px;font-weight:800;color:#fff;margin:0 0 6px;
+      font-size:24px;font-weight:800;color:#fff;margin:0 0 6px;
       letter-spacing:.5px;
     }
     .mc-subtitle {
@@ -352,31 +352,33 @@
       scroll-snap-type:x mandatory;
       scroll-behavior:smooth;
       scrollbar-width:none;
-      padding:0 16px 8px;
+      padding:0 20px 8px;
     }
     .mc-track-wrapper::-webkit-scrollbar{display:none}
 
     .mc-track {
-      display:flex;gap:14px;
+      display:flex;gap:16px;
       width:max-content;
-      padding-right:16px;
+      padding-right:20px;
     }
 
     .mc-card {
       scroll-snap-align:center;
       flex-shrink:0;
-      width:300px;
+      width:calc(100vw - 56px);
+      max-width:360px;
       background:rgba(22,22,34,0.95);
-      -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
-      border:1px solid rgba(255,255,255,0.08);
-      border-radius:20px;
-      padding:20px 18px;
-      display:flex;flex-direction:column;gap:14px;
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:24px;
+      padding:24px 20px;
+      display:flex;flex-direction:column;gap:16px;
+      box-shadow:0 8px 32px rgba(0,0,0,0.3),0 0 0 1px rgba(108,60,224,0.06);
+      transition:transform .3s,box-shadow .3s;
     }
 
     .mc-card-badge {
       text-align:center;
-      font-size:11px;font-weight:700;letter-spacing:1.2px;
+      font-size:12px;font-weight:700;letter-spacing:1.2px;
       text-transform:uppercase;color:#a78bfa;
     }
 
@@ -384,50 +386,51 @@
       display:flex;align-items:center;justify-content:center;gap:0;
     }
     .mc-team {
-      display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;
+      display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;
     }
     .mc-team-icon {
-      width:60px;height:60px;
+      width:72px;height:72px;
       background:rgba(255,255,255,0.06);
       border:1px solid rgba(255,255,255,0.1);
-      border-radius:14px;
+      border-radius:18px;
       display:flex;align-items:center;justify-content:center;
-      padding:8px;
+      padding:10px;
     }
     .mc-team-icon img {
       width:100%;height:100%;object-fit:contain;
     }
     .mc-team-name {
-      font-size:12px;font-weight:700;color:#fff;
+      font-size:13px;font-weight:700;color:#fff;
       text-align:center;text-transform:uppercase;letter-spacing:.5px;
       line-height:1.2;
     }
 
     .mc-vs {
-      font-size:22px;font-weight:900;color:#9b59f0;
-      padding:0 10px;letter-spacing:2px;
+      font-size:24px;font-weight:900;color:#9b59f0;
+      padding:0 12px;letter-spacing:2px;
+      text-shadow:0 0 20px rgba(155,89,240,0.4);
     }
 
     .mc-info {
-      display:flex;flex-wrap:wrap;gap:6px;justify-content:center;
+      display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
     }
     .mc-pill {
-      display:flex;align-items:center;gap:4px;
+      display:flex;align-items:center;gap:5px;
       background:rgba(255,255,255,0.06);
       border:1px solid rgba(255,255,255,0.06);
-      border-radius:10px;padding:6px 10px;
-      font-size:11px;color:rgba(255,255,255,0.6);
+      border-radius:10px;padding:8px 12px;
+      font-size:12px;color:rgba(255,255,255,0.65);
     }
     .mc-pill svg{opacity:.5}
 
     .mc-actions {
-      display:flex;gap:10px;margin-top:2px;
+      display:flex;gap:10px;margin-top:4px;
     }
     .mc-btn {
       display:flex;align-items:center;justify-content:center;gap:6px;
       text-decoration:none;
-      font-size:13px;font-weight:700;
-      border-radius:12px;
+      font-size:14px;font-weight:700;
+      border-radius:14px;
       letter-spacing:.5px;text-transform:uppercase;
       transition:transform .15s,box-shadow .15s;
       cursor:pointer;border:none;
@@ -435,13 +438,13 @@
     .mc-btn:active{transform:scale(.96)}
 
     .mc-btn-primary {
-      flex:1;padding:13px 16px;
+      flex:1;padding:15px 18px;
       background:linear-gradient(135deg,#6c3ce0,#9b59f0);
       color:#fff;
-      box-shadow:0 4px 18px rgba(108,60,224,0.3);
+      box-shadow:0 4px 20px rgba(108,60,224,0.35);
     }
     .mc-btn-whatsapp {
-      width:48px;height:48px;
+      width:52px;height:52px;
       background:rgba(37,211,102,0.15);
       border:1px solid rgba(37,211,102,0.25);
       color:#25d366;
@@ -449,18 +452,27 @@
     }
 
     .mc-dots {
-      display:flex;justify-content:center;gap:8px;
-      padding:12px 0 0;
+      display:flex;justify-content:center;align-items:center;gap:6px;
+      padding:16px 0 0;
     }
     .mc-dot {
-      width:8px;height:8px;border-radius:50%;
+      width:6px;height:6px;border-radius:50%;
       background:rgba(255,255,255,0.15);
-      transition:background .3s,transform .3s,width .3s;
+      transition:all .35s cubic-bezier(.4,0,.2,1);
       cursor:pointer;
+      transform:scale(0);
+      opacity:0;
+    }
+    .mc-dot.visible {
+      transform:scale(1);opacity:1;
+    }
+    .mc-dot.near {
+      transform:scale(.7);opacity:.5;
     }
     .mc-dot.active {
       background:#9b59f0;
-      width:24px;border-radius:4px;
+      width:20px;border-radius:3px;
+      transform:scale(1);opacity:1;
     }
   </style>
 
@@ -512,7 +524,6 @@
 
     cards.forEach(function(_, i) {
       var dot = document.createElement('div');
-      dot.className = 'mc-dot' + (i === 0 ? ' active' : '');
       dot.addEventListener('click', function() {
         goTo(i);
         resetAuto();
@@ -529,8 +540,19 @@
     }
 
     function updateDots(idx) {
-      dots.forEach(function(d, i) { d.classList.toggle('active', i === idx); });
+      dots.forEach(function(d, i) {
+        d.className = 'mc-dot';
+        if (i === idx) {
+          d.classList.add('active');
+        } else if (Math.abs(i - idx) === 1) {
+          d.classList.add('visible');
+        } else if (Math.abs(i - idx) === 2) {
+          d.classList.add('near');
+        }
+      });
     }
+
+    updateDots(0);
 
     function getClosest() {
       var wrapperCenter = wrapper.scrollLeft + wrapper.offsetWidth / 2;
