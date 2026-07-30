@@ -2640,15 +2640,34 @@ body {
     /* Modal eventos */
     .events-modal-content {
         padding: 20px 10px;
+        padding-top: 60px;
     }
-    
+
     .events-modal-header {
         margin-bottom: 24px;
+        position: fixed;
+        top: 10px;
+        right: 120px;
+        left: auto;
+        z-index: 10001;
+        background: none;
+        padding: 0;
+        margin: 0;
     }
-    
+
+    .events-modal-header h2 {
+        display: none;
+    }
+
     .close-modal-btn {
-        padding: 10px 16px;
-        font-size: 0.85rem;
+        padding: 8px 14px;
+        font-size: 0.8rem;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
 }
 
