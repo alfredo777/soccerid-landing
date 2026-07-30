@@ -466,6 +466,156 @@ body {
   }
 }
 
+/* ==========================================================================
+   DOT NAVIGATION
+   ========================================================================== */
+
+.dot-nav {
+  position: fixed;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 8px;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.dot-nav--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dot-nav__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.4);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.dot-nav__item:hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dot-nav__item.active {
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  box-shadow: 0 0 16px rgba(102, 126, 234, 0.5);
+}
+
+.dot-nav__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+}
+
+.dot-nav__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.dot-nav__dot {
+  display: none;
+}
+
+/* Tooltip — desktop only */
+.dot-nav__item::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  right: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%) translateX(6px);
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.dot-nav__item:hover::after {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+}
+
+/* Mobile: dots only, no icons, no tooltips */
+@media (max-width: 768px) {
+  .dot-nav {
+    right: 10px;
+    padding: 10px 6px;
+    gap: 4px;
+    border-radius: 20px;
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  .dot-nav__item {
+    width: 24px;
+    height: 24px;
+  }
+
+  .dot-nav__icon {
+    display: none;
+  }
+
+  .dot-nav__dot {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    transition: all 0.3s ease;
+  }
+
+  .dot-nav__item:hover .dot-nav__dot {
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .dot-nav__item.active .dot-nav__dot {
+    background: #fff;
+    width: 10px;
+    height: 10px;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.6);
+  }
+
+  .dot-nav__item.active {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    box-shadow: 0 0 12px rgba(102, 126, 234, 0.4);
+  }
+
+  .dot-nav__item::after {
+    display: none;
+  }
+}
+
 /* Animación de cambio de idioma */
 @keyframes fadeInContent {
   from {

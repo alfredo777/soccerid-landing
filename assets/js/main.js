@@ -1234,7 +1234,8 @@ function openEventsModal() {
   
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
-  
+  var dn = document.getElementById('dotNav'); if (dn) dn.style.display = 'none';
+
   if (loading) loading.style.display = 'flex';
   if (grid) grid.classList.remove('loaded');
   
@@ -1251,6 +1252,7 @@ function closeEventsModal() {
     modal.classList.remove('active');
   }
   document.body.style.overflow = '';
+  var dn = document.getElementById('dotNav'); if (dn) dn.style.display = '';
 }
 
 // ==========================================================================
@@ -1545,6 +1547,7 @@ function openPanel(panelId) {
   });
   
   document.body.style.overflow = 'hidden';
+  var dn = document.getElementById('dotNav'); if (dn) dn.style.display = 'none';
   currentSlide = 0;
 }
 
@@ -1566,8 +1569,9 @@ function closePanel() {
       mainContainer.classList.remove('slide-out');
     }
   }, 300);
-  
+
   document.body.style.overflow = '';
+  var dn = document.getElementById('dotNav'); if (dn) dn.style.display = '';
 }
 
 function slideTestimonials(direction) {
@@ -1586,11 +1590,67 @@ function slideTestimonials(direction) {
 }
 
 // ==========================================================================
+// DOT NAVIGATION — scroll-spy + visibility
+// ==========================================================================
+
+function initDotNav() {
+  const nav = document.getElementById('dotNav');
+  if (!nav) return;
+
+  const items = nav.querySelectorAll('.dot-nav__item');
+  const sectionIds = [];
+  items.forEach(item => {
+    const id = item.getAttribute('data-section');
+    if (id && document.getElementById(id)) sectionIds.push(id);
+  });
+
+  let ticking = false;
+
+  function update() {
+    const scrollY = window.scrollY;
+    const vh = window.innerHeight;
+
+    const showAfter = vh * 0.4;
+    if (scrollY > showAfter) {
+      nav.classList.add('dot-nav--visible');
+    } else {
+      nav.classList.remove('dot-nav--visible');
+    }
+
+    let activeId = sectionIds[0];
+    for (let i = sectionIds.length - 1; i >= 0; i--) {
+      const el = document.getElementById(sectionIds[i]);
+      if (el && el.getBoundingClientRect().top <= vh * 0.45) {
+        activeId = sectionIds[i];
+        break;
+      }
+    }
+
+    items.forEach(item => {
+      const id = item.getAttribute('data-section');
+      item.classList.toggle('active', id === activeId);
+    });
+
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  update();
+}
+
+// ==========================================================================
 // INICIAR APLICACIÓN
 // ==========================================================================
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeGKraken);
+  document.addEventListener('DOMContentLoaded', () => { initializeGKraken(); initDotNav(); });
 } else {
   initializeGKraken();
+  initDotNav();
 }
