@@ -613,6 +613,9 @@ app.get('/:lang/articulo/:id', (req, res, next) => {
     else typeBadge = isEs ? 'Artículo' : 'Article';
 
     articulo.typeBadge = typeBadge;
+    if (articulo.magazineData && articulo.magazineData.pages) {
+      articulo.pageCount = articulo.magazineData.pages.length;
+    }
 
     res.render('articulo', {
       layout: 'promo',
