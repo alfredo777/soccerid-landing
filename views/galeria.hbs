@@ -1,0 +1,352 @@
+<div class="promo-page gallery-page">
+  <a href="/{{lang}}" class="promo-back">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span>SOCCER iD</span>
+  </a>
+
+  {{#if galeria.banner}}
+  <div class="promo-banner">
+    <img src="{{galeria.banner}}" alt="{{galeria.title}}">
+  </div>
+  {{/if}}
+
+  <div class="promo-content">
+    <span class="promo-badge">{{galeria.badge}}</span>
+
+    <h1 class="gallery-title">{{galeria.title}}</h1>
+    <p class="gallery-subtitle">{{galeria.subtitle}}</p>
+
+    <div class="promo-details" style="margin-top: 8px;">
+      <div class="promo-detail-row">
+        <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+        <div class="promo-detail-info">
+          <span class="detail-label">{{#if isEs}}Fecha{{else}}Date{{/if}}</span>
+          <span class="detail-value">{{galeria.date}}</span>
+        </div>
+      </div>
+      <div class="promo-detail-row">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        <div class="promo-detail-info">
+          <span class="detail-label">{{#if isEs}}Sede{{else}}Venue{{/if}}</span>
+          <span class="detail-value">{{galeria.venue}}</span>
+        </div>
+      </div>
+      <div class="promo-detail-row">
+        <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+        <div class="promo-detail-info">
+          <span class="detail-label">{{#if isEs}}Galería{{else}}Gallery{{/if}}</span>
+          <span class="detail-value">{{galeria.imageCount}} {{#if isEs}}fotos{{else}}photos{{/if}}</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="gallery-description">{{galeria.description}}</p>
+
+    <div class="gallery-grid" id="galleryGrid">
+      {{#each galeria.images}}
+      <div class="gallery-grid__item" data-idx="{{@index}}" onclick="openGalleryLightbox({{@index}})">
+        <img src="{{this.src}}" alt="{{this.alt}}" loading="lazy" draggable="false">
+        <div class="gallery-grid__overlay">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="promo-cta" style="margin-top: 28px;">
+      <a href="https://wa.me/12315158991?text={{#if isEs}}Hola!%20Quiero%20información%20sobre%20SOCCER%20iD%20CUP%202027{{else}}Hi!%20I%20want%20info%20about%20SOCCER%20iD%20CUP%202027{{/if}}">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        {{#if isEs}}Quiero información{{else}}I want info{{/if}}
+      </a>
+    </div>
+
+    <div class="promo-share">
+      <a href="https://wa.me/?text={{ogTitle}}%20{{baseUrl}}/{{lang}}/galeria/{{galeria.id}}" target="_blank" title="WhatsApp">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u={{baseUrl}}/{{lang}}/galeria/{{galeria.id}}" target="_blank" title="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+      <a href="https://twitter.com/intent/tweet?text={{ogTitle}}&url={{baseUrl}}/{{lang}}/galeria/{{galeria.id}}" target="_blank" title="X / Twitter">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+
+    <div class="promo-logo">
+      <img src="/assets/images/iconsoccerid.png" alt="SOCCER iD">
+    </div>
+    <div class="promo-powered">SOCCER iD &copy; {{year}}</div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="gl-lightbox" id="glLightbox">
+  <div class="gl-lightbox__backdrop" onclick="closeGalleryLightbox()"></div>
+  <button class="gl-lightbox__close" onclick="closeGalleryLightbox()" type="button">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <button class="gl-lightbox__nav gl-lightbox__nav--prev" id="glPrev" onclick="navigateGallery(-1)" type="button">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <div class="gl-lightbox__img-wrap">
+    <img id="glImage" src="" alt="" draggable="false">
+  </div>
+  <button class="gl-lightbox__nav gl-lightbox__nav--next" id="glNext" onclick="navigateGallery(1)" type="button">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+  <div class="gl-lightbox__counter" id="glCounter"></div>
+</div>
+
+<style>
+  .gallery-title {
+    font-size: 28px;
+    font-weight: 800;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    background: linear-gradient(135deg, #fff 0%, #c4a8ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .gallery-subtitle {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+
+  .gallery-description {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    text-align: center;
+    max-width: 500px;
+    margin: 20px auto 0;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    width: 100%;
+    margin-top: 24px;
+  }
+
+  .gallery-grid__item {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .gallery-grid__item:first-child {
+    grid-column: span 2;
+    grid-row: span 2;
+    aspect-ratio: 1;
+  }
+
+  .gallery-grid__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s;
+  }
+
+  .gallery-grid__item:hover img,
+  .gallery-grid__item:active img {
+    transform: scale(1.05);
+  }
+
+  .gallery-grid__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(108,60,224,0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+  }
+  .gallery-grid__overlay svg {
+    opacity: 0;
+    transition: opacity 0.3s;
+    color: #fff;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  }
+  .gallery-grid__item:hover .gallery-grid__overlay {
+    background: rgba(108,60,224,0.25);
+  }
+  .gallery-grid__item:hover .gallery-grid__overlay svg {
+    opacity: 1;
+  }
+
+  @media (max-width: 480px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 4px;
+    }
+    .gallery-grid__item:first-child {
+      grid-column: span 2;
+      grid-row: span 1;
+      aspect-ratio: 16/9;
+    }
+    .gallery-title { font-size: 22px; }
+    .gallery-grid__overlay svg { opacity: 0.7; }
+  }
+
+  /* Lightbox */
+  .gl-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+  }
+  .gl-lightbox.active { display: flex; }
+
+  .gl-lightbox__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+  }
+
+  .gl-lightbox__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .gl-lightbox__close:hover { background: rgba(255,255,255,0.2); }
+
+  .gl-lightbox__img-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 90vw;
+    max-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gl-lightbox__img-wrap img {
+    max-width: 90vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 8px;
+    user-select: none;
+  }
+
+  .gl-lightbox__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: #fff;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .gl-lightbox__nav:hover { background: rgba(255,255,255,0.2); }
+  .gl-lightbox__nav--prev { left: 12px; }
+  .gl-lightbox__nav--next { right: 12px; }
+
+  .gl-lightbox__counter {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 480px) {
+    .gl-lightbox__nav { width: 40px; height: 40px; }
+    .gl-lightbox__nav--prev { left: 6px; }
+    .gl-lightbox__nav--next { right: 6px; }
+    .gl-lightbox__img-wrap { max-width: 95vw; }
+    .gl-lightbox__img-wrap img { max-width: 95vw; border-radius: 4px; }
+  }
+</style>
+
+<script>
+(function() {
+  var images = [{{#each galeria.images}}{ src: "{{this.src}}", alt: "{{this.alt}}" }{{#unless @last}},{{/unless}}{{/each}}];
+  var currentIdx = 0;
+  var lightbox = document.getElementById('glLightbox');
+  var imgEl = document.getElementById('glImage');
+  var counterEl = document.getElementById('glCounter');
+  var startX = 0;
+
+  window.openGalleryLightbox = function(idx) {
+    currentIdx = idx;
+    showImage();
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeGalleryLightbox = function() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  };
+
+  window.navigateGallery = function(dir) {
+    currentIdx = (currentIdx + dir + images.length) % images.length;
+    showImage();
+  };
+
+  function showImage() {
+    imgEl.src = images[currentIdx].src;
+    imgEl.alt = images[currentIdx].alt;
+    counterEl.textContent = (currentIdx + 1) + ' / ' + images.length;
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (!lightbox.classList.contains('active')) return;
+    if (e.key === 'Escape') closeGalleryLightbox();
+    if (e.key === 'ArrowLeft') navigateGallery(-1);
+    if (e.key === 'ArrowRight') navigateGallery(1);
+  });
+
+  lightbox.addEventListener('touchstart', function(e) {
+    startX = e.touches[0].clientX;
+  }, { passive: true });
+
+  lightbox.addEventListener('touchend', function(e) {
+    var diff = e.changedTouches[0].clientX - startX;
+    if (Math.abs(diff) > 50) {
+      navigateGallery(diff > 0 ? -1 : 1);
+    }
+  }, { passive: true });
+})();
+</script>

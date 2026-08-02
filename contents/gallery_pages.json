@@ -1,0 +1,44 @@
+{
+  "es": [
+    {
+      "id": "soccer-id-cup-2027",
+      "title": "SOCCER iD CUP 2027",
+      "subtitle": "Partidos internacionales en Estados Unidos",
+      "description": "Revive los mejores momentos de la SOCCER iD CUP. Partidos de primer nivel con equipos de las ligas más importantes de Latinoamérica, jugando en los mejores escenarios de Estados Unidos.",
+      "badge": "SOCCER iD CUP",
+      "date": "Marzo 2027",
+      "venue": "Estados Unidos",
+      "banner": "/assets/images/gallery/socceridcup/4.jpg",
+      "images": [
+        { "src": "/assets/images/gallery/socceridcup/4.jpg", "alt": "Estadio USA" },
+        { "src": "/assets/images/gallery/socceridcup/1.jpg", "alt": "Soccer ID Cup" },
+        { "src": "/assets/images/gallery/socceridcup/6.jpg", "alt": "Equipos en cancha" },
+        { "src": "/assets/images/gallery/socceridcup/3.jpg", "alt": "Celebración de gol" },
+        { "src": "/assets/images/gallery/socceridcup/5.jpg", "alt": "Campo profesional" },
+        { "src": "/assets/images/gallery/socceridcup/2.jpg", "alt": "Partido internacional" },
+        { "src": "/assets/images/gallery/socceridcup/7.jpeg", "alt": "Equipos" }
+      ]
+    }
+  ],
+  "en": [
+    {
+      "id": "soccer-id-cup-2027",
+      "title": "SOCCER iD CUP 2027",
+      "subtitle": "International matches in the United States",
+      "description": "Relive the best moments of the SOCCER iD CUP. Top-tier matches featuring teams from the most important leagues in Latin America, playing at the best venues in the United States.",
+      "badge": "SOCCER iD CUP",
+      "date": "March 2027",
+      "venue": "United States",
+      "banner": "/assets/images/gallery/socceridcup/4.jpg",
+      "images": [
+        { "src": "/assets/images/gallery/socceridcup/4.jpg", "alt": "USA Stadium" },
+        { "src": "/assets/images/gallery/socceridcup/1.jpg", "alt": "Soccer ID Cup" },
+        { "src": "/assets/images/gallery/socceridcup/6.jpg", "alt": "Teams on the field" },
+        { "src": "/assets/images/gallery/socceridcup/3.jpg", "alt": "Goal celebration" },
+        { "src": "/assets/images/gallery/socceridcup/5.jpg", "alt": "Professional field" },
+        { "src": "/assets/images/gallery/socceridcup/2.jpg", "alt": "International match" },
+        { "src": "/assets/images/gallery/socceridcup/7.jpeg", "alt": "Teams" }
+      ]
+    }
+  ]
+}

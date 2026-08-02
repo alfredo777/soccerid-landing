@@ -645,6 +645,57 @@ app.get('/articulo/:id', (req, res) => {
   res.redirect(302, `/${lang}/articulo/${req.params.id}`);
 });
 
+// ============================================================
+// PÁGINA DE GALERÍA
+// ============================================================
+app.get('/:lang/galeria/:id', (req, res, next) => {
+  const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
+  const galeriaId = req.params.id;
+
+  const galeriaPath = path.join(__dirname, 'contents', 'gallery_pages.json');
+  if (!fs.existsSync(galeriaPath)) return next();
+
+  try {
+    const galleries = JSON.parse(fs.readFileSync(galeriaPath, 'utf8'));
+    const langGalleries = galleries[lang] || galleries[DEFAULT_LANG] || [];
+    const galeria = langGalleries.find(g => g.id === galeriaId);
+
+    if (!galeria) return next();
+
+    const isEs = lang === 'es';
+    galeria.imageCount = galeria.images ? galeria.images.length : 0;
+    const ogTitle = `${galeria.title} | SOCCER iD`;
+    const ogDesc = galeria.description;
+    const ogImage = galeria.banner || '/assets/images/og/share.jpg';
+
+    res.render('galeria', {
+      layout: 'promo',
+      title: ogTitle,
+      description: ogDesc,
+      ogTitle: ogTitle,
+      ogDescription: ogDesc,
+      ogImage: ogImage,
+      ogLocale: isEs ? 'es_ES' : 'en_US',
+      lang: lang,
+      baseUrl: BASE_URL,
+      currentPath: `/galeria/${galeriaId}`,
+      isEs: isEs,
+      isEn: lang === 'en',
+      galeria: galeria,
+      year: new Date().getFullYear(),
+      version: APP_VERSION
+    });
+  } catch (e) {
+    console.error('Error cargando galería:', e);
+    next();
+  }
+});
+
+app.get('/galeria/:id', (req, res) => {
+  const lang = detectLanguage(req);
+  res.redirect(302, `/${lang}/galeria/${req.params.id}`);
+});
+
 // Rutas legales sin idioma (redirigen)
 app.get('/terms', (req, res) => {
   const lang = detectLanguage(req);
