@@ -1,0 +1,763 @@
+<div class="promo-page gallery-page">
+
+  <!-- ═══ HERO ═══ -->
+  <section class="gp-hero">
+    <img class="gp-hero__bg" src="{{galeria.banner}}" alt="{{galeria.title}}">
+    <div class="gp-hero__dim"></div>
+    <div class="gp-hero__grain"></div>
+
+    <a href="/{{lang}}" class="gp-nav-back">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </a>
+
+    <div class="gp-hero__share">
+      <a href="https://wa.me/?text={{ogTitle}}%20{{baseUrl}}/{{lang}}/galeria/{{galeria.id}}" target="_blank" title="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+      <a href="https://www.facebook.com/sharer/sharer.php?u={{baseUrl}}/{{lang}}/galeria/{{galeria.id}}" target="_blank" title="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+      <a href="https://twitter.com/intent/tweet?text={{ogTitle}}&url={{baseUrl}}/{{lang}}/galeria/{{galeria.id}}" target="_blank" title="X"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    </div>
+
+    <div class="gp-hero__body">
+      <div class="gp-hero__logo">
+        <img src="/assets/images/iconsoccerid.png" alt="SOCCER iD" height="36">
+      </div>
+      <h1 class="gp-hero__title">
+        <span class="gp-hero__title-main">{{galeria.title}}</span>
+        <span class="gp-hero__title-year">{{galeria.year}}</span>
+      </h1>
+      <p class="gp-hero__sub">{{galeria.subtitle}}</p>
+      <div class="gp-hero__pills">
+        <span class="gp-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+          {{galeria.date}}
+        </span>
+        <span class="gp-pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          {{galeria.venue}}
+        </span>
+      </div>
+      <button class="gp-hero__cta" onclick="document.getElementById('statsSection').scrollIntoView({behavior:'smooth'})" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- ═══ STATS ═══ -->
+  <section class="gp-stats" id="statsSection">
+    <div class="gp-stats__inner">
+      <div class="gp-stats__text">
+        <span class="gp-label">{{#if isEs}}EL EVENTO{{else}}THE EVENT{{/if}}</span>
+        <h2 class="gp-stats__heading">{{galeria.description}}</h2>
+      </div>
+      <div class="gp-stats__cards">
+        {{#each galeria.stats}}
+        <div class="gp-stat-card">
+          <span class="gp-stat-card__value">{{this.value}}</span>
+          <span class="gp-stat-card__label">{{this.label}}</span>
+          <span class="gp-stat-card__sub">{{this.sub}}</span>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PREVIOUS EDITIONS ═══ -->
+  <section class="gp-editions">
+    <div class="gp-editions__inner">
+      <span class="gp-label">{{#if isEs}}EDICIONES ANTERIORES{{else}}PREVIOUS EDITIONS{{/if}}</span>
+      <div class="gp-timeline">
+        {{#each galeria.highlights}}
+        <div class="gp-timeline__item">
+          <span class="gp-timeline__year">{{this.year}}</span>
+          <div class="gp-timeline__content">
+            <span class="gp-timeline__match">{{this.match}}</span>
+            <span class="gp-timeline__city">{{this.city}}</span>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ GALLERY ═══ -->
+  <section class="gp-gallery" id="gallerySection">
+    <div class="gp-gallery__inner">
+      <div class="gp-gallery__header">
+        <div>
+          <span class="gp-label">{{#if isEs}}MOMENTOS{{else}}MOMENTS{{/if}}</span>
+          <h2 class="gp-section-title">{{galeria.galleryTitle}}</h2>
+        </div>
+        <span class="gp-gallery__count">{{galeria.imageCount}} {{#if isEs}}fotos{{else}}photos{{/if}}</span>
+      </div>
+    </div>
+    <div class="gp-mosaic">
+      {{#each galeria.images}}
+      <div class="gp-mosaic__item" onclick="openGalleryLightbox({{@index}})">
+        <img src="{{this.src}}" alt="{{this.alt}}" loading="lazy" draggable="false">
+        <div class="gp-mosaic__hover">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="gp-cta-section">
+    <img class="gp-cta-section__bg" src="/assets/images/gallery/socceridcup/1.jpg" alt="">
+    <div class="gp-cta-section__dim"></div>
+    <div class="gp-cta-section__body">
+      <span class="gp-label" style="color:rgba(255,255,255,0.7)">SOCCER iD CUP {{galeria.year}}</span>
+      <h2 class="gp-cta-section__title">{{#if isEs}}Vive la experiencia{{else}}Live the experience{{/if}}</h2>
+      <a class="gp-cta-btn" href="https://wa.me/12315158991?text={{galeria.ctaMessage}}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        {{galeria.ctaText}}
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="gp-footer">
+    <img src="/assets/images/iconsoccerid.png" alt="SOCCER iD" height="28">
+    <span>SOCCER iD &copy; {{year}}</span>
+  </footer>
+</div>
+
+<!-- ═══ LIGHTBOX ═══ -->
+<div class="gl-lightbox" id="glLightbox">
+  <div class="gl-lightbox__backdrop" onclick="closeGalleryLightbox()"></div>
+  <button class="gl-lightbox__close" onclick="closeGalleryLightbox()" type="button">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <button class="gl-lightbox__nav gl-lightbox__nav--prev" onclick="navigateGallery(-1)" type="button">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <div class="gl-lightbox__img-wrap">
+    <img id="glImage" src="" alt="" draggable="false">
+  </div>
+  <button class="gl-lightbox__nav gl-lightbox__nav--next" onclick="navigateGallery(1)" type="button">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+  <div class="gl-lightbox__counter" id="glCounter"></div>
+</div>
+
+<style>
+  /* ── Reset promo constraints ── */
+  .gallery-page.promo-page { max-width: 100%; }
+  .gallery-page .promo-back { display: none; }
+
+  /* ── Shared ── */
+  .gp-label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #9b59f0;
+    margin-bottom: 10px;
+  }
+  .gp-section-title {
+    font-size: 32px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    color: #fff;
+  }
+
+  /* ═══════════════════ HERO ═══════════════════ */
+  .gp-hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .gp-hero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+  }
+
+  .gp-hero__dim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg,
+        rgba(10,10,26,0.5) 0%,
+        rgba(10,10,26,0) 25%,
+        rgba(10,10,26,0.15) 50%,
+        rgba(10,10,26,0.85) 78%,
+        #0a0a1a 100%);
+  }
+
+  .gp-hero__grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  .gp-nav-back {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 20;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.5);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: #fff;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .gp-nav-back:hover { background: rgba(108,60,224,0.6); }
+
+  .gp-hero__share {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 20;
+    display: flex;
+    gap: 8px;
+  }
+  .gp-hero__share a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.5);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.12);
+    transition: background 0.2s, transform 0.15s;
+  }
+  .gp-hero__share a:active { transform: scale(0.9); }
+  .gp-hero__share a:hover { background: rgba(108,60,224,0.6); }
+  .gp-hero__share a svg { width: 18px; height: 18px; fill: #fff; }
+
+  .gp-hero__body {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    padding: 0 28px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .gp-hero__logo {
+    margin-bottom: 20px;
+    opacity: 0.9;
+  }
+
+  .gp-hero__title {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .gp-hero__title-main {
+    font-size: 46px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    line-height: 1;
+    text-shadow: 0 4px 40px rgba(0,0,0,0.6);
+  }
+  .gp-hero__title-year {
+    font-size: 46px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    line-height: 1;
+    background: linear-gradient(135deg, #9b59f0, #6c3ce0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+  }
+
+  .gp-hero__sub {
+    font-size: 15px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  .gp-hero__pills {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .gp-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.08);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 7px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+  .gp-pill svg { opacity: 0.6; }
+
+  .gp-hero__cta {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(108,60,224,0.4);
+    border: 1px solid rgba(155,89,240,0.4);
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    animation: gp-bounce 2.5s ease-in-out infinite;
+  }
+  @keyframes gp-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  /* ═══════════════════ STATS ═══════════════════ */
+  .gp-stats {
+    background: #0a0a1a;
+    padding: 56px 24px;
+  }
+  .gp-stats__inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+  .gp-stats__heading {
+    font-size: 22px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    line-height: 1.5;
+  }
+  .gp-stats__cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .gp-stat-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .gp-stat-card:hover {
+    border-color: rgba(108,60,224,0.4);
+    background: rgba(108,60,224,0.06);
+  }
+  .gp-stat-card__value {
+    font-size: 36px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #9b59f0, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+  .gp-stat-card__label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+  }
+  .gp-stat-card__sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    margin-top: 2px;
+  }
+
+  @media (max-width: 700px) {
+    .gp-stats__inner { grid-template-columns: 1fr; gap: 28px; }
+    .gp-stats__heading { font-size: 18px; text-align: center; }
+    .gp-stats { padding: 40px 20px; }
+  }
+
+  /* ═══════════════════ EDITIONS ═══════════════════ */
+  .gp-editions {
+    background: linear-gradient(180deg, #0a0a1a 0%, #0e0e28 100%);
+    padding: 48px 24px;
+  }
+  .gp-editions__inner {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .gp-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 8px;
+  }
+  .gp-timeline__item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .gp-timeline__year {
+    font-size: 14px;
+    font-weight: 800;
+    color: #9b59f0;
+    min-width: 48px;
+    letter-spacing: 1px;
+  }
+  .gp-timeline__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .gp-timeline__match {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .gp-timeline__city {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* ═══════════════════ GALLERY ═══════════════════ */
+  .gp-gallery {
+    background: #0e0e28;
+    padding: 48px 0 0;
+  }
+  .gp-gallery__inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px 20px;
+  }
+  .gp-gallery__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+  .gp-gallery__count {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.05);
+    padding: 5px 14px;
+    border-radius: 12px;
+    margin-bottom: 4px;
+  }
+
+  .gp-mosaic {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 220px;
+    gap: 4px;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 4px;
+  }
+
+  .gp-mosaic__item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+  .gp-mosaic__item:nth-child(6) { grid-column: span 2; }
+
+  .gp-mosaic__item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.03);
+  }
+  .gp-mosaic__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .gp-mosaic__hover {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.35s;
+  }
+  .gp-mosaic__hover svg {
+    color: #fff;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: all 0.35s;
+    filter: drop-shadow(0 2px 10px rgba(0,0,0,0.5));
+  }
+  .gp-mosaic__item:hover img { transform: scale(1.1); }
+  .gp-mosaic__item:hover .gp-mosaic__hover {
+    background: linear-gradient(135deg, rgba(108,60,224,0.4), rgba(155,89,240,0.25));
+  }
+  .gp-mosaic__item:hover .gp-mosaic__hover svg { opacity: 1; transform: scale(1); }
+
+  @media (max-width: 700px) {
+    .gp-mosaic {
+      grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: 170px;
+      gap: 3px;
+      padding: 0 3px;
+    }
+    .gp-mosaic__item:nth-child(1) { grid-column: span 2; grid-row: span 1; }
+    .gp-mosaic__item:nth-child(6) { grid-column: span 1; }
+    .gp-mosaic__hover svg { opacity: 0.5; transform: scale(1); }
+    .gp-hero__title-main { font-size: 30px; }
+    .gp-hero__title-year { font-size: 30px; }
+    .gp-section-title { font-size: 24px; }
+    .gp-gallery__inner { padding: 0 16px 16px; }
+  }
+
+  /* ═══════════════════ CTA SECTION ═══════════════════ */
+  .gp-cta-section {
+    position: relative;
+    padding: 80px 24px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gp-cta-section__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+  }
+  .gp-cta-section__dim {
+    position: absolute;
+    inset: 0;
+    background: rgba(10,10,26,0.6);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+  }
+  .gp-cta-section__body {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .gp-cta-section__title {
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    margin-bottom: 24px;
+  }
+  .gp-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 36px;
+    background: linear-gradient(135deg, #6c3ce0, #9b59f0);
+    color: #fff;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(108,60,224,0.5);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .gp-cta-btn:active { transform: scale(0.96); }
+  .gp-cta-btn:hover { box-shadow: 0 12px 48px rgba(108,60,224,0.65); }
+
+  @media (max-width: 700px) {
+    .gp-cta-section { padding: 60px 20px; }
+    .gp-cta-section__title { font-size: 26px; }
+  }
+
+  /* ═══════════════════ FOOTER ═══════════════════ */
+  .gp-footer {
+    background: #0a0a1a;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .gp-footer span {
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+  }
+  .gp-footer img { opacity: 0.5; }
+
+  /* ═══════════════════ LIGHTBOX ═══════════════════ */
+  .gl-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+  }
+  .gl-lightbox.active { display: flex; }
+
+  .gl-lightbox__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.96);
+  }
+
+  .gl-lightbox__close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .gl-lightbox__close:hover { background: rgba(255,255,255,0.15); }
+
+  .gl-lightbox__img-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 92vw;
+    max-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gl-lightbox__img-wrap img {
+    max-width: 92vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 6px;
+    user-select: none;
+    box-shadow: 0 8px 60px rgba(0,0,0,0.6);
+  }
+
+  .gl-lightbox__nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .gl-lightbox__nav:hover { background: rgba(108,60,224,0.5); border-color: rgba(108,60,224,0.5); }
+  .gl-lightbox__nav--prev { left: 16px; }
+  .gl-lightbox__nav--next { right: 16px; }
+
+  .gl-lightbox__counter {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    background: rgba(0,0,0,0.5);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 20px;
+    border-radius: 24px;
+    letter-spacing: 2px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  @media (max-width: 600px) {
+    .gl-lightbox__nav { width: 42px; height: 42px; }
+    .gl-lightbox__nav--prev { left: 8px; }
+    .gl-lightbox__nav--next { right: 8px; }
+    .gl-lightbox__img-wrap img { max-width: 96vw; border-radius: 4px; }
+  }
+</style>
+
+<script>
+(function() {
+  var images = [{{#each galeria.images}}{ src: "{{this.src}}", alt: "{{this.alt}}" }{{#unless @last}},{{/unless}}{{/each}}];
+  var currentIdx = 0;
+  var lightbox = document.getElementById('glLightbox');
+  var imgEl = document.getElementById('glImage');
+  var counterEl = document.getElementById('glCounter');
+  var startX = 0;
+
+  window.openGalleryLightbox = function(idx) {
+    currentIdx = idx;
+    showImage();
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeGalleryLightbox = function() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  };
+  window.navigateGallery = function(dir) {
+    currentIdx = (currentIdx + dir + images.length) % images.length;
+    showImage();
+  };
+  function showImage() {
+    imgEl.src = images[currentIdx].src;
+    imgEl.alt = images[currentIdx].alt;
+    counterEl.textContent = (currentIdx + 1) + ' / ' + images.length;
+  }
+  document.addEventListener('keydown', function(e) {
+    if (!lightbox.classList.contains('active')) return;
+    if (e.key === 'Escape') closeGalleryLightbox();
+    if (e.key === 'ArrowLeft') navigateGallery(-1);
+    if (e.key === 'ArrowRight') navigateGallery(1);
+  });
+  lightbox.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+  lightbox.addEventListener('touchend', function(e) {
+    var diff = e.changedTouches[0].clientX - startX;
+    if (Math.abs(diff) > 50) navigateGallery(diff > 0 ? -1 : 1);
+  }, { passive: true });
+})();
+</script>

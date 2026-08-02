@@ -1,0 +1,74 @@
+{
+  "es": [
+    {
+      "id": "soccer-id-cup-2027",
+      "title": "SOCCER iD CUP",
+      "year": "2027",
+      "subtitle": "Partidos internacionales en Estados Unidos",
+      "description": "Organizamos partidos internacionales en Estados Unidos con equipos de primera división de las ligas más importantes de Latinoamérica.",
+      "badge": "SOCCER iD CUP",
+      "date": "Marzo 2027",
+      "venue": "Estados Unidos",
+      "banner": "/assets/images/gallery/socceridcup/5.jpg",
+      "stats": [
+        { "value": "3", "label": "EDICIONES", "sub": "2024 — 2025" },
+        { "value": "6+", "label": "EQUIPOS", "sub": "Primera División" },
+        { "value": "3", "label": "CIUDADES", "sub": "San José · Orlando · Austin" }
+      ],
+      "highlights": [
+        { "year": "2024", "match": "Pumas vs Comunicaciones", "city": "San José, CA" },
+        { "year": "2024", "match": "América vs Atlético Nacional", "city": "Orlando, FL" },
+        { "year": "2025", "match": "Tigres vs Pumas", "city": "Austin, TX" }
+      ],
+      "ctaText": "Quiero información VIP",
+      "ctaMessage": "Hola!%20Quiero%20información%20VIP%20sobre%20SOCCER%20iD%20CUP%202027",
+      "galleryTitle": "Galería",
+      "galleryDesc": "Los mejores momentos de las ediciones anteriores",
+      "images": [
+        { "src": "/assets/images/gallery/socceridcup/4.jpg", "alt": "Estadio USA" },
+        { "src": "/assets/images/gallery/socceridcup/1.jpg", "alt": "Soccer ID Cup" },
+        { "src": "/assets/images/gallery/socceridcup/6.jpg", "alt": "Equipos en cancha" },
+        { "src": "/assets/images/gallery/socceridcup/3.jpg", "alt": "Celebración de gol" },
+        { "src": "/assets/images/gallery/socceridcup/5.jpg", "alt": "Campo profesional" },
+        { "src": "/assets/images/gallery/socceridcup/2.jpg", "alt": "Partido internacional" },
+        { "src": "/assets/images/gallery/socceridcup/7.jpeg", "alt": "Equipos" }
+      ]
+    }
+  ],
+  "en": [
+    {
+      "id": "soccer-id-cup-2027",
+      "title": "SOCCER iD CUP",
+      "year": "2027",
+      "subtitle": "International matches in the United States",
+      "description": "We organize international matches in the United States featuring top-division teams from the most important leagues in Latin America.",
+      "badge": "SOCCER iD CUP",
+      "date": "March 2027",
+      "venue": "United States",
+      "banner": "/assets/images/gallery/socceridcup/5.jpg",
+      "stats": [
+        { "value": "3", "label": "EDITIONS", "sub": "2024 — 2025" },
+        { "value": "6+", "label": "TEAMS", "sub": "First Division" },
+        { "value": "3", "label": "CITIES", "sub": "San José · Orlando · Austin" }
+      ],
+      "highlights": [
+        { "year": "2024", "match": "Pumas vs Comunicaciones", "city": "San José, CA" },
+        { "year": "2024", "match": "América vs Atlético Nacional", "city": "Orlando, FL" },
+        { "year": "2025", "match": "Tigres vs Pumas", "city": "Austin, TX" }
+      ],
+      "ctaText": "I want VIP info",
+      "ctaMessage": "Hi!%20I%20want%20VIP%20info%20about%20SOCCER%20iD%20CUP%202027",
+      "galleryTitle": "Gallery",
+      "galleryDesc": "The best moments from previous editions",
+      "images": [
+        { "src": "/assets/images/gallery/socceridcup/4.jpg", "alt": "USA Stadium" },
+        { "src": "/assets/images/gallery/socceridcup/1.jpg", "alt": "Soccer ID Cup" },
+        { "src": "/assets/images/gallery/socceridcup/6.jpg", "alt": "Teams on the field" },
+        { "src": "/assets/images/gallery/socceridcup/3.jpg", "alt": "Goal celebration" },
+        { "src": "/assets/images/gallery/socceridcup/5.jpg", "alt": "Professional field" },
+        { "src": "/assets/images/gallery/socceridcup/2.jpg", "alt": "International match" },
+        { "src": "/assets/images/gallery/socceridcup/7.jpeg", "alt": "Teams" }
+      ]
+    }
+  ]
+}
