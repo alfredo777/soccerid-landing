@@ -122,6 +122,20 @@
           <img src="/assets/images/sponsors/nuestra-vision.png" alt="Nuestra Visión">
         </div>
       </div>
+      <div class="gp-sponsors__marquee">
+        <div class="gp-sponsors__track">
+          <div class="gp-sponsors__slide"><img src="/assets/images/segurosidlogo.png" alt="Seguros iD"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/caliente.png" alt="Caliente MX"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/fox-sports.png" alt="Fox Sports"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/voit.png" alt="Voit"></div>
+          <div class="gp-sponsors__slide gp-sponsors__item--nv"><img src="/assets/images/sponsors/nuestra-vision.png" alt="Nuestra Visión"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/segurosidlogo.png" alt="Seguros iD"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/caliente.png" alt="Caliente MX"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/fox-sports.png" alt="Fox Sports"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/voit.png" alt="Voit"></div>
+          <div class="gp-sponsors__slide gp-sponsors__item--nv"><img src="/assets/images/sponsors/nuestra-vision.png" alt="Nuestra Visión"></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -607,6 +621,45 @@
   }
   .gp-sponsors__item--nv img {
     max-height: 80px;
+  }
+  .gp-sponsors__marquee {
+    display: none;
+  }
+  @media (max-width: 700px) {
+    .gp-sponsors__grid { display: none; }
+    .gp-sponsors__marquee {
+      display: block;
+      overflow: hidden;
+      margin-top: 32px;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    }
+    .gp-sponsors__track {
+      display: flex;
+      align-items: center;
+      gap: 56px;
+      width: max-content;
+      animation: sponsorScroll 18s linear infinite;
+    }
+    .gp-sponsors__slide {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gp-sponsors__slide img {
+      height: 64px;
+      max-width: 200px;
+      object-fit: contain;
+      opacity: 0.9;
+    }
+    .gp-sponsors__slide.gp-sponsors__item--nv img {
+      height: 72px;
+    }
+  }
+  @keyframes sponsorScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
 
   /* ═══════════════════ CTA SECTION ═══════════════════ */
