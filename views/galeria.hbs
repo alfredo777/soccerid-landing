@@ -106,9 +106,21 @@
     <div class="gp-sponsors__inner">
       <span class="gp-label">{{#if isEs}}PATROCINADORES{{else}}SPONSORS{{/if}}</span>
       <div class="gp-sponsors__grid">
-        <a href="/{{lang}}#seguros" class="gp-sponsors__item">
+        <div class="gp-sponsors__item">
           <img src="/assets/images/segurosidlogo.png" alt="Seguros iD">
-        </a>
+        </div>
+        <div class="gp-sponsors__item">
+          <img src="/assets/images/sponsors/caliente.png" alt="Caliente MX">
+        </div>
+        <div class="gp-sponsors__item">
+          <img src="/assets/images/sponsors/fox-sports.png" alt="Fox Sports">
+        </div>
+        <div class="gp-sponsors__item">
+          <img src="/assets/images/sponsors/voit.png" alt="Voit">
+        </div>
+        <div class="gp-sponsors__item gp-sponsors__item--nv">
+          <img src="/assets/images/sponsors/nuestra-vision.png" alt="Nuestra Visión">
+        </div>
       </div>
     </div>
   </section>
@@ -576,25 +588,25 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px 32px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    transition: background 0.3s, border-color 0.3s;
+    padding: 16px 28px;
+    border-radius: 12px;
+    transition: transform 0.3s;
   }
   .gp-sponsors__item:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(108,60,224,0.3);
+    transform: scale(1.06);
   }
   .gp-sponsors__item img {
-    max-height: 48px;
-    max-width: 200px;
+    max-height: 44px;
+    max-width: 160px;
     object-fit: contain;
-    filter: brightness(0) invert(1);
-    opacity: 0.8;
+    opacity: 0.7;
     transition: opacity 0.3s;
   }
   .gp-sponsors__item:hover img {
+    opacity: 1;
+  }
+  .gp-sponsors__item--nv img {
+    max-height: 52px;
     opacity: 1;
   }
 
