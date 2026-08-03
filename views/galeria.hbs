@@ -124,16 +124,21 @@
       </div>
       <div class="gp-sponsors__marquee">
         <div class="gp-sponsors__track">
-          <div class="gp-sponsors__slide gp-sponsors__slide--wide"><img src="/assets/images/segurosidlogo.png" alt="Seguros iD"></div>
-          <div class="gp-sponsors__slide gp-sponsors__slide--sq"><img src="/assets/images/sponsors/caliente.png" alt="Caliente MX"></div>
-          <div class="gp-sponsors__slide gp-sponsors__slide--sq"><img src="/assets/images/sponsors/fox-sports.png" alt="Fox Sports"></div>
-          <div class="gp-sponsors__slide gp-sponsors__slide--sq"><img src="/assets/images/sponsors/voit.png" alt="Voit"></div>
-          <div class="gp-sponsors__slide gp-sponsors__slide--sq"><img src="/assets/images/sponsors/nuestra-vision.png" alt="Nuestra Visión"></div>
-          <div class="gp-sponsors__slide gp-sponsors__slide--wide"><img src="/assets/images/segurosidlogo.png" alt="Seguros iD"></div>
-          <div class="gp-sponsors__slide gp-sponsors__slide--sq"><img src="/assets/images/sponsors/caliente.png" alt="Caliente MX"></div>
-          <div class="gp-sponsors__slide gp-sponsors__slide--sq"><img src="/assets/images/sponsors/fox-sports.png" alt="Fox Sports"></div>
-          <div class="gp-sponsors__slide gp-sponsors__slide--sq"><img src="/assets/images/sponsors/voit.png" alt="Voit"></div>
-          <div class="gp-sponsors__slide gp-sponsors__slide--sq"><img src="/assets/images/sponsors/nuestra-vision.png" alt="Nuestra Visión"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/segurosidlogo.png" alt="Seguros iD"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/caliente.png" alt="Caliente MX"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/fox-sports.png" alt="Fox Sports"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/voit.png" alt="Voit"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/nuestra-vision.png" alt="Nuestra Visión"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/segurosidlogo.png" alt="Seguros iD"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/caliente.png" alt="Caliente MX"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/fox-sports.png" alt="Fox Sports"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/voit.png" alt="Voit"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/nuestra-vision.png" alt="Nuestra Visión"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/segurosidlogo.png" alt="Seguros iD"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/caliente.png" alt="Caliente MX"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/fox-sports.png" alt="Fox Sports"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/voit.png" alt="Voit"></div>
+          <div class="gp-sponsors__slide"><img src="/assets/images/sponsors/nuestra-vision.png" alt="Nuestra Visión"></div>
         </div>
       </div>
     </div>
@@ -634,39 +639,34 @@
       display: block;
       overflow: hidden;
       margin-top: 32px;
-      -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-      mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+      mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
     }
     .gp-sponsors__track {
       display: flex;
       align-items: center;
-      gap: 48px;
+      gap: 0;
       width: max-content;
-      animation: sponsorScroll 22s linear infinite;
+      animation: sponsorScroll 30s linear infinite;
     }
     .gp-sponsors__slide {
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+      width: 160px;
       height: 76px;
     }
     .gp-sponsors__slide img {
+      max-width: 140px;
+      max-height: 68px;
       object-fit: contain;
       opacity: 0.9;
-    }
-    .gp-sponsors__slide--wide img {
-      width: 230px;
-      height: auto;
-    }
-    .gp-sponsors__slide--sq img {
-      height: 76px;
-      width: auto;
     }
   }
   @keyframes sponsorScroll {
     0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    100% { transform: translateX(-33.333%); }
   }
 
   /* ═══════════════════ CTA SECTION ═══════════════════ */
