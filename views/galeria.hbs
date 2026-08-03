@@ -167,6 +167,11 @@
     <img src="/assets/images/iconsoccerid.png" alt="SOCCER iD" height="28">
     <span>SOCCER iD &copy; {{year}}</span>
   </footer>
+
+  <!-- ═══ GO TO TOP ═══ -->
+  <button class="gp-go-top" id="gpGoTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" type="button" aria-label="Go to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
 </div>
 
 <!-- ═══ LIGHTBOX ═══ -->
@@ -785,6 +790,37 @@
   }
   .gp-footer img { opacity: 0.5; }
 
+  /* ═══════════════════ GO TO TOP ═══════════════════ */
+  .gp-go-top {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 900;
+    width: 46px;
+    height: 46px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(108,60,224,0.85);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+  .gp-go-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .gp-go-top:active { transform: scale(0.92); }
+
   /* ═══════════════════ LIGHTBOX ═══════════════════ */
   .gl-lightbox {
     display: none;
@@ -924,6 +960,14 @@
   lightbox.addEventListener('touchend', function(e) {
     var diff = e.changedTouches[0].clientX - startX;
     if (Math.abs(diff) > 50) navigateGallery(diff > 0 ? -1 : 1);
+  }, { passive: true });
+})();
+
+(function() {
+  var btn = document.getElementById('gpGoTop');
+  if (!btn) return;
+  window.addEventListener('scroll', function() {
+    btn.classList.toggle('visible', window.scrollY > 400);
   }, { passive: true });
 })();
 </script>
