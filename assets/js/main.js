@@ -987,7 +987,7 @@ function renderBentoGrids() {
   
   if (gridFirst && bentoItemsFirst.length > 0) {
     gridFirst.innerHTML = bentoItemsFirst.map(item => `
-      <div class="bento-item ${item.class || ''}" data-panel="${item.id || ''}">
+      <div class="bento-item ${item.class || ''}" data-panel="${item.id || ''}"${item.link ? ` data-link="${item.link}"` : ''}>
         <div class="bento-content">
           <h3>${item.title || ''}</h3>
         </div>
@@ -997,7 +997,7 @@ function renderBentoGrids() {
   
   if (gridSecond && bentoItemsSecond.length > 0) {
     gridSecond.innerHTML = bentoItemsSecond.map(item => `
-      <div class="bento-item ${item.class || ''}" data-panel="${item.id || ''}">
+      <div class="bento-item ${item.class || ''}" data-panel="${item.id || ''}"${item.link ? ` data-link="${item.link}"` : ''}>
         <div class="bento-content">
           <h3>${item.title || ''}</h3>
         </div>
@@ -1007,6 +1007,11 @@ function renderBentoGrids() {
   
   document.querySelectorAll('.bento-item').forEach(item => {
     item.addEventListener('click', function() {
+      const link = this.dataset.link;
+      if (link) {
+        window.location.href = link;
+        return;
+      }
       const panelId = this.dataset.panel;
       if (panelId) openPanel(panelId);
     });
