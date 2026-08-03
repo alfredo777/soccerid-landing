@@ -3,11 +3,11 @@
     {
       "id": "soccer-id-cup-2027",
       "title": "SOCCER iD CUP",
-      "year": "2027",
+      "year": "",
       "subtitle": "Partidos internacionales en Estados Unidos",
       "description": "Organizamos partidos internacionales en Estados Unidos con equipos de primera división de las ligas más importantes de Latinoamérica.",
       "badge": "SOCCER iD CUP",
-      "date": "Marzo 2027",
+      "date": "Próximamente",
       "venue": "Estados Unidos",
       "banner": "/assets/images/gallery/socceridcup/5.jpg",
       "stats": [
@@ -18,10 +18,11 @@
       "highlights": [
         { "year": "2024", "match": "Pumas vs Comunicaciones", "city": "San José, CA" },
         { "year": "2024", "match": "América vs Atlético Nacional", "city": "Orlando, FL" },
-        { "year": "2025", "match": "Tigres vs Pumas", "city": "Austin, TX" }
+        { "year": "2025", "match": "Tigres vs Pumas", "city": "Austin, TX" },
+        { "year": "2027", "match": "Próximamente", "city": "Por confirmar" }
       ],
-      "ctaText": "Quiero información VIP",
-      "ctaMessage": "Hola!%20Quiero%20información%20VIP%20sobre%20SOCCER%20iD%20CUP%202027",
+      "ctaText": "Quiero ser parte / Socios estratégicos",
+      "ctaMessage": "Hola!%20Quiero%20ser%20socio%20estrat%C3%A9gico%20de%20SOCCER%20iD%20CUP",
       "galleryTitle": "Galería",
       "galleryDesc": "Los mejores momentos de las ediciones anteriores",
       "images": [
@@ -39,11 +40,11 @@
     {
       "id": "soccer-id-cup-2027",
       "title": "SOCCER iD CUP",
-      "year": "2027",
+      "year": "",
       "subtitle": "International matches in the United States",
       "description": "We organize international matches in the United States featuring top-division teams from the most important leagues in Latin America.",
       "badge": "SOCCER iD CUP",
-      "date": "March 2027",
+      "date": "Coming soon",
       "venue": "United States",
       "banner": "/assets/images/gallery/socceridcup/5.jpg",
       "stats": [
@@ -54,10 +55,11 @@
       "highlights": [
         { "year": "2024", "match": "Pumas vs Comunicaciones", "city": "San José, CA" },
         { "year": "2024", "match": "América vs Atlético Nacional", "city": "Orlando, FL" },
-        { "year": "2025", "match": "Tigres vs Pumas", "city": "Austin, TX" }
+        { "year": "2025", "match": "Tigres vs Pumas", "city": "Austin, TX" },
+        { "year": "2027", "match": "Coming soon", "city": "TBA" }
       ],
-      "ctaText": "I want VIP info",
-      "ctaMessage": "Hi!%20I%20want%20VIP%20info%20about%20SOCCER%20iD%20CUP%202027",
+      "ctaText": "Become a partner / Strategic allies",
+      "ctaMessage": "Hi!%20I%20want%20to%20become%20a%20strategic%20partner%20of%20SOCCER%20iD%20CUP",
       "galleryTitle": "Gallery",
       "galleryDesc": "The best moments from previous editions",
       "images": [
