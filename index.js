@@ -648,7 +648,7 @@ app.get('/articulo/:id', (req, res) => {
 // Redirect old gallery URL to new cupid route
 app.get('/:lang/galeria/soccer-id-cup-2027', (req, res) => {
   const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
-  res.redirect(301, `/${lang}/cupid`);
+  res.redirect(301, `/${lang}/socceridcup`);
 });
 
 // ============================================================
@@ -703,9 +703,9 @@ app.get('/galeria/:id', (req, res) => {
 });
 
 // ============================================================
-// PÁGINA SOCCER iD CUP (cupid)
+// PÁGINA SOCCER iD CUP (socceridcup)
 // ============================================================
-app.get('/:lang/cupid', (req, res, next) => {
+app.get('/:lang/socceridcup', (req, res, next) => {
   const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
 
   const galeriaPath = path.join(__dirname, 'contents', 'gallery_pages.json');
@@ -724,7 +724,7 @@ app.get('/:lang/cupid', (req, res, next) => {
     const ogDesc = galeria.description;
     const ogImage = galeria.banner || '/assets/images/og/share.jpg';
 
-    res.render('cupid', {
+    res.render('socceridcup', {
       layout: 'promo',
       title: ogTitle,
       description: ogDesc,
@@ -734,7 +734,7 @@ app.get('/:lang/cupid', (req, res, next) => {
       ogLocale: isEs ? 'es_ES' : 'en_US',
       lang: lang,
       baseUrl: BASE_URL,
-      currentPath: '/cupid',
+      currentPath: '/socceridcup',
       isEs: isEs,
       isEn: lang === 'en',
       galeria: galeria,
@@ -742,14 +742,19 @@ app.get('/:lang/cupid', (req, res, next) => {
       version: APP_VERSION
     });
   } catch (e) {
-    console.error('Error cargando cupid:', e);
+    console.error('Error cargando socceridcup:', e);
     next();
   }
 });
 
+app.get('/socceridcup', (req, res) => {
+  const lang = detectLanguage(req);
+  res.redirect(302, `/${lang}/socceridcup`);
+});
+
 app.get('/cupid', (req, res) => {
   const lang = detectLanguage(req);
-  res.redirect(302, `/${lang}/cupid`);
+  res.redirect(301, `/${lang}/socceridcup`);
 });
 
 // Rutas legales sin idioma (redirigen)
