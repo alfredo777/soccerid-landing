@@ -888,7 +888,7 @@ app.post('/api/project2027/verify', (req, res) => {
 
       transporter.sendMail({
         from: process.env.SMTP_FROM || '"SOCCER iD" <socceridco@soccerid.co>',
-        to: process.env.NOTIFY_EMAILS || 'jardarubydv@gmail.com, leon@socceri.co',
+        to: process.env.NOTIFY_EMAILS || 'jardarubydv@gmail.com, leon@soccerid.co',
         subject: `[SOCCER iD] Acceso Project 2027 — código ${code.trim()}`,
         html: htmlEmail,
         text: `Acceso registrado — SOCCER iD CUP 2027\n\nCódigo: ${code.trim()}\nFecha (CDMX): ${cdmxTime}\nIP: ${logEntry.ip}\nNavegador: ${logEntry.userAgent}`
