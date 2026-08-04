@@ -729,15 +729,16 @@
   .gp-timeline {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 8px;
     margin-top: 8px;
   }
   .gp-timeline__item {
     display: flex;
     align-items: center;
     gap: 20px;
-    padding: 18px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 18px 16px;
+    border-bottom: none;
+    border-radius: 8px;
   }
   .gp-timeline__year {
     font-size: 14px;
@@ -762,10 +763,6 @@
   }
   .gp-timeline__item--soon {
     background: linear-gradient(90deg, rgba(108,60,224,0.12), transparent);
-    border-radius: 8px;
-    padding: 18px 16px;
-    border-bottom: none;
-    margin-top: 8px;
   }
   .gp-timeline__item--soon .gp-timeline__year {
     color: #c084fc;
@@ -777,10 +774,6 @@
   }
   .gp-timeline__item--pause {
     background: linear-gradient(90deg, rgba(234,179,8,0.08), transparent);
-    border-radius: 8px;
-    padding: 18px 16px;
-    border-bottom: none;
-    margin-top: 8px;
   }
   .gp-timeline__item--pause .gp-timeline__year {
     color: #eab308;
@@ -800,8 +793,6 @@
   }
   .gp-timeline__item--link:hover {
     background: rgba(108,60,224,0.08);
-    border-radius: 8px;
-    padding: 18px 16px;
   }
   .gp-timeline__arrow {
     color: rgba(255,255,255,0.2);
