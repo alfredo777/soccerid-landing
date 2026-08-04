@@ -11,12 +11,13 @@
     },
     "hero": {
       "badge": "OPORTUNIDAD DE INVERSIÓN",
-      "team1": "CRUZ AZUL",
+      "team1": "TIGRES",
       "vs": "vs",
-      "team2": "TIGRES",
+      "team2": "CRUZ AZUL",
       "venue": "Shell Energy Stadium",
       "city": "Houston, Texas",
-      "date": "27 de marzo de 2027"
+      "date": "27 de marzo de 2027",
+      "cupBtn": "¿QUÉ ES SOCCER iD CUP?"
     },
     "highlights": {
       "title": "ASPECTOS DESTACADOS DE LA INVERSIÓN",
@@ -174,12 +175,13 @@
     },
     "hero": {
       "badge": "INVESTMENT OPPORTUNITY",
-      "team1": "CRUZ AZUL",
+      "team1": "TIGRES",
       "vs": "vs",
-      "team2": "TIGRES",
+      "team2": "CRUZ AZUL",
       "venue": "Shell Energy Stadium",
       "city": "Houston, Texas",
-      "date": "March 27, 2027"
+      "date": "March 27, 2027",
+      "cupBtn": "WHAT IS SOCCER iD CUP?"
     },
     "highlights": {
       "title": "INVESTMENT HIGHLIGHTS",
