@@ -766,7 +766,7 @@ app.get('/:lang/socceridcupproject2027', (req, res, next) => {
     const data = allData[lang] || allData[DEFAULT_LANG];
 
     const isEs = lang === 'es';
-    const ogTitle = isEs ? 'SOCCER iD — Documento Confidencial' : 'SOCCER iD — Confidential Document';
+    const ogTitle = isEs ? 'SOCCER iD CUP — Confidencial Inversión' : 'SOCCER iD CUP — Confidential Investment';
     const ogDesc = isEs ? 'Acceso restringido. Se requiere código de autorización.' : 'Restricted access. Authorization code required.';
 
     res.render('socceridcup-project2027', {

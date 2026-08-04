@@ -5,8 +5,8 @@
     "lock": {
       "badge": "CONFIDENCIAL",
       "title": "ACCESO RESTRINGIDO",
-      "subtitle": "Ingresa el código de acceso para ver este documento confidencial.",
-      "placeholder": "Código de 7 dígitos",
+      "subtitle": "Ingresa tu código personalizado",
+      "placeholder": "Código de acceso",
       "button": "Acceder",
       "error": "Código incorrecto. Intenta de nuevo."
     },
@@ -112,7 +112,7 @@
       "termsTitle": "TÉRMINOS",
       "terms": [
         { "label": "Capital", "value": "USD $1.0M" },
-        { "label": "Retorno", "value": "30%" },
+        { "label": "Retorno", "value": "Hasta 30%*" },
         { "label": "Pago proyectado", "value": "USD $1.3M" },
         { "label": "Plazo", "value": "12 MESES" }
       ],
@@ -125,7 +125,8 @@
         "Operación a cargo de SOCCER iD, con experiencia comprobada en eventos internacionales"
       ],
       "ticketLabel": "Tickets de inversión desde:",
-      "ticketValue": "$500,000 MXN / $30,000 USD"
+      "ticketValue": "$500,000 MXN / $30,000 USD",
+      "footnote": "*El retorno proyectado es un estimado basado en ediciones anteriores y condiciones de mercado. Los resultados reales pueden variar."
     },
     "closing": {
       "title": "GRACIAS",
@@ -140,8 +141,8 @@
     "lock": {
       "badge": "CONFIDENTIAL",
       "title": "RESTRICTED ACCESS",
-      "subtitle": "Enter the access code to view this confidential document.",
-      "placeholder": "7-digit code",
+      "subtitle": "Enter your personalized code",
+      "placeholder": "Access code",
       "button": "Access",
       "error": "Incorrect code. Please try again."
     },
@@ -247,7 +248,7 @@
       "termsTitle": "TERMS",
       "terms": [
         { "label": "Capital", "value": "USD $1.0M" },
-        { "label": "Return", "value": "30%" },
+        { "label": "Return", "value": "Up to 30%*" },
         { "label": "Projected payout", "value": "USD $1.3M" },
         { "label": "Term", "value": "12 MONTHS" }
       ],
@@ -260,7 +261,8 @@
         "Operated by SOCCER iD, with proven experience in international events"
       ],
       "ticketLabel": "Investment tickets from:",
-      "ticketValue": "$500,000 MXN / $30,000 USD"
+      "ticketValue": "$500,000 MXN / $30,000 USD",
+      "footnote": "*Projected return is an estimate based on previous editions and market conditions. Actual results may vary."
     },
     "closing": {
       "title": "THANK YOU",
