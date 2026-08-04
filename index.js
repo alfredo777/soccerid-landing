@@ -765,12 +765,14 @@ app.get('/:lang/socceridcup2027', (req, res, next) => {
     const allData = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
     const data = allData[lang] || allData[DEFAULT_LANG];
 
-    const galleryPath = path.join(__dirname, 'contents', 'gallery_pages.json');
+    const editionsPath = path.join(__dirname, 'contents', 'cup_editions.json');
     let mediaLinks = [];
     try {
-      const galleryData = JSON.parse(fs.readFileSync(galleryPath, 'utf8'));
-      const cupPage = (galleryData[lang] || galleryData[DEFAULT_LANG] || [])[0];
-      if (cupPage && cupPage.mediaLinks) mediaLinks = cupPage.mediaLinks;
+      const editionsData = JSON.parse(fs.readFileSync(editionsPath, 'utf8'));
+      const editions = editionsData[lang] || editionsData[DEFAULT_LANG] || {};
+      ['2023', '2024', '2025'].forEach(y => {
+        if (editions[y] && editions[y].mediaLinks) mediaLinks = mediaLinks.concat(editions[y].mediaLinks);
+      });
     } catch (_) {}
 
     const isEs = lang === 'es';
