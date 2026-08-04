@@ -753,9 +753,9 @@ app.get('/socceridcup', (req, res) => {
 });
 
 // ============================================================
-// PÁGINA SOCCER iD CUP PROJECT 2027 (socceridcupproject2027)
+// PÁGINA SOCCER iD CUP PROJECT 2027 (socceridcup2027)
 // ============================================================
-app.get('/:lang/socceridcupproject2027', (req, res, next) => {
+app.get('/:lang/socceridcup2027', (req, res, next) => {
   const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
 
   const dataPath = path.join(__dirname, 'contents', 'cup_project_2027.json');
@@ -787,7 +787,7 @@ app.get('/:lang/socceridcupproject2027', (req, res, next) => {
       ogLocale: isEs ? 'es_ES' : 'en_US',
       lang: lang,
       baseUrl: BASE_URL,
-      currentPath: '/socceridcupproject2027',
+      currentPath: '/socceridcup2027',
       isEs: isEs,
       isEn: lang === 'en',
       data: data,
@@ -904,9 +904,9 @@ app.post('/api/project2027/verify', (req, res) => {
   }
 });
 
-app.get('/socceridcupproject2027', (req, res) => {
+app.get('/socceridcup2027', (req, res) => {
   const lang = detectLanguage(req);
-  res.redirect(302, `/${lang}/socceridcupproject2027`);
+  res.redirect(302, `/${lang}/socceridcup2027`);
 });
 
 // ============================================================

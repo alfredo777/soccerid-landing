@@ -34,7 +34,7 @@
           "label": "MERCADO",
           "icon": "people",
           "mainTitle": "Houston, Texas",
-          "lines": ["Principal Mercado Hispano de USA", "Alta concentración de aficionados de Tigres", "Mercado probado para futbol internacional"]
+          "lines": ["Principal Mercado Hispano dentro de los Estados Unidos", "Alta concentración de aficionados de Tigres", "Mercado probado para futbol internacional"]
         },
         {
           "label": "VENUE",
@@ -106,6 +106,10 @@
         "Broadcast",
         "Operación Internacional",
         "Hospitality"
+      ],
+      "videos": [
+        { "id": "P9P4Dkd0P10", "title": "Resumen | América 2-2 Atlético Nacional | SOCCER iD CUP 2024", "edition": "2024" },
+        { "id": "l-KVhjDENOQ", "title": "Tigres 0-0 Pumas | SOCCER iD CUP 2025", "edition": "2025" }
       ]
     },
     "proposal": {
@@ -198,7 +202,7 @@
           "label": "MARKET",
           "icon": "people",
           "mainTitle": "Houston, Texas",
-          "lines": ["Leading Hispanic Market in the USA", "High concentration of Tigres fans", "Proven market for international football"]
+          "lines": ["Leading Hispanic Market in the United States", "High concentration of Tigres fans", "Proven market for international football"]
         },
         {
           "label": "VENUE",
@@ -270,6 +274,10 @@
         "Broadcast",
         "International Operations",
         "Hospitality"
+      ],
+      "videos": [
+        { "id": "P9P4Dkd0P10", "title": "Highlights | América 2-2 Atlético Nacional | SOCCER iD CUP 2024", "edition": "2024" },
+        { "id": "l-KVhjDENOQ", "title": "Tigres 0-0 Pumas | SOCCER iD CUP 2025", "edition": "2025" }
       ]
     },
     "proposal": {

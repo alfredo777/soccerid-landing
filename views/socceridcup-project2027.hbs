@@ -19,8 +19,8 @@
     </div>
     <p class="pp-lock__error" id="ppError">{{data.lock.error}}</p>
     <div class="pp-lock__lang">
-      <a href="/es/socceridcupproject2027" class="{{#if isEs}}active{{/if}}">ES</a>
-      <a href="/en/socceridcupproject2027" class="{{#if isEn}}active{{/if}}">EN</a>
+      <a href="/es/socceridcup2027" class="{{#if isEs}}active{{/if}}">ES</a>
+      <a href="/en/socceridcup2027" class="{{#if isEn}}active{{/if}}">EN</a>
     </div>
   </div>
 </div>
@@ -30,8 +30,8 @@
 
   {{!-- Language toggle --}}
   <div class="pp-lang-bar">
-    <a href="/es/socceridcupproject2027" class="{{#if isEs}}active{{/if}}">ES</a>
-    <a href="/en/socceridcupproject2027" class="{{#if isEn}}active{{/if}}">EN</a>
+    <a href="/es/socceridcup2027" class="{{#if isEs}}active{{/if}}">ES</a>
+    <a href="/en/socceridcup2027" class="{{#if isEn}}active{{/if}}">EN</a>
   </div>
 
   {{!-- ═══ HERO ═══ --}}
@@ -216,6 +216,23 @@
   </section>
   {{/if}}
 
+  {{!-- ═══ VIDEOS ═══ --}}
+  {{#if data.track.videos.length}}
+  <section class="pp-section">
+    <h2 class="pp-section__title">{{#if isEs}}EDICIONES ANTERIORES{{else}}PAST EDITIONS{{/if}}</h2>
+    <div class="pp-videos">
+      {{#each data.track.videos}}
+      <div class="pp-video">
+        <div class="pp-video__wrap">
+          <iframe src="https://www.youtube.com/embed/{{this.id}}" title="{{this.title}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <p class="pp-video__caption">{{this.title}}</p>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+  {{/if}}
+
   {{!-- ═══ PROPOSAL ═══ --}}
   <section class="pp-section">
     <h2 class="pp-section__title">{{data.proposal.title}}</h2>
@@ -251,7 +268,7 @@
 
   {{!-- ═══ STRUCTURE ═══ --}}
   <section class="pp-section">
-    <span class="gp-label">{{data.structure.title}}</span>
+    <h2 class="pp-section__title">{{data.structure.title}}</h2>
     <ul class="pp-structure">
       {{#each data.structure.items}}
       <li class="pp-structure__item">
@@ -273,7 +290,7 @@
 
   {{!-- ═══ TIMELINE ═══ --}}
   <section class="pp-section">
-    <span class="gp-label">{{data.timeline.title}}</span>
+    <h2 class="pp-section__title">{{data.timeline.title}}</h2>
     <div class="pp-timeline">
       <div class="pp-timeline__header">
         <span class="pp-timeline__col-act">&nbsp;</span>
@@ -307,6 +324,10 @@
     <a href="/{{lang}}/socceridcup"><img src="/assets/images/soccerid.png" alt="SOCCER iD" height="28"></a>
     <span>&copy; {{year}} SOCCER iD</span>
   </footer>
+
+  <button class="pp-btt" id="ppBtt" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
 
 </div>
 
@@ -615,6 +636,21 @@
     padding: 16px 20px;
   }
 
+  /* ─── VIDEOS ─── */
+  .pp-videos { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
+  .pp-video__wrap {
+    position: relative; width: 100%; padding-bottom: 56.25%;
+    border-radius: 12px; overflow: hidden;
+    background: rgba(255,255,255,0.04);
+  }
+  .pp-video__wrap iframe {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  }
+  .pp-video__caption {
+    margin-top: 10px; font-size: 13px; font-weight: 600;
+    color: rgba(255,255,255,0.6); text-align: center;
+  }
+
   /* ─── STRUCTURE ─── */
   .pp-structure { list-style: none; padding: 0; margin: 24px 0 0; }
   .pp-structure__item {
@@ -702,6 +738,17 @@
     padding: 20px 48px; border-top: 1px solid rgba(255,255,255,0.06);
   }
   .pp-footer span { font-size: 12px; color: rgba(255,255,255,0.3); }
+  .pp-btt {
+    position: fixed; bottom: 32px; right: 32px; z-index: 90;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--pp-gold); color: #000; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s, transform 0.3s;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+  .pp-btt.visible { opacity: 1; pointer-events: auto; }
+  .pp-btt:hover { transform: scale(1.1); }
+  .pp-btt svg { width: 22px; height: 22px; }
 
   /* ─── MOBILE ─── */
   @media (max-width: 1024px) {
@@ -723,6 +770,7 @@
     .pp-track__editions { grid-template-columns: 1fr; }
     .pp-proposal { grid-template-columns: 1fr; gap: 32px; }
     .pp-press { grid-template-columns: 1fr; }
+    .pp-videos { grid-template-columns: 1fr; }
     .pp-term-row { flex-direction: column; align-items: flex-start; gap: 4px; }
     .pp-term-row__value { font-size: 16px; text-align: left; }
     .pp-ticket-bar { flex-direction: column; gap: 8px; text-align: center; }
@@ -837,5 +885,14 @@
     });
   }
   btn.addEventListener('click', tryAccess);
+
+  var btt = document.getElementById('ppBtt');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 600) btt.classList.add('visible');
+    else btt.classList.remove('visible');
+  });
+  btt.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 })();
 </script>
