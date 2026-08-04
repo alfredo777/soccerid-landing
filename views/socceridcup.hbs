@@ -68,7 +68,7 @@
   <section class="gp-whatwedo">
     <div class="gp-whatwedo__inner">
       <span class="gp-label">{{#if isEs}}QUÉ HACEMOS{{else}}WHAT WE DO{{/if}}</span>
-      <h2 class="gp-section-title">{{#if isEs}}Fuentes de ingreso{{else}}Revenue Streams{{/if}}</h2>
+      <h2 class="gp-section-title">{{#if isEs}}Experiencia en el mercado{{else}}Market Experience{{/if}}</h2>
       <div class="gp-whatwedo__grid">
         <div class="gp-whatwedo__card">
           <div class="gp-whatwedo__icon">
@@ -600,6 +600,8 @@
     padding: 28px 20px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    text-align: center;
     gap: 12px;
     transition: border-color 0.3s, background 0.3s;
   }
@@ -705,6 +707,7 @@
     font-weight: 800;
     letter-spacing: 2px;
     color: rgba(255,255,255,0.5);
+    text-align: center;
   }
 
   @media (max-width: 700px) {
@@ -734,6 +737,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    text-align: center;
   }
   .gp-capabilities__num {
     font-size: 28px;
@@ -983,9 +987,7 @@
   }
   .gp-sponsors__item--bottom {
     width: 100%;
-    margin-top: 16px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: 8px;
   }
   .gp-sponsors__marquee {
     display: none;
@@ -1028,8 +1030,6 @@
       align-items: center;
       justify-content: center;
       margin-top: 28px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255,255,255,0.06);
     }
     .gp-sponsors__seguros-mobile img {
       width: 200px;
@@ -1076,9 +1076,9 @@
     gap: 4px;
   }
   .gp-cta-section__title {
-    font-size: 34px;
-    font-weight: 900;
-    letter-spacing: -0.5px;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
     margin-bottom: 24px;
   }
   .gp-cta-btn {
@@ -1102,7 +1102,7 @@
 
   @media (max-width: 700px) {
     .gp-cta-section { padding: 60px 20px; }
-    .gp-cta-section__title { font-size: 26px; }
+    .gp-cta-section__title { font-size: 22px; }
   }
 
   /* ═══════════════════ FOOTER ═══════════════════ */
