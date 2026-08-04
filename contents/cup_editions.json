@@ -15,8 +15,8 @@
       },
       "stats": [
         { "value": "20K", "label": "ASISTENTES", "sub": "PayPal Park" },
-        { "value": "1", "label": "PARTIDO", "sub": "Pumas vs Comunicaciones" },
-        { "value": "500K+", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
+        { "value": "500K", "label": "ESPECTADORES TV", "sub": "Transmisión en vivo" },
+        { "value": "2M", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
       ],
       "sponsors": [
         { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX" },
@@ -52,7 +52,7 @@
       },
       "stats": [
         { "value": "40K", "label": "ASISTENTES", "sub": "Camping World Stadium" },
-        { "value": "1", "label": "PARTIDO", "sub": "América vs Atlético Nacional" },
+        { "value": "1M", "label": "ESPECTADORES TV", "sub": "Transmisión en vivo" },
         { "value": "1M+", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
       ],
       "sponsors": [
@@ -95,8 +95,8 @@
       },
       "stats": [
         { "value": "20K", "label": "ASISTENTES", "sub": "Q2 Stadium" },
-        { "value": "1", "label": "PARTIDO", "sub": "Tigres vs Pumas" },
-        { "value": "2M+", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
+        { "value": "2M", "label": "ESPECTADORES", "sub": "Audiencia digital" },
+        { "value": "2.5M", "label": "AUDIENCIA TV", "sub": "Transmisión en vivo" }
       ],
       "sponsors": [
         { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX" },
@@ -140,8 +140,8 @@
       },
       "stats": [
         { "value": "20K", "label": "ATTENDEES", "sub": "PayPal Park" },
-        { "value": "1", "label": "MATCH", "sub": "Pumas vs Comunicaciones" },
-        { "value": "500K+", "label": "DIGITAL REACH", "sub": "Social media" }
+        { "value": "500K", "label": "TV VIEWERS", "sub": "Live broadcast" },
+        { "value": "2M", "label": "DIGITAL REACH", "sub": "Social media" }
       ],
       "sponsors": [
         { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX" },
@@ -177,7 +177,7 @@
       },
       "stats": [
         { "value": "40K", "label": "ATTENDEES", "sub": "Camping World Stadium" },
-        { "value": "1", "label": "MATCH", "sub": "América vs Atlético Nacional" },
+        { "value": "1M", "label": "TV VIEWERS", "sub": "Live broadcast" },
         { "value": "1M+", "label": "DIGITAL REACH", "sub": "Social media" }
       ],
       "sponsors": [
@@ -220,8 +220,8 @@
       },
       "stats": [
         { "value": "20K", "label": "ATTENDEES", "sub": "Q2 Stadium" },
-        { "value": "1", "label": "MATCH", "sub": "Tigres vs Pumas" },
-        { "value": "2M+", "label": "DIGITAL REACH", "sub": "Social media" }
+        { "value": "2M", "label": "VIEWERS", "sub": "Digital audience" },
+        { "value": "2.5M", "label": "TV AUDIENCE", "sub": "Live broadcast" }
       ],
       "sponsors": [
         { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX" },
