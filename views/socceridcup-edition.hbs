@@ -63,8 +63,7 @@
   <!-- ═══ PHOTO GALLERY SLIDER ═══ -->
   <section class="ce-gallery">
     <div class="ce-gallery__inner">
-      <span class="gp-label">{{#if isEs}}GALERÍA{{else}}GALLERY{{/if}}</span>
-      <h2 class="gp-section-title">{{#if isEs}}Momentos de la edición{{else}}Edition Highlights{{/if}}</h2>
+      <span class="gp-label">{{#if isEs}}MOMENTOS{{else}}MOMENTS{{/if}}</span>
       {{#if edition.galleryNote}}
       <p class="ce-gallery__note">{{edition.galleryNote}}</p>
       {{/if}}
@@ -92,7 +91,6 @@
   <section class="ce-videos">
     <div class="ce-videos__inner">
       <span class="gp-label">{{#if isEs}}VIDEOS{{else}}VIDEOS{{/if}}</span>
-      <h2 class="gp-section-title">{{#if isEs}}Highlights en video{{else}}Video Highlights{{/if}}</h2>
       <div class="ce-videos__grid">
         {{#each edition.videos}}
         <div class="ce-videos__item">
@@ -111,7 +109,6 @@
   <section class="ce-sponsors">
     <div class="ce-sponsors__inner">
       <span class="gp-label">{{#if isEs}}PATROCINADORES{{else}}SPONSORS{{/if}}</span>
-      <h2 class="gp-section-title">{{#if isEs}}Aliados de esta edición{{else}}Edition Partners{{/if}}</h2>
       <div class="ce-sponsors__grid">
         {{#each edition.sponsors}}
         <div class="ce-sponsors__item">
@@ -126,7 +123,6 @@
   <section class="ce-media">
     <div class="ce-media__inner">
       <span class="gp-label">{{#if isEs}}NOTAS EN MEDIOS{{else}}MEDIA COVERAGE{{/if}}</span>
-      <h2 class="gp-section-title">{{#if isEs}}Cobertura de prensa{{else}}Press Coverage{{/if}}</h2>
       {{#gt edition.mediaLinks.length 0}}
       <div class="ce-media__list">
         {{#each edition.mediaLinks}}
@@ -320,7 +316,7 @@
 
   /* ═══ SPONSORS ═══ */
   .ce-sponsors { background: linear-gradient(180deg, #0e0e28 0%, #0a0a1a 100%); padding: 48px 24px; }
-  .ce-sponsors__inner { max-width: 960px; margin: 0 auto; text-align: center; }
+  .ce-sponsors__inner { max-width: 960px; margin: 0 auto; }
   .ce-sponsors__grid { display: flex; align-items: center; justify-content: center; gap: 40px; margin-top: 24px; flex-wrap: wrap; }
   .ce-sponsors__item { display: flex; align-items: center; justify-content: center; padding: 16px 24px; transition: transform 0.3s; }
   .ce-sponsors__item:hover { transform: scale(1.06); }
