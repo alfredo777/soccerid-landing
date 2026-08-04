@@ -1,0 +1,273 @@
+{
+  "accessCode": "2027327",
+  "es": {
+    "pageTitle": "SOCCER iD CUP 2027 — Oportunidad de Inversión",
+    "lock": {
+      "badge": "CONFIDENCIAL",
+      "title": "ACCESO RESTRINGIDO",
+      "subtitle": "Ingresa el código de acceso para ver este documento confidencial.",
+      "placeholder": "Código de 7 dígitos",
+      "button": "Acceder",
+      "error": "Código incorrecto. Intenta de nuevo."
+    },
+    "hero": {
+      "badge": "OPORTUNIDAD DE INVERSIÓN",
+      "team1": "CRUZ AZUL",
+      "vs": "vs",
+      "team2": "TIGRES",
+      "venue": "Shell Energy Stadium",
+      "city": "Houston, Texas",
+      "date": "27 de marzo de 2027"
+    },
+    "highlights": {
+      "title": "ASPECTOS DESTACADOS DE LA INVERSIÓN",
+      "columns": [
+        {
+          "label": "PRODUCTO",
+          "icon": "trophy",
+          "items": [
+            { "bold": "Cruz Azul", "lines": ["Campeón actual Liga MX", "Actual Campeón de Campeones", "Uno de los \"Cuatro Grandes\""] },
+            { "bold": "Tigres", "lines": ["Multicampeón Liga MX", "Finalista CONCACAF", "Juega de \"local\" en Texas"] }
+          ]
+        },
+        {
+          "label": "MERCADO",
+          "icon": "people",
+          "mainTitle": "Houston, Texas",
+          "lines": ["Principal Mercado Hispano de USA", "Alta concentración de aficionados de Tigres", "Mercado probado para futbol internacional"]
+        },
+        {
+          "label": "VENUE",
+          "icon": "stadium",
+          "mainTitle": "Shell Energy Stadium",
+          "sub": "(MLS) Listo para Futbol",
+          "stats": [
+            { "value": "22,800", "label": "CAPACIDAD TOTAL" },
+            { "value": "21,800", "label": "BOLETOS COMERCIALIZABLES", "note": "(1,000 cortesías)" }
+          ]
+        },
+        {
+          "label": "OPERADOR",
+          "icon": "operator",
+          "mainTitle": "SOCCER iD",
+          "description": "Especialistas en la organización y operación de eventos internacionales de futbol"
+        }
+      ]
+    },
+    "scope": {
+      "title": "ALCANCE DE LA INVERSIÓN",
+      "indicatorsTitle": "PRINCIPALES INDICADORES",
+      "indicators": [
+        { "label": "Ticket promedio proyectado", "value": "USD $100" },
+        { "label": "Boletos comercializables", "value": "21,800" },
+        { "label": "Potencial bruto taquilla", "value": "USD $2.18 M" },
+        { "label": "Cobertura sobre capital", "value": "2.18x" }
+      ],
+      "revenueTitle": "FUENTES DE INGRESOS",
+      "revenue": [
+        "Venta de boletos",
+        "Derechos de TV",
+        "Publicidad en transmisión",
+        "Publicidad en estadio",
+        "Patrocinios",
+        "Porcentaje de alimentos, bebidas y estacionamiento"
+      ],
+      "footnote": "El ticket promedio proyectado de USD$100 es consistente con eventos internacionales de clubes mexicanos en USA."
+    },
+    "funds": {
+      "title": "APLICACIÓN DE FONDOS",
+      "subtitle": "CAPITAL REQUERIDO: USD $1.0 M",
+      "tableTitle": "USO DE RECURSOS",
+      "items": [
+        { "concept": "Fee Clubes", "detail": "(por presentarse)", "amount": "$400,000", "pct": 40 },
+        { "concept": "Estadio y operación", "detail": "", "amount": "$200,000", "pct": 20 },
+        { "concept": "Transporte y Hospedaje", "detail": "", "amount": "$250,000", "pct": 25 },
+        { "concept": "Marketing", "detail": "", "amount": "$100,000", "pct": 10 },
+        { "concept": "Producción TV", "detail": "", "amount": "$15,000", "pct": 1.5 },
+        { "concept": "Permisos y seguros", "detail": "", "amount": "$35,000", "pct": 3.5 }
+      ],
+      "totalLabel": "TOTAL",
+      "totalAmount": "$1,000,000"
+    },
+    "track": {
+      "title": "EJECUCIÓN — TRAYECTORIA",
+      "capTitle": "NUESTRAS CAPACIDADES",
+      "editions": [
+        { "year": "2023", "match": "PUMAS vs COMUNICACIONES", "city": "San José, California", "image": "/assets/images/gallery/cup2023/1.jpg" },
+        { "year": "2024", "match": "AMÉRICA vs ATLÉTICO NACIONAL", "city": "Orlando, Florida", "image": "/assets/images/gallery/cup2024/1.jpg" },
+        { "year": "2025", "match": "PUMAS vs TIGRES", "city": "Austin, Texas", "image": "/assets/images/gallery/cup2025/6.jpg" }
+      ],
+      "capabilities": [
+        "Relación con clubes",
+        "Comercialización",
+        "Producción",
+        "Patrocinios",
+        "Broadcast",
+        "Operación Internacional",
+        "Hospitality"
+      ]
+    },
+    "proposal": {
+      "title": "PROPUESTA DE INVERSIÓN",
+      "termsTitle": "TÉRMINOS",
+      "terms": [
+        { "label": "Capital", "value": "USD $1.0M" },
+        { "label": "Retorno", "value": "30%" },
+        { "label": "Pago proyectado", "value": "USD $1.3M" },
+        { "label": "Plazo", "value": "12 MESES" }
+      ],
+      "whyTitle": "¿POR QUÉ INVERTIR?",
+      "reasons": [
+        "Producto deportivo premium con dos de los clubes más populares de México",
+        "Mercado estratégico con demanda comprobada",
+        "Potencial bruto de taquilla superior a 2x capital",
+        "Múltiples fuentes de ingresos diversificadas",
+        "Operación a cargo de SOCCER iD, con experiencia comprobada en eventos internacionales"
+      ],
+      "ticketLabel": "Tickets de inversión desde:",
+      "ticketValue": "$500,000 MXN / $30,000 USD"
+    },
+    "closing": {
+      "title": "GRACIAS",
+      "cta": "¿Interesado? Contáctanos",
+      "btnText": "Contactar por WhatsApp",
+      "btnMsg": "Hola!%20Estoy%20interesado%20en%20invertir%20en%20SOCCER%20iD%20CUP%202027",
+      "confidential": "CONFIDENCIAL"
+    }
+  },
+  "en": {
+    "pageTitle": "SOCCER iD CUP 2027 — Investment Opportunity",
+    "lock": {
+      "badge": "CONFIDENTIAL",
+      "title": "RESTRICTED ACCESS",
+      "subtitle": "Enter the access code to view this confidential document.",
+      "placeholder": "7-digit code",
+      "button": "Access",
+      "error": "Incorrect code. Please try again."
+    },
+    "hero": {
+      "badge": "INVESTMENT OPPORTUNITY",
+      "team1": "CRUZ AZUL",
+      "vs": "vs",
+      "team2": "TIGRES",
+      "venue": "Shell Energy Stadium",
+      "city": "Houston, Texas",
+      "date": "March 27, 2027"
+    },
+    "highlights": {
+      "title": "INVESTMENT HIGHLIGHTS",
+      "columns": [
+        {
+          "label": "PRODUCT",
+          "icon": "trophy",
+          "items": [
+            { "bold": "Cruz Azul", "lines": ["Current Liga MX Champion", "Current Champion of Champions", "One of the \"Big Four\""] },
+            { "bold": "Tigres", "lines": ["Multi-time Liga MX Champion", "CONCACAF Finalist", "Plays as \"home\" team in Texas"] }
+          ]
+        },
+        {
+          "label": "MARKET",
+          "icon": "people",
+          "mainTitle": "Houston, Texas",
+          "lines": ["Leading Hispanic Market in the USA", "High concentration of Tigres fans", "Proven market for international football"]
+        },
+        {
+          "label": "VENUE",
+          "icon": "stadium",
+          "mainTitle": "Shell Energy Stadium",
+          "sub": "(MLS) Football-Ready",
+          "stats": [
+            { "value": "22,800", "label": "TOTAL CAPACITY" },
+            { "value": "21,800", "label": "MARKETABLE TICKETS", "note": "(1,000 complimentary)" }
+          ]
+        },
+        {
+          "label": "OPERATOR",
+          "icon": "operator",
+          "mainTitle": "SOCCER iD",
+          "description": "Specialists in the organization and operation of international football events"
+        }
+      ]
+    },
+    "scope": {
+      "title": "INVESTMENT SCOPE",
+      "indicatorsTitle": "KEY INDICATORS",
+      "indicators": [
+        { "label": "Projected average ticket", "value": "USD $100" },
+        { "label": "Marketable tickets", "value": "21,800" },
+        { "label": "Gross box office potential", "value": "USD $2.18 M" },
+        { "label": "Capital coverage ratio", "value": "2.18x" }
+      ],
+      "revenueTitle": "REVENUE SOURCES",
+      "revenue": [
+        "Ticket sales",
+        "TV Rights",
+        "Broadcast advertising",
+        "Stadium advertising",
+        "Sponsorships",
+        "Food, beverage, and parking percentage"
+      ],
+      "footnote": "The projected average ticket of USD$100 is consistent with international Mexican club events in the USA."
+    },
+    "funds": {
+      "title": "USE OF FUNDS",
+      "subtitle": "REQUIRED CAPITAL: USD $1.0 M",
+      "tableTitle": "RESOURCE ALLOCATION",
+      "items": [
+        { "concept": "Club Fees", "detail": "(appearance fees)", "amount": "$400,000", "pct": 40 },
+        { "concept": "Stadium & Operations", "detail": "", "amount": "$200,000", "pct": 20 },
+        { "concept": "Transport & Lodging", "detail": "", "amount": "$250,000", "pct": 25 },
+        { "concept": "Marketing", "detail": "", "amount": "$100,000", "pct": 10 },
+        { "concept": "TV Production", "detail": "", "amount": "$15,000", "pct": 1.5 },
+        { "concept": "Permits & Insurance", "detail": "", "amount": "$35,000", "pct": 3.5 }
+      ],
+      "totalLabel": "TOTAL",
+      "totalAmount": "$1,000,000"
+    },
+    "track": {
+      "title": "EXECUTION — TRACK RECORD",
+      "capTitle": "OUR CAPABILITIES",
+      "editions": [
+        { "year": "2023", "match": "PUMAS vs COMUNICACIONES", "city": "San José, California", "image": "/assets/images/gallery/cup2023/1.jpg" },
+        { "year": "2024", "match": "AMÉRICA vs ATLÉTICO NACIONAL", "city": "Orlando, Florida", "image": "/assets/images/gallery/cup2024/1.jpg" },
+        { "year": "2025", "match": "PUMAS vs TIGRES", "city": "Austin, Texas", "image": "/assets/images/gallery/cup2025/6.jpg" }
+      ],
+      "capabilities": [
+        "Club relationships",
+        "Commercialization",
+        "Production",
+        "Sponsorships",
+        "Broadcast",
+        "International Operations",
+        "Hospitality"
+      ]
+    },
+    "proposal": {
+      "title": "INVESTMENT PROPOSAL",
+      "termsTitle": "TERMS",
+      "terms": [
+        { "label": "Capital", "value": "USD $1.0M" },
+        { "label": "Return", "value": "30%" },
+        { "label": "Projected payout", "value": "USD $1.3M" },
+        { "label": "Term", "value": "12 MONTHS" }
+      ],
+      "whyTitle": "WHY INVEST?",
+      "reasons": [
+        "Premium sports product featuring two of Mexico's most popular clubs",
+        "Strategic market with proven demand",
+        "Gross box office potential exceeding 2x capital",
+        "Multiple diversified revenue streams",
+        "Operated by SOCCER iD, with proven experience in international events"
+      ],
+      "ticketLabel": "Investment tickets from:",
+      "ticketValue": "$500,000 MXN / $30,000 USD"
+    },
+    "closing": {
+      "title": "THANK YOU",
+      "cta": "Interested? Contact us",
+      "btnText": "Contact via WhatsApp",
+      "btnMsg": "Hi!%20I'm%20interested%20in%20investing%20in%20SOCCER%20iD%20CUP%202027",
+      "confidential": "CONFIDENTIAL"
+    }
+  }
+}
