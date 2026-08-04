@@ -297,7 +297,6 @@
     <h2 class="pp-section__title">{{data.timeline.title}}</h2>
     <div class="pp-timeline">
       <div class="pp-timeline__header">
-        <span class="pp-timeline__col-act">&nbsp;</span>
         <span class="pp-timeline__col-per">{{data.timeline.periodLabel}}</span>
       </div>
       {{#each data.timeline.items}}
@@ -680,13 +679,11 @@
   /* ─── TIMELINE ─── */
   .pp-timeline { margin-top: 24px; }
   .pp-timeline__header {
-    display: flex; justify-content: space-between; align-items: center;
+    display: flex; justify-content: center; align-items: center;
     padding: 12px 0; border-bottom: 2px solid rgba(255,255,255,0.15);
-    margin-bottom: 4px;
+    margin-bottom: 4px; text-align: center;
   }
-  .pp-timeline__col-act { flex: 1; }
   .pp-timeline__col-per {
-    width: 260px; text-align: right;
     font-weight: 700; font-size: 14px; text-transform: uppercase;
     letter-spacing: 0.05em; color: rgba(255,255,255,0.5);
   }
