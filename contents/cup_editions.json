@@ -10,11 +10,11 @@
       "banner": "/assets/images/gallery/cup2023/1.jpg",
       "description": "En nuestra primera edición reunimos a uno de los clubes más grandes de México y al club más ganador e histórico de Guatemala.",
       "attendance": {
-        "value": "20,000",
+        "value": "15,000",
         "label": "ASISTENTES"
       },
       "stats": [
-        { "value": "20K", "label": "ASISTENTES", "sub": "PayPal Park" },
+        { "value": "15K", "label": "ASISTENTES", "sub": "PayPal Park" },
         { "value": "500K", "label": "ESPECTADORES TV", "sub": "Transmisión en vivo" },
         { "value": "2M", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
       ],
@@ -47,11 +47,11 @@
       "banner": "/assets/images/gallery/cup2024/1.jpg",
       "description": "En la segunda edición enfrentamos a los clubes más grandes de México y Colombia, en un partido histórico.",
       "attendance": {
-        "value": "40,000",
+        "value": "30,000",
         "label": "ASISTENTES"
       },
       "stats": [
-        { "value": "40K", "label": "ASISTENTES", "sub": "Camping World Stadium" },
+        { "value": "30K", "label": "ASISTENTES", "sub": "Camping World Stadium" },
         { "value": "3M", "label": "ESPECTADORES TV", "sub": "Transmisión en vivo" },
         { "value": "5M", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
       ],
@@ -90,11 +90,11 @@
       "banner": "/assets/images/gallery/cup2025/6.jpg",
       "description": "La tercera edición reunió a dos clubes mexicanos con una de las rivalidades más importantes del país.",
       "attendance": {
-        "value": "20,000",
+        "value": "13,000",
         "label": "ASISTENTES"
       },
       "stats": [
-        { "value": "20K", "label": "ASISTENTES", "sub": "Q2 Stadium" },
+        { "value": "13K", "label": "ASISTENTES", "sub": "Q2 Stadium" },
         { "value": "2M", "label": "ESPECTADORES TV", "sub": "Transmisión en vivo" },
         { "value": "4M", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
       ],
@@ -131,11 +131,11 @@
       "banner": "/assets/images/gallery/cup2023/1.jpg",
       "description": "In our first edition, we brought together one of the biggest clubs in Mexico and the most winning and historic club in Guatemala.",
       "attendance": {
-        "value": "20,000",
+        "value": "15,000",
         "label": "ATTENDEES"
       },
       "stats": [
-        { "value": "20K", "label": "ATTENDEES", "sub": "PayPal Park" },
+        { "value": "15K", "label": "ATTENDEES", "sub": "PayPal Park" },
         { "value": "500K", "label": "TV VIEWERS", "sub": "Live broadcast" },
         { "value": "2M", "label": "DIGITAL REACH", "sub": "Social media" }
       ],
@@ -168,11 +168,11 @@
       "banner": "/assets/images/gallery/cup2024/1.jpg",
       "description": "In the second edition, we brought together the biggest clubs from Mexico and Colombia in a historic match.",
       "attendance": {
-        "value": "40,000",
+        "value": "30,000",
         "label": "ATTENDEES"
       },
       "stats": [
-        { "value": "40K", "label": "ATTENDEES", "sub": "Camping World Stadium" },
+        { "value": "30K", "label": "ATTENDEES", "sub": "Camping World Stadium" },
         { "value": "3M", "label": "TV VIEWERS", "sub": "Live broadcast" },
         { "value": "5M", "label": "DIGITAL REACH", "sub": "Social media" }
       ],
@@ -211,11 +211,11 @@
       "banner": "/assets/images/gallery/cup2025/6.jpg",
       "description": "The third edition brought together two Mexican clubs with one of the most important rivalries in the country.",
       "attendance": {
-        "value": "20,000",
+        "value": "13,000",
         "label": "ATTENDEES"
       },
       "stats": [
-        { "value": "20K", "label": "ATTENDEES", "sub": "Q2 Stadium" },
+        { "value": "13K", "label": "ATTENDEES", "sub": "Q2 Stadium" },
         { "value": "2M", "label": "TV VIEWERS", "sub": "Live broadcast" },
         { "value": "4M", "label": "DIGITAL REACH", "sub": "Social media" }
       ],
