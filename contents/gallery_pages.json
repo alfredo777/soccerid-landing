@@ -9,7 +9,7 @@
       "badge": "SOCCER iD CUP",
       "date": "Próximamente",
       "venue": "Estados Unidos",
-      "banner": "/assets/images/gallery/cup2024/2.jpg",
+      "banner": "/assets/images/gallery/socceridcup/1.jpg",
       "stats": [
         { "value": "3", "label": "EDICIONES", "sub": "2023 — 2025" },
         { "value": "6", "label": "EQUIPOS", "sub": "Primera División" },
@@ -32,13 +32,20 @@
       "galleryTitle": "Galería",
       "galleryDesc": "Los mejores momentos de las ediciones anteriores",
       "images": [
-        { "src": "/assets/images/gallery/cup2024/1.jpg", "alt": "América cabeceo Orlando 2024" },
-        { "src": "/assets/images/gallery/cup2024/2.jpg", "alt": "Camping World Stadium 2024" },
-        { "src": "/assets/images/gallery/cup2025/6.jpg", "alt": "Tigres vs Pumas Austin 2025" },
-        { "src": "/assets/images/gallery/cup2023/1.jpg", "alt": "Pumas PayPal Park 2023" },
-        { "src": "/assets/images/gallery/cup2024/8.jpg", "alt": "Afición América 2024" },
-        { "src": "/assets/images/gallery/cup2025/5.jpg", "alt": "Pumas celebración 2025" },
-        { "src": "/assets/images/gallery/cup2024/5.jpg", "alt": "Acción América vs Nacional 2024" }
+        { "src": "/assets/images/gallery/socceridcup/1.jpg", "alt": "SOCCER iD CUP" },
+        { "src": "/assets/images/gallery/socceridcup/2.jpg", "alt": "SOCCER iD CUP" },
+        { "src": "/assets/images/gallery/socceridcup/3.jpg", "alt": "SOCCER iD CUP" },
+        { "src": "/assets/images/gallery/socceridcup/4.jpg", "alt": "SOCCER iD CUP" },
+        { "src": "/assets/images/gallery/socceridcup/5.jpg", "alt": "SOCCER iD CUP" },
+        { "src": "/assets/images/gallery/socceridcup/6.jpg", "alt": "SOCCER iD CUP" },
+        { "src": "/assets/images/gallery/socceridcup/7.jpeg", "alt": "SOCCER iD CUP" }
+      ],
+      "mediaLinks": [
+        { "title": "¿Qué es la Soccer iD Cup? El trofeo que disputarán Tigres y Pumas", "source": "El Sol de México (OEM)", "url": "https://oem.com.mx/esto/liga-mx/que-es-la-soccer-id-cup-el-trofeo-que-disputaran-tigres-y-pumas-27731469", "image": "/assets/images/gallery/cup2025/1.jpg" },
+        { "title": "Pumas vs Tigres: Soccer iD Cup en el Q2 Stadium", "source": "Medio Tiempo", "url": "https://www.mediotiempo.com/futbol/pumas-vs-tigres-soccer-id-cup-en-el-q2-stadium-en-estados-unidos", "image": "/assets/images/gallery/cup2025/2.jpg" },
+        { "title": "Pumas y Tigres jugarán amistoso en Soccer iD Cup en Austin, Texas", "source": "TUDN", "url": "https://www.tudn.com/futbol/pumas-y-tigres-jugaran-partido-amistoso-en-soccer-id-cup-en-austin-texas", "image": "/assets/images/gallery/cup2025/3.jpg" },
+        { "title": "Club América y Atlético Nacional se enfrentan en la histórica Soccer iD Cup", "source": "El Osceola Star", "url": "https://www.elosceolastar.com/club-america-y-atletico-nacional-se-enfrentan-en-la-historica-soccer-id-cup-en-el-camping-world-stadium-el-7-de-septiembre/", "image": "/assets/images/gallery/cup2024/2.jpg" },
+        { "title": "Llega la Soccer iD Cup a Orlando para amplificar la diversión", "source": "Report News", "url": "https://mexico.reportnews.la/blog/2024/08/20/llega-la-soccer-id-cup-a-orlando-para-amplificar-la-diversion/", "image": "/assets/images/gallery/cup2024/3.jpg" }
       ]
     }
   ],
@@ -52,7 +59,7 @@
       "badge": "SOCCER iD CUP",
       "date": "Coming soon",
       "venue": "United States",
-      "banner": "/assets/images/gallery/cup2024/2.jpg",
+      "banner": "/assets/images/gallery/socceridcup/1.jpg",
       "stats": [
         { "value": "3", "label": "EDITIONS", "sub": "2023 — 2025" },
         { "value": "6", "label": "TEAMS", "sub": "First Division" },
@@ -75,13 +82,20 @@
       "galleryTitle": "Gallery",
       "galleryDesc": "The best moments from previous editions",
       "images": [
-        { "src": "/assets/images/gallery/cup2024/1.jpg", "alt": "América header Orlando 2024" },
-        { "src": "/assets/images/gallery/cup2024/2.jpg", "alt": "Camping World Stadium 2024" },
-        { "src": "/assets/images/gallery/cup2025/6.jpg", "alt": "Tigres vs Pumas Austin 2025" },
-        { "src": "/assets/images/gallery/cup2023/1.jpg", "alt": "Pumas PayPal Park 2023" },
-        { "src": "/assets/images/gallery/cup2024/8.jpg", "alt": "América fans 2024" },
-        { "src": "/assets/images/gallery/cup2025/5.jpg", "alt": "Pumas celebration 2025" },
-        { "src": "/assets/images/gallery/cup2024/5.jpg", "alt": "Action América vs Nacional 2024" }
+        { "src": "/assets/images/gallery/socceridcup/1.jpg", "alt": "SOCCER iD CUP" },
+        { "src": "/assets/images/gallery/socceridcup/2.jpg", "alt": "SOCCER iD CUP" },
+        { "src": "/assets/images/gallery/socceridcup/3.jpg", "alt": "SOCCER iD CUP" },
+        { "src": "/assets/images/gallery/socceridcup/4.jpg", "alt": "SOCCER iD CUP" },
+        { "src": "/assets/images/gallery/socceridcup/5.jpg", "alt": "SOCCER iD CUP" },
+        { "src": "/assets/images/gallery/socceridcup/6.jpg", "alt": "SOCCER iD CUP" },
+        { "src": "/assets/images/gallery/socceridcup/7.jpeg", "alt": "SOCCER iD CUP" }
+      ],
+      "mediaLinks": [
+        { "title": "What is the Soccer iD Cup? The trophy Tigres and Pumas will compete for", "source": "El Sol de México (OEM)", "url": "https://oem.com.mx/esto/liga-mx/que-es-la-soccer-id-cup-el-trofeo-que-disputaran-tigres-y-pumas-27731469", "image": "/assets/images/gallery/cup2025/1.jpg" },
+        { "title": "Pumas vs Tigres: Soccer iD Cup at Q2 Stadium", "source": "Medio Tiempo", "url": "https://www.mediotiempo.com/futbol/pumas-vs-tigres-soccer-id-cup-en-el-q2-stadium-en-estados-unidos", "image": "/assets/images/gallery/cup2025/2.jpg" },
+        { "title": "Pumas and Tigres to play friendly at Soccer iD Cup in Austin, Texas", "source": "TUDN", "url": "https://www.tudn.com/futbol/pumas-y-tigres-jugaran-partido-amistoso-en-soccer-id-cup-en-austin-texas", "image": "/assets/images/gallery/cup2025/3.jpg" },
+        { "title": "Club América and Atlético Nacional face off in the historic Soccer iD Cup", "source": "El Osceola Star", "url": "https://www.elosceolastar.com/club-america-y-atletico-nacional-se-enfrentan-en-la-historica-soccer-id-cup-en-el-camping-world-stadium-el-7-de-septiembre/", "image": "/assets/images/gallery/cup2024/2.jpg" },
+        { "title": "Soccer iD Cup arrives in Orlando to amplify the fun", "source": "Report News", "url": "https://mexico.reportnews.la/blog/2024/08/20/llega-la-soccer-id-cup-a-orlando-para-amplificar-la-diversion/", "image": "/assets/images/gallery/cup2024/3.jpg" }
       ]
     }
   ]

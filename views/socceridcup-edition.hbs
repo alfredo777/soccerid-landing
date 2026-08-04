@@ -142,9 +142,15 @@
       <div class="ce-media__list">
         {{#each edition.mediaLinks}}
         <a class="ce-media__item" href="{{this.url}}" target="_blank" rel="noopener">
+          {{#if this.image}}
+          <div class="ce-media__thumb">
+            <img src="{{this.image}}" alt="" loading="lazy">
+          </div>
+          {{else}}
           <div class="ce-media__icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M18 18h-8M18 10h-8"/></svg>
           </div>
+          {{/if}}
           <div class="ce-media__text">
             <span class="ce-media__title">{{this.title}}</span>
             <span class="ce-media__source">{{this.source}}</span>
@@ -163,20 +169,20 @@
   </section>
 
   <!-- ═══ CTA ═══ -->
-  <section class="ce-cta">
-    <div class="ce-cta__inner">
-      <span class="gp-label" style="color:rgba(255,255,255,0.5)">SOCCER iD CUP {{edition.year}}</span>
-      <h2 class="ce-cta__title">{{#if isEs}}Sé parte de la experiencia{{else}}Be part of the experience{{/if}}</h2>
-      <div class="ce-cta__buttons">
-        <a class="gp-cta-btn" href="https://wa.me/525534660028?text=Hola!%20Quiero%20información%20sobre%20SOCCER%20iD%20CUP%20{{edition.year}}" target="_blank">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          {{#if isEs}}Contactar{{else}}Contact{{/if}}
-        </a>
-        <a class="ce-cta__back" href="/{{lang}}/socceridcup">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-          {{#if isEs}}Todas las ediciones{{else}}All editions{{/if}}
-        </a>
-      </div>
+  <section class="gp-cta-section">
+    <img class="gp-cta-section__bg" src="{{edition.banner}}" alt="">
+    <div class="gp-cta-section__dim"></div>
+    <div class="gp-cta-section__body">
+      <span class="gp-label" style="color:rgba(255,255,255,0.7)">SOCCER iD CUP 2027</span>
+      <h2 class="gp-cta-section__title">{{#if isEs}}Sé parte de la experiencia{{else}}Be part of the experience{{/if}}</h2>
+      <a class="gp-cta-btn" href="https://wa.me/525534660028?text=Hola!%20Quiero%20ser%20socio%20estrat%C3%A9gico%20de%20SOCCER%20iD%20CUP%202027" target="_blank">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        {{#if isEs}}Quiero ser parte / Socios estratégicos{{else}}Become a partner / Strategic allies{{/if}}
+      </a>
+      <a class="ce-cta__back" href="/{{lang}}/socceridcup">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        {{#if isEs}}Todas las ediciones{{else}}All editions{{/if}}
+      </a>
     </div>
   </section>
 
@@ -347,6 +353,8 @@
   .ce-media__list { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
   .ce-media__item { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; text-decoration: none; transition: border-color 0.3s, background 0.3s; }
   .ce-media__item:hover { border-color: rgba(108,60,224,0.4); background: rgba(108,60,224,0.06); }
+  .ce-media__thumb { width: 72px; height: 52px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+  .ce-media__thumb img { width: 100%; height: 100%; object-fit: cover; }
   .ce-media__icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(108,60,224,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .ce-media__icon svg { color: #c084fc; }
   .ce-media__text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
@@ -356,17 +364,24 @@
   .ce-media__item:hover .ce-media__arrow { color: #c084fc; }
 
   /* ═══ CTA ═══ */
-  .ce-cta { background: linear-gradient(180deg, #0a0a1a 0%, #0e0e28 100%); padding: 56px 24px; text-align: center; }
-  .ce-cta__inner { max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .ce-cta__title { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 20px; }
-  .ce-cta__buttons { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  /* ═══ CTA SECTION ═══ */
+  .gp-cta-section { position: relative; padding: 80px 24px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .gp-cta-section__bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+  .gp-cta-section__dim { position: absolute; inset: 0; background: rgba(10,10,26,0.6); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
+  .gp-cta-section__body { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .gp-cta-section__title { font-size: 26px; font-weight: 700; letter-spacing: -0.3px; margin-bottom: 24px; }
 
-  .gp-cta-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 32px; background: linear-gradient(135deg, #6c3ce0, #9b59f0); color: #fff; text-decoration: none; font-size: 14px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; border-radius: 14px; box-shadow: 0 8px 32px rgba(108,60,224,0.5); transition: transform 0.2s, box-shadow 0.2s; }
+  .gp-cta-btn { display: inline-flex; align-items: center; gap: 10px; padding: 16px 36px; background: linear-gradient(135deg, #6c3ce0, #9b59f0); color: #fff; text-decoration: none; font-size: 14px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; border-radius: 14px; box-shadow: 0 8px 32px rgba(108,60,224,0.5); transition: transform 0.2s, box-shadow 0.2s; }
   .gp-cta-btn:active { transform: scale(0.96); }
   .gp-cta-btn:hover { box-shadow: 0 12px 48px rgba(108,60,224,0.65); }
 
-  .ce-cta__back { display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.5); text-decoration: none; font-size: 13px; font-weight: 600; padding: 8px 20px; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; transition: color 0.2s, border-color 0.2s; }
+  .ce-cta__back { display: inline-flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.5); text-decoration: none; font-size: 13px; font-weight: 600; padding: 8px 20px; border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; margin-top: 16px; transition: color 0.2s, border-color 0.2s; }
   .ce-cta__back:hover { color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.3); }
+
+  @media (max-width: 700px) {
+    .gp-cta-section { padding: 60px 20px; }
+    .gp-cta-section__title { font-size: 22px; }
+  }
 
   /* ═══ FOOTER ═══ */
   .gp-footer { background: #0e0e28; padding: 24px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
