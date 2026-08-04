@@ -775,7 +775,7 @@ app.get('/:lang/socceridcupproject2027', (req, res, next) => {
       description: ogDesc,
       ogTitle: ogTitle,
       ogDescription: ogDesc,
-      ogImage: '/assets/images/iconsoccerid.png',
+      ogImage: '/assets/images/gallery/cup2027/og.jpg',
       ogLocale: isEs ? 'es_ES' : 'en_US',
       lang: lang,
       baseUrl: BASE_URL,

@@ -43,6 +43,7 @@
         <span>{{data.hero.city}}</span>
       </div>
       <p class="pp-hero__date">{{data.hero.date}}</p>
+      <a href="/{{lang}}/socceridcup" target="_blank" class="pp-hero__cup-btn">SOCCER iD CUP</a>
     </div>
   </section>
 
@@ -57,7 +58,7 @@
         {{#if items}}
           {{#each items}}
           <div class="pp-hl-team">
-            <strong>— {{bold}}</strong>
+            <strong>{{bold}}</strong>
             {{#each lines}}<span>{{this}}</span>{{/each}}
           </div>
           {{/each}}
@@ -338,7 +339,7 @@
   /* ─── HERO ─── */
   .pp-hero {
     position: relative; min-height: 70vh;
-    background: url('/assets/images/gallery/socceridcup/5.jpg') center/cover no-repeat;
+    background: url('/assets/images/gallery/cup2027/hero.jpg') center/cover no-repeat;
     display: flex; align-items: flex-end; padding: 60px 48px;
   }
   .pp-hero__overlay {
@@ -358,6 +359,14 @@
   .pp-hero__info { display: flex; gap: 12px; align-items: center; font-size: 18px; color: rgba(255,255,255,0.85); font-weight: 500; }
   .pp-hero__sep { color: rgba(255,255,255,0.3); }
   .pp-hero__date { font-size: 16px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+  .pp-hero__cup-btn {
+    display: inline-block; margin-top: 20px;
+    padding: 10px 24px; border: 1px solid var(--pp-gold); border-radius: 8px;
+    color: var(--pp-gold); font-size: 13px; font-weight: 700; letter-spacing: 1.5px;
+    text-decoration: none; text-transform: uppercase;
+    transition: background 0.2s, color 0.2s;
+  }
+  .pp-hero__cup-btn:hover { background: var(--pp-gold); color: #000; }
 
   /* ─── SECTIONS ─── */
   .pp-section { padding: 64px 48px; max-width: 1200px; margin: 0 auto; }
@@ -513,7 +522,7 @@
   /* ─── CLOSING ─── */
   .pp-closing {
     position: relative; min-height: 50vh;
-    background: url('/assets/images/gallery/socceridcup/5.jpg') center/cover no-repeat;
+    background: url('/assets/images/gallery/cup2027/hero.jpg') center/cover no-repeat;
     display: flex; align-items: center; justify-content: center; text-align: center;
   }
   .pp-closing__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); }
