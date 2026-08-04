@@ -753,6 +753,52 @@ app.get('/socceridcup', (req, res) => {
 });
 
 // ============================================================
+// PÁGINA SOCCER iD CUP PROJECT 2027 (socceridcupproject2027)
+// ============================================================
+app.get('/:lang/socceridcupproject2027', (req, res, next) => {
+  const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
+
+  const dataPath = path.join(__dirname, 'contents', 'cup_project_2027.json');
+  if (!fs.existsSync(dataPath)) return next();
+
+  try {
+    const allData = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+    const data = allData[lang] || allData[DEFAULT_LANG];
+
+    const isEs = lang === 'es';
+    const ogTitle = data.pageTitle;
+    const ogDesc = `${data.hero.team1} ${data.hero.vs} ${data.hero.team2} — ${data.hero.venue}, ${data.hero.city}`;
+
+    res.render('socceridcup-project2027', {
+      layout: 'promo',
+      title: ogTitle,
+      description: ogDesc,
+      ogTitle: ogTitle,
+      ogDescription: ogDesc,
+      ogImage: '/assets/images/gallery/socceridcup/5.jpg',
+      ogLocale: isEs ? 'es_ES' : 'en_US',
+      lang: lang,
+      baseUrl: BASE_URL,
+      currentPath: '/socceridcupproject2027',
+      isEs: isEs,
+      isEn: lang === 'en',
+      data: data,
+      accessCode: allData.accessCode,
+      year: new Date().getFullYear(),
+      version: APP_VERSION
+    });
+  } catch (e) {
+    console.error('Error cargando project 2027:', e);
+    next();
+  }
+});
+
+app.get('/socceridcupproject2027', (req, res) => {
+  const lang = detectLanguage(req);
+  res.redirect(302, `/${lang}/socceridcupproject2027`);
+});
+
+// ============================================================
 // PÁGINA DE EDICIÓN SOCCER iD CUP (socceridcup/:year)
 // ============================================================
 app.get('/:lang/socceridcup/:year', (req, res, next) => {

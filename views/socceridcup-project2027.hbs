@@ -1,0 +1,599 @@
+{{!-- Lock Screen --}}
+<div class="pp-lock" id="ppLock">
+  <div class="pp-lock__card">
+    <img src="/assets/images/soccerid.png" alt="SOCCER iD" class="pp-lock__logo">
+    <span class="pp-lock__badge">{{data.lock.badge}}</span>
+    <h1 class="pp-lock__title">{{data.lock.title}}</h1>
+    <p class="pp-lock__sub">{{data.lock.subtitle}}</p>
+    <div class="pp-lock__form">
+      <input type="password" id="ppCode" class="pp-lock__input" maxlength="7" inputmode="numeric" pattern="[0-9]*" placeholder="{{data.lock.placeholder}}" autocomplete="off">
+      <button id="ppSubmit" class="pp-lock__btn">{{data.lock.button}}</button>
+    </div>
+    <p class="pp-lock__error" id="ppError">{{data.lock.error}}</p>
+    <div class="pp-lock__lang">
+      <a href="/es/socceridcupproject2027" class="{{#if isEs}}active{{/if}}">ES</a>
+      <a href="/en/socceridcupproject2027" class="{{#if isEn}}active{{/if}}">EN</a>
+    </div>
+  </div>
+</div>
+
+{{!-- Content (hidden until code entered) --}}
+<div class="pp-page" id="ppContent" style="display:none">
+
+  {{!-- Language toggle --}}
+  <div class="pp-lang-bar">
+    <a href="/es/socceridcupproject2027" class="{{#if isEs}}active{{/if}}">ES</a>
+    <a href="/en/socceridcupproject2027" class="{{#if isEn}}active{{/if}}">EN</a>
+  </div>
+
+  {{!-- ═══ HERO ═══ --}}
+  <section class="pp-hero">
+    <div class="pp-hero__overlay"></div>
+    <div class="pp-hero__body">
+      <span class="pp-badge pp-badge--gold">{{data.hero.badge}}</span>
+      <h1 class="pp-hero__teams">
+        <span>{{data.hero.team1}}</span>
+        <em>{{data.hero.vs}}</em>
+        <span>{{data.hero.team2}}</span>
+      </h1>
+      <div class="pp-hero__divider"></div>
+      <div class="pp-hero__info">
+        <span>{{data.hero.venue}}</span>
+        <span class="pp-hero__sep">|</span>
+        <span>{{data.hero.city}}</span>
+      </div>
+      <p class="pp-hero__date">{{data.hero.date}}</p>
+    </div>
+  </section>
+
+  {{!-- ═══ HIGHLIGHTS ═══ --}}
+  <section class="pp-section">
+    <h2 class="pp-section__title">{{data.highlights.title}}</h2>
+    <div class="pp-highlights">
+      {{#each data.highlights.columns}}
+      <div class="pp-hl-col">
+        <div class="pp-hl-col__icon pp-hl-col__icon--{{icon}}"></div>
+        <h3 class="pp-hl-col__label">{{label}}</h3>
+        {{#if items}}
+          {{#each items}}
+          <div class="pp-hl-team">
+            <strong>— {{bold}}</strong>
+            {{#each lines}}<span>{{this}}</span>{{/each}}
+          </div>
+          {{/each}}
+        {{/if}}
+        {{#if mainTitle}}<h4 class="pp-hl-col__main">{{mainTitle}}</h4>{{/if}}
+        {{#if sub}}<span class="pp-hl-col__sub">{{sub}}</span>{{/if}}
+        {{#if lines}}
+          {{#each lines}}<p class="pp-hl-col__line">{{this}}</p>{{/each}}
+        {{/if}}
+        {{#if description}}<p class="pp-hl-col__desc">{{description}}</p>{{/if}}
+        {{#if stats}}
+          {{#each stats}}
+          <div class="pp-hl-stat">
+            <span class="pp-hl-stat__val">{{value}}</span>
+            <span class="pp-hl-stat__lbl">{{label}}</span>
+            {{#if note}}<span class="pp-hl-stat__note">{{note}}</span>{{/if}}
+          </div>
+          {{/each}}
+        {{/if}}
+      </div>
+      {{/each}}
+    </div>
+  </section>
+
+  {{!-- ═══ SCOPE ═══ --}}
+  <section class="pp-section pp-section--alt">
+    <h2 class="pp-section__title">{{data.scope.title}}</h2>
+    <div class="pp-scope">
+      <div class="pp-scope__left">
+        <h3 class="pp-scope__heading">{{data.scope.indicatorsTitle}}</h3>
+        <div class="pp-indicators">
+          {{#each data.scope.indicators}}
+          <div class="pp-ind-row">
+            <span class="pp-ind-row__label">{{label}}</span>
+            <span class="pp-ind-row__value">{{value}}</span>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      <div class="pp-scope__right">
+        <h3 class="pp-scope__heading">{{data.scope.revenueTitle}}</h3>
+        <ul class="pp-revenue">
+          {{#each data.scope.revenue}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+    <p class="pp-scope__foot">{{data.scope.footnote}}</p>
+  </section>
+
+  {{!-- ═══ FUNDS ═══ --}}
+  <section class="pp-section">
+    <h2 class="pp-section__title">{{data.funds.title}}</h2>
+    <p class="pp-funds-sub">{{data.funds.subtitle}}</p>
+    <div class="pp-funds">
+      <div class="pp-funds__table-wrap">
+        <h3 class="pp-scope__heading">{{data.funds.tableTitle}}</h3>
+        <table class="pp-funds-table">
+          <thead>
+            <tr>
+              <th>{{#if ../isEs}}CONCEPTO{{else}}ITEM{{/if}}</th>
+              <th>USD</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{#each data.funds.items}}
+            <tr>
+              <td>{{concept}} {{#if detail}}<em>{{detail}}</em>{{/if}}</td>
+              <td>{{amount}}</td>
+            </tr>
+            {{/each}}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>{{data.funds.totalLabel}}</td>
+              <td>{{data.funds.totalAmount}}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="pp-funds__chart-wrap">
+        <div class="pp-donut">
+          <div class="pp-donut__hole">
+            <span>USD</span>
+            <strong>$1.0M</strong>
+          </div>
+        </div>
+        <div class="pp-donut-legend">
+          {{#each data.funds.items}}
+          <div class="pp-donut-legend__item">
+            <span class="pp-donut-legend__dot" style="background:var(--chart-{{@index}})"></span>
+            <span>{{concept}}</span>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {{!-- ═══ TRACK RECORD ═══ --}}
+  <section class="pp-section pp-section--alt">
+    <h2 class="pp-section__title">{{data.track.title}}</h2>
+    <div class="pp-track">
+      <div class="pp-track__editions">
+        {{#each data.track.editions}}
+        <div class="pp-edition-card">
+          <div class="pp-edition-card__img">
+            <img src="{{image}}" alt="{{match}}" loading="lazy">
+            <span class="pp-edition-card__year">{{year}}</span>
+          </div>
+          <h4 class="pp-edition-card__match">{{match}}</h4>
+          <p class="pp-edition-card__city">{{city}}</p>
+        </div>
+        {{/each}}
+      </div>
+      <div class="pp-track__caps">
+        <h3 class="pp-scope__heading">{{data.track.capTitle}}</h3>
+        <ul class="pp-caps">
+          {{#each data.track.capabilities}}
+          <li><svg viewBox="0 0 20 20" fill="#22c55e"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg> {{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {{!-- ═══ PROPOSAL ═══ --}}
+  <section class="pp-section">
+    <h2 class="pp-section__title">{{data.proposal.title}}</h2>
+    <div class="pp-proposal">
+      <div class="pp-proposal__left">
+        <h3 class="pp-scope__heading">{{data.proposal.termsTitle}}</h3>
+        <div class="pp-terms">
+          {{#each data.proposal.terms}}
+          <div class="pp-term-row">
+            <span class="pp-term-row__label">{{label}}</span>
+            <span class="pp-term-row__value">{{value}}</span>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      <div class="pp-proposal__right">
+        <h3 class="pp-scope__heading">{{data.proposal.whyTitle}}</h3>
+        <ul class="pp-reasons">
+          {{#each data.proposal.reasons}}
+          <li><svg viewBox="0 0 20 20" fill="#22c55e"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg> {{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+    <div class="pp-ticket-bar">
+      <span>{{data.proposal.ticketLabel}}</span>
+      <strong>{{data.proposal.ticketValue}}</strong>
+    </div>
+  </section>
+
+  {{!-- ═══ CLOSING ═══ --}}
+  <section class="pp-closing">
+    <div class="pp-closing__overlay"></div>
+    <div class="pp-closing__body">
+      <h2>{{data.closing.title}}</h2>
+      <p>{{data.closing.cta}}</p>
+      <a href="https://wa.me/5255346600028?text={{data.closing.btnMsg}}" target="_blank" class="pp-closing__btn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        {{data.closing.btnText}}
+      </a>
+      <span class="pp-closing__conf">{{data.closing.confidential}}</span>
+    </div>
+  </section>
+
+  {{!-- Footer --}}
+  <footer class="pp-footer">
+    <a href="/{{lang}}/socceridcup"><img src="/assets/images/soccerid.png" alt="SOCCER iD" height="28"></a>
+    <span>&copy; {{year}} SOCCER iD</span>
+  </footer>
+
+</div>
+
+<style>
+  :root {
+    --pp-gold: #d4a843;
+    --pp-dark: #0a0a1a;
+    --pp-dark2: #0f0f2e;
+    --pp-purple: #6c3ce0;
+    --pp-purple2: #9b59f0;
+    --chart-0: #3b82f6;
+    --chart-1: #22c55e;
+    --chart-2: #eab308;
+    --chart-3: #f97316;
+    --chart-4: #ef4444;
+    --chart-5: #a855f7;
+  }
+
+  .gallery-page.promo-page { max-width: 100%; }
+
+  /* ─── LOCK SCREEN ─── */
+  .pp-lock {
+    position: fixed; inset: 0; z-index: 100;
+    background: linear-gradient(135deg, var(--pp-dark) 0%, var(--pp-dark2) 50%, var(--pp-dark) 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .pp-lock__card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 48px 40px;
+    max-width: 420px; width: 100%;
+    text-align: center;
+    backdrop-filter: blur(20px);
+  }
+  .pp-lock__logo { height: 40px; margin-bottom: 24px; opacity: 0.8; }
+  .pp-lock__badge {
+    display: inline-block;
+    background: rgba(212,168,67,0.15); color: var(--pp-gold);
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    padding: 6px 16px; border-radius: 20px; margin-bottom: 20px;
+  }
+  .pp-lock__title { font-size: 22px; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px; }
+  .pp-lock__sub { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 28px; line-height: 1.5; }
+  .pp-lock__form { display: flex; flex-direction: column; gap: 12px; }
+  .pp-lock__input {
+    width: 100%; padding: 16px 20px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px; color: #fff; font-size: 20px; text-align: center;
+    letter-spacing: 8px; font-weight: 700; outline: none;
+    transition: border-color 0.2s;
+  }
+  .pp-lock__input:focus { border-color: var(--pp-gold); }
+  .pp-lock__input.shake { animation: shake 0.4s ease; }
+  .pp-lock__btn {
+    padding: 14px; border: none; border-radius: 12px; cursor: pointer;
+    background: linear-gradient(135deg, var(--pp-gold), #b8922e);
+    color: #000; font-size: 15px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; transition: transform 0.15s;
+  }
+  .pp-lock__btn:active { transform: scale(0.97); }
+  .pp-lock__error { color: #ef4444; font-size: 13px; margin-top: 12px; display: none; }
+  .pp-lock__error.visible { display: block; }
+  .pp-lock__lang { margin-top: 24px; display: flex; justify-content: center; gap: 12px; }
+  .pp-lock__lang a, .pp-lang-bar a {
+    color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px;
+    font-weight: 700; letter-spacing: 1px; padding: 4px 10px; border-radius: 6px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .pp-lock__lang a.active, .pp-lang-bar a.active {
+    color: #fff; background: rgba(255,255,255,0.1);
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    50% { transform: translateX(8px); }
+    75% { transform: translateX(-4px); }
+  }
+
+  /* ─── PAGE ─── */
+  .pp-page { max-width: 100%; }
+  .pp-lang-bar {
+    position: fixed; top: 16px; right: 16px; z-index: 50;
+    display: flex; gap: 4px; background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(12px); padding: 4px; border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .pp-badge {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    padding: 6px 18px; border-radius: 20px; margin-bottom: 16px;
+  }
+  .pp-badge--gold { background: rgba(212,168,67,0.2); color: var(--pp-gold); }
+
+  /* ─── HERO ─── */
+  .pp-hero {
+    position: relative; min-height: 70vh;
+    background: url('/assets/images/gallery/socceridcup/5.jpg') center/cover no-repeat;
+    display: flex; align-items: flex-end; padding: 60px 48px;
+  }
+  .pp-hero__overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.85) 100%);
+  }
+  .pp-hero__body { position: relative; z-index: 2; }
+  .pp-hero__teams {
+    font-size: 64px; font-weight: 900; line-height: 1.1;
+    letter-spacing: 2px; margin-bottom: 16px;
+  }
+  .pp-hero__teams em {
+    color: var(--pp-gold); font-style: normal; font-size: 42px;
+    margin: 0 16px; font-weight: 800;
+  }
+  .pp-hero__divider { width: 80px; height: 3px; background: var(--pp-gold); margin-bottom: 20px; }
+  .pp-hero__info { display: flex; gap: 12px; align-items: center; font-size: 18px; color: rgba(255,255,255,0.85); font-weight: 500; }
+  .pp-hero__sep { color: rgba(255,255,255,0.3); }
+  .pp-hero__date { font-size: 16px; color: rgba(255,255,255,0.6); margin-top: 8px; }
+
+  /* ─── SECTIONS ─── */
+  .pp-section { padding: 64px 48px; max-width: 1200px; margin: 0 auto; }
+  .pp-section--alt { background: rgba(255,255,255,0.02); }
+  .pp-section__title {
+    font-size: 20px; font-weight: 800; letter-spacing: 1px;
+    margin-bottom: 40px; color: #fff;
+  }
+
+  /* ─── HIGHLIGHTS ─── */
+  .pp-highlights { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .pp-hl-col {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 28px 24px; text-align: center;
+  }
+  .pp-hl-col__icon {
+    width: 48px; height: 48px; margin: 0 auto 16px;
+    background-size: contain; background-repeat: no-repeat; background-position: center;
+    opacity: 0.7;
+  }
+  .pp-hl-col__icon--trophy { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23d4a843' viewBox='0 0 24 24'%3E%3Cpath d='M5 3h14v2H5V3zm0 2v5a7 7 0 005.5 6.84V19H8v2h8v-2h-2.5v-2.16A7 7 0 0019 10V5h2V3h-2V5H5V3H3v2h2zm2 0h10v5a5 5 0 01-10 0V5z'/%3E%3C/svg%3E"); }
+  .pp-hl-col__icon--people { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23d4a843' viewBox='0 0 24 24'%3E%3Cpath d='M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z'/%3E%3C/svg%3E"); }
+  .pp-hl-col__icon--stadium { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23d4a843' viewBox='0 0 24 24'%3E%3Cpath d='M7 5L3 7v8l4 2 5-2.5L17 17l4-2V7l-4-2-5 2.5L7 5zm0 2.24l3.58 1.79L12 8.36l1.42.67L17 7.24l2 1v5.52l-2 1-3.58-1.79L12 13.64l-1.42-.67L7 14.76l-2-1V6.24l2-1z'/%3E%3C/svg%3E"); }
+  .pp-hl-col__icon--operator { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23d4a843' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'/%3E%3C/svg%3E"); }
+  .pp-hl-col__label { color: var(--pp-gold); font-size: 13px; font-weight: 800; letter-spacing: 1.5px; margin-bottom: 16px; }
+  .pp-hl-team { margin-bottom: 12px; text-align: left; }
+  .pp-hl-team strong { display: block; font-size: 14px; margin-bottom: 4px; }
+  .pp-hl-team span { display: block; font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; }
+  .pp-hl-col__main { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .pp-hl-col__sub { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 12px; display: block; }
+  .pp-hl-col__line { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; margin-bottom: 2px; }
+  .pp-hl-col__desc { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+  .pp-hl-stat { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .pp-hl-stat__val { display: block; font-size: 28px; font-weight: 900; }
+  .pp-hl-stat__lbl { display: block; font-size: 10px; letter-spacing: 1px; color: rgba(255,255,255,0.5); font-weight: 700; }
+  .pp-hl-stat__note { display: block; font-size: 11px; color: rgba(255,255,255,0.4); font-style: italic; }
+
+  /* ─── SCOPE ─── */
+  .pp-scope { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .pp-scope__heading {
+    font-size: 14px; font-weight: 800; letter-spacing: 1.5px;
+    color: var(--pp-gold); margin-bottom: 20px;
+    border-bottom: 2px solid var(--pp-gold); padding-bottom: 8px; display: inline-block;
+  }
+  .pp-indicators { display: flex; flex-direction: column; }
+  .pp-ind-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .pp-ind-row__label { font-size: 14px; color: rgba(255,255,255,0.7); }
+  .pp-ind-row__value { font-size: 22px; font-weight: 800; }
+  .pp-revenue { list-style: none; padding: 0; }
+  .pp-revenue li {
+    padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 14px; color: rgba(255,255,255,0.75);
+    padding-left: 20px; position: relative;
+  }
+  .pp-revenue li::before { content: ''; position: absolute; left: 0; top: 50%; width: 8px; height: 8px; background: var(--pp-gold); border-radius: 2px; transform: translateY(-50%); }
+  .pp-scope__foot { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 24px; font-style: italic; }
+
+  /* ─── FUNDS ─── */
+  .pp-funds-sub { color: var(--pp-gold); font-size: 16px; font-weight: 700; margin: -24px 0 32px; letter-spacing: 0.5px; }
+  .pp-funds { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .pp-funds-table { width: 100%; border-collapse: collapse; }
+  .pp-funds-table th {
+    background: #111; color: #fff; padding: 12px 16px;
+    font-size: 12px; letter-spacing: 1px; font-weight: 700; text-align: left;
+  }
+  .pp-funds-table th:last-child { text-align: right; }
+  .pp-funds-table td { padding: 14px 16px; font-size: 14px; border-bottom: 1px dotted rgba(255,255,255,0.1); }
+  .pp-funds-table td:last-child { text-align: right; font-weight: 700; font-size: 15px; }
+  .pp-funds-table td em { font-size: 12px; color: rgba(255,255,255,0.4); }
+  .pp-funds-table tfoot td {
+    background: #111; font-weight: 800; font-size: 15px;
+    border: none; padding: 14px 16px;
+  }
+  .pp-funds__chart-wrap { display: flex; flex-direction: column; align-items: center; }
+  .pp-donut {
+    width: 220px; height: 220px; border-radius: 50%;
+    background: conic-gradient(
+      var(--chart-0) 0deg 144deg,
+      var(--chart-1) 144deg 216deg,
+      var(--chart-2) 216deg 306deg,
+      var(--chart-3) 306deg 342deg,
+      var(--chart-4) 342deg 347.4deg,
+      var(--chart-5) 347.4deg 360deg
+    );
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .pp-donut__hole {
+    width: 120px; height: 120px; border-radius: 50%;
+    background: var(--pp-dark); display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .pp-donut__hole span { font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 1px; }
+  .pp-donut__hole strong { font-size: 24px; font-weight: 900; }
+  .pp-donut-legend { margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
+  .pp-donut-legend__item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.7); }
+  .pp-donut-legend__dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+  /* ─── TRACK ─── */
+  .pp-track { display: grid; grid-template-columns: 2fr 1fr; gap: 48px; align-items: start; }
+  .pp-track__editions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .pp-edition-card {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px; overflow: hidden;
+  }
+  .pp-edition-card__img { position: relative; aspect-ratio: 4/3; overflow: hidden; }
+  .pp-edition-card__img img { width: 100%; height: 100%; object-fit: cover; }
+  .pp-edition-card__year {
+    position: absolute; top: 8px; left: 8px;
+    background: #000; color: #fff; font-size: 12px; font-weight: 800;
+    padding: 4px 10px; border-radius: 4px;
+  }
+  .pp-edition-card__match { font-size: 13px; font-weight: 700; padding: 12px 14px 4px; line-height: 1.3; }
+  .pp-edition-card__city { font-size: 12px; color: rgba(255,255,255,0.5); padding: 0 14px 14px; }
+  .pp-caps { list-style: none; padding: 0; }
+  .pp-caps li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0; font-size: 14px; color: rgba(255,255,255,0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .pp-caps li svg { width: 22px; height: 22px; flex-shrink: 0; }
+
+  /* ─── PROPOSAL ─── */
+  .pp-proposal { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .pp-terms { display: flex; flex-direction: column; }
+  .pp-term-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .pp-term-row__label { font-size: 14px; color: rgba(255,255,255,0.7); }
+  .pp-term-row__value { font-size: 24px; font-weight: 900; }
+  .pp-reasons { list-style: none; padding: 0; }
+  .pp-reasons li {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 10px 0; font-size: 14px; color: rgba(255,255,255,0.75);
+    line-height: 1.5; border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .pp-reasons li svg { width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px; }
+  .pp-ticket-bar {
+    margin-top: 40px; padding: 20px 28px;
+    background: #111; border-radius: 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 15px;
+  }
+  .pp-ticket-bar strong { font-size: 20px; color: var(--pp-gold); }
+
+  /* ─── CLOSING ─── */
+  .pp-closing {
+    position: relative; min-height: 50vh;
+    background: url('/assets/images/gallery/socceridcup/5.jpg') center/cover no-repeat;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+  }
+  .pp-closing__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); }
+  .pp-closing__body { position: relative; z-index: 2; padding: 48px; }
+  .pp-closing__body h2 { font-size: 56px; font-weight: 900; margin-bottom: 16px; }
+  .pp-closing__body p { font-size: 18px; color: rgba(255,255,255,0.7); margin-bottom: 28px; }
+  .pp-closing__btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: #25d366; color: #fff; padding: 16px 32px;
+    border-radius: 12px; font-size: 16px; font-weight: 700;
+    text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px;
+    transition: transform 0.15s;
+  }
+  .pp-closing__btn:active { transform: scale(0.97); }
+  .pp-closing__btn svg { width: 22px; height: 22px; }
+  .pp-closing__conf {
+    display: block; margin-top: 32px; font-size: 12px;
+    letter-spacing: 3px; color: rgba(255,255,255,0.3);
+  }
+
+  /* ─── FOOTER ─── */
+  .pp-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px; border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .pp-footer span { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+  /* ─── MOBILE ─── */
+  @media (max-width: 1024px) {
+    .pp-highlights { grid-template-columns: repeat(2, 1fr); }
+    .pp-track { grid-template-columns: 1fr; }
+    .pp-track__editions { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .pp-hero { min-height: 60vh; padding: 40px 24px; }
+    .pp-hero__teams { font-size: 36px; }
+    .pp-hero__teams em { font-size: 24px; margin: 0 10px; }
+    .pp-hero__info { flex-direction: column; gap: 4px; font-size: 15px; }
+    .pp-hero__sep { display: none; }
+    .pp-section { padding: 40px 20px; }
+    .pp-highlights { grid-template-columns: 1fr 1fr; gap: 16px; }
+    .pp-scope { grid-template-columns: 1fr; gap: 32px; }
+    .pp-funds { grid-template-columns: 1fr; }
+    .pp-track__editions { grid-template-columns: 1fr; }
+    .pp-proposal { grid-template-columns: 1fr; gap: 32px; }
+    .pp-term-row__value { font-size: 18px; }
+    .pp-ticket-bar { flex-direction: column; gap: 8px; text-align: center; }
+    .pp-closing__body h2 { font-size: 36px; }
+    .pp-footer { padding: 16px 20px; }
+    .pp-donut { width: 180px; height: 180px; }
+    .pp-donut__hole { width: 100px; height: 100px; }
+    .pp-donut__hole strong { font-size: 20px; }
+  }
+  @media (max-width: 480px) {
+    .pp-highlights { grid-template-columns: 1fr; }
+    .pp-hero__teams { font-size: 28px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+    .pp-hero__teams em { margin: 0; font-size: 20px; }
+    .pp-lock__card { padding: 32px 24px; }
+    .pp-edition-card__match { font-size: 12px; }
+  }
+</style>
+
+<script>
+(function() {
+  var code = '{{accessCode}}';
+  var stored = sessionStorage.getItem('pp2027');
+  if (stored === code) {
+    document.getElementById('ppLock').style.display = 'none';
+    document.getElementById('ppContent').style.display = 'block';
+  }
+  var inp = document.getElementById('ppCode');
+  var btn = document.getElementById('ppSubmit');
+  var err = document.getElementById('ppError');
+  function tryAccess() {
+    if (inp.value === code) {
+      sessionStorage.setItem('pp2027', code);
+      document.getElementById('ppLock').style.display = 'none';
+      document.getElementById('ppContent').style.display = 'block';
+    } else {
+      err.classList.add('visible');
+      inp.classList.add('shake');
+      setTimeout(function() { inp.classList.remove('shake'); }, 400);
+      inp.value = '';
+      inp.focus();
+    }
+  }
+  btn.addEventListener('click', tryAccess);
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') tryAccess();
+  });
+})();
+</script>
