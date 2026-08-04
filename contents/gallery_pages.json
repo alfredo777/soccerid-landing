@@ -24,8 +24,8 @@
       ],
       "reach": [
         { "value": "80K+", "label": "PERSONAS EN ESTADIO", "icon": "stadium" },
-        { "value": "2M+", "label": "ESPECTADORES TV", "icon": "tv" },
-        { "value": "10M+", "label": "IMPACTOS EN REDES", "icon": "social" }
+        { "value": "5M+", "label": "ESPECTADORES TV", "icon": "tv" },
+        { "value": "40M+", "label": "ALCANCE MEDIA DIGITAL", "icon": "social" }
       ],
       "ctaText": "Quiero ser parte / Socios estratégicos",
       "ctaMessage": "Hola!%20Quiero%20ser%20socio%20estrat%C3%A9gico%20de%20SOCCER%20iD%20CUP",
@@ -75,8 +75,8 @@
       ],
       "reach": [
         { "value": "80K+", "label": "PEOPLE IN STADIUM", "icon": "stadium" },
-        { "value": "2M+", "label": "TV VIEWERS", "icon": "tv" },
-        { "value": "10M+", "label": "SOCIAL MEDIA IMPRESSIONS", "icon": "social" }
+        { "value": "5M+", "label": "TV VIEWERS", "icon": "tv" },
+        { "value": "40M+", "label": "DIGITAL MEDIA REACH", "icon": "social" }
       ],
       "ctaText": "Become a partner / Strategic allies",
       "ctaMessage": "Hi!%20I%20want%20to%20become%20a%20strategic%20partner%20of%20SOCCER%20iD%20CUP",

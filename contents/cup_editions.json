@@ -16,7 +16,7 @@
       "stats": [
         { "value": "15K", "label": "ASISTENTES", "sub": "PayPal Park" },
         { "value": "500K", "label": "ESPECTADORES TV", "sub": "Transmisión en vivo" },
-        { "value": "2M", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
+        { "value": "5M", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
       ],
       "sponsors": [
         { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX" },
@@ -53,7 +53,7 @@
       "stats": [
         { "value": "30K", "label": "ASISTENTES", "sub": "Camping World Stadium" },
         { "value": "3M", "label": "ESPECTADORES TV", "sub": "Transmisión en vivo" },
-        { "value": "5M", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
+        { "value": "25M", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
       ],
       "sponsors": [
         { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX" },
@@ -96,7 +96,7 @@
       "stats": [
         { "value": "13K", "label": "ASISTENTES", "sub": "Q2 Stadium" },
         { "value": "2M", "label": "ESPECTADORES TV", "sub": "Transmisión en vivo" },
-        { "value": "4M", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
+        { "value": "10M", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
       ],
       "sponsors": [
         { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX" },
@@ -137,7 +137,7 @@
       "stats": [
         { "value": "15K", "label": "ATTENDEES", "sub": "PayPal Park" },
         { "value": "500K", "label": "TV VIEWERS", "sub": "Live broadcast" },
-        { "value": "2M", "label": "DIGITAL REACH", "sub": "Social media" }
+        { "value": "5M", "label": "DIGITAL REACH", "sub": "Social media" }
       ],
       "sponsors": [
         { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX" },
@@ -174,7 +174,7 @@
       "stats": [
         { "value": "30K", "label": "ATTENDEES", "sub": "Camping World Stadium" },
         { "value": "3M", "label": "TV VIEWERS", "sub": "Live broadcast" },
-        { "value": "5M", "label": "DIGITAL REACH", "sub": "Social media" }
+        { "value": "25M", "label": "DIGITAL REACH", "sub": "Social media" }
       ],
       "sponsors": [
         { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX" },
@@ -217,7 +217,7 @@
       "stats": [
         { "value": "13K", "label": "ATTENDEES", "sub": "Q2 Stadium" },
         { "value": "2M", "label": "TV VIEWERS", "sub": "Live broadcast" },
-        { "value": "4M", "label": "DIGITAL REACH", "sub": "Social media" }
+        { "value": "10M", "label": "DIGITAL REACH", "sub": "Social media" }
       ],
       "sponsors": [
         { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX" },
