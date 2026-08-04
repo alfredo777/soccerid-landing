@@ -1,8 +1,15 @@
 {
-  "codes": {
-    "2027001": { "name": "Inversionista 1", "email": "inversionista1@ejemplo.com" },
-    "2027002": { "name": "Inversionista 2", "email": "inversionista2@ejemplo.com" },
-    "2027327": { "name": "General", "email": "general@soccerid.co" }
-  },
+  "codes": [
+    "1814810",
+    "2190959",
+    "2310102",
+    "4113948",
+    "4475073",
+    "6437711",
+    "7417486",
+    "7991930",
+    "8096675",
+    "9578661"
+  ],
   "notifyEmail": "info@soccerid.co"
 }

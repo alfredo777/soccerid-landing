@@ -808,13 +808,10 @@ app.post('/api/project2027/verify', (req, res) => {
   const codesPath = path.join(__dirname, 'contents', 'cup_project_2027_codes.json');
   try {
     const codesData = JSON.parse(fs.readFileSync(codesPath, 'utf8'));
-    const entry = codesData.codes[code];
-    if (!entry) return res.json({ ok: false });
+    if (!codesData.codes.includes(code.trim())) return res.json({ ok: false });
 
     const logEntry = {
-      code,
-      name: entry.name,
-      email: entry.email,
+      code: code.trim(),
       timestamp: new Date().toISOString(),
       ip: req.headers['x-forwarded-for'] || req.ip,
       userAgent: req.headers['user-agent']
@@ -831,7 +828,7 @@ app.post('/api/project2027/verify', (req, res) => {
     logs.push(logEntry);
     fs.writeFileSync(logPath, JSON.stringify(logs, null, 2));
 
-    console.log(`[PROJECT 2027] Acceso: ${entry.name} (${entry.email}) — código ${code}`);
+    console.log(`[PROJECT 2027] Acceso con código ${code.trim()}`);
 
     if (codesData.notifyEmail) {
       const nodemailer = (() => { try { return require('nodemailer'); } catch (e) { return null; } })();
@@ -845,13 +842,13 @@ app.post('/api/project2027/verify', (req, res) => {
         transporter.sendMail({
           from: process.env.SMTP_FROM || process.env.SMTP_USER,
           to: codesData.notifyEmail,
-          subject: `[SOCCER iD] Acceso Project 2027 — ${entry.name}`,
-          text: `Acceso registrado:\n\nNombre: ${entry.name}\nEmail: ${entry.email}\nCódigo: ${code}\nFecha: ${logEntry.timestamp}\nIP: ${logEntry.ip}\nNavegador: ${logEntry.userAgent}`
+          subject: `[SOCCER iD] Acceso Project 2027 — código ${code.trim()}`,
+          text: `Acceso registrado:\n\nCódigo: ${code.trim()}\nFecha: ${logEntry.timestamp}\nIP: ${logEntry.ip}\nNavegador: ${logEntry.userAgent}`
         }).catch(err => console.error('Error enviando notificación:', err.message));
       }
     }
 
-    return res.json({ ok: true, name: entry.name });
+    return res.json({ ok: true });
   } catch (e) {
     console.error('Error verificando código:', e);
     return res.json({ ok: false });
