@@ -7,14 +7,14 @@
       "date": "2023",
       "city": "San José, CA",
       "venue": "PayPal Park",
-      "banner": "/assets/images/gallery/socceridcup/5.jpg",
+      "banner": "/assets/images/gallery/cup2023/1.jpg",
       "description": "La primera edición de la SOCCER iD CUP reunió a Pumas UNAM de la Liga MX y Comunicaciones FC de Guatemala en un partido internacional de primer nivel en San José, California.",
       "attendance": {
-        "value": "18,000",
+        "value": "20,000",
         "label": "ASISTENTES"
       },
       "stats": [
-        { "value": "18K", "label": "ASISTENTES", "sub": "PayPal Park" },
+        { "value": "20K", "label": "ASISTENTES", "sub": "PayPal Park" },
         { "value": "1", "label": "PARTIDO", "sub": "Pumas vs Comunicaciones" },
         { "value": "500K+", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
       ],
@@ -28,10 +28,12 @@
       ],
       "videos": [],
       "images": [
-        { "src": "/assets/images/gallery/socceridcup/5.jpg", "alt": "Estadio 2023" },
-        { "src": "/assets/images/gallery/socceridcup/1.jpg", "alt": "Partido 2023" }
-      ],
-      "galleryNote": "Las imágenes de esta edición están en proceso de carga."
+        { "src": "/assets/images/gallery/cup2023/1.jpg", "alt": "Pumas en PayPal Park 2023" },
+        { "src": "/assets/images/gallery/cup2023/2.jpg", "alt": "Partido Pumas vs Comunicaciones" },
+        { "src": "/assets/images/gallery/cup2023/3.jpg", "alt": "Acción en cancha 2023" },
+        { "src": "/assets/images/gallery/cup2023/4.jpg", "alt": "Afición en el estadio 2023" },
+        { "src": "/assets/images/gallery/cup2023/5.jpg", "alt": "Estadio PayPal Park 2023" }
+      ]
     },
     "2024": {
       "year": "2024",
@@ -39,15 +41,15 @@
       "match": "América vs Atlético Nacional",
       "date": "2024",
       "city": "Orlando, FL",
-      "venue": "Inter&Co Stadium",
-      "banner": "/assets/images/gallery/socceridcup/4.jpg",
+      "venue": "Camping World Stadium",
+      "banner": "/assets/images/gallery/cup2024/1.jpg",
       "description": "La segunda edición trajo al Club América de la Liga MX y al Atlético Nacional de Colombia a Orlando, Florida, en un enfrentamiento histórico entre dos gigantes del fútbol latinoamericano.",
       "attendance": {
-        "value": "25,000",
+        "value": "40,000",
         "label": "ASISTENTES"
       },
       "stats": [
-        { "value": "25K", "label": "ASISTENTES", "sub": "Inter&Co Stadium" },
+        { "value": "40K", "label": "ASISTENTES", "sub": "Camping World Stadium" },
         { "value": "1", "label": "PARTIDO", "sub": "América vs Atlético Nacional" },
         { "value": "1M+", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
       ],
@@ -64,11 +66,15 @@
         { "id": "P9P4Dkd0P10", "title": "Resumen | América 2-2 Atlético Nacional | Amistoso | Caliente TV" }
       ],
       "images": [
-        { "src": "/assets/images/gallery/socceridcup/4.jpg", "alt": "Estadio Orlando 2024" },
-        { "src": "/assets/images/gallery/socceridcup/3.jpg", "alt": "Partido 2024" },
-        { "src": "/assets/images/gallery/socceridcup/6.jpg", "alt": "Equipos 2024" }
-      ],
-      "galleryNote": "Las imágenes de esta edición están en proceso de carga."
+        { "src": "/assets/images/gallery/cup2024/1.jpg", "alt": "Jugador América cabeceo 2024" },
+        { "src": "/assets/images/gallery/cup2024/2.jpg", "alt": "Camping World Stadium marcador 2024" },
+        { "src": "/assets/images/gallery/cup2024/3.jpg", "alt": "Afición América Tejanos 2024" },
+        { "src": "/assets/images/gallery/cup2024/4.jpg", "alt": "Afición Atlético Nacional 2024" },
+        { "src": "/assets/images/gallery/cup2024/5.jpg", "alt": "Acción América vs Nacional 2024" },
+        { "src": "/assets/images/gallery/cup2024/6.jpg", "alt": "Jugadores en cancha 2024" },
+        { "src": "/assets/images/gallery/cup2024/7.jpg", "alt": "Jugador selfie con afición 2024" },
+        { "src": "/assets/images/gallery/cup2024/8.jpg", "alt": "Afición Los Pulgas 2024" }
+      ]
     },
     "2025": {
       "year": "2025",
@@ -77,14 +83,14 @@
       "date": "2025",
       "city": "Austin, TX",
       "venue": "Q2 Stadium",
-      "banner": "/assets/images/gallery/socceridcup/1.jpg",
+      "banner": "/assets/images/gallery/cup2025/6.jpg",
       "description": "La tercera edición presenta a Tigres UANL y Pumas UNAM de la Liga MX en Austin, Texas, consolidando a la SOCCER iD CUP como el evento de referencia para el fútbol latinoamericano en Estados Unidos.",
       "attendance": {
-        "value": "20,500",
+        "value": "20,000",
         "label": "ASISTENTES"
       },
       "stats": [
-        { "value": "20K+", "label": "ASISTENTES", "sub": "Q2 Stadium" },
+        { "value": "20K", "label": "ASISTENTES", "sub": "Q2 Stadium" },
         { "value": "1", "label": "PARTIDO", "sub": "Tigres vs Pumas" },
         { "value": "2M+", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
       ],
@@ -101,11 +107,15 @@
         { "id": "l-KVhjDENOQ", "title": "Intenso duelo en Austin | Tigres 0-0 Pumas | Amistoso" }
       ],
       "images": [
-        { "src": "/assets/images/gallery/socceridcup/1.jpg", "alt": "Estadio Austin 2025" },
-        { "src": "/assets/images/gallery/socceridcup/2.jpg", "alt": "Partido 2025" },
-        { "src": "/assets/images/gallery/socceridcup/7.jpeg", "alt": "Equipos 2025" }
-      ],
-      "galleryNote": "Las imágenes de esta edición están en proceso de carga."
+        { "src": "/assets/images/gallery/cup2025/1.jpg", "alt": "Afición Pumas Austin 2025" },
+        { "src": "/assets/images/gallery/cup2025/2.jpg", "alt": "Afición Tigres Austin 2025" },
+        { "src": "/assets/images/gallery/cup2025/3.jpg", "alt": "Barra Tigres 2025" },
+        { "src": "/assets/images/gallery/cup2025/4.jpg", "alt": "Afición Pumas 2025" },
+        { "src": "/assets/images/gallery/cup2025/5.jpg", "alt": "Pumas celebración 2025" },
+        { "src": "/assets/images/gallery/cup2025/6.jpg", "alt": "Acción Tigres vs Pumas 2025" },
+        { "src": "/assets/images/gallery/cup2025/7.jpg", "alt": "Jugada en cancha 2025" },
+        { "src": "/assets/images/gallery/cup2025/8.jpg", "alt": "Estadio Q2 2025" }
+      ]
     }
   },
   "en": {
@@ -116,14 +126,14 @@
       "date": "2023",
       "city": "San José, CA",
       "venue": "PayPal Park",
-      "banner": "/assets/images/gallery/socceridcup/5.jpg",
+      "banner": "/assets/images/gallery/cup2023/1.jpg",
       "description": "The first edition of the SOCCER iD CUP brought together Pumas UNAM from Liga MX and Comunicaciones FC from Guatemala in a top-level international match in San José, California.",
       "attendance": {
-        "value": "18,000",
+        "value": "20,000",
         "label": "ATTENDEES"
       },
       "stats": [
-        { "value": "18K", "label": "ATTENDEES", "sub": "PayPal Park" },
+        { "value": "20K", "label": "ATTENDEES", "sub": "PayPal Park" },
         { "value": "1", "label": "MATCH", "sub": "Pumas vs Comunicaciones" },
         { "value": "500K+", "label": "DIGITAL REACH", "sub": "Social media" }
       ],
@@ -137,10 +147,12 @@
       ],
       "videos": [],
       "images": [
-        { "src": "/assets/images/gallery/socceridcup/5.jpg", "alt": "Stadium 2023" },
-        { "src": "/assets/images/gallery/socceridcup/1.jpg", "alt": "Match 2023" }
-      ],
-      "galleryNote": "Images for this edition are being uploaded."
+        { "src": "/assets/images/gallery/cup2023/1.jpg", "alt": "Pumas at PayPal Park 2023" },
+        { "src": "/assets/images/gallery/cup2023/2.jpg", "alt": "Pumas vs Comunicaciones match" },
+        { "src": "/assets/images/gallery/cup2023/3.jpg", "alt": "Match action 2023" },
+        { "src": "/assets/images/gallery/cup2023/4.jpg", "alt": "Fans at the stadium 2023" },
+        { "src": "/assets/images/gallery/cup2023/5.jpg", "alt": "PayPal Park stadium 2023" }
+      ]
     },
     "2024": {
       "year": "2024",
@@ -148,15 +160,15 @@
       "match": "América vs Atlético Nacional",
       "date": "2024",
       "city": "Orlando, FL",
-      "venue": "Inter&Co Stadium",
-      "banner": "/assets/images/gallery/socceridcup/4.jpg",
+      "venue": "Camping World Stadium",
+      "banner": "/assets/images/gallery/cup2024/1.jpg",
       "description": "The second edition brought Club América from Liga MX and Atlético Nacional from Colombia to Orlando, Florida, in a historic clash between two Latin American football giants.",
       "attendance": {
-        "value": "25,000",
+        "value": "40,000",
         "label": "ATTENDEES"
       },
       "stats": [
-        { "value": "25K", "label": "ATTENDEES", "sub": "Inter&Co Stadium" },
+        { "value": "40K", "label": "ATTENDEES", "sub": "Camping World Stadium" },
         { "value": "1", "label": "MATCH", "sub": "América vs Atlético Nacional" },
         { "value": "1M+", "label": "DIGITAL REACH", "sub": "Social media" }
       ],
@@ -173,11 +185,15 @@
         { "id": "P9P4Dkd0P10", "title": "Highlights | América 2-2 Atlético Nacional | Friendly | Caliente TV" }
       ],
       "images": [
-        { "src": "/assets/images/gallery/socceridcup/4.jpg", "alt": "Orlando Stadium 2024" },
-        { "src": "/assets/images/gallery/socceridcup/3.jpg", "alt": "Match 2024" },
-        { "src": "/assets/images/gallery/socceridcup/6.jpg", "alt": "Teams 2024" }
-      ],
-      "galleryNote": "Images for this edition are being uploaded."
+        { "src": "/assets/images/gallery/cup2024/1.jpg", "alt": "América player header 2024" },
+        { "src": "/assets/images/gallery/cup2024/2.jpg", "alt": "Camping World Stadium scoreboard 2024" },
+        { "src": "/assets/images/gallery/cup2024/3.jpg", "alt": "América fans Tejanos 2024" },
+        { "src": "/assets/images/gallery/cup2024/4.jpg", "alt": "Atlético Nacional fans 2024" },
+        { "src": "/assets/images/gallery/cup2024/5.jpg", "alt": "Match action América vs Nacional 2024" },
+        { "src": "/assets/images/gallery/cup2024/6.jpg", "alt": "Players on the field 2024" },
+        { "src": "/assets/images/gallery/cup2024/7.jpg", "alt": "Player selfie with fans 2024" },
+        { "src": "/assets/images/gallery/cup2024/8.jpg", "alt": "Los Pulgas fans 2024" }
+      ]
     },
     "2025": {
       "year": "2025",
@@ -186,14 +202,14 @@
       "date": "2025",
       "city": "Austin, TX",
       "venue": "Q2 Stadium",
-      "banner": "/assets/images/gallery/socceridcup/1.jpg",
+      "banner": "/assets/images/gallery/cup2025/6.jpg",
       "description": "The third edition features Tigres UANL and Pumas UNAM from Liga MX in Austin, Texas, establishing the SOCCER iD CUP as the premier event for Latin American football in the United States.",
       "attendance": {
-        "value": "20,500",
+        "value": "20,000",
         "label": "ATTENDEES"
       },
       "stats": [
-        { "value": "20K+", "label": "ATTENDEES", "sub": "Q2 Stadium" },
+        { "value": "20K", "label": "ATTENDEES", "sub": "Q2 Stadium" },
         { "value": "1", "label": "MATCH", "sub": "Tigres vs Pumas" },
         { "value": "2M+", "label": "DIGITAL REACH", "sub": "Social media" }
       ],
@@ -210,11 +226,15 @@
         { "id": "l-KVhjDENOQ", "title": "Intense duel in Austin | Tigres 0-0 Pumas | Friendly" }
       ],
       "images": [
-        { "src": "/assets/images/gallery/socceridcup/1.jpg", "alt": "Austin Stadium 2025" },
-        { "src": "/assets/images/gallery/socceridcup/2.jpg", "alt": "Match 2025" },
-        { "src": "/assets/images/gallery/socceridcup/7.jpeg", "alt": "Teams 2025" }
-      ],
-      "galleryNote": "Images for this edition are being uploaded."
+        { "src": "/assets/images/gallery/cup2025/1.jpg", "alt": "Pumas fans Austin 2025" },
+        { "src": "/assets/images/gallery/cup2025/2.jpg", "alt": "Tigres fans Austin 2025" },
+        { "src": "/assets/images/gallery/cup2025/3.jpg", "alt": "Tigres supporters 2025" },
+        { "src": "/assets/images/gallery/cup2025/4.jpg", "alt": "Pumas fans 2025" },
+        { "src": "/assets/images/gallery/cup2025/5.jpg", "alt": "Pumas celebration 2025" },
+        { "src": "/assets/images/gallery/cup2025/6.jpg", "alt": "Tigres vs Pumas action 2025" },
+        { "src": "/assets/images/gallery/cup2025/7.jpg", "alt": "Match play 2025" },
+        { "src": "/assets/images/gallery/cup2025/8.jpg", "alt": "Q2 Stadium 2025" }
+      ]
     }
   }
 }

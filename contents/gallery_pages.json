@@ -9,7 +9,7 @@
       "badge": "SOCCER iD CUP",
       "date": "Próximamente",
       "venue": "Estados Unidos",
-      "banner": "/assets/images/gallery/socceridcup/5.jpg",
+      "banner": "/assets/images/gallery/cup2024/2.jpg",
       "stats": [
         { "value": "3", "label": "EDICIONES", "sub": "2023 — 2025" },
         { "value": "6", "label": "EQUIPOS", "sub": "Primera División" },
@@ -32,13 +32,13 @@
       "galleryTitle": "Galería",
       "galleryDesc": "Los mejores momentos de las ediciones anteriores",
       "images": [
-        { "src": "/assets/images/gallery/socceridcup/4.jpg", "alt": "Estadio USA" },
-        { "src": "/assets/images/gallery/socceridcup/1.jpg", "alt": "Soccer ID Cup" },
-        { "src": "/assets/images/gallery/socceridcup/6.jpg", "alt": "Equipos en cancha" },
-        { "src": "/assets/images/gallery/socceridcup/3.jpg", "alt": "Celebración de gol" },
-        { "src": "/assets/images/gallery/socceridcup/5.jpg", "alt": "Campo profesional" },
-        { "src": "/assets/images/gallery/socceridcup/2.jpg", "alt": "Partido internacional" },
-        { "src": "/assets/images/gallery/socceridcup/7.jpeg", "alt": "Equipos" }
+        { "src": "/assets/images/gallery/cup2024/1.jpg", "alt": "América cabeceo Orlando 2024" },
+        { "src": "/assets/images/gallery/cup2024/2.jpg", "alt": "Camping World Stadium 2024" },
+        { "src": "/assets/images/gallery/cup2025/6.jpg", "alt": "Tigres vs Pumas Austin 2025" },
+        { "src": "/assets/images/gallery/cup2023/1.jpg", "alt": "Pumas PayPal Park 2023" },
+        { "src": "/assets/images/gallery/cup2024/8.jpg", "alt": "Afición América 2024" },
+        { "src": "/assets/images/gallery/cup2025/5.jpg", "alt": "Pumas celebración 2025" },
+        { "src": "/assets/images/gallery/cup2024/5.jpg", "alt": "Acción América vs Nacional 2024" }
       ]
     }
   ],
@@ -52,7 +52,7 @@
       "badge": "SOCCER iD CUP",
       "date": "Coming soon",
       "venue": "United States",
-      "banner": "/assets/images/gallery/socceridcup/5.jpg",
+      "banner": "/assets/images/gallery/cup2024/2.jpg",
       "stats": [
         { "value": "3", "label": "EDITIONS", "sub": "2023 — 2025" },
         { "value": "6", "label": "TEAMS", "sub": "First Division" },
@@ -75,13 +75,13 @@
       "galleryTitle": "Gallery",
       "galleryDesc": "The best moments from previous editions",
       "images": [
-        { "src": "/assets/images/gallery/socceridcup/4.jpg", "alt": "USA Stadium" },
-        { "src": "/assets/images/gallery/socceridcup/1.jpg", "alt": "Soccer ID Cup" },
-        { "src": "/assets/images/gallery/socceridcup/6.jpg", "alt": "Teams on the field" },
-        { "src": "/assets/images/gallery/socceridcup/3.jpg", "alt": "Goal celebration" },
-        { "src": "/assets/images/gallery/socceridcup/5.jpg", "alt": "Professional field" },
-        { "src": "/assets/images/gallery/socceridcup/2.jpg", "alt": "International match" },
-        { "src": "/assets/images/gallery/socceridcup/7.jpeg", "alt": "Teams" }
+        { "src": "/assets/images/gallery/cup2024/1.jpg", "alt": "América header Orlando 2024" },
+        { "src": "/assets/images/gallery/cup2024/2.jpg", "alt": "Camping World Stadium 2024" },
+        { "src": "/assets/images/gallery/cup2025/6.jpg", "alt": "Tigres vs Pumas Austin 2025" },
+        { "src": "/assets/images/gallery/cup2023/1.jpg", "alt": "Pumas PayPal Park 2023" },
+        { "src": "/assets/images/gallery/cup2024/8.jpg", "alt": "América fans 2024" },
+        { "src": "/assets/images/gallery/cup2025/5.jpg", "alt": "Pumas celebration 2025" },
+        { "src": "/assets/images/gallery/cup2024/5.jpg", "alt": "Action América vs Nacional 2024" }
       ]
     }
   ]

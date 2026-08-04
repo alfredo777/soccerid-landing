@@ -97,7 +97,7 @@
         {{#each edition.videos}}
         <div class="ce-videos__item">
           <div class="ce-videos__embed">
-            <iframe src="https://www.youtube.com/embed/{{this.id}}" title="{{this.title}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+            <iframe src="https://www.youtube.com/embed/{{this.id}}?mute=1" title="{{this.title}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
           </div>
           <span class="ce-videos__title">{{this.title}}</span>
         </div>
@@ -314,17 +314,13 @@
   }
 
   /* ═══ VIDEOS ═══ */
-  .ce-videos { background: #0e0e28; padding: 48px 24px; }
+  .ce-videos { background: #0e0e28; padding: 56px 24px; }
   .ce-videos__inner { max-width: 960px; margin: 0 auto; }
-  .ce-videos__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 20px; }
-  .ce-videos__item { display: flex; flex-direction: column; gap: 8px; }
-  .ce-videos__embed { position: relative; width: 100%; padding-bottom: 56.25%; border-radius: 12px; overflow: hidden; background: rgba(255,255,255,0.03); }
+  .ce-videos__grid { display: grid; grid-template-columns: 1fr; gap: 28px; margin-top: 24px; }
+  .ce-videos__item { display: flex; flex-direction: column; gap: 12px; }
+  .ce-videos__embed { position: relative; width: 100%; padding-bottom: 56.25%; border-radius: 16px; overflow: hidden; background: rgba(255,255,255,0.03); border: 1px solid rgba(108,60,224,0.25); box-shadow: 0 8px 40px rgba(108,60,224,0.15), 0 0 0 1px rgba(108,60,224,0.08); }
   .ce-videos__embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .ce-videos__title { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6); }
-
-  @media (max-width: 700px) {
-    .ce-videos__grid { grid-template-columns: 1fr; }
-  }
+  .ce-videos__title { font-size: 15px; font-weight: 700; color: rgba(255,255,255,0.7); text-align: center; padding: 0 8px; }
 
   /* ═══ PLACEHOLDER ═══ */
   .ce-placeholder { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 48px 24px; margin-top: 16px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); border-radius: 16px; }
