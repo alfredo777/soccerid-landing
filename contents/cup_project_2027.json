@@ -5,8 +5,8 @@
     "lock": {
       "badge": "CONFIDENCIAL",
       "title": "ACCESO RESTRINGIDO",
-      "subtitle": "Ingresa el código de acceso para ver este documento confidencial.",
-      "placeholder": "Código de 7 dígitos",
+      "subtitle": "Ingresa tu código personalizado",
+      "placeholder": "Código de acceso",
       "button": "Acceder",
       "error": "Código incorrecto. Intenta de nuevo."
     },
@@ -70,7 +70,8 @@
         "Publicidad en transmisión",
         "Publicidad en estadio",
         "Patrocinios",
-        "Porcentaje de alimentos, bebidas y estacionamiento"
+        "Porcentaje de alimentos, bebidas y estacionamiento",
+        "Merchandising"
       ],
       "footnote": "El ticket promedio proyectado de USD$100 es consistente con eventos internacionales de clubes mexicanos en USA."
     },
@@ -111,10 +112,10 @@
       "title": "PROPUESTA DE INVERSIÓN",
       "termsTitle": "TÉRMINOS",
       "terms": [
-        { "label": "Capital", "value": "USD $1.0M" },
-        { "label": "Retorno", "value": "30%" },
-        { "label": "Pago proyectado", "value": "USD $1.3M" },
-        { "label": "Plazo", "value": "12 MESES" }
+        { "label": "Capital objetivo", "value": "USD $1.0M" },
+        { "label": "Retorno potencial", "value": "Hasta 25%" },
+        { "label": "Escenario de retorno máximo", "value": "USD $1.25M sobre una inversión de USD $1.0M" },
+        { "label": "Plazo", "value": "12 meses" }
       ],
       "whyTitle": "¿POR QUÉ INVERTIR?",
       "reasons": [
@@ -125,7 +126,8 @@
         "Operación a cargo de SOCCER iD, con experiencia comprobada en eventos internacionales"
       ],
       "ticketLabel": "Tickets de inversión desde:",
-      "ticketValue": "$500,000 MXN / $30,000 USD"
+      "ticketValue": "$500,000 MXN / $30,000 USD",
+      "footnote": "Los términos finales de cada inversión, incluyendo el retorno y el plazo, estarán sujetos al monto de inversión, la estructura de la operación y la negociación individual con cada inversionista. El retorno potencial máximo es de hasta 25%."
     },
     "closing": {
       "title": "GRACIAS",
@@ -140,8 +142,8 @@
     "lock": {
       "badge": "CONFIDENTIAL",
       "title": "RESTRICTED ACCESS",
-      "subtitle": "Enter the access code to view this confidential document.",
-      "placeholder": "7-digit code",
+      "subtitle": "Enter your personalized code",
+      "placeholder": "Access code",
       "button": "Access",
       "error": "Incorrect code. Please try again."
     },
@@ -205,7 +207,8 @@
         "Broadcast advertising",
         "Stadium advertising",
         "Sponsorships",
-        "Food, beverage, and parking percentage"
+        "Food, beverage, and parking percentage",
+        "Merchandising"
       ],
       "footnote": "The projected average ticket of USD$100 is consistent with international Mexican club events in the USA."
     },
@@ -246,10 +249,10 @@
       "title": "INVESTMENT PROPOSAL",
       "termsTitle": "TERMS",
       "terms": [
-        { "label": "Capital", "value": "USD $1.0M" },
-        { "label": "Return", "value": "30%" },
-        { "label": "Projected payout", "value": "USD $1.3M" },
-        { "label": "Term", "value": "12 MONTHS" }
+        { "label": "Target capital", "value": "USD $1.0M" },
+        { "label": "Potential return", "value": "Up to 25%" },
+        { "label": "Maximum return scenario", "value": "USD $1.25M on a USD $1.0M investment" },
+        { "label": "Term", "value": "12 months" }
       ],
       "whyTitle": "WHY INVEST?",
       "reasons": [
@@ -260,7 +263,8 @@
         "Operated by SOCCER iD, with proven experience in international events"
       ],
       "ticketLabel": "Investment tickets from:",
-      "ticketValue": "$500,000 MXN / $30,000 USD"
+      "ticketValue": "$500,000 MXN / $30,000 USD",
+      "footnote": "The final terms of each investment, including return and term, will be subject to the investment amount, deal structure, and individual negotiation with each investor. The maximum potential return is up to 25%."
     },
     "closing": {
       "title": "THANK YOU",

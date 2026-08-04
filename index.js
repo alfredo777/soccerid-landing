@@ -765,8 +765,16 @@ app.get('/:lang/socceridcupproject2027', (req, res, next) => {
     const allData = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
     const data = allData[lang] || allData[DEFAULT_LANG];
 
+    const galleryPath = path.join(__dirname, 'contents', 'gallery_pages.json');
+    let mediaLinks = [];
+    try {
+      const galleryData = JSON.parse(fs.readFileSync(galleryPath, 'utf8'));
+      const cupPage = (galleryData[lang] || galleryData[DEFAULT_LANG] || [])[0];
+      if (cupPage && cupPage.mediaLinks) mediaLinks = cupPage.mediaLinks;
+    } catch (_) {}
+
     const isEs = lang === 'es';
-    const ogTitle = isEs ? 'SOCCER iD — Documento Confidencial' : 'SOCCER iD — Confidential Document';
+    const ogTitle = isEs ? 'SOCCER iD CUP — Confidencial Inversión' : 'SOCCER iD CUP — Confidential Investment';
     const ogDesc = isEs ? 'Acceso restringido. Se requiere código de autorización.' : 'Restricted access. Authorization code required.';
 
     res.render('socceridcup-project2027', {
@@ -775,7 +783,7 @@ app.get('/:lang/socceridcupproject2027', (req, res, next) => {
       description: ogDesc,
       ogTitle: ogTitle,
       ogDescription: ogDesc,
-      ogImage: '/assets/images/iconsoccerid.png',
+      ogImage: '/assets/images/gallery/cup2027/og.jpg',
       ogLocale: isEs ? 'es_ES' : 'en_US',
       lang: lang,
       baseUrl: BASE_URL,
@@ -783,6 +791,7 @@ app.get('/:lang/socceridcupproject2027', (req, res, next) => {
       isEs: isEs,
       isEn: lang === 'en',
       data: data,
+      mediaLinks: mediaLinks,
       year: new Date().getFullYear(),
       version: APP_VERSION
     });
