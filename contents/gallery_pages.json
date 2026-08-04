@@ -5,21 +5,27 @@
       "title": "SOCCER iD CUP",
       "year": "",
       "subtitle": "Partidos internacionales en Estados Unidos",
-      "description": "Organizamos partidos internacionales en Estados Unidos con equipos de primera división de las ligas más importantes de Latinoamérica.",
+      "description": "Organizamos partidos internacionales en Estados Unidos con los mejores clubes de las ligas más importantes de Latinoamérica.",
       "badge": "SOCCER iD CUP",
       "date": "Próximamente",
       "venue": "Estados Unidos",
       "banner": "/assets/images/gallery/socceridcup/5.jpg",
       "stats": [
-        { "value": "3", "label": "EDICIONES", "sub": "2024 — 2025" },
-        { "value": "6+", "label": "EQUIPOS", "sub": "Primera División" },
+        { "value": "3", "label": "EDICIONES", "sub": "2023 — 2025" },
+        { "value": "6", "label": "EQUIPOS", "sub": "Primera División" },
         { "value": "3", "label": "CIUDADES", "sub": "San José · Orlando · Austin" }
       ],
       "highlights": [
-        { "year": "2024", "match": "Pumas vs Comunicaciones", "city": "San José, CA" },
+        { "year": "2023", "match": "Pumas vs Comunicaciones", "city": "San José, CA" },
         { "year": "2024", "match": "América vs Atlético Nacional", "city": "Orlando, FL" },
         { "year": "2025", "match": "Tigres vs Pumas", "city": "Austin, TX" },
+        { "year": "2026", "match": "Pausa por Mundial", "city": "FIFA World Cup 2026" },
         { "year": "2027", "match": "Próximamente", "city": "Por confirmar" }
+      ],
+      "reach": [
+        { "value": "80K+", "label": "PERSONAS EN ESTADIO", "icon": "stadium" },
+        { "value": "2M+", "label": "ESPECTADORES TV", "icon": "tv" },
+        { "value": "10M+", "label": "IMPACTOS EN REDES", "icon": "social" }
       ],
       "ctaText": "Quiero ser parte / Socios estratégicos",
       "ctaMessage": "Hola!%20Quiero%20ser%20socio%20estrat%C3%A9gico%20de%20SOCCER%20iD%20CUP",
@@ -42,21 +48,27 @@
       "title": "SOCCER iD CUP",
       "year": "",
       "subtitle": "International matches in the United States",
-      "description": "We organize international matches in the United States featuring top-division teams from the most important leagues in Latin America.",
+      "description": "We organize international matches in the United States featuring the best clubs from the most important leagues in Latin America.",
       "badge": "SOCCER iD CUP",
       "date": "Coming soon",
       "venue": "United States",
       "banner": "/assets/images/gallery/socceridcup/5.jpg",
       "stats": [
-        { "value": "3", "label": "EDITIONS", "sub": "2024 — 2025" },
-        { "value": "6+", "label": "TEAMS", "sub": "First Division" },
+        { "value": "3", "label": "EDITIONS", "sub": "2023 — 2025" },
+        { "value": "6", "label": "TEAMS", "sub": "First Division" },
         { "value": "3", "label": "CITIES", "sub": "San José · Orlando · Austin" }
       ],
       "highlights": [
-        { "year": "2024", "match": "Pumas vs Comunicaciones", "city": "San José, CA" },
+        { "year": "2023", "match": "Pumas vs Comunicaciones", "city": "San José, CA" },
         { "year": "2024", "match": "América vs Atlético Nacional", "city": "Orlando, FL" },
         { "year": "2025", "match": "Tigres vs Pumas", "city": "Austin, TX" },
+        { "year": "2026", "match": "World Cup Pause", "city": "FIFA World Cup 2026" },
         { "year": "2027", "match": "Coming soon", "city": "TBA" }
+      ],
+      "reach": [
+        { "value": "80K+", "label": "PEOPLE IN STADIUM", "icon": "stadium" },
+        { "value": "2M+", "label": "TV VIEWERS", "icon": "tv" },
+        { "value": "10M+", "label": "SOCIAL MEDIA IMPRESSIONS", "icon": "social" }
       ],
       "ctaText": "Become a partner / Strategic allies",
       "ctaMessage": "Hi!%20I%20want%20to%20become%20a%20strategic%20partner%20of%20SOCCER%20iD%20CUP",
