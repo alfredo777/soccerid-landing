@@ -821,6 +821,11 @@ app.get('/:lang/socceridcup/:year', (req, res, next) => {
     const ogDesc = edition.description;
     const ogImage = edition.banner || '/assets/images/og/share.jpg';
 
+    const allYears = Object.keys(langEditions).sort();
+    const idx = allYears.indexOf(year);
+    const prevEdition = idx > 0 ? { year: allYears[idx - 1], match: langEditions[allYears[idx - 1]].match } : null;
+    const nextEdition = idx < allYears.length - 1 ? { year: allYears[idx + 1], match: langEditions[allYears[idx + 1]].match } : null;
+
     res.render('socceridcup-edition', {
       layout: 'promo',
       title: ogTitle,
@@ -835,6 +840,8 @@ app.get('/:lang/socceridcup/:year', (req, res, next) => {
       isEs: isEs,
       isEn: lang === 'en',
       edition: edition,
+      prevEdition: prevEdition,
+      nextEdition: nextEdition,
       year: new Date().getFullYear(),
       version: APP_VERSION
     });
