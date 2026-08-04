@@ -828,24 +828,73 @@ app.post('/api/project2027/verify', (req, res) => {
     logs.push(logEntry);
     fs.writeFileSync(logPath, JSON.stringify(logs, null, 2));
 
-    console.log(`[PROJECT 2027] Acceso con código ${code.trim()}`);
+    const cdmxTime = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
 
-    if (codesData.notifyEmail) {
-      const nodemailer = (() => { try { return require('nodemailer'); } catch (e) { return null; } })();
-      if (nodemailer && process.env.SMTP_HOST) {
-        const transporter = nodemailer.createTransport({
-          host: process.env.SMTP_HOST,
-          port: parseInt(process.env.SMTP_PORT || '587'),
-          secure: process.env.SMTP_SECURE === 'true',
-          auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
-        });
-        transporter.sendMail({
-          from: process.env.SMTP_FROM || process.env.SMTP_USER,
-          to: codesData.notifyEmail,
-          subject: `[SOCCER iD] Acceso Project 2027 — código ${code.trim()}`,
-          text: `Acceso registrado:\n\nCódigo: ${code.trim()}\nFecha: ${logEntry.timestamp}\nIP: ${logEntry.ip}\nNavegador: ${logEntry.userAgent}`
-        }).catch(err => console.error('Error enviando notificación:', err.message));
-      }
+    console.log(`[PROJECT 2027] Acceso con código ${code.trim()} — ${cdmxTime}`);
+
+    try {
+      const nodemailer = require('nodemailer');
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST || 'smtp.mailgun.org',
+        port: parseInt(process.env.SMTP_PORT || '587'),
+        secure: false,
+        auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+      });
+
+      const htmlEmail = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,Helvetica,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:32px 0;">
+<tr><td align="center">
+<table width="600" cellpadding="0" cellspacing="0" style="background:#111;border-radius:12px;overflow:hidden;">
+  <tr><td style="background:#000;padding:32px 40px;text-align:center;">
+    <img src="https://soccerid.co/assets/images/soccerid.png" alt="SOCCER iD" height="36" style="display:inline-block;">
+  </td></tr>
+  <tr><td style="padding:40px;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(212,175,55,0.1);border-left:4px solid #d4af37;border-radius:8px;padding:16px 20px;margin-bottom:32px;">
+      <tr><td style="color:#d4af37;font-size:14px;font-weight:700;letter-spacing:1px;">ALERTA DE ACCESO — PROJECT 2027</td></tr>
+    </table>
+    <p style="color:rgba(255,255,255,0.7);font-size:14px;margin:0 0 24px;">Se ha registrado un nuevo acceso a la plataforma de inversión SOCCER iD CUP 2027.</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+      <tr>
+        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-size:12px;font-weight:700;letter-spacing:1px;width:160px;">CÓDIGO DE ACCESO</td>
+        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:#fff;font-size:15px;font-weight:700;letter-spacing:3px;">${code.trim()}</td>
+      </tr>
+      <tr>
+        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-size:12px;font-weight:700;letter-spacing:1px;">FECHA Y HORA (CDMX)</td>
+        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:#fff;font-size:15px;">${cdmxTime}</td>
+      </tr>
+      <tr>
+        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-size:12px;font-weight:700;letter-spacing:1px;">DIRECCIÓN IP</td>
+        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:#fff;font-size:15px;">${logEntry.ip}</td>
+      </tr>
+      <tr>
+        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-size:12px;font-weight:700;letter-spacing:1px;">NAVEGADOR</td>
+        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:#fff;font-size:14px;">${logEntry.userAgent}</td>
+      </tr>
+    </table>
+    <p style="color:rgba(255,255,255,0.4);font-size:12px;margin:0;">Este es un correo automático generado por SOCCER iD. No responder.</p>
+  </td></tr>
+  <tr><td style="background:#0a0a0a;padding:20px 40px;text-align:center;">
+    <span style="color:rgba(255,255,255,0.3);font-size:11px;">&copy; ${new Date().getFullYear()} SOCCER iD &mdash; Confidencial</span>
+  </td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>`;
+
+      transporter.sendMail({
+        from: process.env.SMTP_FROM || '"SOCCER iD" <socceridco@soccerid.co>',
+        to: process.env.NOTIFY_EMAILS || 'jardarubydv@gmail.com, leon@socceri.co',
+        subject: `[SOCCER iD] Acceso Project 2027 — código ${code.trim()}`,
+        html: htmlEmail,
+        text: `Acceso registrado — SOCCER iD CUP 2027\n\nCódigo: ${code.trim()}\nFecha (CDMX): ${cdmxTime}\nIP: ${logEntry.ip}\nNavegador: ${logEntry.userAgent}`
+      }).catch(err => console.error('Error enviando notificación:', err.message));
+    } catch (mailErr) {
+      console.error('Error con nodemailer:', mailErr.message);
     }
 
     return res.json({ ok: true });
