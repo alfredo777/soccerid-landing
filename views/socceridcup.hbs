@@ -64,44 +64,6 @@
     </div>
   </section>
 
-  <!-- ═══ QUÉ HACEMOS / WHAT WE DO ═══ -->
-  <section class="gp-whatwedo">
-    <div class="gp-whatwedo__inner">
-      <span class="gp-label">{{#if isEs}}QUÉ HACEMOS{{else}}WHAT WE DO{{/if}}</span>
-      <h2 class="gp-section-title">{{#if isEs}}Experiencia en el mercado{{else}}Market Experience{{/if}}</h2>
-      <div class="gp-whatwedo__grid">
-        <div class="gp-whatwedo__card">
-          <div class="gp-whatwedo__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 000 20M12 2a14.5 14.5 0 010 20M2 12h20"/></svg>
-          </div>
-          <h3>{{#if isEs}}Partidos Internacionales{{else}}International Matches{{/if}}</h3>
-          <p>{{galeria.description}}</p>
-        </div>
-        <div class="gp-whatwedo__card">
-          <div class="gp-whatwedo__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-          </div>
-          <h3>Meet & Greet</h3>
-          <p>{{#if isEs}}Experiencias exclusivas con jugadores profesionales de los equipos participantes.{{else}}Exclusive experiences with professional players from the participating teams.{{/if}}</p>
-        </div>
-        <div class="gp-whatwedo__card">
-          <div class="gp-whatwedo__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
-          </div>
-          <h3>{{#if isEs}}Patrocinios{{else}}Sponsorships{{/if}}</h3>
-          <p>{{#if isEs}}Oportunidades de patrocinio y branding en eventos de alto impacto.{{else}}Sponsorship and branding opportunities in high-impact events.{{/if}}</p>
-        </div>
-        <div class="gp-whatwedo__card">
-          <div class="gp-whatwedo__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5zM20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5zM3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14zM21.5 14c0-.83-.67-1.5-1.5-1.5h-5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5c.83 0 1.5-.67 1.5-1.5zM10 3.5c0 .83-.67 1.5-1.5 1.5h-5C2.67 5 2 4.33 2 3.5S2.67 2 3.5 2h5c.83 0 1.5.67 1.5 1.5z"/></svg>
-          </div>
-          <h3>{{#if isEs}}Hospitalidad{{else}}Hospitality{{/if}}</h3>
-          <p>{{#if isEs}}Suites VIP, experiencias premium y servicios exclusivos en cada evento.{{else}}VIP suites, premium experiences, and exclusive services at every event.{{/if}}</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- ═══ ALCANCE / REACH ═══ -->
   <section class="gp-reach">
     <div class="gp-reach__inner">
@@ -124,35 +86,6 @@
           <span class="gp-reach__label">{{this.label}}</span>
         </div>
         {{/each}}
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ NUESTRAS CAPACIDADES ═══ -->
-  <section class="gp-capabilities">
-    <div class="gp-capabilities__inner">
-      <span class="gp-label">{{#if isEs}}NUESTRAS CAPACIDADES{{else}}OUR CAPABILITIES{{/if}}</span>
-      <div class="gp-capabilities__grid">
-        <div class="gp-capabilities__item">
-          <div class="gp-capabilities__num">01</div>
-          <h3>{{#if isEs}}Producción de eventos{{else}}Event Production{{/if}}</h3>
-          <p>{{#if isEs}}Gestión integral de partidos internacionales de fútbol en estadios de primer nivel.{{else}}End-to-end management of international football matches in top-tier stadiums.{{/if}}</p>
-        </div>
-        <div class="gp-capabilities__item">
-          <div class="gp-capabilities__num">02</div>
-          <h3>{{#if isEs}}Relaciones con clubes{{else}}Club Relations{{/if}}</h3>
-          <p>{{#if isEs}}Red de contactos directos con clubes de primera división en Latinoamérica.{{else}}Direct contact network with first-division clubs across Latin America.{{/if}}</p>
-        </div>
-        <div class="gp-capabilities__item">
-          <div class="gp-capabilities__num">03</div>
-          <h3>{{#if isEs}}Comercialización{{else}}Commercialization{{/if}}</h3>
-          <p>{{#if isEs}}Venta de boletos, patrocinios, hospitalidad y contenido digital.{{else}}Ticket sales, sponsorships, hospitality, and digital content.{{/if}}</p>
-        </div>
-        <div class="gp-capabilities__item">
-          <div class="gp-capabilities__num">04</div>
-          <h3>{{#if isEs}}Cobertura mediática{{else}}Media Coverage{{/if}}</h3>
-          <p>{{#if isEs}}Transmisión en TV, streaming y amplificación en redes sociales.{{else}}TV broadcast, streaming, and social media amplification.{{/if}}</p>
-        </div>
       </div>
     </div>
   </section>
@@ -206,13 +139,49 @@
     </div>
   </section>
 
+  <!-- ═══ QUÉ HACEMOS / WHAT WE DO ═══ -->
+  <section class="gp-whatwedo">
+    <div class="gp-whatwedo__inner">
+      <span class="gp-label">{{#if isEs}}QUÉ HACEMOS{{else}}WHAT WE DO{{/if}}</span>
+      <div class="gp-whatwedo__grid">
+        <div class="gp-whatwedo__card">
+          <div class="gp-whatwedo__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 000 20M12 2a14.5 14.5 0 010 20M2 12h20"/></svg>
+          </div>
+          <h3>{{#if isEs}}Producción{{else}}Production{{/if}}</h3>
+          <p>{{#if isEs}}Planificamos y ejecutamos partidos internacionales de principio a fin.{{else}}We plan and execute international matches from start to finish.{{/if}}</p>
+        </div>
+        <div class="gp-whatwedo__card">
+          <div class="gp-whatwedo__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <h3>{{#if isEs}}Clubes{{else}}Clubs{{/if}}</h3>
+          <p>{{#if isEs}}Conectamos con los principales clubes profesionales de Latinoamérica.{{else}}We connect with the top professional clubs in Latin America.{{/if}}</p>
+        </div>
+        <div class="gp-whatwedo__card">
+          <div class="gp-whatwedo__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+          </div>
+          <h3>{{#if isEs}}Comercialización{{else}}Commercialization{{/if}}</h3>
+          <p>{{#if isEs}}Desarrollamos estrategias de venta de boletos, patrocinios y experiencias premium.{{else}}We develop ticket sales, sponsorship, and premium experience strategies.{{/if}}</p>
+        </div>
+        <div class="gp-whatwedo__card">
+          <div class="gp-whatwedo__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><path d="M17 2l-5 5-5-5"/></svg>
+          </div>
+          <h3>{{#if isEs}}Medios{{else}}Media{{/if}}</h3>
+          <p>{{#if isEs}}Gestionamos la producción y transmisión televisiva, y contenido en redes para amplificar el alcance.{{else}}We manage TV production and broadcast, and social media content to amplify reach.{{/if}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ═══ GALLERY ═══ -->
   <section class="gp-gallery" id="gallerySection">
     <div class="gp-gallery__inner">
       <div class="gp-gallery__header">
         <div>
           <span class="gp-label">{{#if isEs}}MOMENTOS{{else}}MOMENTS{{/if}}</span>
-          <h2 class="gp-section-title">{{galeria.galleryTitle}}</h2>
         </div>
         <span class="gp-gallery__count">{{galeria.imageCount}} {{#if isEs}}fotos{{else}}photos{{/if}}</span>
       </div>
@@ -277,7 +246,6 @@
   <section class="gp-media">
     <div class="gp-media__inner">
       <span class="gp-label">{{#if isEs}}NOTAS EN MEDIOS{{else}}MEDIA COVERAGE{{/if}}</span>
-      <h2 class="gp-section-title">{{#if isEs}}Cobertura de prensa{{else}}Press Coverage{{/if}}</h2>
       <div class="gp-media__list">
         {{#each galeria.mediaLinks}}
         <a class="gp-media__item" href="{{this.url}}" target="_blank" rel="noopener">
@@ -718,7 +686,6 @@
   .gp-reach__inner {
     max-width: 960px;
     margin: 0 auto;
-    text-align: center;
   }
   .gp-reach__cards {
     display: grid;
@@ -777,63 +744,6 @@
     .gp-reach__cards { grid-template-columns: 1fr; gap: 12px; }
     .gp-reach__card { padding: 24px 16px; }
     .gp-reach__value { font-size: 34px; }
-  }
-
-  /* ═══════════════════ CAPABILITIES ═══════════════════ */
-  .gp-capabilities {
-    background: linear-gradient(180deg, #0e0e28 0%, #0a0a1a 100%);
-    padding: 56px 24px;
-  }
-  .gp-capabilities__inner {
-    max-width: 960px;
-    margin: 0 auto;
-  }
-  .gp-capabilities__grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin-top: 24px;
-  }
-  .gp-capabilities__item {
-    padding: 28px 20px;
-    border-left: 2px solid rgba(108,60,224,0.4);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    text-align: center;
-  }
-  .gp-capabilities__num {
-    font-size: 28px;
-    font-weight: 900;
-    background: linear-gradient(135deg, #9b59f0, #c084fc);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1;
-  }
-  .gp-capabilities__item h3 {
-    font-size: 15px;
-    font-weight: 800;
-    color: #fff;
-    margin: 0;
-  }
-  .gp-capabilities__item p {
-    font-size: 13px;
-    color: rgba(255,255,255,0.5);
-    line-height: 1.5;
-    margin: 0;
-    text-align: justify;
-  }
-
-  @media (max-width: 700px) {
-    .gp-capabilities__grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    .gp-capabilities__item { padding: 20px 16px; }
-  }
-  @media (max-width: 440px) {
-    .gp-capabilities__grid { grid-template-columns: 1fr; }
   }
 
   /* ═══════════════════ EDITIONS ═══════════════════ */
@@ -1032,7 +942,6 @@
   .gp-sponsors__inner {
     max-width: 960px;
     margin: 0 auto;
-    text-align: center;
   }
   .gp-sponsors__grid {
     display: flex;
