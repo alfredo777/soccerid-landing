@@ -12,7 +12,7 @@
       "banner": "/assets/images/gallery/socceridcup/5.jpg",
       "stats": [
         { "value": "3", "label": "EDICIONES", "sub": "2023 — 2025" },
-        { "value": "6", "label": "EQUIPOS", "sub": "Primera División" },
+        { "value": "5", "label": "EQUIPOS", "sub": "Primera División" },
         { "value": "3", "label": "CIUDADES", "sub": "San José · Orlando · Austin" }
       ],
       "highlights": [
@@ -63,7 +63,7 @@
       "banner": "/assets/images/gallery/socceridcup/5.jpg",
       "stats": [
         { "value": "3", "label": "EDITIONS", "sub": "2023 — 2025" },
-        { "value": "6", "label": "TEAMS", "sub": "First Division" },
+        { "value": "5", "label": "TEAMS", "sub": "First Division" },
         { "value": "3", "label": "CITIES", "sub": "San José · Orlando · Austin" }
       ],
       "highlights": [
