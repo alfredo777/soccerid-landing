@@ -752,6 +752,57 @@ app.get('/socceridcup', (req, res) => {
   res.redirect(302, `/${lang}/socceridcup`);
 });
 
+// ============================================================
+// PÁGINA DE EDICIÓN SOCCER iD CUP (socceridcup/:year)
+// ============================================================
+app.get('/:lang/socceridcup/:year', (req, res, next) => {
+  const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
+  const year = req.params.year;
+
+  const editionsPath = path.join(__dirname, 'contents', 'cup_editions.json');
+  if (!fs.existsSync(editionsPath)) return next();
+
+  try {
+    const editions = JSON.parse(fs.readFileSync(editionsPath, 'utf8'));
+    const langEditions = editions[lang] || editions[DEFAULT_LANG] || {};
+    const edition = langEditions[year];
+
+    if (!edition) return next();
+
+    const isEs = lang === 'es';
+    edition.imageCount = edition.images ? edition.images.length : 0;
+    const ogTitle = `${edition.title} | SOCCER iD`;
+    const ogDesc = edition.description;
+    const ogImage = edition.banner || '/assets/images/og/share.jpg';
+
+    res.render('socceridcup-edition', {
+      layout: 'promo',
+      title: ogTitle,
+      description: ogDesc,
+      ogTitle: ogTitle,
+      ogDescription: ogDesc,
+      ogImage: ogImage,
+      ogLocale: isEs ? 'es_ES' : 'en_US',
+      lang: lang,
+      baseUrl: BASE_URL,
+      currentPath: `/socceridcup/${year}`,
+      isEs: isEs,
+      isEn: lang === 'en',
+      edition: edition,
+      year: new Date().getFullYear(),
+      version: APP_VERSION
+    });
+  } catch (e) {
+    console.error('Error cargando edición:', e);
+    next();
+  }
+});
+
+app.get('/socceridcup/:year', (req, res) => {
+  const lang = detectLanguage(req);
+  res.redirect(302, `/${lang}/socceridcup/${req.params.year}`);
+});
+
 app.get('/cupid', (req, res) => {
   const lang = detectLanguage(req);
   res.redirect(301, `/${lang}/socceridcup`);
