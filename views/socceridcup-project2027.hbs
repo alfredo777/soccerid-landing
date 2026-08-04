@@ -569,9 +569,8 @@
 
 <script>
 (function() {
-  var code = '{{accessCode}}';
   var stored = sessionStorage.getItem('pp2027');
-  if (stored === code) {
+  if (stored === 'granted') {
     document.getElementById('ppLock').style.display = 'none';
     document.getElementById('ppContent').style.display = 'block';
   }
@@ -579,17 +578,35 @@
   var btn = document.getElementById('ppSubmit');
   var err = document.getElementById('ppError');
   function tryAccess() {
-    if (inp.value === code) {
-      sessionStorage.setItem('pp2027', code);
-      document.getElementById('ppLock').style.display = 'none';
-      document.getElementById('ppContent').style.display = 'block';
-    } else {
-      err.classList.add('visible');
-      inp.classList.add('shake');
-      setTimeout(function() { inp.classList.remove('shake'); }, 400);
-      inp.value = '';
-      inp.focus();
-    }
+    var val = inp.value.trim();
+    if (!val) return;
+    btn.disabled = true;
+    btn.textContent = '...';
+    fetch('/api/project2027/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: val })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.ok) {
+        sessionStorage.setItem('pp2027', 'granted');
+        document.getElementById('ppLock').style.display = 'none';
+        document.getElementById('ppContent').style.display = 'block';
+      } else {
+        err.classList.add('visible');
+        inp.classList.add('shake');
+        setTimeout(function() { inp.classList.remove('shake'); }, 400);
+        inp.value = '';
+        inp.focus();
+      }
+      btn.disabled = false;
+      btn.textContent = '{{data.lock.button}}';
+    })
+    .catch(function() {
+      btn.disabled = false;
+      btn.textContent = '{{data.lock.button}}';
+    });
   }
   btn.addEventListener('click', tryAccess);
   inp.addEventListener('keydown', function(e) {

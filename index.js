@@ -766,8 +766,8 @@ app.get('/:lang/socceridcupproject2027', (req, res, next) => {
     const data = allData[lang] || allData[DEFAULT_LANG];
 
     const isEs = lang === 'es';
-    const ogTitle = data.pageTitle;
-    const ogDesc = `${data.hero.team1} ${data.hero.vs} ${data.hero.team2} — ${data.hero.venue}, ${data.hero.city}`;
+    const ogTitle = isEs ? 'SOCCER iD — Documento Confidencial' : 'SOCCER iD — Confidential Document';
+    const ogDesc = isEs ? 'Acceso restringido. Se requiere código de autorización.' : 'Restricted access. Authorization code required.';
 
     res.render('socceridcup-project2027', {
       layout: 'promo',
@@ -775,7 +775,7 @@ app.get('/:lang/socceridcupproject2027', (req, res, next) => {
       description: ogDesc,
       ogTitle: ogTitle,
       ogDescription: ogDesc,
-      ogImage: '/assets/images/gallery/socceridcup/5.jpg',
+      ogImage: '/assets/images/iconsoccerid.png',
       ogLocale: isEs ? 'es_ES' : 'en_US',
       lang: lang,
       baseUrl: BASE_URL,
@@ -783,13 +783,69 @@ app.get('/:lang/socceridcupproject2027', (req, res, next) => {
       isEs: isEs,
       isEn: lang === 'en',
       data: data,
-      accessCode: allData.accessCode,
       year: new Date().getFullYear(),
       version: APP_VERSION
     });
   } catch (e) {
     console.error('Error cargando project 2027:', e);
     next();
+  }
+});
+
+app.post('/api/project2027/verify', (req, res) => {
+  const { code } = req.body;
+  if (!code) return res.json({ ok: false });
+
+  const codesPath = path.join(__dirname, 'contents', 'cup_project_2027_codes.json');
+  try {
+    const codesData = JSON.parse(fs.readFileSync(codesPath, 'utf8'));
+    const entry = codesData.codes[code];
+    if (!entry) return res.json({ ok: false });
+
+    const logEntry = {
+      code,
+      name: entry.name,
+      email: entry.email,
+      timestamp: new Date().toISOString(),
+      ip: req.headers['x-forwarded-for'] || req.ip,
+      userAgent: req.headers['user-agent']
+    };
+
+    const logPath = path.join(__dirname, 'data', 'project2027_access.json');
+    const logDir = path.join(__dirname, 'data');
+    if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
+
+    let logs = [];
+    if (fs.existsSync(logPath)) {
+      try { logs = JSON.parse(fs.readFileSync(logPath, 'utf8')); } catch (e) { logs = []; }
+    }
+    logs.push(logEntry);
+    fs.writeFileSync(logPath, JSON.stringify(logs, null, 2));
+
+    console.log(`[PROJECT 2027] Acceso: ${entry.name} (${entry.email}) — código ${code}`);
+
+    if (codesData.notifyEmail) {
+      const nodemailer = (() => { try { return require('nodemailer'); } catch (e) { return null; } })();
+      if (nodemailer && process.env.SMTP_HOST) {
+        const transporter = nodemailer.createTransport({
+          host: process.env.SMTP_HOST,
+          port: parseInt(process.env.SMTP_PORT || '587'),
+          secure: process.env.SMTP_SECURE === 'true',
+          auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+        });
+        transporter.sendMail({
+          from: process.env.SMTP_FROM || process.env.SMTP_USER,
+          to: codesData.notifyEmail,
+          subject: `[SOCCER iD] Acceso Project 2027 — ${entry.name}`,
+          text: `Acceso registrado:\n\nNombre: ${entry.name}\nEmail: ${entry.email}\nCódigo: ${code}\nFecha: ${logEntry.timestamp}\nIP: ${logEntry.ip}\nNavegador: ${logEntry.userAgent}`
+        }).catch(err => console.error('Error enviando notificación:', err.message));
+      }
+    }
+
+    return res.json({ ok: true, name: entry.name });
+  } catch (e) {
+    console.error('Error verificando código:', e);
+    return res.json({ ok: false });
   }
 });
 
