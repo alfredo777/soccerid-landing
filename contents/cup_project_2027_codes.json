@@ -1,0 +1,8 @@
+{
+  "codes": {
+    "2027001": { "name": "Inversionista 1", "email": "inversionista1@ejemplo.com" },
+    "2027002": { "name": "Inversionista 2", "email": "inversionista2@ejemplo.com" },
+    "2027327": { "name": "General", "email": "general@soccerid.co" }
+  },
+  "notifyEmail": "info@soccerid.co"
+}
