@@ -112,10 +112,10 @@
       "title": "PROPUESTA DE INVERSIÓN",
       "termsTitle": "TÉRMINOS",
       "terms": [
-        { "label": "Capital", "value": "USD $1.0M" },
-        { "label": "Retorno", "value": "Hasta 30%*" },
-        { "label": "Pago proyectado", "value": "USD $1.3M" },
-        { "label": "Plazo", "value": "12 MESES" }
+        { "label": "Capital objetivo", "value": "USD $1.0M" },
+        { "label": "Retorno potencial", "value": "Hasta 25%" },
+        { "label": "Escenario de retorno máximo", "value": "USD $1.25M sobre una inversión de USD $1.0M" },
+        { "label": "Plazo", "value": "12 meses" }
       ],
       "whyTitle": "¿POR QUÉ INVERTIR?",
       "reasons": [
@@ -127,7 +127,7 @@
       ],
       "ticketLabel": "Tickets de inversión desde:",
       "ticketValue": "$500,000 MXN / $30,000 USD",
-      "footnote": "*El retorno proyectado es un estimado basado en ediciones anteriores y condiciones de mercado. Los resultados reales pueden variar."
+      "footnote": "Los términos finales de cada inversión, incluyendo el retorno y el plazo, estarán sujetos al monto de inversión, la estructura de la operación y la negociación individual con cada inversionista. El retorno potencial máximo es de hasta 25%."
     },
     "closing": {
       "title": "GRACIAS",
@@ -249,10 +249,10 @@
       "title": "INVESTMENT PROPOSAL",
       "termsTitle": "TERMS",
       "terms": [
-        { "label": "Capital", "value": "USD $1.0M" },
-        { "label": "Return", "value": "Up to 30%*" },
-        { "label": "Projected payout", "value": "USD $1.3M" },
-        { "label": "Term", "value": "12 MONTHS" }
+        { "label": "Target capital", "value": "USD $1.0M" },
+        { "label": "Potential return", "value": "Up to 25%" },
+        { "label": "Maximum return scenario", "value": "USD $1.25M on a USD $1.0M investment" },
+        { "label": "Term", "value": "12 months" }
       ],
       "whyTitle": "WHY INVEST?",
       "reasons": [
@@ -264,7 +264,7 @@
       ],
       "ticketLabel": "Investment tickets from:",
       "ticketValue": "$500,000 MXN / $30,000 USD",
-      "footnote": "*Projected return is an estimate based on previous editions and market conditions. Actual results may vary."
+      "footnote": "The final terms of each investment, including return and term, will be subject to the investment amount, deal structure, and individual negotiation with each investor. The maximum potential return is up to 25%."
     },
     "closing": {
       "title": "THANK YOU",
