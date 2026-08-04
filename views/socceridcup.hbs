@@ -163,13 +163,44 @@
       <span class="gp-label">{{#if isEs}}EDICIONES{{else}}EDITIONS{{/if}}</span>
       <div class="gp-timeline">
         {{#each galeria.highlights}}
-        <div class="gp-timeline__item {{#eq this.city 'Por confirmar'}}gp-timeline__item--soon{{/eq}}{{#eq this.city 'TBA'}}gp-timeline__item--soon{{/eq}}{{#eq this.city 'FIFA World Cup 2026'}}gp-timeline__item--pause{{/eq}}">
+        {{#eq this.city 'Por confirmar'}}
+        <div class="gp-timeline__item gp-timeline__item--soon">
           <span class="gp-timeline__year">{{this.year}}</span>
           <div class="gp-timeline__content">
             <span class="gp-timeline__match">{{this.match}}</span>
             <span class="gp-timeline__city">{{this.city}}</span>
           </div>
         </div>
+        {{else}}
+        {{#eq this.city 'TBA'}}
+        <div class="gp-timeline__item gp-timeline__item--soon">
+          <span class="gp-timeline__year">{{this.year}}</span>
+          <div class="gp-timeline__content">
+            <span class="gp-timeline__match">{{this.match}}</span>
+            <span class="gp-timeline__city">{{this.city}}</span>
+          </div>
+        </div>
+        {{else}}
+        {{#eq this.city 'FIFA World Cup 2026'}}
+        <div class="gp-timeline__item gp-timeline__item--pause">
+          <span class="gp-timeline__year">{{this.year}}</span>
+          <div class="gp-timeline__content">
+            <span class="gp-timeline__match">{{this.match}}</span>
+            <span class="gp-timeline__city">{{this.city}}</span>
+          </div>
+        </div>
+        {{else}}
+        <a class="gp-timeline__item gp-timeline__item--link" href="/{{../lang}}/socceridcup/{{this.year}}">
+          <span class="gp-timeline__year">{{this.year}}</span>
+          <div class="gp-timeline__content">
+            <span class="gp-timeline__match">{{this.match}}</span>
+            <span class="gp-timeline__city">{{this.city}}</span>
+          </div>
+          <svg class="gp-timeline__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+        {{/eq}}
+        {{/eq}}
+        {{/eq}}
         {{/each}}
       </div>
     </div>
@@ -528,6 +559,7 @@
     font-weight: 700;
     color: rgba(255,255,255,0.9);
     line-height: 1.5;
+    text-align: justify;
   }
   .gp-stats__cards {
     display: grid;
@@ -634,6 +666,7 @@
     color: rgba(255,255,255,0.5);
     line-height: 1.5;
     margin: 0;
+    text-align: justify;
   }
 
   @media (max-width: 700px) {
@@ -759,6 +792,7 @@
     color: rgba(255,255,255,0.5);
     line-height: 1.5;
     margin: 0;
+    text-align: justify;
   }
 
   @media (max-width: 700px) {
@@ -847,6 +881,25 @@
   }
   .gp-timeline__item--pause .gp-timeline__city {
     color: rgba(234,179,8,0.5);
+  }
+  .gp-timeline__item--link {
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .gp-timeline__item--link:hover {
+    background: rgba(108,60,224,0.08);
+    border-radius: 8px;
+    padding: 18px 16px;
+  }
+  .gp-timeline__arrow {
+    color: rgba(255,255,255,0.2);
+    flex-shrink: 0;
+    margin-left: auto;
+    transition: color 0.2s;
+  }
+  .gp-timeline__item--link:hover .gp-timeline__arrow {
+    color: #9b59f0;
   }
 
   /* ═══════════════════ GALLERY ═══════════════════ */
