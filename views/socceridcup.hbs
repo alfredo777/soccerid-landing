@@ -272,6 +272,36 @@
     </div>
   </section>
 
+  <!-- ═══ MEDIA / PRESS ═══ -->
+  {{#gt galeria.mediaLinks.length 0}}
+  <section class="gp-media">
+    <div class="gp-media__inner">
+      <span class="gp-label">{{#if isEs}}NOTAS EN MEDIOS{{else}}MEDIA COVERAGE{{/if}}</span>
+      <h2 class="gp-section-title">{{#if isEs}}Cobertura de prensa{{else}}Press Coverage{{/if}}</h2>
+      <div class="gp-media__list">
+        {{#each galeria.mediaLinks}}
+        <a class="gp-media__item" href="{{this.url}}" target="_blank" rel="noopener">
+          {{#if this.image}}
+          <div class="gp-media__thumb">
+            <img src="{{this.image}}" alt="" loading="lazy">
+          </div>
+          {{else}}
+          <div class="gp-media__icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M18 18h-8M18 10h-8"/></svg>
+          </div>
+          {{/if}}
+          <div class="gp-media__text">
+            <span class="gp-media__title">{{this.title}}</span>
+            <span class="gp-media__source">{{this.source}}</span>
+          </div>
+          <svg class="gp-media__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+        </a>
+        {{/each}}
+      </div>
+    </div>
+  </section>
+  {{/gt}}
+
   <!-- ═══ CTA ═══ -->
   <section class="gp-cta-section">
     <img class="gp-cta-section__bg" src="/assets/images/gallery/socceridcup/1.jpg" alt="">
@@ -930,9 +960,9 @@
   .gp-mosaic {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 220px;
+    grid-auto-rows: 260px;
     gap: 4px;
-    max-width: 960px;
+    max-width: 1280px;
     margin: 0 auto;
     padding: 0 4px;
   }
@@ -1094,6 +1124,22 @@
     0% { transform: translateX(0); }
     100% { transform: translateX(-33.333%); }
   }
+
+  /* ═══════════════════ MEDIA / PRESS ═══════════════════ */
+  .gp-media { background: #0a0a1a; padding: 48px 24px; }
+  .gp-media__inner { max-width: 960px; margin: 0 auto; }
+  .gp-media__list { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
+  .gp-media__item { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; text-decoration: none; transition: border-color 0.3s, background 0.3s; }
+  .gp-media__item:hover { border-color: rgba(108,60,224,0.4); background: rgba(108,60,224,0.06); }
+  .gp-media__thumb { width: 72px; height: 52px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+  .gp-media__thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .gp-media__icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(108,60,224,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .gp-media__icon svg { color: #c084fc; }
+  .gp-media__text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .gp-media__title { font-size: 14px; font-weight: 700; color: #fff; }
+  .gp-media__source { font-size: 12px; color: rgba(255,255,255,0.4); }
+  .gp-media__arrow { color: rgba(255,255,255,0.3); flex-shrink: 0; transition: color 0.2s; }
+  .gp-media__item:hover .gp-media__arrow { color: #c084fc; }
 
   /* ═══════════════════ CTA SECTION ═══════════════════ */
   .gp-cta-section {

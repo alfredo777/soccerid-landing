@@ -24,7 +24,9 @@
         { "src": "/assets/images/sponsors/voit.png", "alt": "Voit" }
       ],
       "mediaLinks": [
-        { "title": "Nota pendiente", "source": "Medio por confirmar", "url": "#" }
+        { "title": "Pumas arrolla al Comunicaciones en amistoso jugado en Estados Unidos", "source": "TUDN", "url": "https://www.tudn.com/futbol/amistosos-liga-mx/pumas-arrolla-al-comunicaciones-en-amistoso-jugado-en-estados-unidos", "image": "/assets/images/gallery/cup2023/1.jpg" },
+        { "title": "Pumas vs Comunicaciones: resumen y resultado del partido amistoso", "source": "Milenio", "url": "https://www.milenio.com/deportes/futbol-internacional/pumas-vs-comunicaciones-resumen-y-resultado-partido-amistoso", "image": "/assets/images/gallery/cup2023/2.jpg" },
+        { "title": "Anuncian amistoso entre Pumas y Comunicaciones para fecha FIFA de octubre", "source": "ESPN", "url": "https://www.espn.com.mx/futbol/guatemala/nota/_/id/12615166/anuncia-amistoso-pumas-y-comunicaciones-para-fecha-fifa-octubre", "image": "/assets/images/gallery/cup2023/5.jpg" }
       ],
       "videos": [],
       "images": [
@@ -60,7 +62,9 @@
         { "src": "/assets/images/sponsors/nuestra-vision.png", "alt": "Nuestra Visión" }
       ],
       "mediaLinks": [
-        { "title": "Nota pendiente", "source": "Medio por confirmar", "url": "#" }
+        { "title": "América vs Atlético Nacional: goles, resumen y resultado del amistoso en Orlando", "source": "TUDN", "url": "https://www.tudn.com/futbol/liga-mx/america-vs-atletico-nacional-goles-resumen-resultado-partido-amistoso-en-orlando", "image": "/assets/images/gallery/cup2024/5.jpg" },
+        { "title": "América rescata empate vs Atlético Nacional en debut de Efraín Juárez", "source": "Récord", "url": "https://www.record.com.mx/historia/america-rescata-empate-vs-atletico-nacional-en-debut-de-efrain-juarez-2025101623421975636", "image": "/assets/images/gallery/cup2024/1.jpg" },
+        { "title": "Atlético Nacional vs América — Resultado del partido", "source": "ESPN", "url": "https://www.espn.com.mx/futbol/partido/_/juegoId/467221/atletico-nacional-america", "image": "/assets/images/gallery/cup2024/2.jpg" }
       ],
       "videos": [
         { "id": "P9P4Dkd0P10", "title": "Resumen | América 2-2 Atlético Nacional | Amistoso | Caliente TV" }
@@ -101,7 +105,9 @@
         { "src": "/assets/images/sponsors/nuestra-vision.png", "alt": "Nuestra Visión" }
       ],
       "mediaLinks": [
-        { "title": "Nota pendiente", "source": "Medio por confirmar", "url": "#" }
+        { "title": "Resumen del partido Pumas vs Tigres, partido amistoso 2025", "source": "Medio Tiempo", "url": "https://www.mediotiempo.com/futbol/liga-mx/resumen-del-partido-pumas-vs-tigres-partido-amistoso-2025", "image": "/assets/images/gallery/cup2025/6.jpg" },
+        { "title": "Pumas y Tigres jugarán partido amistoso en Soccer iD Cup en Austin, Texas", "source": "TUDN", "url": "https://www.tudn.com/futbol/pumas-y-tigres-jugaran-partido-amistoso-en-soccer-id-cup-en-austin-texas", "image": "/assets/images/gallery/cup2025/5.jpg" },
+        { "title": "Tigres vs Pumas en vivo — Liga MX, partido amistoso", "source": "Marca", "url": "https://www.marca.com/mx/futbol/liga-mx/2025/03/22/67df2979c30c377a8e2cdc5e-directo.html", "image": "/assets/images/gallery/cup2025/7.jpg" }
       ],
       "videos": [
         { "id": "l-KVhjDENOQ", "title": "Intenso duelo en Austin | Tigres 0-0 Pumas | Amistoso" }
@@ -143,7 +149,9 @@
         { "src": "/assets/images/sponsors/voit.png", "alt": "Voit" }
       ],
       "mediaLinks": [
-        { "title": "Pending article", "source": "TBA", "url": "#" }
+        { "title": "Pumas thrashes Comunicaciones in a friendly played in the United States", "source": "TUDN", "url": "https://www.tudn.com/futbol/amistosos-liga-mx/pumas-arrolla-al-comunicaciones-en-amistoso-jugado-en-estados-unidos", "image": "/assets/images/gallery/cup2023/1.jpg" },
+        { "title": "Pumas vs Comunicaciones: summary and result of the friendly match", "source": "Milenio", "url": "https://www.milenio.com/deportes/futbol-internacional/pumas-vs-comunicaciones-resumen-y-resultado-partido-amistoso", "image": "/assets/images/gallery/cup2023/2.jpg" },
+        { "title": "Pumas and Comunicaciones announce friendly for October FIFA date", "source": "ESPN", "url": "https://www.espn.com.mx/futbol/guatemala/nota/_/id/12615166/anuncia-amistoso-pumas-y-comunicaciones-para-fecha-fifa-octubre", "image": "/assets/images/gallery/cup2023/5.jpg" }
       ],
       "videos": [],
       "images": [
@@ -179,7 +187,9 @@
         { "src": "/assets/images/sponsors/nuestra-vision.png", "alt": "Nuestra Visión" }
       ],
       "mediaLinks": [
-        { "title": "Pending article", "source": "TBA", "url": "#" }
+        { "title": "América vs Atlético Nacional: goals, summary and result of friendly in Orlando", "source": "TUDN", "url": "https://www.tudn.com/futbol/liga-mx/america-vs-atletico-nacional-goles-resumen-resultado-partido-amistoso-en-orlando", "image": "/assets/images/gallery/cup2024/5.jpg" },
+        { "title": "América rescues draw vs Atlético Nacional in Efraín Juárez debut", "source": "Récord", "url": "https://www.record.com.mx/historia/america-rescata-empate-vs-atletico-nacional-en-debut-de-efrain-juarez-2025101623421975636", "image": "/assets/images/gallery/cup2024/1.jpg" },
+        { "title": "Atlético Nacional vs América — Match Result", "source": "ESPN", "url": "https://www.espn.com.mx/futbol/partido/_/juegoId/467221/atletico-nacional-america", "image": "/assets/images/gallery/cup2024/2.jpg" }
       ],
       "videos": [
         { "id": "P9P4Dkd0P10", "title": "Highlights | América 2-2 Atlético Nacional | Friendly | Caliente TV" }
@@ -220,7 +230,9 @@
         { "src": "/assets/images/sponsors/nuestra-vision.png", "alt": "Nuestra Visión" }
       ],
       "mediaLinks": [
-        { "title": "Pending article", "source": "TBA", "url": "#" }
+        { "title": "Pumas vs Tigres match summary, friendly 2025", "source": "Medio Tiempo", "url": "https://www.mediotiempo.com/futbol/liga-mx/resumen-del-partido-pumas-vs-tigres-partido-amistoso-2025", "image": "/assets/images/gallery/cup2025/6.jpg" },
+        { "title": "Pumas and Tigres to play friendly at Soccer iD Cup in Austin, Texas", "source": "TUDN", "url": "https://www.tudn.com/futbol/pumas-y-tigres-jugaran-partido-amistoso-en-soccer-id-cup-en-austin-texas", "image": "/assets/images/gallery/cup2025/5.jpg" },
+        { "title": "Tigres vs Pumas live — Liga MX, friendly match", "source": "Marca", "url": "https://www.marca.com/mx/futbol/liga-mx/2025/03/22/67df2979c30c377a8e2cdc5e-directo.html", "image": "/assets/images/gallery/cup2025/7.jpg" }
       ],
       "videos": [
         { "id": "l-KVhjDENOQ", "title": "Intense duel in Austin | Tigres 0-0 Pumas | Friendly" }
