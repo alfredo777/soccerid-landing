@@ -150,13 +150,13 @@
       "title": "APLICACIÓN DEL CAPITAL",
       "periodLabel": "Periodo",
       "items": [
-        { "activity": "Cierre de contratos (clubes, estadio, permisos y reservas)", "period": "Agosto – Septiembre 2026" },
-        { "activity": "Anticipos operativos (vuelos, hospedaje, producción y proveedores)", "period": "Septiembre – Octubre 2026" },
-        { "activity": "Lanzamiento comercial (venta de boletos, patrocinios y campaña de medios)", "period": "Diciembre 2026 – Enero 2027" },
-        { "activity": "Liquidación de proveedores y clubes", "period": "Febrero – Marzo 2027" },
-        { "activity": "Partido Internacional", "period": "27 de marzo de 2027", "highlight": true },
-        { "activity": "Liquidación de ingresos (boletera → estadio → SOCCER iD)", "period": "Abril – Julio 2027" },
-        { "activity": "Cierre financiero y retorno al inversionista", "period": "Hasta agosto de 2027" }
+        { "activity": "<strong>Cierre de contratos</strong> (clubes, estadio, permisos y reservas)", "period": "Agosto – Septiembre 2026" },
+        { "activity": "<strong>Anticipos operativos</strong> (vuelos, hospedaje, producción y proveedores)", "period": "Septiembre – Octubre 2026" },
+        { "activity": "<strong>Lanzamiento comercial</strong> (venta de boletos, patrocinios y campaña de medios)", "period": "Diciembre 2026 – Enero 2027" },
+        { "activity": "<strong>Liquidación de proveedores y clubes</strong>", "period": "Febrero – Marzo 2027" },
+        { "activity": "<strong>Partido Internacional</strong>", "period": "27 de marzo de 2027", "highlight": true },
+        { "activity": "<strong>Liquidación de ingresos</strong> (boletera → estadio → SOCCER iD)", "period": "Abril – Julio 2027" },
+        { "activity": "<strong>Cierre financiero y retorno al inversionista</strong>", "period": "Hasta agosto de 2027" }
       ]
     },
     "closing": {
@@ -318,13 +318,13 @@
       "title": "CAPITAL DEPLOYMENT",
       "periodLabel": "Period",
       "items": [
-        { "activity": "Contract closing (clubs, stadium, permits and reservations)", "period": "August – September 2026" },
-        { "activity": "Operational advances (flights, lodging, production and vendors)", "period": "September – October 2026" },
-        { "activity": "Commercial launch (ticket sales, sponsorships and media campaign)", "period": "December 2026 – January 2027" },
-        { "activity": "Vendor and club settlements", "period": "February – March 2027" },
-        { "activity": "International Match", "period": "March 27, 2027", "highlight": true },
-        { "activity": "Revenue settlement (box office → stadium → SOCCER iD)", "period": "April – July 2027" },
-        { "activity": "Financial closing and investor return", "period": "Through August 2027" }
+        { "activity": "<strong>Contract closing</strong> (clubs, stadium, permits and reservations)", "period": "August – September 2026" },
+        { "activity": "<strong>Operational advances</strong> (flights, lodging, production and vendors)", "period": "September – October 2026" },
+        { "activity": "<strong>Commercial launch</strong> (ticket sales, sponsorships and media campaign)", "period": "December 2026 – January 2027" },
+        { "activity": "<strong>Vendor and club settlements</strong>", "period": "February – March 2027" },
+        { "activity": "<strong>International Match</strong>", "period": "March 27, 2027", "highlight": true },
+        { "activity": "<strong>Revenue settlement</strong> (box office → stadium → SOCCER iD)", "period": "April – July 2027" },
+        { "activity": "<strong>Financial closing and investor return</strong>", "period": "Through August 2027" }
       ]
     },
     "closing": {
