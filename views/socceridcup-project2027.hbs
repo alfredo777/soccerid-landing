@@ -434,13 +434,13 @@
   .pp-hero {
     position: relative; min-height: 70vh;
     background: url('/assets/images/gallery/cup2027/hero.jpg') center/cover no-repeat;
-    display: flex; align-items: flex-end; padding: 60px 48px;
+    display: flex; align-items: flex-end; justify-content: center; padding: 60px 48px;
   }
   .pp-hero__overlay {
     position: absolute; inset: 0;
     background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.85) 100%);
   }
-  .pp-hero__body { position: relative; z-index: 2; }
+  .pp-hero__body { position: relative; z-index: 2; text-align: center; display: flex; flex-direction: column; align-items: center; }
   .pp-hero__teams {
     font-size: 64px; font-weight: 900; line-height: 1.1;
     letter-spacing: 2px; margin-bottom: 16px;
@@ -450,7 +450,7 @@
     margin: 0 16px; font-weight: 800;
   }
   .pp-hero__divider { width: 80px; height: 3px; background: var(--pp-gold); margin-bottom: 20px; }
-  .pp-hero__info { display: flex; gap: 12px; align-items: center; font-size: 18px; color: rgba(255,255,255,0.85); font-weight: 500; }
+  .pp-hero__info { display: flex; gap: 12px; align-items: center; justify-content: center; font-size: 18px; color: rgba(255,255,255,0.85); font-weight: 500; }
   .pp-hero__sep { color: rgba(255,255,255,0.3); }
   .pp-hero__date { font-size: 16px; color: rgba(255,255,255,0.6); margin-top: 8px; }
   .pp-hero__cup-btn {
@@ -787,7 +787,7 @@
   }
   @media (max-width: 480px) {
     .pp-highlights { grid-template-columns: 1fr; }
-    .pp-hero__teams { font-size: 28px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+    .pp-hero__teams { font-size: 28px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .pp-hero__teams em { margin: 0; font-size: 20px; }
     .pp-lock__card { padding: 32px 24px; }
     .pp-lock__digits { gap: 6px; }
