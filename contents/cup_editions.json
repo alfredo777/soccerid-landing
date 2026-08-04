@@ -88,15 +88,15 @@
       "city": "Austin, TX",
       "venue": "Q2 Stadium",
       "banner": "/assets/images/gallery/cup2025/6.jpg",
-      "description": "La tercera edición presenta a Tigres UANL y Pumas UNAM de la Liga MX en Austin, Texas, consolidando a la SOCCER iD CUP como el evento de referencia para el fútbol latinoamericano en Estados Unidos.",
+      "description": "La tercera edición reunió a dos clubes mexicanos con una de las rivalidades más importantes del país.",
       "attendance": {
         "value": "20,000",
         "label": "ASISTENTES"
       },
       "stats": [
         { "value": "20K", "label": "ASISTENTES", "sub": "Q2 Stadium" },
-        { "value": "2M", "label": "ESPECTADORES", "sub": "Audiencia digital" },
-        { "value": "2.5M", "label": "AUDIENCIA TV", "sub": "Transmisión en vivo" }
+        { "value": "2M", "label": "ESPECTADORES TV", "sub": "Transmisión en vivo" },
+        { "value": "4M", "label": "ALCANCE DIGITAL", "sub": "Redes sociales" }
       ],
       "sponsors": [
         { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX" },
@@ -213,15 +213,15 @@
       "city": "Austin, TX",
       "venue": "Q2 Stadium",
       "banner": "/assets/images/gallery/cup2025/6.jpg",
-      "description": "The third edition features Tigres UANL and Pumas UNAM from Liga MX in Austin, Texas, establishing the SOCCER iD CUP as the premier event for Latin American football in the United States.",
+      "description": "The third edition brought together two Mexican clubs with one of the most important rivalries in the country.",
       "attendance": {
         "value": "20,000",
         "label": "ATTENDEES"
       },
       "stats": [
         { "value": "20K", "label": "ATTENDEES", "sub": "Q2 Stadium" },
-        { "value": "2M", "label": "VIEWERS", "sub": "Digital audience" },
-        { "value": "2.5M", "label": "TV AUDIENCE", "sub": "Live broadcast" }
+        { "value": "2M", "label": "TV VIEWERS", "sub": "Live broadcast" },
+        { "value": "4M", "label": "DIGITAL REACH", "sub": "Social media" }
       ],
       "sponsors": [
         { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX" },
