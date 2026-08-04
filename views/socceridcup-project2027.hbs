@@ -6,7 +6,15 @@
     <h1 class="pp-lock__title">{{data.lock.title}}</h1>
     <p class="pp-lock__sub">{{data.lock.subtitle}}</p>
     <div class="pp-lock__form">
-      <input type="password" id="ppCode" class="pp-lock__input" maxlength="7" inputmode="numeric" pattern="[0-9]*" placeholder="{{data.lock.placeholder}}" autocomplete="off">
+      <div class="pp-lock__digits" id="ppDigits">
+        <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" class="pp-lock__digit" autocomplete="off" data-idx="0">
+        <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" class="pp-lock__digit" autocomplete="off" data-idx="1">
+        <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" class="pp-lock__digit" autocomplete="off" data-idx="2">
+        <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" class="pp-lock__digit" autocomplete="off" data-idx="3">
+        <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" class="pp-lock__digit" autocomplete="off" data-idx="4">
+        <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" class="pp-lock__digit" autocomplete="off" data-idx="5">
+        <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" class="pp-lock__digit" autocomplete="off" data-idx="6">
+      </div>
       <button id="ppSubmit" class="pp-lock__btn">{{data.lock.button}}</button>
     </div>
     <p class="pp-lock__error" id="ppError">{{data.lock.error}}</p>
@@ -241,6 +249,45 @@
     {{/if}}
   </section>
 
+  {{!-- ═══ STRUCTURE ═══ --}}
+  <section class="pp-section">
+    <span class="gp-label">{{data.structure.title}}</span>
+    <ul class="pp-structure">
+      {{#each data.structure.items}}
+      <li class="pp-structure__item">
+        <svg class="pp-structure__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <div>
+          <span>{{{this.text}}}</span>
+          {{#if this.sub}}
+          <ul class="pp-structure__sub">
+            {{#each this.sub}}
+            <li>{{{this.text}}}</li>
+            {{/each}}
+          </ul>
+          {{/if}}
+        </div>
+      </li>
+      {{/each}}
+    </ul>
+  </section>
+
+  {{!-- ═══ TIMELINE ═══ --}}
+  <section class="pp-section">
+    <span class="gp-label">{{data.timeline.title}}</span>
+    <div class="pp-timeline">
+      <div class="pp-timeline__header">
+        <span class="pp-timeline__col-act">&nbsp;</span>
+        <span class="pp-timeline__col-per">{{data.timeline.periodLabel}}</span>
+      </div>
+      {{#each data.timeline.items}}
+      <div class="pp-timeline__row{{#if this.highlight}} pp-timeline__row--highlight{{/if}}">
+        <span class="pp-timeline__activity">{{this.activity}}</span>
+        <span class="pp-timeline__period">{{this.period}}</span>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+
   {{!-- ═══ CLOSING ═══ --}}
   <section class="pp-closing">
     <div class="pp-closing__overlay"></div>
@@ -305,17 +352,20 @@
   }
   .pp-lock__title { font-size: 22px; font-weight: 800; margin-bottom: 10px; letter-spacing: 1px; }
   .pp-lock__sub { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 28px; line-height: 1.5; }
-  .pp-lock__form { display: flex; flex-direction: column; gap: 12px; }
-  .pp-lock__input {
-    width: 100%; padding: 14px 20px;
+  .pp-lock__form { display: flex; flex-direction: column; gap: 16px; align-items: center; }
+  .pp-lock__digits { display: flex; gap: 8px; justify-content: center; }
+  .pp-lock__digit {
+    width: 44px; height: 56px;
     background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 12px; color: #fff; font-size: 16px; text-align: center;
-    letter-spacing: 6px; font-weight: 700; outline: none;
-    transition: border-color 0.2s;
+    border-radius: 10px; color: #fff;
+    font-size: 22px; font-weight: 700; text-align: center;
+    outline: none; transition: border-color 0.2s, background 0.2s;
+    caret-color: var(--pp-gold);
+    -webkit-text-security: disc;
   }
-  .pp-lock__input::placeholder { font-size: 13px; letter-spacing: 1px; font-weight: 500; opacity: 0.5; }
-  .pp-lock__input:focus { border-color: var(--pp-gold); }
-  .pp-lock__input.shake { animation: shake 0.4s ease; }
+  .pp-lock__digit:focus { border-color: var(--pp-gold); background: rgba(255,255,255,0.1); }
+  .pp-lock__digit.filled { border-color: rgba(255,255,255,0.3); }
+  .pp-lock__digits.shake { animation: shake 0.4s ease; }
   .pp-lock__btn {
     padding: 14px; border: none; border-radius: 12px; cursor: pointer;
     background: linear-gradient(135deg, var(--pp-gold), #b8922e);
@@ -565,6 +615,63 @@
     padding: 16px 20px;
   }
 
+  /* ─── STRUCTURE ─── */
+  .pp-structure { list-style: none; padding: 0; margin: 24px 0 0; }
+  .pp-structure__item {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 15px; color: rgba(255,255,255,0.85);
+    text-align: justify;
+  }
+  .pp-structure__item:last-child { border-bottom: none; }
+  .pp-structure__check {
+    width: 20px; height: 20px; min-width: 20px;
+    color: var(--pp-gold); margin-top: 2px;
+  }
+  .pp-structure__sub {
+    list-style: disc; padding-left: 24px; margin-top: 8px;
+    color: rgba(255,255,255,0.7);
+  }
+  .pp-structure__sub li { padding: 4px 0; font-size: 14px; }
+
+  /* ─── TIMELINE ─── */
+  .pp-timeline { margin-top: 24px; }
+  .pp-timeline__header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 0; border-bottom: 2px solid rgba(255,255,255,0.15);
+    margin-bottom: 4px;
+  }
+  .pp-timeline__col-act { flex: 1; }
+  .pp-timeline__col-per {
+    width: 260px; text-align: right;
+    font-weight: 700; font-size: 14px; text-transform: uppercase;
+    letter-spacing: 0.05em; color: rgba(255,255,255,0.5);
+  }
+  .pp-timeline__row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 16px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .pp-timeline__activity {
+    flex: 1; font-size: 15px; color: rgba(255,255,255,0.85);
+    text-align: justify; padding-right: 24px;
+  }
+  .pp-timeline__period {
+    width: 260px; text-align: right;
+    font-size: 15px; color: rgba(255,255,255,0.6);
+  }
+  .pp-timeline__row--highlight {
+    background: rgba(255,255,255,0.04); border-radius: 8px;
+    padding: 16px 16px; margin: 4px -16px;
+  }
+  .pp-timeline__row--highlight .pp-timeline__activity {
+    font-weight: 700; color: #fff;
+  }
+  .pp-timeline__row--highlight .pp-timeline__period {
+    font-weight: 700; color: var(--pp-gold);
+  }
+
   /* ─── CLOSING ─── */
   .pp-closing {
     position: relative; min-height: 50vh;
@@ -619,6 +726,10 @@
     .pp-term-row { flex-direction: column; align-items: flex-start; gap: 4px; }
     .pp-term-row__value { font-size: 16px; text-align: left; }
     .pp-ticket-bar { flex-direction: column; gap: 8px; text-align: center; }
+    .pp-timeline__header { display: none; }
+    .pp-timeline__row { flex-direction: column; gap: 4px; }
+    .pp-timeline__period { width: auto; text-align: left; font-size: 14px; }
+    .pp-timeline__row--highlight { margin: 4px -12px; padding: 14px 12px; }
     .pp-closing__body h2 { font-size: 36px; }
     .pp-footer { padding: 16px 20px; }
     .pp-donut { width: 180px; height: 180px; }
@@ -630,6 +741,8 @@
     .pp-hero__teams { font-size: 28px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
     .pp-hero__teams em { margin: 0; font-size: 20px; }
     .pp-lock__card { padding: 32px 24px; }
+    .pp-lock__digits { gap: 6px; }
+    .pp-lock__digit { width: 38px; height: 48px; font-size: 20px; border-radius: 8px; }
     .pp-edition-card__match { font-size: 12px; }
   }
 </style>
@@ -641,12 +754,60 @@
     document.getElementById('ppLock').style.display = 'none';
     document.getElementById('ppContent').style.display = 'block';
   }
-  var inp = document.getElementById('ppCode');
+  var digits = document.querySelectorAll('.pp-lock__digit');
+  var digitsWrap = document.getElementById('ppDigits');
   var btn = document.getElementById('ppSubmit');
   var err = document.getElementById('ppError');
+
+  function getCode() {
+    var code = '';
+    digits.forEach(function(d) { code += d.value; });
+    return code;
+  }
+
+  function updateFilled() {
+    digits.forEach(function(d) {
+      if (d.value) d.classList.add('filled');
+      else d.classList.remove('filled');
+    });
+  }
+
+  digits.forEach(function(d, i) {
+    d.addEventListener('input', function() {
+      var v = d.value.replace(/[^0-9]/g, '');
+      d.value = v.charAt(0) || '';
+      updateFilled();
+      if (d.value && i < 6) digits[i + 1].focus();
+      if (getCode().length === 7) tryAccess();
+    });
+
+    d.addEventListener('keydown', function(e) {
+      if (e.key === 'Backspace' && !d.value && i > 0) {
+        digits[i - 1].value = '';
+        digits[i - 1].focus();
+        updateFilled();
+      }
+      if (e.key === 'Enter') tryAccess();
+    });
+
+    d.addEventListener('paste', function(e) {
+      e.preventDefault();
+      var text = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
+      for (var j = 0; j < 7 && j < text.length; j++) {
+        digits[j].value = text.charAt(j);
+      }
+      updateFilled();
+      var next = Math.min(text.length, 6);
+      digits[next].focus();
+      if (getCode().length === 7) tryAccess();
+    });
+  });
+
+  digits[0].focus();
+
   function tryAccess() {
-    var val = inp.value.trim();
-    if (!val) return;
+    var val = getCode();
+    if (val.length < 7) return;
     btn.disabled = true;
     btn.textContent = '...';
     fetch('/api/project2027/verify', {
@@ -662,10 +823,10 @@
         document.getElementById('ppContent').style.display = 'block';
       } else {
         err.classList.add('visible');
-        inp.classList.add('shake');
-        setTimeout(function() { inp.classList.remove('shake'); }, 400);
-        inp.value = '';
-        inp.focus();
+        digitsWrap.classList.add('shake');
+        setTimeout(function() { digitsWrap.classList.remove('shake'); }, 400);
+        digits.forEach(function(d) { d.value = ''; d.classList.remove('filled'); });
+        digits[0].focus();
       }
       btn.disabled = false;
       btn.textContent = '{{data.lock.button}}';
@@ -676,8 +837,5 @@
     });
   }
   btn.addEventListener('click', tryAccess);
-  inp.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') tryAccess();
-  });
 })();
 </script>
