@@ -281,9 +281,134 @@
       margin-top: 8px;
       text-align: center;
     }
+
+    /* Preloader */
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0a0a1a 0%, #0f0f2e 50%, #0a0a1a 100%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .preloader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .preloader-logo-container {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .preloader-spinner {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border: 3px solid transparent;
+      border-top-color: #6c3ce0;
+      border-right-color: #9b59f0;
+      border-radius: 50%;
+      animation: preloaderSpin 1.2s linear infinite;
+    }
+    .preloader-spinner::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      bottom: 8px;
+      border: 3px solid transparent;
+      border-top-color: #e040fb;
+      border-left-color: #6c3ce0;
+      border-radius: 50%;
+      animation: preloaderSpin 1.8s linear infinite reverse;
+    }
+    @keyframes preloaderSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .preloader-logo {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+    .preloader-logo svg {
+      width: 100%;
+      height: 100%;
+    }
+    .preloader-text {
+      margin-top: 30px;
+    }
+    .preloader-text img {
+      max-width: 200px;
+      height: auto;
+    }
+    .preloader-subtext {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      animation: preloaderPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes preloaderPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    @media (max-width: 768px) {
+      .preloader-logo-container { width: 100px; height: 100px; }
+      .preloader-spinner { width: 100px; height: 100px; }
+      .preloader-logo { width: 50px; height: 50px; }
+      .preloader-text img { max-width: 160px; }
+    }
   </style>
 </head>
 <body>
+  <!-- Preloader -->
+  <div class="preloader" id="preloader">
+    <div class="preloader-logo-container">
+      <div class="preloader-spinner"></div>
+      <div class="preloader-logo">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="45" stroke="url(#loaderGrad)" stroke-width="4" fill="none"></circle>
+          <path d="M50 15 L50 85 M15 50 L85 50" stroke="url(#loaderGrad)" stroke-width="3" stroke-linecap="round"></path>
+          <circle cx="50" cy="50" r="20" stroke="url(#loaderGrad)" stroke-width="3" fill="none"></circle>
+          <circle cx="50" cy="50" r="8" fill="url(#loaderGrad)"></circle>
+          <defs>
+            <linearGradient id="loaderGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#6c3ce0"/>
+              <stop offset="100%" stop-color="#e040fb"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+    <div class="preloader-text"><img src="/assets/images/soccerid.png" alt="SOCCER iD"></div>
+    <div class="preloader-subtext">Cargando...</div>
+  </div>
+
   {{{body}}}
+
+  <script>
+    window.addEventListener('load', function() {
+      var p = document.getElementById('preloader');
+      if (p) {
+        setTimeout(function() { p.classList.add('hidden'); }, 400);
+      }
+    });
+  </script>
 </body>
 </html>
