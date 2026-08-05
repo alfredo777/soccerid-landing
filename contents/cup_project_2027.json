@@ -56,6 +56,7 @@
     },
     "scope": {
       "title": "ALCANCE DE LA INVERSIÓN",
+      "subtitle": "CAPITAL REQUERIDO: USD $1.0 M",
       "indicatorsTitle": "PRINCIPALES INDICADORES",
       "indicators": [
         { "label": "Ticket promedio proyectado", "value": "USD $100" },
@@ -224,6 +225,7 @@
     },
     "scope": {
       "title": "INVESTMENT SCOPE",
+      "subtitle": "REQUIRED CAPITAL: USD $1.0 M",
       "indicatorsTitle": "KEY INDICATORS",
       "indicators": [
         { "label": "Projected average ticket", "value": "USD $100" },
