@@ -1,40 +1,46 @@
 <style>
-  .nw-chips { display:flex; gap:10px; margin: 6px 0 20px; flex-wrap:wrap; }
-  .nw-chip { padding: 9px 18px; border-radius: 12px; background:#fff; border:1px solid var(--pn-border); font-size:13px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
-  .nw-chip.is-active { background: var(--pn-ink); color:#fff; border-color: var(--pn-ink); }
+  .nw-chips { display:flex; gap:10px; margin: 6px 0 22px; flex-wrap:wrap; }
+  .nw-chip { padding: 10px 20px; border-radius: 13px; background:#fff; border:1px solid var(--pn-border); font-size:13px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
+  .nw-chip.is-active { background: var(--pn-purple); color:#fff; border-color: var(--pn-purple); }
 
-  .nw-grid { display:grid; grid-template-columns: 1fr 320px; gap: 20px; align-items:start; }
-  .nw-main { min-width:0; display:flex; flex-direction:column; gap: 18px; }
+  .nw-grid { display:grid; grid-template-columns: 1fr 320px; gap: 22px; align-items:start; }
+  .nw-main { min-width:0; }
 
-  /* Featured */
-  .nw-feat { display:grid; grid-template-columns: 300px 1fr; overflow:hidden; }
-  .nw-feat img { width:100%; height:100%; min-height:220px; object-fit:cover; }
-  .nw-feat__b { padding: 26px; display:flex; flex-direction:column; justify-content:center; }
-  .nw-tag { display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; padding:5px 12px; border-radius:20px; align-self:flex-start; }
-  .nw-tag .d { width:6px; height:6px; border-radius:50%; background: currentColor; }
-  .nw-feat__b h2 { font-size:24px; font-weight:900; letter-spacing:-.3px; margin:14px 0 8px; line-height:1.2; }
-  .nw-feat__b p { font-size:14px; color:var(--pn-ink-2); line-height:1.55; }
-  .nw-feat__foot { display:flex; align-items:center; gap:14px; margin-top:18px; font-size:12px; color:var(--pn-muted); font-weight:700; }
-  .nw-readmore { margin-left:auto; font-size:13px; font-weight:800; color:var(--pn-ink); display:flex; align-items:center; gap:6px; }
+  /* Masonry (Pinterest) */
+  .nw-masonry { column-count: 2; column-gap: 18px; }
+  .nw-card {
+    break-inside: avoid; width:100%; margin: 0 0 18px;
+    background:#fff; border:1px solid var(--pn-border); border-radius:18px;
+    box-shadow: var(--pn-shadow); overflow:hidden; display:inline-block;
+  }
+  .nw-card__imgwrap { position:relative; }
+  .nw-card img { width:100%; display:block; object-fit:cover; }
+  .nw-card.is-tall img { height: 240px; }
+  .nw-card.is-short img { height: 150px; }
+  .nw-card__tag {
+    position:absolute; top:12px; left:12px;
+    display:inline-flex; align-items:center; gap:6px; font-size:10.5px; font-weight:900;
+    text-transform:uppercase; letter-spacing:.5px; padding:6px 12px; border-radius:20px;
+    background:#fff; color:var(--pn-ink);
+  }
+  .nw-card__tag .d { width:7px; height:7px; border-radius:50%; }
+  .nw-card__b { padding: 16px 18px 18px; }
+  .nw-card__b h3 { font-size:17px; font-weight:800; line-height:1.28; letter-spacing:-.2px; margin-bottom:8px; }
+  .nw-card__b p { font-size:13px; color:var(--pn-ink-2); line-height:1.55; }
+  .nw-card__foot { display:flex; align-items:center; justify-content:space-between; margin-top:16px; font-size:12px; color:var(--pn-muted); font-weight:700; }
+  .nw-readmore { font-size:13px; font-weight:800; color:var(--pn-purple); display:flex; align-items:center; gap:6px; }
 
-  .nw-cards { display:grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
-  .nw-card { overflow:hidden; display:flex; flex-direction:column; }
-  .nw-card img { width:100%; height:150px; object-fit:cover; }
-  .nw-card__b { padding: 16px 18px 18px; display:flex; flex-direction:column; flex:1; }
-  .nw-card__b h3 { font-size:16px; font-weight:800; line-height:1.3; margin:10px 0 6px; }
-  .nw-card__b p { font-size:13px; color:var(--pn-ink-2); line-height:1.5; flex:1; }
-  .nw-card__foot { display:flex; align-items:center; justify-content:space-between; margin-top:14px; font-size:12px; color:var(--pn-muted); font-weight:700; }
-
+  /* Rail */
   .nw-rail { display:flex; flex-direction:column; gap: 18px; }
-  .nw-mile { display:flex; gap:12px; align-items:flex-start; padding: 12px 0; border-bottom:1px solid var(--pn-border); }
-  .nw-mile:last-child { border-bottom:none; }
+  .nw-mile { display:flex; gap:12px; align-items:flex-start; padding: 13px 0; border-bottom:1px solid var(--pn-border); }
+  .nw-mile:last-child { border-bottom:none; padding-bottom:0; }
   .nw-mile__ico { flex-shrink:0; margin-top:1px; }
   .nw-mile__b strong { display:block; font-size:14px; font-weight:700; }
   .nw-mile__b small { font-size:12px; color:var(--pn-muted); font-weight:600; }
-  .nw-rail__list { padding: 6px 20px 18px; }
+  .nw-rail__list { padding: 6px 20px 20px; }
 
   @media (max-width: 1100px) { .nw-grid { grid-template-columns: 1fr; } }
-  @media (max-width: 620px) { .nw-feat { grid-template-columns: 1fr; } .nw-feat img { min-height:180px; } .nw-cards { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) { .nw-masonry { column-count: 1; } }
 </style>
 
 <div class="nw-chips">
@@ -46,43 +52,24 @@
 
 <div class="nw-grid">
   <div class="nw-main">
-    {{#each panel.news}}
-      {{#if this.featured}}
-      <article class="pn-card nw-feat">
-        <img src="{{this.image}}" alt="">
-        <div class="nw-feat__b">
-          <span class="nw-tag" style="color: {{this.tagColor}}; background: {{this.tagColor}}1A;"><span class="d"></span>{{this.tag}}</span>
-          <h2>{{this.title}}</h2>
+    <div class="nw-masonry">
+      {{#each panel.news}}
+      <article class="nw-card {{#if this.size}}is-{{this.size}}{{else}}is-short{{/if}}">
+        <div class="nw-card__imgwrap">
+          <img src="{{this.image}}" alt="">
+          <span class="nw-card__tag"><span class="d" style="background: {{this.tagColor}}"></span>{{this.tag}}</span>
+        </div>
+        <div class="nw-card__b">
+          <h3>{{this.title}}</h3>
           <p>{{this.excerpt}}</p>
-          <div class="nw-feat__foot">
+          <div class="nw-card__foot">
             <span>{{this.date}}</span>
             <span class="nw-readmore">Leer más
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </span>
           </div>
         </div>
       </article>
-      {{/if}}
-    {{/each}}
-
-    <div class="nw-cards">
-      {{#each panel.news}}
-        {{#unless this.featured}}
-        <article class="pn-card nw-card">
-          <img src="{{this.image}}" alt="">
-          <div class="nw-card__b">
-            <span class="nw-tag" style="color: {{this.tagColor}}; background: {{this.tagColor}}1A;"><span class="d"></span>{{this.tag}}</span>
-            <h3>{{this.title}}</h3>
-            <p>{{this.excerpt}}</p>
-            <div class="nw-card__foot">
-              <span>{{this.date}}</span>
-              <span class="nw-readmore">Leer más
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-              </span>
-            </div>
-          </div>
-        </article>
-        {{/unless}}
       {{/each}}
     </div>
   </div>
@@ -93,7 +80,7 @@
       <div class="nw-rail__list">
         {{#each panel.milestones}}
         <div class="nw-mile">
-          <div class="nw-mile__ico" style="color: {{#if this.highlight}}#C79A2E{{else}}{{#if this.done}}#2FB380{{else}}var(--pn-muted){{/if}}{{/if}}">
+          <div class="nw-mile__ico" style="color: {{#if this.highlight}}var(--pn-purple){{else}}{{#if this.done}}var(--pn-ink){{else}}var(--pn-muted){{/if}}{{/if}}">
             {{#if this.done}}
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12.5 11 15 16 9.5"/></svg>
             {{else}}
@@ -111,10 +98,10 @@
 
     <div class="pn-card">
       <div class="pn-card__head"><h3>Tu categoría</h3></div>
-      <div style="padding: 18px 20px;">
-        <span class="pn-badge" style="color: {{panel.user.color}}; background: {{panel.user.bg}};"><span class="dotc"></span>{{panel.user.categoryLabel}}</span>
+      <div style="padding: 6px 20px 20px;">
+        <span class="pn-badge" style="color:#fff; background: {{panel.user.color}};">{{panel.user.categoryLabel}}</span>
         <p style="font-size:13px; color:var(--pn-ink-2); line-height:1.55; margin-top:14px;">Como inversionista {{panel.user.categoryLabel}} recibes todas las comunicaciones y actualizaciones con acceso prioritario.</p>
-        <a href="/panel" class="pn-card__link" style="margin-top:14px;">Ver mis beneficios ›</a>
+        <a href="/panel" class="pn-card__link" style="margin-top:14px; display:inline-flex;">Ver mis beneficios ›</a>
       </div>
     </div>
   </aside>
