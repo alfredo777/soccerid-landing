@@ -291,6 +291,21 @@
             </a>
           </div>
         </div>
+
+        {{#eq panel.user.role 'admin'}}
+        <div class="pn-group">
+          <button class="pn-group__head" data-group>
+            Administración
+            <svg class="pn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="pn-group__body">
+            <a href="/panel/admin" class="pn-link {{#eq active 'admin'}}is-active{{/eq}}" title="Panel del organizador">
+              <svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5z"/><polyline points="9 12 11 14 15 10"/></svg>
+              <span class="pn-label">Organizador</span>
+            </a>
+          </div>
+        </div>
+        {{/eq}}
       </nav>
 
       <div class="pn-side__event">
@@ -307,7 +322,7 @@
             <small>{{panel.org.role}}</small>
           </div>
         </div>
-        <button class="pn-logout" onclick="window.location.href='/panel'">
+        <button class="pn-logout" onclick="window.location.href='/panel/logout'">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           <span>Cerrar sesión</span>
         </button>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso · SOCCER iD Investor Portal</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F5F4F8;color:#14141B;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;-webkit-font-smoothing:antialiased;}
+    .lg-card{width:100%;max-width:420px;background:#fff;border:1px solid #ECEAF2;border-radius:22px;box-shadow:0 10px 40px rgba(76,43,166,.08);overflow:hidden;}
+    .lg-top{background:#6C3CE0;padding:30px;text-align:center;}
+    .lg-top .logo{width:56px;height:56px;border-radius:16px;background:rgba(255,255,255,.15);display:inline-flex;align-items:center;justify-content:center;margin-bottom:12px;}
+    .lg-top .logo img{width:34px;height:34px;}
+    .lg-top strong{display:block;color:#fff;font-size:18px;font-weight:800;letter-spacing:.3px;}
+    .lg-top small{color:rgba(255,255,255,.75);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+    .lg-body{padding:32px 30px 30px;}
+    .lg-body h1{font-size:22px;font-weight:800;margin-bottom:6px;}
+    .lg-body p{font-size:13px;color:#6A6675;margin-bottom:24px;}
+    .lg-field{margin-bottom:16px;}
+    .lg-field label{display:block;font-size:12px;font-weight:700;color:#6A6675;margin-bottom:7px;}
+    .lg-field input{width:100%;padding:14px 16px;border:1px solid #ECEAF2;border-radius:13px;font-size:14px;font-family:inherit;background:#FAFAFC;outline:none;transition:border .15s,background .15s;}
+    .lg-field input:focus{border-color:#6C3CE0;background:#fff;}
+    .lg-btn{width:100%;padding:15px;border:none;border-radius:13px;background:#6C3CE0;color:#fff;font-size:15px;font-weight:800;font-family:inherit;cursor:pointer;margin-top:8px;transition:background .15s;}
+    .lg-btn:hover{background:#5A2FC7;}
+    .lg-err{background:#FDECEC;color:#C0392B;font-size:13px;font-weight:600;padding:12px 14px;border-radius:11px;margin-bottom:18px;}
+    .lg-ok{background:#EAF7F0;color:#1E8E5A;font-size:13px;font-weight:600;padding:12px 14px;border-radius:11px;margin-bottom:18px;}
+    .lg-foot{text-align:center;font-size:12px;color:#A6A2B3;margin-top:22px;}
+    .lg-foot a{color:#6C3CE0;font-weight:700;text-decoration:none;}
+  </style>
+</head>
+<body>
+  <div class="lg-card">
+    <div class="lg-top">
+      <span class="logo"><img src="/assets/images/iconsoccerid.png" alt="SOCCER iD"></span>
+      <strong>SOCCER iD</strong>
+      <small>Investor Portal</small>
+    </div>
+    <div class="lg-body">
+      <h1>Iniciar sesión</h1>
+      <p>Accede a tu panel privado de SOCCER iD CUP 2027.</p>
+      {{#if error}}<div class="lg-err">Correo o contraseña incorrectos.</div>{{/if}}
+      {{#if ok}}<div class="lg-ok">Cuenta activada. Ya puedes iniciar sesión.</div>{{/if}}
+      <form method="POST" action="/panel/login">
+        <div class="lg-field">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" required autocomplete="email" placeholder="tu@correo.com">
+        </div>
+        <div class="lg-field">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <button type="submit" class="lg-btn">Entrar</button>
+      </form>
+      <div class="lg-foot">¿Problemas para acceder? <a href="https://wa.me/17867844303" target="_blank">Contáctanos</a></div>
+    </div>
+  </div>
+</body>
+</html>

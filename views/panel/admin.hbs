@@ -1,0 +1,247 @@
+<style>
+  .ad-tabs { display:flex; gap:10px; margin: 6px 0 22px; flex-wrap:wrap; }
+  .ad-tab { padding:10px 20px; border-radius:13px; background:#fff; border:1px solid var(--pn-border); font-size:13px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
+  .ad-tab.is-active { background:var(--pn-purple); color:#fff; border-color:var(--pn-purple); }
+  .ad-sec { display:none; }
+  .ad-sec.is-active { display:block; }
+
+  .ad-flash { padding:13px 18px; border-radius:13px; font-size:13px; font-weight:700; margin-bottom:20px; }
+  .ad-flash.ok { background:#EAF7F0; color:#1E8E5A; }
+  .ad-flash.error { background:#FDECEC; color:#C0392B; }
+
+  .ad-grid { display:grid; grid-template-columns: 360px 1fr; gap:22px; align-items:start; }
+  @media (max-width:1000px){ .ad-grid{ grid-template-columns:1fr; } }
+
+  .ad-form { padding:20px; }
+  .ad-form h3 { font-size:15px; font-weight:800; margin-bottom:16px; }
+  .ad-f { margin-bottom:14px; }
+  .ad-f label { display:block; font-size:12px; font-weight:700; color:var(--pn-ink-2); margin-bottom:6px; }
+  .ad-f input, .ad-f select, .ad-f textarea { width:100%; padding:11px 13px; border:1px solid var(--pn-border); border-radius:11px; font-size:13px; font-family:inherit; background:#FAFAFC; outline:none; }
+  .ad-f input:focus, .ad-f select:focus, .ad-f textarea:focus { border-color:var(--pn-purple); background:#fff; }
+  .ad-f textarea { resize:vertical; min-height:70px; }
+  .ad-row2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .ad-check { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:var(--pn-ink-2); }
+  .ad-check input { width:auto; }
+  .ad-btn { width:100%; padding:13px; border:none; border-radius:12px; background:var(--pn-purple); color:#fff; font-size:14px; font-weight:800; font-family:inherit; cursor:pointer; margin-top:6px; }
+  .ad-btn:hover { background:#5A2FC7; }
+
+  .ad-list { padding:6px 4px; }
+  .ad-item { display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid var(--pn-border); }
+  .ad-item:last-child { border-bottom:none; }
+  .ad-item__av { width:40px; height:40px; border-radius:10px; color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; flex-shrink:0; }
+  .ad-item__thumb { width:52px; height:40px; border-radius:9px; object-fit:cover; flex-shrink:0; }
+  .ad-item__b { flex:1; min-width:0; }
+  .ad-item__b strong { display:block; font-size:14px; font-weight:700; }
+  .ad-item__b small { font-size:12px; color:var(--pn-muted); }
+  .ad-tagpill { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; padding:3px 9px; border-radius:20px; }
+  .ad-status { font-size:11px; font-weight:800; text-transform:uppercase; padding:4px 10px; border-radius:20px; }
+  .ad-status.active { background:#EAF7F0; color:#1E8E5A; }
+  .ad-status.invited { background:#FFF4E5; color:#B77A1E; }
+  .ad-status.disabled { background:#F1F0F5; color:#8A8F98; }
+  .ad-actions { display:flex; gap:8px; flex-shrink:0; }
+  .ad-actions button { border:1px solid var(--pn-border); background:#fff; border-radius:9px; padding:7px 10px; font-size:12px; font-weight:700; cursor:pointer; color:var(--pn-ink-2); font-family:inherit; }
+  .ad-actions button:hover { background:#F6F5F9; }
+  .ad-actions button.danger:hover { background:#FDECEC; color:#C0392B; border-color:#F5C6C6; }
+  .ad-empty { padding:30px; text-align:center; color:var(--pn-muted); font-size:13px; }
+</style>
+
+{{#if flash}}<div class="ad-flash {{#eq flashType 'error'}}error{{else}}ok{{/eq}}">{{flash}}</div>{{/if}}
+
+<div class="ad-tabs">
+  <div class="ad-tab is-active" data-tab="usuarios">Usuarios</div>
+  <div class="ad-tab" data-tab="noticias">Noticias</div>
+  <div class="ad-tab" data-tab="calendario">Calendario</div>
+  <div class="ad-tab" data-tab="cronograma">Cronograma</div>
+</div>
+
+<!-- USUARIOS -->
+<section class="ad-sec is-active" id="sec-usuarios">
+  <div class="ad-grid">
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/invite">
+      <h3>Invitar usuario</h3>
+      <div class="ad-f"><label>Nombre completo</label><input type="text" name="name" required placeholder="Nombre y apellido"></div>
+      <div class="ad-f"><label>Correo electrónico</label><input type="email" name="email" required placeholder="correo@ejemplo.com"></div>
+      <div class="ad-f"><label>Tipo</label>
+        <select name="role" id="ad-role">
+          <option value="investor">Inversionista</option>
+          <option value="sponsor">Patrocinador</option>
+        </select>
+      </div>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Categoría</label><select name="category" id="ad-cat"></select></div>
+        <div class="ad-f"><label>Monto (USD)</label><input type="number" name="amount" id="ad-amount" min="0" step="1000"></div>
+      </div>
+      <button type="submit" class="ad-btn">Enviar invitación</button>
+    </form>
+
+    <div class="pn-card">
+      <div class="pn-card__head"><h3>Usuarios ({{users.length}})</h3></div>
+      <div class="ad-list">
+        {{#each users}}
+        <div class="ad-item">
+          <div class="ad-item__av" style="background: {{this.color}}">{{this.tierLabel.[0]}}</div>
+          <div class="ad-item__b">
+            <strong>{{this.name}}</strong>
+            <small>{{this.email}} · {{this.roleLabel}} {{this.tierLabel}} · {{this.amount}}</small>
+          </div>
+          <span class="ad-status {{this.status}}">{{this.status}}</span>
+          <div class="ad-actions">
+            <form method="POST" action="/panel/admin/user/{{this.id}}/resend"><button type="submit">Reenviar</button></form>
+            <form method="POST" action="/panel/admin/user/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar a {{this.name}}?')"><button type="submit" class="danger">Eliminar</button></form>
+          </div>
+        </div>
+        {{else}}
+        <div class="ad-empty">Aún no hay usuarios. Invita al primero.</div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NOTICIAS -->
+<section class="ad-sec" id="sec-noticias">
+  <div class="ad-grid">
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/news">
+      <h3>Publicar noticia</h3>
+      <div class="ad-f"><label>Categoría</label>
+        <select name="tag"><option>Anuncio</option><option>Actualización</option><option>Prensa</option></select>
+      </div>
+      <div class="ad-f"><label>Título</label><input type="text" name="title" required></div>
+      <div class="ad-f"><label>Extracto</label><textarea name="excerpt"></textarea></div>
+      <div class="ad-f"><label>URL de imagen</label><input type="text" name="image" placeholder="/assets/images/gallery/cup2025/6.jpg"></div>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Fecha (texto)</label><input type="text" name="date_label" placeholder="12 Jul 2026"></div>
+        <div class="ad-f"><label>Tamaño</label><select name="size"><option value="short">Normal</option><option value="tall">Grande</option></select></div>
+      </div>
+      <label class="ad-check"><input type="checkbox" name="featured" value="1"> Destacada</label>
+      <button type="submit" class="ad-btn" style="margin-top:14px;">Publicar</button>
+    </form>
+
+    <div class="pn-card">
+      <div class="pn-card__head"><h3>Noticias ({{news.length}})</h3></div>
+      <div class="ad-list">
+        {{#each news}}
+        <div class="ad-item">
+          <img class="ad-item__thumb" src="{{this.image}}" alt="">
+          <div class="ad-item__b">
+            <span class="ad-tagpill" style="color:{{this.tag_color}}; background:{{this.tag_color}}1A;">{{this.tag}}</span>
+            <strong style="margin-top:4px;">{{this.title}}</strong>
+            <small>{{this.date_label}}{{#if this.featured}} · Destacada{{/if}}</small>
+          </div>
+          <div class="ad-actions">
+            <form method="POST" action="/panel/admin/news/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar noticia?')"><button type="submit" class="danger">Eliminar</button></form>
+          </div>
+        </div>
+        {{else}}
+        <div class="ad-empty">No hay noticias.</div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CALENDARIO -->
+<section class="ad-sec" id="sec-calendario">
+  <div class="ad-grid">
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/event">
+      <h3>Agregar evento</h3>
+      <div class="ad-f"><label>Título</label><input type="text" name="title" required></div>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Día</label><input type="number" name="day" min="1" max="31" required></div>
+        <div class="ad-f"><label>Tipo</label><select name="type"><option>Evento</option><option>Actualización</option><option>Patrocinio</option><option>Prensa</option><option>Partido</option></select></div>
+      </div>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Mes</label><input type="number" name="month" min="1" max="12" value="3"></div>
+        <div class="ad-f"><label>Año</label><input type="number" name="year" value="2027"></div>
+      </div>
+      <button type="submit" class="ad-btn">Agregar al calendario</button>
+    </form>
+
+    <div class="pn-card">
+      <div class="pn-card__head"><h3>Eventos ({{events.length}})</h3></div>
+      <div class="ad-list">
+        {{#each events}}
+        <div class="ad-item">
+          <div class="ad-item__av" style="background: {{this.color}}">{{this.day}}</div>
+          <div class="ad-item__b">
+            <strong>{{this.title}}</strong>
+            <small>{{this.day}}/{{this.month}}/{{this.year}} · {{this.type}}</small>
+          </div>
+          <div class="ad-actions">
+            <form method="POST" action="/panel/admin/event/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar evento?')"><button type="submit" class="danger">Eliminar</button></form>
+          </div>
+        </div>
+        {{else}}
+        <div class="ad-empty">No hay eventos.</div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CRONOGRAMA -->
+<section class="ad-sec" id="sec-cronograma">
+  <div class="ad-grid">
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/milestone">
+      <h3>Agregar hito</h3>
+      <div class="ad-f"><label>Título</label><input type="text" name="title" required></div>
+      <div class="ad-f"><label>Fecha (texto)</label><input type="text" name="date_label" placeholder="Sep 2026"></div>
+      <label class="ad-check"><input type="checkbox" name="done" value="1"> Completado</label>
+      <label class="ad-check" style="margin-top:8px;"><input type="checkbox" name="highlight" value="1"> Destacar (partido)</label>
+      <button type="submit" class="ad-btn" style="margin-top:14px;">Agregar hito</button>
+    </form>
+
+    <div class="pn-card">
+      <div class="pn-card__head"><h3>Cronograma ({{milestones.length}})</h3></div>
+      <div class="ad-list">
+        {{#each milestones}}
+        <div class="ad-item">
+          <div class="ad-item__av" style="background: {{#if this.highlight}}#6C3CE0{{else}}{{#if this.done}}#1E8E5A{{else}}#8A8F98{{/if}}{{/if}}">
+            {{#if this.done}}✓{{else}}○{{/if}}
+          </div>
+          <div class="ad-item__b">
+            <strong>{{this.title}}</strong>
+            <small>{{this.date_label}}{{#if this.done}} · Completado{{/if}}{{#if this.highlight}} · Destacado{{/if}}</small>
+          </div>
+          <div class="ad-actions">
+            <form method="POST" action="/panel/admin/milestone/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar hito?')"><button type="submit" class="danger">Eliminar</button></form>
+          </div>
+        </div>
+        {{else}}
+        <div class="ad-empty">No hay hitos.</div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  var INVESTOR_TIERS = {{{json investorTiers}}};
+  var SPONSOR_TIERS = {{{json sponsorTiers}}};
+  var roleSel = document.getElementById('ad-role');
+  var catSel = document.getElementById('ad-cat');
+  var amountInp = document.getElementById('ad-amount');
+  function fillCats(){
+    var tiers = roleSel.value === 'sponsor' ? SPONSOR_TIERS : INVESTOR_TIERS;
+    catSel.innerHTML = tiers.map(function(t){ return '<option value="'+t.key+'" data-amt="'+t.amount+'">'+t.label+'</option>'; }).join('');
+    syncAmount();
+  }
+  function syncAmount(){
+    var opt = catSel.options[catSel.selectedIndex];
+    if (opt) amountInp.value = opt.getAttribute('data-amt') || '';
+  }
+  if (roleSel) {
+    roleSel.addEventListener('change', fillCats);
+    catSel.addEventListener('change', syncAmount);
+    fillCats();
+  }
+
+  // Tabs
+  var tabs = document.querySelectorAll('.ad-tab');
+  function activate(name){
+    tabs.forEach(function(t){ t.classList.toggle('is-active', t.dataset.tab === name); });
+    document.querySelectorAll('.ad-sec').forEach(function(s){ s.classList.toggle('is-active', s.id === 'sec-'+name); });
+  }
+  tabs.forEach(function(t){ t.addEventListener('click', function(){ activate(t.dataset.tab); }); });
+  if (location.hash) { var h = location.hash.replace('#',''); if (document.getElementById('sec-'+h)) activate(h); }
+</script>

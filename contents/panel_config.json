@@ -1,0 +1,77 @@
+{
+  "org": { "name": "SOCCER iD", "role": "Organizador del evento" },
+  "eventDate": "2027-03-27",
+  "eventLabel": "Sábado, 27 de marzo 2027",
+  "focus": { "month": 3, "year": 2027 },
+  "matchAgendaDate": "Sábado, 27 de marzo 2027",
+  "matchAgenda": [
+    { "time": "10:00", "title": "Fan Fest — Activación de aficionados", "sub": "Explanada del estadio", "color": "#A78BE6" },
+    { "time": "14:00", "title": "Apertura de Hospitality y Palcos", "sub": "Acceso VIP inversionistas", "color": "#6C3CE0" },
+    { "time": "17:00", "title": "Alfombra roja de inversionistas", "sub": "Zona premium", "color": "#14141B" },
+    { "time": "19:00", "title": "Kickoff — Tigres vs Cruz Azul", "sub": "Shell Energy Stadium", "color": "#6C3CE0" }
+  ],
+  "advisor": {
+    "name": "Laura Ortega",
+    "role": "Relación con inversionistas",
+    "phone": "+1 786 784 4303",
+    "whatsapp": "17867844303",
+    "initials": "LO"
+  },
+  "documents": [
+    { "name": "Contrato de inversión", "meta": "PDF · 2.4 MB", "icon": "doc" },
+    { "name": "Prospecto SOCCER iD CUP 2027", "meta": "PDF · 5.1 MB", "icon": "doc" },
+    { "name": "Estados financieros Q1", "meta": "PDF · 1.2 MB", "icon": "chart" }
+  ],
+  "investorTiers": [
+    { "key": "diamante", "label": "Diamante", "count": 1, "color": "#6C3CE0", "bg": "#EFE9FC", "amount": 1000000, "benefits": [
+      "Reconocimiento como inversionista principal del torneo",
+      "Palco privado premium para 20 personas",
+      "40 boletos en zona preferente",
+      "Acceso VIP a zona de jugadores y hospitality",
+      "Participación prioritaria en utilidades",
+      "Menciones en transmisión oficial y rueda de prensa",
+      "Reporte financiero personalizado del evento"
+    ]},
+    { "key": "platino", "label": "Platino", "count": 3, "color": "#2B2B33", "bg": "#EDEDEF", "amount": 500000, "benefits": [
+      "Palco compartido para 10 personas",
+      "20 boletos en zona preferente",
+      "Acceso a hospitality VIP",
+      "Participación en utilidades",
+      "Mención en materiales del evento"
+    ]},
+    { "key": "oro", "label": "Oro", "count": 6, "color": "#C79A2E", "bg": "#FBF4E0", "amount": 250000, "benefits": [
+      "10 boletos en zona preferente",
+      "Acceso a hospitality",
+      "Participación en utilidades",
+      "Kit oficial conmemorativo"
+    ]},
+    { "key": "plata", "label": "Plata", "count": 12, "color": "#8A8F98", "bg": "#F1F2F4", "amount": 100000, "benefits": [
+      "6 boletos en zona general premium",
+      "Acceso a lounge de inversionistas",
+      "Participación en utilidades"
+    ]},
+    { "key": "bronce", "label": "Bronce", "count": 24, "color": "#B06B33", "bg": "#F6EBE0", "amount": 50000, "benefits": [
+      "4 boletos en zona general",
+      "Acceso a lounge de inversionistas",
+      "Participación en utilidades"
+    ]}
+  ],
+  "sponsorTiers": [
+    { "key": "black", "label": "Black", "count": 3, "color": "#14141B", "bg": "#EDEDEF", "amount": 1000000, "benefits": [
+      "Naming rights y marca principal del evento",
+      "Presencia dominante en estadio y transmisión",
+      "Palco corporativo premium",
+      "Activación de marca en Fan Fest"
+    ]},
+    { "key": "gold", "label": "Gold", "count": 6, "color": "#C79A2E", "bg": "#FBF4E0", "amount": 500000, "benefits": [
+      "Presencia de marca en estadio y transmisión",
+      "Palco corporativo",
+      "Activación de marca en zona VIP"
+    ]},
+    { "key": "pearl", "label": "Pearl", "count": 12, "color": "#A99AB8", "bg": "#F3F0F7", "amount": 100000, "benefits": [
+      "Presencia de marca en estadio",
+      "Boletos en zona hospitality",
+      "Mención en materiales del evento"
+    ]}
+  ]
+}

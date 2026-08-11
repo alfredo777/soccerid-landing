@@ -236,6 +236,7 @@ app.set('view cache', isProduction); // Habilitar cache de vistas solo en produc
 // ============================================================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(require('cookie-parser')());
 
 // Trust proxy para obtener IP real detrás de reverse proxy (producción)
 if (isProduction) {
@@ -975,89 +976,9 @@ app.get('/cupid', (req, res) => {
 });
 
 // ============================================================
-// PANEL DE INVERSIONISTAS / PATROCINADORES (Fase 1: vistas mock)
+// PANEL DE INVERSIONISTAS / PATROCINADORES (Fase 2: login + BD + admin)
 // ============================================================
-function buildPanelData() {
-  const mockPath = path.join(__dirname, 'contents', 'panel_mock.json');
-  const panel = JSON.parse(fs.readFileSync(mockPath, 'utf8'));
-
-  // Beneficios de la categoría del usuario logueado
-  const tier = (panel.investorTiers || []).find(t => t.key === panel.user.category);
-  panel.userBenefits = tier ? tier.benefits : [];
-
-  // Total y donut de distribución
-  const total = (panel.distribution || []).reduce((s, d) => s + d.count, 0);
-  panel.investorTotal = total;
-  const C = 2 * Math.PI * 54;
-  panel.donutC = Math.round(C * 100) / 100;
-  let cum = 0;
-  panel.donut = (panel.distribution || []).map(d => {
-    const frac = total ? d.count / total : 0;
-    const seg = { color: d.color, len: Math.round(frac * C * 100) / 100, angle: Math.round((cum / total) * 360 * 100) / 100 - 90 };
-    cum += d.count;
-    return seg;
-  });
-
-  // Celdas del calendario (semana inicia en domingo)
-  const cal = panel.calendar || {};
-  const cells = [];
-  for (let i = 0; i < (cal.firstWeekday || 0); i++) cells.push({ empty: true });
-  for (let day = 1; day <= (cal.daysInMonth || 0); day++) {
-    const events = (cal.events || []).filter(e => e.day === day);
-    cells.push({ day, events, match: events.some(e => e.match) });
-  }
-  panel.calendarCells = cells;
-
-  return panel;
-}
-
-app.get('/panel', (req, res) => {
-  try {
-    res.render('panel/dashboard', {
-      layout: 'panel',
-      title: 'Dashboard · SOCCER iD Investor Portal',
-      pageHeading: 'Hola, Carlos 👋',
-      pageSub: 'Bienvenido a tu panel de inversionista SOCCER iD CUP',
-      active: 'dashboard',
-      panel: buildPanelData()
-    });
-  } catch (e) {
-    console.error('Error panel dashboard:', e);
-    res.status(500).send('Error cargando el panel');
-  }
-});
-
-app.get('/panel/noticias', (req, res) => {
-  try {
-    res.render('panel/noticias', {
-      layout: 'panel',
-      title: 'Noticias · SOCCER iD Investor Portal',
-      pageHeading: 'Noticias del evento',
-      pageSub: 'Anuncios, actualizaciones y prensa de SOCCER iD CUP 2027',
-      active: 'noticias',
-      panel: buildPanelData()
-    });
-  } catch (e) {
-    console.error('Error panel noticias:', e);
-    res.status(500).send('Error cargando el panel');
-  }
-});
-
-app.get('/panel/calendario', (req, res) => {
-  try {
-    res.render('panel/calendario', {
-      layout: 'panel',
-      title: 'Calendario · SOCCER iD Investor Portal',
-      pageHeading: 'Calendario y cronograma',
-      pageSub: 'Fechas clave rumbo al 27 de marzo de 2027',
-      active: 'calendario',
-      panel: buildPanelData()
-    });
-  } catch (e) {
-    console.error('Error panel calendario:', e);
-    res.status(500).send('Error cargando el panel');
-  }
-});
+app.use('/panel', require('./routes/panel'));
 
 // Rutas legales sin idioma (redirigen)
 app.get('/terms', (req, res) => {
@@ -1185,4 +1106,9 @@ app.listen(PORT, () => {
   }
   console.log('='.repeat(60));
   console.log('');
+
+  // Inicializar base de datos del panel de inversionistas
+  require('./db/schema').init().catch(err => {
+    console.error('✗ Error inicializando base de datos del panel:', err.message);
+  });
 });
