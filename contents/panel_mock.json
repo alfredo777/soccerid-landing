@@ -1,0 +1,126 @@
+{
+  "org": {
+    "name": "SOCCER iD",
+    "role": "Organizador del evento"
+  },
+  "user": {
+    "name": "Carlos Mendoza",
+    "firstName": "Carlos",
+    "initials": "CM",
+    "email": "carlos.mendoza@example.com",
+    "type": "investor",
+    "category": "diamante",
+    "categoryLabel": "DIAMANTE",
+    "color": "#22B8CF",
+    "bg": "#E7FAFD",
+    "amount": "USD $1,000,000",
+    "amountRaw": 1000000,
+    "memberId": "SIDC-D01",
+    "since": "Marzo 2026",
+    "projectedReturn": "USD $1,250,000",
+    "returnPct": "Hasta 25%"
+  },
+  "eventDate": "2027-03-27",
+  "eventLabel": "Sábado, 27 de marzo 2027",
+  "stats": [
+    { "label": "Monto invertido", "value": "USD $1,000,000", "icon": "wallet", "accent": "#22B8CF" },
+    { "label": "Retorno proyectado", "value": "USD $1,250,000", "sub": "Hasta 25%", "icon": "trend", "accent": "#2FB380" },
+    { "label": "Tu categoría", "value": "Diamante", "sub": "Nivel máximo", "icon": "diamond", "accent": "#22B8CF" },
+    { "label": "Faltan para el partido", "value": "—", "sub": "27 marzo 2027", "icon": "clock", "accent": "#C79A2E", "countdown": true }
+  ],
+  "investorTiers": [
+    { "key": "diamante", "label": "Diamante", "count": 1, "color": "#22B8CF", "bg": "#E7FAFD", "amount": "USD $1,000,000", "benefits": [
+      "Reconocimiento como inversionista principal del torneo",
+      "Palco privado premium para 20 personas",
+      "40 boletos en zona preferente",
+      "Acceso VIP a zona de jugadores y hospitality",
+      "Participación prioritaria en utilidades",
+      "Menciones en transmisión oficial y rueda de prensa",
+      "Reporte financiero personalizado del evento"
+    ]},
+    { "key": "platino", "label": "Platino", "count": 3, "color": "#7C89A0", "bg": "#F1F4F8", "amount": "USD $500,000", "benefits": [
+      "Palco compartido para 10 personas",
+      "20 boletos en zona preferente",
+      "Acceso a hospitality VIP",
+      "Participación en utilidades",
+      "Mención en materiales del evento"
+    ]},
+    { "key": "oro", "label": "Oro", "count": 6, "color": "#C79A2E", "bg": "#FBF4E0", "amount": "USD $250,000", "benefits": [
+      "10 boletos en zona preferente",
+      "Acceso a hospitality",
+      "Participación en utilidades",
+      "Kit oficial conmemorativo"
+    ]},
+    { "key": "plata", "label": "Plata", "count": 12, "color": "#94A3B8", "bg": "#F1F3F6", "amount": "USD $100,000", "benefits": [
+      "6 boletos en zona general premium",
+      "Acceso a lounge de inversionistas",
+      "Participación en utilidades"
+    ]},
+    { "key": "bronce", "label": "Bronce", "count": 24, "color": "#B87333", "bg": "#F6EBE0", "amount": "USD $50,000", "benefits": [
+      "4 boletos en zona general",
+      "Acceso a lounge de inversionistas",
+      "Participación en utilidades"
+    ]}
+  ],
+  "sponsorTiers": [
+    { "key": "black", "label": "Black", "count": 3, "color": "#1F2430", "bg": "#EEF0F3", "amount": "Más de USD $1,000,000", "benefits": [
+      "Naming rights y marca principal del evento",
+      "Presencia dominante en estadio y transmisión",
+      "Palco corporativo premium",
+      "Activación de marca en Fan Fest"
+    ]},
+    { "key": "gold", "label": "Gold", "count": 6, "color": "#C79A2E", "bg": "#FBF4E0", "amount": "USD $500,000", "benefits": [
+      "Presencia de marca en estadio y transmisión",
+      "Palco corporativo",
+      "Activación de marca en zona VIP"
+    ]},
+    { "key": "pearl", "label": "Pearl", "count": 12, "color": "#8E93B0", "bg": "#F2F2F8", "amount": "USD $100,000", "benefits": [
+      "Presencia de marca en estadio",
+      "Boletos en zona hospitality",
+      "Mención en materiales del evento"
+    ]}
+  ],
+  "distribution": [
+    { "label": "Diamante", "count": 1, "color": "#22B8CF" },
+    { "label": "Platino", "count": 3, "color": "#7C89A0" },
+    { "label": "Oro", "count": 6, "color": "#C79A2E" },
+    { "label": "Plata", "count": 12, "color": "#94A3B8" },
+    { "label": "Bronce", "count": 24, "color": "#B87333" }
+  ],
+  "news": [
+    { "id": 1, "tag": "Anuncio", "tagColor": "#22B8CF", "title": "Confirmado: Tigres vs Cruz Azul en Houston", "date": "12 Jul 2026", "excerpt": "El clásico regio-cementero se jugará en el Shell Energy Stadium el 27 de marzo de 2027.", "image": "/assets/images/gallery/cup2025/6.jpg", "featured": true },
+    { "id": 2, "tag": "Anuncio", "tagColor": "#22B8CF", "title": "Shell Energy Stadium confirmado como sede oficial", "date": "28 Jun 2026", "excerpt": "Estadio MLS listo para futbol con capacidad de 22,800 asistentes.", "image": "/assets/images/gallery/cup2024/1.jpg" },
+    { "id": 3, "tag": "Actualización", "tagColor": "#2FB380", "title": "Abrimos preventa exclusiva para inversionistas", "date": "15 Ago 2026", "excerpt": "Los inversionistas Diamante y Platino tienen acceso prioritario a la asignación de boletos.", "image": "/assets/images/gallery/cup2023/1.jpg" },
+    { "id": 4, "tag": "Prensa", "tagColor": "#C79A2E", "title": "Cobertura confirmada con ESPN y TUDN", "date": "02 Sep 2026", "excerpt": "El partido será transmitido a nivel internacional en las principales cadenas deportivas.", "image": "/assets/images/gallery/cup2025/6.jpg" },
+    { "id": 5, "tag": "Actualización", "tagColor": "#2FB380", "title": "Nuevo patrocinador categoría Black confirmado", "date": "20 Sep 2026", "excerpt": "Sumamos una marca líder como patrocinador principal del torneo.", "image": "/assets/images/gallery/cup2024/1.jpg" },
+    { "id": 6, "tag": "Anuncio", "tagColor": "#22B8CF", "title": "Presentación de jerseys conmemorativos", "date": "05 Oct 2026", "excerpt": "Diseño especial edición SOCCER iD CUP 2027 para ambos equipos.", "image": "/assets/images/gallery/cup2023/1.jpg" }
+  ],
+  "milestones": [
+    { "title": "Cierre de contratos", "date": "Sep 2026", "done": true },
+    { "title": "Lanzamiento comercial", "date": "Dic 2026", "done": true },
+    { "title": "Media Day", "date": "Feb 2027", "done": false },
+    { "title": "Partido internacional", "date": "27 Mar 2027", "done": false, "highlight": true },
+    { "title": "Retorno a inversionistas", "date": "Ago 2027", "done": false }
+  ],
+  "calendar": {
+    "monthLabel": "Marzo",
+    "year": "2027",
+    "firstWeekday": 1,
+    "daysInMonth": 31,
+    "events": [
+      { "day": 5, "title": "Cierre de patrocinios", "type": "Patrocinio", "color": "#C79A2E" },
+      { "day": 12, "title": "Update inversionistas", "type": "Actualización", "color": "#2FB380" },
+      { "day": 15, "title": "Rueda de prensa", "type": "Prensa", "color": "#7C89A0" },
+      { "day": 20, "title": "Media Day", "type": "Evento", "color": "#22B8CF" },
+      { "day": 23, "title": "Llegada de equipos", "type": "Evento", "color": "#22B8CF" },
+      { "day": 27, "title": "PARTIDO", "type": "Partido", "color": "#C0392B", "match": true }
+    ],
+    "agendaDate": "Sábado, 27 de marzo 2027",
+    "agenda": [
+      { "time": "10:00", "title": "Fan Fest — Activación de aficionados", "sub": "Explanada del estadio", "color": "#22B8CF" },
+      { "time": "14:00", "title": "Apertura de Hospitality y Palcos", "sub": "Acceso VIP inversionistas", "color": "#2FB380" },
+      { "time": "17:00", "title": "Alfombra roja de inversionistas", "sub": "Zona premium", "color": "#C79A2E" },
+      { "time": "19:00", "title": "Kickoff — Tigres vs Cruz Azul", "sub": "Shell Energy Stadium", "color": "#C0392B" }
+    ]
+  }
+}

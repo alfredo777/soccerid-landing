@@ -1,0 +1,117 @@
+<style>
+  .cl-grid { display:grid; grid-template-columns: 1fr 340px; gap: 20px; align-items:start; }
+
+  .cl-cal { padding: 20px; }
+  .cl-cal__top { display:flex; align-items:center; gap: 14px; margin-bottom: 18px; }
+  .cl-cal__month { font-size:20px; font-weight:900; letter-spacing:-.3px; }
+  .cl-cal__month span { color: var(--pn-muted); font-weight:700; }
+  .cl-nav { margin-left:auto; display:flex; gap:8px; }
+  .cl-nav button { width:36px; height:36px; border-radius:10px; border:1px solid var(--pn-border); background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .cl-nav button svg { width:16px; height:16px; stroke:var(--pn-ink); }
+
+  .cl-week { display:grid; grid-template-columns: repeat(7, 1fr); gap:8px; margin-bottom:8px; }
+  .cl-week span { text-align:center; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--pn-muted); }
+  .cl-days { display:grid; grid-template-columns: repeat(7, 1fr); gap:8px; }
+  .cl-day { min-height:96px; border:1px solid var(--pn-border); border-radius:12px; padding:8px; display:flex; flex-direction:column; gap:5px; background:#fff; }
+  .cl-day.is-empty { background:#FAFBFC; border-style:dashed; }
+  .cl-day__n { font-size:13px; font-weight:800; color:var(--pn-ink); }
+  .cl-day.is-match { border-color:#C0392B; background:#FDF3F2; }
+  .cl-day.is-match .cl-day__n { color:#C0392B; }
+  .cl-ev { font-size:10.5px; font-weight:700; padding:3px 6px; border-radius:6px; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  .cl-rail { display:flex; flex-direction:column; gap:18px; }
+  .cl-agenda { padding: 6px 20px 20px; }
+  .cl-agenda__date { font-size:13px; font-weight:800; color:var(--pn-ink); padding: 12px 0 6px; }
+  .cl-slot { display:flex; gap:14px; padding: 14px 0; border-top:1px solid var(--pn-border); }
+  .cl-slot__time { font-size:12px; font-weight:800; color:var(--pn-muted); width:44px; flex-shrink:0; padding-top:2px; }
+  .cl-slot__bar { width:4px; border-radius:4px; flex-shrink:0; }
+  .cl-slot__b strong { display:block; font-size:14px; font-weight:700; line-height:1.3; }
+  .cl-slot__b small { font-size:12px; color:var(--pn-muted); font-weight:600; }
+
+  .cl-legend { display:flex; gap:16px; flex-wrap:wrap; padding: 14px 20px; }
+  .cl-legend span { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:700; color:var(--pn-ink-2); }
+  .cl-legend .sw { width:10px; height:10px; border-radius:4px; }
+
+  @media (max-width: 1100px) { .cl-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 560px) {
+    .cl-day { min-height:64px; padding:5px; }
+    .cl-ev { display:none; }
+    .cl-day.has-ev::after { content:''; width:6px; height:6px; border-radius:50%; background:var(--pn-gold); display:block; }
+  }
+</style>
+
+<div class="cl-grid">
+  <div class="pn-card cl-cal">
+    <div class="cl-cal__top">
+      <div class="cl-cal__month">{{panel.calendar.monthLabel}} <span>{{panel.calendar.year}}</span></div>
+      <div class="cl-nav">
+        <button aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+      </div>
+    </div>
+
+    <div class="cl-week">
+      <span>Dom</span><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span>
+    </div>
+    <div class="cl-days">
+      {{#each panel.calendarCells}}
+        {{#if this.empty}}
+          <div class="cl-day is-empty"></div>
+        {{else}}
+          <div class="cl-day {{#if this.match}}is-match{{/if}} {{#if this.events.length}}has-ev{{/if}}">
+            <span class="cl-day__n">{{this.day}}</span>
+            {{#each this.events}}
+            <span class="cl-ev" style="color: {{this.color}}; background: {{this.color}}1A;">{{this.title}}</span>
+            {{/each}}
+          </div>
+        {{/if}}
+      {{/each}}
+    </div>
+
+    <div class="cl-legend" style="border-top:1px solid var(--pn-border); margin-top:16px;">
+      <span><span class="sw" style="background:#22B8CF"></span>Evento</span>
+      <span><span class="sw" style="background:#2FB380"></span>Actualización</span>
+      <span><span class="sw" style="background:#C79A2E"></span>Patrocinio</span>
+      <span><span class="sw" style="background:#7C89A0"></span>Prensa</span>
+      <span><span class="sw" style="background:#C0392B"></span>Partido</span>
+    </div>
+  </div>
+
+  <aside class="cl-rail">
+    <div class="pn-card">
+      <div class="pn-card__head"><h3>Agenda del partido</h3></div>
+      <div class="cl-agenda">
+        <div class="cl-agenda__date">{{panel.calendar.agendaDate}}</div>
+        {{#each panel.calendar.agenda}}
+        <div class="cl-slot">
+          <span class="cl-slot__time">{{this.time}}</span>
+          <span class="cl-slot__bar" style="background: {{this.color}}"></span>
+          <div class="cl-slot__b">
+            <strong>{{this.title}}</strong>
+            <small>{{this.sub}}</small>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="pn-card">
+      <div class="pn-card__head"><h3>Cuenta regresiva</h3></div>
+      <div style="padding: 22px 20px; text-align:center;">
+        <div id="clCountdown" style="font-size:38px; font-weight:900; letter-spacing:-1px; color: var(--pn-gold);">—</div>
+        <div style="font-size:13px; color:var(--pn-ink-2); font-weight:700; margin-top:4px;">para el partido</div>
+        <div style="font-size:12px; color:var(--pn-muted); margin-top:2px;">{{panel.eventLabel}}</div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+  (function(){
+    var el = document.getElementById('clCountdown');
+    if (!el) return;
+    var target = new Date('2027-03-27T19:00:00-05:00').getTime();
+    var days = Math.floor((target - Date.now()) / 86400000);
+    el.textContent = days > 0 ? days + ' días' : '¡Hoy!';
+  })();
+</script>
