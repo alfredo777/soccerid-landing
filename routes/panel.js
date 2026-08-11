@@ -7,9 +7,13 @@ const path = require('path');
 const fs = require('fs');
 const router = express.Router();
 
+const multer = require('multer');
 const knex = require('../db/knex');
 const auth = require('../lib/panelAuth');
 const { sendInvite, sendNotification } = require('../lib/panelMailer');
+const { uploadImage } = require('../lib/uploads');
+
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
 
 const CONFIG_PATH = path.join(__dirname, '..', 'contents', 'panel_config.json');
 function loadConfig() {
@@ -30,9 +34,20 @@ function monthYear(dateVal) {
   const d = dateVal ? new Date(dateVal) : new Date();
   return `${MONTHS_ES_CAP[d.getMonth()]} ${d.getFullYear()}`;
 }
-function tierFor(config, role, key) {
-  const list = role === 'sponsor' ? config.sponsorTiers : config.investorTiers;
-  return list.find(t => t.key === key) || null;
+function safeParse(str, fallback) {
+  try { return JSON.parse(str); } catch (_) { return fallback; }
+}
+
+// Categorías (tiers) desde la base de datos
+async function getTiers() {
+  const rows = await knex('tiers').orderBy([{ column: 'role' }, { column: 'sort' }]);
+  return rows.map(r => ({
+    id: r.id, key: r.key, role: r.role, label: r.label, color: r.color, bg: r.bg,
+    amount: r.amount, count: r.count, benefits: safeParse(r.benefits, [])
+  }));
+}
+function findTier(tiers, role, key) {
+  return tiers.find(t => t.role === role && t.key === key) || null;
 }
 
 // Notificaciones dirigidas a un usuario (audiencia 'all' o su rol)
@@ -48,8 +63,9 @@ async function notificationsForUser(user) {
 // ── Ensambla el objeto `panel` para un usuario (inversionista/patrocinador) ──
 async function buildPanelData(user) {
   const config = loadConfig();
+  const tiers = await getTiers();
   const isSponsor = user.role === 'sponsor';
-  const tier = tierFor(config, user.role, user.category) || { label: user.category || '—', color: '#6C3CE0', bg: '#EFE9FC', benefits: [] };
+  const tier = findTier(tiers, user.role, user.category) || { label: user.category || '—', color: '#6C3CE0', bg: '#EFE9FC', benefits: [] };
 
   const amountLabel = formatUSD(user.amount);
   const projected = formatUSD(Math.round((user.amount || 0) * 1.25));
@@ -83,7 +99,7 @@ async function buildPanelData(user) {
   ];
 
   // Distribución (estructura planeada del cupo) + donut
-  const distribution = config.investorTiers.map(t => ({ label: t.label, count: t.count, color: t.color }));
+  const distribution = tiers.filter(t => t.role === 'investor').map(t => ({ label: t.label, count: t.count, color: t.color }));
   const total = distribution.reduce((s, d) => s + d.count, 0);
   const C = 2 * Math.PI * 54;
   let cum = 0;
@@ -291,7 +307,7 @@ router.get('/notificaciones', auth.requireAuth, async (req, res, next) => {
 // ════════════════════════════════════════════════
 router.get('/admin', auth.requireAdmin, async (req, res, next) => {
   try {
-    const config = loadConfig();
+    const tiers = await getTiers();
     const users = await knex('users').whereNot({ role: 'admin' }).orderBy('id', 'desc');
     const news = await knex('news').orderBy([{ column: 'featured', order: 'desc' }, { column: 'sort', order: 'asc' }]);
     const events = await knex('events').orderBy([{ column: 'year' }, { column: 'month' }, { column: 'day' }]);
@@ -299,10 +315,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     const notifications = await knex('notifications').orderBy('id', 'desc');
 
     const roleLabel = (u) => u.role === 'sponsor' ? 'Patrocinador' : 'Inversionista';
-    const tierLabel = (u) => {
-      const t = tierFor(config, u.role, u.category);
-      return t ? t.label : '—';
-    };
+    const tierLabel = (u) => { const t = findTier(tiers, u.role, u.category); return t ? t.label : '—'; };
 
     res.render('panel/admin', {
       layout: 'panel',
@@ -313,19 +326,25 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       panel: buildAdminPanel(req.panelUser),
       flash: req.query.msg,
       flashType: req.query.type,
+      s3: require('../lib/uploads').s3Enabled,
       users: users.map(u => ({
         id: u.id, name: u.name, email: u.email, role: u.role, roleLabel: roleLabel(u),
         category: u.category || '', tierLabel: tierLabel(u), amountRaw: u.amount || 0,
         amount: formatUSD(u.amount), status: u.status,
-        color: (tierFor(config, u.role, u.category) || {}).color || '#8A8F98'
+        color: (findTier(tiers, u.role, u.category) || {}).color || '#8A8F98'
       })),
       news, events, milestones,
       notifications: notifications.map(n => ({
         id: n.id, title: n.title, body: n.body, audience: n.audience,
         date: new Date(n.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })
       })),
-      investorTiers: config.investorTiers.map(t => ({ key: t.key, label: t.label, amount: t.amount })),
-      sponsorTiers: config.sponsorTiers.map(t => ({ key: t.key, label: t.label, amount: t.amount }))
+      tiers: tiers.map(t => ({
+        id: t.id, key: t.key, role: t.role, roleLabel: t.role === 'sponsor' ? 'Patrocinador' : 'Inversionista',
+        label: t.label, color: t.color, amount: t.amount, count: t.count,
+        benefitsText: (t.benefits || []).join('\n'), benefitsCount: (t.benefits || []).length
+      })),
+      investorTiers: tiers.filter(t => t.role === 'investor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
+      sponsorTiers: tiers.filter(t => t.role === 'sponsor').map(t => ({ key: t.key, label: t.label, amount: t.amount }))
     });
   } catch (e) { next(e); }
 });
@@ -355,8 +374,7 @@ router.post('/admin/invite', auth.requireAdmin, async (req, res, next) => {
       status: 'invited', invite_token: token, invite_expires: expires
     });
 
-    const config = loadConfig();
-    const tier = tierFor(config, role, category);
+    const tier = findTier(await getTiers(), role, category);
     const baseUrl = process.env.BASE_URL || (process.env.NODE_ENV === 'production' ? 'https://soccerid.co' : `http://localhost:${process.env.PORT || 3000}`);
     await sendInvite({
       to: email, name,
@@ -377,8 +395,7 @@ router.post('/admin/user/:id/resend', auth.requireAdmin, async (req, res, next) 
     const token = auth.makeInviteToken();
     const expires = Date.now() + 7 * 24 * 60 * 60 * 1000;
     await knex('users').where({ id: user.id }).update({ invite_token: token, invite_expires: expires, status: 'invited' });
-    const config = loadConfig();
-    const tier = tierFor(config, user.role, user.category);
+    const tier = findTier(await getTiers(), user.role, user.category);
     const baseUrl = process.env.BASE_URL || (process.env.NODE_ENV === 'production' ? 'https://soccerid.co' : `http://localhost:${process.env.PORT || 3000}`);
     await sendInvite({ to: user.email, name: user.name, activateUrl: `${baseUrl}/panel/activar/${token}`, categoryLabel: tier ? tier.label : '', roleLabel: user.role === 'sponsor' ? 'Patrocinador' : 'Inversionista' });
     res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Invitación reenviada a ${user.email}`));
@@ -393,16 +410,30 @@ router.post('/admin/user/:id/delete', auth.requireAdmin, async (req, res, next) 
   } catch (e) { next(e); }
 });
 
+// Subida de imagen genérica (AJAX) → devuelve JSON { url }
+router.post('/admin/upload', auth.requireAdmin, upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'No se recibió archivo' });
+    const { url } = await uploadImage(req.file);
+    res.json({ url });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
 // Noticias
-router.post('/admin/news', auth.requireAdmin, async (req, res, next) => {
+router.post('/admin/news', auth.requireAdmin, upload.single('imageFile'), async (req, res, next) => {
   try {
     const tag = req.body.tag || 'Anuncio';
     const tagColors = { 'Anuncio': '#6C3CE0', 'Actualización': '#14141B', 'Prensa': '#6B7280' };
+    let image = (req.body.image || '').trim();
+    if (req.file) { const up = await uploadImage(req.file); image = up.url; }
+    if (!image) image = '/assets/images/gallery/cup2025/6.jpg';
     await knex('news').insert({
       tag, tag_color: tagColors[tag] || '#6C3CE0',
       title: (req.body.title || '').trim(),
       excerpt: (req.body.excerpt || '').trim(),
-      image: (req.body.image || '/assets/images/gallery/cup2025/6.jpg').trim(),
+      image,
       date_label: (req.body.date_label || '').trim(),
       size: req.body.size === 'tall' ? 'tall' : 'short',
       featured: req.body.featured ? true : false,
@@ -478,15 +509,18 @@ router.post('/admin/user/:id/update', auth.requireAdmin, async (req, res, next) 
   } catch (e) { next(e); }
 });
 
-router.post('/admin/news/:id/update', auth.requireAdmin, async (req, res, next) => {
+router.post('/admin/news/:id/update', auth.requireAdmin, upload.single('imageFile'), async (req, res, next) => {
   try {
     const tag = req.body.tag || 'Anuncio';
     const tagColors = { 'Anuncio': '#6C3CE0', 'Actualización': '#14141B', 'Prensa': '#6B7280' };
+    const current = await knex('news').where({ id: req.params.id }).first();
+    let image = (req.body.image || (current && current.image) || '/assets/images/gallery/cup2025/6.jpg').trim();
+    if (req.file) { const up = await uploadImage(req.file); image = up.url; }
     await knex('news').where({ id: req.params.id }).update({
       tag, tag_color: tagColors[tag] || '#6C3CE0',
       title: (req.body.title || '').trim(),
       excerpt: (req.body.excerpt || '').trim(),
-      image: (req.body.image || '/assets/images/gallery/cup2025/6.jpg').trim(),
+      image,
       date_label: (req.body.date_label || '').trim(),
       size: req.body.size === 'tall' ? 'tall' : 'short',
       featured: req.body.featured ? true : false,
@@ -523,6 +557,22 @@ router.post('/admin/milestone/:id/update', auth.requireAdmin, async (req, res, n
       updated_at: knex.fn.now()
     });
     res.redirect('/panel/admin?type=ok&msg=Hito+actualizado#cronograma');
+  } catch (e) { next(e); }
+});
+
+// Categorías (tiers): editar etiqueta, color, monto, cupo y beneficios
+router.post('/admin/tier/:id/update', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const benefits = (req.body.benefits || '').split('\n').map(s => s.trim()).filter(Boolean);
+    await knex('tiers').where({ id: req.params.id }).update({
+      label: (req.body.label || '').trim(),
+      color: (req.body.color || '#6C3CE0').trim(),
+      amount: parseInt(req.body.amount || '0', 10) || 0,
+      count: parseInt(req.body.count || '0', 10) || 0,
+      benefits: JSON.stringify(benefits),
+      updated_at: knex.fn.now()
+    });
+    res.redirect('/panel/admin?type=ok&msg=Categor%C3%ADa+actualizada#categorias');
   } catch (e) { next(e); }
 });
 

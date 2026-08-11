@@ -75,6 +75,22 @@ async function ensureSchema() {
     });
   }
 
+  if (!(await knex.schema.hasTable('tiers'))) {
+    await knex.schema.createTable('tiers', (t) => {
+      t.increments('id').primary();
+      t.string('key').notNullable();
+      t.string('role').notNullable();      // investor | sponsor
+      t.string('label').notNullable();
+      t.string('color').defaultTo('#6C3CE0');
+      t.string('bg').defaultTo('#EFE9FC');
+      t.bigInteger('amount').defaultTo(0);
+      t.integer('count').defaultTo(0);
+      t.text('benefits');                  // JSON array
+      t.integer('sort').defaultTo(0);
+      t.timestamps(true, true);
+    });
+  }
+
   // Columna para rastrear la última notificación vista por usuario (idempotente)
   if (await knex.schema.hasTable('users') && !(await knex.schema.hasColumn('users', 'notifications_seen_id'))) {
     await knex.schema.alterTable('users', (t) => {
@@ -84,6 +100,23 @@ async function ensureSchema() {
 }
 
 async function seed() {
+  // Categorías (tiers) desde panel_config.json
+  if (!(await knex('tiers').first())) {
+    const path = require('path');
+    const fs = require('fs');
+    const config = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'contents', 'panel_config.json'), 'utf8'));
+    const rows = [];
+    (config.investorTiers || []).forEach((t, i) => rows.push({
+      key: t.key, role: 'investor', label: t.label, color: t.color, bg: t.bg,
+      amount: t.amount, count: t.count, benefits: JSON.stringify(t.benefits || []), sort: i + 1
+    }));
+    (config.sponsorTiers || []).forEach((t, i) => rows.push({
+      key: t.key, role: 'sponsor', label: t.label, color: t.color, bg: t.bg,
+      amount: t.amount, count: t.count, benefits: JSON.stringify(t.benefits || []), sort: i + 1
+    }));
+    if (rows.length) { await knex('tiers').insert(rows); console.log('  ✓ Categorías sembradas'); }
+  }
+
   // Dueño / admin
   const adminEmail = (process.env.ADMIN_EMAIL || 'admin@soccerid.co').toLowerCase();
   const existingAdmin = await knex('users').where({ email: adminEmail }).first();

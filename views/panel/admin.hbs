@@ -45,6 +45,17 @@
   .ad-actions button.primary:hover { background:var(--pn-purple-soft); }
   .ad-actions button.danger:hover { background:#FDECEC; color:#C0392B; border-color:#F5C6C6; }
   .ad-empty { padding:30px; text-align:center; color:var(--pn-muted); font-size:13px; }
+  .ad-hint { font-size:11px; color:var(--pn-muted); margin-top:6px; }
+  .ad-note { font-size:13px; color:var(--pn-ink-2); margin:0 0 18px; }
+
+  .ad-catgrid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width:900px){ .ad-catgrid{ grid-template-columns:1fr; } }
+  .ad-tier { padding:20px; }
+  .ad-tier__head { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .ad-tier__dot { width:14px; height:14px; border-radius:5px; flex-shrink:0; }
+  .ad-tier__head strong { font-size:16px; font-weight:800; }
+  .ad-tier__role { margin-left:auto; font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--pn-muted); background:#F1F0F5; padding:4px 10px; border-radius:20px; }
+  .ad-tier textarea { min-height:120px; }
 
   /* Modal */
   .ad-modal { position:fixed; inset:0; background:rgba(20,20,27,.5); z-index:100; display:none; align-items:center; justify-content:center; padding:20px; }
@@ -64,6 +75,7 @@
   <div class="ad-tab" data-tab="noticias">Noticias</div>
   <div class="ad-tab" data-tab="calendario">Calendario</div>
   <div class="ad-tab" data-tab="cronograma">Cronograma</div>
+  <div class="ad-tab" data-tab="categorias">Categorías</div>
   <div class="ad-tab" data-tab="notificaciones">Notificaciones</div>
 </div>
 
@@ -113,12 +125,15 @@
 <!-- NOTICIAS -->
 <section class="ad-sec" id="sec-noticias">
   <div class="ad-grid">
-    <form class="pn-card ad-form" method="POST" action="/panel/admin/news">
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/news" enctype="multipart/form-data">
       <h3>Publicar noticia</h3>
       <div class="ad-f"><label>Categoría</label><select name="tag"><option>Anuncio</option><option>Actualización</option><option>Prensa</option></select></div>
       <div class="ad-f"><label>Título</label><input type="text" name="title" required></div>
       <div class="ad-f"><label>Extracto</label><textarea name="excerpt"></textarea></div>
-      <div class="ad-f"><label>URL de imagen</label><input type="text" name="image" placeholder="/assets/images/gallery/cup2025/6.jpg"></div>
+      <div class="ad-f"><label>Imagen</label><input type="file" name="imageFile" accept="image/*">
+        <div class="ad-hint">{{#if s3}}Se subirá a Amazon S3.{{else}}Se guardará localmente (configura S3 para producción).{{/if}} O pega una URL abajo.</div>
+      </div>
+      <div class="ad-f"><label>URL de imagen (opcional)</label><input type="text" name="image" placeholder="/assets/images/gallery/cup2025/6.jpg"></div>
       <div class="ad-row2">
         <div class="ad-f"><label>Fecha (texto)</label><input type="text" name="date_label" placeholder="12 Jul 2026"></div>
         <div class="ad-f"><label>Tamaño</label><select name="size"><option value="short">Normal</option><option value="tall">Grande</option></select></div>
@@ -268,6 +283,32 @@
   </div>
 </section>
 
+<!-- CATEGORÍAS -->
+<section class="ad-sec" id="sec-categorias">
+  <p class="ad-note">Edita el nombre, color, monto, cupo y beneficios de cada categoría. Los cambios se reflejan en el panel de inversionistas y patrocinadores.</p>
+  <div class="ad-catgrid">
+    {{#each tiers}}
+    <form class="pn-card ad-tier" method="POST" action="/panel/admin/tier/{{this.id}}/update">
+      <div class="ad-tier__head">
+        <span class="ad-tier__dot" style="background:{{this.color}}"></span>
+        <strong>{{this.label}}</strong>
+        <span class="ad-tier__role">{{this.roleLabel}}</span>
+      </div>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Nombre</label><input type="text" name="label" value="{{this.label}}" required></div>
+        <div class="ad-f"><label>Color</label><input type="color" name="color" value="{{this.color}}" style="height:42px; padding:4px;"></div>
+      </div>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Monto (USD)</label><input type="number" name="amount" value="{{this.amount}}" step="1000" min="0"></div>
+        <div class="ad-f"><label>Cupo</label><input type="number" name="count" value="{{this.count}}" min="0"></div>
+      </div>
+      <div class="ad-f"><label>Beneficios (uno por línea)</label><textarea name="benefits" rows="6">{{this.benefitsText}}</textarea></div>
+      <button type="submit" class="ad-btn">Guardar categoría</button>
+    </form>
+    {{/each}}
+  </div>
+</section>
+
 <!-- ═══ MODALES DE EDICIÓN ═══ -->
 <div class="ad-modal" id="modal-user">
   <div class="ad-modal__card">
@@ -292,10 +333,11 @@
   <div class="ad-modal__card">
     <div class="ad-modal__head"><h3>Editar noticia</h3><button class="ad-modal__close" onclick="closeModal('modal-news')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
     <div class="ad-modal__body">
-      <form method="POST" id="form-news">
+      <form method="POST" id="form-news" enctype="multipart/form-data">
         <div class="ad-f"><label>Categoría</label><select name="tag" id="en-tag"><option>Anuncio</option><option>Actualización</option><option>Prensa</option></select></div>
         <div class="ad-f"><label>Título</label><input type="text" name="title" id="en-title" required></div>
         <div class="ad-f"><label>Extracto</label><textarea name="excerpt" id="en-excerpt"></textarea></div>
+        <div class="ad-f"><label>Reemplazar imagen</label><input type="file" name="imageFile" accept="image/*"><div class="ad-hint">Deja vacío para conservar la actual.</div></div>
         <div class="ad-f"><label>URL de imagen</label><input type="text" name="image" id="en-image"></div>
         <div class="ad-row2">
           <div class="ad-f"><label>Fecha (texto)</label><input type="text" name="date_label" id="en-date"></div>
