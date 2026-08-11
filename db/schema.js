@@ -64,6 +64,23 @@ async function ensureSchema() {
       t.timestamps(true, true);
     });
   }
+
+  if (!(await knex.schema.hasTable('notifications'))) {
+    await knex.schema.createTable('notifications', (t) => {
+      t.increments('id').primary();
+      t.string('title').notNullable();
+      t.text('body');
+      t.string('audience').defaultTo('all'); // all | investor | sponsor
+      t.timestamps(true, true);
+    });
+  }
+
+  // Columna para rastrear la última notificación vista por usuario (idempotente)
+  if (await knex.schema.hasTable('users') && !(await knex.schema.hasColumn('users', 'notifications_seen_id'))) {
+    await knex.schema.alterTable('users', (t) => {
+      t.integer('notifications_seen_id').defaultTo(0);
+    });
+  }
 }
 
 async function seed() {
@@ -139,6 +156,16 @@ async function seed() {
       { title: 'Retorno a inversionistas', date_label: 'Ago 2027', done: false, sort: 5 }
     ]);
     console.log('  ✓ Cronograma inicial sembrado');
+  }
+
+  // Notificación de bienvenida
+  if (!(await knex('notifications').first())) {
+    await knex('notifications').insert({
+      title: '¡Bienvenido al portal de inversionistas!',
+      body: 'Aquí recibirás las novedades, fechas clave y comunicados de SOCCER iD CUP 2027.',
+      audience: 'all'
+    });
+    console.log('  ✓ Notificación de bienvenida sembrada');
   }
 }
 

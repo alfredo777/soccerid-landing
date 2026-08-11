@@ -163,6 +163,7 @@
     }
     .pn-iconbtn svg { width: 19px; height: 19px; stroke: var(--pn-ink); }
     .pn-iconbtn .dot { position:absolute; top: 10px; right: 11px; width: 7px; height: 7px; border-radius: 50%; background: var(--pn-purple); border: 2px solid var(--pn-card); }
+    .pn-notifcount { position:absolute; top: -5px; right: -5px; min-width:18px; height:18px; padding:0 5px; border-radius:20px; background: var(--pn-purple); color:#fff; font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center; border:2px solid var(--pn-bg); }
     .pn-userchip {
       display:flex; align-items:center; gap: 11px; padding: 5px 14px 5px 5px;
       background: var(--pn-card); border: 1px solid var(--pn-border); border-radius: 40px; flex-shrink: 0;
@@ -249,11 +250,11 @@
             <a href="/panel/noticias" class="pn-link {{#eq active 'noticias'}}is-active{{/eq}}" title="Noticias">
               <svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13v14H6a2 2 0 0 1-2-2V5z"/><path d="M17 8h2a1 1 0 0 1 1 1v8a2 2 0 0 1-2 2"/><line x1="7" y1="9" x2="14" y2="9"/><line x1="7" y1="13" x2="14" y2="13"/></svg>
               <span class="pn-label">Noticias</span>
-              <span class="pn-link__badge">6</span>
             </a>
-            <a href="/panel/noticias" class="pn-link" title="Actualizaciones">
-              <svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10"/><polyline points="12 6 12 12 16 14"/></svg>
-              <span class="pn-label">Actualizaciones</span>
+            <a href="/panel/notificaciones" class="pn-link {{#eq active 'notificaciones'}}is-active{{/eq}}" title="Notificaciones">
+              <svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+              <span class="pn-label">Notificaciones</span>
+              {{#if panel.unread}}<span class="pn-link__badge" style="background:var(--pn-purple);color:#fff;">{{panel.unread}}</span>{{/if}}
             </a>
           </div>
         </div>
@@ -343,9 +344,10 @@
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
           <input type="text" placeholder="Buscar...">
         </div>
-        <button class="pn-iconbtn"><span class="dot"></span>
+        <a class="pn-iconbtn" href="/panel/notificaciones" aria-label="Notificaciones">
+          {{#if panel.unread}}<span class="pn-notifcount">{{panel.unread}}</span>{{/if}}
           <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-        </button>
+        </a>
         <div class="pn-userchip">
           <div class="pn-avatar" style="background: {{panel.user.color}}">{{panel.user.initials}}</div>
           <div class="pn-userchip__info">

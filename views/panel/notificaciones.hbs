@@ -1,0 +1,35 @@
+<style>
+  .nt-wrap { max-width: 760px; }
+  .nt-item { display:flex; gap:16px; padding:20px; border:1px solid var(--pn-border); border-radius:16px; background:#fff; box-shadow:var(--pn-shadow); margin-bottom:14px; position:relative; }
+  .nt-item.is-unread { border-color:#DCCFF7; }
+  .nt-ic { width:44px; height:44px; border-radius:13px; background:var(--pn-purple-soft); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .nt-ic svg { width:21px; height:21px; stroke:var(--pn-purple); }
+  .nt-b { flex:1; min-width:0; }
+  .nt-b h3 { font-size:16px; font-weight:800; margin-bottom:4px; }
+  .nt-b p { font-size:14px; color:var(--pn-ink-2); line-height:1.55; white-space:pre-line; }
+  .nt-b small { display:block; font-size:12px; color:var(--pn-muted); font-weight:600; margin-top:10px; }
+  .nt-dot { position:absolute; top:20px; right:20px; width:9px; height:9px; border-radius:50%; background:var(--pn-purple); }
+  .nt-empty { padding:60px 20px; text-align:center; color:var(--pn-muted); }
+  .nt-empty svg { width:40px; height:40px; stroke:var(--pn-muted); margin-bottom:12px; }
+</style>
+
+<div class="nt-wrap">
+  {{#each notifications}}
+  <div class="nt-item {{#if this.unread}}is-unread{{/if}}">
+    <div class="nt-ic">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+    </div>
+    <div class="nt-b">
+      <h3>{{this.title}}</h3>
+      {{#if this.body}}<p>{{this.body}}</p>{{/if}}
+      <small>{{this.date}}</small>
+    </div>
+    {{#if this.unread}}<span class="nt-dot"></span>{{/if}}
+  </div>
+  {{else}}
+  <div class="nt-empty">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+    <p>No tienes notificaciones por ahora.</p>
+  </div>
+  {{/each}}
+</div>

@@ -9,7 +9,7 @@ const router = express.Router();
 
 const knex = require('../db/knex');
 const auth = require('../lib/panelAuth');
-const { sendInvite } = require('../lib/panelMailer');
+const { sendInvite, sendNotification } = require('../lib/panelMailer');
 
 const CONFIG_PATH = path.join(__dirname, '..', 'contents', 'panel_config.json');
 function loadConfig() {
@@ -33,6 +33,16 @@ function monthYear(dateVal) {
 function tierFor(config, role, key) {
   const list = role === 'sponsor' ? config.sponsorTiers : config.investorTiers;
   return list.find(t => t.key === key) || null;
+}
+
+// Notificaciones dirigidas a un usuario (audiencia 'all' o su rol)
+async function notificationsForUser(user) {
+  const rows = await knex('notifications')
+    .where('audience', 'all').orWhere('audience', user.role)
+    .orderBy('id', 'desc');
+  const seenId = user.notifications_seen_id || 0;
+  const unread = rows.filter(n => n.id > seenId).length;
+  return { rows, unread };
 }
 
 // ── Ensambla el objeto `panel` para un usuario (inversionista/patrocinador) ──
@@ -108,9 +118,12 @@ async function buildPanelData(user) {
     cells.push({ day, events: dayEvents, match: dayEvents.some(e => e.match) });
   }
 
+  const notifs = await notificationsForUser(user);
+
   return {
     org: config.org,
     eventLabel: config.eventLabel,
+    unread: notifs.unread,
     advisor: config.advisor,
     documents: config.documents,
     user: panelUser,
@@ -246,6 +259,33 @@ router.get('/calendario', auth.requireAuth, async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+router.get('/notificaciones', auth.requireAuth, async (req, res, next) => {
+  try {
+    if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
+    const { rows } = await notificationsForUser(req.panelUser);
+    const seenId = req.panelUser.notifications_seen_id || 0;
+    const list = rows.map(n => ({
+      title: n.title, body: n.body,
+      date: new Date(n.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' }),
+      unread: n.id > seenId
+    }));
+    // Marcar todas como vistas
+    const maxId = rows.length ? Math.max(...rows.map(n => n.id)) : 0;
+    if (maxId > seenId) await knex('users').where({ id: req.panelUser.id }).update({ notifications_seen_id: maxId });
+
+    const panel = await buildPanelData(req.panelUser);
+    panel.unread = 0;
+    res.render('panel/notificaciones', {
+      layout: 'panel',
+      title: 'Notificaciones · SOCCER iD Investor Portal',
+      pageHeading: 'Notificaciones',
+      pageSub: 'Comunicados y novedades de SOCCER iD CUP 2027',
+      active: 'notificaciones',
+      panel, notifications: list
+    });
+  } catch (e) { next(e); }
+});
+
 // ════════════════════════════════════════════════
 // PANEL DEL DUEÑO (ADMIN)
 // ════════════════════════════════════════════════
@@ -256,6 +296,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     const news = await knex('news').orderBy([{ column: 'featured', order: 'desc' }, { column: 'sort', order: 'asc' }]);
     const events = await knex('events').orderBy([{ column: 'year' }, { column: 'month' }, { column: 'day' }]);
     const milestones = await knex('milestones').orderBy('sort');
+    const notifications = await knex('notifications').orderBy('id', 'desc');
 
     const roleLabel = (u) => u.role === 'sponsor' ? 'Patrocinador' : 'Inversionista';
     const tierLabel = (u) => {
@@ -274,10 +315,15 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       flashType: req.query.type,
       users: users.map(u => ({
         id: u.id, name: u.name, email: u.email, role: u.role, roleLabel: roleLabel(u),
-        tierLabel: tierLabel(u), amount: formatUSD(u.amount), status: u.status,
+        category: u.category || '', tierLabel: tierLabel(u), amountRaw: u.amount || 0,
+        amount: formatUSD(u.amount), status: u.status,
         color: (tierFor(config, u.role, u.category) || {}).color || '#8A8F98'
       })),
       news, events, milestones,
+      notifications: notifications.map(n => ({
+        id: n.id, title: n.title, body: n.body, audience: n.audience,
+        date: new Date(n.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })
+      })),
       investorTiers: config.investorTiers.map(t => ({ key: t.key, label: t.label, amount: t.amount })),
       sponsorTiers: config.sponsorTiers.map(t => ({ key: t.key, label: t.label, amount: t.amount }))
     });
@@ -404,6 +450,116 @@ router.post('/admin/milestone', auth.requireAdmin, async (req, res, next) => {
 });
 router.post('/admin/milestone/:id/delete', auth.requireAdmin, async (req, res, next) => {
   try { await knex('milestones').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=Hito+eliminado#cronograma'); } catch (e) { next(e); }
+});
+
+// ── Edición ──
+router.post('/admin/user/:id/update', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const user = await knex('users').where({ id: req.params.id }).first();
+    if (!user || user.role === 'admin') return res.redirect('/panel/admin?type=error&msg=Usuario+no+encontrado');
+    const email = (req.body.email || user.email).trim().toLowerCase();
+    if (email !== user.email) {
+      const dup = await knex('users').where({ email }).whereNot({ id: user.id }).first();
+      if (dup) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Ese email ya está en uso'));
+    }
+    // Estado: activo sólo si ya tiene contraseña; si no, permanece invitado
+    let status = req.body.active ? 'active' : 'disabled';
+    if (!user.password_hash) status = 'invited';
+    await knex('users').where({ id: user.id }).update({
+      name: (req.body.name || user.name).trim(),
+      email,
+      role: req.body.role === 'sponsor' ? 'sponsor' : 'investor',
+      category: (req.body.category || '').trim(),
+      amount: parseInt(req.body.amount || '0', 10) || 0,
+      status,
+      updated_at: knex.fn.now()
+    });
+    res.redirect('/panel/admin?type=ok&msg=Usuario+actualizado');
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/news/:id/update', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const tag = req.body.tag || 'Anuncio';
+    const tagColors = { 'Anuncio': '#6C3CE0', 'Actualización': '#14141B', 'Prensa': '#6B7280' };
+    await knex('news').where({ id: req.params.id }).update({
+      tag, tag_color: tagColors[tag] || '#6C3CE0',
+      title: (req.body.title || '').trim(),
+      excerpt: (req.body.excerpt || '').trim(),
+      image: (req.body.image || '/assets/images/gallery/cup2025/6.jpg').trim(),
+      date_label: (req.body.date_label || '').trim(),
+      size: req.body.size === 'tall' ? 'tall' : 'short',
+      featured: req.body.featured ? true : false,
+      updated_at: knex.fn.now()
+    });
+    res.redirect('/panel/admin?type=ok&msg=Noticia+actualizada#noticias');
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/event/:id/update', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const typeColors = { 'Evento': '#6C3CE0', 'Actualización': '#A78BE6', 'Patrocinio': '#14141B', 'Prensa': '#8A8F98', 'Partido': '#6C3CE0' };
+    const type = req.body.type || 'Evento';
+    await knex('events').where({ id: req.params.id }).update({
+      day: parseInt(req.body.day, 10) || 1,
+      month: parseInt(req.body.month, 10) || 3,
+      year: parseInt(req.body.year, 10) || 2027,
+      title: (req.body.title || '').trim(),
+      type, color: typeColors[type] || '#6C3CE0',
+      is_match: type === 'Partido',
+      updated_at: knex.fn.now()
+    });
+    res.redirect('/panel/admin?type=ok&msg=Evento+actualizado#calendario');
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/milestone/:id/update', auth.requireAdmin, async (req, res, next) => {
+  try {
+    await knex('milestones').where({ id: req.params.id }).update({
+      title: (req.body.title || '').trim(),
+      date_label: (req.body.date_label || '').trim(),
+      done: req.body.done ? true : false,
+      highlight: req.body.highlight ? true : false,
+      updated_at: knex.fn.now()
+    });
+    res.redirect('/panel/admin?type=ok&msg=Hito+actualizado#cronograma');
+  } catch (e) { next(e); }
+});
+
+// ── Notificaciones ──
+router.post('/admin/notify', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const title = (req.body.title || '').trim();
+    const body = (req.body.body || '').trim();
+    const audience = ['all', 'investor', 'sponsor'].includes(req.body.audience) ? req.body.audience : 'all';
+    if (!title) return res.redirect('/panel/admin?type=error&msg=El+t%C3%ADtulo+es+obligatorio#notificaciones');
+    await knex('notifications').insert({ title, body, audience });
+    let emailed = 0;
+    if (req.body.sendEmail) {
+      let q = knex('users').where({ status: 'active' }).whereNot({ role: 'admin' });
+      if (audience !== 'all') q = q.andWhere({ role: audience });
+      const recipients = await q;
+      recipients.forEach(u => { sendNotification({ to: u.email, name: u.name, title, body }).catch(() => {}); });
+      emailed = recipients.length;
+    }
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Notificación enviada${emailed ? ` (email a ${emailed})` : ''}`) + '#notificaciones');
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/notification/:id/delete', auth.requireAdmin, async (req, res, next) => {
+  try { await knex('notifications').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=Notificaci%C3%B3n+eliminada#notificaciones'); } catch (e) { next(e); }
+});
+
+// Compartir una noticia como notificación
+router.post('/admin/news/:id/notify', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const n = await knex('news').where({ id: req.params.id }).first();
+    if (!n) return res.redirect('/panel/admin?type=error&msg=Noticia+no+encontrada#noticias');
+    await knex('notifications').insert({ title: n.title, body: n.excerpt, audience: 'all' });
+    const recipients = await knex('users').where({ status: 'active' }).whereNot({ role: 'admin' });
+    recipients.forEach(u => { sendNotification({ to: u.email, name: u.name, title: n.title, body: n.excerpt }).catch(() => {}); });
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Noticia compartida con ${recipients.length} usuarios`) + '#noticias');
+  } catch (e) { next(e); }
 });
 
 module.exports = router;
