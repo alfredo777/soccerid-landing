@@ -1,0 +1,49 @@
+<style>
+  .dc-wrap { max-width: 820px; }
+  .dc-intro { display:flex; gap:14px; align-items:flex-start; background:var(--pn-purple-soft); border:1px solid #E4DAFA; border-radius:16px; padding:18px 20px; margin-bottom:22px; }
+  .dc-intro svg { width:22px; height:22px; stroke:var(--pn-purple); flex-shrink:0; margin-top:1px; }
+  .dc-intro p { font-size:13px; color:var(--pn-ink-2); line-height:1.55; }
+  .dc-intro strong { color:var(--pn-ink); }
+
+  .dc-item { display:flex; align-items:center; gap:16px; padding:18px 20px; border:1px solid var(--pn-border); border-radius:16px; background:#fff; box-shadow:var(--pn-shadow); margin-bottom:14px; }
+  .dc-ic { width:48px; height:48px; border-radius:13px; background:var(--pn-purple-soft); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .dc-ic svg { width:23px; height:23px; stroke:var(--pn-purple); }
+  .dc-ic span { font-size:11px; font-weight:900; color:var(--pn-purple); }
+  .dc-b { flex:1; min-width:0; }
+  .dc-b strong { display:block; font-size:15px; font-weight:700; }
+  .dc-b small { font-size:12px; color:var(--pn-muted); font-weight:600; }
+  .dc-dl { display:flex; align-items:center; gap:8px; padding:11px 18px; border-radius:12px; background:var(--pn-ink); color:#fff; font-size:13px; font-weight:800; flex-shrink:0; }
+  .dc-dl svg { width:16px; height:16px; stroke:#fff; }
+
+  .dc-empty { padding:60px 20px; text-align:center; color:var(--pn-muted); }
+  .dc-empty svg { width:44px; height:44px; stroke:var(--pn-muted); margin-bottom:14px; }
+  .dc-empty p { font-size:14px; }
+</style>
+
+<div class="dc-wrap">
+  <div class="dc-intro">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+    <p><strong>Documentación confidencial.</strong> Aquí encuentras los contratos y documentos legales que SOCCER iD ha compartido específicamente contigo. No los compartas con terceros.</p>
+  </div>
+
+  {{#each panel.userDocuments}}
+  <div class="dc-item">
+    <div class="dc-ic">
+      {{#if this.ext}}<span>{{this.ext}}</span>{{else}}<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/></svg>{{/if}}
+    </div>
+    <div class="dc-b">
+      <strong>{{this.name}}</strong>
+      <small>{{this.meta}}</small>
+    </div>
+    <a class="dc-dl" href="{{this.url}}" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 11 12 16 17 11"/><path d="M5 21h14"/></svg>
+      Descargar
+    </a>
+  </div>
+  {{else}}
+  <div class="dc-empty">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/></svg>
+    <p>Aún no hay documentos compartidos contigo.<br>Cuando SOCCER iD suba tus contratos, aparecerán aquí.</p>
+  </div>
+  {{/each}}
+</div>

@@ -110,6 +110,7 @@
           <div class="ad-actions">
             <button type="button" class="primary" onclick="openUser(this)"
               data-id="{{this.id}}" data-name="{{this.name}}" data-email="{{this.email}}" data-role="{{this.role}}" data-category="{{this.category}}" data-amount="{{this.amountRaw}}" data-status="{{this.status}}">Editar</button>
+            <button type="button" onclick="openDocs(this)" data-id="{{this.id}}" data-name="{{this.name}}">Docs{{#if this.docCount}} ({{this.docCount}}){{/if}}</button>
             <form method="POST" action="/panel/admin/user/{{this.id}}/resend"><button type="submit">Reenviar</button></form>
             <form method="POST" action="/panel/admin/user/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar a {{this.name}}?')"><button type="submit" class="danger">Eliminar</button></form>
           </div>
@@ -329,6 +330,20 @@
   </div>
 </div>
 
+<div class="ad-modal" id="modal-docs">
+  <div class="ad-modal__card">
+    <div class="ad-modal__head"><h3>Contratos y documentos · <span id="ed-user"></span></h3><button class="ad-modal__close" onclick="closeModal('modal-docs')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+    <div class="ad-modal__body">
+      <div id="ed-list" style="margin-bottom:18px;"></div>
+      <form method="POST" id="form-doc" enctype="multipart/form-data" style="border-top:1px solid var(--pn-border); padding-top:16px;">
+        <div class="ad-f"><label>Nombre del documento</label><input type="text" name="name" placeholder="Ej. Contrato de inversión"></div>
+        <div class="ad-f"><label>Archivo (PDF, Word, Excel o imagen)</label><input type="file" name="file" accept=".pdf,.doc,.docx,.xls,.xlsx,image/*" required></div>
+        <button type="submit" class="ad-btn">Subir documento</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 <div class="ad-modal" id="modal-news">
   <div class="ad-modal__card">
     <div class="ad-modal__head"><h3>Editar noticia</h3><button class="ad-modal__close" onclick="closeModal('modal-news')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
@@ -388,6 +403,7 @@
 <script>
   var INVESTOR_TIERS = {{{json investorTiers}}};
   var SPONSOR_TIERS = {{{json sponsorTiers}}};
+  var USER_DOCS = {{{json docsByUser}}};
 
   function fillCatSelect(sel, role, selected){
     var tiers = role === 'sponsor' ? SPONSOR_TIERS : INVESTOR_TIERS;
@@ -443,6 +459,27 @@
     document.getElementById('ee-type').value = d.type;
     openModal('modal-event');
   }
+  function openDocs(btn){
+    var d = btn.dataset;
+    document.getElementById('ed-user').textContent = d.name;
+    document.getElementById('form-doc').action = '/panel/admin/user/'+d.id+'/document';
+    var docs = USER_DOCS[d.id] || [];
+    var list = document.getElementById('ed-list');
+    if (!docs.length) {
+      list.innerHTML = '<p style="font-size:13px;color:var(--pn-muted);padding:6px 0;">Sin documentos. Sube el primero abajo.</p>';
+    } else {
+      list.innerHTML = docs.map(function(doc){
+        return '<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--pn-border);">'
+          + '<div style="flex:1;min-width:0;"><strong style="display:block;font-size:14px;">'+esc(doc.name)+'</strong><small style="color:var(--pn-muted);font-size:12px;">'+esc(doc.meta||'')+'</small></div>'
+          + '<a href="'+doc.url+'" target="_blank" rel="noopener" style="font-size:12px;font-weight:700;color:var(--pn-purple);">Ver</a>'
+          + '<form method="POST" action="/panel/admin/document/'+doc.id+'/delete" onsubmit="return confirm(\'¿Eliminar documento?\')"><button type="submit" style="border:1px solid var(--pn-border);background:#fff;border-radius:9px;padding:6px 10px;font-size:12px;font-weight:700;color:var(--pn-ink-2);cursor:pointer;">Eliminar</button></form>'
+          + '</div>';
+      }).join('');
+    }
+    openModal('modal-docs');
+  }
+  function esc(s){ var d=document.createElement('div'); d.textContent=s==null?'':s; return d.innerHTML; }
+
   function openMile(btn){
     var d = btn.dataset;
     document.getElementById('form-mile').action = '/panel/admin/milestone/'+d.id+'/update';

@@ -75,6 +75,18 @@ async function ensureSchema() {
     });
   }
 
+  if (!(await knex.schema.hasTable('user_documents'))) {
+    await knex.schema.createTable('user_documents', (t) => {
+      t.increments('id').primary();
+      t.integer('user_id').notNullable();
+      t.string('name').notNullable();
+      t.string('url').notNullable();
+      t.string('meta');
+      t.string('ext');
+      t.timestamps(true, true);
+    });
+  }
+
   if (!(await knex.schema.hasTable('tiers'))) {
     await knex.schema.createTable('tiers', (t) => {
       t.increments('id').primary();

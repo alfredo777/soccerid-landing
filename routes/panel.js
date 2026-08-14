@@ -11,7 +11,7 @@ const multer = require('multer');
 const knex = require('../db/knex');
 const auth = require('../lib/panelAuth');
 const { sendInvite, sendNotification } = require('../lib/panelMailer');
-const { uploadImage } = require('../lib/uploads');
+const { uploadImage, uploadDocument } = require('../lib/uploads');
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
 
@@ -136,12 +136,17 @@ async function buildPanelData(user) {
 
   const notifs = await notificationsForUser(user);
 
+  // Documentos personalizados del usuario (contratos y documentos legales)
+  const docRows = await knex('user_documents').where({ user_id: user.id }).orderBy('id', 'desc');
+  const userDocuments = docRows.map(d => ({ id: d.id, name: d.name, url: d.url, meta: d.meta, ext: d.ext }));
+
   return {
     org: config.org,
     eventLabel: config.eventLabel,
     unread: notifs.unread,
     advisor: config.advisor,
-    documents: config.documents,
+    documents: userDocuments,
+    userDocuments,
     user: panelUser,
     userBenefits: tier.benefits || [],
     stats,
@@ -302,6 +307,20 @@ router.get('/notificaciones', auth.requireAuth, async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+router.get('/documentos', auth.requireAuth, async (req, res, next) => {
+  try {
+    if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
+    res.render('panel/documentos', {
+      layout: 'panel',
+      title: 'Contratos y documentos · SOCCER iD Investor Portal',
+      pageHeading: 'Contratos y documentos legales',
+      pageSub: 'Documentación privada compartida contigo por SOCCER iD',
+      active: 'documentos',
+      panel: await buildPanelData(req.panelUser)
+    });
+  } catch (e) { next(e); }
+});
+
 // ════════════════════════════════════════════════
 // PANEL DEL DUEÑO (ADMIN)
 // ════════════════════════════════════════════════
@@ -313,6 +332,9 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     const events = await knex('events').orderBy([{ column: 'year' }, { column: 'month' }, { column: 'day' }]);
     const milestones = await knex('milestones').orderBy('sort');
     const notifications = await knex('notifications').orderBy('id', 'desc');
+    const allDocs = await knex('user_documents').orderBy('id', 'desc');
+    const docsByUser = {};
+    allDocs.forEach(d => { (docsByUser[d.user_id] = docsByUser[d.user_id] || []).push({ id: d.id, name: d.name, url: d.url, meta: d.meta }); });
 
     const roleLabel = (u) => u.role === 'sponsor' ? 'Patrocinador' : 'Inversionista';
     const tierLabel = (u) => { const t = findTier(tiers, u.role, u.category); return t ? t.label : '—'; };
@@ -331,8 +353,10 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         id: u.id, name: u.name, email: u.email, role: u.role, roleLabel: roleLabel(u),
         category: u.category || '', tierLabel: tierLabel(u), amountRaw: u.amount || 0,
         amount: formatUSD(u.amount), status: u.status,
-        color: (findTier(tiers, u.role, u.category) || {}).color || '#8A8F98'
+        color: (findTier(tiers, u.role, u.category) || {}).color || '#8A8F98',
+        docs: docsByUser[u.id] || [], docCount: (docsByUser[u.id] || []).length
       })),
+      docsByUser,
       news, events, milestones,
       notifications: notifications.map(n => ({
         id: n.id, title: n.title, body: n.body, audience: n.audience,
@@ -406,8 +430,27 @@ router.post('/admin/user/:id/resend', auth.requireAdmin, async (req, res, next) 
 router.post('/admin/user/:id/delete', auth.requireAdmin, async (req, res, next) => {
   try {
     await knex('users').where({ id: req.params.id }).whereNot({ role: 'admin' }).del();
+    await knex('user_documents').where({ user_id: req.params.id }).del();
     res.redirect('/panel/admin?type=ok&msg=Usuario+eliminado');
   } catch (e) { next(e); }
+});
+
+// Documentos legales por usuario
+router.post('/admin/user/:id/document', auth.requireAdmin, upload.single('file'), async (req, res, next) => {
+  try {
+    const user = await knex('users').where({ id: req.params.id }).first();
+    if (!user) return res.redirect('/panel/admin?type=error&msg=Usuario+no+encontrado');
+    if (!req.file) return res.redirect('/panel/admin?type=error&msg=Selecciona+un+archivo');
+    const up = await uploadDocument(req.file);
+    const name = (req.body.name || '').trim() || req.file.originalname;
+    await knex('user_documents').insert({ user_id: user.id, name, url: up.url, meta: up.meta, ext: up.ext });
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Documento agregado a ${user.name}`));
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message));
+  }
+});
+router.post('/admin/document/:id/delete', auth.requireAdmin, async (req, res, next) => {
+  try { await knex('user_documents').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=Documento+eliminado'); } catch (e) { next(e); }
 });
 
 // Subida de imagen genérica (AJAX) → devuelve JSON { url }

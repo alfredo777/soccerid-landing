@@ -227,12 +227,12 @@
 
     <!-- Documents -->
     <div class="pn-card">
-      <div class="pn-card__head"><h3>Documentos</h3></div>
+      <div class="pn-card__head"><h3>Contratos y documentos</h3><a href="/panel/documentos" class="pn-card__link">Ver todos ›</a></div>
       <div class="db-docs">
-        {{#each panel.documents}}
-        <a href="#" class="db-doc">
+        {{#each panel.userDocuments}}
+        <a href="{{this.url}}" target="_blank" rel="noopener" class="db-doc">
           <div class="db-doc__ic">
-            {{#eq this.icon 'chart'}}<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="11" width="3" height="6"/><rect x="13" y="7" width="3" height="10"/></svg>{{else}}<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/></svg>{{/eq}}
+            {{#if this.ext}}<span style="font-size:10px;font-weight:900;color:var(--pn-purple);">{{this.ext}}</span>{{else}}<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/></svg>{{/if}}
           </div>
           <div class="db-doc__b">
             <strong>{{this.name}}</strong>
@@ -240,6 +240,8 @@
           </div>
           <span class="db-doc__dl"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 11 12 16 17 11"/><path d="M5 21h14"/></svg></span>
         </a>
+        {{else}}
+        <p style="padding:14px 10px; font-size:12px; color:var(--pn-muted);">Aún no hay documentos compartidos contigo.</p>
         {{/each}}
       </div>
     </div>
