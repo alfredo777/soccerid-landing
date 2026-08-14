@@ -435,15 +435,16 @@ router.post('/admin/user/:id/delete', auth.requireAdmin, async (req, res, next) 
   } catch (e) { next(e); }
 });
 
-// Documentos legales por usuario
-router.post('/admin/user/:id/document', auth.requireAdmin, upload.single('file'), async (req, res, next) => {
+// Documentos legales por usuario (enlaces de Google Drive)
+router.post('/admin/user/:id/document', auth.requireAdmin, async (req, res, next) => {
   try {
     const user = await knex('users').where({ id: req.params.id }).first();
     if (!user) return res.redirect('/panel/admin?type=error&msg=Usuario+no+encontrado');
-    if (!req.file) return res.redirect('/panel/admin?type=error&msg=Selecciona+un+archivo');
-    const up = await uploadDocument(req.file);
-    const name = (req.body.name || '').trim() || req.file.originalname;
-    await knex('user_documents').insert({ user_id: user.id, name, url: up.url, meta: up.meta, ext: up.ext });
+    const name = (req.body.name || '').trim();
+    const url = (req.body.url || '').trim();
+    if (!name || !url) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Nombre y enlace son obligatorios'));
+    if (!/^https?:\/\//i.test(url)) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El enlace debe empezar con http:// o https://'));
+    await knex('user_documents').insert({ user_id: user.id, name, url, meta: 'Google Drive', ext: null });
     res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Documento agregado a ${user.name}`));
   } catch (e) {
     res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message));

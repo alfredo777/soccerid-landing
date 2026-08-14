@@ -335,10 +335,12 @@
     <div class="ad-modal__head"><h3>Contratos y documentos · <span id="ed-user"></span></h3><button class="ad-modal__close" onclick="closeModal('modal-docs')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
     <div class="ad-modal__body">
       <div id="ed-list" style="margin-bottom:18px;"></div>
-      <form method="POST" id="form-doc" enctype="multipart/form-data" style="border-top:1px solid var(--pn-border); padding-top:16px;">
-        <div class="ad-f"><label>Nombre del documento</label><input type="text" name="name" placeholder="Ej. Contrato de inversión"></div>
-        <div class="ad-f"><label>Archivo (PDF, Word, Excel o imagen)</label><input type="file" name="file" accept=".pdf,.doc,.docx,.xls,.xlsx,image/*" required></div>
-        <button type="submit" class="ad-btn">Subir documento</button>
+      <form method="POST" id="form-doc" style="border-top:1px solid var(--pn-border); padding-top:16px;">
+        <div class="ad-f"><label>Nombre del documento</label><input type="text" name="name" placeholder="Ej. Contrato de inversión" required></div>
+        <div class="ad-f"><label>Enlace de Google Drive</label><input type="url" name="url" placeholder="https://drive.google.com/..." required>
+          <div class="ad-hint">Pega el enlace para compartir del documento. Configura los permisos de acceso en Google Drive.</div>
+        </div>
+        <button type="submit" class="ad-btn">Agregar documento</button>
       </form>
     </div>
   </div>
