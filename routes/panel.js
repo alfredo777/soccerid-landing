@@ -414,24 +414,38 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       };
     });
 
+    // Registro de accesos: una sola consulta, se deriva todo (por código y por prospecto)
+    const allAccess = await knex('access_log').orderBy('id', 'desc');
+    const fmtWhen = (d) => d ? new Date(d).toLocaleString('es-MX', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+
+    // Historial por código (cruzable con prospectos: incluye nombre/email/lead)
+    const codesHistory = {};
+    allAccess.forEach(a => {
+      (codesHistory[a.code] = codesHistory[a.code] || []).push({
+        leadId: a.lead_id || null, name: a.name || '—', email: a.email || '—',
+        ip: a.ip || '—', device: (a.device_id || '').slice(0, 10) || '—', newDevice: !!a.new_device,
+        when: fmtWhen(a.created_at)
+      });
+    });
+
     // Códigos de acceso a la propuesta 2027
     const codeRows = await knex('access_codes').orderBy([{ column: 'status' }, { column: 'id' }]);
     const codesView = codeRows.map(c => ({
       id: c.id, code: c.code, status: c.status,
-      statusLabel: c.status === 'used' ? 'Usado' : 'Por usar', isTest: c.note === 'test'
+      statusLabel: c.status === 'used' ? 'Usado' : 'Por usar', isTest: c.note === 'test',
+      accesses: (codesHistory[c.code] || []).length
     }));
     const codesUsed = codesView.filter(c => c.status === 'used').length;
     const codesUnused = codesView.filter(c => c.status === 'unused' && !c.isTest).length;
 
     // Prospectos (leads) + historial de accesos por prospecto
     const leadRows = await knex('leads').orderBy('id', 'desc');
-    const leadLogRows = await knex('access_log').whereNotNull('lead_id').orderBy('id', 'desc');
     const leadsHistory = {};
-    leadLogRows.forEach(a => {
+    allAccess.forEach(a => {
+      if (!a.lead_id) return;
       (leadsHistory[a.lead_id] = leadsHistory[a.lead_id] || []).push({
         code: a.code || '—', ip: a.ip || '—', device: (a.device_id || '').slice(0, 10) || '—',
-        ua: a.user_agent || '', newDevice: !!a.new_device,
-        when: a.created_at ? new Date(a.created_at).toLocaleString('es-MX', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''
+        ua: a.user_agent || '', newDevice: !!a.new_device, when: fmtWhen(a.created_at)
       });
     });
     const leadStatusLabels = { nuevo: 'Nuevo', contactado: 'Contactado', cliente: 'Cliente', descartado: 'Descartado' };
@@ -446,12 +460,11 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       };
     });
 
-    // Registro de accesos (últimos 200)
-    const logRows = await knex('access_log').orderBy('id', 'desc').limit(200);
-    const accessView = logRows.map(a => ({
+    // Registro de accesos (últimos 200) — derivado de allAccess
+    const accessView = allAccess.slice(0, 200).map(a => ({
       id: a.id, code: a.code, name: a.name || '—', email: a.email || '—',
       device: (a.device_id || '').slice(0, 8), newDevice: !!a.new_device, ip: a.ip || '',
-      when: a.created_at ? new Date(a.created_at).toLocaleString('es-MX', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''
+      when: fmtWhen(a.created_at)
     }));
 
     const notifyRow = await knex('app_settings').where({ key: 'notify_emails' }).first();
@@ -489,7 +502,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       sponsorTiers: tiers.filter(t => t.role === 'sponsor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
       editions: editionsView,
       editionsForms: editionsView.map(e => e.form),
-      codes: codesView, codesUsed, codesUnused,
+      codes: codesView, codesUsed, codesUnused, codesHistory,
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
       notifyEmails
