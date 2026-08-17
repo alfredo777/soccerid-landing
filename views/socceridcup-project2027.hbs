@@ -230,40 +230,59 @@
   </section>
   {{/if}}
 
-  {{!-- ═══ DETRÁS DE CÁMARAS ═══ --}}
+  {{!-- ═══ PUBLICACIONES DE LOS CLUBES ═══ --}}
   <section class="pp-section">
-    <div class="bts-head">
-      <div>
-        <h2 class="pp-section__title" style="margin-bottom:6px;">{{#if isEs}}DETRÁS DE CÁMARAS{{else}}BEHIND THE SCENES{{/if}}</h2>
-        <p class="bts-sub">{{#if isEs}}Momentos de los clubes en cada edición · desliza para ver más{{else}}Club moments from each edition · swipe to see more{{/if}}</p>
+    <div class="bts">
+      <div class="bts-head">
+        <div>
+          <h2 class="pp-section__title" style="margin-bottom:6px;">{{#if isEs}}PUBLICACIONES DE LOS CLUBES{{else}}CLUB POSTS{{/if}}</h2>
+          <p class="bts-sub">{{#if isEs}}Los clubes en redes sociales · desliza para ver más{{else}}The clubs on social media · swipe to see more{{/if}}</p>
+        </div>
+        <div class="bts-nav">
+          <button class="bts-arrow bts-prev" type="button" aria-label="{{#if isEs}}Anterior{{else}}Previous{{/if}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="bts-arrow bts-next" type="button" aria-label="{{#if isEs}}Siguiente{{else}}Next{{/if}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
       </div>
-      <div class="bts-nav">
-        <button class="bts-arrow" id="btsPrev" type="button" aria-label="{{#if isEs}}Anterior{{else}}Previous{{/if}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
-        <button class="bts-arrow" id="btsNext" type="button" aria-label="{{#if isEs}}Siguiente{{else}}Next{{/if}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+      <div class="bts-track">
+        {{!-- 2025 · Pumas primero, luego Tigres --}}
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DHMbo_-uwxz/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DHgc8InsfGf/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ff8a00"></span>Tigres · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DXYZnyvjSx4/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ff8a00"></span>Tigres · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DXYZdVQDU3q/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        {{!-- 2024 · América vs Atlético Nacional --}}
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ffe600"></span>América · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C_MIUMKy4KW/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ffe600"></span>América · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C-ibrhTxVFY/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#009639"></span>Atlético Nacional · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C_nUjsJROIO/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#009639"></span>Atlético Nacional · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C_eW4TIqzlG/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        {{!-- 2023 · Pumas vs Comunicaciones --}}
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C3rNzPHMSoT/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C45zMSiLAal/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#e8e8e8"></span>Comunicaciones · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C3ql6KWx0eR/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#e8e8e8"></span>Comunicaciones · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C44uMApuSf7/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
       </div>
+      <div class="bts-dots" aria-hidden="true"></div>
     </div>
-    <div class="bts-track" id="btsTrack">
-      <div class="bts-card">
-        <div class="bts-card__tag"><span class="bts-dot" style="background:#6c3ce0"></span>SOCCER iD CUP</div>
-        <div class="bts-embed"><iframe src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1372392885003887&show_text=false&width=340&height=600" loading="lazy" scrolling="no" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe></div>
+  </section>
+
+  {{!-- ═══ DETRÁS DE CÁMARAS (videos de Facebook) ═══ --}}
+  <section class="pp-section pp-section--alt">
+    <div class="bts">
+      <div class="bts-head">
+        <div>
+          <h2 class="pp-section__title" style="margin-bottom:6px;">{{#if isEs}}DETRÁS DE CÁMARAS{{else}}BEHIND THE SCENES{{/if}}</h2>
+          <p class="bts-sub">{{#if isEs}}Videos de SOCCER iD CUP{{else}}SOCCER iD CUP videos{{/if}}</p>
+        </div>
+        <div class="bts-nav">
+          <button class="bts-arrow bts-prev" type="button" aria-label="{{#if isEs}}Anterior{{else}}Previous{{/if}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="bts-arrow bts-next" type="button" aria-label="{{#if isEs}}Siguiente{{else}}Next{{/if}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
       </div>
-      {{!-- 2023 · Pumas vs Comunicaciones --}}
-      <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C3rNzPHMSoT/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-      <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C45zMSiLAal/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-      <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#e8e8e8"></span>Comunicaciones · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C3ql6KWx0eR/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-      <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#e8e8e8"></span>Comunicaciones · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C44uMApuSf7/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-      {{!-- 2024 · América vs Atlético Nacional --}}
-      <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ffe600"></span>América · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C_MIUMKy4KW/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-      <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ffe600"></span>América · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C-ibrhTxVFY/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-      <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#009639"></span>Atlético Nacional · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C_nUjsJROIO/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-      <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#009639"></span>Atlético Nacional · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C_eW4TIqzlG/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-      {{!-- 2025 · Tigres vs Pumas --}}
-      <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ff8a00"></span>Tigres · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DXYZnyvjSx4/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-      <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ff8a00"></span>Tigres · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DXYZdVQDU3q/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-      <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DHMbo_-uwxz/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-      <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DHgc8InsfGf/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+      <div class="bts-track">
+        <a class="bts-card bts-video" href="https://www.facebook.com/reel/1372392885003887" target="_blank" rel="noopener"><div class="bts-card__tag"><span class="bts-dot" style="background:#ff8a00"></span>Austin · 2025</div><div class="bts-embed bts-poster" style="background-image:url('/assets/images/gallery/cup2025/6.jpg')"><span class="bts-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="bts-watch">{{#if isEs}}Ver en Facebook{{else}}Watch on Facebook{{/if}}</span></div></a>
+        <a class="bts-card bts-video" href="https://www.facebook.com/soccerid7/videos/907822141540511/" target="_blank" rel="noopener"><div class="bts-card__tag"><span class="bts-dot" style="background:#ffe600"></span>Orlando · 2024</div><div class="bts-embed bts-poster" style="background-image:url('/assets/images/gallery/cup2024/5.jpg')"><span class="bts-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="bts-watch">{{#if isEs}}Ver en Facebook{{else}}Watch on Facebook{{/if}}</span></div></a>
+      </div>
+      <div class="bts-dots" aria-hidden="true"></div>
     </div>
-    <div class="bts-dots" id="btsDots" aria-hidden="true"></div>
   </section>
 
   <style>
@@ -288,6 +307,14 @@
     /* Escudo: permite el swipe del carrusel sobre el embed y abre la publicación al tocar */
     .bts-shield { position:absolute; inset:0; z-index:2; display:block; background:transparent; }
     .bts-track.is-dragging .bts-shield { pointer-events:none; }
+    /* Tarjeta de video (póster + play que abre Facebook) */
+    .bts-video { text-decoration:none; color:inherit; }
+    .bts-poster { background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; }
+    .bts-poster::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,10,26,0.15), rgba(10,10,26,0.6)); }
+    .bts-play { position:relative; z-index:1; width:66px; height:66px; border-radius:50%; background:rgba(108,60,224,0.92); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(0,0,0,0.5); transition:transform .2s; }
+    .bts-video:hover .bts-play { transform:scale(1.08); }
+    .bts-play svg { width:26px; height:26px; margin-left:3px; color:#fff; }
+    .bts-watch { position:absolute; z-index:1; bottom:16px; left:0; right:0; text-align:center; color:#fff; font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; }
     @media (max-width:700px) {
       .bts-embed { height:62vh; min-height:400px; max-height:560px; }
       .bts-nav { display:none; }
@@ -297,63 +324,65 @@
   </style>
   <script>
     (function(){
-      var track = document.getElementById('btsTrack');
-      if (!track) return;
-      var prev = document.getElementById('btsPrev'), next = document.getElementById('btsNext');
       var SHIELD_LABEL = '{{#if isEs}}Ver publicación{{else}}View post{{/if}}';
-      function step(){ var c = track.querySelector('.bts-card'); var w = c ? c.getBoundingClientRect().width : 0; return (w || 340) + 16; }
-      // Flechas siempre activas: scrollBy se limita solo en los extremos
-      if (prev) prev.addEventListener('click', function(){ track.scrollBy({ left: -step(), behavior:'smooth' }); });
-      if (next) next.addEventListener('click', function(){ track.scrollBy({ left: step(), behavior:'smooth' }); });
+      document.querySelectorAll('.bts').forEach(function(root){
+        var track = root.querySelector('.bts-track');
+        if (!track) return;
+        var prev = root.querySelector('.bts-prev'), next = root.querySelector('.bts-next');
+        var dotsWrap = root.querySelector('.bts-dots');
+        function step(){ var c = track.querySelector('.bts-card'); var w = c ? c.getBoundingClientRect().width : 0; return (w || 340) + 16; }
+        // Flechas siempre activas: scrollBy se limita solo en los extremos
+        if (prev) prev.addEventListener('click', function(){ track.scrollBy({ left: -step(), behavior:'smooth' }); });
+        if (next) next.addEventListener('click', function(){ track.scrollBy({ left: step(), behavior:'smooth' }); });
 
-      // Escudo transparente sobre cada embed: en mobile el swipe del carrusel funciona
-      // (los iframes ya no capturan el gesto) y un tap abre la publicación original.
-      track.querySelectorAll('.bts-embed').forEach(function(embed){
-        if (embed.querySelector('.bts-shield')) return;
-        var iframe = embed.querySelector('iframe'); if (!iframe) return;
-        var src = iframe.getAttribute('src') || '';
-        var link = '#', m = src.match(/instagram\.com\/p\/([^\/]+)\/embed/);
-        if (m) { link = 'https://www.instagram.com/p/' + m[1] + '/'; }
-        else { var fb = src.match(/[?&]href=([^&]+)/); if (fb) link = decodeURIComponent(fb[1]); }
-        var a = document.createElement('a');
-        a.className = 'bts-shield'; a.href = link; a.target = '_blank'; a.rel = 'noopener';
-        a.setAttribute('aria-label', SHIELD_LABEL);
-        embed.appendChild(a);
-      });
-
-      // Puntos indicadores (visibles en mobile): posición actual + navegación al tocar
-      var dotsWrap = document.getElementById('btsDots');
-      var cards = track.querySelectorAll('.bts-card');
-      if (dotsWrap && cards.length) {
-        cards.forEach(function(_, i){
-          var b = document.createElement('button');
-          b.type = 'button'; b.className = 'bts-dot-i'; b.setAttribute('aria-label', 'Ir a ' + (i + 1));
-          b.addEventListener('click', function(){ cards[i].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' }); });
-          dotsWrap.appendChild(b);
+        // Escudo transparente sobre cada embed: el swipe del carrusel funciona sobre el
+        // embed (los iframes no capturan el gesto) y un tap abre la publicación original.
+        track.querySelectorAll('.bts-embed').forEach(function(embed){
+          if (embed.querySelector('.bts-shield')) return;
+          var iframe = embed.querySelector('iframe'); if (!iframe) return;
+          var src = iframe.getAttribute('src') || '';
+          var link = '#', m = src.match(/instagram\.com\/p\/([^\/]+)\/embed/);
+          if (m) { link = 'https://www.instagram.com/p/' + m[1] + '/'; }
+          else { var fb = src.match(/[?&]href=([^&]+)/); if (fb) link = decodeURIComponent(fb[1]); }
+          var a = document.createElement('a');
+          a.className = 'bts-shield'; a.href = link; a.target = '_blank'; a.rel = 'noopener';
+          a.setAttribute('aria-label', SHIELD_LABEL);
+          embed.appendChild(a);
         });
-        var dots = dotsWrap.querySelectorAll('.bts-dot-i');
-        var syncDots = function(){
-          var tr = track.getBoundingClientRect(), center = tr.left + tr.width / 2, best = 0, bestDist = Infinity;
-          cards.forEach(function(c, i){ var r = c.getBoundingClientRect(), cc = r.left + r.width / 2, d = Math.abs(cc - center); if (d < bestDist) { bestDist = d; best = i; } });
-          dots.forEach(function(d, i){ d.classList.toggle('is-active', i === best); });
-        };
-        track.addEventListener('scroll', syncDots, { passive: true });
-        window.addEventListener('resize', syncDots);
-        syncDots();
-      }
 
-      var moved = false;
-      // Táctil: distingue swipe de tap (el scroll horizontal es nativo con scroll-snap)
-      var tsx = 0, tsy = 0;
-      track.addEventListener('touchstart', function(e){ var t = e.touches[0]; tsx = t.clientX; tsy = t.clientY; moved = false; }, { passive: true });
-      track.addEventListener('touchmove', function(e){ var t = e.touches[0]; if (Math.abs(t.clientX - tsx) > 8 || Math.abs(t.clientY - tsy) > 8) moved = true; }, { passive: true });
-      // Arrastre con mouse en desktop
-      var down = false, startX = 0, startLeft = 0;
-      track.addEventListener('pointerdown', function(e){ if (e.pointerType === 'mouse') { down = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft; track.classList.add('is-dragging'); } });
-      window.addEventListener('pointermove', function(e){ if (down) { var dx = e.clientX - startX; if (Math.abs(dx) > 3) moved = true; track.scrollLeft = startLeft - dx; } });
-      window.addEventListener('pointerup', function(){ if (down) { down = false; track.classList.remove('is-dragging'); } });
-      // Si hubo swipe/arrastre, no abrir el enlace del escudo
-      track.addEventListener('click', function(e){ var a = e.target.closest('.bts-shield'); if (a && moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+        // Puntos indicadores (visibles en mobile): posición actual + navegación al tocar
+        var cards = track.querySelectorAll('.bts-card');
+        if (dotsWrap && cards.length) {
+          cards.forEach(function(_, i){
+            var b = document.createElement('button');
+            b.type = 'button'; b.className = 'bts-dot-i'; b.setAttribute('aria-label', 'Ir a ' + (i + 1));
+            b.addEventListener('click', function(){ cards[i].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' }); });
+            dotsWrap.appendChild(b);
+          });
+          var dots = dotsWrap.querySelectorAll('.bts-dot-i');
+          var syncDots = function(){
+            var tr = track.getBoundingClientRect(), center = tr.left + tr.width / 2, best = 0, bestDist = Infinity;
+            cards.forEach(function(c, i){ var r = c.getBoundingClientRect(), cc = r.left + r.width / 2, d = Math.abs(cc - center); if (d < bestDist) { bestDist = d; best = i; } });
+            dots.forEach(function(d, i){ d.classList.toggle('is-active', i === best); });
+          };
+          track.addEventListener('scroll', syncDots, { passive: true });
+          window.addEventListener('resize', syncDots);
+          syncDots();
+        }
+
+        var moved = false;
+        // Táctil: distingue swipe de tap (el scroll horizontal es nativo con scroll-snap)
+        var tsx = 0, tsy = 0;
+        track.addEventListener('touchstart', function(e){ var t = e.touches[0]; tsx = t.clientX; tsy = t.clientY; moved = false; }, { passive: true });
+        track.addEventListener('touchmove', function(e){ var t = e.touches[0]; if (Math.abs(t.clientX - tsx) > 8 || Math.abs(t.clientY - tsy) > 8) moved = true; }, { passive: true });
+        // Arrastre con mouse en desktop
+        var down = false, startX = 0, startLeft = 0;
+        track.addEventListener('pointerdown', function(e){ if (e.pointerType === 'mouse') { down = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft; track.classList.add('is-dragging'); } });
+        window.addEventListener('pointermove', function(e){ if (down) { var dx = e.clientX - startX; if (Math.abs(dx) > 3) moved = true; track.scrollLeft = startLeft - dx; } });
+        window.addEventListener('pointerup', function(){ if (down) { down = false; track.classList.remove('is-dragging'); } });
+        // Si hubo swipe/arrastre, no abrir el enlace (escudo o tarjeta de video)
+        track.addEventListener('click', function(e){ var a = e.target.closest('.bts-shield, .bts-video'); if (a && moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+      });
     })();
   </script>
 
