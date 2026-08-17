@@ -14,7 +14,10 @@ const session = require('express-session');
 const path = require('path');
 const fs = require('fs');
 
+const crypto = require('crypto');
+const knex = require('./db/knex');
 const cupEditions = require('./db/editions');
+const project2027 = require('./lib/project2027');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -804,105 +807,73 @@ app.get('/:lang/socceridcup2027', async (req, res, next) => {
   }
 });
 
-app.post('/api/project2027/verify', (req, res) => {
-  const { code } = req.body;
-  if (!code) return res.json({ ok: false });
-
-  const codesPath = path.join(__dirname, 'contents', 'cup_project_2027_codes.json');
+app.post('/api/project2027/verify', async (req, res) => {
   try {
-    const codesData = JSON.parse(fs.readFileSync(codesPath, 'utf8'));
-    if (!codesData.codes.includes(code.trim())) return res.json({ ok: false });
+    const code = (req.body.code || '').trim();
+    if (!code) return res.json({ ok: false });
 
-    const logEntry = {
-      code: code.trim(),
-      timestamp: new Date().toISOString(),
-      ip: req.headers['x-forwarded-for'] || req.ip,
-      userAgent: req.headers['user-agent']
-    };
+    const codeRow = await knex('access_codes').where({ code }).first();
+    if (!codeRow) return res.json({ ok: false });
+    const isTest = codeRow.note === 'test';
 
-    const logPath = path.join(__dirname, 'data', 'project2027_access.json');
-    const logDir = path.join(__dirname, 'data');
-    if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
+    // Identificación de dispositivo por cookie
+    let deviceId = req.cookies && req.cookies.p2027_device;
+    const knownDevice = !!deviceId;
 
-    let logs = [];
-    if (fs.existsSync(logPath)) {
-      try { logs = JSON.parse(fs.readFileSync(logPath, 'utf8')); } catch (e) { logs = []; }
+    let name = (req.body.name || '').trim();
+    let email = (req.body.email || '').trim().toLowerCase();
+    const validEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
+
+    // Dispositivo nuevo → se exige nombre y email antes de dar acceso
+    if (!knownDevice) {
+      if (!name || !validEmail) return res.json({ ok: false, needLead: true });
+      deviceId = crypto.randomBytes(16).toString('hex');
+      res.cookie('p2027_device', deviceId, { httpOnly: true, secure: isProduction, sameSite: 'lax', maxAge: 365 * 24 * 60 * 60 * 1000 });
     }
-    logs.push(logEntry);
-    fs.writeFileSync(logPath, JSON.stringify(logs, null, 2));
 
-    const cdmxTime = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    // Registro / actualización del prospecto (lead)
+    let leadId = null;
+    if (email && validEmail) {
+      const existing = await knex('leads').where({ email }).first();
+      if (existing) {
+        leadId = existing.id;
+        if (name && !existing.name) await knex('leads').where({ id: leadId }).update({ name, updated_at: knex.fn.now() });
+      } else {
+        const ins = await knex('leads').insert({ name: name || null, email }).returning('id');
+        leadId = Array.isArray(ins) ? (ins[0] && ins[0].id != null ? ins[0].id : ins[0]) : ins;
+      }
+    } else if (knownDevice) {
+      const last = await knex('access_log').where({ device_id: deviceId }).whereNotNull('lead_id').orderBy('id', 'desc').first();
+      if (last) {
+        leadId = last.lead_id;
+        if (!name) name = last.name || '';
+        if (!email) email = last.email || '';
+      }
+    }
 
-    console.log(`[PROJECT 2027] Acceso con código ${code.trim()} — ${cdmxTime}`);
+    const ip = req.headers['x-forwarded-for'] || req.ip;
+    const userAgent = req.headers['user-agent'] || '';
+    await knex('access_log').insert({
+      code, lead_id: leadId, device_id: deviceId,
+      name: name || null, email: email || null, ip, user_agent: userAgent, new_device: !knownDevice
+    });
 
-    try {
-      const nodemailer = require('nodemailer');
-      const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST || 'smtp.mailgun.org',
-        port: parseInt(process.env.SMTP_PORT || '587'),
-        secure: false,
-        auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
-      });
+    // Marca el código como usado (salvo el de prueba)
+    if (codeRow.status === 'unused' && !isTest) {
+      await knex('access_codes').where({ id: codeRow.id }).update({ status: 'used', updated_at: knex.fn.now() });
+    }
 
-      const htmlEmail = `
-<!DOCTYPE html>
-<html>
-<head><meta charset="utf-8"></head>
-<body style="margin:0;padding:0;background:#f4f4f4;font-family:Arial,Helvetica,sans-serif;">
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:32px 0;">
-<tr><td align="center">
-<table width="600" cellpadding="0" cellspacing="0" style="background:#111;border-radius:12px;overflow:hidden;">
-  <tr><td style="background:#000;padding:32px 40px;text-align:center;">
-    <img src="https://soccerid.co/assets/images/soccerid.png" alt="SOCCER iD" height="36" style="display:inline-block;">
-  </td></tr>
-  <tr><td style="padding:40px;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="background:rgba(212,175,55,0.1);border-left:4px solid #d4af37;border-radius:8px;padding:16px 20px;margin-bottom:32px;">
-      <tr><td style="color:#d4af37;font-size:14px;font-weight:700;letter-spacing:1px;">ALERTA DE ACCESO — PROJECT 2027</td></tr>
-    </table>
-    <p style="color:rgba(255,255,255,0.7);font-size:14px;margin:0 0 24px;">Se ha registrado un nuevo acceso a la plataforma de inversión SOCCER iD CUP 2027.</p>
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
-      <tr>
-        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-size:12px;font-weight:700;letter-spacing:1px;width:160px;">CÓDIGO DE ACCESO</td>
-        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:#fff;font-size:15px;font-weight:700;letter-spacing:3px;">${code.trim()}</td>
-      </tr>
-      <tr>
-        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-size:12px;font-weight:700;letter-spacing:1px;">FECHA Y HORA (CDMX)</td>
-        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:#fff;font-size:15px;">${cdmxTime}</td>
-      </tr>
-      <tr>
-        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-size:12px;font-weight:700;letter-spacing:1px;">DIRECCIÓN IP</td>
-        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:#fff;font-size:15px;">${logEntry.ip}</td>
-      </tr>
-      <tr>
-        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-size:12px;font-weight:700;letter-spacing:1px;">NAVEGADOR</td>
-        <td style="padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);color:#fff;font-size:14px;">${logEntry.userAgent}</td>
-      </tr>
-    </table>
-    <p style="color:rgba(255,255,255,0.4);font-size:12px;margin:0;">Este es un correo automático generado por SOCCER iD. No responder.</p>
-  </td></tr>
-  <tr><td style="background:#0a0a0a;padding:20px 40px;text-align:center;">
-    <span style="color:rgba(255,255,255,0.3);font-size:11px;">&copy; ${new Date().getFullYear()} SOCCER iD &mdash; Confidencial</span>
-  </td></tr>
-</table>
-</td></tr>
-</table>
-</body>
-</html>`;
+    const cdmxTime = new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City', hour12: true });
+    console.log(`[PROJECT 2027] Acceso código ${code}${isTest ? ' (PRUEBA)' : ''} — ${name || '—'} / ${email || '—'} — ${cdmxTime}`);
 
-      transporter.sendMail({
-        from: process.env.SMTP_FROM || '"SOCCER iD" <socceridco@soccerid.co>',
-        to: process.env.NOTIFY_EMAILS || 'jardarubydv@gmail.com, leon@soccerid.co, 7leonr@gmail.com',
-        subject: `[SOCCER iD] Acceso Project 2027 — código ${code.trim()}`,
-        html: htmlEmail,
-        text: `Acceso registrado — SOCCER iD CUP 2027\n\nCódigo: ${code.trim()}\nFecha (CDMX): ${cdmxTime}\nIP: ${logEntry.ip}\nNavegador: ${logEntry.userAgent}`
-      }).catch(err => console.error('Error enviando notificación:', err.message));
-    } catch (mailErr) {
-      console.error('Error con nodemailer:', mailErr.message);
+    // Notificación por email a los administradores (el código de prueba NO envía correo)
+    if (!isTest) {
+      project2027.sendAccessNotification({ code, ip, userAgent, name, email, newDevice: !knownDevice }).catch(() => {});
     }
 
     return res.json({ ok: true });
   } catch (e) {
-    console.error('Error verificando código:', e);
+    console.error('Error verificando código 2027:', e.message);
     return res.json({ ok: false });
   }
 });

@@ -115,6 +115,48 @@ async function ensureSchema() {
     });
   }
 
+  if (!(await knex.schema.hasTable('access_codes'))) {
+    await knex.schema.createTable('access_codes', (t) => {
+      t.increments('id').primary();
+      t.string('code').notNullable().unique();
+      t.string('status').notNullable().defaultTo('unused'); // unused | used
+      t.string('note');                                     // p.ej. 'test'
+      t.timestamps(true, true);
+    });
+  }
+
+  if (!(await knex.schema.hasTable('leads'))) {
+    await knex.schema.createTable('leads', (t) => {
+      t.increments('id').primary();
+      t.string('name');
+      t.string('email').notNullable().unique();
+      t.string('status').defaultTo('nuevo');                // nuevo | contactado | cliente | descartado
+      t.timestamps(true, true);
+    });
+  }
+
+  if (!(await knex.schema.hasTable('access_log'))) {
+    await knex.schema.createTable('access_log', (t) => {
+      t.increments('id').primary();
+      t.string('code');
+      t.integer('lead_id');
+      t.string('device_id');
+      t.string('name');
+      t.string('email');
+      t.string('ip');
+      t.text('user_agent');
+      t.boolean('new_device').defaultTo(false);
+      t.timestamps(true, true);
+    });
+  }
+
+  if (!(await knex.schema.hasTable('app_settings'))) {
+    await knex.schema.createTable('app_settings', (t) => {
+      t.string('key').primary();
+      t.text('value');
+    });
+  }
+
   // Columna para rastrear la última notificación vista por usuario (idempotente)
   if (await knex.schema.hasTable('users') && !(await knex.schema.hasColumn('users', 'notifications_seen_id'))) {
     await knex.schema.alterTable('users', (t) => {
@@ -249,6 +291,28 @@ async function seed() {
       });
     });
     if (rows.length) { await knex('editions').insert(rows); console.log('  ✓ Ediciones sembradas'); }
+  }
+
+  // Códigos de acceso a la propuesta 2027 (+ configuración de notificaciones)
+  if (!(await knex('access_codes').first())) {
+    const path = require('path');
+    const fs = require('fs');
+    let existing = [];
+    try { existing = (JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'contents', 'cup_project_2027_codes.json'), 'utf8')).codes) || []; } catch (_) {}
+    const rows = existing.map(c => ({ code: String(c), status: 'used', note: null }));
+    const taken = new Set(rows.map(r => r.code));
+    let n = 0;
+    while (n < 20) {
+      const c = String(Math.floor(1000000 + Math.random() * 9000000));
+      if (taken.has(c)) continue;
+      taken.add(c); rows.push({ code: c, status: 'unused', note: null }); n++;
+    }
+    if (!taken.has('2027000')) rows.push({ code: '2027000', status: 'unused', note: 'test' });
+    await knex('access_codes').insert(rows);
+    console.log(`  ✓ Códigos de acceso sembrados (${existing.length} usados, 20 por usar, prueba: 2027000)`);
+  }
+  if (!(await knex('app_settings').where({ key: 'notify_emails' }).first())) {
+    await knex('app_settings').insert({ key: 'notify_emails', value: process.env.NOTIFY_EMAILS || 'info@soccerid.co' });
   }
 
   // Notificación de bienvenida

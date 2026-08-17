@@ -72,6 +72,7 @@
   .ad-langsec { display:none; }
   .ad-langsec.is-active { display:block; }
   .ad-f label em { font-style:normal; color:var(--pn-muted); font-weight:600; }
+  .ad-select-sm { border:1px solid var(--pn-border); border-radius:9px; padding:7px 8px; font-size:12px; font-weight:700; font-family:inherit; color:var(--pn-ink-2); background:#fff; cursor:pointer; }
 </style>
 
 {{#if flash}}<div class="ad-flash {{#eq flashType 'error'}}error{{else}}ok{{/eq}}">{{flash}}</div>{{/if}}
@@ -84,6 +85,9 @@
   <div class="ad-tab" data-tab="categorias">Categorías</div>
   <div class="ad-tab" data-tab="notificaciones">Notificaciones</div>
   <div class="ad-tab" data-tab="ediciones">Ediciones</div>
+  <div class="ad-tab" data-tab="codigos">Códigos</div>
+  <div class="ad-tab" data-tab="accesos">Accesos</div>
+  <div class="ad-tab" data-tab="leads">Prospectos</div>
 </div>
 
 <!-- USUARIOS -->
@@ -346,6 +350,119 @@
   </div>
 </section>
 
+<!-- CÓDIGOS -->
+<section class="ad-sec" id="sec-codigos">
+  <p class="ad-note">Códigos de acceso a la <strong>propuesta 2027</strong> (<a href="/es/socceridcup2027" target="_blank" rel="noopener" style="color:var(--pn-purple);font-weight:700;">ver página</a>). Al entrar desde un dispositivo nuevo se pide nombre y correo (quedan en <strong>Prospectos</strong>) y se registra en <strong>Accesos</strong>.</p>
+  <div class="ad-grid">
+    <div>
+      <form class="pn-card ad-form" method="POST" action="/panel/admin/settings/notify" style="margin-bottom:18px;">
+        <h3>Notificaciones de acceso</h3>
+        <p class="ad-hint" style="margin:-6px 0 12px;">Correos que reciben aviso en cada acceso. Separa varios con comas.</p>
+        <div class="ad-f"><label>Correos</label><input type="text" name="notify_emails" value="{{notifyEmails}}" placeholder="info@soccerid.co, ventas@soccerid.co"></div>
+        <button type="submit" class="ad-btn">Guardar correos</button>
+      </form>
+      <form class="pn-card ad-form" method="POST" action="/panel/admin/codes/generate" style="margin-bottom:18px;">
+        <h3>Generar códigos</h3>
+        <div class="ad-f"><label>Cantidad</label><input type="number" name="count" value="10" min="1" max="100"></div>
+        <button type="submit" class="ad-btn">Generar (por usar)</button>
+      </form>
+      <form class="pn-card ad-form" method="POST" action="/panel/admin/code">
+        <h3>Agregar código manual</h3>
+        <div class="ad-f"><label>Código</label><input type="text" name="code" placeholder="1234567" required></div>
+        <div class="ad-f"><label>Estado</label><select name="status"><option value="unused">Por usar</option><option value="used">Usado</option></select></div>
+        <button type="submit" class="ad-btn">Agregar</button>
+      </form>
+    </div>
+
+    <div class="pn-card">
+      <div class="pn-card__head"><h3>Códigos ({{codes.length}})</h3><span class="ad-hint">{{codesUsed}} usados · {{codesUnused}} por usar</span></div>
+      <div class="ad-list">
+        {{#each codes}}
+        <div class="ad-item">
+          <div class="ad-item__av" style="background: {{#eq this.status 'used'}}#8A8F98{{else}}#1E8E5A{{/eq}}; font-size:13px;">{{#if this.isTest}}★{{else}}#{{/if}}</div>
+          <div class="ad-item__b">
+            <strong style="letter-spacing:2px;">{{this.code}}</strong>
+            <small>{{#if this.isTest}}Código de prueba · {{/if}}{{this.statusLabel}}</small>
+          </div>
+          <div class="ad-actions">
+            <form method="POST" action="/panel/admin/code/{{this.id}}/status">
+              <select name="status" class="ad-select-sm" onchange="this.form.submit()">
+                <option value="unused" {{#eq this.status 'unused'}}selected{{/eq}}>Por usar</option>
+                <option value="used" {{#eq this.status 'used'}}selected{{/eq}}>Usado</option>
+              </select>
+            </form>
+            <form method="POST" action="/panel/admin/code/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar el código {{this.code}}?')"><button type="submit" class="danger">Eliminar</button></form>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACCESOS -->
+<section class="ad-sec" id="sec-accesos">
+  <p class="ad-note">Registro de accesos a la propuesta 2027, basado en dispositivo. Cada apertura queda guardada con fecha, IP y si es un dispositivo nuevo.</p>
+  <div class="pn-card">
+    <div class="pn-card__head"><h3>Accesos ({{accessLog.length}})</h3><span class="ad-hint">Últimos 200</span></div>
+    <div class="ad-list">
+      {{#each accessLog}}
+      <div class="ad-item">
+        <div class="ad-item__av" style="background: {{#if this.newDevice}}#6C3CE0{{else}}#8A8F98{{/if}}; font-size:10px;">{{#if this.newDevice}}NEW{{else}}···{{/if}}</div>
+        <div class="ad-item__b">
+          <strong>{{this.name}} · <span style="font-weight:600;color:var(--pn-ink-2);">{{this.email}}</span></strong>
+          <small>Código {{this.code}} · {{this.when}} · disp. {{this.device}} · {{this.ip}}{{#if this.newDevice}} · dispositivo nuevo{{/if}}</small>
+        </div>
+      </div>
+      {{else}}
+      <div class="ad-empty">Aún no hay accesos registrados.</div>
+      {{/each}}
+    </div>
+  </div>
+</section>
+
+<!-- PROSPECTOS -->
+<section class="ad-sec" id="sec-leads">
+  <p class="ad-note">Nombres y correos capturados en la propuesta 2027. Cambia su estado con el select, o envíales correo individual o masivo.</p>
+  <div class="ad-grid">
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/leads/email" onsubmit="return confirm('¿Enviar este correo a los prospectos seleccionados?')">
+      <h3>Correo masivo</h3>
+      <div class="ad-f"><label>Audiencia</label><select name="audience"><option value="all">Todos</option><option value="nuevo">Nuevos</option><option value="contactado">Contactados</option><option value="cliente">Clientes</option><option value="descartado">Descartados</option></select></div>
+      <div class="ad-f"><label>Asunto</label><input type="text" name="subject" required></div>
+      <div class="ad-f"><label>Mensaje</label><textarea name="body" rows="5" required></textarea></div>
+      <button type="submit" class="ad-btn">Enviar correo masivo</button>
+    </form>
+    <div class="pn-card">
+      <div class="pn-card__head"><h3>Prospectos ({{leads.length}})</h3></div>
+      <div class="ad-list">
+        {{#each leads}}
+        <div class="ad-item">
+          <div class="ad-item__av" style="background:#6C3CE0;">{{this.name.[0]}}</div>
+          <div class="ad-item__b">
+            <strong>{{this.name}}</strong>
+            <small>{{this.email}} · {{this.accesses}} accesos · {{this.date}}</small>
+          </div>
+          <div class="ad-actions">
+            <form method="POST" action="/panel/admin/lead/{{this.id}}/status">
+              <select name="status" class="ad-select-sm" onchange="this.form.submit()">
+                <option value="nuevo" {{#eq this.status 'nuevo'}}selected{{/eq}}>Nuevo</option>
+                <option value="contactado" {{#eq this.status 'contactado'}}selected{{/eq}}>Contactado</option>
+                <option value="cliente" {{#eq this.status 'cliente'}}selected{{/eq}}>Cliente</option>
+                <option value="descartado" {{#eq this.status 'descartado'}}selected{{/eq}}>Descartado</option>
+              </select>
+            </form>
+            <button type="button" class="primary" onclick="openLeadEmail(this)" data-id="{{this.id}}" data-name="{{this.name}}" data-email="{{this.email}}">Correo</button>
+            <form method="POST" action="/panel/admin/lead/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar a {{this.name}}?')"><button type="submit" class="danger">Eliminar</button></form>
+          </div>
+        </div>
+        {{else}}
+        <div class="ad-empty">Aún no hay prospectos. Se registran al entrar a la propuesta desde un dispositivo nuevo.</div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ═══ MODALES DE EDICIÓN ═══ -->
 <div class="ad-modal" id="modal-user">
   <div class="ad-modal__card">
@@ -490,6 +607,20 @@
   </div>
 </div>
 
+<div class="ad-modal" id="modal-lead">
+  <div class="ad-modal__card">
+    <div class="ad-modal__head"><h3>Correo a <span id="el-name"></span></h3><button class="ad-modal__close" onclick="closeModal('modal-lead')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+    <div class="ad-modal__body">
+      <form method="POST" id="form-lead-email">
+        <p class="ad-hint" id="el-email" style="margin:0 0 14px;"></p>
+        <div class="ad-f"><label>Asunto</label><input type="text" name="subject" required></div>
+        <div class="ad-f"><label>Mensaje</label><textarea name="body" rows="6" required></textarea></div>
+        <button type="submit" class="ad-btn">Enviar correo</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script>
   var INVESTOR_TIERS = {{{json investorTiers}}};
   var SPONSOR_TIERS = {{{json sponsorTiers}}};
@@ -514,6 +645,14 @@
     openModal('modal-edition');
   }
   document.querySelectorAll('.ad-langtab').forEach(function(b){ b.addEventListener('click', function(){ setEditionLang(b.dataset.lang); }); });
+
+  function openLeadEmail(btn){
+    var d = btn.dataset;
+    document.getElementById('el-name').textContent = d.name;
+    document.getElementById('el-email').textContent = d.email;
+    document.getElementById('form-lead-email').action = '/panel/admin/lead/' + d.id + '/email';
+    openModal('modal-lead');
+  }
 
   function fillCatSelect(sel, role, selected){
     var tiers = role === 'sponsor' ? SPONSOR_TIERS : INVESTOR_TIERS;
@@ -629,9 +768,13 @@
       calendario: { label: 'Eventos', color: '#A78BE6' },
       cronograma: { label: 'Cronograma', color: '#1E8E5A' },
       categorias: { label: 'Categorías', color: '#14141B' },
-      notificaciones: { label: 'Notificaciones', color: '#6C3CE0' }
+      notificaciones: { label: 'Notificaciones', color: '#6C3CE0' },
+      ediciones: { label: 'Ediciones', color: '#6C3CE0' },
+      codigos: { label: 'Códigos', color: '#1E8E5A' },
+      accesos: { label: 'Accesos', color: '#8A8F98' },
+      leads: { label: 'Prospectos', color: '#6C3CE0' }
     };
-    var ORDER = ['Inversionistas','Patrocinadores','Noticias','Eventos','Cronograma','Categorías','Notificaciones'];
+    var ORDER = ['Inversionistas','Patrocinadores','Prospectos','Noticias','Eventos','Cronograma','Categorías','Notificaciones','Ediciones','Códigos','Accesos'];
 
     function buildIndex(){
       var idx = [];

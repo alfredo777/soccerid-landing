@@ -11,6 +11,7 @@ const multer = require('multer');
 const knex = require('../db/knex');
 const auth = require('../lib/panelAuth');
 const { sendInvite, sendNotification } = require('../lib/panelMailer');
+const { sendLeadEmail } = require('../lib/project2027');
 const { uploadImage, uploadDocument } = require('../lib/uploads');
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
@@ -413,6 +414,37 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       };
     });
 
+    // Códigos de acceso a la propuesta 2027
+    const codeRows = await knex('access_codes').orderBy([{ column: 'status' }, { column: 'id' }]);
+    const codesView = codeRows.map(c => ({
+      id: c.id, code: c.code, status: c.status,
+      statusLabel: c.status === 'used' ? 'Usado' : 'Por usar', isTest: c.note === 'test'
+    }));
+    const codesUsed = codesView.filter(c => c.status === 'used').length;
+    const codesUnused = codesView.filter(c => c.status === 'unused' && !c.isTest).length;
+
+    // Prospectos (leads) + número de accesos
+    const leadRows = await knex('leads').orderBy('id', 'desc');
+    const accCounts = await knex('access_log').whereNotNull('lead_id').groupBy('lead_id').select('lead_id').count('* as c');
+    const accMap = {}; accCounts.forEach(r => { accMap[r.lead_id] = Number(r.c); });
+    const leadStatusLabels = { nuevo: 'Nuevo', contactado: 'Contactado', cliente: 'Cliente', descartado: 'Descartado' };
+    const leadsView = leadRows.map(l => ({
+      id: l.id, name: l.name || '—', email: l.email, status: l.status || 'nuevo',
+      statusLabel: leadStatusLabels[l.status] || l.status, accesses: accMap[l.id] || 0,
+      date: l.created_at ? new Date(l.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }) : ''
+    }));
+
+    // Registro de accesos (últimos 200)
+    const logRows = await knex('access_log').orderBy('id', 'desc').limit(200);
+    const accessView = logRows.map(a => ({
+      id: a.id, code: a.code, name: a.name || '—', email: a.email || '—',
+      device: (a.device_id || '').slice(0, 8), newDevice: !!a.new_device, ip: a.ip || '',
+      when: a.created_at ? new Date(a.created_at).toLocaleString('es-MX', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : ''
+    }));
+
+    const notifyRow = await knex('app_settings').where({ key: 'notify_emails' }).first();
+    const notifyEmails = notifyRow ? (notifyRow.value || '') : '';
+
     res.render('panel/admin', {
       layout: 'panel',
       title: 'Administración · SOCCER iD Investor Portal',
@@ -444,7 +476,11 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       investorTiers: tiers.filter(t => t.role === 'investor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
       sponsorTiers: tiers.filter(t => t.role === 'sponsor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
       editions: editionsView,
-      editionsForms: editionsView.map(e => e.form)
+      editionsForms: editionsView.map(e => e.form),
+      codes: codesView, codesUsed, codesUnused,
+      leads: leadsView, leadsCount: leadsView.length,
+      accessLog: accessView,
+      notifyEmails
     });
   } catch (e) { next(e); }
 });
@@ -766,6 +802,97 @@ router.post('/admin/edition/:id/delete', auth.requireAdmin, async (req, res, nex
   try {
     await knex('editions').where({ id: req.params.id }).del();
     res.redirect('/panel/admin?type=ok&msg=Edici%C3%B3n+eliminada#ediciones');
+  } catch (e) { next(e); }
+});
+
+// ════════════════════════════════════════════════
+// CÓDIGOS DE ACCESO A LA PROPUESTA 2027 + PROSPECTOS (LEADS)
+// ════════════════════════════════════════════════
+router.post('/admin/code', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const code = (req.body.code || '').trim();
+    if (!code) return res.redirect('/panel/admin?type=error&msg=C%C3%B3digo+vac%C3%ADo#codigos');
+    const ex = await knex('access_codes').where({ code }).first();
+    if (ex) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Ese código ya existe') + '#codigos');
+    await knex('access_codes').insert({ code, status: req.body.status === 'used' ? 'used' : 'unused' });
+    res.redirect('/panel/admin?type=ok&msg=C%C3%B3digo+agregado#codigos');
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/codes/generate', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const n = Math.min(Math.max(parseInt(req.body.count || '10', 10) || 10, 1), 100);
+    const existing = new Set((await knex('access_codes').select('code')).map(r => r.code));
+    const rows = []; let made = 0, guard = 0;
+    while (made < n && guard < n * 60) {
+      guard++;
+      const c = String(Math.floor(1000000 + Math.random() * 9000000));
+      if (existing.has(c)) continue;
+      existing.add(c); rows.push({ code: c, status: 'unused' }); made++;
+    }
+    if (rows.length) await knex('access_codes').insert(rows);
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`${rows.length} códigos generados`) + '#codigos');
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/code/:id/status', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const status = req.body.status === 'used' ? 'used' : 'unused';
+    await knex('access_codes').where({ id: req.params.id }).update({ status, updated_at: knex.fn.now() });
+    res.redirect('/panel/admin?type=ok&msg=Estado+actualizado#codigos');
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/code/:id/delete', auth.requireAdmin, async (req, res, next) => {
+  try { await knex('access_codes').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=C%C3%B3digo+eliminado#codigos'); } catch (e) { next(e); }
+});
+
+router.post('/admin/settings/notify', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const value = (req.body.notify_emails || '').trim();
+    const ex = await knex('app_settings').where({ key: 'notify_emails' }).first();
+    if (ex) await knex('app_settings').where({ key: 'notify_emails' }).update({ value });
+    else await knex('app_settings').insert({ key: 'notify_emails', value });
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Correos de notificación actualizados') + '#codigos');
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/lead/:id/status', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const status = ['nuevo', 'contactado', 'cliente', 'descartado'].includes(req.body.status) ? req.body.status : 'nuevo';
+    await knex('leads').where({ id: req.params.id }).update({ status, updated_at: knex.fn.now() });
+    res.redirect('/panel/admin?type=ok&msg=Prospecto+actualizado#leads');
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/lead/:id/delete', auth.requireAdmin, async (req, res, next) => {
+  try { await knex('leads').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=Prospecto+eliminado#leads'); } catch (e) { next(e); }
+});
+
+router.post('/admin/lead/:id/email', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const lead = await knex('leads').where({ id: req.params.id }).first();
+    if (!lead) return res.redirect('/panel/admin?type=error&msg=Prospecto+no+encontrado#leads');
+    const r = await sendLeadEmail({ to: lead.email, name: lead.name, subject: (req.body.subject || '').trim(), body: (req.body.body || '').trim() });
+    if (r.sent && lead.status === 'nuevo') await knex('leads').where({ id: lead.id }).update({ status: 'contactado', updated_at: knex.fn.now() });
+    res.redirect('/panel/admin?type=' + (r.sent ? 'ok' : 'error') + '&msg=' + encodeURIComponent(r.sent ? `Correo enviado a ${lead.email}` : ('Error: ' + (r.error || 'no enviado'))) + '#leads');
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/leads/email', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const subject = (req.body.subject || '').trim();
+    const body = (req.body.body || '').trim();
+    const audience = req.body.audience;
+    let q = knex('leads');
+    if (['nuevo', 'contactado', 'cliente', 'descartado'].includes(audience)) q = q.where({ status: audience });
+    const leads = await q;
+    let sent = 0;
+    for (const l of leads) {
+      const r = await sendLeadEmail({ to: l.email, name: l.name, subject, body });
+      if (r.sent) sent++;
+    }
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Correo enviado a ${sent} de ${leads.length} prospectos`) + '#leads');
   } catch (e) { next(e); }
 });
 

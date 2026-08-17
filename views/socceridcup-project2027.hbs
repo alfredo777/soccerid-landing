@@ -18,6 +18,15 @@
       <button id="ppSubmit" class="pp-lock__btn">{{data.lock.button}}</button>
     </div>
     <p class="pp-lock__error" id="ppError">{{data.lock.error}}</p>
+
+    <div id="ppLead" style="display:none; margin-top:6px;">
+      <p class="pp-lock__sub" style="margin-bottom:14px;">{{#if isEs}}Antes de continuar, déjanos tus datos.{{else}}Before continuing, please leave your details.{{/if}}</p>
+      <input type="text" id="ppLeadName" placeholder="{{#if isEs}}Nombre completo{{else}}Full name{{/if}}" autocomplete="name" style="width:100%; padding:13px 15px; margin-bottom:10px; border-radius:10px; border:1px solid rgba(255,255,255,0.16); background:rgba(255,255,255,0.06); color:#fff; font-size:15px; outline:none;">
+      <input type="email" id="ppLeadEmail" placeholder="{{#if isEs}}Correo electrónico{{else}}Email address{{/if}}" autocomplete="email" style="width:100%; padding:13px 15px; margin-bottom:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.16); background:rgba(255,255,255,0.06); color:#fff; font-size:15px; outline:none;">
+      <button id="ppLeadBtn" type="button" class="pp-lock__btn">{{#if isEs}}Ver la propuesta{{else}}View the proposal{{/if}}</button>
+      <p class="pp-lock__error" id="ppLeadError">{{#if isEs}}Escribe tu nombre y un correo válido.{{else}}Enter your name and a valid email.{{/if}}</p>
+    </div>
+
     <div class="pp-lock__lang">
       <a href="/es/socceridcup2027" class="{{#if isEs}}active{{/if}}">ES</a>
       <a href="/en/socceridcup2027" class="{{#if isEn}}active{{/if}}">EN</a>
@@ -855,31 +864,51 @@
 
   digits[0].focus();
 
+  var leadWrap = document.getElementById('ppLead');
+  var leadName = document.getElementById('ppLeadName');
+  var leadEmail = document.getElementById('ppLeadEmail');
+  var leadBtn = document.getElementById('ppLeadBtn');
+  var leadErr = document.getElementById('ppLeadError');
+  var formWrap = document.querySelector('.pp-lock__form');
+  var lastCode = '';
+
+  function reveal() {
+    sessionStorage.setItem('pp2027', 'granted');
+    document.getElementById('ppLock').style.display = 'none';
+    document.getElementById('ppContent').style.display = 'block';
+  }
+
+  function post(payload) {
+    return fetch('/api/project2027/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(function(r) { return r.json(); });
+  }
+
   function tryAccess() {
     var val = getCode();
     if (val.length < 7) return;
     btn.disabled = true;
     btn.textContent = '...';
-    fetch('/api/project2027/verify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: val })
-    })
-    .then(function(r) { return r.json(); })
+    post({ code: val })
     .then(function(data) {
-      if (data.ok) {
-        sessionStorage.setItem('pp2027', 'granted');
-        document.getElementById('ppLock').style.display = 'none';
-        document.getElementById('ppContent').style.display = 'block';
-      } else {
-        err.classList.add('visible');
-        digitsWrap.classList.add('shake');
-        setTimeout(function() { digitsWrap.classList.remove('shake'); }, 400);
-        digits.forEach(function(d) { d.value = ''; d.classList.remove('filled'); });
-        digits[0].focus();
-      }
       btn.disabled = false;
       btn.textContent = '{{data.lock.button}}';
+      if (data.ok) { reveal(); return; }
+      if (data.needLead) {
+        lastCode = val;
+        err.classList.remove('visible');
+        if (formWrap) formWrap.style.display = 'none';
+        leadWrap.style.display = 'block';
+        leadName.focus();
+        return;
+      }
+      err.classList.add('visible');
+      digitsWrap.classList.add('shake');
+      setTimeout(function() { digitsWrap.classList.remove('shake'); }, 400);
+      digits.forEach(function(d) { d.value = ''; d.classList.remove('filled'); });
+      digits[0].focus();
     })
     .catch(function() {
       btn.disabled = false;
@@ -887,6 +916,26 @@
     });
   }
   btn.addEventListener('click', tryAccess);
+
+  function submitLead() {
+    var nm = (leadName.value || '').trim();
+    var em = (leadEmail.value || '').trim();
+    if (nm.length < 2 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { leadErr.classList.add('visible'); return; }
+    leadErr.classList.remove('visible');
+    leadBtn.disabled = true;
+    var original = leadBtn.textContent;
+    leadBtn.textContent = '...';
+    post({ code: lastCode, name: nm, email: em })
+    .then(function(data) {
+      leadBtn.disabled = false;
+      leadBtn.textContent = original;
+      if (data.ok) { reveal(); return; }
+      leadErr.classList.add('visible');
+    })
+    .catch(function() { leadBtn.disabled = false; leadBtn.textContent = original; });
+  }
+  leadBtn.addEventListener('click', submitLead);
+  leadEmail.addEventListener('keydown', function(e) { if (e.key === 'Enter') submitLead(); });
 
   var btt = document.getElementById('ppBtt');
   window.addEventListener('scroll', function() {
