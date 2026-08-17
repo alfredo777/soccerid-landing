@@ -1,0 +1,98 @@
+<style>
+  .bts-section { padding: 48px 24px; max-width: 960px; margin: 0 auto; }
+  .bts-section__title { font-size: 28px; font-weight: 900; letter-spacing: -0.5px; color: #fff; }
+  .bts-videowrap { display: flex; justify-content: center; margin-top: 22px; }
+  .bts-head { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:22px; flex-wrap:wrap; }
+  .bts-sub { color:rgba(255,255,255,0.5); font-size:14px; margin:6px 0 0; }
+  .bts-nav { display:flex; gap:10px; }
+  .bts-arrow { width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s, border-color .2s, opacity .2s; }
+  .bts-arrow:hover { background:rgba(108,60,224,0.5); border-color:rgba(108,60,224,0.5); }
+  .bts-arrow:disabled { opacity:.3; cursor:default; }
+  .bts-dots { display:none; }
+  .bts-dot-i { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.25); border:0; padding:0; cursor:pointer; transition:width .25s ease, background .25s ease; }
+  .bts-dot-i.is-active { width:22px; border-radius:20px; background:#9b59f0; }
+  .bts-track { display:flex; gap:16px; overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scroll-behavior:smooth; padding:4px 2px 10px; cursor:grab; }
+  .bts-track::-webkit-scrollbar { height:0; }
+  .bts-track.is-dragging { cursor:grabbing; scroll-snap-type:none; scroll-behavior:auto; }
+  .bts-track.is-dragging iframe { pointer-events:none; }
+  .bts-card { flex:0 0 auto; width:340px; max-width:86vw; scroll-snap-align:center; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:16px; overflow:hidden; }
+  .bts-card__tag { display:flex; align-items:center; gap:8px; padding:14px 16px; font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.85); }
+  .bts-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; box-shadow:0 0 0 3px rgba(255,255,255,0.06); }
+  .bts-embed { position:relative; width:100%; height:540px; background:#000; overflow:hidden; }
+  .bts-embed iframe { width:100%; height:100%; border:0; display:block; pointer-events:none; }
+  /* Escudo: permite el swipe del carrusel sobre el embed y abre la publicación al tocar */
+  .bts-shield { position:absolute; inset:0; z-index:2; display:block; background:transparent; }
+  .bts-track.is-dragging .bts-shield { pointer-events:none; }
+  /* Tarjeta de video (póster + play que abre Facebook) */
+  .bts-video { text-decoration:none; color:inherit; }
+  .bts-poster { background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; }
+  .bts-poster::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,10,26,0.15), rgba(10,10,26,0.6)); }
+  .bts-play { position:relative; z-index:1; width:66px; height:66px; border-radius:50%; background:rgba(108,60,224,0.92); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(0,0,0,0.5); transition:transform .2s; }
+  .bts-video:hover .bts-play { transform:scale(1.08); }
+  .bts-play svg { width:26px; height:26px; margin-left:3px; color:#fff; }
+  .bts-watch { position:absolute; z-index:1; bottom:16px; left:0; right:0; text-align:center; color:#fff; font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; }
+  @media (max-width:700px) {
+    .bts-section { padding: 36px 18px; }
+    .bts-section__title { font-size: 22px; }
+    .bts-embed { height:62vh; min-height:400px; max-height:560px; }
+    .bts-nav { display:none; }
+    .bts-card { width:82vw; max-width:82vw; }
+    .bts-dots { display:flex; justify-content:center; align-items:center; gap:7px; margin-top:16px; flex-wrap:wrap; }
+  }
+</style>
+<script>
+  (function(){
+    var SHIELD_LABEL = '{{#if isEs}}Ver publicación{{else}}View post{{/if}}';
+    document.querySelectorAll('.bts').forEach(function(root){
+      var track = root.querySelector('.bts-track');
+      if (!track) return;
+      var prev = root.querySelector('.bts-prev'), next = root.querySelector('.bts-next');
+      var dotsWrap = root.querySelector('.bts-dots');
+      function step(){ var c = track.querySelector('.bts-card'); var w = c ? c.getBoundingClientRect().width : 0; return (w || 340) + 16; }
+      if (prev) prev.addEventListener('click', function(){ track.scrollBy({ left: -step(), behavior:'smooth' }); });
+      if (next) next.addEventListener('click', function(){ track.scrollBy({ left: step(), behavior:'smooth' }); });
+
+      track.querySelectorAll('.bts-embed').forEach(function(embed){
+        if (embed.querySelector('.bts-shield')) return;
+        var iframe = embed.querySelector('iframe'); if (!iframe) return;
+        var src = iframe.getAttribute('src') || '';
+        var link = '#', m = src.match(/instagram\.com\/p\/([^\/]+)\/embed/);
+        if (m) { link = 'https://www.instagram.com/p/' + m[1] + '/'; }
+        else { var fb = src.match(/[?&]href=([^&]+)/); if (fb) link = decodeURIComponent(fb[1]); }
+        var a = document.createElement('a');
+        a.className = 'bts-shield'; a.href = link; a.target = '_blank'; a.rel = 'noopener';
+        a.setAttribute('aria-label', SHIELD_LABEL);
+        embed.appendChild(a);
+      });
+
+      var cards = track.querySelectorAll('.bts-card');
+      if (dotsWrap && cards.length) {
+        cards.forEach(function(_, i){
+          var b = document.createElement('button');
+          b.type = 'button'; b.className = 'bts-dot-i'; b.setAttribute('aria-label', 'Ir a ' + (i + 1));
+          b.addEventListener('click', function(){ cards[i].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' }); });
+          dotsWrap.appendChild(b);
+        });
+        var dots = dotsWrap.querySelectorAll('.bts-dot-i');
+        var syncDots = function(){
+          var tr = track.getBoundingClientRect(), center = tr.left + tr.width / 2, best = 0, bestDist = Infinity;
+          cards.forEach(function(c, i){ var r = c.getBoundingClientRect(), cc = r.left + r.width / 2, d = Math.abs(cc - center); if (d < bestDist) { bestDist = d; best = i; } });
+          dots.forEach(function(d, i){ d.classList.toggle('is-active', i === best); });
+        };
+        track.addEventListener('scroll', syncDots, { passive: true });
+        window.addEventListener('resize', syncDots);
+        syncDots();
+      }
+
+      var moved = false;
+      var tsx = 0, tsy = 0;
+      track.addEventListener('touchstart', function(e){ var t = e.touches[0]; tsx = t.clientX; tsy = t.clientY; moved = false; }, { passive: true });
+      track.addEventListener('touchmove', function(e){ var t = e.touches[0]; if (Math.abs(t.clientX - tsx) > 8 || Math.abs(t.clientY - tsy) > 8) moved = true; }, { passive: true });
+      var down = false, startX = 0, startLeft = 0;
+      track.addEventListener('pointerdown', function(e){ if (e.pointerType === 'mouse') { down = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft; track.classList.add('is-dragging'); } });
+      window.addEventListener('pointermove', function(e){ if (down) { var dx = e.clientX - startX; if (Math.abs(dx) > 3) moved = true; track.scrollLeft = startLeft - dx; } });
+      window.addEventListener('pointerup', function(){ if (down) { down = false; track.classList.remove('is-dragging'); } });
+      track.addEventListener('click', function(e){ var a = e.target.closest('.bts-shield, .bts-video'); if (a && moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+    });
+  })();
+</script>

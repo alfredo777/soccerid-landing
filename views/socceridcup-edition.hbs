@@ -148,6 +148,67 @@
     </div>
   </section>
 
+  <!-- ═══ PUBLICACIONES DE LOS CLUBES ═══ -->
+  <section class="bts-section">
+    <div class="bts">
+      <div class="bts-head">
+        <div>
+          <span class="gp-label">{{#if isEs}}REDES SOCIALES{{else}}SOCIAL MEDIA{{/if}}</span>
+          <h2 class="bts-section__title">{{#if isEs}}Publicaciones de los clubes{{else}}Club posts{{/if}}</h2>
+          <p class="bts-sub">{{#if isEs}}Los clubes en redes sociales · desliza para ver más{{else}}The clubs on social media · swipe to see more{{/if}}</p>
+        </div>
+        <div class="bts-nav">
+          <button class="bts-arrow bts-prev" type="button" aria-label="{{#if isEs}}Anterior{{else}}Previous{{/if}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="bts-arrow bts-next" type="button" aria-label="{{#if isEs}}Siguiente{{else}}Next{{/if}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+      </div>
+      <div class="bts-track">
+        {{#eq edition.year '2023'}}
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C3rNzPHMSoT/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C45zMSiLAal/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#e8e8e8"></span>Comunicaciones · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C3ql6KWx0eR/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#e8e8e8"></span>Comunicaciones · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C44uMApuSf7/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        {{/eq}}
+        {{#eq edition.year '2024'}}
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ffe600"></span>América · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C_MIUMKy4KW/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ffe600"></span>América · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C-ibrhTxVFY/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#009639"></span>Atlético Nacional · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C_nUjsJROIO/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#009639"></span>Atlético Nacional · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C_eW4TIqzlG/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        {{/eq}}
+        {{#eq edition.year '2025'}}
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DHMbo_-uwxz/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DHgc8InsfGf/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ff8a00"></span>Tigres · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DXYZnyvjSx4/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ff8a00"></span>Tigres · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DXYZdVQDU3q/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
+        {{/eq}}
+      </div>
+      <div class="bts-dots" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  {{#eq edition.year '2024'}}
+  {{!-- ═══ DETRÁS DE CÁMARAS (Orlando 2024) ═══ --}}
+  <section class="bts-section">
+    <span class="gp-label">SOCCER iD CUP</span>
+    <h2 class="bts-section__title">{{#if isEs}}Detrás de cámaras{{else}}Behind the scenes{{/if}}</h2>
+    <div class="bts-videowrap">
+      <a class="bts-card bts-video" href="https://www.facebook.com/soccerid7/videos/907822141540511/" target="_blank" rel="noopener"><div class="bts-card__tag"><span class="bts-dot" style="background:#6c3ce0"></span>{{edition.city}}</div><div class="bts-embed bts-poster" style="background-image:url('{{edition.banner}}')"><span class="bts-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="bts-watch">{{#if isEs}}Ver en Facebook{{else}}Watch on Facebook{{/if}}</span></div></a>
+    </div>
+  </section>
+  {{/eq}}
+  {{#eq edition.year '2025'}}
+  {{!-- ═══ DETRÁS DE CÁMARAS (Austin 2025) ═══ --}}
+  <section class="bts-section">
+    <span class="gp-label">SOCCER iD CUP</span>
+    <h2 class="bts-section__title">{{#if isEs}}Detrás de cámaras{{else}}Behind the scenes{{/if}}</h2>
+    <div class="bts-videowrap">
+      <a class="bts-card bts-video" href="https://www.facebook.com/reel/1372392885003887" target="_blank" rel="noopener"><div class="bts-card__tag"><span class="bts-dot" style="background:#6c3ce0"></span>{{edition.city}}</div><div class="bts-embed bts-poster" style="background-image:url('{{edition.banner}}')"><span class="bts-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="bts-watch">{{#if isEs}}Ver en Facebook{{else}}Watch on Facebook{{/if}}</span></div></a>
+    </div>
+  </section>
+  {{/eq}}
+
+  {{> bts-assets}}
+
   <!-- ═══ EDITION NAV ═══ -->
   <nav class="ce-nav">
     <div class="ce-nav__inner">
