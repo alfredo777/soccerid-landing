@@ -38,6 +38,54 @@ function safeParse(str, fallback) {
   try { return JSON.parse(str); } catch (_) { return fallback; }
 }
 
+// ── Ediciones: parseo de textareas "a | b | c" (una por línea) ↔ arreglo de objetos ──
+const ED_KEYS = {
+  stats: ['value', 'label', 'sub'],
+  sponsors: ['src', 'alt'],
+  media: ['title', 'source', 'url', 'image'],
+  videos: ['id', 'title'],
+  images: ['src', 'alt']
+};
+function edSplit(text) { return (text || '').split('\n').map(s => s.trim()).filter(Boolean); }
+function edParse(text, keys) {
+  return edSplit(text).map(line => {
+    const p = line.split('|').map(x => x.trim());
+    const o = {}; keys.forEach((k, i) => { o[k] = p[i] || ''; });
+    return o;
+  });
+}
+function edJoin(arr, keys) {
+  return (arr || []).map(o => keys.map(k => o[k] || '').join(' | ')).join('\n');
+}
+function buildEditionData(body) {
+  const shared = {
+    year: (body.year || '').trim(),
+    match: (body.match || '').trim(),
+    date: (body.date || '').trim(),
+    city: (body.city || '').trim(),
+    venue: (body.venue || '').trim(),
+    banner: (body.banner || '').trim(),
+    sponsors: edParse(body.sponsors, ED_KEYS.sponsors),
+    videos: edParse(body.videos, ED_KEYS.videos),
+    images: edParse(body.images, ED_KEYS.images)
+  };
+  const es = Object.assign({}, shared, {
+    title: (body.title_es || '').trim(),
+    description: (body.description_es || '').trim(),
+    attendance: { value: (body.att_value || '').trim(), label: (body.att_label_es || '').trim() },
+    stats: edParse(body.stats_es, ED_KEYS.stats),
+    mediaLinks: edParse(body.media_es, ED_KEYS.media)
+  });
+  const en = Object.assign({}, shared, {
+    title: (body.title_en || body.title_es || '').trim(),
+    description: (body.description_en || '').trim(),
+    attendance: { value: (body.att_value || '').trim(), label: (body.att_label_en || '').trim() },
+    stats: edParse(body.stats_en, ED_KEYS.stats),
+    mediaLinks: edParse(body.media_en, ED_KEYS.media)
+  });
+  return { data_es: JSON.stringify(es), data_en: JSON.stringify(en) };
+}
+
 // Categorías (tiers) desde la base de datos
 async function getTiers() {
   const rows = await knex('tiers').orderBy([{ column: 'role' }, { column: 'sort' }]);
@@ -339,6 +387,32 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     const roleLabel = (u) => u.role === 'sponsor' ? 'Patrocinador' : 'Inversionista';
     const tierLabel = (u) => { const t = findTier(tiers, u.role, u.category); return t ? t.label : '—'; };
 
+    // Ediciones de la CUP
+    const editionRows = await knex('editions').orderBy([{ column: 'sort' }, { column: 'year' }]);
+    const statusLabels = { past: 'Pasada', upcoming: 'Próxima', pause: 'Pausa' };
+    const editionsView = editionRows.map(r => {
+      const es = safeParse(r.data_es, {}) || {};
+      const en = safeParse(r.data_en, {}) || {};
+      return {
+        id: r.id, year: r.year, status: r.status, statusLabel: statusLabels[r.status] || r.status,
+        sort: r.sort, match: es.match || '', city: es.city || '', title: es.title || '',
+        imageCount: (es.images || []).length,
+        form: {
+          id: r.id, year: r.year, status: r.status, sort: r.sort,
+          match: es.match || '', date: es.date || '', city: es.city || '', venue: es.venue || '', banner: es.banner || '',
+          att_value: (es.attendance || {}).value || '',
+          att_label_es: (es.attendance || {}).label || '', att_label_en: (en.attendance || {}).label || '',
+          title_es: es.title || '', title_en: en.title || '',
+          description_es: es.description || '', description_en: en.description || '',
+          stats_es: edJoin(es.stats, ED_KEYS.stats), stats_en: edJoin(en.stats, ED_KEYS.stats),
+          media_es: edJoin(es.mediaLinks, ED_KEYS.media), media_en: edJoin(en.mediaLinks, ED_KEYS.media),
+          sponsors: edJoin(es.sponsors, ED_KEYS.sponsors),
+          videos: edJoin(es.videos, ED_KEYS.videos),
+          images: edJoin(es.images, ED_KEYS.images)
+        }
+      };
+    });
+
     res.render('panel/admin', {
       layout: 'panel',
       title: 'Administración · SOCCER iD Investor Portal',
@@ -368,7 +442,9 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         benefitsText: (t.benefits || []).join('\n'), benefitsCount: (t.benefits || []).length
       })),
       investorTiers: tiers.filter(t => t.role === 'investor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
-      sponsorTiers: tiers.filter(t => t.role === 'sponsor').map(t => ({ key: t.key, label: t.label, amount: t.amount }))
+      sponsorTiers: tiers.filter(t => t.role === 'sponsor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
+      editions: editionsView,
+      editionsForms: editionsView.map(e => e.form)
     });
   } catch (e) { next(e); }
 });
@@ -653,6 +729,43 @@ router.post('/admin/news/:id/notify', auth.requireAdmin, async (req, res, next) 
     const recipients = await knex('users').where({ status: 'active' }).whereNot({ role: 'admin' });
     recipients.forEach(u => { sendNotification({ to: u.email, name: u.name, title: n.title, body: n.excerpt }).catch(() => {}); });
     res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Noticia compartida con ${recipients.length} usuarios`) + '#noticias');
+  } catch (e) { next(e); }
+});
+
+// ════════════════════════════════════════════════
+// EDICIONES DE LA CUP (contenido público administrable)
+// ════════════════════════════════════════════════
+router.post('/admin/edition', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const year = (req.body.year || '').trim();
+    if (!year) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El año es obligatorio') + '#ediciones');
+    const existing = await knex('editions').where({ year }).first();
+    if (existing) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Ya existe una edición con ese año') + '#ediciones');
+    const status = ['past', 'upcoming', 'pause'].includes(req.body.status) ? req.body.status : 'past';
+    const sort = parseInt(req.body.sort || year, 10) || 0;
+    const { data_es, data_en } = buildEditionData(req.body);
+    await knex('editions').insert({ year, status, sort, data_es, data_en });
+    res.redirect('/panel/admin?type=ok&msg=Edici%C3%B3n+creada#ediciones');
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/edition/:id/update', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const row = await knex('editions').where({ id: req.params.id }).first();
+    if (!row) return res.redirect('/panel/admin?type=error&msg=Edici%C3%B3n+no+encontrada#ediciones');
+    const year = (req.body.year || row.year).trim();
+    const status = ['past', 'upcoming', 'pause'].includes(req.body.status) ? req.body.status : 'past';
+    const sort = parseInt(req.body.sort || year, 10) || 0;
+    const { data_es, data_en } = buildEditionData(req.body);
+    await knex('editions').where({ id: row.id }).update({ year, status, sort, data_es, data_en, updated_at: knex.fn.now() });
+    res.redirect('/panel/admin?type=ok&msg=Edici%C3%B3n+actualizada#ediciones');
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/edition/:id/delete', auth.requireAdmin, async (req, res, next) => {
+  try {
+    await knex('editions').where({ id: req.params.id }).del();
+    res.redirect('/panel/admin?type=ok&msg=Edici%C3%B3n+eliminada#ediciones');
   } catch (e) { next(e); }
 });
 

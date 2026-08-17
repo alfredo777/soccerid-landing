@@ -66,6 +66,12 @@
   .ad-modal__close { background:none; border:none; cursor:pointer; padding:4px; }
   .ad-modal__close svg { width:20px; height:20px; stroke:var(--pn-ink-2); }
   .ad-modal__body { padding:20px 22px 22px; }
+  .ad-langtabs { display:flex; gap:8px; margin:18px 0 14px; border-bottom:1px solid var(--pn-border); }
+  .ad-langtab { padding:8px 14px; background:none; border:none; border-bottom:2px solid transparent; font-family:inherit; font-size:13px; font-weight:800; color:var(--pn-ink-2); cursor:pointer; }
+  .ad-langtab.is-active { color:var(--pn-purple); border-bottom-color:var(--pn-purple); }
+  .ad-langsec { display:none; }
+  .ad-langsec.is-active { display:block; }
+  .ad-f label em { font-style:normal; color:var(--pn-muted); font-weight:600; }
 </style>
 
 {{#if flash}}<div class="ad-flash {{#eq flashType 'error'}}error{{else}}ok{{/eq}}">{{flash}}</div>{{/if}}
@@ -77,6 +83,7 @@
   <div class="ad-tab" data-tab="cronograma">Cronograma</div>
   <div class="ad-tab" data-tab="categorias">Categorías</div>
   <div class="ad-tab" data-tab="notificaciones">Notificaciones</div>
+  <div class="ad-tab" data-tab="ediciones">Ediciones</div>
 </div>
 
 <!-- USUARIOS -->
@@ -310,6 +317,35 @@
   </div>
 </section>
 
+<!-- EDICIONES -->
+<section class="ad-sec" id="sec-ediciones">
+  <p class="ad-note">Gestiona las ediciones de la SOCCER iD CUP que aparecen en la página pública (timeline y páginas de detalle). Contenido en español e inglés. Estado <strong>Pasada</strong> genera su página; <strong>Próxima</strong>/<strong>Pausa</strong> solo aparecen en el timeline.</p>
+  <div class="pn-card">
+    <div class="pn-card__head">
+      <h3>Ediciones ({{editions.length}})</h3>
+      <button type="button" class="ad-btn" style="width:auto; padding:10px 16px; margin:0;" onclick="openEdition()">+ Nueva edición</button>
+    </div>
+    <div class="ad-list">
+      {{#each editions}}
+      <div class="ad-item">
+        <div class="ad-item__av" style="background: {{#eq this.status 'past'}}#6C3CE0{{else}}{{#eq this.status 'pause'}}#eab308{{else}}#A78BE6{{/eq}}{{/eq}}">{{this.year}}</div>
+        <div class="ad-item__b">
+          <strong>{{#if this.match}}{{this.match}}{{else}}—{{/if}}</strong>
+          <small>{{this.city}}{{#if this.city}} · {{/if}}{{this.statusLabel}}{{#if this.imageCount}} · {{this.imageCount}} fotos{{/if}}</small>
+        </div>
+        <div class="ad-actions">
+          {{#eq this.status 'past'}}<a href="/es/socceridcup/{{this.year}}" target="_blank" rel="noopener" style="border:1px solid var(--pn-border);background:#fff;border-radius:9px;padding:7px 10px;font-size:12px;font-weight:700;color:var(--pn-ink-2);text-decoration:none;">Ver</a>{{/eq}}
+          <button type="button" class="primary" onclick="openEdition('{{this.id}}')">Editar</button>
+          <form method="POST" action="/panel/admin/edition/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar la edición {{this.year}}?')"><button type="submit" class="danger">Eliminar</button></form>
+        </div>
+      </div>
+      {{else}}
+      <div class="ad-empty">No hay ediciones. Crea la primera.</div>
+      {{/each}}
+    </div>
+  </div>
+</section>
+
 <!-- ═══ MODALES DE EDICIÓN ═══ -->
 <div class="ad-modal" id="modal-user">
   <div class="ad-modal__card">
@@ -402,10 +438,82 @@
   </div>
 </div>
 
+<div class="ad-modal" id="modal-edition">
+  <div class="ad-modal__card" style="max-width:640px;">
+    <div class="ad-modal__head"><h3 id="ed-modal-title">Nueva edición</h3><button class="ad-modal__close" onclick="closeModal('modal-edition')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+    <div class="ad-modal__body">
+      <form method="POST" id="form-edition">
+        <div class="ad-row2">
+          <div class="ad-f"><label>Año</label><input type="text" name="year" id="ed-year" required placeholder="2027"></div>
+          <div class="ad-f"><label>Estado</label><select name="status" id="ed-status"><option value="past">Pasada (con página)</option><option value="upcoming">Próxima</option><option value="pause">Pausa</option></select></div>
+        </div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Equipos</label><input type="text" name="match" id="ed-match" placeholder="Tigres vs Pumas"></div>
+          <div class="ad-f"><label>Orden (timeline)</label><input type="number" name="sort" id="ed-sort" placeholder="2027"></div>
+        </div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Fecha (texto)</label><input type="text" name="date" id="ed-date" placeholder="27 Mar 2027"></div>
+          <div class="ad-f"><label>Ciudad</label><input type="text" name="city" id="ed-city" placeholder="Austin, TX"></div>
+        </div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Sede</label><input type="text" name="venue" id="ed-venue" placeholder="Q2 Stadium"></div>
+          <div class="ad-f"><label>Banner (URL)</label><input type="text" name="banner" id="ed-banner" placeholder="/assets/images/gallery/..."></div>
+        </div>
+        <div class="ad-f" style="max-width:50%;"><label>Asistentes (valor)</label><input type="text" name="att_value" id="ed-att_value" placeholder="13,000"></div>
+
+        <div class="ad-langtabs">
+          <button type="button" class="ad-langtab is-active" data-lang="es">Español</button>
+          <button type="button" class="ad-langtab" data-lang="en">English</button>
+        </div>
+        <div class="ad-langsec is-active" data-langsec="es">
+          <div class="ad-f"><label>Título (ES)</label><input type="text" name="title_es" id="ed-title_es" placeholder="SOCCER iD CUP 2027"></div>
+          <div class="ad-f"><label>Mensaje / descripción (ES)</label><textarea name="description_es" id="ed-description_es"></textarea></div>
+          <div class="ad-f"><label>Etiqueta de asistentes (ES)</label><input type="text" name="att_label_es" id="ed-att_label_es" placeholder="ASISTENTES"></div>
+          <div class="ad-f"><label>Estadísticas (ES) — una por línea: <em>valor | etiqueta | subtítulo</em></label><textarea name="stats_es" id="ed-stats_es" rows="3" placeholder="13K | ASISTENTES | Q2 Stadium"></textarea></div>
+          <div class="ad-f"><label>Notas en medios (ES) — <em>título | fuente | url | imagen</em></label><textarea name="media_es" id="ed-media_es" rows="3"></textarea></div>
+        </div>
+        <div class="ad-langsec" data-langsec="en">
+          <div class="ad-f"><label>Title (EN)</label><input type="text" name="title_en" id="ed-title_en" placeholder="SOCCER iD CUP 2027"></div>
+          <div class="ad-f"><label>Message / description (EN)</label><textarea name="description_en" id="ed-description_en"></textarea></div>
+          <div class="ad-f"><label>Attendance label (EN)</label><input type="text" name="att_label_en" id="ed-att_label_en" placeholder="ATTENDEES"></div>
+          <div class="ad-f"><label>Stats (EN) — one per line: <em>value | label | sub</em></label><textarea name="stats_en" id="ed-stats_en" rows="3" placeholder="13K | ATTENDEES | Q2 Stadium"></textarea></div>
+          <div class="ad-f"><label>Media coverage (EN) — <em>title | source | url | image</em></label><textarea name="media_en" id="ed-media_en" rows="3"></textarea></div>
+        </div>
+
+        <div class="ad-f"><label>Imágenes (compartidas) — una por línea: <em>url | texto alternativo</em></label><textarea name="images" id="ed-images" rows="3" placeholder="/assets/images/gallery/cup2025/6.jpg | Acción del partido"></textarea></div>
+        <div class="ad-f"><label>Patrocinadores (compartidos) — <em>url logo | nombre</em></label><textarea name="sponsors" id="ed-sponsors" rows="2"></textarea></div>
+        <div class="ad-f"><label>Videos (compartidos) — <em>idYouTube | título</em></label><textarea name="videos" id="ed-videos" rows="2"></textarea></div>
+
+        <button type="submit" class="ad-btn" style="margin-top:8px;">Guardar edición</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script>
   var INVESTOR_TIERS = {{{json investorTiers}}};
   var SPONSOR_TIERS = {{{json sponsorTiers}}};
   var USER_DOCS = {{{json docsByUser}}};
+  var EDITIONS_FORMS = {{{json editionsForms}}};
+  var EDITION_FIELDS = ['year','status','sort','match','date','city','venue','banner','att_value','att_label_es','att_label_en','title_es','title_en','description_es','description_en','stats_es','stats_en','media_es','media_en','sponsors','videos','images'];
+
+  function setEditionLang(l){
+    document.querySelectorAll('.ad-langtab').forEach(function(b){ b.classList.toggle('is-active', b.dataset.lang === l); });
+    document.querySelectorAll('.ad-langsec').forEach(function(s){ s.classList.toggle('is-active', s.dataset.langsec === l); });
+  }
+  function openEdition(id){
+    var data = id ? EDITIONS_FORMS.filter(function(e){ return String(e.id) === String(id); })[0] : null;
+    document.getElementById('ed-modal-title').textContent = data ? ('Editar edición ' + data.year) : 'Nueva edición';
+    document.getElementById('form-edition').action = data ? ('/panel/admin/edition/' + data.id + '/update') : '/panel/admin/edition';
+    EDITION_FIELDS.forEach(function(f){
+      var el = document.getElementById('ed-' + f);
+      if (!el) return;
+      el.value = data ? (data[f] == null ? '' : data[f]) : (f === 'status' ? 'past' : '');
+    });
+    setEditionLang('es');
+    openModal('modal-edition');
+  }
+  document.querySelectorAll('.ad-langtab').forEach(function(b){ b.addEventListener('click', function(){ setEditionLang(b.dataset.lang); }); });
 
   function fillCatSelect(sel, role, selected){
     var tiers = role === 'sponsor' ? SPONSOR_TIERS : INVESTOR_TIERS;

@@ -14,6 +14,8 @@ const session = require('express-session');
 const path = require('path');
 const fs = require('fs');
 
+const cupEditions = require('./db/editions');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
@@ -708,7 +710,7 @@ app.get('/galeria/:id', (req, res) => {
 // ============================================================
 // PÁGINA SOCCER iD CUP (socceridcup)
 // ============================================================
-app.get('/:lang/socceridcup', (req, res, next) => {
+app.get('/:lang/socceridcup', async (req, res, next) => {
   const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
 
   const galeriaPath = path.join(__dirname, 'contents', 'gallery_pages.json');
@@ -720,6 +722,9 @@ app.get('/:lang/socceridcup', (req, res, next) => {
     const galeria = langGalleries.find(g => g.id === 'soccer-id-cup-2027');
 
     if (!galeria) return next();
+
+    // El timeline de ediciones se administra desde la base de datos (con respaldo al JSON)
+    galeria.highlights = await cupEditions.timeline(lang);
 
     const isEs = lang === 'es';
     galeria.imageCount = galeria.images ? galeria.images.length : 0;
@@ -758,7 +763,7 @@ app.get('/socceridcup', (req, res) => {
 // ============================================================
 // PÁGINA SOCCER iD CUP PROJECT 2027 (socceridcup2027)
 // ============================================================
-app.get('/:lang/socceridcup2027', (req, res, next) => {
+app.get('/:lang/socceridcup2027', async (req, res, next) => {
   const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
 
   const dataPath = path.join(__dirname, 'contents', 'cup_project_2027.json');
@@ -768,15 +773,8 @@ app.get('/:lang/socceridcup2027', (req, res, next) => {
     const allData = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
     const data = allData[lang] || allData[DEFAULT_LANG];
 
-    const editionsPath = path.join(__dirname, 'contents', 'cup_editions.json');
-    let mediaLinks = [];
-    try {
-      const editionsData = JSON.parse(fs.readFileSync(editionsPath, 'utf8'));
-      const editions = editionsData[lang] || editionsData[DEFAULT_LANG] || {};
-      ['2023', '2024', '2025'].forEach(y => {
-        if (editions[y] && editions[y].mediaLinks) mediaLinks = mediaLinks.concat(editions[y].mediaLinks);
-      });
-    } catch (_) {}
+    // Notas de medios agregadas de las ediciones pasadas (desde la base de datos)
+    const mediaLinks = await cupEditions.mediaLinks(lang);
 
     const isEs = lang === 'es';
     const ogTitle = isEs ? 'SOCCER iD CUP — Confidencial Inversión' : 'SOCCER iD CUP — Confidential Investment';
@@ -917,19 +915,14 @@ app.get('/socceridcup2027', (req, res) => {
 // ============================================================
 // PÁGINA DE EDICIÓN SOCCER iD CUP (socceridcup/:year)
 // ============================================================
-app.get('/:lang/socceridcup/:year', (req, res, next) => {
+app.get('/:lang/socceridcup/:year', async (req, res, next) => {
   const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
   const year = req.params.year;
 
-  const editionsPath = path.join(__dirname, 'contents', 'cup_editions.json');
-  if (!fs.existsSync(editionsPath)) return next();
-
   try {
-    const editions = JSON.parse(fs.readFileSync(editionsPath, 'utf8'));
-    const langEditions = editions[lang] || editions[DEFAULT_LANG] || {};
-    const edition = langEditions[year];
-
-    if (!edition) return next();
+    const nav = await cupEditions.detail(year, lang);
+    if (!nav || !nav.edition) return next();
+    const edition = nav.edition;
 
     const isEs = lang === 'es';
     edition.imageCount = edition.images ? edition.images.length : 0;
@@ -937,10 +930,8 @@ app.get('/:lang/socceridcup/:year', (req, res, next) => {
     const ogDesc = edition.description;
     const ogImage = edition.banner || '/assets/images/og/share.jpg';
 
-    const allYears = Object.keys(langEditions).sort();
-    const idx = allYears.indexOf(year);
-    const prevEdition = idx > 0 ? { year: allYears[idx - 1], match: langEditions[allYears[idx - 1]].match } : null;
-    const nextEdition = idx < allYears.length - 1 ? { year: allYears[idx + 1], match: langEditions[allYears[idx + 1]].match } : null;
+    const prevEdition = nav.prev;
+    const nextEdition = nav.next;
 
     res.render('socceridcup-edition', {
       layout: 'promo',

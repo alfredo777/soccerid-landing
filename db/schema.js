@@ -103,6 +103,18 @@ async function ensureSchema() {
     });
   }
 
+  if (!(await knex.schema.hasTable('editions'))) {
+    await knex.schema.createTable('editions', (t) => {
+      t.increments('id').primary();
+      t.string('year').notNullable();                        // identificador / slug de URL
+      t.string('status').notNullable().defaultTo('past');    // past | upcoming | pause
+      t.integer('sort').defaultTo(0);
+      t.text('data_es');                                     // objeto completo de la edición (ES)
+      t.text('data_en');                                     // objeto completo de la edición (EN)
+      t.timestamps(true, true);
+    });
+  }
+
   // Columna para rastrear la última notificación vista por usuario (idempotente)
   if (await knex.schema.hasTable('users') && !(await knex.schema.hasColumn('users', 'notifications_seen_id'))) {
     await knex.schema.alterTable('users', (t) => {
@@ -201,6 +213,42 @@ async function seed() {
       { title: 'Retorno a inversionistas', date_label: 'Ago 2027', done: false, sort: 5 }
     ]);
     console.log('  ✓ Cronograma inicial sembrado');
+  }
+
+  // Ediciones de la SOCCER iD CUP (desde cup_editions.json + timeline de gallery_pages.json)
+  if (!(await knex('editions').first())) {
+    const path = require('path');
+    const fs = require('fs');
+    const readJson = (f) => { try { return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'contents', f), 'utf8')); } catch (_) { return null; } };
+    const ed = readJson('cup_editions.json') || {};
+    const gal = readJson('gallery_pages.json') || {};
+    const es = ed.es || {};
+    const en = ed.en || {};
+    const rows = [];
+    // Ediciones pasadas (con página de detalle)
+    Object.keys(es).forEach((year) => {
+      rows.push({
+        year, status: 'past', sort: parseInt(year, 10) || 0,
+        data_es: JSON.stringify(es[year]),
+        data_en: JSON.stringify(en[year] || es[year])
+      });
+    });
+    // Entradas del timeline sin detalle (pausa/próxima) desde gallery_pages.json
+    const findG = (lang) => ((gal[lang] || []).find(g => g.id === 'soccer-id-cup-2027')) || {};
+    const hiEs = (findG('es').highlights) || [];
+    const hiEn = (findG('en').highlights) || [];
+    hiEs.forEach((h, i) => {
+      if (rows.find(r => r.year === h.year)) return;
+      const he = hiEn[i] || h;
+      const s = (h.city + ' ' + h.match).toLowerCase();
+      const status = /fifa|world cup|pausa|mundial/.test(s) ? 'pause' : 'upcoming';
+      rows.push({
+        year: h.year, status, sort: parseInt(h.year, 10) || 0,
+        data_es: JSON.stringify({ year: h.year, match: h.match, city: h.city }),
+        data_en: JSON.stringify({ year: he.year, match: he.match, city: he.city })
+      });
+    });
+    if (rows.length) { await knex('editions').insert(rows); console.log('  ✓ Ediciones sembradas'); }
   }
 
   // Notificación de bienvenida

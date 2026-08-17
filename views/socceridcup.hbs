@@ -91,33 +91,7 @@
       <span class="gp-label">{{#if isEs}}EDICIONES{{else}}EDITIONS{{/if}}</span>
       <div class="gp-timeline">
         {{#each galeria.highlights}}
-        {{#eq this.city 'Por confirmar'}}
-        <div class="gp-timeline__item gp-timeline__item--soon">
-          <span class="gp-timeline__year">{{this.year}}</span>
-          <div class="gp-timeline__content">
-            <span class="gp-timeline__match">{{this.match}}</span>
-            <span class="gp-timeline__city">{{this.city}}</span>
-          </div>
-        </div>
-        {{else}}
-        {{#eq this.city 'TBA'}}
-        <div class="gp-timeline__item gp-timeline__item--soon">
-          <span class="gp-timeline__year">{{this.year}}</span>
-          <div class="gp-timeline__content">
-            <span class="gp-timeline__match">{{this.match}}</span>
-            <span class="gp-timeline__city">{{this.city}}</span>
-          </div>
-        </div>
-        {{else}}
-        {{#eq this.city 'FIFA World Cup 2026'}}
-        <div class="gp-timeline__item gp-timeline__item--pause">
-          <span class="gp-timeline__year">{{this.year}}</span>
-          <div class="gp-timeline__content">
-            <span class="gp-timeline__match">{{this.match}}</span>
-            <span class="gp-timeline__city">{{this.city}}</span>
-          </div>
-        </div>
-        {{else}}
+        {{#if this.link}}
         <a class="gp-timeline__item gp-timeline__item--link" href="/{{../lang}}/socceridcup/{{this.year}}">
           <span class="gp-timeline__year">{{this.year}}</span>
           <div class="gp-timeline__content">
@@ -126,9 +100,15 @@
           </div>
           <svg class="gp-timeline__arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
         </a>
-        {{/eq}}
-        {{/eq}}
-        {{/eq}}
+        {{else}}
+        <div class="gp-timeline__item {{#eq this.tone 'pause'}}gp-timeline__item--pause{{else}}gp-timeline__item--soon{{/eq}}">
+          <span class="gp-timeline__year">{{this.year}}</span>
+          <div class="gp-timeline__content">
+            <span class="gp-timeline__match">{{this.match}}</span>
+            <span class="gp-timeline__city">{{this.city}}</span>
+          </div>
+        </div>
+        {{/if}}
         {{/each}}
       </div>
     </div>
