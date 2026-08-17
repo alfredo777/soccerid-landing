@@ -508,4 +508,98 @@
   window.addEventListener('hashchange', function(){ var h = location.hash.replace('#',''); if (document.getElementById('sec-'+h)) activate(h); });
   var initial = (location.hash ? location.hash.replace('#','') : 'usuarios');
   if (document.getElementById('sec-'+initial)) activate(initial);
+
+  // ── Buscador global con desplegable agrupado por tipo/perfil ──
+  (function(){
+    var box = document.getElementById('pnSearch');
+    var panel = document.getElementById('pnSearchResults');
+    if (!box || !panel) return;
+    box.setAttribute('placeholder', 'Buscar usuarios, noticias, eventos…');
+
+    var SECTION = {
+      noticias: { label: 'Noticias', color: '#6C3CE0' },
+      calendario: { label: 'Eventos', color: '#A78BE6' },
+      cronograma: { label: 'Cronograma', color: '#1E8E5A' },
+      categorias: { label: 'Categorías', color: '#14141B' },
+      notificaciones: { label: 'Notificaciones', color: '#6C3CE0' }
+    };
+    var ORDER = ['Inversionistas','Patrocinadores','Noticias','Eventos','Cronograma','Categorías','Notificaciones'];
+
+    function buildIndex(){
+      var idx = [];
+      document.querySelectorAll('.ad-sec').forEach(function(sec){
+        var secId = sec.id.replace('sec-','');
+        sec.querySelectorAll('.ad-item, .ad-tier').forEach(function(el){
+          var strong = el.querySelector('strong');
+          var title = (strong ? strong.textContent : el.textContent).trim();
+          var group, color = '#6C3CE0', sub = '';
+          if (secId === 'usuarios'){
+            var eb = el.querySelector('button[data-role]');
+            var role = eb ? eb.getAttribute('data-role') : 'investor';
+            group = role === 'sponsor' ? 'Patrocinadores' : 'Inversionistas';
+            var av = el.querySelector('.ad-item__av'); if (av && av.style.background) color = av.style.background;
+            var small = el.querySelector('small'); if (small) sub = small.textContent.trim();
+          } else if (SECTION[secId]) {
+            group = SECTION[secId].label; color = SECTION[secId].color;
+            var sm = el.querySelector('small, .ad-tier__role'); if (sm) sub = sm.textContent.trim();
+          } else { return; }
+          idx.push({ text: el.textContent.toLowerCase(), title: title, sub: sub, group: group, color: color, secId: secId, el: el });
+        });
+      });
+      return idx;
+    }
+
+    var INDEX = [];
+    function esc(s){ var d=document.createElement('div'); d.textContent=(s==null?'':s); return d.innerHTML; }
+
+    function render(q){
+      q = (q||'').trim().toLowerCase();
+      if (!q){ panel.classList.remove('is-open'); panel.innerHTML=''; return; }
+      var matches = INDEX.filter(function(it){ return it.text.indexOf(q) !== -1; });
+      if (!matches.length){ panel.innerHTML = '<div class="pn-search__empty">Sin resultados para “'+esc(q)+'”</div>'; panel.classList.add('is-open'); return; }
+      var byGroup = {};
+      matches.forEach(function(m){ (byGroup[m.group]=byGroup[m.group]||[]).push(m); });
+      var html = '';
+      ORDER.forEach(function(g){
+        var arr = byGroup[g]; if (!arr || !arr.length) return;
+        html += '<div class="pn-search__group">'+g+' ('+arr.length+')</div>';
+        arr.slice(0,8).forEach(function(m){
+          html += '<button type="button" class="pn-search__opt" data-i="'+INDEX.indexOf(m)+'">'
+            + '<span class="pn-search__dot" style="background:'+(m.color||'#6C3CE0')+'"></span>'
+            + '<span class="pn-search__txt"><strong>'+esc(m.title)+'</strong>'+(m.sub?'<small>'+esc(m.sub)+'</small>':'')+'</span>'
+            + '</button>';
+        });
+        if (arr.length > 8) html += '<div class="pn-search__group" style="opacity:.7;">+'+(arr.length-8)+' más…</div>';
+      });
+      panel.innerHTML = html;
+      panel.classList.add('is-open');
+    }
+
+    function jump(m){
+      if (!m) return;
+      var sec = m.secId, el = m.el;
+      // Cambia de sección sin que se limpie el término hasta después de saltar
+      document.querySelectorAll('.ad-tab').forEach(function(t){ t.classList.toggle('is-active', t.dataset.tab === sec); });
+      document.querySelectorAll('.ad-sec').forEach(function(s){ s.classList.toggle('is-active', s.id === 'sec-'+sec); });
+      document.querySelectorAll('.pn-nav a[data-tab]').forEach(function(a){ a.classList.toggle('is-active', a.getAttribute('data-tab') === sec); });
+      panel.classList.remove('is-open');
+      setTimeout(function(){
+        try { el.scrollIntoView({ behavior:'smooth', block:'center' }); } catch(_){}
+        el.classList.remove('ad-jump'); void el.offsetWidth; el.classList.add('ad-jump');
+      }, 60);
+    }
+
+    window.__pnSearch = function(v){ INDEX = buildIndex(); render(v); };
+
+    panel.addEventListener('click', function(e){
+      var opt = e.target.closest('.pn-search__opt'); if (!opt) return;
+      jump(INDEX[parseInt(opt.getAttribute('data-i'),10)]);
+    });
+    document.addEventListener('click', function(e){ if (!e.target.closest('.pn-search')) panel.classList.remove('is-open'); });
+    box.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') panel.classList.remove('is-open');
+      if (e.key === 'Enter'){ var first = panel.querySelector('.pn-search__opt'); if (first){ e.preventDefault(); first.click(); } }
+    });
+    box.addEventListener('focus', function(){ if (box.value.trim()){ INDEX = buildIndex(); render(box.value); } });
+  })();
 </script>
