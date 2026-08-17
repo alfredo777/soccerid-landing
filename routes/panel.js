@@ -336,7 +336,7 @@ router.get('/notificaciones', auth.requireAuth, async (req, res, next) => {
     const seenId = req.panelUser.notifications_seen_id || 0;
     const list = rows.map(n => ({
       title: n.title, body: n.body,
-      date: new Date(n.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' }),
+      date: new Date(n.created_at).toLocaleDateString('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'long', year: 'numeric' }),
       unread: n.id > seenId
     }));
     // Marcar todas como vistas
@@ -416,7 +416,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
 
     // Registro de accesos: una sola consulta, se deriva todo (por código y por prospecto)
     const allAccess = await knex('access_log').orderBy('id', 'desc');
-    const fmtWhen = (d) => d ? new Date(d).toLocaleString('es-MX', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+    const fmtWhen = (d) => d ? new Date(d).toLocaleString('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
 
     // Historial por código (cruzable con prospectos: incluye nombre/email/lead)
     const codesHistory = {};
@@ -456,7 +456,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         id: l.id, name: l.name || '—', email: l.email, status: l.status || 'nuevo',
         statusLabel: leadStatusLabels[l.status] || l.status, accesses: h.length,
         deviceCount: devices.size, lastIp: h[0] ? h[0].ip : '', lastWhen: h[0] ? h[0].when : '',
-        date: l.created_at ? new Date(l.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }) : ''
+        date: l.created_at ? new Date(l.created_at).toLocaleDateString('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'short', year: 'numeric' }) : ''
       };
     });
 
@@ -491,7 +491,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       news, events, milestones,
       notifications: notifications.map(n => ({
         id: n.id, title: n.title, body: n.body, audience: n.audience,
-        date: new Date(n.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' })
+        date: new Date(n.created_at).toLocaleDateString('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'short', year: 'numeric' })
       })),
       tiers: tiers.map(t => ({
         id: t.id, key: t.key, role: t.role, roleLabel: t.role === 'sponsor' ? 'Patrocinador' : 'Inversionista',
