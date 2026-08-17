@@ -367,10 +367,12 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 // ============================================================
 // RUTAS DE ADMIN Y BLOG (sin idioma)
 // ============================================================
-const adminRoutes = require('./routes/admin');
 const blogRoutes = require('./routes/blog');
 
-app.use('/admin', adminRoutes);
+// El antiguo admin de Kraken CMS fue reemplazado por el panel de inversionistas.
+// /admin (y cualquier sub-ruta) ahora lleva al admin del panel; si no hay sesión
+// de admin, requireAdmin redirige a /panel/login.
+app.get(['/admin', '/admin/*'], (req, res) => res.redirect('/panel/admin'));
 app.use('/blog', blogRoutes);
 
 // ============================================================
@@ -1090,7 +1092,7 @@ app.listen(PORT, () => {
   console.log(`  🌐 URL Local:   http://localhost:${PORT}`);
   console.log(`  🌐 URL Base:    ${BASE_URL}`);
   console.log(`  🌍 Idiomas:     ${SUPPORTED_LANGS.join(', ')} (default: ${DEFAULT_LANG})`);
-  console.log(`  🔐 Admin:       ${BASE_URL}/admin`);
+  console.log(`  🔐 Admin:       ${BASE_URL}/panel/admin`);
   console.log(`  📝 Blog:        ${BASE_URL}/blog`);
   console.log(`  🔧 Entorno:     ${isProduction ? '🔴 PRODUCCIÓN' : '🟢 DESARROLLO'}`);
   console.log('='.repeat(60));
