@@ -151,7 +151,7 @@
       "title": "APLICACIÓN DEL CAPITAL",
       "periodLabel": "Periodo",
       "items": [
-        { "activity": "<strong>Cierre de contratos</strong> (clubes, estadio, permisos y reservas)", "period": "Agosto – Septiembre 2026" },
+        { "activity": "<strong>Cierre de contratos</strong> (clubes, estadio, permisos y reservas)", "period": "Agosto – Septiembre 2026", "active": true },
         { "activity": "<strong>Anticipos operativos</strong> (vuelos, hospedaje, producción y proveedores)", "period": "Septiembre – Octubre 2026" },
         { "activity": "<strong>Lanzamiento comercial</strong> (venta de boletos, patrocinios y campaña de medios)", "period": "Diciembre 2026 – Enero 2027" },
         { "activity": "<strong>Liquidación de proveedores y clubes</strong>", "period": "Febrero – Marzo 2027" },
@@ -320,7 +320,7 @@
       "title": "CAPITAL DEPLOYMENT",
       "periodLabel": "Period",
       "items": [
-        { "activity": "<strong>Contract closing</strong> (clubs, stadium, permits and reservations)", "period": "August – September 2026" },
+        { "activity": "<strong>Contract closing</strong> (clubs, stadium, permits and reservations)", "period": "August – September 2026", "active": true },
         { "activity": "<strong>Operational advances</strong> (flights, lodging, production and vendors)", "period": "September – October 2026" },
         { "activity": "<strong>Commercial launch</strong> (ticket sales, sponsorships and media campaign)", "period": "December 2026 – January 2027" },
         { "activity": "<strong>Vendor and club settlements</strong>", "period": "February – March 2027" },
