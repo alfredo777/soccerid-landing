@@ -497,7 +497,15 @@
   function activate(name){
     tabs.forEach(function(t){ t.classList.toggle('is-active', t.dataset.tab === name); });
     document.querySelectorAll('.ad-sec').forEach(function(s){ s.classList.toggle('is-active', s.id === 'sec-'+name); });
+    // Sincroniza el estado activo del menú lateral del admin
+    document.querySelectorAll('.pn-nav a[data-tab]').forEach(function(a){ a.classList.toggle('is-active', a.getAttribute('data-tab') === name); });
+    // Limpia cualquier filtro de búsqueda al cambiar de sección
+    var box = document.getElementById('pnSearch'); if (box && box.value){ box.value=''; box.dispatchEvent(new Event('input')); }
   }
-  tabs.forEach(function(t){ t.addEventListener('click', function(){ activate(t.dataset.tab); }); });
-  if (location.hash){ var h = location.hash.replace('#',''); if (document.getElementById('sec-'+h)) activate(h); }
+  tabs.forEach(function(t){ t.addEventListener('click', function(){ activate(t.dataset.tab); history.replaceState(null,'','/panel/admin#'+t.dataset.tab); }); });
+  // Permite que el sidebar (layout) cambie de pestaña
+  window.__adminActivate = activate;
+  window.addEventListener('hashchange', function(){ var h = location.hash.replace('#',''); if (document.getElementById('sec-'+h)) activate(h); });
+  var initial = (location.hash ? location.hash.replace('#','') : 'usuarios');
+  if (document.getElementById('sec-'+initial)) activate(initial);
 </script>

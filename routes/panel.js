@@ -656,4 +656,38 @@ router.post('/admin/news/:id/notify', auth.requireAdmin, async (req, res, next) 
   } catch (e) { next(e); }
 });
 
+// ════════════════════════════════════════════════
+// VISTA PREVIA (admin ve el panel como inversionista/patrocinador)
+// ════════════════════════════════════════════════
+router.get('/admin/preview/:role', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const role = req.params.role === 'sponsor' ? 'sponsor' : 'investor';
+    const tiers = await getTiers();
+    const roleTiers = tiers.filter(t => t.role === role);
+    // Toma la categoría de mayor monto como ejemplo representativo
+    const tier = roleTiers.slice().sort((a, b) => (b.amount || 0) - (a.amount || 0))[0] || null;
+    const sampleUser = {
+      id: 0,
+      name: role === 'sponsor' ? 'Patrocinador de ejemplo' : 'Inversionista de ejemplo',
+      role,
+      category: tier ? tier.key : '',
+      amount: tier ? tier.amount : 0,
+      member_id: role === 'sponsor' ? 'SIDC-S01' : 'SIDC-D01',
+      created_at: null,
+      notifications_seen_id: 0
+    };
+    const roleLabel = role === 'sponsor' ? 'Patrocinador' : 'Inversionista';
+    res.render('panel/dashboard', {
+      layout: 'panel',
+      title: `Vista previa · ${roleLabel} · SOCCER iD Investor Portal`,
+      pageHeading: `Vista previa · ${roleLabel}`,
+      pageSub: 'Previsualización de solo lectura del portal del usuario',
+      active: 'dashboard',
+      previewRole: role,
+      previewLabel: roleLabel,
+      panel: await buildPanelData(sampleUser)
+    });
+  } catch (e) { next(e); }
+});
+
 module.exports = router;
