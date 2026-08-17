@@ -355,12 +355,6 @@
   <p class="ad-note">Códigos de acceso a la <strong>propuesta 2027</strong> (<a href="/es/socceridcup2027" target="_blank" rel="noopener" style="color:var(--pn-purple);font-weight:700;">ver página</a>). Al entrar desde un dispositivo nuevo se pide nombre y correo (quedan en <strong>Prospectos</strong>) y se registra en <strong>Accesos</strong>.</p>
   <div class="ad-grid">
     <div>
-      <form class="pn-card ad-form" method="POST" action="/panel/admin/settings/notify" style="margin-bottom:18px;">
-        <h3>Notificaciones de acceso</h3>
-        <p class="ad-hint" style="margin:-6px 0 12px;">Correos que reciben aviso en cada acceso. Separa varios con comas.</p>
-        <div class="ad-f"><label>Correos</label><input type="text" name="notify_emails" value="{{notifyEmails}}" placeholder="info@soccerid.co, ventas@soccerid.co"></div>
-        <button type="submit" class="ad-btn">Guardar correos</button>
-      </form>
       <form class="pn-card ad-form" method="POST" action="/panel/admin/codes/generate" style="margin-bottom:18px;">
         <h3>Generar códigos</h3>
         <div class="ad-f"><label>Cantidad</label><input type="number" name="count" value="10" min="1" max="100"></div>
