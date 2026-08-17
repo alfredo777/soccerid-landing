@@ -312,7 +312,7 @@ async function seed() {
     console.log(`  ✓ Códigos de acceso sembrados (${existing.length} usados, 20 por usar, prueba: 2027000)`);
   }
   if (!(await knex('app_settings').where({ key: 'notify_emails' }).first())) {
-    await knex('app_settings').insert({ key: 'notify_emails', value: process.env.NOTIFY_EMAILS || 'info@soccerid.co' });
+    await knex('app_settings').insert({ key: 'notify_emails', value: process.env.NOTIFY_EMAILS || 'jardarubydv@gmail.com, leon@soccerid.co, 7leonr@gmail.com' });
   }
 
   // Notificación de bienvenida

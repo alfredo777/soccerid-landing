@@ -423,16 +423,28 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     const codesUsed = codesView.filter(c => c.status === 'used').length;
     const codesUnused = codesView.filter(c => c.status === 'unused' && !c.isTest).length;
 
-    // Prospectos (leads) + número de accesos
+    // Prospectos (leads) + historial de accesos por prospecto
     const leadRows = await knex('leads').orderBy('id', 'desc');
-    const accCounts = await knex('access_log').whereNotNull('lead_id').groupBy('lead_id').select('lead_id').count('* as c');
-    const accMap = {}; accCounts.forEach(r => { accMap[r.lead_id] = Number(r.c); });
+    const leadLogRows = await knex('access_log').whereNotNull('lead_id').orderBy('id', 'desc');
+    const leadsHistory = {};
+    leadLogRows.forEach(a => {
+      (leadsHistory[a.lead_id] = leadsHistory[a.lead_id] || []).push({
+        code: a.code || '—', ip: a.ip || '—', device: (a.device_id || '').slice(0, 10) || '—',
+        ua: a.user_agent || '', newDevice: !!a.new_device,
+        when: a.created_at ? new Date(a.created_at).toLocaleString('es-MX', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : ''
+      });
+    });
     const leadStatusLabels = { nuevo: 'Nuevo', contactado: 'Contactado', cliente: 'Cliente', descartado: 'Descartado' };
-    const leadsView = leadRows.map(l => ({
-      id: l.id, name: l.name || '—', email: l.email, status: l.status || 'nuevo',
-      statusLabel: leadStatusLabels[l.status] || l.status, accesses: accMap[l.id] || 0,
-      date: l.created_at ? new Date(l.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }) : ''
-    }));
+    const leadsView = leadRows.map(l => {
+      const h = leadsHistory[l.id] || [];
+      const devices = new Set(h.map(x => x.device).filter(d => d && d !== '—'));
+      return {
+        id: l.id, name: l.name || '—', email: l.email, status: l.status || 'nuevo',
+        statusLabel: leadStatusLabels[l.status] || l.status, accesses: h.length,
+        deviceCount: devices.size, lastIp: h[0] ? h[0].ip : '', lastWhen: h[0] ? h[0].when : '',
+        date: l.created_at ? new Date(l.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', year: 'numeric' }) : ''
+      };
+    });
 
     // Registro de accesos (últimos 200)
     const logRows = await knex('access_log').orderBy('id', 'desc').limit(200);
@@ -478,7 +490,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       editions: editionsView,
       editionsForms: editionsView.map(e => e.form),
       codes: codesView, codesUsed, codesUnused,
-      leads: leadsView, leadsCount: leadsView.length,
+      leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
       notifyEmails
     });
