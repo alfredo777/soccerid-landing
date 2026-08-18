@@ -236,7 +236,7 @@
   <style>
     /* Banner minimizado: pastilla flotante, sin overlay/blur, se desliza desde abajo */
     .mn-mini{position:fixed;z-index:9997;left:50%;bottom:16px;transform:translateX(-50%) translateY(180%);
-      display:inline-flex;align-items:center;gap:9px;padding:8px 8px 11px 10px;border-radius:40px;
+      display:inline-flex;align-items:center;gap:9px;padding:9px 15px 14px 12px;border-radius:40px;
       border:1px solid rgba(255,255,255,0.12);background:#14141f;box-shadow:0 8px 28px rgba(0,0,0,0.5);
       cursor:pointer;font-family:inherit;max-width:92vw;overflow:hidden;
       transition:transform .45s cubic-bezier(.2,.8,.2,1);}
@@ -250,8 +250,10 @@
     .mn-mini-text{font-size:13px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;
       text-overflow:ellipsis;letter-spacing:.2px;}
     .mn-mini-text b{color:#a78bfa;font-weight:800;margin:0 3px;}
-    .mn-mini-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,0.08);}
-    .mn-mini-bar-fill{display:block;height:100%;width:0;background:linear-gradient(90deg,#6c3ce0,#a78bfa);}
+    .mn-mini-bar{position:absolute;left:14px;right:14px;bottom:6px;height:4px;border-radius:99px;
+      background:rgba(255,255,255,0.14);overflow:hidden;}
+    .mn-mini-bar-fill{display:block;height:100%;width:0;border-radius:99px;
+      background:linear-gradient(90deg,#6c3ce0,#a78bfa);transition:width .6s ease;}
     @media (max-width:600px){.mn-mini-text{max-width:44vw;}}
     .mn-overlay {
       display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9998;
@@ -578,18 +580,29 @@
     var WEEK = 7 * 24 * 60 * 60 * 1000, FULL_S = 10;
     var state = 'hidden', timer = null;
 
-    function apply() {
-      notif.classList.toggle('active', state === 'full');
-      overlay.classList.toggle('active', state === 'full');
-      if (mini) mini.classList.toggle('active', state === 'mini');
-    }
+    function setMini(on) { if (mini) mini.classList.toggle('active', on); }
+
     function toMini() {
       if (timer) { clearInterval(timer); timer = null; }
-      state = 'mini'; apply();
+      var wasFull = state === 'full';
+      state = 'mini';
+      // Colapsa el sheet (baja) y oculta el overlay
+      notif.classList.remove('active');
+      overlay.classList.remove('active');
+      // Si veníamos del maximizado, esperamos a que el sheet termine de colapsar
+      // antes de mostrar la pastilla, para que se sienta un colapso y no un salto.
+      if (wasFull) {
+        setTimeout(function() { if (state === 'mini') setMini(true); }, 320);
+      } else {
+        setMini(true);
+      }
     }
     function toFull() {
       if (state === 'full') return;
-      state = 'full'; apply();
+      state = 'full';
+      setMini(false);
+      notif.classList.add('active');
+      overlay.classList.add('active');
       var remaining = FULL_S;
       if (countdown) countdown.textContent = remaining + 's';
       if (bar) {
