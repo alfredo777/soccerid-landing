@@ -372,6 +372,14 @@
         window.__nmBoot = true;
         for (var i = 1; i < wraps.length; i++) { if (wraps[i].parentNode) wraps[i].parentNode.removeChild(wraps[i]); }
         var wrap = wraps[0];
+        // Defensa continua: elimina cualquier clon del banner que aparezca luego (p.ej. extensiones del navegador)
+        try {
+          var __mo = new MutationObserver(function(){
+            var ws = document.querySelectorAll('.nm-wrap');
+            if (ws.length > 1) { for (var j = 0; j < ws.length; j++) { if (ws[j] !== wrap && ws[j].parentNode) ws[j].parentNode.removeChild(ws[j]); } }
+          });
+          __mo.observe(document.body, { childList: true, subtree: true });
+        } catch(_){}
         var full = wrap.querySelector('#nmFull'), mini = wrap.querySelector('#nmMini'), backdrop = wrap.querySelector('#nmBackdrop');
         var progWrap = wrap.querySelector('#nmProgress'), progFill = wrap.querySelector('#nmProgressFill');
         var KEY = 'nmLastFull:' + wrap.dataset.matchId;
