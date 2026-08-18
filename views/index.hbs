@@ -355,40 +355,46 @@
 
     <script>
     (function(){
-      function boot(){
+      function whenPreloaderGone(cb){
+        var done = false; function fire(){ if (done) return; done = true; cb(); }
+        var pl = document.getElementById('preloader');
+        function gone(){ if (!pl || !document.body.contains(pl)) return true; var s = getComputedStyle(pl); return s.display === 'none' || s.visibility === 'hidden' || parseFloat(s.opacity) === 0; }
+        if (gone()){ setTimeout(fire, 400); return; }
+        var obs = new MutationObserver(function(){ if (gone()){ obs.disconnect(); setTimeout(fire, 300); } });
+        try { obs.observe(pl, { attributes: true, attributeFilter: ['style', 'class'] }); obs.observe(document.body, { childList: true }); } catch(_){}
+        setTimeout(function(){ try { obs.disconnect(); } catch(_){}; fire(); }, 6000);
+      }
+
+      function init(){
         if (window.__nmBoot) return;
         var wraps = document.querySelectorAll('.nm-wrap');
         if (!wraps.length) return;
         window.__nmBoot = true;
-        // Si por cualquier motivo hubiera más de un banner, deja solo el primero
         for (var i = 1; i < wraps.length; i++) { if (wraps[i].parentNode) wraps[i].parentNode.removeChild(wraps[i]); }
         var wrap = wraps[0];
         var full = wrap.querySelector('#nmFull'), mini = wrap.querySelector('#nmMini'), backdrop = wrap.querySelector('#nmBackdrop');
         var progWrap = wrap.querySelector('#nmProgress'), progFill = wrap.querySelector('#nmProgressFill');
         var KEY = 'nmLastFull:' + wrap.dataset.matchId;
         var WEEK = 7*24*60*60*1000, FULL_MS = 8000;
-        var isOpen = false, dismissTimer = null, decided = false;
+        var state = 'hidden', dismissTimer = null;
 
-        function showMini(){ mini.classList.add('is-visible'); }
-        function closeFull(){ if (!isOpen) return; isOpen = false; clearTimeout(dismissTimer); full.classList.remove('is-open'); backdrop.classList.remove('is-open'); showMini(); }
-        function runProgress(){
-          progWrap.style.display = '';
-          progFill.style.transition = 'none';
-          progFill.style.width = '0%';
+        // Estado único: 'hidden' | 'full' | 'mini' — full y mini nunca coexisten
+        function apply(){
+          full.classList.toggle('is-open', state === 'full');
+          backdrop.classList.toggle('is-open', state === 'full');
+          mini.classList.toggle('is-visible', state === 'mini');
+        }
+        function toMini(){ clearTimeout(dismissTimer); dismissTimer = null; state = 'mini'; apply(); }
+        function toFull(){
+          if (state === 'full') return; state = 'full'; apply();
+          progWrap.style.display = ''; progFill.style.transition = 'none'; progFill.style.width = '0%';
           requestAnimationFrame(function(){ requestAnimationFrame(function(){
-            progFill.style.transition = 'width ' + FULL_MS + 'ms linear';
-            progFill.style.width = '100%';
+            progFill.style.transition = 'width ' + FULL_MS + 'ms linear'; progFill.style.width = '100%';
           }); });
-        }
-        function openFull(auto){
-          if (isOpen) return; isOpen = true;
-          mini.classList.remove('is-visible'); full.classList.add('is-open'); backdrop.classList.add('is-open');
           clearTimeout(dismissTimer);
-          if (auto){ runProgress(); dismissTimer = setTimeout(closeFull, FULL_MS); }
-          else { progWrap.style.display = 'none'; }
+          dismissTimer = setTimeout(toMini, FULL_MS); // siempre se auto-cierra
         }
 
-        // Barra del minimizado = cuenta regresiva al partido (ventana de 30 días)
         (function(){
           var iso = wrap.dataset.matchIso, bar = wrap.querySelector('#nmMiniBar'); if (!iso || !bar) return;
           var mt = new Date(iso + 'T20:00:00').getTime(), win = 30*24*60*60*1000, rem = mt - Date.now();
@@ -396,19 +402,23 @@
           bar.style.width = (frac * 100).toFixed(1) + '%';
         })();
 
-        // Completo solo 1 vez cada 7 días por dispositivo (estado se guarda de inmediato)
+        var SKEY = 'nmSess:' + wrap.dataset.matchId;
         var last = parseInt(localStorage.getItem(KEY) || '0', 10), now = Date.now();
-        var showBig = (!last || (now - last) > WEEK);
-        if (showBig) { try { localStorage.setItem(KEY, String(now)); } catch(_){} }
-        setTimeout(function(){ if (decided) return; decided = true; if (showBig) openFull(true); else showMini(); }, 1200);
+        var weekDue = (!last || (now - last) > WEEK);
+        var sessShown = false; try { sessShown = sessionStorage.getItem(SKEY) === '1'; } catch(_){}
+        var showBig = weekDue && !sessShown; // el grande: máx 1 vez por semana Y máx 1 vez por sesión
+        if (showBig) { try { localStorage.setItem(KEY, String(now)); } catch(_){} try { sessionStorage.setItem(SKEY, '1'); } catch(_){} }
 
-        mini.addEventListener('click', function(){ openFull(false); });
-        full.querySelector('#nmClose').addEventListener('click', function(e){ e.preventDefault(); closeFull(); });
-        backdrop.addEventListener('click', closeFull);
-        full.querySelector('#nmAllEvents').addEventListener('click', closeFull);
-        document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && isOpen) closeFull(); });
+        mini.addEventListener('click', toFull);
+        full.querySelector('#nmClose').addEventListener('click', function(e){ e.preventDefault(); toMini(); });
+        backdrop.addEventListener('click', toMini);
+        full.querySelector('#nmAllEvents').addEventListener('click', toMini);
+        document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && state === 'full') toMini(); });
+
+        whenPreloaderGone(function(){ if (showBig) toFull(); else toMini(); });
       }
-      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', boot); } else { boot(); }
+
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', init); } else { init(); }
     })();
     </script>
     {{/if}}
