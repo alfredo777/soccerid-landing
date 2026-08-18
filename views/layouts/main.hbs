@@ -225,36 +225,52 @@
 
   <!-- Banner minimizado: siempre visible, sin blur ni fondo detrás, se expande al tocar -->
   <button class="mn-mini" id="matchNotifMini" aria-label="{{#if isEs}}Ver próximo partido{{else}}View next match{{/if}}">
-    <span class="mn-mini-icons">
-      <span class="mn-mini-icon"><img src="{{upcoming_events.[0].team1Icon}}" alt="{{upcoming_events.[0].team1}}"></span>
-      <span class="mn-mini-icon"><img src="{{upcoming_events.[0].team2Icon}}" alt="{{upcoming_events.[0].team2}}"></span>
+    <span class="mn-mini-pill">
+      <span class="mn-mini-top">
+        <span class="mn-mini-icons">
+          <span class="mn-mini-icon"><img src="{{upcoming_events.[0].team1Icon}}" alt="{{upcoming_events.[0].team1}}"></span>
+          <span class="mn-mini-icon"><img src="{{upcoming_events.[0].team2Icon}}" alt="{{upcoming_events.[0].team2}}"></span>
+        </span>
+        <span class="mn-mini-text">{{upcoming_events.[0].team1}} <b>vs</b> {{upcoming_events.[0].team2}}</span>
+      </span>
+      <span class="mn-mini-bar"><span class="mn-mini-bar-fill" id="matchNotifMiniBar"></span></span>
     </span>
-    <span class="mn-mini-text">{{upcoming_events.[0].team1}} <b>vs</b> {{upcoming_events.[0].team2}}</span>
-    <span class="mn-mini-bar"><span class="mn-mini-bar-fill" id="matchNotifMiniBar"></span></span>
+    <span class="mn-mini-hint">{{#if isEs}}DESLIZA{{else}}SWIPE{{/if}}</span>
   </button>
 
   <style>
-    /* Banner minimizado: pastilla flotante, sin overlay/blur, se desliza desde abajo */
-    .mn-mini{position:fixed;z-index:9997;left:50%;bottom:16px;transform:translateX(-50%) translateY(180%);
-      display:inline-flex;align-items:center;gap:9px;padding:9px 15px 14px 12px;border-radius:40px;
-      border:1px solid rgba(255,255,255,0.12);background:#14141f;box-shadow:0 8px 28px rgba(0,0,0,0.5);
-      cursor:pointer;font-family:inherit;max-width:92vw;overflow:hidden;
+    /* Banner minimizado: contenedor flotante SIN fondo ni blur (solo la pastilla tiene fondo) */
+    .mn-mini{position:fixed;z-index:9997;left:50%;bottom:14px;transform:translateX(-50%) translateY(220%);
+      display:flex;flex-direction:column;align-items:center;gap:8px;
+      background:none;border:0;padding:0;margin:0;cursor:pointer;font-family:inherit;max-width:94vw;
       transition:transform .45s cubic-bezier(.2,.8,.2,1);}
     .mn-mini.active{transform:translateX(-50%) translateY(0);}
-    .mn-mini:active{transform:translateX(-50%) translateY(0) scale(.97);}
+    .mn-mini:active .mn-mini-pill{transform:scale(.97);}
+    /* La pastilla oscura */
+    .mn-mini-pill{display:flex;flex-direction:column;gap:11px;
+      padding:13px 22px;border-radius:30px;
+      background:#191922;border:1px solid rgba(255,255,255,0.10);
+      box-shadow:0 12px 34px rgba(0,0,0,0.55);max-width:94vw;
+      transition:transform .2s ease;}
+    .mn-mini-top{display:flex;align-items:center;gap:13px;}
     .mn-mini-icons{display:inline-flex;flex-shrink:0;}
-    .mn-mini-icon{width:30px;height:30px;border-radius:50%;background:#20202e;border:2px solid #14141f;
-      display:flex;align-items:center;justify-content:center;}
-    .mn-mini-icon:last-child{margin-left:-10px;}
-    .mn-mini-icon img{width:20px;height:20px;object-fit:contain;}
-    .mn-mini-text{font-size:13px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;
+    .mn-mini-icon{width:34px;height:34px;border-radius:50%;background:#0f1720;border:2px solid #191922;
+      display:flex;align-items:center;justify-content:center;overflow:hidden;}
+    .mn-mini-icon:last-child{margin-left:-12px;}
+    .mn-mini-icon img{width:26px;height:26px;object-fit:contain;}
+    .mn-mini-text{font-size:20px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;
       text-overflow:ellipsis;letter-spacing:.2px;}
-    .mn-mini-text b{color:#a78bfa;font-weight:800;margin:0 3px;}
-    .mn-mini-bar{position:absolute;left:14px;right:14px;bottom:6px;height:4px;border-radius:99px;
-      background:rgba(255,255,255,0.14);overflow:hidden;}
+    .mn-mini-text b{color:#8b6cf0;font-weight:800;margin:0 6px;}
+    .mn-mini-bar{display:block;width:100%;height:7px;border-radius:99px;
+      background:rgba(255,255,255,0.13);overflow:hidden;}
     .mn-mini-bar-fill{display:block;height:100%;width:0;border-radius:99px;
-      background:linear-gradient(90deg,#6c3ce0,#a78bfa);transition:width .6s ease;}
-    @media (max-width:600px){.mn-mini-text{max-width:44vw;}}
+      background:linear-gradient(90deg,#5b34d6,#a78bfa);transition:width .8s cubic-bezier(.2,.8,.2,1);}
+    .mn-mini-hint{font-size:14px;font-weight:600;letter-spacing:4px;color:rgba(255,255,255,0.45);}
+    @media (max-width:600px){
+      .mn-mini-text{font-size:17px;max-width:52vw;}
+      .mn-mini-icon{width:30px;height:30px;}
+      .mn-mini-icon img{width:22px;height:22px;}
+    }
     .mn-overlay {
       display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9998;
       opacity:0;transition:opacity .3s;
@@ -580,7 +596,30 @@
     var WEEK = 7 * 24 * 60 * 60 * 1000, FULL_S = 10;
     var state = 'hidden', timer = null;
 
-    function setMini(on) { if (mini) mini.classList.toggle('active', on); }
+    // Objetivo de la barra del minimizado: qué tan cerca está el partido (ventana 30 días)
+    var miniBar = document.getElementById('matchNotifMiniBar');
+    var miniPct = 18;
+    (function() {
+      var iso = notif.getAttribute('data-match-iso');
+      if (!iso) return;
+      var mt = new Date(iso + 'T20:00:00').getTime();
+      if (isNaN(mt)) return;
+      var win = 30 * 24 * 60 * 60 * 1000, rem = mt - Date.now();
+      var frac = rem <= 0 ? 1 : Math.max(0.06, Math.min(1, 1 - rem / win));
+      miniPct = +(frac * 100).toFixed(1);
+    })();
+    function fillMini() {
+      if (!miniBar) return;
+      miniBar.style.width = '0%';
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() { miniBar.style.width = miniPct + '%'; });
+      });
+    }
+    function setMini(on) {
+      if (!mini) return;
+      mini.classList.toggle('active', on);
+      if (on) fillMini(); else if (miniBar) miniBar.style.width = '0%';
+    }
 
     function toMini() {
       if (timer) { clearInterval(timer); timer = null; }
@@ -616,18 +655,6 @@
         if (remaining <= 0) toMini();
       }, 1000);
     }
-
-    // La barra del minimizado representa qué tan cerca está el partido (ventana de 30 días)
-    (function() {
-      var iso = notif.getAttribute('data-match-iso');
-      var mbar = document.getElementById('matchNotifMiniBar');
-      if (!iso || !mbar) return;
-      var mt = new Date(iso + 'T20:00:00').getTime();
-      if (isNaN(mt)) { mbar.style.width = '18%'; return; }
-      var win = 30 * 24 * 60 * 60 * 1000, rem = mt - Date.now();
-      var frac = rem <= 0 ? 1 : Math.max(0.05, Math.min(1, 1 - rem / win));
-      mbar.style.width = (frac * 100).toFixed(1) + '%';
-    })();
 
     // ¿Toca mostrar la versión completa? Solo 1 vez cada 7 días por dispositivo, y 1 vez por sesión.
     var last = parseInt(localStorage.getItem(KEY) || '0', 10), now = Date.now();
