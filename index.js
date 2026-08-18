@@ -514,7 +514,6 @@ function loadViewData(lang = DEFAULT_LANG, currentPath = '/') {
   if (Array.isArray(data.upcoming_events)) {
     const today = new Date().toISOString().slice(0, 10);
     data.upcoming_events = data.upcoming_events.filter(e => !e.dateISO || e.dateISO >= today);
-    data.nextMatch = data.upcoming_events[0] || null;
   }
 
   return data;
