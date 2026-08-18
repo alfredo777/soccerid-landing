@@ -233,7 +233,6 @@
         </span>
         <span class="mn-mini-text">{{upcoming_events.[0].team1}} <b>vs</b> {{upcoming_events.[0].team2}}</span>
       </span>
-      <span class="mn-mini-bar" style="display:block;width:100%;height:7px;border-radius:99px;background:rgba(255,255,255,0.18);overflow:hidden;"><span class="mn-mini-bar-fill" id="matchNotifMiniBar" style="display:block;height:100%;width:82%;border-radius:99px;background:linear-gradient(90deg,#5b34d6,#a78bfa);transition:width .8s cubic-bezier(.2,.8,.2,1);"></span></span>
     </span>
     <span class="mn-mini-hint">{{#if isEs}}DESLIZA{{else}}SWIPE{{/if}}</span>
   </button>
@@ -261,22 +260,6 @@
     .mn-mini-text{font-size:20px;font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;
       text-overflow:ellipsis;letter-spacing:.2px;}
     .mn-mini-text b{color:#8b6cf0;font-weight:800;margin:0 6px;}
-    .mn-mini-bar{display:block;width:100%;height:7px;border-radius:99px;
-      background:rgba(255,255,255,0.18);overflow:hidden;}
-    .mn-mini-bar-fill{position:relative;display:block;height:100%;width:82%;border-radius:99px;overflow:hidden;
-      background:linear-gradient(90deg,#5b34d6,#a78bfa);}
-    /* Brillo que recorre la barra en bucle (puro CSS, no depende del JS) */
-    .mn-mini-bar-fill::after{content:'';position:absolute;top:0;bottom:0;left:0;width:60%;border-radius:99px;
-      background:linear-gradient(90deg,transparent,rgba(255,255,255,0.55),transparent);
-      transform:translateX(-120%);animation:mnMiniShimmer 1.7s linear infinite;}
-    /* Al aparecer la pastilla, la barra se llena de 0 a su valor */
-    .mn-mini.active .mn-mini-bar-fill{animation:mnMiniFill 1s cubic-bezier(.2,.8,.2,1);}
-    @keyframes mnMiniFill{from{width:0;}}
-    @keyframes mnMiniShimmer{0%{transform:translateX(-120%);}100%{transform:translateX(230%);}}
-    @media (prefers-reduced-motion:reduce){
-      .mn-mini-bar-fill::after{animation:none;}
-      .mn-mini.active .mn-mini-bar-fill{animation:none;}
-    }
     .mn-mini-hint{font-size:14px;font-weight:600;letter-spacing:4px;color:rgba(255,255,255,0.45);}
     @media (max-width:600px){
       .mn-mini-text{font-size:17px;max-width:52vw;}
