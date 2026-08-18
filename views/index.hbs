@@ -355,45 +355,50 @@
 
     <script>
     (function(){
+      if (window.__nmBoot) return; window.__nmBoot = true; // evita doble ejecución
       var wrap = document.getElementById('nmWrap'); if (!wrap) return;
       var full = document.getElementById('nmFull'), mini = document.getElementById('nmMini'), backdrop = document.getElementById('nmBackdrop');
       var progWrap = document.getElementById('nmProgress'), progFill = document.getElementById('nmProgressFill');
-      var KEY = 'nmLastFull:' + wrap.dataset.matchId; // por partido: si cambia el partido, se resetea el ciclo
-      var WEEK = 7*24*60*60*1000, FULL_MS = 8000, autoTimer = null;
+      var KEY = 'nmLastFull:' + wrap.dataset.matchId;
+      var WEEK = 7*24*60*60*1000, FULL_MS = 8000;
+      var isOpen = false, rafId = null, startT = 0;
 
       function showMini(){ mini.classList.add('is-visible'); }
-      function closeFull(){ clearTimeout(autoTimer); full.classList.remove('is-open'); backdrop.classList.remove('is-open'); showMini(); }
-      function startProgress(){
-        progWrap.style.display='block'; progFill.style.transition='none'; progFill.style.width='0%'; void progFill.offsetWidth;
-        progFill.style.transition='width '+FULL_MS+'ms linear'; progFill.style.width='100%';
-        clearTimeout(autoTimer); autoTimer = setTimeout(closeFull, FULL_MS);
+      function stopProgress(){ if (rafId) { cancelAnimationFrame(rafId); rafId = null; } }
+      function closeFull(){ if (!isOpen) return; isOpen = false; stopProgress(); full.classList.remove('is-open'); backdrop.classList.remove('is-open'); showMini(); }
+      function tick(ts){
+        if (!startT) startT = ts;
+        var p = Math.min(1, (ts - startT) / FULL_MS);
+        progFill.style.width = (p * 100) + '%';
+        if (p < 1) { rafId = requestAnimationFrame(tick); } else { rafId = null; closeFull(); }
       }
       function openFull(auto){
+        if (isOpen) return; isOpen = true;
         mini.classList.remove('is-visible'); full.classList.add('is-open'); backdrop.classList.add('is-open');
-        if (auto){ startProgress(); } else { progWrap.style.display='none'; clearTimeout(autoTimer); }
+        stopProgress();
+        if (auto){ progWrap.style.display = ''; progFill.style.width = '0%'; startT = 0; rafId = requestAnimationFrame(tick); }
+        else { progWrap.style.display = 'none'; }
       }
 
-      // Barra del minimizado = cuenta regresiva al partido (se llena al acercarse, ventana de 30 días)
+      // Barra del minimizado = cuenta regresiva al partido (ventana de 30 días)
       (function(){
         var iso = wrap.dataset.matchIso, bar = document.getElementById('nmMiniBar'); if (!iso || !bar) return;
-        var matchTime = new Date(iso + 'T20:00:00').getTime(), win = 30*24*60*60*1000, rem = matchTime - Date.now();
+        var mt = new Date(iso + 'T20:00:00').getTime(), win = 30*24*60*60*1000, rem = mt - Date.now();
         var frac = rem <= 0 ? 1 : Math.max(0.04, Math.min(1, 1 - rem/win));
-        bar.style.width = (frac*100).toFixed(1) + '%';
+        bar.style.width = (frac * 100).toFixed(1) + '%';
       })();
 
-      // Decisión al cargar: completo solo cada 7 días por dispositivo; si no, minimizado
+      // Completo solo 1 vez cada 7 días por dispositivo (estado se guarda de inmediato)
       var last = parseInt(localStorage.getItem(KEY) || '0', 10), now = Date.now();
-      if (!last || (now - last) > WEEK){
-        setTimeout(function(){ openFull(true); try { localStorage.setItem(KEY, String(now)); } catch(_){} }, 1000);
-      } else {
-        setTimeout(showMini, 1000);
-      }
+      var showBig = (!last || (now - last) > WEEK);
+      if (showBig) { try { localStorage.setItem(KEY, String(now)); } catch(_){} }
+      setTimeout(function(){ if (showBig) openFull(true); else showMini(); }, 1000);
 
       mini.addEventListener('click', function(){ openFull(false); });
       document.getElementById('nmClose').addEventListener('click', function(e){ e.preventDefault(); closeFull(); });
       backdrop.addEventListener('click', closeFull);
-      document.getElementById('nmAllEvents').addEventListener('click', function(){ closeFull(); });
-      document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && full.classList.contains('is-open')) closeFull(); });
+      document.getElementById('nmAllEvents').addEventListener('click', closeFull);
+      document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && isOpen) closeFull(); });
     })();
     </script>
     {{/if}}
