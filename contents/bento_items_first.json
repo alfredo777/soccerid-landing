@@ -12,11 +12,6 @@
       "link": "/es/socceridcup"
     },
     {
-      "id": "vip",
-      "class": "item-vip",
-      "title": "EXPERIENCIAS VIP"
-    },
-    {
       "id": "seguros",
       "class": "item-seguros",
       "title": "SEGUROS iD"
@@ -33,11 +28,6 @@
       "class": "item-soccer",
       "title": "SOCCER iD CUP",
       "link": "/en/socceridcup"
-    },
-    {
-      "id": "vip",
-      "class": "item-vip",
-      "title": "VIP EXPERIENCES"
     },
     {
       "id": "seguros",
