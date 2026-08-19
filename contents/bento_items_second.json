@@ -1,9 +1,9 @@
 {
   "es": [
     {
-      "id": "copa",
-      "class": "item-copa",
-      "title": "EXPERIENCIA LIGA MX"
+      "id": "vip",
+      "class": "item-vip",
+      "title": "ASIENTOS VIP"
     },
     {
       "id": "fan",
@@ -23,9 +23,9 @@
   ],
   "en": [
     {
-      "id": "copa",
-      "class": "item-copa",
-      "title": "LIGA MX EXPERIENCE"
+      "id": "vip",
+      "class": "item-vip",
+      "title": "VIP SEATS"
     },
     {
       "id": "fan",

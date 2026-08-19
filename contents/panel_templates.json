@@ -34,7 +34,7 @@
     },
     "vip": {
       "tag": "Premium",
-      "title": "EXPERIENCIAS VIP",
+      "title": "ASIENTOS VIP",
       "description": "<p style=\"text-align: justify;\"><b>Llevamos a nuestros clientes a cualquier evento deportivo del mundo</b>. Contamos con <b>palcos en todos los estadios de la Liga MX</b>, incluyendo <b>las suites más exclusivas del Estadio Banorte</b>, y ofrecemos <b>asientos en los eventos más atractivos del planeta</b>, como la <b>UEFA Champions League</b>.</p>",
       "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=470",
       "alt": "Eventos mundiales",
@@ -244,7 +244,7 @@
     },
     "vip": {
       "tag": "Premium",
-      "title": "VIP EXPERIENCES",
+      "title": "VIP SEATS",
       "description": "<p style=\"text-align: justify;\"><b>We take our clients to any sporting event in the world</b>. We have <b>boxes in all Liga MX stadiums</b>, including <b>the most exclusive suites at Banorte Stadium</b>, and we offer <b>seats at the most attractive events on the planet</b>, such as the <b>UEFA Champions League</b>.</p>",
       "src": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=470",
       "alt": "World events",

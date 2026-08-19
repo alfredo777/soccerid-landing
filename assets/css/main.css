@@ -701,7 +701,7 @@ body {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, 180px);
     grid-template-areas:
-        "quienes quienes soccer vip"
+        "quienes quienes soccer soccer"
         "quienes quienes seguros seguros";
 }
 
@@ -709,18 +709,17 @@ body {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(2, 180px);
     grid-template-areas:
-        "copa fan media media"
+        "vip fan media media"
         "opiniones opiniones opiniones opiniones";
 }
 
 /* Asignación de áreas - Grid 1 */
 .bento-grid-first .item-quienes { grid-area: quienes; }
 .bento-grid-first .item-soccer { grid-area: soccer; }
-.bento-grid-first .item-vip { grid-area: vip; }
 .bento-grid-first .item-seguros { grid-area: seguros; }
 
 /* Asignación de áreas - Grid 2 */
-.bento-grid-second .item-copa { grid-area: copa; }
+.bento-grid-second .item-vip { grid-area: vip; }
 .bento-grid-second .item-fan { grid-area: fan; }
 .bento-grid-second .item-media { grid-area: media; }
 .bento-grid-second .item-opiniones { grid-area: opiniones; }
@@ -768,7 +767,6 @@ body {
 .item-soccer::before { background-image: url('/assets/images/idcup.jpg'); }
 .item-seguros::before { background-image: url('/assets/images/news3.png'); }
 .item-vip::before { background-image: url('/assets/images/vip2.jpg'); }
-.item-copa::before { background-image: url('/assets/images/ligamx.png'); }
 .item-fan::before { background-image: url('/assets/images/fan.png'); }
 .item-media::before { background-image: url('/assets/images/media.png'); }
 .item-opiniones::before { background-image: url('/assets/images/opi2.jpg'); }
@@ -2579,7 +2577,7 @@ body {
         grid-template-rows: auto auto auto;
         grid-template-areas:
             "quienes quienes"
-            "soccer vip"
+            "soccer soccer"
             "seguros seguros";
     }
     
@@ -2587,7 +2585,7 @@ body {
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: auto auto auto;
         grid-template-areas:
-            "copa fan"
+            "vip fan"
             "media media"
             "opiniones opiniones";
     }
@@ -2741,13 +2739,12 @@ body {
         grid-template-areas:
             "quienes"
             "soccer"
-            "vip"
             "seguros";
     }
     
     .bento-grid-second {
         grid-template-areas:
-            "copa"
+            "vip"
             "fan"
             "media"
             "opiniones";
