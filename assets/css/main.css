@@ -764,7 +764,9 @@ body {
 
 /* Imágenes de fondo para cada item */
 .item-quienes::before { background-image: url('/assets/images/somoss.jpg'); }
-.item-soccer::before { background-image: url('/assets/images/idcup.jpg'); }
+/* La foto es 3:2 y el tile mide 3.2:1: centrada, el cover recorta las cabezas.
+   Se sube el encuadre para que las caras entren en todos los anchos. */
+.item-soccer::before { background-image: url('/assets/images/idcup.jpg'); background-position: center 12%; }
 .item-seguros::before { background-image: url('/assets/images/news3.png'); }
 .item-vip::before { background-image: url('/assets/images/vip2.jpg'); }
 .item-fan::before { background-image: url('/assets/images/fan.png'); }
