@@ -226,21 +226,17 @@
       .pn-content { padding: 8px 18px 40px; }
       .pn-top { padding: 18px 18px 12px; }
     }
-    @media (max-width: 860px) {
-      .pn-side { transform: translateX(-100%); width: var(--pn-sidebar-w); box-shadow: 0 0 50px rgba(0,0,0,.18); }
-      .pn-side.is-open { transform: translateX(0); }
-      .pn-shell.is-rail .pn-side { width: var(--pn-sidebar-w); }
-      .pn-main, .pn-shell.is-rail .pn-main { margin-left: 0; }
-      .pn-collapse-btn { display: none; }
-      .pn-burger { display: inline-flex; }
-      .pn-search { display: none; }
-      .pn-overlay { position: fixed; inset: 0; background: rgba(20,20,27,.4); z-index: 39; display: none; }
-      .pn-overlay.is-open { display: block; }
-      .pn-userchip__info { display: none; }
-
-      /* La nav debe caber completa: se compactan la cuenta regresiva y el pie
-         para que grupos como "Vista previa" queden alcanzables sin pelear con el scroll. */
-      .pn-nav { overscroll-behavior: contain; padding: 2px 14px 6px; }
+    /* La nav lleva 12 enlaces + 2 grupos y no siempre cabe: con la cuenta
+       regresiva y el pie a tamaño completo hacen falta ~922px de alto, así que
+       en pantallas más bajas el grupo "Vista previa" quedaba fuera de la vista.
+       Se compactan ambos bloques cuando el alto aprieta (aplica igual en
+       escritorio y en móvil), y si aun así sobra contenido, la barra de scroll
+       se hace visible para que se note que hay más abajo. */
+    @media (max-height: 940px) {
+      .pn-nav { padding: 2px 14px 6px; }
+      .pn-nav::-webkit-scrollbar { width: 4px; }
+      .pn-nav::-webkit-scrollbar-thumb { background: #D8D6E0; border-radius: 4px; }
+      .pn-nav { scrollbar-width: thin; scrollbar-color: #D8D6E0 transparent; }
       .pn-group__head { padding: 10px 12px 4px; }
       .pn-side__event {
         display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px;
@@ -254,6 +250,34 @@
       .pn-owner__logo { width: 30px; height: 30px; }
       .pn-owner__logo img { width: 18px; height: 18px; }
       .pn-logout { margin-top: 2px; padding: 9px 10px; }
+    }
+
+    /* Pantallas más bajas todavía (portátiles de 768px, ventanas reducidas):
+       la cuenta regresiva se cede —también está en el dashboard— y los enlaces
+       se compactan, antes que dejar "Vista previa" fuera de alcance. */
+    @media (max-height: 820px) {
+      .pn-side__event { display: none; }
+    }
+    @media (max-height: 760px) {
+      .pn-side__brand { padding: 14px 20px 10px; min-height: 0; }
+      .pn-link { padding: 8px 12px; }
+      .pn-logout { padding: 8px 10px; }
+      .pn-group__head { padding: 8px 12px 3px; }
+    }
+
+    @media (max-width: 860px) {
+      .pn-side { transform: translateX(-100%); width: var(--pn-sidebar-w); box-shadow: 0 0 50px rgba(0,0,0,.18); }
+      .pn-side.is-open { transform: translateX(0); }
+      .pn-shell.is-rail .pn-side { width: var(--pn-sidebar-w); }
+      .pn-main, .pn-shell.is-rail .pn-main { margin-left: 0; }
+      .pn-collapse-btn { display: none; }
+      .pn-burger { display: inline-flex; }
+      .pn-search { display: none; }
+      .pn-overlay { position: fixed; inset: 0; background: rgba(20,20,27,.4); z-index: 39; display: none; }
+      .pn-overlay.is-open { display: block; }
+      .pn-userchip__info { display: none; }
+
+      .pn-nav { overscroll-behavior: contain; }
     }
   </style>
 </head>

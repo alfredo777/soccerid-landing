@@ -2,6 +2,19 @@
   .ad-tabs { display:flex; gap:10px; margin: 6px 0 22px; flex-wrap:wrap; }
   .ad-tab { padding:10px 20px; border-radius:13px; background:#fff; border:1px solid var(--pn-border); font-size:13px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
   .ad-tab.is-active { background:var(--pn-purple); color:#fff; border-color:var(--pn-purple); }
+  /* En móvil la navegación vive en el menú lateral, así que los chips sobran
+     (ocupaban tres renglones). Se sustituyen por una barra de ruta. */
+  .ad-crumb { display:none; }
+  @media (max-width:860px){
+    .ad-tabs { display:none; }
+    .ad-crumb {
+      display:flex; align-items:center; gap:8px; margin:6px 0 18px; padding:11px 14px;
+      background:#fff; border:1px solid var(--pn-border); border-radius:13px;
+      font-size:13px; font-weight:700; color:var(--pn-muted);
+    }
+    .ad-crumb strong { color:var(--pn-ink); font-weight:800; }
+    .ad-crumb svg { width:14px; height:14px; stroke:currentColor; fill:none; flex-shrink:0; }
+  }
   .ad-sec { display:none; }
   .ad-sec.is-active { display:block; }
 
@@ -89,6 +102,13 @@
 </style>
 
 {{#if flash}}<div class="ad-flash {{#eq flashType 'error'}}error{{else}}ok{{/eq}}">{{flash}}</div>{{/if}}
+
+<nav class="ad-crumb" aria-label="Ruta">
+  <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+  <span>Administración</span>
+  <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+  <strong id="adCrumbSec" aria-live="polite">Usuarios</strong>
+</nav>
 
 <div class="ad-tabs">
   <div class="ad-tab is-active" data-tab="usuarios">Usuarios</div>
@@ -818,7 +838,14 @@
 
   // Tabs
   var tabs = document.querySelectorAll('.ad-tab');
+  // La barra de ruta de móvil toma el nombre de la pestaña, para no duplicar la lista
+  function setCrumb(name){
+    var out = document.getElementById('adCrumbSec');
+    var tab = document.querySelector('.ad-tab[data-tab="' + name + '"]');
+    if (out && tab) out.textContent = tab.textContent.trim();
+  }
   function activate(name){
+    setCrumb(name);
     tabs.forEach(function(t){ t.classList.toggle('is-active', t.dataset.tab === name); });
     document.querySelectorAll('.ad-sec').forEach(function(s){ s.classList.toggle('is-active', s.id === 'sec-'+name); });
     // Sincroniza el estado activo del menú lateral del admin
@@ -907,6 +934,9 @@
       if (!m) return;
       var sec = m.secId, el = m.el;
       // Cambia de sección sin que se limpie el término hasta después de saltar
+      var crumb = document.getElementById('adCrumbSec');
+      var crumbTab = document.querySelector('.ad-tab[data-tab="' + sec + '"]');
+      if (crumb && crumbTab) crumb.textContent = crumbTab.textContent.trim();
       document.querySelectorAll('.ad-tab').forEach(function(t){ t.classList.toggle('is-active', t.dataset.tab === sec); });
       document.querySelectorAll('.ad-sec').forEach(function(s){ s.classList.toggle('is-active', s.id === 'sec-'+sec); });
       document.querySelectorAll('.pn-nav a[data-tab]').forEach(function(a){ a.classList.toggle('is-active', a.getAttribute('data-tab') === sec); });
