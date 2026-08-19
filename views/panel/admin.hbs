@@ -45,6 +45,19 @@
   .ad-actions button.primary:hover { background:var(--pn-purple-soft); }
   .ad-actions button.danger:hover { background:#FDECEC; color:#C0392B; border-color:#F5C6C6; }
   .ad-empty { padding:30px; text-align:center; color:var(--pn-muted); font-size:13px; }
+
+  /* En móvil las acciones no caben junto al texto: con flex-shrink:0 aplastaban
+     el nombre/correo a una palabra por línea y se salían de la tarjeta.
+     Pasan a una fila propia, en dos columnas. */
+  @media (max-width:720px){
+    .ad-item { flex-wrap:wrap; align-items:flex-start; gap:12px; padding:14px; }
+    .ad-item__b { flex:1 1 0; }
+    .ad-item__b small { word-break:break-word; }
+    .ad-actions { flex:1 0 100%; display:grid; grid-template-columns:1fr 1fr; gap:8px; justify-content:stretch; }
+    .ad-actions > * { min-width:0; }
+    .ad-actions button, .ad-actions select, .ad-actions .ad-select-sm { width:100%; padding:9px 10px; }
+    .ad-actions form { display:block; }
+  }
   .ad-hint { font-size:11px; color:var(--pn-muted); margin-top:6px; }
   .ad-note { font-size:13px; color:var(--pn-ink-2); margin:0 0 18px; }
 

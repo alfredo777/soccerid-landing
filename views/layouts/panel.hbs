@@ -41,7 +41,9 @@
       background: var(--pn-card);
       border-right: 1px solid var(--pn-border);
       display: flex; flex-direction: column;
-      position: fixed; top: 0; left: 0; height: 100vh;
+      position: fixed; top: 0; left: 0;
+      height: 100vh;
+      height: 100dvh; /* iOS: 100vh incluye las barras del navegador y corta el pie */
       z-index: 40;
       transition: width .22s ease, transform .25s ease;
     }
@@ -235,6 +237,23 @@
       .pn-overlay { position: fixed; inset: 0; background: rgba(20,20,27,.4); z-index: 39; display: none; }
       .pn-overlay.is-open { display: block; }
       .pn-userchip__info { display: none; }
+
+      /* La nav debe caber completa: se compactan la cuenta regresiva y el pie
+         para que grupos como "Vista previa" queden alcanzables sin pelear con el scroll. */
+      .pn-nav { overscroll-behavior: contain; padding: 2px 14px 6px; }
+      .pn-group__head { padding: 10px 12px 4px; }
+      .pn-side__event {
+        display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px;
+        margin: 6px 14px 2px; padding: 10px 14px; border-radius: 12px;
+      }
+      .pn-side__event small { font-size: 9.5px; }
+      .pn-side__event strong { display: inline; font-size: 15px; margin: 0; }
+      .pn-side__event span { font-size: 11px; width: 100%; }
+      .pn-side__foot { padding: 8px 10px; }
+      .pn-owner { padding: 7px 10px; }
+      .pn-owner__logo { width: 30px; height: 30px; }
+      .pn-owner__logo img { width: 18px; height: 18px; }
+      .pn-logout { margin-top: 2px; padding: 9px 10px; }
     }
   </style>
 </head>
