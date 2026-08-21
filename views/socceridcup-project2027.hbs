@@ -1902,11 +1902,48 @@
 
   var jump = document.querySelector('.pp-jump');
   if (jump) {
+    // Desplazamiento propio: el scroll suave del navegador es demasiado
+    // rapido para la distancia que hay hasta modalidades de inversion.
+    var MS_POR_PIXEL = 0.52;  // sube este valor para que vaya mas lento
+    var MS_MINIMO = 1200;
+    var MS_MAXIMO = 3200;
+    var animando = null;
+
+    function cancelar() {
+      if (animando) { cancelAnimationFrame(animando); animando = null; }
+    }
+    ['wheel', 'touchstart', 'keydown'].forEach(function(evt) {
+      window.addEventListener(evt, cancelar, { passive: true });
+    });
+
+    function desplazar(destino) {
+      var inicio = window.pageYOffset;
+      var delta = destino - inicio;
+      var duracion = Math.min(MS_MAXIMO, Math.max(MS_MINIMO, Math.abs(delta) * MS_POR_PIXEL));
+      var t0 = null;
+      cancelar();
+      function paso(t) {
+        if (t0 === null) t0 = t;
+        var p = Math.min((t - t0) / duracion, 1);
+        // Arranca y frena despacio (easeInOutCubic)
+        var e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+        window.scrollTo(0, inicio + delta * e);
+        if (p < 1) { animando = requestAnimationFrame(paso); }
+        else { animando = null; }
+      }
+      animando = requestAnimationFrame(paso);
+    }
+
     jump.addEventListener('click', function(e) {
       var target = document.getElementById('ppModalidades');
       if (!target) return;
       e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      var destino = target.getBoundingClientRect().top + window.pageYOffset - 8;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        window.scrollTo(0, destino);
+        return;
+      }
+      desplazar(destino);
     });
   }
 
