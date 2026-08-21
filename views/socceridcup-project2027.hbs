@@ -649,13 +649,17 @@
   <div class="pp-calc" id="ppCalc" hidden>
     <div class="pp-calc__backdrop" data-calc-close></div>
     <div class="pp-calc__card" role="dialog" aria-modal="true" aria-labelledby="ppCalcTitle">
-      <button type="button" class="pp-calc__x" data-calc-close aria-label="{{data.calculator.closeLabel}}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-      </button>
+      <div class="pp-calc__head">
+        <div class="pp-calc__headtext">
+          <h3 class="pp-calc__title" id="ppCalcTitle">{{data.calculator.title}}</h3>
+          <p class="pp-calc__sub">{{data.calculator.subtitle}}</p>
+        </div>
+        <button type="button" class="pp-calc__x" data-calc-close aria-label="{{data.calculator.closeLabel}}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
 
-      <h3 class="pp-calc__title" id="ppCalcTitle">{{data.calculator.title}}</h3>
-      <p class="pp-calc__sub">{{data.calculator.subtitle}}</p>
-
+      <div class="pp-calc__body">
       <div class="pp-calc__field">
         <span class="pp-calc__lbl">{{data.calculator.steps.type}}</span>
         <div class="pp-switch" id="ppCalcType">
@@ -700,6 +704,7 @@
 
       <div class="pp-calc__result" id="ppCalcResult"></div>
       <p class="pp-calc__disc">{{data.calculator.disclaimer}}</p>
+      </div>
     </div>
   </div>
   {{/if}}
@@ -1193,15 +1198,24 @@
   .pp-calc__backdrop { position: absolute; inset: 0; background: rgba(4,4,12,0.82); backdrop-filter: blur(6px); }
   .pp-calc__card {
     position: relative; z-index: 1;
-    width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
+    display: flex; flex-direction: column;
+    width: 100%; max-width: 560px;
+    max-height: 90vh; max-height: 90dvh;
     background: linear-gradient(160deg, #14142e 0%, var(--pp-dark) 100%);
     border: 1px solid rgba(212,168,67,0.35); border-radius: 20px;
-    padding: 32px 32px 26px;
     box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+    overflow: hidden;
   }
+  /* El encabezado no se desplaza: la ✕ siempre queda a la vista */
+  .pp-calc__head {
+    flex: 0 0 auto; display: flex; align-items: flex-start; gap: 16px;
+    padding: 24px 26px 16px; border-bottom: 1px solid rgba(255,255,255,0.09);
+  }
+  .pp-calc__headtext { flex: 1; min-width: 0; }
+  .pp-calc__body { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 22px 26px calc(24px + env(safe-area-inset-bottom, 0px)); }
   .pp-calc__x {
-    position: absolute; top: 16px; right: 16px;
-    width: 34px; height: 34px; border-radius: 50%;
+    flex: 0 0 auto;
+    width: 36px; height: 36px; border-radius: 50%;
     background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
     color: rgba(255,255,255,0.7); cursor: pointer;
     display: flex; align-items: center; justify-content: center;
@@ -1209,8 +1223,8 @@
   }
   .pp-calc__x:hover { background: rgba(255,255,255,0.14); color: #fff; }
   .pp-calc__x svg { width: 16px; height: 16px; }
-  .pp-calc__title { font-size: 19px; font-weight: 900; letter-spacing: 1.2px; color: var(--pp-gold); margin: 0 40px 6px 0; }
-  .pp-calc__sub { font-size: 13px; color: rgba(255,255,255,0.55); margin: 0 0 24px; line-height: 1.5; }
+  .pp-calc__title { font-size: 19px; font-weight: 900; letter-spacing: 1.2px; color: var(--pp-gold); margin: 0 0 6px; }
+  .pp-calc__sub { font-size: 13px; color: rgba(255,255,255,0.55); margin: 0; line-height: 1.5; }
 
   .pp-calc__field { margin-bottom: 22px; }
   .pp-calc__lbl { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
@@ -1297,7 +1311,13 @@
 
   @media (max-width: 560px) {
     .pp-calc { padding: 0; align-items: flex-end; }
-    .pp-calc__card { max-width: 100%; max-height: 94vh; border-radius: 20px 20px 0 0; padding: 26px 20px 22px; }
+    .pp-calc__card {
+      max-width: 100%; border-radius: 20px 20px 0 0;
+      max-height: 88vh; max-height: 88dvh;
+    }
+    .pp-calc__head { padding: 18px 18px 14px; }
+    .pp-calc__body { padding: 18px 18px calc(20px + env(safe-area-inset-bottom, 0px)); }
+    .pp-calc__title { font-size: 17px; }
     .pp-switch { gap: 10px; }
     .pp-switch__side { font-size: 12px; }
     .pp-calc__amount input { font-size: 20px; }
