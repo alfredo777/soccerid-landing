@@ -2085,11 +2085,14 @@
     function esMovil() { return window.matchMedia('(max-width: 768px)').matches; }
     var temporizador = null;
     var gracia = null;
-    var presentando = false;   // breve margen para que el scroll de entrada no lo cierre de golpe
+    var presentando = false;   // margen para que el scroll de entrada no lo cierre de golpe
+    var yAlAbrir = 0;
+    var PX_PARA_CERRAR = 90;   // hay que desplazarse de verdad para replegarlo
 
     function abrirMenu(msAutoCierre, msGracia) {
       if (!esMovil()) return;
       nav.classList.add('is-open');
+      yAlAbrir = window.pageYOffset;
       clearTimeout(temporizador);
       clearTimeout(gracia);
       presentando = !!msGracia;
@@ -2102,6 +2105,11 @@
       presentando = false;
       nav.classList.remove('is-open');
     }
+    function replegarSiHuboScroll() {
+      if (presentando || animando) return;
+      if (!nav.classList.contains('is-open')) return;
+      if (Math.abs(window.pageYOffset - yAlAbrir) > PX_PARA_CERRAR) cerrarMenu();
+    }
 
     // El primer toque despliega; el siguiente ya navega.
     nav.addEventListener('click', function(e) {
@@ -2109,7 +2117,7 @@
       if (!nav.classList.contains('is-open')) {
         e.preventDefault();
         e.stopPropagation();
-        abrirMenu(3500);
+        abrirMenu(5000);
       } else {
         setTimeout(cerrarMenu, 250);
       }
@@ -2129,7 +2137,7 @@
       nav.classList.toggle('is-visible', visible);
       if (visible && !yaSePresento) {
         yaSePresento = true;
-        abrirMenu(2400, 650);   // se presenta desplegado; el scroll lo repliega enseguida
+        abrirMenu(4200, 1000);   // se presenta desplegado; luego el scroll lo repliega
       } else if (!visible) {
         cerrarMenu();
       }
@@ -2141,7 +2149,7 @@
       items.forEach(function(a, i) { a.classList.toggle('is-active', i === activo); });
     }
     window.addEventListener('scroll', function() {
-      if (!presentando && !animando && nav.classList.contains('is-open')) cerrarMenu();
+      replegarSiHuboScroll();
       if (!pendiente) { pendiente = true; requestAnimationFrame(actualizar); }
     }, { passive: true });
     window.addEventListener('resize', actualizar);
