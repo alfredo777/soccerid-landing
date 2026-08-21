@@ -21,6 +21,7 @@
     },
     "highlights": {
       "title": "ASPECTOS DESTACADOS DE LA INVERSIÓN",
+      "note": "El éxito de un evento internacional no depende únicamente del tamaño de los clubes, sino de elegir el <strong>producto correcto</strong> para el <strong>mercado</strong> y el <strong>momento</strong> adecuados.",
       "columns": [
         {
           "label": "PRODUCTO",
@@ -55,7 +56,7 @@
       ]
     },
     "scope": {
-      "title": "ALCANCE DE LA INVERSIÓN",
+      "title": "POTENCIAL ECONÓMICO DEL EVENTO",
       "subtitle": "CAPITAL REQUERIDO: USD $1.0 M",
       "indicatorsTitle": "PRINCIPALES INDICADORES",
       "indicators": [
@@ -77,7 +78,7 @@
       "footnote": "El ticket promedio proyectado de USD$100 es consistente con eventos internacionales de clubes mexicanos en USA."
     },
     "funds": {
-      "title": "APLICACIÓN DE FONDOS",
+      "title": "ESTRUCTURA DE COSTOS",
       "subtitle": "CAPITAL REQUERIDO: USD $1.0 M",
       "tableTitle": "USO DE RECURSOS",
       "items": [
@@ -92,8 +93,12 @@
       "totalAmount": "$1,000,000"
     },
     "track": {
-      "title": "EJECUCIÓN — TRAYECTORIA",
+      "title": "EXPERIENCIA Y CAPACIDAD DE EJECUCIÓN",
       "capTitle": "NUESTRAS CAPACIDADES",
+      "editionsTitle": "EVENTOS REALIZADOS",
+      "editionsSub": "Tres ediciones organizadas y operadas por SOCCER iD.",
+      "videosTitle": "COBERTURA EN TELEVISIÓN",
+      "videosSub": "Resúmenes de TV de ediciones anteriores.",
       "editions": [
         { "year": "2023", "match": "PUMAS vs COMUNICACIONES", "city": "San José, California", "image": "/assets/images/gallery/cup2023/1.jpg" },
         { "year": "2024", "match": "AMÉRICA vs ATLÉTICO NACIONAL", "city": "Orlando, Florida", "image": "/assets/images/gallery/cup2024/1.jpg" },
@@ -113,15 +118,67 @@
         { "id": "l-KVhjDENOQ", "title": "Tigres 0-0 Pumas | SOCCER iD CUP 2025", "edition": "2025" }
       ]
     },
+    "sponsors": {
+      "title": "RESPALDO COMERCIAL",
+      "subtitle": "Marcas que han participado en ediciones anteriores.",
+      "logos": [
+        { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX", "years": "2023 · 2024 · 2025" },
+        { "src": "/assets/images/sponsors/fox-sports.png", "alt": "Fox Sports", "years": "2023 · 2024 · 2025" },
+        { "src": "/assets/images/sponsors/voit.png", "alt": "Voit", "years": "2023 · 2024 · 2025" },
+        { "src": "/assets/images/sponsors/nuestra-vision.png", "alt": "Nuestra Visión", "years": "2024 · 2025" }
+      ]
+    },
     "proposal": {
-      "title": "PROPUESTA DE INVERSIÓN",
-      "termsTitle": "TÉRMINOS",
-      "terms": [
-        { "label": "Capital objetivo", "value": "USD $1.0M" },
-        { "label": "Retorno potencial", "value": "Hasta 25%" },
-        { "label": "Escenario de retorno máximo", "value": "USD $1.25M sobre una inversión de USD $1.0M" },
-        { "label": "Plazo", "value": "12 meses" }
-      ],
+      "title": "EJEMPLOS DE PARTICIPACIÓN",
+      "subtitle": "Dos formas de invertir, un mismo objetivo: generar un rendimiento atractivo con el respaldo de un evento internacional.",
+      "fixed": {
+        "icon": "shield",
+        "name": "RETORNO FIJO",
+        "tagline": "Rendimiento contractual de hasta 25%",
+        "investLabel": "Inversión ejemplo:",
+        "investValue": "USD $100,000",
+        "returnLabel": "Retorno contractual máximo:",
+        "returnValue": "25%",
+        "results": [
+          { "label": "Utilidad del inversionista:", "value": "USD $25,000", "accent": true },
+          { "label": "Capital + retorno:", "value": "USD $125,000" }
+        ],
+        "note": "El porcentaje final depende del monto y momento de entrada."
+      },
+      "risk": {
+        "icon": "growth",
+        "name": "PARTICIPACIÓN A RIESGO",
+        "tagline": "Participación como socio del proyecto",
+        "scenarioTitle": "ESCENARIO MODERADO",
+        "scenario": [
+          { "icon": "people", "value": "15,000", "label": "boletos vendidos", "lead": true },
+          { "icon": "stadium", "value": "68.8%", "label": "de ocupación", "note": "sobre 21,800 boletos comercializables", "lead": true },
+          { "icon": "ticket", "label": "Ticket promedio:", "value": "USD $100" },
+          { "icon": "dollar", "label": "Ingreso proyectado de taquilla:", "value": "USD $1.50M" },
+          { "icon": "coins", "label": "Costo del proyecto:", "value": "USD $1.00M" },
+          { "icon": "chart", "label": "Utilidad proyectada:", "value": "USD $500,000" }
+        ],
+        "exampleTitle": "EJEMPLO DE 10%",
+        "rows": [
+          { "label": "Participación del inversionista (10%):", "value": "USD $50,000" },
+          { "label": "Capital + utilidad:", "value": "USD $150,000" }
+        ],
+        "yieldLabel": "Rendimiento proyectado:",
+        "yieldValue": "50%"
+      },
+      "compare": {
+        "head": ["CONCEPTO", "RETORNO FIJO", "PARTICIPACIÓN A RIESGO"],
+        "rows": [
+          { "concept": "Inversión ejemplo", "fixed": "USD $100,000", "risk": "USD $100,000" },
+          { "concept": "Participación", "fixed": "—", "risk": "10%" },
+          { "concept": "Escenario", "fixed": "Contractual", "risk": "15,000 asistentes" },
+          { "concept": "Ocupación del estadio", "fixed": "—", "risk": "68.8%" },
+          { "concept": "Utilidad inversionista", "fixed": "USD $25,000", "risk": "USD $50,000", "accent": true },
+          { "concept": "Capital + resultado", "fixed": "USD $125,000", "risk": "USD $150,000" },
+          { "concept": "Rendimiento", "fixed": "25% máx.", "risk": "50% proyectado", "accent": true }
+        ]
+      },
+      "disclaimer": "Ejercicio ilustrativo basado únicamente en ingresos de taquilla. No considera ingresos adicionales por patrocinios, hospitality, medios, merchandising u otras fuentes, ni posibles variaciones en costos.",
       "whyTitle": "¿POR QUÉ INVERTIR?",
       "reasons": [
         "Producto deportivo premium con dos de los clubes más populares de México",
@@ -135,7 +192,15 @@
       "footnote": "Los términos finales de cada inversión, incluyendo el retorno y el plazo, estarán sujetos al monto de inversión, la estructura de la operación y la negociación individual con cada inversionista. El retorno potencial máximo es de hasta 25%."
     },
     "structure": {
-      "title": "ESTRUCTURA DE LA INVERSIÓN",
+      "title": "MODALIDADES DE INVERSIÓN",
+      "termsTitle": "TÉRMINOS",
+      "terms": [
+        { "label": "Capital objetivo", "value": "USD $1.0M" },
+        { "label": "Retorno potencial", "value": "Hasta 25%" },
+        { "label": "Escenario de retorno máximo", "value": "USD $1.25M sobre una inversión de USD $1.0M" },
+        { "label": "Plazo", "value": "12 meses" }
+      ],
+      "itemsTitle": "CONDICIONES GENERALES",
       "items": [
         { "text": "Contrato de inversión formal." },
         { "text": "Dos modalidades de participación:", "sub": [
@@ -148,7 +213,7 @@
       ]
     },
     "timeline": {
-      "title": "APLICACIÓN DEL CAPITAL",
+      "title": "CRONOGRAMA DEL CAPITAL",
       "periodLabel": "Periodo",
       "items": [
         { "activity": "<strong>Cierre de contratos</strong> (clubes, estadio, permisos y reservas)", "period": "Agosto – Septiembre 2026", "active": true },
@@ -190,6 +255,7 @@
     },
     "highlights": {
       "title": "INVESTMENT HIGHLIGHTS",
+      "note": "The success of an international event does not depend solely on the size of the clubs, but on choosing the <strong>right product</strong> for the right <strong>market</strong> and the right <strong>timing</strong>.",
       "columns": [
         {
           "label": "PRODUCT",
@@ -224,7 +290,7 @@
       ]
     },
     "scope": {
-      "title": "INVESTMENT SCOPE",
+      "title": "EVENT REVENUE POTENTIAL",
       "subtitle": "REQUIRED CAPITAL: USD $1.0 M",
       "indicatorsTitle": "KEY INDICATORS",
       "indicators": [
@@ -246,7 +312,7 @@
       "footnote": "The projected average ticket of USD$100 is consistent with international Mexican club events in the USA."
     },
     "funds": {
-      "title": "USE OF FUNDS",
+      "title": "COST STRUCTURE",
       "subtitle": "REQUIRED CAPITAL: USD $1.0 M",
       "tableTitle": "RESOURCE ALLOCATION",
       "items": [
@@ -261,8 +327,12 @@
       "totalAmount": "$1,000,000"
     },
     "track": {
-      "title": "EXECUTION — TRACK RECORD",
+      "title": "EXPERIENCE & EXECUTION CAPACITY",
       "capTitle": "OUR CAPABILITIES",
+      "editionsTitle": "PAST EVENTS",
+      "editionsSub": "Three editions organized and operated by SOCCER iD.",
+      "videosTitle": "TV COVERAGE",
+      "videosSub": "TV highlights from previous editions.",
       "editions": [
         { "year": "2023", "match": "PUMAS vs COMUNICACIONES", "city": "San José, California", "image": "/assets/images/gallery/cup2023/1.jpg" },
         { "year": "2024", "match": "AMÉRICA vs ATLÉTICO NACIONAL", "city": "Orlando, Florida", "image": "/assets/images/gallery/cup2024/1.jpg" },
@@ -282,15 +352,67 @@
         { "id": "l-KVhjDENOQ", "title": "Tigres 0-0 Pumas | SOCCER iD CUP 2025", "edition": "2025" }
       ]
     },
+    "sponsors": {
+      "title": "COMMERCIAL BACKING",
+      "subtitle": "Brands that have taken part in previous editions.",
+      "logos": [
+        { "src": "/assets/images/sponsors/caliente.png", "alt": "Caliente MX", "years": "2023 · 2024 · 2025" },
+        { "src": "/assets/images/sponsors/fox-sports.png", "alt": "Fox Sports", "years": "2023 · 2024 · 2025" },
+        { "src": "/assets/images/sponsors/voit.png", "alt": "Voit", "years": "2023 · 2024 · 2025" },
+        { "src": "/assets/images/sponsors/nuestra-vision.png", "alt": "Nuestra Visión", "years": "2024 · 2025" }
+      ]
+    },
     "proposal": {
-      "title": "INVESTMENT PROPOSAL",
-      "termsTitle": "TERMS",
-      "terms": [
-        { "label": "Target capital", "value": "USD $1.0M" },
-        { "label": "Potential return", "value": "Up to 25%" },
-        { "label": "Maximum return scenario", "value": "USD $1.25M on a USD $1.0M investment" },
-        { "label": "Term", "value": "12 months" }
-      ],
+      "title": "PARTICIPATION EXAMPLES",
+      "subtitle": "Two ways to invest, one shared goal: an attractive return backed by an international event.",
+      "fixed": {
+        "icon": "shield",
+        "name": "FIXED RETURN",
+        "tagline": "Contractual yield of up to 25%",
+        "investLabel": "Sample investment:",
+        "investValue": "USD $100,000",
+        "returnLabel": "Maximum contractual return:",
+        "returnValue": "25%",
+        "results": [
+          { "label": "Investor profit:", "value": "USD $25,000", "accent": true },
+          { "label": "Capital + return:", "value": "USD $125,000" }
+        ],
+        "note": "The final percentage depends on the amount and timing of entry."
+      },
+      "risk": {
+        "icon": "growth",
+        "name": "AT-RISK PARTICIPATION",
+        "tagline": "Participation as a project partner",
+        "scenarioTitle": "MODERATE SCENARIO",
+        "scenario": [
+          { "icon": "people", "value": "15,000", "label": "tickets sold", "lead": true },
+          { "icon": "stadium", "value": "68.8%", "label": "occupancy", "note": "of 21,800 marketable tickets", "lead": true },
+          { "icon": "ticket", "label": "Average ticket:", "value": "USD $100" },
+          { "icon": "dollar", "label": "Projected box office revenue:", "value": "USD $1.50M" },
+          { "icon": "coins", "label": "Project cost:", "value": "USD $1.00M" },
+          { "icon": "chart", "label": "Projected profit:", "value": "USD $500,000" }
+        ],
+        "exampleTitle": "10% EXAMPLE",
+        "rows": [
+          { "label": "Investor share (10%):", "value": "USD $50,000" },
+          { "label": "Capital + profit:", "value": "USD $150,000" }
+        ],
+        "yieldLabel": "Projected yield:",
+        "yieldValue": "50%"
+      },
+      "compare": {
+        "head": ["ITEM", "FIXED RETURN", "AT-RISK PARTICIPATION"],
+        "rows": [
+          { "concept": "Sample investment", "fixed": "USD $100,000", "risk": "USD $100,000" },
+          { "concept": "Share", "fixed": "—", "risk": "10%" },
+          { "concept": "Scenario", "fixed": "Contractual", "risk": "15,000 attendees" },
+          { "concept": "Stadium occupancy", "fixed": "—", "risk": "68.8%" },
+          { "concept": "Investor profit", "fixed": "USD $25,000", "risk": "USD $50,000", "accent": true },
+          { "concept": "Capital + result", "fixed": "USD $125,000", "risk": "USD $150,000" },
+          { "concept": "Yield", "fixed": "25% max.", "risk": "50% projected", "accent": true }
+        ]
+      },
+      "disclaimer": "Illustrative exercise based solely on box office revenue. It does not account for additional revenue from sponsorships, hospitality, media, merchandising or other sources, nor for possible cost variations.",
       "whyTitle": "WHY INVEST?",
       "reasons": [
         "Premium sports product featuring two of Mexico's most popular clubs",
@@ -304,7 +426,15 @@
       "footnote": "The final terms of each investment, including return and term, will be subject to the investment amount, deal structure, and individual negotiation with each investor. The maximum potential return is up to 25%."
     },
     "structure": {
-      "title": "INVESTMENT STRUCTURE",
+      "title": "INVESTMENT MODALITIES",
+      "termsTitle": "TERMS",
+      "terms": [
+        { "label": "Target capital", "value": "USD $1.0M" },
+        { "label": "Potential return", "value": "Up to 25%" },
+        { "label": "Maximum return scenario", "value": "USD $1.25M on a USD $1.0M investment" },
+        { "label": "Term", "value": "12 months" }
+      ],
+      "itemsTitle": "GENERAL CONDITIONS",
       "items": [
         { "text": "Formal investment contract." },
         { "text": "Two participation modalities:", "sub": [
@@ -317,7 +447,7 @@
       ]
     },
     "timeline": {
-      "title": "CAPITAL DEPLOYMENT",
+      "title": "CAPITAL SCHEDULE",
       "periodLabel": "Period",
       "items": [
         { "activity": "<strong>Contract closing</strong> (clubs, stadium, permits and reservations)", "period": "August – September 2026", "active": true },
