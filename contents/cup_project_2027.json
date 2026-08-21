@@ -179,7 +179,7 @@
           { "concept": "Rendimiento", "fixed": "25% máx.", "risk": "50% proyectado", "accent": true }
         ]
       },
-      "disclaimer": "Ejercicio ilustrativo basado únicamente en ingresos de taquilla. No considera ingresos adicionales por patrocinios, hospitality, medios, merchandising u otras fuentes, ni posibles variaciones en costos.",
+      "disclaimer": "Ejercicio ilustrativo basado solo en taquilla; no incluye otros ingresos ni variaciones en costos.",
       "whyTitle": "¿POR QUÉ INVERTIR?",
       "reasons": [
         "Producto deportivo premium con dos de los clubes más populares de México",
@@ -410,7 +410,7 @@
           { "concept": "Yield", "fixed": "25% max.", "risk": "50% projected", "accent": true }
         ]
       },
-      "disclaimer": "Illustrative exercise based solely on box office revenue. It does not account for additional revenue from sponsorships, hospitality, media, merchandising or other sources, nor for possible cost variations.",
+      "disclaimer": "Illustrative exercise based on box office only; it does not include other revenue sources or cost variations.",
       "whyTitle": "WHY INVEST?",
       "reasons": [
         "Premium sports product featuring two of Mexico's most popular clubs",
