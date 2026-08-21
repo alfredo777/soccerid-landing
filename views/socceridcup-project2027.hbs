@@ -205,6 +205,12 @@
       <li><svg viewBox="0 0 20 20" fill="#22c55e"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg> {{this}}</li>
       {{/each}}
     </ul>
+    <div class="pp-jump-wrap">
+      <a class="pp-jump" href="#ppModalidades">
+        <span>{{data.structure.title}}</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </a>
+    </div>
   </section>
 
   {{!-- ═══ 5 · EVENTOS REALIZADOS ═══ --}}
@@ -441,7 +447,7 @@
   </script>
 
   {{!-- ═══ STRUCTURE · MODALIDADES DE INVERSIÓN ═══ --}}
-  <section class="pp-section">
+  <section class="pp-section" id="ppModalidades">
     <h2 class="pp-section__title">{{data.structure.title}}</h2>
     <div class="pp-proposal">
       <div class="pp-proposal__left">
@@ -889,6 +895,27 @@
   }
   .pp-caps li svg { width: 22px; height: 22px; flex-shrink: 0; }
   .pp-caps--grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 40px; margin-top: 8px; }
+
+  /* ─── SALTO A MODALIDADES ─── */
+  .pp-jump-wrap { display: flex; justify-content: center; margin-top: 44px; }
+  .pp-jump {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 15px 32px; border-radius: 40px;
+    border: 1px solid var(--pp-gold); background: rgba(212,168,67,0.08);
+    color: var(--pp-gold); text-decoration: none;
+    font-size: 14px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+    transition: background 0.2s, color 0.2s, transform 0.2s;
+  }
+  .pp-jump:hover { background: var(--pp-gold); color: #0a0a1a; transform: translateY(-2px); }
+  .pp-jump svg { width: 18px; height: 18px; flex-shrink: 0; animation: ppJump 1.8s ease-in-out infinite; }
+  .pp-jump:hover svg { animation: none; }
+  @keyframes ppJump {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pp-jump svg { animation: none; }
+  }
 
   /* ─── PRESS ─── */
   .pp-media-list { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; }
@@ -1419,6 +1446,16 @@
   }
   leadBtn.addEventListener('click', submitLead);
   leadEmail.addEventListener('keydown', function(e) { if (e.key === 'Enter') submitLead(); });
+
+  var jump = document.querySelector('.pp-jump');
+  if (jump) {
+    jump.addEventListener('click', function(e) {
+      var target = document.getElementById('ppModalidades');
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
 
   var btt = document.getElementById('ppBtt');
   window.addEventListener('scroll', function() {
