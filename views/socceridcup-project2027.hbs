@@ -1032,16 +1032,16 @@
     height: 1px; margin: 3px 6px;
     background: rgba(255,255,255,0.14);
   }
+  /* Sin relleno, para no confundirlo con la sección seleccionada */
   .pp-nav__item--calc {
-    border: none; cursor: pointer; font-family: inherit; padding: 0;
-    color: #0a0a1a;
-    background: linear-gradient(135deg, #f0c25a, var(--pp-gold) 55%, #b8922e);
-    box-shadow: 0 0 0 0 rgba(212,168,67,0.55);
+    box-sizing: border-box; cursor: pointer; font-family: inherit; padding: 0;
+    color: var(--pp-gold); background: transparent;
+    border: 1.5px solid var(--pp-gold);
     animation: ppNavPulse 2.6s ease-out infinite;
   }
   .pp-nav__item--calc:hover {
-    color: #0a0a1a;
-    background: linear-gradient(135deg, #ffd97a, #d4a843 55%, #c79c33);
+    color: #ffd97a; border-color: #ffd97a;
+    background: rgba(212,168,67,0.14);
     transform: scale(1.06);
   }
   .pp-nav__item--calc svg { width: 20px; height: 20px; }
@@ -1058,7 +1058,7 @@
   @media (max-width: 768px) {
     .pp-nav { right: 8px; gap: 4px; padding: 7px 6px; border-radius: 24px; background: rgba(0,0,0,0.62); }
     .pp-nav__item { width: 36px; height: 36px; color: rgba(255,255,255,0.6); }
-    .pp-nav__item--calc { width: 40px; height: 40px; color: #0a0a1a; }
+    .pp-nav__item--calc { width: 40px; height: 40px; color: var(--pp-gold); }
     .pp-nav__item--calc svg { width: 19px; height: 19px; }
     .pp-nav__item svg { width: 17px; height: 17px; }
     .pp-nav__label { display: none; }
