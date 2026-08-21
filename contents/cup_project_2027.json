@@ -34,14 +34,13 @@
         "intro": "Dos antecedentes recientes de convocatoria, con fuente.",
         "sourcesLabel": "Fuentes",
         "marketLabel": "AFINIDAD DE MERCADO",
-        "footer": "Demanda comprobada en Estados Unidos y Tigres probado en Shell Energy Stadium.",
+        "footer": "Tigres llenó 21,792 lugares en el mismo estadio del SOCCER iD CUP 2027, que ofrece 21,800 boletos comercializables.",
         "cards": [
           {
             "team": "TIGRES EN HOUSTON",
             "image": "",
             "venue": "Shell Energy Stadium",
             "pct": 100,
-            "compare": { "label": "Boletos comercializables SOCCER iD CUP 2027", "value": "21,800" },
             "outlet": "Houston Dynamo FC",
             "handle": "@HoustonDynamo",
             "quote": "Houston Dynamo FC announce sellout for Tuesday's Leagues Cup match versus Tigres UANL",
@@ -367,14 +366,13 @@
         "intro": "Two recent attendance precedents, with sources.",
         "sourcesLabel": "Sources",
         "marketLabel": "MARKET AFFINITY",
-        "footer": "Proven demand in the United States, and Tigres proven at Shell Energy Stadium.",
+        "footer": "Tigres filled 21,792 seats at the very stadium of SOCCER iD CUP 2027, which offers 21,800 marketable tickets.",
         "cards": [
           {
             "team": "TIGRES IN HOUSTON",
             "image": "",
             "venue": "Shell Energy Stadium",
             "pct": 100,
-            "compare": { "label": "Marketable tickets, SOCCER iD CUP 2027", "value": "21,800" },
             "outlet": "Houston Dynamo FC",
             "handle": "@HoustonDynamo",
             "quote": "Houston Dynamo FC announce sellout for Tuesday's Leagues Cup match versus Tigres UANL",

@@ -168,19 +168,6 @@
             </div>
           </div>
 
-          {{#if compare}}
-          <div class="pp-proof__cmp">
-            <div class="pp-proof__cmprow">
-              <span>{{compare.label}}</span>
-              <b>{{compare.value}}</b>
-            </div>
-            <div class="pp-proof__cmpbars">
-              <i class="is-ref"></i>
-              <i class="is-real"></i>
-            </div>
-          </div>
-          {{/if}}
-
           {{#if market}}
           <div class="pp-proof__market">
             <span>{{../marketLabel}}</span>
@@ -1011,8 +998,9 @@
   }
   .pp-why-panel__foot { margin-top: 24px; }
 
-  .pp-proofs { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+  .pp-proofs { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: stretch; }
   .pp-proof {
+    display: flex; flex-direction: column;
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(212,168,67,0.3); border-radius: 18px;
     padding: 20px 22px 16px;
@@ -1075,7 +1063,7 @@
   .pp-proof__cmpbars .is-real { width: 99.96%; background: linear-gradient(90deg, var(--pp-gold), #b8922e); }
 
   .pp-proof__market {
-    margin-top: 16px; padding: 11px 14px;
+    margin: 16px 0; padding: 11px 14px;
     background: rgba(212,168,67,0.07); border-left: 2px solid var(--pp-gold);
     border-radius: 0 10px 10px 0;
   }
@@ -1085,7 +1073,7 @@
   }
   .pp-proof__market p { margin: 0; font-size: 12.5px; line-height: 1.5; color: rgba(255,255,255,0.72); }
 
-  .pp-proof__links { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .pp-proof__links { margin-top: auto; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); }
   .pp-proof__links a {
     display: flex; align-items: center; gap: 9px; padding: 6px 0;
     text-decoration: none; color: rgba(255,255,255,0.78); transition: color 0.2s;
