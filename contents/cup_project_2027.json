@@ -172,7 +172,7 @@
         "rows": [
           { "concept": "Inversión ejemplo", "fixed": "USD $100,000", "risk": "USD $100,000" },
           { "concept": "Participación", "fixed": "—", "risk": "10%" },
-          { "concept": "Escenario", "fixed": "Contractual", "risk": "15,000 asistentes" },
+          { "concept": "Escenario", "fixed": "Fijo por contrato", "risk": "15,000 asistentes" },
           { "concept": "Ocupación del estadio", "fixed": "—", "risk": "68.8%" },
           { "concept": "Utilidad inversionista", "fixed": "USD $25,000", "risk": "USD $50,000", "accent": true },
           { "concept": "Capital + resultado", "fixed": "USD $125,000", "risk": "USD $150,000" },
@@ -403,7 +403,7 @@
         "rows": [
           { "concept": "Sample investment", "fixed": "USD $100,000", "risk": "USD $100,000" },
           { "concept": "Share", "fixed": "—", "risk": "10%" },
-          { "concept": "Scenario", "fixed": "Contractual", "risk": "15,000 attendees" },
+          { "concept": "Scenario", "fixed": "Fixed by contract", "risk": "15,000 attendees" },
           { "concept": "Stadium occupancy", "fixed": "—", "risk": "68.8%" },
           { "concept": "Investor profit", "fixed": "USD $25,000", "risk": "USD $50,000", "accent": true },
           { "concept": "Capital + result", "fixed": "USD $125,000", "risk": "USD $150,000" },
