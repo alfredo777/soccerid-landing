@@ -658,20 +658,23 @@
 
       <div class="pp-calc__field">
         <span class="pp-calc__lbl">{{data.calculator.steps.type}}</span>
-        <div class="pp-calc__toggle" id="ppCalcType" role="group">
-          <span class="pp-calc__thumb" aria-hidden="true"></span>
-          <button type="button" data-val="fixed" class="is-active" aria-pressed="true">{{data.calculator.types.fixed}}</button>
-          <button type="button" data-val="risk" aria-pressed="false">{{data.calculator.types.risk}}</button>
+        <div class="pp-switch" id="ppCalcType">
+          <button type="button" class="pp-switch__side is-active" data-val="fixed">{{data.calculator.types.fixed}}</button>
+          <button type="button" class="pp-switch__track" role="switch" aria-checked="false" aria-label="{{data.calculator.steps.type}}">
+            <span class="pp-switch__knob"></span>
+          </button>
+          <button type="button" class="pp-switch__side" data-val="risk">{{data.calculator.types.risk}}</button>
         </div>
       </div>
 
       <div class="pp-calc__field">
         <span class="pp-calc__lbl">{{data.calculator.steps.currency}}</span>
-        <div class="pp-calc__toggle" id="ppCalcCurrency" role="group">
-          <span class="pp-calc__thumb" aria-hidden="true"></span>
-          {{#each data.calculator.currencies}}
-          <button type="button" data-val="{{id}}" class="{{#if @first}}is-active{{/if}}" aria-pressed="{{#if @first}}true{{else}}false{{/if}}">{{tab}}</button>
-          {{/each}}
+        <div class="pp-switch" id="ppCalcCurrency">
+          <button type="button" class="pp-switch__side is-active" data-val="{{data.calculator.currencies.0.id}}">{{data.calculator.currencies.0.tab}}</button>
+          <button type="button" class="pp-switch__track" role="switch" aria-checked="false" aria-label="{{data.calculator.steps.currency}}">
+            <span class="pp-switch__knob"></span>
+          </button>
+          <button type="button" class="pp-switch__side" data-val="{{data.calculator.currencies.1.id}}">{{data.calculator.currencies.1.tab}}</button>
         </div>
       </div>
 
@@ -1211,30 +1214,36 @@
 
   .pp-calc__field { margin-bottom: 22px; }
   .pp-calc__lbl { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
-  .pp-calc__toggle {
-    position: relative; display: grid; grid-template-columns: 1fr 1fr;
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 40px; padding: 4px;
+  .pp-switch { display: flex; align-items: center; gap: 14px; }
+  .pp-switch__side {
+    flex: 1; min-width: 0; padding: 6px 0;
+    background: none; border: none; cursor: pointer; font-family: inherit;
+    font-size: 13px; font-weight: 800; letter-spacing: 0.3px; line-height: 1.3;
+    color: rgba(255,255,255,0.4); transition: color 0.25s;
   }
-  .pp-calc__thumb {
-    position: absolute; top: 4px; bottom: 4px; left: 4px; width: calc(50% - 4px);
-    border-radius: 40px; background: linear-gradient(135deg, var(--pp-gold), #b8922e);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+  .pp-switch__side:first-child { text-align: right; }
+  .pp-switch__side:last-child { text-align: left; }
+  .pp-switch__side:hover { color: rgba(255,255,255,0.75); }
+  .pp-switch__side.is-active { color: var(--pp-gold); }
+  .pp-switch__track {
+    position: relative; flex: 0 0 auto; width: 58px; height: 32px; padding: 0;
+    border-radius: 20px; cursor: pointer;
+    background: rgba(255,255,255,0.13); border: 1px solid rgba(255,255,255,0.18);
+    transition: background 0.25s, border-color 0.25s;
+  }
+  .pp-switch__track:focus-visible { outline: 2px solid var(--pp-gold); outline-offset: 3px; }
+  .pp-switch.is-second .pp-switch__track {
+    background: linear-gradient(135deg, var(--pp-gold), #b8922e);
+    border-color: var(--pp-gold);
+  }
+  .pp-switch__knob {
+    position: absolute; top: 3px; left: 3px; width: 24px; height: 24px;
+    border-radius: 50%; background: #fff; box-shadow: 0 2px 7px rgba(0,0,0,0.5);
     transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .pp-calc__toggle.is-second .pp-calc__thumb { transform: translateX(100%); }
-  .pp-calc__toggle button {
-    position: relative; z-index: 1;
-    padding: 12px 6px; border: none; background: none; border-radius: 40px;
-    color: rgba(255,255,255,0.6); font-family: inherit;
-    font-size: 13px; font-weight: 800; letter-spacing: 0.3px;
-    cursor: pointer; transition: color 0.25s;
-  }
-  .pp-calc__toggle button:hover { color: rgba(255,255,255,0.9); }
-  .pp-calc__toggle button.is-active { color: #0a0a1a; }
-  .pp-calc__toggle button.is-active:hover { color: #0a0a1a; }
+  .pp-switch.is-second .pp-switch__knob { transform: translateX(26px); }
   @media (prefers-reduced-motion: reduce) {
-    .pp-calc__thumb { transition: none; }
+    .pp-switch__knob { transition: none; }
   }
 
   .pp-calc__amount {
@@ -1289,7 +1298,8 @@
   @media (max-width: 560px) {
     .pp-calc { padding: 0; align-items: flex-end; }
     .pp-calc__card { max-width: 100%; max-height: 94vh; border-radius: 20px 20px 0 0; padding: 26px 20px 22px; }
-    .pp-calc__toggle button { font-size: 12px; padding: 12px 4px; }
+    .pp-switch { gap: 10px; }
+    .pp-switch__side { font-size: 12px; }
     .pp-calc__amount input { font-size: 20px; }
     .pp-calc__row strong { font-size: 15px; }
     .pp-calc__row--big strong { font-size: 21px; }
@@ -1738,19 +1748,25 @@
       render();
     }
 
+    // Switch de dos posiciones: se puede tocar cualquiera de las dos
+    // etiquetas o la pastilla para alternar.
     function segment(id, onPick) {
       var wrap = document.getElementById(id);
-      wrap.addEventListener('click', function(e) {
-        var b = e.target.closest('button');
-        if (!b) return;
-        var botones = [].slice.call(wrap.querySelectorAll('button'));
-        botones.forEach(function(x) {
-          var activo = x === b;
-          x.classList.toggle('is-active', activo);
-          x.setAttribute('aria-pressed', activo ? 'true' : 'false');
-        });
-        wrap.classList.toggle('is-second', botones.indexOf(b) === 1);
-        onPick(b.getAttribute('data-val'));
+      var lados = [].slice.call(wrap.querySelectorAll('.pp-switch__side'));
+      var track = wrap.querySelector('.pp-switch__track');
+
+      function elegir(i, avisar) {
+        lados.forEach(function(x, j) { x.classList.toggle('is-active', j === i); });
+        wrap.classList.toggle('is-second', i === 1);
+        track.setAttribute('aria-checked', i === 1 ? 'true' : 'false');
+        if (avisar !== false) onPick(lados[i].getAttribute('data-val'));
+      }
+
+      lados.forEach(function(x, i) {
+        x.addEventListener('click', function() { elegir(i); });
+      });
+      track.addEventListener('click', function() {
+        elegir(wrap.classList.contains('is-second') ? 0 : 1);
       });
     }
 
