@@ -591,6 +591,16 @@
     </div>
     {{/if}}
 
+    {{#if data.calculator}}
+    <div class="pp-calc-cta">
+      <button type="button" class="pp-jump pp-calc-open" id="ppCalcOpen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.5" width="16" height="19" rx="2.5"/><path d="M8 7h8"/><path d="M8.5 12h0M12 12h0M15.5 12h0M8.5 16.5h0M12 16.5h0M15.5 16.5h0"/></svg>
+        <span>{{data.calculator.cta}}</span>
+      </button>
+      <p class="pp-calc-cta__note">{{data.calculator.ctaNote}}</p>
+    </div>
+    {{/if}}
+
     <div class="pp-ticket-bar">
       <span>{{data.proposal.ticketLabel}}</span>
       <strong>{{data.proposal.ticketValue}}</strong>
@@ -632,6 +642,62 @@
     <a href="/{{lang}}/socceridcup"><img src="/assets/images/soccerid.png" alt="SOCCER iD" height="28"></a>
     <span>&copy; {{year}} SOCCER iD</span>
   </footer>
+
+  {{!-- ═══ CALCULADORA DE UTILIDADES ═══ --}}
+  {{#if data.calculator}}
+  <script type="application/json" id="ppCalcCfg">{{{json data.calculator}}}</script>
+  <div class="pp-calc" id="ppCalc" hidden>
+    <div class="pp-calc__backdrop" data-calc-close></div>
+    <div class="pp-calc__card" role="dialog" aria-modal="true" aria-labelledby="ppCalcTitle">
+      <button type="button" class="pp-calc__x" data-calc-close aria-label="{{data.calculator.closeLabel}}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+
+      <h3 class="pp-calc__title" id="ppCalcTitle">{{data.calculator.title}}</h3>
+      <p class="pp-calc__sub">{{data.calculator.subtitle}}</p>
+
+      <div class="pp-calc__field">
+        <span class="pp-calc__lbl">{{data.calculator.steps.type}}</span>
+        <div class="pp-calc__seg" id="ppCalcType">
+          <button type="button" data-val="fixed" class="is-active">{{data.calculator.types.fixed}}</button>
+          <button type="button" data-val="risk">{{data.calculator.types.risk}}</button>
+        </div>
+      </div>
+
+      <div class="pp-calc__field">
+        <span class="pp-calc__lbl">{{data.calculator.steps.currency}}</span>
+        <div class="pp-calc__seg" id="ppCalcCurrency">
+          {{#each data.calculator.currencies}}
+          <button type="button" data-val="{{id}}" class="{{#if @first}}is-active{{/if}}">{{tab}}</button>
+          {{/each}}
+        </div>
+      </div>
+
+      <div class="pp-calc__field">
+        <span class="pp-calc__lbl">{{data.calculator.steps.amount}}</span>
+        <div class="pp-calc__amount">
+          <span class="pp-calc__cur" id="ppCalcSymbol"></span>
+          <input type="text" inputmode="numeric" autocomplete="off" id="ppCalcAmount">
+        </div>
+        <input type="range" class="pp-calc__range" id="ppCalcAmountRange">
+        <span class="pp-calc__hint" id="ppCalcHint"></span>
+        <span class="pp-calc__err" id="ppCalcErr"></span>
+      </div>
+
+      <div class="pp-calc__field" id="ppCalcAttField">
+        <span class="pp-calc__lbl">{{data.calculator.steps.attendance}}</span>
+        <input type="range" class="pp-calc__range" id="ppCalcAtt" min="0" step="100">
+        <div class="pp-calc__attinfo">
+          <strong id="ppCalcAttVal"></strong>
+          <span id="ppCalcOcc"></span>
+        </div>
+      </div>
+
+      <div class="pp-calc__result" id="ppCalcResult"></div>
+      <p class="pp-calc__disc">{{data.calculator.disclaimer}}</p>
+    </div>
+  </div>
+  {{/if}}
 
   <button class="pp-btt" id="ppBtt" aria-label="Back to top">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
@@ -1112,6 +1178,106 @@
   .pp-ico--coins { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4a843' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cellipse cx='12' cy='6.5' rx='7' ry='3'/%3E%3Cpath d='M5 6.5v5c0 1.66 3.13 3 7 3s7-1.34 7-3v-5'/%3E%3Cpath d='M5 11.5v5c0 1.66 3.13 3 7 3s7-1.34 7-3v-5'/%3E%3C/svg%3E"); }
   .pp-ico--chart { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4a843' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 20.5h18'/%3E%3Crect x='4' y='12' width='4' height='6' rx='1'/%3E%3Crect x='10' y='8' width='4' height='10' rx='1'/%3E%3Crect x='16' y='4' width='4' height='14' rx='1'/%3E%3C/svg%3E"); }
 
+  /* ─── CALCULADORA DE UTILIDADES ─── */
+  .pp-calc-cta { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 34px; }
+  .pp-calc-open { cursor: pointer; font-family: inherit; }
+  .pp-calc-cta__note { margin: 0; font-size: 13px; color: rgba(255,255,255,0.5); text-align: center; }
+
+  .pp-calc { position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  .pp-calc[hidden] { display: none; }
+  .pp-calc__backdrop { position: absolute; inset: 0; background: rgba(4,4,12,0.82); backdrop-filter: blur(6px); }
+  .pp-calc__card {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
+    background: linear-gradient(160deg, #14142e 0%, var(--pp-dark) 100%);
+    border: 1px solid rgba(212,168,67,0.35); border-radius: 20px;
+    padding: 32px 32px 26px;
+    box-shadow: 0 24px 70px rgba(0,0,0,0.6);
+  }
+  .pp-calc__x {
+    position: absolute; top: 16px; right: 16px;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.7); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, color 0.2s;
+  }
+  .pp-calc__x:hover { background: rgba(255,255,255,0.14); color: #fff; }
+  .pp-calc__x svg { width: 16px; height: 16px; }
+  .pp-calc__title { font-size: 19px; font-weight: 900; letter-spacing: 1.2px; color: var(--pp-gold); margin: 0 40px 6px 0; }
+  .pp-calc__sub { font-size: 13px; color: rgba(255,255,255,0.55); margin: 0 0 24px; line-height: 1.5; }
+
+  .pp-calc__field { margin-bottom: 22px; }
+  .pp-calc__lbl { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
+  .pp-calc__seg { display: flex; gap: 8px; }
+  .pp-calc__seg button {
+    flex: 1; padding: 12px 10px; border-radius: 10px; cursor: pointer;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.7); font-family: inherit;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.3px;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .pp-calc__seg button:hover { border-color: rgba(212,168,67,0.5); color: #fff; }
+  .pp-calc__seg button.is-active { background: rgba(212,168,67,0.16); border-color: var(--pp-gold); color: var(--pp-gold); }
+
+  .pp-calc__amount {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 12px; padding: 12px 16px;
+    transition: border-color 0.2s;
+  }
+  .pp-calc__amount:focus-within { border-color: var(--pp-gold); }
+  .pp-calc__amount.is-error { border-color: #ef4444; }
+  .pp-calc__cur { font-size: 14px; font-weight: 800; color: var(--pp-gold); flex-shrink: 0; }
+  .pp-calc__amount input {
+    flex: 1; min-width: 0; background: none; border: none; outline: none;
+    color: #fff; font-family: inherit; font-size: 22px; font-weight: 900; letter-spacing: 0.3px;
+  }
+  .pp-calc__hint { display: block; font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 8px; }
+  .pp-calc__err { display: none; font-size: 12px; color: #ef4444; margin-top: 6px; }
+  .pp-calc__err.is-visible { display: block; }
+
+  .pp-calc__range { width: 100%; margin-top: 14px; -webkit-appearance: none; appearance: none; background: none; }
+  .pp-calc__range::-webkit-slider-runnable-track { height: 5px; border-radius: 4px; background: rgba(255,255,255,0.14); }
+  .pp-calc__range::-moz-range-track { height: 5px; border-radius: 4px; background: rgba(255,255,255,0.14); }
+  .pp-calc__range::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none; margin-top: -8px;
+    width: 21px; height: 21px; border-radius: 50%; cursor: pointer;
+    background: var(--pp-gold); border: 3px solid #14142e;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+  .pp-calc__range::-moz-range-thumb {
+    width: 21px; height: 21px; border-radius: 50%; cursor: pointer;
+    background: var(--pp-gold); border: 3px solid #14142e;
+  }
+  .pp-calc__attinfo { display: flex; align-items: baseline; gap: 8px; margin-top: 10px; }
+  .pp-calc__attinfo strong { font-size: 22px; font-weight: 900; color: #fff; }
+  .pp-calc__attinfo span { font-size: 13px; color: rgba(255,255,255,0.5); }
+
+  .pp-calc__result {
+    background: rgba(212,168,67,0.07); border: 1px solid rgba(212,168,67,0.35);
+    border-radius: 14px; padding: 8px 20px 16px; margin-top: 26px;
+  }
+  .pp-calc__rtitle { font-size: 11px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--pp-gold); padding: 14px 0 4px; }
+  .pp-calc__row { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .pp-calc__row:last-child { border-bottom: none; }
+  .pp-calc__row span { font-size: 13px; color: rgba(255,255,255,0.65); }
+  .pp-calc__row strong { font-size: 16px; font-weight: 800; color: #fff; text-align: right; white-space: nowrap; }
+  .pp-calc__row--big { padding: 14px 0 6px; }
+  .pp-calc__row--big strong { font-size: 24px; color: var(--pp-gold); }
+  .pp-calc__row--neg strong { color: #ef4444; }
+  .pp-calc__warn { font-size: 12px; color: #f59e0b; line-height: 1.5; margin: 12px 0 0; }
+  .pp-calc__disc { font-size: 11px; font-style: italic; color: rgba(255,255,255,0.4); line-height: 1.5; margin: 18px 0 0; }
+
+  @media (max-width: 560px) {
+    .pp-calc { padding: 0; align-items: flex-end; }
+    .pp-calc__card { max-width: 100%; max-height: 94vh; border-radius: 20px 20px 0 0; padding: 26px 20px 22px; }
+    .pp-calc__seg { flex-direction: column; }
+    .pp-calc__amount input { font-size: 20px; }
+    .pp-calc__row strong { font-size: 15px; }
+    .pp-calc__row--big strong { font-size: 21px; }
+  }
+
   /* ─── VIDEOS ─── */
   .pp-videos { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 24px; }
   .pp-video__wrap {
@@ -1446,6 +1612,175 @@
   }
   leadBtn.addEventListener('click', submitLead);
   leadEmail.addEventListener('keydown', function(e) { if (e.key === 'Enter') submitLead(); });
+
+  // ─── Calculadora de utilidades ───
+  (function() {
+    var cfgEl = document.getElementById('ppCalcCfg');
+    var modal = document.getElementById('ppCalc');
+    var openBtn = document.getElementById('ppCalcOpen');
+    if (!cfgEl || !modal || !openBtn) return;
+
+    var cfg = JSON.parse(cfgEl.textContent);
+    var L = cfg.labels;
+    var state = { type: 'fixed', cur: cfg.currencies[0], amount: 0, att: 0 };
+
+    var elSymbol = document.getElementById('ppCalcSymbol');
+    var elAmount = document.getElementById('ppCalcAmount');
+    var elAmountRange = document.getElementById('ppCalcAmountRange');
+    var elHint = document.getElementById('ppCalcHint');
+    var elErr = document.getElementById('ppCalcErr');
+    var elAttField = document.getElementById('ppCalcAttField');
+    var elAtt = document.getElementById('ppCalcAtt');
+    var elAttVal = document.getElementById('ppCalcAttVal');
+    var elOcc = document.getElementById('ppCalcOcc');
+    var elResult = document.getElementById('ppCalcResult');
+    var amountBox = elAmount.closest('.pp-calc__amount');
+
+    function nf(n) {
+      return new Intl.NumberFormat(state.cur.locale, { maximumFractionDigits: 0 }).format(Math.round(n));
+    }
+    function money(n) {
+      return (n < 0 ? '-' : '') + state.cur.symbol + nf(Math.abs(n));
+    }
+    function pct(n) {
+      return new Intl.NumberFormat(state.cur.locale, { maximumFractionDigits: 1 }).format(n) + '%';
+    }
+    function fill(tpl, map) {
+      return Object.keys(map).reduce(function(s, k) { return s.split('{' + k + '}').join(map[k]); }, tpl);
+    }
+    function digits(s) { return parseInt(String(s).replace(/[^0-9]/g, ''), 10) || 0; }
+    function clamp(n, lo, hi) { return Math.min(hi, Math.max(lo, n)); }
+
+    function setCurrency(cur, keepRatio) {
+      var ratio = keepRatio && state.amount ? state.amount / state.cur.projectCost : null;
+      state.cur = cur;
+      elSymbol.textContent = cur.symbol;
+      elAmountRange.min = cur.min;
+      elAmountRange.max = cur.max;
+      elAmountRange.step = cur.step;
+      elHint.textContent = fill(L.amountHint, { min: cur.symbol + nf(cur.min), max: cur.symbol + nf(cur.max) });
+      setAmount(ratio !== null ? ratio * cur.projectCost : cur.min);
+    }
+
+    function setAmount(n, fromInput) {
+      state.amount = clamp(Math.round(n), state.cur.min, state.cur.max);
+      if (!fromInput) elAmount.value = nf(state.amount);
+      elAmountRange.value = state.amount;
+      render();
+    }
+
+    function row(label, value, cls) {
+      return '<div class="pp-calc__row' + (cls ? ' ' + cls : '') + '"><span>' + label +
+             '</span><strong>' + value + '</strong></div>';
+    }
+
+    function render() {
+      var a = state.amount, cur = state.cur, html = '<div class="pp-calc__rtitle">' + L.resultTitle + '</div>';
+      html += row(L.investment, money(a));
+
+      if (state.type === 'fixed') {
+        var profit = a * cfg.fixedRate / 100;
+        html += row(fill(L.fixedProfit, { rate: cfg.fixedRate }), money(profit));
+        html += row(L.yield, pct(cfg.fixedRate));
+        html += row(L.totalFixed, money(a + profit), 'pp-calc__row--big');
+      } else {
+        var share = a / cur.projectCost;
+        var box = state.att * cur.ticketPrice;
+        var projectProfit = box - cur.projectCost;
+        var mine = projectProfit * share;
+        var neg = mine < 0 ? ' pp-calc__row--neg' : '';
+        html += row(L.share, pct(share * 100));
+        html += row(L.boxOffice, money(box));
+        html += row(L.projectCost, '− ' + money(cur.projectCost));
+        html += row(L.projectProfit, money(projectProfit), projectProfit < 0 ? 'pp-calc__row--neg' : '');
+        html += row(L.yourProfit, money(mine), neg);
+        html += row(L.yield, pct(a ? (mine / a) * 100 : 0), neg);
+        html += row(L.total, money(a + mine), 'pp-calc__row--big' + neg);
+        var breakEven = Math.ceil(cur.projectCost / cur.ticketPrice);
+        if (state.att < breakEven) {
+          html += '<p class="pp-calc__warn">' + fill(L.breakEven, { n: nf(breakEven) }) + '</p>';
+        }
+      }
+      elResult.innerHTML = html;
+    }
+
+    function setType(t) {
+      state.type = t;
+      elAttField.style.display = t === 'risk' ? '' : 'none';
+      render();
+    }
+
+    function setAtt(n) {
+      state.att = clamp(Math.round(n), 0, cfg.capacity);
+      elAtt.value = state.att;
+      elAttVal.textContent = nf(state.att);
+      var occ = (state.att / cfg.capacity) * 100;
+      elOcc.textContent = state.att >= cfg.capacity
+        ? L.attendanceFull
+        : L.attendanceSold + ' · ' + pct(occ) + ' ' + L.occupancy;
+      render();
+    }
+
+    function segment(id, onPick) {
+      var wrap = document.getElementById(id);
+      wrap.addEventListener('click', function(e) {
+        var b = e.target.closest('button');
+        if (!b) return;
+        wrap.querySelectorAll('button').forEach(function(x) { x.classList.toggle('is-active', x === b); });
+        onPick(b.getAttribute('data-val'));
+      });
+    }
+
+    segment('ppCalcType', setType);
+    segment('ppCalcCurrency', function(id) {
+      var cur = cfg.currencies.filter(function(c) { return c.id === id; })[0];
+      if (cur) setCurrency(cur, true);
+    });
+
+    elAmount.addEventListener('input', function() {
+      var raw = digits(elAmount.value);
+      elAmount.value = raw ? nf(raw) : '';
+      var bad = raw < state.cur.min || raw > state.cur.max;
+      amountBox.classList.toggle('is-error', bad);
+      elErr.classList.toggle('is-visible', bad);
+      if (bad) {
+        elErr.textContent = fill(L.amountError, {
+          min: state.cur.symbol + nf(state.cur.min),
+          max: state.cur.symbol + nf(state.cur.max)
+        });
+      }
+      setAmount(raw, true);
+    });
+    elAmount.addEventListener('blur', function() {
+      amountBox.classList.remove('is-error');
+      elErr.classList.remove('is-visible');
+      setAmount(state.amount);
+    });
+    elAmountRange.addEventListener('input', function() {
+      amountBox.classList.remove('is-error');
+      elErr.classList.remove('is-visible');
+      setAmount(+elAmountRange.value);
+    });
+    elAtt.addEventListener('input', function() { setAtt(+elAtt.value); });
+
+    elAtt.max = cfg.capacity;
+    setCurrency(cfg.currencies[0], false);
+    setType('fixed');
+    setAtt(Math.round(cfg.capacity * 0.688 / 100) * 100);
+
+    function open() {
+      modal.hidden = false;
+      document.body.style.overflow = 'hidden';
+    }
+    function close() {
+      modal.hidden = true;
+      document.body.style.overflow = '';
+      openBtn.focus();
+    }
+    openBtn.addEventListener('click', open);
+    modal.addEventListener('click', function(e) { if (e.target.closest('[data-calc-close]')) close(); });
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && !modal.hidden) close(); });
+  })();
 
   var jump = document.querySelector('.pp-jump');
   if (jump) {

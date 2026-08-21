@@ -213,6 +213,51 @@
         { "activity": "<strong>Cierre financiero y retorno al inversionista</strong>", "period": "Hasta agosto de 2027" }
       ]
     },
+    "calculator": {
+      "cta": "Calculadora de utilidades",
+      "ctaNote": "Simula tu inversión con tus propios números.",
+      "title": "CALCULADORA DE UTILIDADES",
+      "subtitle": "Ejercicio ilustrativo. Ajusta los valores para ver el resultado estimado.",
+      "closeLabel": "Cerrar",
+      "capacity": 21800,
+      "fixedRate": 25,
+      "currencies": [
+        { "id": "usd", "tab": "Dólares (USD)", "symbol": "USD $", "locale": "en-US",
+          "min": 30000, "max": 1000000, "step": 10000, "projectCost": 1000000, "ticketPrice": 100 },
+        { "id": "mxn", "tab": "Pesos (MXN)", "symbol": "MXN $", "locale": "es-MX",
+          "min": 500000, "max": 18000000, "step": 100000, "projectCost": 18000000, "ticketPrice": 1800 }
+      ],
+      "steps": {
+        "type": "1 · Tipo de inversión",
+        "currency": "2 · Moneda",
+        "amount": "3 · Monto de inversión",
+        "attendance": "4 · Asistencia al estadio"
+      },
+      "types": {
+        "fixed": "Retorno fijo",
+        "risk": "Participación a riesgo"
+      },
+      "labels": {
+        "amountHint": "Mínimo {min} · Máximo {max}",
+        "amountError": "El monto debe estar entre {min} y {max}.",
+        "attendanceSold": "boletos vendidos",
+        "attendanceFull": "estadio lleno",
+        "occupancy": "de ocupación",
+        "resultTitle": "Resultado estimado",
+        "investment": "Tu inversión",
+        "fixedProfit": "Utilidad máxima ({rate}%)",
+        "share": "Tu participación en el proyecto",
+        "boxOffice": "Ingreso de taquilla",
+        "projectCost": "Costo del proyecto",
+        "projectProfit": "Utilidad del proyecto",
+        "yourProfit": "Tu utilidad",
+        "total": "Capital + utilidad",
+        "totalFixed": "Capital + retorno",
+        "yield": "Rendimiento",
+        "breakEven": "Con menos de {n} asistentes el proyecto no llega al punto de equilibrio y la participación a riesgo arroja pérdida."
+      },
+      "disclaimer": "Ejercicio ilustrativo basado solo en taquilla; no incluye otros ingresos ni variaciones en costos. Los términos finales dependerán del monto, estructura y negociación de cada inversión."
+    },
     "why": {
       "title": "¿POR QUÉ INVERTIR?",
       "reasons": [
@@ -444,6 +489,51 @@
         { "activity": "<strong>Revenue settlement</strong> (box office → stadium → SOCCER iD)", "period": "April – July 2027" },
         { "activity": "<strong>Financial closing and investor return</strong>", "period": "Through August 2027" }
       ]
+    },
+    "calculator": {
+      "cta": "Profit calculator",
+      "ctaNote": "Simulate your investment with your own numbers.",
+      "title": "PROFIT CALCULATOR",
+      "subtitle": "Illustrative exercise. Adjust the values to see the estimated result.",
+      "closeLabel": "Close",
+      "capacity": 21800,
+      "fixedRate": 25,
+      "currencies": [
+        { "id": "usd", "tab": "Dollars (USD)", "symbol": "USD $", "locale": "en-US",
+          "min": 30000, "max": 1000000, "step": 10000, "projectCost": 1000000, "ticketPrice": 100 },
+        { "id": "mxn", "tab": "Pesos (MXN)", "symbol": "MXN $", "locale": "es-MX",
+          "min": 500000, "max": 18000000, "step": 100000, "projectCost": 18000000, "ticketPrice": 1800 }
+      ],
+      "steps": {
+        "type": "1 · Investment type",
+        "currency": "2 · Currency",
+        "amount": "3 · Investment amount",
+        "attendance": "4 · Stadium attendance"
+      },
+      "types": {
+        "fixed": "Fixed return",
+        "risk": "At-risk participation"
+      },
+      "labels": {
+        "amountHint": "Minimum {min} · Maximum {max}",
+        "amountError": "The amount must be between {min} and {max}.",
+        "attendanceSold": "tickets sold",
+        "attendanceFull": "sold out",
+        "occupancy": "occupancy",
+        "resultTitle": "Estimated result",
+        "investment": "Your investment",
+        "fixedProfit": "Maximum profit ({rate}%)",
+        "share": "Your share in the project",
+        "boxOffice": "Box office revenue",
+        "projectCost": "Project cost",
+        "projectProfit": "Project profit",
+        "yourProfit": "Your profit",
+        "total": "Capital + profit",
+        "totalFixed": "Capital + return",
+        "yield": "Yield",
+        "breakEven": "Below {n} attendees the project does not reach break-even and at-risk participation results in a loss."
+      },
+      "disclaimer": "Illustrative exercise based on box office only; it does not include other revenue sources or cost variations. Final terms will depend on the amount, structure and negotiation of each investment."
     },
     "why": {
       "title": "WHY INVEST?",
