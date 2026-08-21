@@ -156,7 +156,7 @@
           { "icon": "ticket", "label": "Ticket promedio:", "value": "USD $100" },
           { "icon": "dollar", "label": "Ingreso proyectado de taquilla:", "value": "USD $1.50M" },
           { "icon": "coins", "label": "Costo del proyecto:", "value": "USD $1.00M" },
-          { "icon": "chart", "label": "Utilidad proyectada:", "value": "USD $500,000" }
+          { "icon": "chart", "label": "Utilidad ilustrativa:", "value": "USD $500,000" }
         ],
         "exampleTitle": "EJEMPLO DE 10%",
         "rows": [
@@ -389,7 +389,7 @@
           { "icon": "ticket", "label": "Average ticket:", "value": "USD $100" },
           { "icon": "dollar", "label": "Projected box office revenue:", "value": "USD $1.50M" },
           { "icon": "coins", "label": "Project cost:", "value": "USD $1.00M" },
-          { "icon": "chart", "label": "Projected profit:", "value": "USD $500,000" }
+          { "icon": "chart", "label": "Illustrative profit:", "value": "USD $500,000" }
         ],
         "exampleTitle": "10% EXAMPLE",
         "rows": [
