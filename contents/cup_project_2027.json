@@ -22,7 +22,8 @@
     "nav": {
       "project": "El proyecto",
       "experience": "Experiencia",
-      "investment": "Inversión"
+      "investment": "Inversión",
+      "calculator": "Calcula tu utilidad"
     },
     "highlights": {
       "title": "ASPECTOS DESTACADOS DE LA INVERSIÓN",
@@ -304,7 +305,8 @@
     "nav": {
       "project": "The project",
       "experience": "Experience",
-      "investment": "Investment"
+      "investment": "Investment",
+      "calculator": "Calculate your profit"
     },
     "highlights": {
       "title": "INVESTMENT HIGHLIGHTS",
