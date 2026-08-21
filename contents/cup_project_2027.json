@@ -160,7 +160,8 @@
         ],
         "exampleTitle": "EJEMPLO DE 10%",
         "rows": [
-          { "label": "Participación del inversionista (10%):", "value": "USD $50,000" },
+          { "label": "El inversionista pone:", "value": "USD $100,000", "note": "equivalente al 10% del proyecto" },
+          { "label": "Utilidad del inversionista en este escenario:", "value": "USD $50,000" },
           { "label": "Capital + utilidad:", "value": "USD $150,000" }
         ],
         "yieldLabel": "Rendimiento proyectado:",
@@ -390,7 +391,8 @@
         ],
         "exampleTitle": "10% EXAMPLE",
         "rows": [
-          { "label": "Investor share (10%):", "value": "USD $50,000" },
+          { "label": "The investor puts in:", "value": "USD $100,000", "note": "equal to 10% of the project" },
+          { "label": "Investor profit in this scenario:", "value": "USD $50,000" },
           { "label": "Capital + profit:", "value": "USD $150,000" }
         ],
         "yieldLabel": "Projected yield:",
