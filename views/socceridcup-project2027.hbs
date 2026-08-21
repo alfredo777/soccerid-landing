@@ -152,6 +152,12 @@
             <div>
               <h4>{{team}}</h4>
               <span>{{venue}}</span>
+              {{#if venueTag}}
+              <span class="pp-proof__tag">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+                {{venueTag}}
+              </span>
+              {{/if}}
             </div>
             <span class="pp-proof__badge">
               <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
@@ -170,7 +176,7 @@
 
           {{#if market}}
           <div class="pp-proof__market">
-            <span>{{../marketLabel}}</span>
+            <span>{{#if marketLabel}}{{marketLabel}}{{else}}{{../marketLabel}}{{/if}}</span>
             <p>{{market}}</p>
           </div>
           {{/if}}
@@ -1010,15 +1016,19 @@
   .pp-proof__img {
     position: absolute; top: 0; left: 0; right: 0; height: 300px; z-index: 0;
     background-size: cover; background-position: center 30%;
+    /* Se desvanece a transparente en vez de terminar en un color fijo:
+       así no queda costura contra el fondo de la tarjeta. */
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 42%, rgba(0,0,0,0.45) 68%, rgba(0,0,0,0) 92%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 42%, rgba(0,0,0,0.45) 68%, rgba(0,0,0,0) 92%);
   }
   .pp-proof__img::after {
     content: ''; position: absolute; inset: 0;
     background: linear-gradient(180deg,
-      rgba(18,18,43,0.10) 0%,
-      rgba(18,18,43,0.35) 42%,
-      rgba(18,18,43,0.86) 62%,
-      rgba(18,18,43,0.96) 82%,
-      #12122b 100%);
+      rgba(8,8,20,0) 0%,
+      rgba(8,8,20,0.30) 40%,
+      rgba(8,8,20,0.70) 60%,
+      rgba(8,8,20,0.85) 78%,
+      rgba(8,8,20,0.90) 100%);
   }
   .pp-proof.has-img > *:not(.pp-proof__img) { position: relative; z-index: 1; }
   .pp-proof__head {
@@ -1030,6 +1040,15 @@
     color: var(--pp-gold); margin: 0 0 3px;
   }
   .pp-proof__head > div > span { font-size: 12px; color: rgba(255,255,255,0.5); }
+  .pp-proof__tag {
+    display: inline-flex !important; align-items: center; gap: 6px; margin-top: 8px;
+    padding: 5px 12px 5px 9px; border-radius: 20px;
+    background: rgba(212,168,67,0.14); border: 1px solid rgba(212,168,67,0.55);
+    color: var(--pp-gold) !important;
+    font-size: 10.5px !important; font-weight: 800; letter-spacing: 0.8px;
+    line-height: 1.3;
+  }
+  .pp-proof__tag svg { width: 13px; height: 13px; flex-shrink: 0; }
   .pp-proof__badge {
     display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0;
     padding: 5px 10px; border-radius: 20px;

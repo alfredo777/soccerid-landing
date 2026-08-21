@@ -31,7 +31,7 @@
       "whyMatch": {
         "cta": "¿Por qué este partido?",
         "title": "¿POR QUÉ ESTE PARTIDO?",
-        "intro": "Dos antecedentes recientes de convocatoria, con fuente.",
+        "intro": "Antecedentes recientes demuestran la capacidad de convocatoria de ambos clubes en Estados Unidos.",
         "sourcesLabel": "Fuentes",
         "marketLabel": "AFINIDAD DE MERCADO",
         "footer": "Tigres llenó 21,792 lugares en el mismo estadio del SOCCER iD CUP 2027, que ofrece 21,800 boletos comercializables.",
@@ -40,6 +40,7 @@
             "team": "TIGRES EN HOUSTON",
             "image": "/assets/images/antecedentes/tigres-houston.jpg",
             "venue": "Shell Energy Stadium",
+            "venueTag": "EL MISMO ESTADIO DEL SOCCER iD CUP 2027",
             "pct": 100,
             "outlet": "Houston Dynamo FC",
             "handle": "@HoustonDynamo",
@@ -49,7 +50,8 @@
             "value": "21,792",
             "label": "AFICIONADOS",
             "sub": "vs. Houston Dynamo · Leagues Cup 2025",
-            "market": "Uno de los cinco clubes con mayor afición de México y el de mayor arraigo en el norte.",
+            "marketLabel": "CAPACIDAD DE CONVOCATORIA EN HOUSTON",
+            "market": "Afición consolidada en Texas, con antecedente de SOLD OUT en el mismo estadio de nuestro evento.",
             "links": [
               { "text": "Reporte oficial del partido", "source": "Houston Dynamo FC", "url": "https://www.houstondynamofc.com/news/houston-dynamo-fc-fall-to-tigres-uanl-4-1-in-opening-leagues-cup-match" }
             ]
@@ -66,7 +68,8 @@
             "value": "25,405",
             "label": "AFICIONADOS",
             "sub": "vs. Club América · 2024",
-            "market": "Nace de la cooperativa cementera: arraigo natural en el gremio de la construcción y las reparaciones.",
+            "marketLabel": "CAPACIDAD DE CONVOCATORIA",
+            "market": "Uno de los clubes más populares de México, con antecedentes recientes de estadios llenos en Estados Unidos.",
             "links": [
               { "text": "Crónica del partido", "source": "Los Angeles Times", "url": "https://www.latimes.com/espanol/deportes/articulo/2024-03-23/cruz-azul-derrota-al-america-en-su-regreso-al-sur-de-california" }
             ]
@@ -363,7 +366,7 @@
       "whyMatch": {
         "cta": "Why this match?",
         "title": "WHY THIS MATCH?",
-        "intro": "Two recent attendance precedents, with sources.",
+        "intro": "Recent precedents demonstrate both clubs' drawing power in the United States.",
         "sourcesLabel": "Sources",
         "marketLabel": "MARKET AFFINITY",
         "footer": "Tigres filled 21,792 seats at the very stadium of SOCCER iD CUP 2027, which offers 21,800 marketable tickets.",
@@ -372,6 +375,7 @@
             "team": "TIGRES IN HOUSTON",
             "image": "/assets/images/antecedentes/tigres-houston.jpg",
             "venue": "Shell Energy Stadium",
+            "venueTag": "THE SAME VENUE AS SOCCER iD CUP 2027",
             "pct": 100,
             "outlet": "Houston Dynamo FC",
             "handle": "@HoustonDynamo",
@@ -381,7 +385,8 @@
             "value": "21,792",
             "label": "FANS",
             "sub": "vs. Houston Dynamo · Leagues Cup 2025",
-            "market": "One of Mexico's five most-followed clubs and the most deeply rooted in the north.",
+            "marketLabel": "DRAWING POWER IN HOUSTON",
+            "market": "An established following in Texas, with a sold-out precedent at the very stadium of our event.",
             "links": [
               { "text": "Official match report", "source": "Houston Dynamo FC", "url": "https://www.houstondynamofc.com/news/houston-dynamo-fc-fall-to-tigres-uanl-4-1-in-opening-leagues-cup-match" }
             ]
@@ -398,7 +403,8 @@
             "value": "25,405",
             "label": "FANS",
             "sub": "vs. Club América · 2024",
-            "market": "Born from the cement cooperative: a natural following among the construction and repair trades.",
+            "marketLabel": "DRAWING POWER",
+            "market": "One of Mexico's most popular clubs, with recent precedents of sold-out stadiums in the United States.",
             "links": [
               { "text": "Match report", "source": "Los Angeles Times", "url": "https://www.latimes.com/espanol/deportes/articulo/2024-03-23/cruz-azul-derrota-al-america-en-su-regreso-al-sur-de-california" }
             ]
