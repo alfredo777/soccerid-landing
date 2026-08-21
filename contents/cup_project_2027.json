@@ -190,7 +190,7 @@
       ],
       "ticketLabel": "Tickets de inversión desde:",
       "ticketValue": "$500,000 MXN / $30,000 USD",
-      "footnote": "Los términos finales de cada inversión, incluyendo el retorno y el plazo, estarán sujetos al monto de inversión, la estructura de la operación y la negociación individual con cada inversionista."
+      "footnote": "Los términos finales dependerán del monto, estructura y negociación de cada inversión."
     },
     "structure": {
       "title": "MODALIDADES DE INVERSIÓN",
@@ -421,7 +421,7 @@
       ],
       "ticketLabel": "Investment tickets from:",
       "ticketValue": "$500,000 MXN / $30,000 USD",
-      "footnote": "The final terms of each investment, including return and term, will be subject to the investment amount, deal structure, and individual negotiation with each investor."
+      "footnote": "Final terms will depend on the amount, structure and negotiation of each investment."
     },
     "structure": {
       "title": "INVESTMENT MODALITIES",
