@@ -28,6 +28,51 @@
     "highlights": {
       "title": "ASPECTOS DESTACADOS DE LA INVERSIÓN",
       "note": "<strong>Evento estratégicamente seleccionado:</strong> Producto, mercado y momento adecuados.",
+      "whyMatch": {
+        "cta": "¿Por qué este partido?",
+        "title": "¿POR QUÉ ESTE PARTIDO?",
+        "intro": "Antecedentes recientes confirman la capacidad de convocatoria de ambos clubes en mercados estratégicos de Estados Unidos.",
+        "sourcesLabel": "Fuentes",
+        "marketLabel": "AFINIDAD DE MERCADO",
+        "footer": "Demanda comprobada en Estados Unidos y Tigres probado en Shell Energy Stadium.",
+        "cards": [
+          {
+            "team": "TIGRES EN HOUSTON",
+            "venue": "Shell Energy Stadium · el mismo estadio del SOCCER iD CUP 2027",
+            "outlet": "Houston Dynamo FC",
+            "handle": "@HoustonDynamo",
+            "quote": "Houston Dynamo FC announce sellout for Tuesday's Leagues Cup match versus Tigres UANL",
+            "date": "Agosto de 2025",
+            "badge": "SOLD OUT",
+            "value": "21,792",
+            "label": "AFICIONADOS",
+            "sub": "vs. Houston Dynamo · Leagues Cup 2025",
+            "note": "El propio club local anunció el lleno total, y el reporte posterior del partido confirmó la asistencia.",
+            "market": "Tigres es uno de los cinco clubes con mayor afición de México y el de mayor arraigo en el norte del país.",
+            "links": [
+              { "text": "Anuncio oficial del sold out", "source": "Houston Dynamo FC", "url": "https://www.houstondynamofc.com/news/houston-dynamo-fc-announce-sellout-for-tuesday-s-leagues-cup-match-versus-tigres-uanl" },
+              { "text": "Reporte del partido con la asistencia", "source": "Houston Dynamo FC", "url": "https://www.houstondynamofc.com/news/houston-dynamo-fc-fall-to-tigres-uanl-4-1-in-opening-leagues-cup-match" }
+            ]
+          },
+          {
+            "team": "CRUZ AZUL EN LOS ÁNGELES",
+            "venue": "Dignity Health Sports Park · Carson, California",
+            "outlet": "Los Angeles Times",
+            "quote": "El diario reportó 25,405 aficionados en el amistoso ante América, con entradas agotadas, en el regreso de Cruz Azul al sur de California.",
+            "date": "Marzo de 2024",
+            "badge": "LLENO TOTAL",
+            "value": "25,405",
+            "label": "AFICIONADOS",
+            "sub": "vs. Club América · 2024",
+            "note": "La nota previa confirmaba que el partido ya estaba vendido en su totalidad.",
+            "market": "Cruz Azul nace de la cooperativa cementera del mismo nombre y conserva una afinidad natural con el gremio de la construcción y las reparaciones, un sector con fuerte presencia entre la comunidad de origen mexicano en Estados Unidos.",
+            "links": [
+              { "text": "Crónica con la cifra de asistencia", "source": "Los Angeles Times", "url": "https://www.latimes.com/espanol/deportes/articulo/2024-03-23/cruz-azul-derrota-al-america-en-su-regreso-al-sur-de-california" },
+              { "text": "Nota previa: entradas agotadas", "source": "Los Angeles Times", "url": "https://www.latimes.com/espanol/deportes/articulo/2024-03-22/cruz-azul-sostiene-clinica-con-ninos-locales-previo-a-su-regreso-al-sur-de-california" }
+            ]
+          }
+        ]
+      },
       "columns": [
         {
           "label": "PRODUCTO",
@@ -315,6 +360,51 @@
     "highlights": {
       "title": "INVESTMENT HIGHLIGHTS",
       "note": "<strong>Strategically selected event:</strong> The right product, market and timing.",
+      "whyMatch": {
+        "cta": "Why this match?",
+        "title": "WHY THIS MATCH?",
+        "intro": "Recent precedents confirm both clubs' drawing power in strategic U.S. markets.",
+        "sourcesLabel": "Sources",
+        "marketLabel": "MARKET AFFINITY",
+        "footer": "Proven demand in the United States, and Tigres proven at Shell Energy Stadium.",
+        "cards": [
+          {
+            "team": "TIGRES IN HOUSTON",
+            "venue": "Shell Energy Stadium · the same venue as SOCCER iD CUP 2027",
+            "outlet": "Houston Dynamo FC",
+            "handle": "@HoustonDynamo",
+            "quote": "Houston Dynamo FC announce sellout for Tuesday's Leagues Cup match versus Tigres UANL",
+            "date": "August 2025",
+            "badge": "SOLD OUT",
+            "value": "21,792",
+            "label": "FANS",
+            "sub": "vs. Houston Dynamo · Leagues Cup 2025",
+            "note": "The home club itself announced the sellout, and the post-match report confirmed the attendance.",
+            "market": "Tigres is one of Mexico's five most-followed clubs and the most deeply rooted in the north of the country.",
+            "links": [
+              { "text": "Official sellout announcement", "source": "Houston Dynamo FC", "url": "https://www.houstondynamofc.com/news/houston-dynamo-fc-announce-sellout-for-tuesday-s-leagues-cup-match-versus-tigres-uanl" },
+              { "text": "Match report with the attendance", "source": "Houston Dynamo FC", "url": "https://www.houstondynamofc.com/news/houston-dynamo-fc-fall-to-tigres-uanl-4-1-in-opening-leagues-cup-match" }
+            ]
+          },
+          {
+            "team": "CRUZ AZUL IN LOS ANGELES",
+            "venue": "Dignity Health Sports Park · Carson, California",
+            "outlet": "Los Angeles Times",
+            "quote": "The newspaper reported 25,405 fans at the sold-out friendly against América, on Cruz Azul's return to Southern California.",
+            "date": "March 2024",
+            "badge": "SOLD OUT",
+            "value": "25,405",
+            "label": "FANS",
+            "sub": "vs. Club América · 2024",
+            "note": "The preview article confirmed the match was already completely sold out.",
+            "market": "Cruz Azul was founded by the cement cooperative of the same name and retains a natural affinity with the construction and repair trades, a sector with a strong presence among the Mexican-origin community in the United States.",
+            "links": [
+              { "text": "Report with the attendance figure", "source": "Los Angeles Times", "url": "https://www.latimes.com/espanol/deportes/articulo/2024-03-23/cruz-azul-derrota-al-america-en-su-regreso-al-sur-de-california" },
+              { "text": "Preview: tickets sold out", "source": "Los Angeles Times", "url": "https://www.latimes.com/espanol/deportes/articulo/2024-03-22/cruz-azul-sostiene-clinica-con-ninos-locales-previo-a-su-regreso-al-sur-de-california" }
+            ]
+          }
+        ]
+      },
       "columns": [
         {
           "label": "PRODUCT",

@@ -128,6 +128,78 @@
       <p>{{{data.highlights.note}}}</p>
     </div>
     {{/if}}
+
+    {{#if data.highlights.whyMatch}}
+    {{#with data.highlights.whyMatch}}
+    <div class="pp-why-cta">
+      <button type="button" class="pp-jump pp-why-btn" id="ppWhyBtn" aria-expanded="false" aria-controls="ppWhyPanel">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v3a5 5 0 0 1-10 0z"/><path d="M17 5h3v1.5a3.5 3.5 0 0 1-3.5 3.5"/><path d="M7 5H4v1.5A3.5 3.5 0 0 0 7.5 10"/><path d="M12 12v4"/><path d="M9 20h6"/><path d="M10 16h4v4h-4z"/></svg>
+        <span>{{cta}}</span>
+        <svg class="pp-why-btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+
+    <div class="pp-why-panel" id="ppWhyPanel" hidden>
+      <h3 class="pp-why-panel__title">{{title}}</h3>
+      <p class="pp-why-panel__intro">{{intro}}</p>
+
+      <div class="pp-proofs">
+        {{#each cards}}
+        <div class="pp-proof">
+          <div class="pp-proof__head">
+            <h4>{{team}}</h4>
+            <span>{{venue}}</span>
+          </div>
+
+          <blockquote class="pp-proof__quote">
+            <div class="pp-proof__outlet">
+              <strong>{{outlet}}</strong>
+              {{#if handle}}<em>{{handle}}</em>{{/if}}
+            </div>
+            <p>{{quote}}</p>
+            <span class="pp-proof__date">{{date}}</span>
+          </blockquote>
+
+          <div class="pp-proof__stat">
+            <span class="pp-proof__badge">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+              {{badge}}
+            </span>
+            <strong>{{value}}</strong>
+            <span class="pp-proof__lbl">{{label}}</span>
+            <span class="pp-proof__sub">{{sub}}</span>
+          </div>
+
+          <p class="pp-proof__note">{{note}}</p>
+
+          {{#if market}}
+          <div class="pp-proof__market">
+            <span>{{../marketLabel}}</span>
+            <p>{{market}}</p>
+          </div>
+          {{/if}}
+
+          <div class="pp-proof__links">
+            <span class="pp-proof__srclbl">{{../sourcesLabel}}</span>
+            {{#each links}}
+            <a href="{{url}}" target="_blank" rel="noopener">
+              <span>{{text}}</span>
+              <em>{{source}}</em>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+            </a>
+            {{/each}}
+          </div>
+        </div>
+        {{/each}}
+      </div>
+
+      <div class="pp-callout pp-why-panel__foot">
+        <span class="pp-callout__icon"></span>
+        <p>{{footer}}</p>
+      </div>
+    </div>
+    {{/with}}
+    {{/if}}
   </section>
 
   {{!-- ═══ SCOPE ═══ --}}
@@ -903,6 +975,95 @@
   .pp-hl-stat__val { display: block; font-size: 28px; font-weight: 900; }
   .pp-hl-stat__lbl { display: block; font-size: 10px; letter-spacing: 1px; color: rgba(255,255,255,0.5); font-weight: 700; }
   .pp-hl-stat__note { display: block; font-size: 11px; color: rgba(255,255,255,0.4); font-style: italic; }
+
+  /* ─── ¿POR QUÉ ESTE PARTIDO? ─── */
+  .pp-why-cta { display: flex; justify-content: center; margin-top: 26px; }
+  .pp-why-btn { cursor: pointer; font-family: inherit; }
+  .pp-why-btn__arrow { transition: transform 0.28s ease; }
+  .pp-why-btn[aria-expanded="true"] .pp-why-btn__arrow { transform: rotate(180deg); }
+
+  .pp-why-panel { margin-top: 26px; }
+  .pp-why-panel[hidden] { display: none; }
+  .pp-why-panel__title {
+    font-size: 20px; font-weight: 900; letter-spacing: 1.4px;
+    color: var(--pp-gold); text-align: center; margin: 0 0 8px;
+  }
+  .pp-why-panel__intro {
+    font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6;
+    text-align: center; max-width: 660px; margin: 0 auto 28px;
+  }
+  .pp-why-panel__foot { margin-top: 24px; }
+
+  .pp-proofs { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+  .pp-proof {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(212,168,67,0.3); border-radius: 18px;
+    padding: 22px 22px 18px;
+  }
+  .pp-proof__head { padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .pp-proof__head h4 {
+    font-size: 17px; font-weight: 900; letter-spacing: 1px;
+    color: var(--pp-gold); margin: 0 0 4px;
+  }
+  .pp-proof__head span { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.4; }
+
+  .pp-proof__quote {
+    margin: 16px 0 0; padding: 14px 16px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+  }
+  .pp-proof__outlet { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+  .pp-proof__outlet strong { font-size: 13px; font-weight: 800; color: #fff; }
+  .pp-proof__outlet em { font-size: 12px; font-style: normal; color: rgba(255,255,255,0.4); }
+  .pp-proof__quote p { margin: 0; font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.9); }
+  .pp-proof__date { display: block; margin-top: 8px; font-size: 11px; color: rgba(255,255,255,0.4); }
+
+  .pp-proof__stat { text-align: center; padding: 18px 0 4px; }
+  .pp-proof__badge {
+    display: inline-flex; align-items: center; gap: 6px; margin-bottom: 8px;
+    font-size: 11px; font-weight: 800; letter-spacing: 1.2px; color: #22c55e;
+  }
+  .pp-proof__badge svg { width: 15px; height: 15px; }
+  .pp-proof__stat strong { display: block; font-size: 40px; font-weight: 900; color: #fff; line-height: 1.05; }
+  .pp-proof__lbl { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1.4px; color: rgba(255,255,255,0.55); margin-top: 2px; }
+  .pp-proof__sub { display: block; font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 6px; }
+
+  .pp-proof__note { font-size: 13px; line-height: 1.55; color: rgba(255,255,255,0.65); margin: 16px 0 0; }
+
+  .pp-proof__market {
+    margin-top: 14px; padding: 12px 14px;
+    background: rgba(212,168,67,0.07); border-left: 2px solid var(--pp-gold);
+    border-radius: 0 10px 10px 0;
+  }
+  .pp-proof__market span {
+    display: block; font-size: 10px; font-weight: 800; letter-spacing: 1.3px;
+    color: var(--pp-gold); margin-bottom: 5px;
+  }
+  .pp-proof__market p { margin: 0; font-size: 12.5px; line-height: 1.55; color: rgba(255,255,255,0.75); }
+
+  .pp-proof__links { margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .pp-proof__srclbl {
+    display: block; font-size: 10px; font-weight: 800; letter-spacing: 1.3px;
+    text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 8px;
+  }
+  .pp-proof__links a {
+    display: flex; align-items: center; gap: 8px; padding: 7px 0;
+    text-decoration: none; color: rgba(255,255,255,0.7); transition: color 0.2s;
+  }
+  .pp-proof__links a:hover { color: var(--pp-gold); }
+  .pp-proof__links a span { font-size: 12.5px; line-height: 1.4; }
+  .pp-proof__links a em { font-size: 11px; font-style: normal; color: rgba(255,255,255,0.35); white-space: nowrap; }
+  .pp-proof__links a svg { width: 13px; height: 13px; flex-shrink: 0; margin-left: auto; opacity: 0.6; }
+
+  @media (max-width: 768px) {
+    .pp-proofs { grid-template-columns: 1fr; gap: 16px; }
+    .pp-why-panel__title { font-size: 17px; }
+    .pp-why-panel__intro { font-size: 13px; margin-bottom: 20px; }
+    .pp-proof { padding: 18px 16px 14px; }
+    .pp-proof__head h4 { font-size: 15px; }
+    .pp-proof__stat strong { font-size: 34px; }
+    .pp-proof__links a em { display: none; }
+  }
 
   /* ─── SCOPE ─── */
   .pp-scope { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
@@ -2156,6 +2317,19 @@
     }, { passive: true });
     window.addEventListener('resize', actualizar);
     actualizar();
+  })();
+
+  // ─── ¿Por qué este partido?: panel colapsable ───
+  (function() {
+    var boton = document.getElementById('ppWhyBtn');
+    var panel = document.getElementById('ppWhyPanel');
+    if (!boton || !panel) return;
+    boton.addEventListener('click', function() {
+      var abierto = panel.hidden;
+      panel.hidden = !abierto;
+      boton.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+      if (abierto) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
   })();
 
   // ─── Notas de prensa: una por edición, el resto colapsadas ───
