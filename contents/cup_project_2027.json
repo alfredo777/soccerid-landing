@@ -181,8 +181,7 @@
       },
       "disclaimer": "Ejercicio ilustrativo basado solo en taquilla; no incluye otros ingresos ni variaciones en costos.",
       "ticketLabel": "Tickets de inversión desde:",
-      "ticketValue": "$500,000 MXN / $30,000 USD",
-      "footnote": "Los términos finales dependerán del monto, estructura y negociación de cada inversión."
+      "ticketValue": "$500,000 MXN / $30,000 USD"
     },
     "structure": {
       "title": "MODALIDADES DE INVERSIÓN",
@@ -414,8 +413,7 @@
       },
       "disclaimer": "Illustrative exercise based on box office only; it does not include other revenue sources or cost variations.",
       "ticketLabel": "Investment tickets from:",
-      "ticketValue": "$500,000 MXN / $30,000 USD",
-      "footnote": "Final terms will depend on the amount, structure and negotiation of each investment."
+      "ticketValue": "$500,000 MXN / $30,000 USD"
     },
     "structure": {
       "title": "INVESTMENT MODALITIES",
