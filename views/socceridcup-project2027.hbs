@@ -983,7 +983,7 @@
     transition: background 0.2s, color 0.2s;
   }
   .pp-why-btn:hover { background: var(--pp-gold); color: #0a0a1a; }
-  .pp-why-btn__arrow { transition: transform 0.28s ease; }
+  .pp-why-btn__arrow { width: 14px; height: 14px; flex-shrink: 0; transition: transform 0.28s ease; }
   .pp-why-btn[aria-expanded="true"] .pp-why-btn__arrow { transform: rotate(180deg); }
 
   .pp-why-panel { margin-top: 26px; }
@@ -1005,16 +1005,22 @@
     border: 1px solid rgba(212,168,67,0.3); border-radius: 18px;
     padding: 20px 22px 16px;
   }
-  .pp-proof.has-img { padding-top: 0; overflow: hidden; }
+  /* La foto se extiende por detrás del encabezado y se oscurece donde va el texto */
+  .pp-proof.has-img { position: relative; padding-top: 172px; overflow: hidden; }
   .pp-proof__img {
-    height: 170px; margin: 0 -22px 0; background-size: cover; background-position: center 32%;
-    position: relative;
+    position: absolute; top: 0; left: 0; right: 0; height: 300px; z-index: 0;
+    background-size: cover; background-position: center 30%;
   }
   .pp-proof__img::after {
     content: ''; position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(18,18,43,0) 40%, rgba(18,18,43,0.92) 100%);
+    background: linear-gradient(180deg,
+      rgba(18,18,43,0.10) 0%,
+      rgba(18,18,43,0.35) 42%,
+      rgba(18,18,43,0.86) 62%,
+      rgba(18,18,43,0.96) 82%,
+      #12122b 100%);
   }
-  .pp-proof.has-img .pp-proof__head { padding-top: 16px; }
+  .pp-proof.has-img > *:not(.pp-proof__img) { position: relative; z-index: 1; }
   .pp-proof__head {
     display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
     padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -1098,9 +1104,11 @@
     .pp-why-panel__title { font-size: 17px; }
     .pp-why-panel__intro { font-size: 13px; margin-bottom: 18px; }
     .pp-proof { padding: 16px 16px 12px; }
-    .pp-proof.has-img { padding-top: 0; }
-    .pp-proof__img { height: 130px; margin: 0 -16px 0; }
+    .pp-proof.has-img { padding-top: 138px; }
+    .pp-proof__img { height: 250px; }
+    .pp-proof__head { flex-direction: column; align-items: flex-start; gap: 9px; }
     .pp-proof__head h4 { font-size: 15px; }
+    .pp-proof__badge { order: -1; }
     .pp-proof__meter { gap: 16px; padding: 16px 0 2px; }
     .pp-proof__ring { width: 78px; height: 78px; }
     .pp-proof__ring::after { inset: 8px; }
