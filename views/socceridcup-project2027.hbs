@@ -123,21 +123,20 @@
       {{/each}}
     </div>
     {{#if data.highlights.note}}
-    <div class="pp-callout">
+    <div class="pp-callout pp-callout--cta">
       <span class="pp-callout__icon"></span>
       <p>{{{data.highlights.note}}}</p>
+      {{#if data.highlights.whyMatch}}
+      <button type="button" class="pp-why-btn" id="ppWhyBtn" aria-expanded="false" aria-controls="ppWhyPanel">
+        <span>{{data.highlights.whyMatch.cta}}</span>
+        <svg class="pp-why-btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      {{/if}}
     </div>
     {{/if}}
 
     {{#if data.highlights.whyMatch}}
     {{#with data.highlights.whyMatch}}
-    <div class="pp-why-cta">
-      <button type="button" class="pp-jump pp-why-btn" id="ppWhyBtn" aria-expanded="false" aria-controls="ppWhyPanel">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v3a5 5 0 0 1-10 0z"/><path d="M17 5h3v1.5a3.5 3.5 0 0 1-3.5 3.5"/><path d="M7 5H4v1.5A3.5 3.5 0 0 0 7.5 10"/><path d="M12 12v4"/><path d="M9 20h6"/><path d="M10 16h4v4h-4z"/></svg>
-        <span>{{cta}}</span>
-        <svg class="pp-why-btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-    </div>
 
     <div class="pp-why-panel" id="ppWhyPanel" hidden>
       <h3 class="pp-why-panel__title">{{title}}</h3>
@@ -145,32 +144,42 @@
 
       <div class="pp-proofs">
         {{#each cards}}
-        <div class="pp-proof">
+        <div class="pp-proof{{#if image}} has-img{{/if}}">
+          {{#if image}}
+          <div class="pp-proof__img" style="background-image:url('{{image}}')" role="img" aria-label="{{team}}"></div>
+          {{/if}}
           <div class="pp-proof__head">
-            <h4>{{team}}</h4>
-            <span>{{venue}}</span>
-          </div>
-
-          <blockquote class="pp-proof__quote">
-            <div class="pp-proof__outlet">
-              <strong>{{outlet}}</strong>
-              {{#if handle}}<em>{{handle}}</em>{{/if}}
+            <div>
+              <h4>{{team}}</h4>
+              <span>{{venue}}</span>
             </div>
-            <p>{{quote}}</p>
-            <span class="pp-proof__date">{{date}}</span>
-          </blockquote>
-
-          <div class="pp-proof__stat">
             <span class="pp-proof__badge">
               <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
               {{badge}}
             </span>
-            <strong>{{value}}</strong>
-            <span class="pp-proof__lbl">{{label}}</span>
-            <span class="pp-proof__sub">{{sub}}</span>
           </div>
 
-          <p class="pp-proof__note">{{note}}</p>
+          <div class="pp-proof__meter">
+            <div class="pp-proof__ring" style="--pct:{{pct}}"><span>{{pct}}%</span></div>
+            <div class="pp-proof__figure">
+              <strong>{{value}}</strong>
+              <span class="pp-proof__lbl">{{label}}</span>
+              <span class="pp-proof__sub">{{sub}}</span>
+            </div>
+          </div>
+
+          {{#if compare}}
+          <div class="pp-proof__cmp">
+            <div class="pp-proof__cmprow">
+              <span>{{compare.label}}</span>
+              <b>{{compare.value}}</b>
+            </div>
+            <div class="pp-proof__cmpbars">
+              <i class="is-ref"></i>
+              <i class="is-real"></i>
+            </div>
+          </div>
+          {{/if}}
 
           {{#if market}}
           <div class="pp-proof__market">
@@ -180,14 +189,14 @@
           {{/if}}
 
           <div class="pp-proof__links">
-            <span class="pp-proof__srclbl">{{../sourcesLabel}}</span>
             {{#each links}}
             <a href="{{url}}" target="_blank" rel="noopener">
-              <span>{{text}}</span>
               <em>{{source}}</em>
+              <span>{{text}}</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
             </a>
             {{/each}}
+            <p class="pp-proof__quote">“{{quote}}” <em>· {{date}}</em></p>
           </div>
         </div>
         {{/each}}
@@ -977,8 +986,16 @@
   .pp-hl-stat__note { display: block; font-size: 11px; color: rgba(255,255,255,0.4); font-style: italic; }
 
   /* ─── ¿POR QUÉ ESTE PARTIDO? ─── */
-  .pp-why-cta { display: flex; justify-content: center; margin-top: 26px; }
-  .pp-why-btn { cursor: pointer; font-family: inherit; }
+  .pp-callout--cta { gap: 18px; }
+  .pp-callout--cta p { flex: 1; }
+  .pp-why-btn {
+    display: inline-flex; align-items: center; gap: 9px; flex-shrink: 0;
+    padding: 11px 20px; border-radius: 30px; cursor: pointer; font-family: inherit;
+    background: rgba(212,168,67,0.1); border: 1px solid var(--pp-gold); color: var(--pp-gold);
+    font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+    transition: background 0.2s, color 0.2s;
+  }
+  .pp-why-btn:hover { background: var(--pp-gold); color: #0a0a1a; }
   .pp-why-btn__arrow { transition: transform 0.28s ease; }
   .pp-why-btn[aria-expanded="true"] .pp-why-btn__arrow { transform: rotate(180deg); }
 
@@ -998,71 +1015,109 @@
   .pp-proof {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(212,168,67,0.3); border-radius: 18px;
-    padding: 22px 22px 18px;
+    padding: 20px 22px 16px;
   }
-  .pp-proof__head { padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .pp-proof.has-img { padding-top: 0; overflow: hidden; }
+  .pp-proof__img {
+    height: 170px; margin: 0 -22px 0; background-size: cover; background-position: center;
+    position: relative;
+  }
+  .pp-proof__img::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(18,18,43,0) 40%, rgba(18,18,43,0.92) 100%);
+  }
+  .pp-proof.has-img .pp-proof__head { padding-top: 16px; }
+  .pp-proof__head {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
   .pp-proof__head h4 {
     font-size: 17px; font-weight: 900; letter-spacing: 1px;
-    color: var(--pp-gold); margin: 0 0 4px;
+    color: var(--pp-gold); margin: 0 0 3px;
   }
-  .pp-proof__head span { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.4; }
-
-  .pp-proof__quote {
-    margin: 16px 0 0; padding: 14px 16px;
-    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-  }
-  .pp-proof__outlet { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
-  .pp-proof__outlet strong { font-size: 13px; font-weight: 800; color: #fff; }
-  .pp-proof__outlet em { font-size: 12px; font-style: normal; color: rgba(255,255,255,0.4); }
-  .pp-proof__quote p { margin: 0; font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.9); }
-  .pp-proof__date { display: block; margin-top: 8px; font-size: 11px; color: rgba(255,255,255,0.4); }
-
-  .pp-proof__stat { text-align: center; padding: 18px 0 4px; }
+  .pp-proof__head > div > span { font-size: 12px; color: rgba(255,255,255,0.5); }
   .pp-proof__badge {
-    display: inline-flex; align-items: center; gap: 6px; margin-bottom: 8px;
-    font-size: 11px; font-weight: 800; letter-spacing: 1.2px; color: #22c55e;
+    display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0;
+    padding: 5px 10px; border-radius: 20px;
+    background: rgba(34,197,94,0.13); border: 1px solid rgba(34,197,94,0.4);
+    font-size: 10px; font-weight: 800; letter-spacing: 1px; color: #22c55e; white-space: nowrap;
   }
-  .pp-proof__badge svg { width: 15px; height: 15px; }
-  .pp-proof__stat strong { display: block; font-size: 40px; font-weight: 900; color: #fff; line-height: 1.05; }
-  .pp-proof__lbl { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1.4px; color: rgba(255,255,255,0.55); margin-top: 2px; }
-  .pp-proof__sub { display: block; font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 6px; }
+  .pp-proof__badge svg { width: 13px; height: 13px; }
 
-  .pp-proof__note { font-size: 13px; line-height: 1.55; color: rgba(255,255,255,0.65); margin: 16px 0 0; }
+  /* Medidor de ocupación */
+  .pp-proof__meter { display: flex; align-items: center; gap: 20px; padding: 20px 0 4px; }
+  .pp-proof__ring {
+    position: relative; flex: 0 0 auto; width: 92px; height: 92px; border-radius: 50%;
+    background: conic-gradient(var(--pp-gold) calc(var(--pct) * 1%), rgba(255,255,255,0.09) 0);
+  }
+  .pp-proof__ring::after {
+    content: ''; position: absolute; inset: 9px; border-radius: 50%;
+    background: #12122b;
+  }
+  .pp-proof__ring span {
+    position: absolute; inset: 0; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 21px; font-weight: 900; color: var(--pp-gold);
+  }
+  .pp-proof__figure { min-width: 0; }
+  .pp-proof__figure strong { display: block; font-size: 38px; font-weight: 900; color: #fff; line-height: 1.05; }
+  .pp-proof__lbl { display: block; font-size: 10px; font-weight: 800; letter-spacing: 1.4px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .pp-proof__sub { display: block; font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 7px; line-height: 1.4; }
+
+  /* Comparativa contra la capacidad de 2027 */
+  .pp-proof__cmp { margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); }
+  .pp-proof__cmprow { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .pp-proof__cmprow span { font-size: 11.5px; color: rgba(255,255,255,0.5); line-height: 1.4; }
+  .pp-proof__cmprow b { font-size: 15px; font-weight: 800; color: #fff; white-space: nowrap; }
+  .pp-proof__cmpbars { display: flex; flex-direction: column; gap: 5px; margin-top: 9px; }
+  .pp-proof__cmpbars i { display: block; height: 7px; border-radius: 4px; }
+  .pp-proof__cmpbars .is-ref { width: 100%; background: rgba(255,255,255,0.16); }
+  .pp-proof__cmpbars .is-real { width: 99.96%; background: linear-gradient(90deg, var(--pp-gold), #b8922e); }
 
   .pp-proof__market {
-    margin-top: 14px; padding: 12px 14px;
+    margin-top: 16px; padding: 11px 14px;
     background: rgba(212,168,67,0.07); border-left: 2px solid var(--pp-gold);
     border-radius: 0 10px 10px 0;
   }
   .pp-proof__market span {
-    display: block; font-size: 10px; font-weight: 800; letter-spacing: 1.3px;
-    color: var(--pp-gold); margin-bottom: 5px;
+    display: block; font-size: 9.5px; font-weight: 800; letter-spacing: 1.3px;
+    color: var(--pp-gold); margin-bottom: 4px;
   }
-  .pp-proof__market p { margin: 0; font-size: 12.5px; line-height: 1.55; color: rgba(255,255,255,0.75); }
+  .pp-proof__market p { margin: 0; font-size: 12.5px; line-height: 1.5; color: rgba(255,255,255,0.72); }
 
-  .pp-proof__links { margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.08); }
-  .pp-proof__srclbl {
-    display: block; font-size: 10px; font-weight: 800; letter-spacing: 1.3px;
-    text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 8px;
-  }
+  .pp-proof__links { margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.08); }
   .pp-proof__links a {
-    display: flex; align-items: center; gap: 8px; padding: 7px 0;
-    text-decoration: none; color: rgba(255,255,255,0.7); transition: color 0.2s;
+    display: flex; align-items: center; gap: 9px; padding: 6px 0;
+    text-decoration: none; color: rgba(255,255,255,0.78); transition: color 0.2s;
   }
   .pp-proof__links a:hover { color: var(--pp-gold); }
-  .pp-proof__links a span { font-size: 12.5px; line-height: 1.4; }
-  .pp-proof__links a em { font-size: 11px; font-style: normal; color: rgba(255,255,255,0.35); white-space: nowrap; }
-  .pp-proof__links a svg { width: 13px; height: 13px; flex-shrink: 0; margin-left: auto; opacity: 0.6; }
+  .pp-proof__links a em {
+    font-size: 10px; font-style: normal; font-weight: 800; letter-spacing: 0.8px;
+    text-transform: uppercase; color: var(--pp-gold);
+    padding: 3px 8px; border-radius: 5px; background: rgba(212,168,67,0.12);
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .pp-proof__links a span { font-size: 12.5px; }
+  .pp-proof__links a svg { width: 13px; height: 13px; flex-shrink: 0; margin-left: auto; opacity: 0.55; }
+  .pp-proof__quote {
+    margin: 8px 0 0; font-size: 11.5px; font-style: italic;
+    line-height: 1.5; color: rgba(255,255,255,0.42);
+  }
+  .pp-proof__quote em { font-style: normal; }
 
   @media (max-width: 768px) {
     .pp-proofs { grid-template-columns: 1fr; gap: 16px; }
     .pp-why-panel__title { font-size: 17px; }
-    .pp-why-panel__intro { font-size: 13px; margin-bottom: 20px; }
-    .pp-proof { padding: 18px 16px 14px; }
+    .pp-why-panel__intro { font-size: 13px; margin-bottom: 18px; }
+    .pp-proof { padding: 16px 16px 12px; }
+    .pp-proof.has-img { padding-top: 0; }
+    .pp-proof__img { height: 130px; margin: 0 -16px 0; }
     .pp-proof__head h4 { font-size: 15px; }
-    .pp-proof__stat strong { font-size: 34px; }
-    .pp-proof__links a em { display: none; }
+    .pp-proof__meter { gap: 16px; padding: 16px 0 2px; }
+    .pp-proof__ring { width: 78px; height: 78px; }
+    .pp-proof__ring::after { inset: 8px; }
+    .pp-proof__ring span { font-size: 18px; }
+    .pp-proof__figure strong { font-size: 31px; }
   }
 
   /* ─── SCOPE ─── */
@@ -1825,6 +1880,8 @@
     .pp-jump svg { width: 16px; height: 16px; }
     .pp-calc-cta { padding: 0 46px; }
     .pp-callout { gap: 14px; padding: 16px 18px; margin-top: 28px; align-items: flex-start; }
+    .pp-callout--cta { flex-wrap: wrap; }
+    .pp-callout--cta .pp-why-btn { width: 100%; justify-content: center; font-size: 11.5px; }
     .pp-callout__icon { width: 26px; height: 26px; margin-top: 2px; }
     .pp-callout p { font-size: 13.5px; line-height: 1.55; }
     .pp-callout--info { gap: 12px; }
