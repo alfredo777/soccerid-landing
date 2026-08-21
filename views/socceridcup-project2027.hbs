@@ -254,9 +254,9 @@
   {{#if mediaLinks.length}}
   <section class="pp-section pp-section--alt">
     <h2 class="pp-section__title">{{#if isEs}}PRESENCIA EN MEDIOS{{else}}MEDIA PRESENCE{{/if}}</h2>
-    <div class="pp-media-list">
+    <div class="pp-media-list" id="ppMediaList">
       {{#each mediaLinks}}
-      <a class="pp-media-item" href="{{url}}" target="_blank" rel="noopener">
+      <a class="pp-media-item{{#unless featured}} is-extra{{/unless}}" href="{{url}}" target="_blank" rel="noopener">
         {{#if image}}
         <div class="pp-media-thumb">
           <img src="{{image}}" alt="" loading="lazy">
@@ -270,6 +270,13 @@
       </a>
       {{/each}}
     </div>
+    {{#gt mediaLinks.length 3}}
+    <button type="button" class="pp-media-toggle" id="ppMediaToggle"
+            data-mas="{{data.media.more}}" data-menos="{{data.media.less}}" aria-expanded="false">
+      <span>{{data.media.more}}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    {{/gt}}
   </section>
   {{/if}}
 
@@ -1107,6 +1114,19 @@
   .pp-media-source { font-size: 12px; color: rgba(255,255,255,0.4); }
   .pp-media-arrow { color: rgba(255,255,255,0.3); flex-shrink: 0; transition: color 0.2s; }
   .pp-media-item:hover .pp-media-arrow { color: var(--pp-gold); }
+  .pp-media-list .is-extra { display: none; }
+  .pp-media-list.is-expanded .is-extra { display: flex; }
+  .pp-media-toggle {
+    display: flex; align-items: center; justify-content: center; gap: 9px;
+    margin: 18px auto 0; padding: 11px 24px; border-radius: 30px; cursor: pointer;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.14);
+    color: rgba(255,255,255,0.75); font-family: inherit;
+    font-size: 12px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;
+    transition: border-color 0.25s, color 0.25s, background 0.25s;
+  }
+  .pp-media-toggle:hover { border-color: rgba(212,168,67,0.5); color: var(--pp-gold); background: rgba(212,168,67,0.07); }
+  .pp-media-toggle svg { width: 15px; height: 15px; transition: transform 0.25s; }
+  .pp-media-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
 
   /* ─── PROPOSAL ─── */
   .pp-proposal { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
@@ -2126,6 +2146,20 @@
     }, { passive: true });
     window.addEventListener('resize', actualizar);
     actualizar();
+  })();
+
+  // ─── Notas de prensa: una por edición, el resto colapsadas ───
+  (function() {
+    var lista = document.getElementById('ppMediaList');
+    var boton = document.getElementById('ppMediaToggle');
+    if (!lista || !boton) return;
+    var etiqueta = boton.querySelector('span');
+    boton.addEventListener('click', function() {
+      var abierto = lista.classList.toggle('is-expanded');
+      boton.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+      etiqueta.textContent = boton.getAttribute(abierto ? 'data-menos' : 'data-mas');
+      if (!abierto) lista.scrollIntoView({ block: 'nearest' });
+    });
   })();
 
   var btt = document.getElementById('ppBtt');

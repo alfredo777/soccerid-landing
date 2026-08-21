@@ -75,19 +75,30 @@ async function detail(year, lang) {
 }
 
 // Notas de medios agregadas de las ediciones pasadas (para /socceridcup2027)
+/**
+ * Etiqueta la primera nota de cada edicion como destacada, para que la
+ * propuesta 2027 muestre una por año y colapse el resto.
+ */
+function marcarDestacada(links, year) {
+  return links.map((m, i) => Object.assign({}, m, { year: year, featured: i === 0 }));
+}
+
 async function mediaLinks(lang) {
   try {
     const rows = await knex('editions').where({ status: 'past' }).orderBy('year');
     if (rows && rows.length) {
       let out = [];
-      rows.forEach(r => { const d = parse(r, lang); if (d && d.mediaLinks) out = out.concat(d.mediaLinks); });
+      rows.forEach(r => {
+        const d = parse(r, lang);
+        if (d && d.mediaLinks) out = out.concat(marcarDestacada(d.mediaLinks, r.year));
+      });
       return out;
     }
   } catch (_) {}
   const ed = readJson('cup_editions.json') || {};
   const le = ed[lang] || ed.es || {};
   let out = [];
-  Object.keys(le).forEach(y => { if (le[y].mediaLinks) out = out.concat(le[y].mediaLinks); });
+  Object.keys(le).forEach(y => { if (le[y].mediaLinks) out = out.concat(marcarDestacada(le[y].mediaLinks, y)); });
   return out;
 }
 

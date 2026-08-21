@@ -124,6 +124,10 @@
         { "id": "l-KVhjDENOQ", "title": "Tigres 0-0 Pumas | SOCCER iD CUP 2025", "edition": "2025" }
       ]
     },
+    "media": {
+      "more": "Ver todas las notas",
+      "less": "Ver menos"
+    },
     "sponsors": {
       "title": "RESPALDO COMERCIAL",
       "subtitle": "Marcas que han participado en ediciones anteriores.",
@@ -406,6 +410,10 @@
         { "id": "P9P4Dkd0P10", "title": "Highlights | América 2-2 Atlético Nacional | SOCCER iD CUP 2024", "edition": "2024" },
         { "id": "l-KVhjDENOQ", "title": "Tigres 0-0 Pumas | SOCCER iD CUP 2025", "edition": "2025" }
       ]
+    },
+    "media": {
+      "more": "See all coverage",
+      "less": "See less"
     },
     "sponsors": {
       "title": "COMMERCIAL BACKING",
