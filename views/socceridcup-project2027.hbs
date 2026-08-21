@@ -1062,6 +1062,21 @@
     .pp-nav__item--calc svg { width: 19px; height: 19px; }
     .pp-nav__item svg { width: 17px; height: 17px; }
     .pp-nav__label { display: none; }
+
+    /* Desplegado: crece hacia la izquierda mostrando el título de cada icono */
+    .pp-nav.is-open { border-radius: 20px; padding: 8px; gap: 3px; background: rgba(0,0,0,0.78); }
+    .pp-nav.is-open .pp-nav__item {
+      width: auto; height: 36px; border-radius: 18px;
+      justify-content: flex-start; gap: 10px; padding: 0 15px 0 9px;
+    }
+    .pp-nav.is-open .pp-nav__item--calc { height: 38px; border-radius: 19px; }
+    .pp-nav.is-open .pp-nav__item svg { flex: 0 0 auto; }
+    .pp-nav.is-open .pp-nav__label {
+      display: block; position: static; transform: none; opacity: 1;
+      background: none; border: none; padding: 0; border-radius: 0;
+      color: inherit; font-size: 11px; letter-spacing: 0.7px;
+    }
+    .pp-nav.is-open .pp-nav__sep { margin: 4px 10px; }
   }
 
   .pp-jump {
@@ -2046,11 +2061,54 @@
       navCalc.addEventListener('click', function() { abreCalc.click(); });
     }
 
+    // ── Movil: el menu se despliega mostrando el titulo de cada icono ──
+    function esMovil() { return window.matchMedia('(max-width: 768px)').matches; }
+    var temporizador = null;
+    var presentando = false;   // ventana inicial: el scroll no lo repliega
+
+    function abrirMenu(msAutoCierre, esPresentacion) {
+      if (!esMovil()) return;
+      nav.classList.add('is-open');
+      presentando = !!esPresentacion;
+      clearTimeout(temporizador);
+      if (msAutoCierre) temporizador = setTimeout(cerrarMenu, msAutoCierre);
+    }
+    function cerrarMenu() {
+      clearTimeout(temporizador);
+      presentando = false;
+      nav.classList.remove('is-open');
+    }
+
+    // El primer toque despliega; el siguiente ya navega.
+    nav.addEventListener('click', function(e) {
+      if (!esMovil()) return;
+      if (!nav.classList.contains('is-open')) {
+        e.preventDefault();
+        e.stopPropagation();
+        abrirMenu(6000);
+      } else {
+        setTimeout(cerrarMenu, 250);
+      }
+    }, true);
+
+    document.addEventListener('click', function(e) {
+      if (esMovil() && nav.classList.contains('is-open') && !nav.contains(e.target)) cerrarMenu();
+    });
+    window.addEventListener('resize', function() { if (!esMovil()) cerrarMenu(); });
+
     // El menú aparece al pasar el hero y marca la sección en curso
     var pendiente = false;
+    var yaSePresento = false;
     function actualizar() {
       pendiente = false;
-      nav.classList.toggle('is-visible', window.pageYOffset > window.innerHeight * 0.6);
+      var visible = window.pageYOffset > window.innerHeight * 0.6;
+      nav.classList.toggle('is-visible', visible);
+      if (visible && !yaSePresento) {
+        yaSePresento = true;
+        abrirMenu(4500, true);   // se presenta desplegado la primera vez
+      } else if (!visible) {
+        cerrarMenu();
+      }
       var referencia = window.pageYOffset + window.innerHeight * 0.35;
       var activo = -1;
       secciones.forEach(function(sec, i) {
@@ -2059,6 +2117,7 @@
       items.forEach(function(a, i) { a.classList.toggle('is-active', i === activo); });
     }
     window.addEventListener('scroll', function() {
+      if (!presentando && !animando && nav.classList.contains('is-open')) cerrarMenu();
       if (!pendiente) { pendiente = true; requestAnimationFrame(actualizar); }
     }, { passive: true });
     window.addEventListener('resize', actualizar);
