@@ -1321,13 +1321,13 @@
 
   /* Movil: todo compacto para que la calculadora quepa en una pantalla */
   @media (max-width: 560px) {
-    .pp-calc { padding: 0; align-items: flex-end; }
+    .pp-calc { padding: 10px; align-items: center; }
     .pp-calc__card {
-      max-width: 100%; border-radius: 18px 18px 0 0;
-      max-height: 94vh; max-height: 94dvh;
+      max-width: 100%; border-radius: 18px;
+      max-height: 96vh; max-height: 96dvh;
     }
     .pp-calc__head { padding: 11px 16px 9px; gap: 10px; }
-    .pp-calc__body { padding: 12px 16px calc(11px + env(safe-area-inset-bottom, 0px)); }
+    .pp-calc__body { padding: 12px 16px 12px; }
     .pp-calc__title { font-size: 15px; letter-spacing: 0.8px; margin-bottom: 3px; }
     .pp-calc__sub { font-size: 11px; line-height: 1.35; }
     .pp-calc__x { width: 32px; height: 32px; }
