@@ -196,17 +196,11 @@
       "termsTitle": "TÉRMINOS",
       "terms": [
         { "label": "Capital objetivo", "value": "USD $1.0M" },
-        { "label": "Retorno potencial", "value": "Hasta 25%" },
-        { "label": "Escenario de retorno máximo", "value": "USD $1.25M sobre una inversión de USD $1.0M" },
-        { "label": "Plazo", "value": "12 meses" }
+        { "label": "Plazo / Retorno", "value": "Agosto 2027" }
       ],
       "itemsTitle": "CONDICIONES GENERALES",
       "items": [
         { "text": "Contrato de inversión formal." },
-        { "text": "Dos modalidades de participación:", "sub": [
-          { "text": "<strong>Retorno fijo</strong> (menor riesgo / menor rendimiento)." },
-          { "text": "<strong>Participación en utilidades</strong> (mayor riesgo / mayor rendimiento potencial)." }
-        ]},
         { "text": "Uso exclusivo de los recursos para la operación del evento." },
         { "text": "Acceso a documentación y seguimiento del proyecto." },
         { "text": "Cumplimiento conforme a la legislación aplicable." }
@@ -430,17 +424,11 @@
       "termsTitle": "TERMS",
       "terms": [
         { "label": "Target capital", "value": "USD $1.0M" },
-        { "label": "Potential return", "value": "Up to 25%" },
-        { "label": "Maximum return scenario", "value": "USD $1.25M on a USD $1.0M investment" },
-        { "label": "Term", "value": "12 months" }
+        { "label": "Term / Return", "value": "August 2027" }
       ],
       "itemsTitle": "GENERAL CONDITIONS",
       "items": [
         { "text": "Formal investment contract." },
-        { "text": "Two participation modalities:", "sub": [
-          { "text": "<strong>Fixed return</strong> (lower risk / lower yield)." },
-          { "text": "<strong>Profit sharing</strong> (higher risk / higher potential yield)." }
-        ]},
         { "text": "Exclusive use of funds for event operations." },
         { "text": "Access to project documentation and tracking." },
         { "text": "Compliance with applicable legislation." }
