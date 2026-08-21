@@ -196,7 +196,9 @@
       "termsTitle": "TÉRMINOS",
       "terms": [
         { "label": "Capital objetivo", "value": "USD $1.0M" },
-        { "label": "Plazo / Retorno", "value": "Agosto 2027" }
+        { "label": "Modalidades", "value": "Retorno fijo o participación a riesgo" },
+        { "label": "Retorno", "value": "Depende de la modalidad" },
+        { "label": "Plazo", "value": "Entrega de utilidades en agosto 2027" }
       ],
       "itemsTitle": "CONDICIONES GENERALES",
       "items": [
@@ -424,7 +426,9 @@
       "termsTitle": "TERMS",
       "terms": [
         { "label": "Target capital", "value": "USD $1.0M" },
-        { "label": "Term / Return", "value": "August 2027" }
+        { "label": "Modalities", "value": "Fixed return or at-risk participation" },
+        { "label": "Return", "value": "Depends on the modality" },
+        { "label": "Term", "value": "Profit distribution in August 2027" }
       ],
       "itemsTitle": "GENERAL CONDITIONS",
       "items": [
