@@ -148,16 +148,16 @@
           {{#if image}}
           <div class="pp-proof__img" style="background-image:url('{{image}}')" role="img" aria-label="{{team}}"></div>
           {{/if}}
+          {{#if venueTag}}
+          <span class="pp-proof__tag">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            {{venueTag}}
+          </span>
+          {{/if}}
           <div class="pp-proof__head">
             <div>
               <h4>{{team}}</h4>
               <span>{{venue}}</span>
-              {{#if venueTag}}
-              <span class="pp-proof__tag">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
-                {{venueTag}}
-              </span>
-              {{/if}}
             </div>
             <span class="pp-proof__badge">
               <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
@@ -658,7 +658,33 @@
             </div>
           </div>
         </div>
+
       </div>
+    </div>
+
+    <div class="pp-riskrules">
+      <div class="pp-split">
+          <span class="pp-chip">{{data.proposal.risk.splitTitle}}</span>
+          <div class="pp-split__grid">
+            {{#each data.proposal.risk.split}}
+            <div class="pp-split__side">
+              <strong>{{pct}}</strong>
+              <span>{{name}}</span>
+              <p>{{role}}</p>
+            </div>
+            {{/each}}
+          </div>
+          <p class="pp-split__note">{{data.proposal.risk.splitNote}}</p>
+        </div>
+      {{#if data.proposal.risk.breakEven}}
+      <div class="pp-breakeven">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-3 6a3.2 3.2 0 0 0 6 0z"/><path d="M19 7l3 6a3.2 3.2 0 0 1-6 0z"/><path d="M8 21h8"/></svg>
+          <div>
+            <span>{{data.proposal.risk.breakEvenTitle}}</span>
+            <p>{{data.proposal.risk.breakEven}}</p>
+          </div>
+        </div>
+        {{/if}}
     </div>
 
     {{#if data.proposal.compare}}
@@ -798,6 +824,7 @@
           <strong id="ppCalcAttVal"></strong>
           <span id="ppCalcOcc"></span>
         </div>
+        <div class="pp-calc__break" id="ppCalcBreak"></div>
       </div>
 
       <div class="pp-calc__result" id="ppCalcResult"></div>
@@ -1030,7 +1057,7 @@
       rgba(8,8,20,0.85) 78%,
       rgba(8,8,20,0.90) 100%);
   }
-  .pp-proof.has-img > *:not(.pp-proof__img) { position: relative; z-index: 1; }
+  .pp-proof.has-img > *:not(.pp-proof__img):not(.pp-proof__tag) { position: relative; z-index: 1; }
   .pp-proof__head {
     display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
     padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -1041,12 +1068,13 @@
   }
   .pp-proof__head > div > span { font-size: 12px; color: rgba(255,255,255,0.5); }
   .pp-proof__tag {
-    display: inline-flex !important; align-items: center; gap: 6px; margin-top: 8px;
-    padding: 5px 12px 5px 9px; border-radius: 20px;
-    background: rgba(212,168,67,0.14); border: 1px solid rgba(212,168,67,0.55);
-    color: var(--pp-gold) !important;
-    font-size: 10.5px !important; font-weight: 800; letter-spacing: 0.8px;
-    line-height: 1.3;
+    position: absolute; top: 14px; left: 14px; z-index: 2;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 13px 6px 10px; border-radius: 20px;
+    background: rgba(10,10,26,0.82); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(212,168,67,0.7); color: var(--pp-gold);
+    font-size: 10.5px; font-weight: 800; letter-spacing: 0.8px; line-height: 1.3;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.45);
   }
   .pp-proof__tag svg { width: 13px; height: 13px; flex-shrink: 0; }
   .pp-proof__badge {
@@ -1430,7 +1458,7 @@
 
   /* ─── MODALIDADES / EJEMPLOS DE PARTICIPACIÓN ─── */
   .pp-modes-sub { font-size: 15px; color: rgba(255,255,255,0.6); margin: 0 0 28px; line-height: 1.6; }
-  .pp-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .pp-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; }
   .pp-mode {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(212,168,67,0.35);
@@ -1452,7 +1480,12 @@
   .pp-mode__lbl { display: block; font-size: 12px; color: rgba(255,255,255,0.6); line-height: 1.4; margin-bottom: 4px; }
   .pp-mode__val { display: block; font-size: 21px; font-weight: 900; color: #fff; }
   .pp-mode__val.is-accent { color: var(--pp-gold); }
-  .pp-mode__note { font-size: 12px; font-style: italic; color: rgba(255,255,255,0.45); text-align: center; margin: 16px 0 0; padding-top: 8px; }
+  .pp-mode__note {
+    font-size: 12px; font-style: italic; color: rgba(255,255,255,0.55);
+    text-align: center; line-height: 1.55; margin: 18px 0 0;
+    padding: 14px 16px; border: 1px solid rgba(255,255,255,0.12); border-radius: 12px;
+    background: rgba(255,255,255,0.02);
+  }
   .pp-mode__body > .pp-mode__note { margin-top: auto; }
 
   /* Retorno fijo */
@@ -1469,6 +1502,45 @@
   }
   .pp-fixed-res > div { padding: 16px 12px; text-align: center; }
   .pp-fixed-res > div + div { border-left: 1px solid rgba(212,168,67,0.3); }
+
+  .pp-riskrules {
+    margin-top: 22px; padding: 20px 24px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(212,168,67,0.3);
+    border-radius: 18px;
+  }
+  .pp-riskrules .pp-split { margin-bottom: 0; }
+  .pp-riskrules .pp-breakeven { margin-top: 16px; }
+
+  /* Estructura 50 / 50 */
+  .pp-split { margin-bottom: 18px; }
+  .pp-split__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; position: relative; }
+  .pp-split__side {
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 14px 14px 12px; text-align: center;
+  }
+  .pp-split__side strong { display: block; font-size: 26px; font-weight: 900; color: var(--pp-gold); line-height: 1; }
+  .pp-split__side > span {
+    display: block; margin: 5px 0 8px;
+    font-size: 11px; font-weight: 800; letter-spacing: 1px; color: #fff;
+  }
+  .pp-split__side p { margin: 0; font-size: 11.5px; line-height: 1.5; color: rgba(255,255,255,0.6); }
+  .pp-split__note {
+    margin: 12px 0 0; padding: 10px 14px;
+    background: rgba(212,168,67,0.07); border-left: 2px solid var(--pp-gold); border-radius: 0 10px 10px 0;
+    font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.75);
+  }
+
+  /* Punto de equilibrio */
+  .pp-breakeven {
+    display: flex; align-items: flex-start; gap: 14px; margin-top: 18px; padding: 14px 16px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px;
+  }
+  .pp-breakeven svg { width: 24px; height: 24px; flex-shrink: 0; color: var(--pp-gold); margin-top: 1px; }
+  .pp-breakeven span {
+    display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.2px;
+    color: var(--pp-gold); margin-bottom: 4px;
+  }
+  .pp-breakeven p { margin: 0; font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.7); }
 
   /* Participación a riesgo */
   .pp-risk { display: grid; grid-template-columns: 1.35fr 1fr; gap: 22px; }
@@ -1559,7 +1631,7 @@
   /* El encabezado no se desplaza: la ✕ siempre queda a la vista */
   .pp-calc__head {
     flex: 0 0 auto; display: flex; align-items: flex-start; gap: 16px;
-    padding: 24px 26px 16px; border-bottom: 1px solid rgba(255,255,255,0.09);
+    padding: 21px 26px 14px; border-bottom: 1px solid rgba(255,255,255,0.09);
   }
   .pp-calc__headtext { flex: 1; min-width: 0; }
   .pp-calc__body { flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 22px 26px calc(24px + env(safe-area-inset-bottom, 0px)); }
@@ -1644,6 +1716,15 @@
   .pp-calc__attinfo strong { font-size: 22px; font-weight: 900; color: #fff; }
   .pp-calc__attinfo span { font-size: 13px; color: rgba(255,255,255,0.5); }
 
+  .pp-calc__break {
+    margin-top: 10px; padding: 9px 13px; border-radius: 10px;
+    background: rgba(212,168,67,0.08); border: 1px solid rgba(212,168,67,0.32);
+  }
+  .pp-calc__break b { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1px; color: var(--pp-gold); }
+  .pp-calc__break span { display: block; margin-top: 3px; font-size: 11px; line-height: 1.45; color: rgba(255,255,255,0.55); }
+  .pp-calc__break.is-below { background: rgba(245,158,11,0.09); border-color: rgba(245,158,11,0.4); }
+  .pp-calc__break.is-below b { color: #f59e0b; }
+
   .pp-calc__result {
     background: rgba(212,168,67,0.07); border: 1px solid rgba(212,168,67,0.35);
     border-radius: 14px; padding: 8px 20px 16px; margin-top: 26px;
@@ -1669,46 +1750,58 @@
   .pp-calc__warn { font-size: 12px; color: #f59e0b; line-height: 1.5; margin: 12px 0 0; }
   .pp-calc__disc { font-size: 11px; font-style: italic; color: rgba(255,255,255,0.4); line-height: 1.5; margin: 18px 0 0; }
 
+  /* Escritorio ancho: dos columnas para que quepa sin scroll */
+  @media (min-width: 900px) {
+    .pp-calc__card { max-width: 920px; }
+    .pp-calc__body {
+      display: grid; grid-template-columns: 1fr 1.02fr;
+      column-gap: 30px; align-items: start;
+    }
+    .pp-calc__field { grid-column: 1; }
+    .pp-calc__result { grid-column: 2; grid-row: 1 / span 8; margin-top: 0; }
+    .pp-calc__disc { grid-column: 1 / -1; margin-top: 14px; }
+  }
+
   /* Movil: todo compacto para que la calculadora quepa en una pantalla */
   @media (max-width: 560px) {
-    .pp-calc { padding: 10px; align-items: center; }
+    .pp-calc { padding: 8px; align-items: center; }
     .pp-calc__card {
       max-width: 100%; border-radius: 18px;
-      max-height: 96vh; max-height: 96dvh;
+      max-height: 97vh; max-height: 97dvh;
     }
-    .pp-calc__head { padding: 11px 16px 9px; gap: 10px; }
-    .pp-calc__body { padding: 12px 16px 12px; }
-    .pp-calc__title { font-size: 15px; letter-spacing: 0.8px; margin-bottom: 3px; }
-    .pp-calc__sub { font-size: 11px; line-height: 1.35; }
+    .pp-calc__head { padding: 9px 15px 7px; gap: 10px; }
+    .pp-calc__body { padding: 11px 15px 10px; }
+    .pp-calc__title { font-size: 14px; letter-spacing: 0.7px; margin-bottom: 2px; }
+    .pp-calc__sub { font-size: 10.5px; line-height: 1.3; }
     .pp-calc__x { width: 32px; height: 32px; }
 
-    .pp-calc__field { margin-bottom: 10px; }
-    .pp-calc__lbl { font-size: 9.5px; letter-spacing: 0.9px; margin-bottom: 5px; }
+    .pp-calc__field { margin-bottom: 7px; }
+    .pp-calc__lbl { font-size: 9.5px; letter-spacing: 0.9px; margin-bottom: 4px; }
 
     .pp-switch { gap: 9px; }
     .pp-switch__side { font-size: 12px; padding: 1px 0; }
-    .pp-switch__track { width: 50px; height: 28px; }
-    .pp-switch__knob { width: 20px; height: 20px; top: 3px; left: 3px; }
-    .pp-switch.is-second .pp-switch__knob { transform: translateX(22px); }
+    .pp-switch__track { width: 46px; height: 26px; }
+    .pp-switch__knob { width: 18px; height: 18px; top: 3px; left: 3px; }
+    .pp-switch.is-second .pp-switch__knob { transform: translateX(20px); }
 
-    .pp-calc__amount { padding: 7px 13px; border-radius: 10px; }
-    .pp-calc__amount input { font-size: 19px; }
+    .pp-calc__amount { padding: 6px 12px; border-radius: 10px; }
+    .pp-calc__amount input { font-size: 18px; }
     .pp-calc__cur { font-size: 12px; }
-    .pp-calc__range { margin-top: 7px; }
+    .pp-calc__range { margin-top: 6px; }
     .pp-calc__hint { font-size: 9.5px; margin-top: 4px; }
-    .pp-calc__attinfo { margin-top: 5px; }
+    .pp-calc__attinfo { margin-top: 4px; }
     .pp-calc__attinfo strong { font-size: 17px; }
     .pp-calc__attinfo span { font-size: 11px; }
 
-    .pp-calc__result { margin-top: 11px; padding: 2px 14px 8px; border-radius: 12px; }
-    .pp-calc__rtitle { font-size: 9.5px; padding: 8px 0 1px; }
-    .pp-calc__row { padding: 5px 0; }
+    .pp-calc__result { margin-top: 9px; padding: 2px 13px 7px; border-radius: 12px; }
+    .pp-calc__rtitle { font-size: 9.5px; padding: 6px 0 1px; }
+    .pp-calc__row { padding: 3px 0; }
     .pp-calc__row > span:first-child { font-size: 12px; }
     .pp-calc__row strong { font-size: 14px; }
     .pp-calc__row--big { padding: 9px 0 3px; }
     .pp-calc__row--big strong { font-size: 19px; }
     .pp-calc__row--inv, .pp-calc__row--yield { display: none; }
-    .pp-calc__math { grid-template-columns: repeat(3, 1fr); gap: 7px; padding: 7px 0; }
+    .pp-calc__math { grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 5px 0; }
     .pp-calc__math span { font-size: 9.5px; margin-bottom: 2px; }
     .pp-calc__math b { font-size: 12px; }
     .pp-calc__pct {
@@ -1717,7 +1810,10 @@
     }
     .pp-calc__row--neg .pp-calc__pct { color: #ef4444; }
     .pp-calc__warn { font-size: 11px; margin-top: 8px; }
-    .pp-calc__disc { font-size: 9.5px; line-height: 1.35; margin-top: 9px; }
+    .pp-calc__disc { font-size: 9px; line-height: 1.25; margin-top: 7px; }
+    .pp-calc__break { margin-top: 7px; padding: 7px 11px; border-radius: 9px; }
+    .pp-calc__break b { font-size: 9.5px; }
+    .pp-calc__break span { display: none; }
   }
 
   /* ─── VIDEOS ─── */
@@ -1906,6 +2002,8 @@
     .pp-mode__heading h3 { font-size: 18px; }
     .pp-fixed-top { grid-template-columns: 1fr; gap: 10px; }
     .pp-fixed-arrow { transform: rotate(90deg); margin: 0 auto; }
+    .pp-split__grid { grid-template-columns: 1fr; gap: 10px; }
+    .pp-split__side { text-align: left; }
     .pp-risk { grid-template-columns: 1fr; gap: 18px; }
     .pp-risk__col + .pp-risk__col {
       border-left: none; padding-left: 0;
@@ -2080,6 +2178,7 @@
     var elAtt = document.getElementById('ppCalcAtt');
     var elAttVal = document.getElementById('ppCalcAttVal');
     var elOcc = document.getElementById('ppCalcOcc');
+    var elBreak = document.getElementById('ppCalcBreak');
     var elResult = document.getElementById('ppCalcResult');
     var amountBox = elAmount.closest('.pp-calc__amount');
 
@@ -2142,18 +2241,26 @@
         html += row(L.yield, pct(cfg.fixedRate));
         html += row(L.totalFixed, money(a + profit), 'pp-calc__row--big');
       } else {
-        var share = a / cur.projectCost;
+        // El proyecto reparte sus utilidades 50% SOCCER iD / 50% pool de
+        // inversionistas; dentro del pool, cada quien va en proporción a su aporte.
+        var splitPct = cfg.investorSplit;                 // 50
+        var enCapital = a / cur.projectCost;              // % del capital requerido
+        var efectiva = enCapital * (splitPct / 100);      // participación real en la utilidad
         var box = state.att * cur.ticketPrice;
         var projectProfit = box - cur.projectCost;
-        var mine = projectProfit * share;
+        var pool = projectProfit * (splitPct / 100);
+        var mine = pool * enCapital;
         var neg = mine < 0 ? ' pp-calc__row--neg' : '';
         var rend = pct(a ? (mine / a) * 100 : 0);
-        html += row(L.share, pct(share * 100));
+
+        html += row(L.shareEffective, pct(efectiva * 100), '',
+                    fill(L.shareEffectiveNote, { a: pct(enCapital * 100), b: splitPct + '%' }));
         html += tira([
           [L.boxOffice, money(box)],
           [L.projectCost, '− ' + money(cur.projectCost)],
           [L.projectProfit, money(projectProfit), projectProfit < 0 ? 'is-neg' : '']
         ]);
+        html += row(L.pool, money(pool), projectProfit < 0 ? 'pp-calc__row--neg' : '');
         html += row(L.yourProfit, money(mine), neg);
         html += row(L.yield, rend, 'pp-calc__row--yield' + neg);
         html += row(L.total, money(a + mine), 'pp-calc__row--big' + neg, rend);
@@ -2179,6 +2286,11 @@
       elOcc.textContent = state.att >= cfg.capacity
         ? L.attendanceFull
         : L.attendanceSold + ' · ' + pct(occ) + ' ' + L.occupancy;
+      var be = Math.ceil(state.cur.projectCost / state.cur.ticketPrice);
+      if (elBreak) {
+        elBreak.innerHTML = '<b>' + nf(be) + ' · ' + L.breakEvenTag + '</b><span>' + L.breakEvenHelp + '</span>';
+        elBreak.classList.toggle('is-below', state.att < be);
+      }
       render();
     }
 
@@ -2239,7 +2351,7 @@
     elAtt.max = cfg.capacity;
     setCurrency(cfg.currencies[0], false);
     setType('fixed');
-    setAtt(Math.round(cfg.capacity * 0.688 / 100) * 100);
+    setAtt(cfg.defaultAttendance || Math.ceil(cfg.currencies[0].projectCost / cfg.currencies[0].ticketPrice));
 
     function open() {
       modal.hidden = false;

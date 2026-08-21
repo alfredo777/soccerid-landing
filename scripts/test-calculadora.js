@@ -105,6 +105,8 @@ function check(nombre, real, esperado) {
   await ev(`document.getElementById('ppCalcOpen').click()`);
   await sleep(300);
   check('el modal abre', await ev(`!document.getElementById('ppCalc').hidden`), 'true');
+  check('asistencia por defecto = break-even',
+    await ev(`document.getElementById('ppCalcAtt').value`), '10000');
 
   console.log('\nRETORNO FIJO · USD 100,000');
   await moneda('usd'); await tipo('fixed'); await monto(100000); await sleep(150);
@@ -114,44 +116,60 @@ function check(nombre, real, esperado) {
   check('Rendimiento', r['Rendimiento'], '25%');
   check('Capital + retorno', r['Capital + retorno'], 'USD $125,000');
 
-  console.log('\nRIESGO · USD 100,000 · 15,000 asistentes (el caso de la tarjeta)');
-  await tipo('risk'); await asistencia(15000); await sleep(150);
+  console.log('\nRIESGO · sold out 21,800 · reparto 50/50 (el caso de la tarjeta)');
+  await tipo('risk'); await asistencia(21800); await sleep(150);
   r = await resultado();
-  check('Participacion', r['Tu participación en el proyecto'], '10%');
-  check('Taquilla', r['Ingreso de taquilla'], 'USD $1,500,000');
-  check('Utilidad del proyecto', r['Utilidad del proyecto'], 'USD $500,000');
-  check('Tu utilidad', r['Tu utilidad'], 'USD $50,000');
-  check('Rendimiento', r['Rendimiento'], '50%');
-  check('Capital + utilidad', r['Capital + utilidad'], 'USD $150,000');
+  check('Participacion efectiva', r['Participación efectiva en utilidades'], '5%');
+  check('Taquilla', r['Ingreso de taquilla'], 'USD $2,180,000');
+  check('Utilidad del proyecto', r['Utilidad ilustrativa del proyecto'], 'USD $1,180,000');
+  check('50% al pool', r['50% destinado a inversionistas (pool)'], 'USD $590,000');
+  check('Tu utilidad', r['Tu utilidad'], 'USD $59,000');
+  check('Rendimiento', r['Rendimiento'], '59%');
+  check('Capital + utilidad', r['Capital + utilidad'], 'USD $159,000');
   check('sin aviso de perdida', (await aviso()) === '', 'true');
 
-  console.log('\nRIESGO · USD 100,000 · estadio lleno (21,800)');
-  await asistencia(21800); await sleep(150);
+  console.log('\nRIESGO · break-even exacto (10,000)');
+  await asistencia(10000); await sleep(150);
   r = await resultado();
-  check('Taquilla', r['Ingreso de taquilla'], 'USD $2,180,000');
-  check('Tu utilidad', r['Tu utilidad'], 'USD $118,000');
-  check('Capital + utilidad', r['Capital + utilidad'], 'USD $218,000');
-  check('etiqueta de lleno', await ev(`document.getElementById('ppCalcOcc').textContent`), 'estadio lleno');
+  check('Utilidad del proyecto', r['Utilidad ilustrativa del proyecto'], 'USD $0');
+  check('50% al pool', r['50% destinado a inversionistas (pool)'], 'USD $0');
+  check('Tu utilidad', r['Tu utilidad'], 'USD $0');
+  check('Rendimiento', r['Rendimiento'], '0%');
+  check('Capital + resultado', r['Capital + utilidad'], 'USD $100,000');
 
-  console.log('\nRIESGO · USD 100,000 · 5,000 asistentes (bajo punto de equilibrio)');
+  console.log('\nRIESGO · 5,000 asistentes (bajo el break-even)');
   await asistencia(5000); await sleep(150);
   r = await resultado();
-  check('Utilidad del proyecto', r['Utilidad del proyecto'], '-USD $500,000');
-  check('Tu utilidad', r['Tu utilidad'], '-USD $50,000');
-  check('Rendimiento', r['Rendimiento'], '-50%');
-  check('Capital + utilidad', r['Capital + utilidad'], 'USD $50,000');
+  check('Utilidad del proyecto', r['Utilidad ilustrativa del proyecto'], '-USD $500,000');
+  check('Tu utilidad', r['Tu utilidad'], '-USD $25,000');
+  check('Rendimiento', r['Rendimiento'], '-25%');
+  check('Capital + resultado', r['Capital + utilidad'], 'USD $75,000');
   check('avisa del punto de equilibrio', (await aviso()).includes('10,000'), 'true');
   check('la perdida se marca en rojo',
     await ev(`!!document.querySelector('#ppCalcResult .pp-calc__row--neg')`), 'true');
 
-  console.log('\nCAMBIO A PESOS · debe conservar el 10% del proyecto');
-  await moneda('mxn'); await asistencia(15000); await sleep(150);
-  check('monto convertido', await ev(`document.getElementById('ppCalcAmount').value`), '1,800,000');
+  console.log('\nEL TOPE ES 50% DE LAS UTILIDADES, NO 100%');
+  await asistencia(21800); await sleep(150);
+  await ev(`(() => { const i = document.getElementById('ppCalcAmount');
+    i.value = '1000000'; i.dispatchEvent(new Event('input', {bubbles:true})); i.dispatchEvent(new Event('blur')); })()`);
+  await sleep(200);
   r = await resultado();
-  check('Participacion', r['Tu participación en el proyecto'], '10%');
-  check('Taquilla', r['Ingreso de taquilla'], 'MXN $27,000,000');
-  check('Tu utilidad', r['Tu utilidad'], 'MXN $900,000');
-  check('Rendimiento', r['Rendimiento'], '50%');
+  check('con el millon completo la participacion efectiva es 50%',
+    r['Participación efectiva en utilidades'], '50%');
+  check('su utilidad es el 50% del proyecto', r['Tu utilidad'], 'USD $590,000');
+  check('el rendimiento tope sigue siendo 59%', r['Rendimiento'], '59%');
+
+  console.log('\nCAMBIO A PESOS · conserva la participacion efectiva');
+  await moneda('mxn'); await sleep(150);
+  await ev(`(() => { const i = document.getElementById('ppCalcAmount');
+    i.value = '1800000'; i.dispatchEvent(new Event('input', {bubbles:true})); i.dispatchEvent(new Event('blur')); })()`);
+  await asistencia(21800); await sleep(200);
+  r = await resultado();
+  check('Participacion efectiva', r['Participación efectiva en utilidades'], '5%');
+  check('Taquilla', r['Ingreso de taquilla'], 'MXN $39,240,000');
+  check('50% al pool', r['50% destinado a inversionistas (pool)'], 'MXN $10,620,000');
+  check('Tu utilidad', r['Tu utilidad'], 'MXN $1,062,000');
+  check('Rendimiento', r['Rendimiento'], '59%');
 
   console.log('\nLIMITES');
   await ev(`(() => { const i = document.getElementById('ppCalcAmount');
