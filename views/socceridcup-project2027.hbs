@@ -573,13 +573,6 @@
     </div>
     {{/if}}
 
-    <h3 class="pp-scope__heading pp-why-heading">{{data.proposal.whyTitle}}</h3>
-    <ul class="pp-reasons pp-reasons--grid">
-      {{#each data.proposal.reasons}}
-      <li><svg viewBox="0 0 20 20" fill="#22c55e"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg> {{this}}</li>
-      {{/each}}
-    </ul>
-
     <div class="pp-ticket-bar">
       <span>{{data.proposal.ticketLabel}}</span>
       <strong>{{data.proposal.ticketValue}}</strong>
@@ -604,6 +597,21 @@
       {{/each}}
     </div>
   </section>
+
+  {{!-- ═══ ¿POR QUÉ INVERTIR? ═══ --}}
+  {{#if data.why.reasons.length}}
+  <section class="pp-section pp-section--alt pp-why-section">
+    <h2 class="pp-section__title pp-why-title">{{data.why.title}}</h2>
+    <div class="pp-why">
+      {{#each data.why.reasons}}
+      <div class="pp-why__item">
+        <span class="pp-why__num" aria-hidden="true"></span>
+        <p>{{this}}</p>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+  {{/if}}
 
   {{!-- ═══ CLOSING ═══ --}}
   <section class="pp-closing">
@@ -1077,8 +1085,36 @@
   .pp-cmp tbody tr:last-child td { border-bottom: none; }
   .pp-cmp td.is-accent { color: var(--pp-gold); font-weight: 800; }
 
-  .pp-why-heading { margin-top: 40px; }
-  .pp-reasons--grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; }
+  /* ─── ¿POR QUÉ INVERTIR? ─── */
+  .pp-why-section { border-top: 1px solid rgba(212,168,67,0.2); border-bottom: 1px solid rgba(212,168,67,0.2); }
+  .pp-why-title {
+    font-size: 26px; text-align: center; letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  .pp-why-section > .pp-why-title + .pp-why { margin-top: 34px; }
+  .pp-why-title::after {
+    content: ''; display: block; width: 64px; height: 3px;
+    background: var(--pp-gold); margin: 16px auto 0;
+  }
+  .pp-why { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; counter-reset: whyn; }
+  .pp-why__item {
+    counter-increment: whyn;
+    flex: 0 1 calc(33.333% - 12px);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(212,168,67,0.28);
+    border-radius: 16px; padding: 26px 24px;
+    display: flex; flex-direction: column; gap: 16px;
+    transition: border-color 0.3s, transform 0.3s, background 0.3s;
+  }
+  .pp-why__item:hover { border-color: rgba(212,168,67,0.6); background: rgba(212,168,67,0.05); transform: translateY(-4px); }
+  .pp-why__num {
+    width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+    background: rgba(212,168,67,0.14); border: 1px solid rgba(212,168,67,0.4);
+    color: var(--pp-gold); font-size: 15px; font-weight: 900; letter-spacing: 0.5px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pp-why__num::before { content: '0' counter(whyn); }
+  .pp-why__item p { margin: 0; font-size: 15px; line-height: 1.55; color: rgba(255,255,255,0.88); }
 
   /* Iconos (modalidades y escenario) */
   .pp-ico--shield { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4a843' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5.2L12 2.2 4 5.2V12c0 6 8 10 8 10z'/%3E%3Cpolyline points='8.8 12 11 14.2 15.2 10'/%3E%3C/svg%3E"); }
@@ -1233,6 +1269,7 @@
     .pp-highlights { grid-template-columns: repeat(2, 1fr); }
     .pp-track__editions { grid-template-columns: repeat(3, 1fr); }
     .pp-caps--grid { grid-template-columns: repeat(2, 1fr); gap: 0 32px; }
+    .pp-why__item { flex-basis: calc(50% - 9px); }
     .pp-modes { grid-template-columns: 1fr; }
   }
   @media (max-width: 768px) {
@@ -1281,7 +1318,11 @@
     .pp-sponsor img { height: 44px; }
     .pp-cmp-wrap { padding: 6px 14px 12px; overflow-x: auto; }
     .pp-cmp { min-width: 520px; }
-    .pp-reasons--grid { grid-template-columns: 1fr; }
+    .pp-why { gap: 14px; }
+    .pp-why-title { font-size: 21px; }
+    .pp-why__item { flex-basis: 100%; flex-direction: row; align-items: center; gap: 14px; padding: 18px 16px; }
+    .pp-why__num { width: 36px; height: 36px; font-size: 14px; }
+    .pp-why__item p { font-size: 14px; }
   }
   @media (max-width: 480px) {
     .pp-highlights { grid-template-columns: 1fr; }

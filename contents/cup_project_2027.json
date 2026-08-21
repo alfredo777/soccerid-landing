@@ -180,14 +180,6 @@
         ]
       },
       "disclaimer": "Ejercicio ilustrativo basado solo en taquilla; no incluye otros ingresos ni variaciones en costos.",
-      "whyTitle": "¿POR QUÉ INVERTIR?",
-      "reasons": [
-        "Producto deportivo premium con dos de los clubes más populares de México",
-        "Mercado estratégico con demanda comprobada",
-        "Potencial bruto de taquilla superior a 2x capital",
-        "Múltiples fuentes de ingresos diversificadas",
-        "Operación a cargo de SOCCER iD, con experiencia comprobada en eventos internacionales"
-      ],
       "ticketLabel": "Tickets de inversión desde:",
       "ticketValue": "$500,000 MXN / $30,000 USD",
       "footnote": "Los términos finales dependerán del monto, estructura y negociación de cada inversión."
@@ -220,6 +212,16 @@
         { "activity": "<strong>Partido Internacional</strong>", "period": "27 de marzo de 2027", "highlight": true },
         { "activity": "<strong>Liquidación de ingresos</strong> (boletera → estadio → SOCCER iD)", "period": "Abril – Julio 2027" },
         { "activity": "<strong>Cierre financiero y retorno al inversionista</strong>", "period": "Hasta agosto de 2027" }
+      ]
+    },
+    "why": {
+      "title": "¿POR QUÉ INVERTIR?",
+      "reasons": [
+        "Producto deportivo premium con dos de los clubes más populares de México",
+        "Mercado estratégico con demanda comprobada",
+        "Potencial bruto de taquilla superior a 2x capital",
+        "Múltiples fuentes de ingresos diversificadas",
+        "Operación a cargo de SOCCER iD, con experiencia comprobada en eventos internacionales"
       ]
     },
     "closing": {
@@ -411,14 +413,6 @@
         ]
       },
       "disclaimer": "Illustrative exercise based on box office only; it does not include other revenue sources or cost variations.",
-      "whyTitle": "WHY INVEST?",
-      "reasons": [
-        "Premium sports product featuring two of Mexico's most popular clubs",
-        "Strategic market with proven demand",
-        "Gross box office potential exceeding 2x capital",
-        "Multiple diversified revenue streams",
-        "Operated by SOCCER iD, with proven experience in international events"
-      ],
       "ticketLabel": "Investment tickets from:",
       "ticketValue": "$500,000 MXN / $30,000 USD",
       "footnote": "Final terms will depend on the amount, structure and negotiation of each investment."
@@ -451,6 +445,16 @@
         { "activity": "<strong>International Match</strong>", "period": "March 27, 2027", "highlight": true },
         { "activity": "<strong>Revenue settlement</strong> (box office → stadium → SOCCER iD)", "period": "April – July 2027" },
         { "activity": "<strong>Financial closing and investor return</strong>", "period": "Through August 2027" }
+      ]
+    },
+    "why": {
+      "title": "WHY INVEST?",
+      "reasons": [
+        "Premium sports product featuring two of Mexico's most popular clubs",
+        "Strategic market with proven demand",
+        "Gross box office potential exceeding 2x capital",
+        "Multiple diversified revenue streams",
+        "Operated by SOCCER iD, with proven experience in international events"
       ]
     },
     "closing": {
