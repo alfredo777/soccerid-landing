@@ -143,7 +143,7 @@
           { "label": "Utilidad del inversionista:", "value": "USD $25,000", "accent": true },
           { "label": "Capital + retorno:", "value": "USD $125,000" }
         ],
-        "note": "El porcentaje final depende del monto y momento de entrada."
+        "note": "El retorno depende del monto invertido y de la etapa del proyecto al momento de invertir."
       },
       "risk": {
         "icon": "growth",
@@ -420,7 +420,7 @@
           { "label": "Investor profit:", "value": "USD $25,000", "accent": true },
           { "label": "Capital + return:", "value": "USD $125,000" }
         ],
-        "note": "The final percentage depends on the amount and timing of entry."
+        "note": "The return depends on the amount invested and the project stage at the time of investment."
       },
       "risk": {
         "icon": "growth",
