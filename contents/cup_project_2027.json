@@ -407,7 +407,7 @@
     },
     "proposal": {
       "title": "PARTICIPATION EXAMPLES",
-      "subtitle": "Two investment modalities so you can choose the one that best fits your profile and goals.",
+      "subtitle": "Two investment structures so you can choose the one that best fits your profile and goals.",
       "fixed": {
         "icon": "shield",
         "name": "FIXED RETURN",
@@ -461,12 +461,12 @@
       "ticketValue": "$500,000 MXN / $30,000 USD"
     },
     "structure": {
-      "title": "INVESTMENT MODALITIES",
+      "title": "INVESTMENT STRUCTURES",
       "termsTitle": "TERMS",
       "terms": [
         { "label": "Target capital", "value": "USD $1.0M" },
-        { "label": "Modalities", "value": "Fixed return or at-risk participation" },
-        { "label": "Return", "value": "Depends on the modality" },
+        { "label": "Structures", "value": "Fixed return or at-risk participation" },
+        { "label": "Return", "value": "Depends on the structure" },
         { "label": "Estimated close", "value": "August 2027" }
       ],
       "itemsTitle": "GENERAL CONDITIONS",
