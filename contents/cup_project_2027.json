@@ -189,7 +189,7 @@
       ],
       "ticketLabel": "Tickets de inversión desde:",
       "ticketValue": "$500,000 MXN / $30,000 USD",
-      "footnote": "Los términos finales de cada inversión, incluyendo el retorno y el plazo, estarán sujetos al monto de inversión, la estructura de la operación y la negociación individual con cada inversionista. El retorno potencial máximo es de hasta 25%."
+      "footnote": "Los términos finales de cada inversión, incluyendo el retorno y el plazo, estarán sujetos al monto de inversión, la estructura de la operación y la negociación individual con cada inversionista."
     },
     "structure": {
       "title": "MODALIDADES DE INVERSIÓN",
@@ -419,7 +419,7 @@
       ],
       "ticketLabel": "Investment tickets from:",
       "ticketValue": "$500,000 MXN / $30,000 USD",
-      "footnote": "The final terms of each investment, including return and term, will be subject to the investment amount, deal structure, and individual negotiation with each investor. The maximum potential return is up to 25%."
+      "footnote": "The final terms of each investment, including return and term, will be subject to the investment amount, deal structure, and individual negotiation with each investor."
     },
     "structure": {
       "title": "INVESTMENT MODALITIES",
