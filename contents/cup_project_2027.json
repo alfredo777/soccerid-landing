@@ -148,7 +148,7 @@
       "risk": {
         "icon": "growth",
         "name": "PARTICIPACIÓN A RIESGO",
-        "tagline": "Participación como socio del proyecto",
+        "tagline": "El inversionista participa proporcionalmente en las utilidades del proyecto",
         "scenarioTitle": "ESCENARIO MODERADO",
         "scenario": [
           { "icon": "people", "value": "15,000", "label": "boletos vendidos", "lead": true },
@@ -379,7 +379,7 @@
       "risk": {
         "icon": "growth",
         "name": "AT-RISK PARTICIPATION",
-        "tagline": "Participation as a project partner",
+        "tagline": "The investor shares proportionally in the project's profits",
         "scenarioTitle": "MODERATE SCENARIO",
         "scenario": [
           { "icon": "people", "value": "15,000", "label": "tickets sold", "lead": true },
