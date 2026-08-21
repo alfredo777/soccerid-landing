@@ -2064,17 +2064,21 @@
     // ── Movil: el menu se despliega mostrando el titulo de cada icono ──
     function esMovil() { return window.matchMedia('(max-width: 768px)').matches; }
     var temporizador = null;
-    var presentando = false;   // ventana inicial: el scroll no lo repliega
+    var gracia = null;
+    var presentando = false;   // breve margen para que el scroll de entrada no lo cierre de golpe
 
-    function abrirMenu(msAutoCierre, esPresentacion) {
+    function abrirMenu(msAutoCierre, msGracia) {
       if (!esMovil()) return;
       nav.classList.add('is-open');
-      presentando = !!esPresentacion;
       clearTimeout(temporizador);
+      clearTimeout(gracia);
+      presentando = !!msGracia;
+      if (msGracia) gracia = setTimeout(function() { presentando = false; }, msGracia);
       if (msAutoCierre) temporizador = setTimeout(cerrarMenu, msAutoCierre);
     }
     function cerrarMenu() {
       clearTimeout(temporizador);
+      clearTimeout(gracia);
       presentando = false;
       nav.classList.remove('is-open');
     }
@@ -2085,7 +2089,7 @@
       if (!nav.classList.contains('is-open')) {
         e.preventDefault();
         e.stopPropagation();
-        abrirMenu(6000);
+        abrirMenu(3500);
       } else {
         setTimeout(cerrarMenu, 250);
       }
@@ -2105,7 +2109,7 @@
       nav.classList.toggle('is-visible', visible);
       if (visible && !yaSePresento) {
         yaSePresento = true;
-        abrirMenu(4500, true);   // se presenta desplegado la primera vez
+        abrirMenu(2400, 650);   // se presenta desplegado; el scroll lo repliega enseguida
       } else if (!visible) {
         cerrarMenu();
       }
