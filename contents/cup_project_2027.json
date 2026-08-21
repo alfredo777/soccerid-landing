@@ -19,6 +19,11 @@
       "date": "Sábado, 27 de marzo 2027",
       "cupBtn": "¿QUÉ ES SOCCER iD CUP?"
     },
+    "nav": {
+      "project": "El proyecto",
+      "experience": "Experiencia",
+      "investment": "Inversión"
+    },
     "highlights": {
       "title": "ASPECTOS DESTACADOS DE LA INVERSIÓN",
       "note": "<strong>Evento estratégicamente seleccionado:</strong> Producto, mercado y momento adecuados.",
@@ -295,6 +300,11 @@
       "city": "Houston, Texas",
       "date": "Saturday, March 27, 2027",
       "cupBtn": "WHAT IS SOCCER iD CUP?"
+    },
+    "nav": {
+      "project": "The project",
+      "experience": "Experience",
+      "investment": "Investment"
     },
     "highlights": {
       "title": "INVESTMENT HIGHLIGHTS",
