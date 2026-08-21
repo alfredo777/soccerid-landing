@@ -215,27 +215,9 @@
     </div>
   </section>
 
-  {{!-- ═══ 6 · COBERTURA EN TELEVISIÓN ═══ --}}
-  {{#if data.track.videos.length}}
-  <section class="pp-section pp-section--alt">
-    <h2 class="pp-section__title" style="margin-bottom:6px;">{{data.track.videosTitle}}</h2>
-    <p class="pp-modes-sub">{{data.track.videosSub}}</p>
-    <div class="pp-videos">
-      {{#each data.track.videos}}
-      <div class="pp-video">
-        <div class="pp-video__wrap">
-          <iframe src="https://www.youtube.com/embed/{{this.id}}" title="{{this.title}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <p class="pp-video__caption">{{this.title}}</p>
-      </div>
-      {{/each}}
-    </div>
-  </section>
-  {{/if}}
-
-  {{!-- ═══ PRENSA ═══ --}}
+  {{!-- ═══ 6 · PRESENCIA EN MEDIOS ═══ --}}
   {{#if mediaLinks.length}}
-  <section class="pp-section">
+  <section class="pp-section pp-section--alt">
     <h2 class="pp-section__title">{{#if isEs}}PRESENCIA EN MEDIOS{{else}}MEDIA PRESENCE{{/if}}</h2>
     <div class="pp-media-list">
       {{#each mediaLinks}}
@@ -256,7 +238,25 @@
   </section>
   {{/if}}
 
-  {{!-- ═══ RESPALDO Y DIFUSIÓN DE LOS CLUBES ═══ --}}
+  {{!-- ═══ 7 · COBERTURA EN TELEVISIÓN ═══ --}}
+  {{#if data.track.videos.length}}
+  <section class="pp-section">
+    <h2 class="pp-section__title" style="margin-bottom:6px;">{{data.track.videosTitle}}</h2>
+    <p class="pp-modes-sub">{{data.track.videosSub}}</p>
+    <div class="pp-videos">
+      {{#each data.track.videos}}
+      <div class="pp-video">
+        <div class="pp-video__wrap">
+          <iframe src="https://www.youtube.com/embed/{{this.id}}" title="{{this.title}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <p class="pp-video__caption">{{this.title}}</p>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+  {{/if}}
+
+  {{!-- ═══ 8 · RESPALDO Y DIFUSIÓN DE LOS CLUBES ═══ --}}
   <section class="pp-section pp-section--alt">
     <div class="bts">
       <div class="bts-head">
