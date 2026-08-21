@@ -38,7 +38,7 @@
         "cards": [
           {
             "team": "TIGRES EN HOUSTON",
-            "image": "",
+            "image": "/assets/images/antecedentes/tigres-houston.jpg",
             "venue": "Shell Energy Stadium",
             "pct": 100,
             "outlet": "Houston Dynamo FC",
@@ -56,7 +56,7 @@
           },
           {
             "team": "CRUZ AZUL EN LOS ÁNGELES",
-            "image": "",
+            "image": "/assets/images/antecedentes/cruzazul-la.jpg",
             "venue": "Dignity Health Sports Park · Carson",
             "pct": 100,
             "outlet": "Los Angeles Times",
@@ -370,7 +370,7 @@
         "cards": [
           {
             "team": "TIGRES IN HOUSTON",
-            "image": "",
+            "image": "/assets/images/antecedentes/tigres-houston.jpg",
             "venue": "Shell Energy Stadium",
             "pct": 100,
             "outlet": "Houston Dynamo FC",
@@ -388,7 +388,7 @@
           },
           {
             "team": "CRUZ AZUL IN LOS ANGELES",
-            "image": "",
+            "image": "/assets/images/antecedentes/cruzazul-la.jpg",
             "venue": "Dignity Health Sports Park · Carson",
             "pct": 100,
             "outlet": "Los Angeles Times",
