@@ -25,6 +25,17 @@
       "investment": "Inversión",
       "calculator": "Calcula tu utilidad"
     },
+    "brief": {
+      "title": "RESUMEN",
+      "items": [
+        { "icon": "capital", "label": "CAPITAL OBJETIVO", "value": "USD $1.0M", "note": "Capital requerido para el proyecto" },
+        { "icon": "modes", "label": "MODALIDADES", "value": "FIJO / A RIESGO", "note": "Dos formas de participación" },
+        { "icon": "return", "label": "RETORNO", "value": "FIJO: HASTA 25%", "note": "A riesgo: variable según utilidades" },
+        { "icon": "calendar", "label": "CIERRE ESTIMADO", "value": "AGOSTO 2027", "note": "Retorno / distribución" },
+        { "icon": "trophy", "label": "EXPERIENCIA", "value": "3 EDICIONES", "note": "2023 · 2024 · 2025 · eventos en EE.UU." },
+        { "icon": "ticket", "label": "INVERSIÓN DESDE", "value": "USD $30,000", "note": "$500,000 MXN · ticket mínimo" }
+      ]
+    },
     "highlights": {
       "title": "ASPECTOS DESTACADOS DE LA INVERSIÓN",
       "note": "<strong>Evento estratégicamente seleccionado:</strong> Producto, mercado y momento adecuados.",
@@ -209,6 +220,7 @@
         "icon": "growth",
         "name": "PARTICIPACIÓN A RIESGO",
         "tagline": "El inversionista se hace socio del evento y participa en sus utilidades",
+        "splitScope": "Aplica solo a Participación a riesgo",
         "splitTitle": "ESTRUCTURA DE PARTICIPACIÓN 50 / 50",
         "split": [
           { "name": "SOCCER iD", "pct": "50%", "role": "Aporta el proyecto y la ejecución: relación con clubes, estadio, estructuración comercial, operación y experiencia." },
@@ -227,7 +239,7 @@
         ],
         "breakEvenTitle": "BREAK-EVEN ILUSTRATIVO",
         "breakEven": "10,000 boletos · 45.9% de ocupación · Taquilla USD $1.0M. Por debajo de ese punto el proyecto no genera utilidad.",
-        "exampleTitle": "EJEMPLO CON USD $100,000",
+        "exampleTitle": "EJEMPLO",
         "rows": [
           { "label": "El inversionista pone:", "value": "USD $100,000", "note": "10% del capital requerido" },
           { "label": "Su participación efectiva en utilidades:", "value": "5%", "note": "10% del 50% destinado a inversionistas" },
@@ -240,7 +252,6 @@
       "compare": {
         "head": ["CONCEPTO", "RETORNO FIJO", "PARTICIPACIÓN A RIESGO"],
         "rows": [
-          { "concept": "Modalidad", "fixed": "Contractual", "risk": "Participación en utilidades" },
           { "concept": "Inversión ejemplo", "fixed": "USD $100,000", "risk": "USD $100,000" },
           { "concept": "Escenario", "fixed": "Retorno máximo contractual", "risk": "Sold out ilustrativo" },
           { "concept": "Participación en utilidades", "fixed": "No aplica", "risk": "5% del total" },
@@ -322,7 +333,7 @@
         "shareCapital": "% del capital requerido",
         "sharePool": "% del pool de inversionistas",
         "shareEffective": "Participación efectiva en utilidades",
-        "shareEffectiveNote": "{a} × {b}",
+        "shareEffectiveNote": "{a} del capital requerido × {b} que va al pool de inversionistas",
         "share": "Tu participación efectiva en utilidades",
         "pool": "50% destinado a inversionistas (pool)",
         "breakEvenTag": "BREAK-EVEN ILUSTRATIVO",
@@ -381,6 +392,17 @@
       "experience": "Experience",
       "investment": "Investment",
       "calculator": "Calculate your profit"
+    },
+    "brief": {
+      "title": "SUMMARY",
+      "items": [
+        { "icon": "capital", "label": "TARGET CAPITAL", "value": "USD $1.0M", "note": "Capital required for the project" },
+        { "icon": "modes", "label": "STRUCTURES", "value": "FIXED / AT-RISK", "note": "Two ways to participate" },
+        { "icon": "return", "label": "RETURN", "value": "FIXED: UP TO 25%", "note": "At-risk: variable, based on profits" },
+        { "icon": "calendar", "label": "ESTIMATED CLOSE", "value": "AUGUST 2027", "note": "Return / distribution" },
+        { "icon": "trophy", "label": "EXPERIENCE", "value": "3 EDITIONS", "note": "2023 · 2024 · 2025 · events in the U.S." },
+        { "icon": "ticket", "label": "INVESTMENT FROM", "value": "USD $30,000", "note": "$500,000 MXN · minimum ticket" }
+      ]
     },
     "highlights": {
       "title": "INVESTMENT HIGHLIGHTS",
@@ -566,6 +588,7 @@
         "icon": "growth",
         "name": "AT-RISK PARTICIPATION",
         "tagline": "The investor becomes a partner in the event and shares in its profits",
+        "splitScope": "Applies only to At-risk participation",
         "splitTitle": "PARTICIPATION STRUCTURE 50 / 50",
         "split": [
           { "name": "SOCCER iD", "pct": "50%", "role": "Contributes the project and its execution: club relationships, venue, commercial structuring, operations and experience." },
@@ -584,7 +607,7 @@
         ],
         "breakEvenTitle": "ILLUSTRATIVE BREAK-EVEN",
         "breakEven": "10,000 tickets · 45.9% occupancy · Box office USD $1.0M. Below that point the project generates no profit.",
-        "exampleTitle": "EXAMPLE WITH USD $100,000",
+        "exampleTitle": "EXAMPLE",
         "rows": [
           { "label": "The investor puts in:", "value": "USD $100,000", "note": "10% of the required capital" },
           { "label": "Effective share of profits:", "value": "5%", "note": "10% of the 50% allocated to investors" },
@@ -597,7 +620,6 @@
       "compare": {
         "head": ["ITEM", "FIXED RETURN", "AT-RISK PARTICIPATION"],
         "rows": [
-          { "concept": "Modality", "fixed": "Contractual", "risk": "Profit participation" },
           { "concept": "Sample investment", "fixed": "USD $100,000", "risk": "USD $100,000" },
           { "concept": "Scenario", "fixed": "Maximum contractual return", "risk": "Illustrative sold out" },
           { "concept": "Share of profits", "fixed": "Not applicable", "risk": "5% of total" },
@@ -679,7 +701,7 @@
         "shareCapital": "% of required capital",
         "sharePool": "% of the investor pool",
         "shareEffective": "Effective share of profits",
-        "shareEffectiveNote": "{a} × {b}",
+        "shareEffectiveNote": "{a} of required capital × {b} that goes to the investor pool",
         "share": "Your effective share of profits",
         "pool": "50% allocated to investors (pool)",
         "breakEvenTag": "ILLUSTRATIVE BREAK-EVEN",

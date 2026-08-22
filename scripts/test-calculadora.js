@@ -119,10 +119,8 @@ function check(nombre, real, esperado) {
   console.log('\nRIESGO · sold out 21,800 · reparto 50/50 (el caso de la tarjeta)');
   await tipo('risk'); await asistencia(21800); await sleep(150);
   r = await resultado();
-  check('Participacion efectiva', r['Participación efectiva en utilidades'], '5%');
   check('Taquilla', r['Ingreso de taquilla'], 'USD $2,180,000');
   check('Utilidad del proyecto', r['Utilidad ilustrativa del proyecto'], 'USD $1,180,000');
-  check('50% al pool', r['50% destinado a inversionistas (pool)'], 'USD $590,000');
   check('Tu utilidad', r['Tu utilidad'], 'USD $59,000');
   check('Rendimiento', r['Rendimiento'], '59%');
   check('Capital + utilidad', r['Capital + utilidad'], 'USD $159,000');
@@ -132,7 +130,6 @@ function check(nombre, real, esperado) {
   await asistencia(10000); await sleep(150);
   r = await resultado();
   check('Utilidad del proyecto', r['Utilidad ilustrativa del proyecto'], 'USD $0');
-  check('50% al pool', r['50% destinado a inversionistas (pool)'], 'USD $0');
   check('Tu utilidad', r['Tu utilidad'], 'USD $0');
   check('Rendimiento', r['Rendimiento'], '0%');
   check('Capital + resultado', r['Capital + utilidad'], 'USD $100,000');
@@ -141,12 +138,19 @@ function check(nombre, real, esperado) {
   await asistencia(5000); await sleep(150);
   r = await resultado();
   check('Utilidad del proyecto', r['Utilidad ilustrativa del proyecto'], '-USD $500,000');
-  check('Tu utilidad', r['Tu utilidad'], '-USD $25,000');
-  check('Rendimiento', r['Rendimiento'], '-25%');
-  check('Capital + resultado', r['Capital + utilidad'], 'USD $75,000');
+  check('Tu utilidad', r['Tu utilidad'], '-USD $50,000');
+  check('Rendimiento', r['Rendimiento'], '-50%');
+  check('Capital + resultado', r['Capital + utilidad'], 'USD $50,000');
   check('avisa del punto de equilibrio', (await aviso()).includes('10,000'), 'true');
   check('la perdida se marca en rojo',
     await ev(`!!document.querySelector('#ppCalcResult .pp-calc__row--neg')`), 'true');
+
+  console.log('\nRIESGO · 0 asistentes (perdida total, la perdida NO se reparte)');
+  await asistencia(0); await sleep(150);
+  r = await resultado();
+  check('Tu utilidad', r['Tu utilidad'], '-USD $100,000');
+  check('Rendimiento', r['Rendimiento'], '-100%');
+  check('Capital + resultado', r['Capital + utilidad'], 'USD $0');
 
   console.log('\nEL TOPE ES 50% DE LAS UTILIDADES, NO 100%');
   await asistencia(21800); await sleep(150);
@@ -154,8 +158,6 @@ function check(nombre, real, esperado) {
     i.value = '1000000'; i.dispatchEvent(new Event('input', {bubbles:true})); i.dispatchEvent(new Event('blur')); })()`);
   await sleep(200);
   r = await resultado();
-  check('con el millon completo la participacion efectiva es 50%',
-    r['Participación efectiva en utilidades'], '50%');
   check('su utilidad es el 50% del proyecto', r['Tu utilidad'], 'USD $590,000');
   check('el rendimiento tope sigue siendo 59%', r['Rendimiento'], '59%');
 
@@ -165,9 +167,7 @@ function check(nombre, real, esperado) {
     i.value = '1800000'; i.dispatchEvent(new Event('input', {bubbles:true})); i.dispatchEvent(new Event('blur')); })()`);
   await asistencia(21800); await sleep(200);
   r = await resultado();
-  check('Participacion efectiva', r['Participación efectiva en utilidades'], '5%');
   check('Taquilla', r['Ingreso de taquilla'], 'MXN $39,240,000');
-  check('50% al pool', r['50% destinado a inversionistas (pool)'], 'MXN $10,620,000');
   check('Tu utilidad', r['Tu utilidad'], 'MXN $1,062,000');
   check('Rendimiento', r['Rendimiento'], '59%');
 

@@ -87,6 +87,24 @@
     </div>
   </section>
 
+  {{!-- ═══ BRIEF / RESUMEN ═══ --}}
+  {{#if data.brief}}
+  <section class="pp-section pp-brief-section" id="ppResumen">
+    <h2 class="pp-section__title">{{data.brief.title}}</h2>
+    <div class="pp-brief">
+      {{#each data.brief.items}}
+      <div class="pp-brief__card">
+        <span class="pp-brief__icon pp-bico--{{icon}}"></span>
+        <span class="pp-brief__label">{{label}}</span>
+        <span class="pp-brief__rule"></span>
+        <strong class="pp-brief__value">{{value}}</strong>
+        <span class="pp-brief__note">{{note}}</span>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+  {{/if}}
+
   {{!-- ═══ HIGHLIGHTS ═══ --}}
   <section class="pp-section pp-section--alt" id="ppProyecto">
     <h2 class="pp-section__title">{{data.highlights.title}}</h2>
@@ -587,6 +605,37 @@
     <h2 class="pp-section__title" style="margin-bottom:6px;">{{data.proposal.title}}</h2>
     {{#if data.proposal.subtitle}}<p class="pp-modes-sub">{{data.proposal.subtitle}}</p>{{/if}}
 
+    <div class="pp-riskrules">
+      {{#if data.proposal.risk.splitScope}}
+      <span class="pp-riskrules__scope">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg>
+        {{data.proposal.risk.splitScope}}
+      </span>
+      {{/if}}
+      <div class="pp-split">
+          <span class="pp-chip">{{data.proposal.risk.splitTitle}}</span>
+          <div class="pp-split__grid">
+            {{#each data.proposal.risk.split}}
+            <div class="pp-split__side">
+              <strong>{{pct}}</strong>
+              <span>{{name}}</span>
+              <p>{{role}}</p>
+            </div>
+            {{/each}}
+          </div>
+          <p class="pp-split__note">{{data.proposal.risk.splitNote}}</p>
+        </div>
+      {{#if data.proposal.risk.breakEven}}
+      <div class="pp-breakeven">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-3 6a3.2 3.2 0 0 0 6 0z"/><path d="M19 7l3 6a3.2 3.2 0 0 1-6 0z"/><path d="M8 21h8"/></svg>
+          <div>
+            <span>{{data.proposal.risk.breakEvenTitle}}</span>
+            <p>{{data.proposal.risk.breakEven}}</p>
+          </div>
+        </div>
+        {{/if}}
+    </div>
+
     <div class="pp-modes">
       {{!-- Modalidad A · Retorno fijo --}}
       <div class="pp-mode">
@@ -660,31 +709,6 @@
         </div>
 
       </div>
-    </div>
-
-    <div class="pp-riskrules">
-      <div class="pp-split">
-          <span class="pp-chip">{{data.proposal.risk.splitTitle}}</span>
-          <div class="pp-split__grid">
-            {{#each data.proposal.risk.split}}
-            <div class="pp-split__side">
-              <strong>{{pct}}</strong>
-              <span>{{name}}</span>
-              <p>{{role}}</p>
-            </div>
-            {{/each}}
-          </div>
-          <p class="pp-split__note">{{data.proposal.risk.splitNote}}</p>
-        </div>
-      {{#if data.proposal.risk.breakEven}}
-      <div class="pp-breakeven">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-3 6a3.2 3.2 0 0 0 6 0z"/><path d="M19 7l3 6a3.2 3.2 0 0 1-6 0z"/><path d="M8 21h8"/></svg>
-          <div>
-            <span>{{data.proposal.risk.breakEvenTitle}}</span>
-            <p>{{data.proposal.risk.breakEven}}</p>
-          </div>
-        </div>
-        {{/if}}
     </div>
 
     {{#if data.proposal.compare}}
@@ -974,6 +998,44 @@
   .pp-section__title {
     font-size: 20px; font-weight: 800; letter-spacing: 1px;
     margin-bottom: 40px; color: #fff;
+  }
+
+  /* ─── BRIEF / RESUMEN ─── */
+  .pp-brief-section { padding-top: 48px; padding-bottom: 48px; }
+  .pp-brief { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+  .pp-brief__card {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(212,168,67,0.28);
+    border-radius: 16px; padding: 24px 16px 20px;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .pp-brief__card:hover { border-color: rgba(212,168,67,0.6); transform: translateY(-4px); }
+  .pp-brief__icon {
+    width: 42px; height: 42px; margin-bottom: 14px;
+    background-size: contain; background-repeat: no-repeat; background-position: center;
+  }
+  .pp-brief__label { font-size: 11px; font-weight: 800; letter-spacing: 1px; color: #fff; line-height: 1.3; min-height: 28px; display: flex; align-items: center; }
+  .pp-brief__rule { width: 26px; height: 2px; background: rgba(212,168,67,0.5); margin: 10px 0; }
+  .pp-brief__value { font-size: 17px; font-weight: 900; color: var(--pp-gold); line-height: 1.2; }
+  .pp-brief__note { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.45; margin-top: 8px; }
+
+  .pp-bico--capital { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4a843' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9.2'/%3E%3Cpath d='M15 9.4a2.4 2.4 0 0 0-2.4-1.9h-1.2a2 2 0 0 0 0 4h1.2a2 2 0 0 1 0 4h-1.2A2.4 2.4 0 0 1 9 13.6'/%3E%3Cpath d='M12 5.6v12.8'/%3E%3C/svg%3E"); }
+  .pp-bico--modes { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4a843' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='17 2 21 6 17 10'/%3E%3Cpath d='M3 11V9a4 4 0 0 1 4-4h14'/%3E%3Cpolyline points='7 22 3 18 7 14'/%3E%3Cpath d='M21 13v2a4 4 0 0 1-4 4H3'/%3E%3C/svg%3E"); }
+  .pp-bico--return { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4a843' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='3 17 9 11 13 15 21 7'/%3E%3Cpolyline points='15 7 21 7 21 13'/%3E%3C/svg%3E"); }
+  .pp-bico--calendar { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4a843' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4.5' width='18' height='17' rx='2.5'/%3E%3Cpath d='M3 9h18M8 2.5v4M16 2.5v4'/%3E%3Cpath d='M7.5 13h0M12 13h0M16.5 13h0M7.5 17h0M12 17h0'/%3E%3C/svg%3E"); }
+  .pp-bico--trophy { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23d4a843' viewBox='0 0 24 24'%3E%3Cpath d='M5 3h14v2H5V3zm0 2v5a7 7 0 005.5 6.84V19H8v2h8v-2h-2.5v-2.16A7 7 0 0019 10V5h2V3h-2V5H5V3H3v2h2zm2 0h10v5a5 5 0 01-10 0V5z'/%3E%3C/svg%3E"); }
+  .pp-bico--ticket { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d4a843' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 9.5V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2.5a2.5 2.5 0 0 0 0 5V17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-2.5a2.5 2.5 0 0 0 0-5z'/%3E%3Cpath d='M14.5 5.5v2M14.5 11v2M14.5 16.5v2'/%3E%3C/svg%3E"); }
+
+  @media (max-width: 1024px) {
+    .pp-brief { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .pp-brief { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .pp-brief__card { padding: 18px 12px 16px; }
+    .pp-brief__icon { width: 36px; height: 36px; margin-bottom: 10px; }
+    .pp-brief__label { font-size: 10px; min-height: 26px; }
+    .pp-brief__value { font-size: 15px; }
+    .pp-brief__note { font-size: 10px; }
   }
 
   /* ─── HIGHLIGHTS ─── */
@@ -1503,8 +1565,15 @@
   .pp-fixed-res > div { padding: 16px 12px; text-align: center; }
   .pp-fixed-res > div + div { border-left: 1px solid rgba(212,168,67,0.3); }
 
+  .pp-riskrules__scope {
+    display: inline-flex; align-items: center; gap: 8px; margin-bottom: 16px;
+    padding: 7px 15px 7px 12px; border-radius: 20px;
+    background: rgba(212,168,67,0.12); border: 1px solid rgba(212,168,67,0.5);
+    color: var(--pp-gold); font-size: 11px; font-weight: 800; letter-spacing: 0.8px;
+  }
+  .pp-riskrules__scope svg { width: 15px; height: 15px; flex-shrink: 0; }
   .pp-riskrules {
-    margin-top: 22px; padding: 20px 24px;
+    margin: 0 0 22px; padding: 20px 24px;
     background: rgba(255,255,255,0.03); border: 1px solid rgba(212,168,67,0.3);
     border-radius: 18px;
   }
@@ -1733,6 +1802,10 @@
   .pp-calc__row { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
   .pp-calc__row:last-child { border-bottom: none; }
   .pp-calc__row > span:first-child { font-size: 13px; color: rgba(255,255,255,0.65); }
+  .pp-calc__rownote {
+    display: block; margin-top: 3px; font-style: normal;
+    font-size: 11px; line-height: 1.4; color: rgba(255,255,255,0.4);
+  }
   .pp-calc__val { display: flex; align-items: baseline; gap: 8px; text-align: right; }
   .pp-calc__row strong { font-size: 16px; font-weight: 800; color: #fff; text-align: right; white-space: nowrap; }
   .pp-calc__row--big { padding: 14px 0 6px; }
@@ -1797,6 +1870,7 @@
     .pp-calc__rtitle { font-size: 9.5px; padding: 6px 0 1px; }
     .pp-calc__row { padding: 3px 0; }
     .pp-calc__row > span:first-child { font-size: 12px; }
+    .pp-calc__rownote { font-size: 10px; margin-top: 2px; }
     .pp-calc__row strong { font-size: 14px; }
     .pp-calc__row--big { padding: 9px 0 3px; }
     .pp-calc__row--big strong { font-size: 19px; }
@@ -2215,9 +2289,11 @@
       render();
     }
 
-    function row(label, value, cls, sufijo) {
+    function row(label, value, cls, sufijo, nota) {
       return '<div class="pp-calc__row' + (cls ? ' ' + cls : '') + '">' +
-             '<span>' + label + '</span>' +
+             '<span>' + label +
+             (nota ? '<em class="pp-calc__rownote">' + nota + '</em>' : '') +
+             '</span>' +
              '<span class="pp-calc__val"><strong>' + value + '</strong>' +
              (sufijo ? '<em class="pp-calc__pct">' + sufijo + '</em>' : '') +
              '</span></div>';
@@ -2248,19 +2324,18 @@
         var efectiva = enCapital * (splitPct / 100);      // participación real en la utilidad
         var box = state.att * cur.ticketPrice;
         var projectProfit = box - cur.projectCost;
-        var pool = projectProfit * (splitPct / 100);
+        // El 50/50 aplica SOLO a la utilidad. Si hay pérdida, el inversionista
+        // la absorbe completa en proporción a su capital (no se reparte a la mitad).
+        var pool = projectProfit > 0 ? projectProfit * (splitPct / 100) : projectProfit;
         var mine = pool * enCapital;
         var neg = mine < 0 ? ' pp-calc__row--neg' : '';
         var rend = pct(a ? (mine / a) * 100 : 0);
 
-        html += row(L.shareEffective, pct(efectiva * 100), '',
-                    fill(L.shareEffectiveNote, { a: pct(enCapital * 100), b: splitPct + '%' }));
         html += tira([
           [L.boxOffice, money(box)],
           [L.projectCost, '− ' + money(cur.projectCost)],
           [L.projectProfit, money(projectProfit), projectProfit < 0 ? 'is-neg' : '']
         ]);
-        html += row(L.pool, money(pool), projectProfit < 0 ? 'pp-calc__row--neg' : '');
         html += row(L.yourProfit, money(mine), neg);
         html += row(L.yield, rend, 'pp-calc__row--yield' + neg);
         html += row(L.total, money(a + mine), 'pp-calc__row--big' + neg, rend);
