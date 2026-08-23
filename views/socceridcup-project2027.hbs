@@ -605,39 +605,8 @@
     <h2 class="pp-section__title" style="margin-bottom:6px;">{{data.proposal.title}}</h2>
     {{#if data.proposal.subtitle}}<p class="pp-modes-sub">{{data.proposal.subtitle}}</p>{{/if}}
 
-    <div class="pp-riskrules">
-      {{#if data.proposal.risk.splitScope}}
-      <span class="pp-riskrules__scope">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg>
-        {{data.proposal.risk.splitScope}}
-      </span>
-      {{/if}}
-      <div class="pp-split">
-          <span class="pp-chip">{{data.proposal.risk.splitTitle}}</span>
-          <div class="pp-split__grid">
-            {{#each data.proposal.risk.split}}
-            <div class="pp-split__side">
-              <strong>{{pct}}</strong>
-              <span>{{name}}</span>
-              <p>{{role}}</p>
-            </div>
-            {{/each}}
-          </div>
-          <p class="pp-split__note">{{data.proposal.risk.splitNote}}</p>
-        </div>
-      {{#if data.proposal.risk.breakEven}}
-      <div class="pp-breakeven">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-3 6a3.2 3.2 0 0 0 6 0z"/><path d="M19 7l3 6a3.2 3.2 0 0 1-6 0z"/><path d="M8 21h8"/></svg>
-          <div>
-            <span>{{data.proposal.risk.breakEvenTitle}}</span>
-            <p>{{data.proposal.risk.breakEven}}</p>
-          </div>
-        </div>
-        {{/if}}
-    </div>
-
     <div class="pp-modes">
-      {{!-- Modalidad A · Retorno fijo --}}
+      {{!-- Modalidad A · Retorno fijo (simple y claro) --}}
       <div class="pp-mode">
         <div class="pp-mode__head">
           <span class="pp-mode__icon pp-ico--{{data.proposal.fixed.icon}}"></span>
@@ -679,7 +648,25 @@
             <p>{{data.proposal.risk.tagline}}</p>
           </div>
         </div>
-        <div class="pp-mode__body pp-risk">
+        <div class="pp-mode__body">
+          {{!-- Estructura 50 / 50 · explicada dentro de la Participación a riesgo --}}
+          <div class="pp-riskrules pp-riskrules--nested">
+            <div class="pp-split">
+              <span class="pp-chip">{{data.proposal.risk.splitTitle}}</span>
+              <div class="pp-split__grid">
+                {{#each data.proposal.risk.split}}
+                <div class="pp-split__side">
+                  <strong>{{pct}}</strong>
+                  <span>{{name}}</span>
+                  <p>{{role}}</p>
+                </div>
+                {{/each}}
+              </div>
+              <p class="pp-split__note">{{data.proposal.risk.splitNote}}</p>
+            </div>
+          </div>
+
+          <div class="pp-risk">
           <div class="pp-risk__col">
             <span class="pp-chip">{{data.proposal.risk.scenarioTitle}}</span>
             {{#each data.proposal.risk.scenario}}
@@ -706,6 +693,17 @@
               <strong>{{data.proposal.risk.yieldValue}}</strong>
             </div>
           </div>
+          </div>
+
+          {{#if data.proposal.risk.breakEven}}
+          <div class="pp-breakeven">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-3 6a3.2 3.2 0 0 0 6 0z"/><path d="M19 7l3 6a3.2 3.2 0 0 1-6 0z"/><path d="M8 21h8"/></svg>
+            <div>
+              <span>{{data.proposal.risk.breakEvenTitle}}</span>
+              <p>{{data.proposal.risk.breakEven}}</p>
+            </div>
+          </div>
+          {{/if}}
         </div>
 
       </div>
@@ -1520,7 +1518,8 @@
 
   /* ─── MODALIDADES / EJEMPLOS DE PARTICIPACIÓN ─── */
   .pp-modes-sub { font-size: 15px; color: rgba(255,255,255,0.6); margin: 0 0 28px; line-height: 1.6; }
-  .pp-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; }
+  /* Modalidades apiladas: primero el Retorno fijo (simple), después la Participación a riesgo (explicada) */
+  .pp-modes { display: grid; grid-template-columns: 1fr; gap: 24px; }
   .pp-mode {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(212,168,67,0.35);
@@ -1579,6 +1578,8 @@
   }
   .pp-riskrules .pp-split { margin-bottom: 0; }
   .pp-riskrules .pp-breakeven { margin-top: 16px; }
+  /* Estructura 50/50 anidada dentro de la tarjeta de Participación a riesgo */
+  .pp-riskrules--nested { margin: 0 0 22px; }
 
   /* Estructura 50 / 50 */
   .pp-split { margin-bottom: 18px; }
@@ -2033,7 +2034,6 @@
     .pp-highlights { grid-template-columns: repeat(2, 1fr); }
     .pp-track__editions { grid-template-columns: repeat(3, 1fr); }
     .pp-caps--grid { grid-template-columns: repeat(2, 1fr); gap: 0 32px; }
-    .pp-modes { grid-template-columns: 1fr; }
   }
   @media (max-width: 768px) {
     .pp-hero { min-height: 60vh; padding: 40px 24px; }
