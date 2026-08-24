@@ -1811,6 +1811,7 @@
   .pp-calc__row strong { font-size: 16px; font-weight: 800; color: #fff; text-align: right; white-space: nowrap; }
   .pp-calc__row--big { padding: 14px 0 6px; }
   .pp-calc__row--big strong { font-size: 24px; color: var(--pp-gold); }
+  .pp-calc__row--pos strong { color: #22c55e; }
   .pp-calc__row--neg strong { color: #ef4444; }
   .pp-calc__math {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
@@ -1819,6 +1820,7 @@
   .pp-calc__math div { min-width: 0; }
   .pp-calc__math span { display: block; font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.3; margin-bottom: 3px; }
   .pp-calc__math b { display: block; font-size: 14px; font-weight: 800; color: #fff; }
+  .pp-calc__math b.is-pos { color: #22c55e; }
   .pp-calc__math b.is-neg { color: #ef4444; }
   .pp-calc__pct { display: none; }
   .pp-calc__warn { font-size: 12px; color: #f59e0b; line-height: 1.5; margin: 12px 0 0; }
@@ -1883,6 +1885,7 @@
       display: inline-block; margin-left: 8px; font-style: normal;
       font-size: 12px; font-weight: 800; color: rgba(255,255,255,0.75);
     }
+    .pp-calc__row--pos .pp-calc__pct { color: #22c55e; }
     .pp-calc__row--neg .pp-calc__pct { color: #ef4444; }
     .pp-calc__warn { font-size: 11px; margin-top: 8px; }
     .pp-calc__disc { font-size: 9px; line-height: 1.25; margin-top: 7px; }
@@ -2289,6 +2292,11 @@
       render();
     }
 
+    // Verde para cifras a favor, rojo para cifras en contra
+    function signo(n) {
+      return n > 0 ? ' pp-calc__row--pos' : (n < 0 ? ' pp-calc__row--neg' : '');
+    }
+
     function row(label, value, cls, sufijo, nota) {
       return '<div class="pp-calc__row' + (cls ? ' ' + cls : '') + '">' +
              '<span>' + label +
@@ -2313,9 +2321,10 @@
 
       if (state.type === 'fixed') {
         var profit = a * cfg.fixedRate / 100;
-        html += row(fill(L.fixedProfit, { rate: cfg.fixedRate }), money(profit));
-        html += row(L.yield, pct(cfg.fixedRate));
-        html += row(L.totalFixed, money(a + profit), 'pp-calc__row--big');
+        var signoFijo = signo(profit);
+        html += row(fill(L.fixedProfit, { rate: cfg.fixedRate }), money(profit), signoFijo);
+        html += row(L.yield, pct(cfg.fixedRate), signoFijo);
+        html += row(L.totalFixed, money(a + profit), 'pp-calc__row--big' + signoFijo);
       } else {
         // El proyecto reparte sus utilidades 50% SOCCER iD / 50% pool de
         // inversionistas; dentro del pool, cada quien va en proporción a su aporte.
@@ -2328,17 +2337,17 @@
         // la absorbe completa en proporción a su capital (no se reparte a la mitad).
         var pool = projectProfit > 0 ? projectProfit * (splitPct / 100) : projectProfit;
         var mine = pool * enCapital;
-        var neg = mine < 0 ? ' pp-calc__row--neg' : '';
+        var sgn = signo(mine);
         var rend = pct(a ? (mine / a) * 100 : 0);
 
         html += tira([
-          [L.boxOffice, money(box)],
-          [L.projectCost, '− ' + money(cur.projectCost)],
-          [L.projectProfit, money(projectProfit), projectProfit < 0 ? 'is-neg' : '']
+          [L.boxOffice, money(box), box > 0 ? 'is-pos' : ''],
+          [L.projectCost, '− ' + money(cur.projectCost), 'is-neg'],
+          [L.projectProfit, money(projectProfit), projectProfit > 0 ? 'is-pos' : (projectProfit < 0 ? 'is-neg' : '')]
         ]);
-        html += row(L.yourProfit, money(mine), neg);
-        html += row(L.yield, rend, 'pp-calc__row--yield' + neg);
-        html += row(L.total, money(a + mine), 'pp-calc__row--big' + neg, rend);
+        html += row(L.yourProfit, money(mine), sgn);
+        html += row(L.yield, rend, 'pp-calc__row--yield' + sgn);
+        html += row(L.total, money(a + mine), 'pp-calc__row--big' + sgn, rend);
         var breakEven = Math.ceil(cur.projectCost / cur.ticketPrice);
         if (state.att < breakEven) {
           html += '<p class="pp-calc__warn">' + fill(L.breakEven, { n: nf(breakEven) }) + '</p>';
