@@ -163,6 +163,13 @@ async function ensureSchema() {
       t.integer('notifications_seen_id').defaultTo(0);
     });
   }
+
+  // Tipo de inversión por usuario: 'fijo' (retorno contractual) | 'riesgo' (participación 50/50)
+  if (await knex.schema.hasTable('users') && !(await knex.schema.hasColumn('users', 'investment_type'))) {
+    await knex.schema.alterTable('users', (t) => {
+      t.string('investment_type').defaultTo('fijo');
+    });
+  }
 }
 
 async function seed() {

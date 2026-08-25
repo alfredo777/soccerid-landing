@@ -109,12 +109,21 @@
         </span>
         <span class="db-cat__id">{{panel.user.memberId}}</span>
       </div>
-      <div class="db-cat__label">Monto invertido</div>
+      <div class="db-cat__label">{{#eq panel.user.role 'sponsor'}}Monto patrocinado{{else}}Monto invertido · {{panel.user.investmentTypeLabel}}{{/eq}}</div>
       <div class="db-cat__amount">{{panel.user.amount}}</div>
       <div class="db-cat__meta">
-        <div><small>Retorno proyectado</small><strong>{{panel.user.projectedReturn}}</strong></div>
-        <div><small>Rendimiento</small><strong>{{panel.user.returnPct}}</strong></div>
+        {{#eq panel.user.role 'sponsor'}}
+        <div><small>Categoría</small><strong>{{panel.user.categoryLabel}}</strong></div>
         <div><small>Miembro desde</small><strong>{{panel.user.since}}</strong></div>
+        {{else}}
+        <div><small>{{#if panel.user.isRisk}}Capital + utilidad{{else}}Capital + retorno{{/if}}</small><strong>{{panel.user.projectedReturn}}</strong></div>
+        <div><small>{{panel.user.returnMetaLabel}}</small><strong>{{panel.user.returnPct}}</strong></div>
+        {{#if panel.user.isRisk}}
+        <div><small>Participación efectiva</small><strong>{{panel.user.effectiveSharePct}}</strong></div>
+        {{else}}
+        <div><small>Miembro desde</small><strong>{{panel.user.since}}</strong></div>
+        {{/if}}
+        {{/eq}}
       </div>
     </div>
 
@@ -265,7 +274,8 @@
   (function(){
     var el = document.getElementById('pnCountdown');
     if (!el) return;
-    var days = Math.floor((new Date('2027-03-27T19:00:00-05:00').getTime() - Date.now()) / 86400000);
+    var target = '{{panel.eventDateISO}}' || '2027-03-27T19:00:00-05:00';
+    var days = Math.floor((new Date(target).getTime() - Date.now()) / 86400000);
     el.textContent = days > 0 ? days + ' días' : '¡Hoy!';
   })();
 </script>

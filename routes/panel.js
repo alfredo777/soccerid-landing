@@ -13,6 +13,7 @@ const auth = require('../lib/panelAuth');
 const { sendInvite, sendNotification } = require('../lib/panelMailer');
 const { sendLeadEmail } = require('../lib/project2027');
 const { uploadImage, uploadDocument } = require('../lib/uploads');
+const { getDashboardConfig, saveDashboardConfig, computeReturn } = require('../lib/panelSettings');
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
 
@@ -112,12 +113,20 @@ async function notificationsForUser(user) {
 // ── Ensambla el objeto `panel` para un usuario (inversionista/patrocinador) ──
 async function buildPanelData(user) {
   const config = loadConfig();
+  const cfg = await getDashboardConfig();
   const tiers = await getTiers();
   const isSponsor = user.role === 'sponsor';
   const tier = findTier(tiers, user.role, user.category) || { label: user.category || '—', color: '#6C3CE0', bg: '#EFE9FC', benefits: [] };
 
   const amountLabel = formatUSD(user.amount);
-  const projected = formatUSD(Math.round((user.amount || 0) * 1.25));
+  const ret = computeReturn(user, cfg); // retorno según tipo de inversión
+  // Fecha corta del evento para el subtítulo del contador (ej. "27 marzo 2027")
+  const evShort = (() => {
+    try {
+      const d = new Date((cfg.eventDate || '2027-03-27') + 'T12:00:00');
+      return `${d.getDate()} ${MONTHS_ES[d.getMonth()]} ${d.getFullYear()}`;
+    } catch (_) { return cfg.eventLabel || ''; }
+  })();
 
   const panelUser = {
     name: user.name,
@@ -131,20 +140,25 @@ async function buildPanelData(user) {
     amount: amountLabel,
     memberId: user.member_id || '—',
     since: monthYear(user.created_at),
-    projectedReturn: projected,
-    returnPct: 'Hasta 25%'
+    projectedReturn: ret.projectedReturn,
+    returnPct: ret.returnPct,
+    returnMetaLabel: ret.returnMetaLabel,
+    investmentType: ret.type,
+    investmentTypeLabel: ret.typeLabel,
+    isRisk: ret.isRisk,
+    effectiveSharePct: ret.effectiveSharePct || null
   };
 
   const stats = isSponsor ? [
     { label: 'Monto patrocinado', value: amountLabel, icon: 'wallet', accent: '#6C3CE0' },
     { label: 'Categoría', value: tier.label, sub: 'Patrocinador', icon: 'diamond', accent: '#14141B' },
     { label: 'Activaciones', value: 'Incluidas', sub: 'Según categoría', icon: 'trend', accent: '#14141B' },
-    { label: 'Faltan para el partido', value: '—', sub: '27 marzo 2027', icon: 'clock', accent: '#14141B', countdown: true }
+    { label: 'Faltan para el partido', value: '—', sub: evShort, icon: 'clock', accent: '#14141B', countdown: true }
   ] : [
     { label: 'Monto invertido', value: amountLabel, icon: 'wallet', accent: '#6C3CE0' },
-    { label: 'Retorno proyectado', value: projected, sub: 'Hasta 25%', icon: 'trend', accent: '#14141B' },
-    { label: 'Tu categoría', value: tier.label, sub: user.category === 'diamante' ? 'Nivel máximo' : 'Inversionista', icon: 'diamond', accent: '#6C3CE0' },
-    { label: 'Faltan para el partido', value: '—', sub: '27 marzo 2027', icon: 'clock', accent: '#14141B', countdown: true }
+    { label: 'Retorno proyectado', value: ret.projectedReturn, sub: ret.returnPct, icon: 'trend', accent: '#14141B' },
+    { label: 'Tu categoría', value: tier.label, sub: ret.typeLabel, icon: 'diamond', accent: '#6C3CE0' },
+    { label: 'Faltan para el partido', value: '—', sub: evShort, icon: 'clock', accent: '#14141B', countdown: true }
   ];
 
   // Distribución (estructura planeada del cupo) + donut
@@ -189,14 +203,18 @@ async function buildPanelData(user) {
   const docRows = await knex('user_documents').where({ user_id: user.id }).orderBy('id', 'desc');
   const userDocuments = docRows.map(d => ({ id: d.id, name: d.name, url: d.url, meta: d.meta, ext: d.ext }));
 
+  // Fecha/hora del evento para el contador (desde la config editable)
+  const eventDateISO = `${cfg.eventDate || '2027-03-27'}T${cfg.eventTime || '19:00'}:00-05:00`;
+
   return {
     org: config.org,
-    eventLabel: config.eventLabel,
+    eventLabel: cfg.eventLabel || config.eventLabel,
+    eventDateISO,
     unread: notifs.unread,
-    advisor: config.advisor,
+    advisor: cfg.advisor,
     documents: userDocuments,
     userDocuments,
-    sharedFolder: config.sharedFolder || null,
+    sharedFolder: cfg.sharedFolder || null,
     user: panelUser,
     userBenefits: tier.benefits || [],
     stats,
@@ -485,6 +503,8 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         id: u.id, name: u.name, email: u.email, role: u.role, roleLabel: roleLabel(u),
         category: u.category || '', tierLabel: tierLabel(u), amountRaw: u.amount || 0,
         amount: formatUSD(u.amount), status: u.status,
+        investmentType: u.investment_type === 'riesgo' ? 'riesgo' : 'fijo',
+        investmentTypeLabel: u.investment_type === 'riesgo' ? 'Participación a riesgo' : 'Retorno fijo',
         color: (findTier(tiers, u.role, u.category) || {}).color || '#8A8F98',
         docs: docsByUser[u.id] || [], docCount: (docsByUser[u.id] || []).length
       })),
@@ -506,7 +526,8 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       codes: codesView, codesUsed, codesUnused, codesHistory,
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
-      notifyEmails
+      notifyEmails,
+      dashboardConfig: await getDashboardConfig()
     });
   } catch (e) { next(e); }
 });
@@ -519,6 +540,7 @@ router.post('/admin/invite', auth.requireAdmin, async (req, res, next) => {
     const role = req.body.role === 'sponsor' ? 'sponsor' : 'investor';
     const category = (req.body.category || '').trim();
     const amount = parseInt(req.body.amount || '0', 10) || 0;
+    const investmentType = req.body.investment_type === 'riesgo' ? 'riesgo' : 'fijo';
     if (!name || !email) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Nombre y email son obligatorios'));
 
     const existing = await knex('users').where({ email }).first();
@@ -533,6 +555,7 @@ router.post('/admin/invite', auth.requireAdmin, async (req, res, next) => {
     const expires = Date.now() + 7 * 24 * 60 * 60 * 1000;
     await knex('users').insert({
       name, email, role, category, amount, member_id: memberId,
+      investment_type: investmentType,
       status: 'invited', invite_token: token, invite_expires: expires
     });
 
@@ -684,6 +707,7 @@ router.post('/admin/user/:id/update', auth.requireAdmin, async (req, res, next) 
       role: req.body.role === 'sponsor' ? 'sponsor' : 'investor',
       category: (req.body.category || '').trim(),
       amount: parseInt(req.body.amount || '0', 10) || 0,
+      investment_type: req.body.investment_type === 'riesgo' ? 'riesgo' : 'fijo',
       status,
       updated_at: knex.fn.now()
     });
@@ -880,6 +904,39 @@ router.post('/admin/settings/notify', auth.requireAdmin, async (req, res, next) 
     if (ex) await knex('app_settings').where({ key: 'notify_emails' }).update({ value });
     else await knex('app_settings').insert({ key: 'notify_emails', value });
     res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Correos de notificación actualizados') + '#codigos');
+  } catch (e) { next(e); }
+});
+
+// Configuración del dashboard del inversionista (asesor, carpeta, evento, retorno)
+router.post('/admin/settings/dashboard', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const b = req.body;
+    const num = (v, d) => { const n = parseFloat(v); return isNaN(n) ? d : n; };
+    const sharedName = (b.sf_name || '').trim();
+    const sharedUrl = (b.sf_url || '').trim();
+    await saveDashboardConfig({
+      advisor: {
+        name: (b.adv_name || '').trim(),
+        role: (b.adv_role || '').trim(),
+        phone: (b.adv_phone || '').trim(),
+        whatsapp: (b.adv_whatsapp || '').replace(/[^0-9]/g, ''),
+        initials: ''
+      },
+      sharedFolder: sharedUrl ? {
+        name: sharedName || 'Carpeta compartida',
+        description: (b.sf_desc || '').trim(),
+        url: sharedUrl
+      } : null,
+      eventDate: (b.event_date || '').trim() || '2027-03-27',
+      eventTime: (b.event_time || '').trim() || '19:00',
+      eventLabel: (b.event_label || '').trim(),
+      fixedRate: num(b.fixed_rate, 25),
+      investorSplit: num(b.investor_split, 50),
+      projectCost: num(b.project_cost, 1000000),
+      ticketPrice: num(b.ticket_price, 100),
+      referenceAttendance: num(b.reference_attendance, 21800)
+    });
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Configuración del dashboard actualizada') + '#configuracion');
   } catch (e) { next(e); }
 });
 

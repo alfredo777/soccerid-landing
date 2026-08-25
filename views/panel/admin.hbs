@@ -121,6 +121,7 @@
   <div class="ad-tab" data-tab="codigos">Códigos</div>
   <div class="ad-tab" data-tab="accesos">Accesos</div>
   <div class="ad-tab" data-tab="leads">Prospectos</div>
+  <div class="ad-tab" data-tab="configuracion">Configuración</div>
 </div>
 
 <!-- USUARIOS -->
@@ -137,6 +138,9 @@
         <div class="ad-f"><label>Categoría</label><select name="category" id="ad-cat"></select></div>
         <div class="ad-f"><label>Monto (USD)</label><input type="number" name="amount" id="ad-amount" min="0" step="1000"></div>
       </div>
+      <div class="ad-f"><label>Tipo de inversión</label>
+        <select name="investment_type"><option value="fijo">Retorno fijo</option><option value="riesgo">Participación a riesgo</option></select>
+      </div>
       <button type="submit" class="ad-btn">Enviar invitación</button>
     </form>
 
@@ -148,12 +152,12 @@
           <div class="ad-item__av" style="background: {{this.color}}">{{this.tierLabel.[0]}}</div>
           <div class="ad-item__b">
             <strong>{{this.name}}</strong>
-            <small>{{this.email}} · {{this.roleLabel}} {{this.tierLabel}} · {{this.amount}}</small>
+            <small>{{this.email}} · {{this.roleLabel}} {{this.tierLabel}} · {{this.amount}}{{#eq this.role 'investor'}} · {{this.investmentTypeLabel}}{{/eq}}</small>
           </div>
           <span class="ad-status {{this.status}}">{{this.status}}</span>
           <div class="ad-actions">
             <button type="button" class="primary" onclick="openUser(this)"
-              data-id="{{this.id}}" data-name="{{this.name}}" data-email="{{this.email}}" data-role="{{this.role}}" data-category="{{this.category}}" data-amount="{{this.amountRaw}}" data-status="{{this.status}}">Editar</button>
+              data-id="{{this.id}}" data-name="{{this.name}}" data-email="{{this.email}}" data-role="{{this.role}}" data-category="{{this.category}}" data-amount="{{this.amountRaw}}" data-status="{{this.status}}" data-invtype="{{this.investmentType}}">Editar</button>
             <button type="button" onclick="openDocs(this)" data-id="{{this.id}}" data-name="{{this.name}}">Docs{{#if this.docCount}} ({{this.docCount}}){{/if}}</button>
             <form method="POST" action="/panel/admin/user/{{this.id}}/resend"><button type="submit">Reenviar</button></form>
             <form method="POST" action="/panel/admin/user/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar a {{this.name}}?')"><button type="submit" class="danger">Eliminar</button></form>
@@ -492,6 +496,57 @@
   </div>
 </section>
 
+<!-- CONFIGURACIÓN DEL DASHBOARD -->
+<section class="ad-sec" id="sec-configuracion">
+  <p class="ad-note">Personaliza lo que ven <strong>todos los inversionistas</strong> en su dashboard: asesor, carpeta compartida, fecha del evento y los parámetros de retorno de cada tipo de inversión.</p>
+  <form class="pn-card ad-form" method="POST" action="/panel/admin/settings/dashboard" style="max-width:720px;">
+
+    <h3>Asesor de inversionistas</h3>
+    <div class="ad-row2">
+      <div class="ad-f"><label>Nombre</label><input type="text" name="adv_name" value="{{dashboardConfig.advisor.name}}"></div>
+      <div class="ad-f"><label>Rol / puesto</label><input type="text" name="adv_role" value="{{dashboardConfig.advisor.role}}"></div>
+    </div>
+    <div class="ad-row2">
+      <div class="ad-f"><label>Teléfono (visible)</label><input type="text" name="adv_phone" value="{{dashboardConfig.advisor.phone}}" placeholder="+1 786 784 4303"></div>
+      <div class="ad-f"><label>WhatsApp (solo números)</label><input type="text" name="adv_whatsapp" value="{{dashboardConfig.advisor.whatsapp}}" placeholder="17867844303"></div>
+    </div>
+
+    <h3 style="margin-top:24px;">Carpeta compartida (Google Drive)</h3>
+    <div class="ad-f"><label>Título</label><input type="text" name="sf_name" value="{{dashboardConfig.sharedFolder.name}}" placeholder="Carpeta compartida — SOCCER iD CUP 2027"></div>
+    <div class="ad-f"><label>Descripción</label><input type="text" name="sf_desc" value="{{dashboardConfig.sharedFolder.description}}" placeholder="Documentación general del proyecto para todos los inversionistas."></div>
+    <div class="ad-f"><label>Enlace</label><input type="url" name="sf_url" value="{{dashboardConfig.sharedFolder.url}}" placeholder="https://drive.google.com/drive/folders/...">
+      <div class="ad-hint">Deja el enlace vacío para ocultar la carpeta del dashboard.</div>
+    </div>
+
+    <h3 style="margin-top:24px;">Evento y cuenta regresiva</h3>
+    <div class="ad-row2">
+      <div class="ad-f"><label>Fecha del partido</label><input type="date" name="event_date" value="{{dashboardConfig.eventDate}}"></div>
+      <div class="ad-f"><label>Hora (24h)</label><input type="time" name="event_time" value="{{dashboardConfig.eventTime}}"></div>
+    </div>
+    <div class="ad-f"><label>Etiqueta del evento (texto)</label><input type="text" name="event_label" value="{{dashboardConfig.eventLabel}}" placeholder="Sábado, 27 de marzo 2027"></div>
+
+    <h3 style="margin-top:24px;">Retorno fijo</h3>
+    <div class="ad-f" style="max-width:50%;"><label>Tasa de retorno (%)</label><input type="number" name="fixed_rate" value="{{dashboardConfig.fixedRate}}" min="0" step="0.5">
+      <div class="ad-hint">Retorno proyectado = monto × (1 + tasa/100).</div>
+    </div>
+
+    <h3 style="margin-top:24px;">Participación a riesgo (50/50)</h3>
+    <p class="ad-hint" style="margin-bottom:14px;">Se usa para proyectar la utilidad ilustrativa de los inversionistas a riesgo, con la misma lógica de la calculadora pública.</p>
+    <div class="ad-row2">
+      <div class="ad-f"><label>Reparto a inversionistas (%)</label><input type="number" name="investor_split" value="{{dashboardConfig.investorSplit}}" min="0" max="100" step="1"></div>
+      <div class="ad-f"><label>Costo del proyecto (USD)</label><input type="number" name="project_cost" value="{{dashboardConfig.projectCost}}" min="0" step="10000"></div>
+    </div>
+    <div class="ad-row2">
+      <div class="ad-f"><label>Precio de boleto (USD)</label><input type="number" name="ticket_price" value="{{dashboardConfig.ticketPrice}}" min="0" step="10"></div>
+      <div class="ad-f"><label>Asistencia de referencia</label><input type="number" name="reference_attendance" value="{{dashboardConfig.referenceAttendance}}" min="0" step="500">
+        <div class="ad-hint">Escenario para la proyección (default: estadio lleno).</div>
+      </div>
+    </div>
+
+    <button type="submit" class="ad-btn" style="margin-top:18px;">Guardar configuración</button>
+  </form>
+</section>
+
 <!-- ═══ MODALES DE EDICIÓN ═══ -->
 <div class="ad-modal" id="modal-user">
   <div class="ad-modal__card">
@@ -504,6 +559,9 @@
         <div class="ad-row2">
           <div class="ad-f"><label>Categoría</label><select name="category" id="eu-cat"></select></div>
           <div class="ad-f"><label>Monto (USD)</label><input type="number" name="amount" id="eu-amount" min="0" step="1000"></div>
+        </div>
+        <div class="ad-f"><label>Tipo de inversión</label>
+          <select name="investment_type" id="eu-invtype"><option value="fijo">Retorno fijo</option><option value="riesgo">Participación a riesgo</option></select>
         </div>
         <label class="ad-check"><input type="checkbox" name="active" id="eu-active" value="1"> Cuenta activa</label>
         <button type="submit" class="ad-btn" style="margin-top:14px;">Guardar cambios</button>
@@ -778,6 +836,7 @@
     document.getElementById('eu-role').value = d.role;
     fillCatSelect(document.getElementById('eu-cat'), d.role, d.category);
     document.getElementById('eu-amount').value = d.amount;
+    document.getElementById('eu-invtype').value = (d.invtype === 'riesgo' ? 'riesgo' : 'fijo');
     document.getElementById('eu-active').checked = (d.status === 'active');
     openModal('modal-user');
   }

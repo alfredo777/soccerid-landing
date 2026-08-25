@@ -119,7 +119,8 @@
   (function(){
     var el = document.getElementById('clCountdown');
     if (!el) return;
-    var days = Math.floor((new Date('2027-03-27T19:00:00-05:00').getTime() - Date.now()) / 86400000);
+    var target = '{{panel.eventDateISO}}' || '2027-03-27T19:00:00-05:00';
+    var days = Math.floor((new Date(target).getTime() - Date.now()) / 86400000);
     el.textContent = days > 0 ? days + ' días' : '¡Hoy!';
   })();
 </script>
