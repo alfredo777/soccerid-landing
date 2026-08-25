@@ -84,6 +84,51 @@
       "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division",
       "videoId": "9cqn_j9XzH4",
       "articles": [
+        {
+          "id": "futbol-amateur-liga-mx-visibilidad",
+          "image": "/assets/images/news/futbol-amateur-visibilidad.jpg",
+          "source": "cionoticias.tv",
+          "title": "Del fútbol amateur a la Liga MX: ¿por qué la visibilidad es el mayor obstáculo para los jóvenes?",
+          "excerpt": "Cada año miles de jóvenes mexicanos sueñan con llegar al fútbol profesional, pero el desafío no comienza cuando un visor los observa, sino en el acceso a espacios de formación y a competir de manera constante.",
+          "type": "link",
+          "url": "https://cionoticias.tv/2026/08/12/del-futbol-amateur-a-la-liga-mx-por-que-la-visibilidad-es-el-mayor-obstaculo-para-los-jovenes/"
+        },
+        {
+          "id": "aficionados-consumen-mundial-2026",
+          "image": "/assets/images/news/aficionados-mundial-2026.jpg",
+          "source": "www.mediotiempo.com",
+          "title": "Así es la nueva forma en que los aficionados consumen el Mundial 2026",
+          "excerpt": "Las formas tradicionales de ver y vivir el futbol han cambiado conforme avanza la tecnología, y el Mundial 2026 lo ha hecho patente.",
+          "type": "link",
+          "url": "https://www.mediotiempo.com/futbol/copa-mundial/asi-es-la-nueva-forma-en-que-los-aficionados-consumen-el-mundial-2026"
+        },
+        {
+          "id": "boletaje-digital-fraudes-central-fox",
+          "image": "/assets/images/news/boletaje-digital-fox.jpg",
+          "source": "Central FOX · FOX Sports México",
+          "title": "Boletaje deportivo en la era digital: el reto de evitar fraudes rumbo al Mundial en México",
+          "excerpt": "León Rangel, CEO de SOCCER iD, explica en Central FOX cómo funciona el boletaje totalmente digital del Mundial: \"Al ser todo digital, hay más control\".",
+          "type": "link",
+          "url": "https://x.com/CentralFOXMX/status/2065131030441316438"
+        },
+        {
+          "id": "mundial-2026-primero-100-digital",
+          "image": "/assets/images/news/mundial-digital.jpg",
+          "source": "www.heraldodeportes.com.mx",
+          "title": "Mundial 2026, el primero 100% digital en la historia: \"Un gran paso\", advierte experto",
+          "excerpt": "La Copa del Mundo estrenará herramientas inteligentes que buscan redefinir la seguridad, el acceso y la experiencia de los aficionados.",
+          "type": "link",
+          "url": "https://www.heraldodeportes.com.mx/futbol/2026/6/4/mundial-2026-el-primero-100-digital-en-la-historia-un-gran-paso-advierte-experto-68381.html"
+        },
+        {
+          "id": "precios-mundial-2026-vuelos",
+          "image": "/assets/images/news/precios-mundial-vuelos.jpg",
+          "source": "www.unotv.com",
+          "title": "¡Van a la baja los precios para el Mundial 2026!, pero siguen altos los costos de los vuelos",
+          "excerpt": "Boletos y hoteles para el Mundial 2026 bajan hasta 50%, pero los vuelos mantienen precios elevados rumbo al torneo más caro de la historia.",
+          "type": "link",
+          "url": "https://www.unotv.com/deportes/van-a-la-baja-los-precios-para-el-mundial-2026-pero-siguen-altos-los-costos-de-los-vuelos/"
+        },
           {
           "id": "soccer-id-venta-voleto-mundial",
           "image": "/assets/images/news/fifaplay2.png",
@@ -294,6 +339,51 @@
       "url": "https://www.record.com.mx/especiales/jugadores-amateur-son-atendidos-de-lesiones-por-doctores-de-primera-division",
       "videoId": "9cqn_j9XzH4",
       "articles": [
+        {
+          "id": "futbol-amateur-liga-mx-visibilidad",
+          "image": "/assets/images/news/futbol-amateur-visibilidad.jpg",
+          "source": "cionoticias.tv",
+          "title": "From amateur football to Liga MX: why is visibility the biggest obstacle for young players?",
+          "excerpt": "Every year thousands of young Mexicans dream of reaching professional football, but the challenge does not begin when a scout watches them — it starts with access to training spaces and regular competition.",
+          "type": "link",
+          "url": "https://cionoticias.tv/2026/08/12/del-futbol-amateur-a-la-liga-mx-por-que-la-visibilidad-es-el-mayor-obstaculo-para-los-jovenes/"
+        },
+        {
+          "id": "aficionados-consumen-mundial-2026",
+          "image": "/assets/images/news/aficionados-mundial-2026.jpg",
+          "source": "www.mediotiempo.com",
+          "title": "This is the new way fans experience the 2026 World Cup",
+          "excerpt": "Traditional ways of watching and living football have changed as technology advances, and the 2026 World Cup has made it evident.",
+          "type": "link",
+          "url": "https://www.mediotiempo.com/futbol/copa-mundial/asi-es-la-nueva-forma-en-que-los-aficionados-consumen-el-mundial-2026"
+        },
+        {
+          "id": "boletaje-digital-fraudes-central-fox",
+          "image": "/assets/images/news/boletaje-digital-fox.jpg",
+          "source": "Central FOX · FOX Sports México",
+          "title": "Sports ticketing in the digital era: the challenge of preventing fraud ahead of the World Cup in Mexico",
+          "excerpt": "León Rangel, CEO of SOCCER iD, explains on Central FOX how the fully digital ticketing for the World Cup works: \"Being all digital, there is more control\".",
+          "type": "link",
+          "url": "https://x.com/CentralFOXMX/status/2065131030441316438"
+        },
+        {
+          "id": "mundial-2026-primero-100-digital",
+          "image": "/assets/images/news/mundial-digital.jpg",
+          "source": "www.heraldodeportes.com.mx",
+          "title": "2026 World Cup, the first 100% digital in history: \"A great step\", expert warns",
+          "excerpt": "The World Cup will debut smart tools aimed at redefining security, access and the fan experience.",
+          "type": "link",
+          "url": "https://www.heraldodeportes.com.mx/futbol/2026/6/4/mundial-2026-el-primero-100-digital-en-la-historia-un-gran-paso-advierte-experto-68381.html"
+        },
+        {
+          "id": "precios-mundial-2026-vuelos",
+          "image": "/assets/images/news/precios-mundial-vuelos.jpg",
+          "source": "www.unotv.com",
+          "title": "World Cup 2026 prices are coming down, but flight costs remain high",
+          "excerpt": "Tickets and hotels for the 2026 World Cup are down by up to 50%, but flights keep high prices ahead of the most expensive tournament in history.",
+          "type": "link",
+          "url": "https://www.unotv.com/deportes/van-a-la-baja-los-precios-para-el-mundial-2026-pero-siguen-altos-los-costos-de-los-vuelos/"
+        },
         {
           "id": "soccer-id-world-cup-ticket-sales",
           "image": "/assets/images/news/fifaplay2.png",
