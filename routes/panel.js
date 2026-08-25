@@ -196,6 +196,7 @@ async function buildPanelData(user) {
     advisor: config.advisor,
     documents: userDocuments,
     userDocuments,
+    sharedFolder: config.sharedFolder || null,
     user: panelUser,
     userBenefits: tier.benefits || [],
     stats,

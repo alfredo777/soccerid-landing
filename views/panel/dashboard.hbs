@@ -229,6 +229,18 @@
     <div class="pn-card">
       <div class="pn-card__head"><h3>Contratos y documentos</h3><a href="/panel/documentos" class="pn-card__link">Ver todos ›</a></div>
       <div class="db-docs">
+        {{#if panel.sharedFolder}}
+        <a href="{{panel.sharedFolder.url}}" target="_blank" rel="noopener" class="db-doc" style="background:var(--pn-purple-soft); border-radius:13px;">
+          <div class="db-doc__ic" style="background:var(--pn-purple);">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="stroke:#fff;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="db-doc__b">
+            <strong>Carpeta compartida</strong>
+            <small>Google Drive</small>
+          </div>
+          <span class="db-doc__dl"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span>
+        </a>
+        {{/if}}
         {{#each panel.userDocuments}}
         <a href="{{this.url}}" target="_blank" rel="noopener" class="db-doc">
           <div class="db-doc__ic">
@@ -240,9 +252,10 @@
           </div>
           <span class="db-doc__dl"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></span>
         </a>
-        {{else}}
-        <p style="padding:14px 10px; font-size:12px; color:var(--pn-muted);">Aún no hay documentos compartidos contigo.</p>
         {{/each}}
+        {{#unless panel.userDocuments.length}}{{#unless panel.sharedFolder}}
+        <p style="padding:14px 10px; font-size:12px; color:var(--pn-muted);">Aún no hay documentos compartidos contigo.</p>
+        {{/unless}}{{/unless}}
       </div>
     </div>
   </div>

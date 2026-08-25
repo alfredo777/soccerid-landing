@@ -22,6 +22,11 @@
     { "name": "Prospecto SOCCER iD CUP 2027", "meta": "PDF · 5.1 MB", "icon": "doc" },
     { "name": "Estados financieros Q1", "meta": "PDF · 1.2 MB", "icon": "chart" }
   ],
+  "sharedFolder": {
+    "name": "Carpeta compartida — SOCCER iD CUP 2027",
+    "description": "Documentación general del proyecto accesible para todos los inversionistas.",
+    "url": "https://drive.google.com/drive/folders/1KC0j6JFu1InLcasApsp2CkhG60O8wZxB?usp=sharing"
+  },
   "investorTiers": [
     { "key": "diamante", "label": "Diamante", "count": 1, "color": "#6C3CE0", "bg": "#EFE9FC", "amount": 1000000, "benefits": [
       "Reconocimiento como inversionista principal del torneo",

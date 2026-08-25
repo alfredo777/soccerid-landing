@@ -15,6 +15,17 @@
   .dc-dl { display:flex; align-items:center; gap:8px; padding:11px 18px; border-radius:12px; background:var(--pn-ink); color:#fff; font-size:13px; font-weight:800; flex-shrink:0; }
   .dc-dl svg { width:16px; height:16px; stroke:#fff; }
 
+  .dc-shared { display:flex; align-items:center; gap:18px; padding:22px 24px; border:2px solid #E4DAFA; border-radius:18px; background:linear-gradient(135deg, #F8F5FF 0%, #FFFFFF 100%); box-shadow:var(--pn-shadow); margin-bottom:28px; }
+  .dc-shared__ic { width:56px; height:56px; border-radius:15px; background:var(--pn-purple); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .dc-shared__ic svg { width:28px; height:28px; fill:#fff; stroke:none; }
+  .dc-shared__b { flex:1; min-width:0; }
+  .dc-shared__b strong { display:block; font-size:16px; font-weight:800; margin-bottom:4px; }
+  .dc-shared__b small { font-size:13px; color:var(--pn-ink-2); line-height:1.5; }
+  .dc-shared__btn { display:flex; align-items:center; gap:9px; padding:13px 22px; border-radius:13px; background:var(--pn-purple); color:#fff; font-size:14px; font-weight:800; flex-shrink:0; }
+  .dc-shared__btn svg { width:18px; height:18px; fill:#fff; }
+
+  .dc-section { font-size:12px; font-weight:800; letter-spacing:1.3px; text-transform:uppercase; color:var(--pn-muted); margin:28px 0 14px; padding-left:2px; }
+
   .dc-empty { padding:60px 20px; text-align:center; color:var(--pn-muted); }
   .dc-empty svg { width:44px; height:44px; stroke:var(--pn-muted); margin-bottom:14px; }
   .dc-empty p { font-size:14px; }
@@ -25,6 +36,26 @@
     <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
     <p><strong>Documentación confidencial.</strong> Aquí encuentras los contratos y documentos legales que SOCCER iD ha compartido específicamente contigo. No los compartas con terceros.</p>
   </div>
+
+  {{#if panel.sharedFolder}}
+  <a href="{{panel.sharedFolder.url}}" target="_blank" rel="noopener" class="dc-shared">
+    <div class="dc-shared__ic">
+      <svg viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path d="M6.6 66.85L3.85 61.35 34.4 13.5H45.3L14.75 61.35H34.8L31.05 66.85Z" fill="#0066DA"/><path d="M43.65 25.05L53.75 8.35H75.55L45.3 61.35H34.4L52.55 30.6L43.65 25.05Z" fill="#00AC47"/><path d="M72.55 66.85H50.6L64.05 43.6L75.55 8.35L83.45 22L72.55 66.85Z" fill="#EA4335"/><path d="M43.65 25.05L52.55 30.6L64.05 43.6L50.6 66.85H31.05L34.8 61.35H14.75L43.65 25.05Z" fill="#00832D"/><path d="M50.6 66.85L72.55 66.85L83.45 22L75.55 8.35L64.05 43.6Z" fill="#2684FC"/><path d="M3.85 61.35L6.6 66.85H31.05L34.8 61.35Z" fill="#FFBA00"/></svg>
+    </div>
+    <div class="dc-shared__b">
+      <strong>{{panel.sharedFolder.name}}</strong>
+      <small>{{panel.sharedFolder.description}}</small>
+    </div>
+    <span class="dc-shared__btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+      Abrir carpeta
+    </span>
+  </a>
+  {{/if}}
+
+  {{#if panel.userDocuments.length}}
+  <div class="dc-section">Tus documentos</div>
+  {{/if}}
 
   {{#each panel.userDocuments}}
   <div class="dc-item">
@@ -41,9 +72,11 @@
     </a>
   </div>
   {{else}}
+  {{#unless panel.sharedFolder}}
   <div class="dc-empty">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/></svg>
     <p>Aún no hay documentos compartidos contigo.<br>Cuando SOCCER iD suba tus contratos, aparecerán aquí.</p>
   </div>
+  {{/unless}}
   {{/each}}
 </div>
