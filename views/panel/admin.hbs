@@ -1,7 +1,31 @@
 <style>
-  .ad-tabs { display:flex; gap:10px; margin: 6px 0 22px; flex-wrap:wrap; }
-  .ad-tab { padding:10px 20px; border-radius:13px; background:#fff; border:1px solid var(--pn-border); font-size:13px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
-  .ad-tab.is-active { background:var(--pn-purple); color:#fff; border-color:var(--pn-purple); }
+  .ad-tabs { display:flex; gap:8px; margin: 6px 0 22px; flex-wrap:wrap; }
+  .ad-tab {
+    position:relative; width:44px; height:44px; border-radius:13px;
+    background:#fff; border:1px solid var(--pn-border); color:var(--pn-ink-2);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    padding:0; transition: background .15s, color .15s, border-color .15s;
+  }
+  .ad-tab svg { width:20px; height:20px; stroke:currentColor; fill:none; }
+  .ad-tab:hover { background:var(--pn-purple-soft); color:var(--pn-purple); border-color:#E4DAFA; }
+  .ad-tab.is-active { background:var(--pn-purple); color:#fff; border-color:var(--pn-purple); box-shadow:0 8px 18px rgba(108,60,224,.24); }
+  /* Tooltip al pasar el mouse */
+  .ad-tab::after {
+    content: attr(data-label);
+    position:absolute; top:calc(100% + 9px); left:50%; transform:translateX(-50%) translateY(-3px);
+    background:var(--pn-ink); color:#fff; font-size:12px; font-weight:700; letter-spacing:.2px;
+    padding:6px 11px; border-radius:9px; white-space:nowrap;
+    opacity:0; pointer-events:none; transition:opacity .14s, transform .14s; z-index:30;
+    box-shadow:0 6px 18px rgba(20,20,27,.18);
+  }
+  .ad-tab::before {
+    content:''; position:absolute; top:calc(100% + 3px); left:50%; transform:translateX(-50%) translateY(-3px);
+    border:5px solid transparent; border-bottom-color:var(--pn-ink);
+    opacity:0; pointer-events:none; transition:opacity .14s, transform .14s; z-index:30;
+  }
+  .ad-tab:hover::after, .ad-tab:hover::before, .ad-tab:focus-visible::after, .ad-tab:focus-visible::before {
+    opacity:1; transform:translateX(-50%) translateY(0);
+  }
   /* En móvil la navegación vive en el menú lateral, así que los chips sobran
      (ocupaban tres renglones). Se sustituyen por una barra de ruta. */
   .ad-crumb { display:none; }
@@ -111,17 +135,39 @@
 </nav>
 
 <div class="ad-tabs">
-  <div class="ad-tab is-active" data-tab="usuarios">Usuarios</div>
-  <div class="ad-tab" data-tab="noticias">Noticias</div>
-  <div class="ad-tab" data-tab="calendario">Calendario</div>
-  <div class="ad-tab" data-tab="cronograma">Cronograma</div>
-  <div class="ad-tab" data-tab="categorias">Categorías</div>
-  <div class="ad-tab" data-tab="notificaciones">Notificaciones</div>
-  <div class="ad-tab" data-tab="ediciones">Ediciones</div>
-  <div class="ad-tab" data-tab="codigos">Códigos</div>
-  <div class="ad-tab" data-tab="accesos">Accesos</div>
-  <div class="ad-tab" data-tab="leads">Prospectos</div>
-  <div class="ad-tab" data-tab="configuracion">Configuración</div>
+  <button type="button" class="ad-tab is-active" data-tab="usuarios" data-label="Usuarios" title="Usuarios" aria-label="Usuarios">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  </button>
+  <button type="button" class="ad-tab" data-tab="noticias" data-label="Noticias" title="Noticias" aria-label="Noticias">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13v14H6a2 2 0 0 1-2-2V5z"/><path d="M17 8h2a1 1 0 0 1 1 1v8a2 2 0 0 1-2 2"/><line x1="7" y1="9" x2="14" y2="9"/><line x1="7" y1="13" x2="14" y2="13"/></svg>
+  </button>
+  <button type="button" class="ad-tab" data-tab="calendario" data-label="Calendario" title="Calendario" aria-label="Calendario">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+  </button>
+  <button type="button" class="ad-tab" data-tab="cronograma" data-label="Cronograma" title="Cronograma" aria-label="Cronograma">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="14" y2="18"/></svg>
+  </button>
+  <button type="button" class="ad-tab" data-tab="categorias" data-label="Categorías" title="Categorías" aria-label="Categorías">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18"/><path d="M9 3 6 9l6 12 6-12-3-6"/></svg>
+  </button>
+  <button type="button" class="ad-tab" data-tab="notificaciones" data-label="Notificaciones" title="Notificaciones" aria-label="Notificaciones">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+  </button>
+  <button type="button" class="ad-tab" data-tab="ediciones" data-label="Ediciones" title="Ediciones" aria-label="Ediciones">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 5.4L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.6-.6z"/></svg>
+  </button>
+  <button type="button" class="ad-tab" data-tab="codigos" data-label="Códigos" title="Códigos" aria-label="Códigos">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+  </button>
+  <button type="button" class="ad-tab" data-tab="accesos" data-label="Accesos" title="Accesos" aria-label="Accesos">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"/><path d="M12 8v4l3 2"/></svg>
+  </button>
+  <button type="button" class="ad-tab" data-tab="leads" data-label="Prospectos" title="Prospectos" aria-label="Prospectos">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  </button>
+  <button type="button" class="ad-tab" data-tab="configuracion" data-label="Configuración" title="Configuración" aria-label="Configuración">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+  </button>
 </div>
 
 <!-- USUARIOS -->
@@ -901,7 +947,7 @@
   function setCrumb(name){
     var out = document.getElementById('adCrumbSec');
     var tab = document.querySelector('.ad-tab[data-tab="' + name + '"]');
-    if (out && tab) out.textContent = tab.textContent.trim();
+    if (out && tab) out.textContent = (tab.getAttribute('data-label') || tab.textContent).trim();
   }
   function activate(name){
     setCrumb(name);
@@ -995,7 +1041,7 @@
       // Cambia de sección sin que se limpie el término hasta después de saltar
       var crumb = document.getElementById('adCrumbSec');
       var crumbTab = document.querySelector('.ad-tab[data-tab="' + sec + '"]');
-      if (crumb && crumbTab) crumb.textContent = crumbTab.textContent.trim();
+      if (crumb && crumbTab) crumb.textContent = (crumbTab.getAttribute('data-label') || crumbTab.textContent).trim();
       document.querySelectorAll('.ad-tab').forEach(function(t){ t.classList.toggle('is-active', t.dataset.tab === sec); });
       document.querySelectorAll('.ad-sec').forEach(function(s){ s.classList.toggle('is-active', s.id === 'sec-'+sec); });
       document.querySelectorAll('.pn-nav a[data-tab]').forEach(function(a){ a.classList.toggle('is-active', a.getAttribute('data-tab') === sec); });
