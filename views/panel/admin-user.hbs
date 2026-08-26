@@ -43,6 +43,10 @@
   .au-doc a.view { font-size:12px; font-weight:700; color:var(--pn-purple); }
   .au-doc button { border:1px solid var(--pn-border); background:#fff; border-radius:9px; padding:6px 10px; font-size:12px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
   .au-doc button:hover { border-color:#E7B3B3; color:#C0392B; }
+  .au-confirm { display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; color:var(--pn-ink-2); flex-wrap:wrap; }
+  .au-confirm button { border:1px solid var(--pn-border); background:#fff; border-radius:8px; padding:6px 12px; font-size:12px; font-weight:800; cursor:pointer; font-family:inherit; }
+  .au-confirm .yes { background:#C0392B; color:#fff; border-color:#C0392B; }
+  .au-confirm .no:hover { background:#F6F5F9; }
 </style>
 
 <div class="au-top">
@@ -152,7 +156,7 @@
       <small>{{this.category}}{{#if this.docDate}} · {{this.docDate}}{{/if}}{{#if this.meta}} · {{this.meta}}{{/if}}</small>
     </div>
     <a href="{{this.url}}" target="_blank" rel="noopener" class="view">Ver</a>
-    <form method="POST" action="/panel/admin/document/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar documento?')">
+    <form method="POST" action="/panel/admin/document/{{this.id}}/delete" data-confirm="¿Eliminar documento?">
       <input type="hidden" name="redirect" value="{{../account.id}}">
       <button type="submit">Eliminar</button>
     </form>
@@ -207,4 +211,22 @@
     var o = catSel.options[catSel.selectedIndex];
     if (o && (!amountInp.value || amountInp.value === '0')) amountInp.value = o.getAttribute('data-amt') || '';
   });
+
+  // Confirmación inline de borrado (sin confirm nativo)
+  document.addEventListener('submit', function(e){
+    var form = e.target;
+    if (!form || !form.getAttribute || !form.getAttribute('data-confirm') || form.__ok) return;
+    e.preventDefault();
+    if (form.__confirming) return; form.__confirming = true;
+    var btn = form.querySelector('[type="submit"], button:not([type])');
+    var wrap = document.createElement('span'); wrap.className = 'au-confirm';
+    wrap.innerHTML = '<span>' + form.getAttribute('data-confirm') + '</span>';
+    var yes = document.createElement('button'); yes.type='button'; yes.className='yes'; yes.textContent='Sí, eliminar';
+    var no = document.createElement('button'); no.type='button'; no.className='no'; no.textContent='Cancelar';
+    wrap.appendChild(yes); wrap.appendChild(no);
+    if (btn) btn.style.display='none'; form.appendChild(wrap);
+    function cleanup(){ wrap.remove(); if(btn) btn.style.display=''; form.__confirming=false; }
+    no.addEventListener('click', cleanup);
+    yes.addEventListener('click', function(){ form.__ok=true; cleanup(); form.requestSubmit ? form.requestSubmit(btn) : form.submit(); });
+  }, true);
 </script>

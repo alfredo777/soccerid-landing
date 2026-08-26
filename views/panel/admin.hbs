@@ -98,6 +98,15 @@
   .ad-chips { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
   .ad-chip2 { font-size:10.5px; font-weight:800; padding:3px 9px; border-radius:20px; letter-spacing:.2px; }
 
+  /* Confirmación inline de borrado (sin modal ni confirm nativo) */
+  .ad-confirm { display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; color:var(--pn-ink-2); flex-wrap:wrap; }
+  .ad-confirm__q { white-space:nowrap; }
+  .ad-confirm button { border:1px solid var(--pn-border); background:#fff; border-radius:8px; padding:6px 12px; font-size:12px; font-weight:800; cursor:pointer; font-family:inherit; }
+  .ad-confirm .yes { background:#C0392B; color:#fff; border-color:#C0392B; }
+  .ad-confirm .yes:hover { background:#A93226; }
+  .ad-confirm .no { color:var(--pn-ink-2); }
+  .ad-confirm .no:hover { background:#F6F5F9; }
+
   /* Flechas de reordenar */
   .ad-move { display:flex; flex-direction:column; gap:2px; flex-shrink:0; }
   .ad-move button { border:1px solid var(--pn-border); background:#fff; border-radius:7px; width:26px; height:19px; padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--pn-ink-2); }
@@ -271,7 +280,7 @@
           <div class="ad-actions">
             <button type="button" class="primary" onclick="location.href='/panel/admin/user/{{this.id}}'">Editar cuenta{{#if this.docCount}} · {{this.docCount}} doc{{/if}}</button>
             <form method="POST" action="/panel/admin/user/{{this.id}}/resend"><button type="submit">Reenviar</button></form>
-            <form method="POST" action="/panel/admin/user/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar a {{this.name}}?')"><button type="submit" class="danger">Eliminar</button></form>
+            <form method="POST" action="/panel/admin/user/{{this.id}}/delete" data-confirm="¿Eliminar a {{this.name}}?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
         {{else}}
@@ -317,8 +326,8 @@
           <div class="ad-actions">
             <button type="button" class="primary" onclick="openNews(this)"
               data-id="{{this.id}}" data-tag="{{this.tag}}" data-title="{{this.title}}" data-excerpt="{{this.excerpt}}" data-body="{{this.body}}" data-image="{{this.image}}" data-date="{{this.date_label}}" data-size="{{this.size}}" data-featured="{{#if this.featured}}1{{/if}}">Editar</button>
-            <form method="POST" action="/panel/admin/news/{{this.id}}/notify" onsubmit="return confirm('¿Compartir esta noticia como notificación (email) a todos los usuarios?')"><button type="submit">Compartir</button></form>
-            <form method="POST" action="/panel/admin/news/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar noticia?')"><button type="submit" class="danger">Eliminar</button></form>
+            <form method="POST" action="/panel/admin/news/{{this.id}}/notify" data-confirm="¿Compartir esta noticia como notificación (email) a todos los usuarios?"><button type="submit">Compartir</button></form>
+            <form method="POST" action="/panel/admin/news/{{this.id}}/delete" data-confirm="¿Eliminar noticia?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
         {{else}}
@@ -359,7 +368,7 @@
           <div class="ad-actions">
             <button type="button" class="primary" onclick="openEvent(this)"
               data-id="{{this.id}}" data-title="{{this.title}}" data-day="{{this.day}}" data-month="{{this.month}}" data-year="{{this.year}}" data-type="{{this.type}}">Editar</button>
-            <form method="POST" action="/panel/admin/event/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar evento?')"><button type="submit" class="danger">Eliminar</button></form>
+            <form method="POST" action="/panel/admin/event/{{this.id}}/delete" data-confirm="¿Eliminar evento?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
         {{else}}
@@ -404,7 +413,7 @@
           <div class="ad-actions">
             <button type="button" class="primary" onclick="openMile(this)"
               data-id="{{this.id}}" data-title="{{this.title}}" data-date="{{this.date_label}}" data-status="{{this.status}}" data-owner="{{this.owner}}" data-highlight="{{#if this.highlight}}1{{/if}}">Editar</button>
-            <form method="POST" action="/panel/admin/milestone/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar hito?')"><button type="submit" class="danger">Eliminar</button></form>
+            <form method="POST" action="/panel/admin/milestone/{{this.id}}/delete" data-confirm="¿Eliminar hito?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
         {{else}}
@@ -442,7 +451,7 @@
             <small>{{this.date}} · {{#eq this.audience 'all'}}Todos{{/eq}}{{#eq this.audience 'investor'}}Inversionistas{{/eq}}{{#eq this.audience 'sponsor'}}Patrocinadores{{/eq}}</small>
           </div>
           <div class="ad-actions">
-            <form method="POST" action="/panel/admin/notification/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar notificación?')"><button type="submit" class="danger">Eliminar</button></form>
+            <form method="POST" action="/panel/admin/notification/{{this.id}}/delete" data-confirm="¿Eliminar notificación?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
         {{else}}
@@ -503,7 +512,7 @@
         <div class="ad-actions">
           {{#eq this.status 'past'}}<a href="/es/socceridcup/{{this.year}}" target="_blank" rel="noopener" style="border:1px solid var(--pn-border);background:#fff;border-radius:9px;padding:7px 10px;font-size:12px;font-weight:700;color:var(--pn-ink-2);text-decoration:none;">Ver</a>{{/eq}}
           <button type="button" class="primary" onclick="openEdition('{{this.id}}')">Editar</button>
-          <form method="POST" action="/panel/admin/edition/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar la edición {{this.year}}?')"><button type="submit" class="danger">Eliminar</button></form>
+          <form method="POST" action="/panel/admin/edition/{{this.id}}/delete" data-confirm="¿Eliminar la edición {{this.year}}?"><button type="submit" class="danger">Eliminar</button></form>
         </div>
       </div>
       {{else}}
@@ -549,7 +558,7 @@
                 <option value="used" {{#eq this.status 'used'}}selected{{/eq}}>Usado</option>
               </select>
             </form>
-            <form method="POST" action="/panel/admin/code/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar el código {{this.code}}?')"><button type="submit" class="danger">Eliminar</button></form>
+            <form method="POST" action="/panel/admin/code/{{this.id}}/delete" data-confirm="¿Eliminar el código {{this.code}}?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
         {{/each}}
@@ -583,7 +592,7 @@
 <section class="ad-sec" id="sec-leads">
   <p class="ad-note">Nombres y correos capturados en la propuesta 2027. Cambia su estado con el select, o envíales correo individual o masivo.</p>
   <div class="ad-grid">
-    <form class="pn-card ad-form" method="POST" action="/panel/admin/leads/email" onsubmit="return confirm('¿Enviar este correo a los prospectos seleccionados?')">
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/leads/email" data-confirm="¿Enviar este correo a los prospectos seleccionados?">
       <h3>Correo masivo</h3>
       <div class="ad-f"><label>Audiencia</label><select name="audience"><option value="all">Todos</option><option value="nuevo">Nuevos</option><option value="contactado">Contactados</option><option value="cliente">Clientes</option><option value="descartado">Descartados</option></select></div>
       <div class="ad-f"><label>Asunto</label><input type="text" name="subject" required></div>
@@ -611,7 +620,7 @@
             </form>
             <button type="button" onclick="openLeadHistory(this)" data-id="{{this.id}}" data-name="{{this.name}}" data-email="{{this.email}}">Historial{{#if this.accesses}} ({{this.accesses}}){{/if}}</button>
             <button type="button" class="primary" onclick="openLeadEmail(this)" data-id="{{this.id}}" data-name="{{this.name}}" data-email="{{this.email}}">Correo</button>
-            <form method="POST" action="/panel/admin/lead/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar a {{this.name}}?')"><button type="submit" class="danger">Eliminar</button></form>
+            <form method="POST" action="/panel/admin/lead/{{this.id}}/delete" data-confirm="¿Eliminar a {{this.name}}?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
         {{else}}
@@ -666,7 +675,7 @@
           <div class="ad-actions">
             <button type="button" class="primary" onclick="openCapital(this)"
               data-id="{{this.id}}" data-label="{{this.label}}" data-budget="{{this.budget}}" data-spent="{{this.spent}}" data-note="{{this.note}}" data-source="{{this.source}}">Editar</button>
-            <form method="POST" action="/panel/admin/capital/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar rubro?')"><button type="submit" class="danger">Eliminar</button></form>
+            <form method="POST" action="/panel/admin/capital/{{this.id}}/delete" data-confirm="¿Eliminar rubro?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
         {{else}}
@@ -716,7 +725,7 @@
           <div class="ad-actions">
             <button type="button" class="primary" onclick="openRisk(this)"
               data-id="{{this.id}}" data-title="{{this.title}}" data-level="{{this.level}}" data-status="{{this.status}}" data-mitigation="{{this.mitigation}}">Editar</button>
-            <form method="POST" action="/panel/admin/risk/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar riesgo?')"><button type="submit" class="danger">Eliminar</button></form>
+            <form method="POST" action="/panel/admin/risk/{{this.id}}/delete" data-confirm="¿Eliminar riesgo?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
         {{else}}
@@ -1203,7 +1212,7 @@
         return '<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--pn-border);">'
           + '<div style="flex:1;min-width:0;"><strong style="display:block;font-size:14px;">'+esc(doc.name)+'</strong><small style="color:var(--pn-muted);font-size:12px;">'+esc(doc.meta||'')+'</small></div>'
           + '<a href="'+doc.url+'" target="_blank" rel="noopener" style="font-size:12px;font-weight:700;color:var(--pn-purple);">Ver</a>'
-          + '<form method="POST" action="/panel/admin/document/'+doc.id+'/delete" onsubmit="return confirm(\'¿Eliminar documento?\')"><button type="submit" style="border:1px solid var(--pn-border);background:#fff;border-radius:9px;padding:6px 10px;font-size:12px;font-weight:700;color:var(--pn-ink-2);cursor:pointer;">Eliminar</button></form>'
+          + '<form method="POST" action="/panel/admin/document/'+doc.id+'/delete" data-confirm="¿Eliminar documento?"><button type="submit" style="border:1px solid var(--pn-border);background:#fff;border-radius:9px;padding:6px 10px;font-size:12px;font-weight:700;color:var(--pn-ink-2);cursor:pointer;">Eliminar</button></form>'
           + '</div>';
       }).join('');
     }
@@ -1370,6 +1379,35 @@
       if (e.key === 'Enter'){ var first = panel.querySelector('.pn-search__opt'); if (first){ e.preventDefault(); first.click(); } }
     });
     box.addEventListener('focus', function(){ if (box.value.trim()){ INDEX = buildIndex(); render(box.value); } });
+  })();
+
+  // ── Confirmación inline (reemplaza confirm() nativo): "¿Eliminar? Sí / No" ──
+  (function(){
+    document.addEventListener('submit', function(e){
+      var form = e.target;
+      if (!form || !form.getAttribute || !form.getAttribute('data-confirm')) return;
+      if (form.__ok) return;               // ya confirmado → deja pasar
+      e.preventDefault();
+      if (form.__confirming) return;       // ya se está mostrando el confirm
+      form.__confirming = true;
+      var btn = form.querySelector('[type="submit"], button:not([type])');
+      var msg = form.getAttribute('data-confirm') || '¿Confirmar?';
+      var wrap = document.createElement('span');
+      wrap.className = 'ad-confirm';
+      var q = document.createElement('span'); q.className = 'ad-confirm__q'; q.textContent = msg;
+      var yes = document.createElement('button'); yes.type = 'button'; yes.className = 'yes'; yes.textContent = 'Sí, eliminar';
+      var no = document.createElement('button'); no.type = 'button'; no.className = 'no'; no.textContent = 'Cancelar';
+      if (/enviar|compartir/i.test(msg)) yes.textContent = 'Sí, continuar';
+      wrap.appendChild(q); wrap.appendChild(yes); wrap.appendChild(no);
+      if (btn) btn.style.display = 'none';
+      form.appendChild(wrap);
+      function cleanup(){ wrap.remove(); if (btn) btn.style.display = ''; form.__confirming = false; }
+      no.addEventListener('click', cleanup);
+      yes.addEventListener('click', function(){
+        form.__ok = true; cleanup();
+        if (form.requestSubmit) form.requestSubmit(btn); else form.submit();
+      });
+    }, true);
   })();
 
   // ── Toast: mostrar, auto-ocultar y limpiar el ?msg de la URL ──
