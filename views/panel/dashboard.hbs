@@ -1,7 +1,10 @@
 <style>
   .db-chips { display:flex; gap:10px; margin: 6px 0 22px; flex-wrap: wrap; }
-  .db-chip { padding: 10px 20px; border-radius: 13px; background:#fff; border:1px solid var(--pn-border); font-size:13px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
+  .db-chip { padding: 10px 20px; border-radius: 13px; background:#fff; border:1px solid var(--pn-border); font-size:13px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; text-decoration:none; }
+  .db-chip:hover { background: var(--pn-purple-soft); color: var(--pn-purple); border-color:#E4DAFA; }
   .db-chip.is-active { background: var(--pn-purple); color:#fff; border-color: var(--pn-purple); }
+  #mi-inversion, #beneficios, #distribucion { scroll-margin-top: 92px; }
+  html { scroll-behavior: smooth; }
 
   .db-grid { display:grid; grid-template-columns: 1fr 348px; gap: 22px; align-items:start; }
   .db-col { display:flex; flex-direction:column; gap: 22px; min-width:0; }
@@ -89,16 +92,17 @@
 </style>
 
 <div class="db-chips">
-  <div class="db-chip is-active">Resumen</div>
-  <div class="db-chip">Mis beneficios</div>
-  <div class="db-chip">Distribución</div>
-  <div class="db-chip">Documentos</div>
+  <a href="#mi-inversion" class="db-chip is-active" data-anchor>{{#eq panel.user.role 'sponsor'}}Mi patrocinio{{else}}Mi inversión{{/eq}}</a>
+  <a href="#beneficios" class="db-chip" data-anchor>Beneficios</a>
+  <a href="#distribucion" class="db-chip" data-anchor>Distribución</a>
+  <a href="/panel/documentos" class="db-chip">Documentos y evidencias</a>
+  <a href="/panel/calendario" class="db-chip">Cronograma</a>
 </div>
 
 <div class="db-grid">
   <div class="db-col">
     <!-- Category hero -->
-    <div class="db-cat" style="background: {{panel.user.color}}">
+    <div class="db-cat" id="mi-inversion" style="background: {{panel.user.color}}">
       <div class="db-cat__gemwm">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l3 6-9 12L3 9z"/><path d="M3 9h18M9 3 6 9l6 12 6-12-3-6"/></svg>
       </div>
@@ -145,7 +149,7 @@
     </div>
 
     <!-- Benefits collapsible -->
-    <div class="pn-card pn-collapse">
+    <div class="pn-card pn-collapse" id="beneficios">
       <div class="pn-card__head pn-collapse__head" data-collapse>
         <h3>Mis beneficios · {{panel.user.categoryLabel}}</h3>
         <svg class="pn-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--pn-ink-2)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -163,7 +167,7 @@
     </div>
 
     <!-- Distribution -->
-    <div class="pn-card">
+    <div class="pn-card" id="distribucion">
       <div class="pn-card__head"><h3>Distribución de inversionistas</h3><span class="pn-card__link" style="color:var(--pn-ink-2)">{{panel.investorTotal}} en total</span></div>
       <div class="db-dist">
         <div class="db-donut">
@@ -236,7 +240,7 @@
 
     <!-- Documents -->
     <div class="pn-card">
-      <div class="pn-card__head"><h3>Contratos y documentos</h3><a href="/panel/documentos" class="pn-card__link">Ver todos ›</a></div>
+      <div class="pn-card__head"><h3>Documentos y evidencias</h3><a href="/panel/documentos" class="pn-card__link">Ver todos ›</a></div>
       <div class="db-docs">
         {{#if panel.sharedFolder}}
         <a href="{{panel.sharedFolder.url}}" target="_blank" rel="noopener" class="db-doc" style="background:var(--pn-purple-soft); border-radius:13px;">
@@ -277,5 +281,14 @@
     var target = '{{panel.eventDateISO}}' || '2027-03-27T19:00:00-05:00';
     var days = Math.floor((new Date(target).getTime() - Date.now()) / 86400000);
     el.textContent = days > 0 ? days + ' días' : '¡Hoy!';
+  })();
+  // Chips de ancla: marca el activo al hacer clic
+  (function(){
+    var chips = document.querySelectorAll('.db-chip[data-anchor]');
+    chips.forEach(function(c){
+      c.addEventListener('click', function(){
+        chips.forEach(function(x){ x.classList.toggle('is-active', x === c); });
+      });
+    });
   })();
 </script>

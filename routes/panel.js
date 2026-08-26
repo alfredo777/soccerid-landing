@@ -320,9 +320,11 @@ router.get('/', auth.requireAuth, async (req, res, next) => {
     if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
     res.render('panel/dashboard', {
       layout: 'panel',
-      title: 'Dashboard · SOCCER iD Investor Portal',
+      title: (req.panelUser.role === 'sponsor' ? 'Mi patrocinio' : 'Mi inversión') + ' · SOCCER iD Investor Hub',
       pageHeading: `Hola, ${req.panelUser.name.split(/\s+/)[0]} 👋`,
-      pageSub: 'Bienvenido a tu panel de inversionista SOCCER iD CUP',
+      pageSub: req.panelUser.role === 'sponsor'
+        ? 'Tu patrocinio en SOCCER iD CUP 2027, con cada etapa y cada activación a la vista'
+        : 'Tu inversión en SOCCER iD CUP 2027, con cada etapa y cada cifra a la vista',
       active: 'dashboard',
       panel: await buildPanelData(req.panelUser)
     });
@@ -334,9 +336,9 @@ router.get('/noticias', auth.requireAuth, async (req, res, next) => {
     if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
     res.render('panel/noticias', {
       layout: 'panel',
-      title: 'Noticias · SOCCER iD Investor Portal',
-      pageHeading: 'Noticias del evento',
-      pageSub: 'Anuncios, actualizaciones y prensa de SOCCER iD CUP 2027',
+      title: 'Noticias · SOCCER iD Investor Hub',
+      pageHeading: 'Estado del evento',
+      pageSub: 'Avances, anuncios y prensa de SOCCER iD CUP 2027, conforme suceden',
       active: 'noticias',
       panel: await buildPanelData(req.panelUser)
     });
@@ -348,7 +350,7 @@ router.get('/calendario', auth.requireAuth, async (req, res, next) => {
     if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
     res.render('panel/calendario', {
       layout: 'panel',
-      title: 'Calendario · SOCCER iD Investor Portal',
+      title: 'Calendario · SOCCER iD Investor Hub',
       pageHeading: 'Calendario y cronograma',
       pageSub: 'Fechas clave rumbo al 27 de marzo de 2027',
       active: 'calendario',
@@ -375,7 +377,7 @@ router.get('/notificaciones', auth.requireAuth, async (req, res, next) => {
     panel.unread = 0;
     res.render('panel/notificaciones', {
       layout: 'panel',
-      title: 'Notificaciones · SOCCER iD Investor Portal',
+      title: 'Notificaciones · SOCCER iD Investor Hub',
       pageHeading: 'Notificaciones',
       pageSub: 'Comunicados y novedades de SOCCER iD CUP 2027',
       active: 'notificaciones',
@@ -389,9 +391,9 @@ router.get('/documentos', auth.requireAuth, async (req, res, next) => {
     if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
     res.render('panel/documentos', {
       layout: 'panel',
-      title: 'Contratos y documentos · SOCCER iD Investor Portal',
-      pageHeading: 'Contratos y documentos legales',
-      pageSub: 'Documentación privada compartida contigo por SOCCER iD',
+      title: 'Documentos y evidencias · SOCCER iD Investor Hub',
+      pageHeading: 'Documentos y evidencias',
+      pageSub: 'Contratos, documentación legal y evidencias del proyecto compartidos contigo',
       active: 'documentos',
       panel: await buildPanelData(req.panelUser)
     });
@@ -500,7 +502,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
 
     res.render('panel/admin', {
       layout: 'panel',
-      title: 'Administración · SOCCER iD Investor Portal',
+      title: 'Administración · SOCCER iD Investor Hub',
       pageHeading: 'Panel del organizador',
       pageSub: 'Invita usuarios, publica noticias y gestiona el evento',
       active: 'admin',
@@ -1111,7 +1113,7 @@ router.get('/admin/preview/:role', auth.requireAdmin, async (req, res, next) => 
     const roleLabel = role === 'sponsor' ? 'Patrocinador' : 'Inversionista';
     res.render('panel/dashboard', {
       layout: 'panel',
-      title: `Vista previa · ${roleLabel} · SOCCER iD Investor Portal`,
+      title: `Vista previa · ${roleLabel} · SOCCER iD Investor Hub`,
       pageHeading: `Vista previa · ${roleLabel}`,
       pageSub: 'Previsualización de solo lectura del portal del usuario',
       active: 'dashboard',
