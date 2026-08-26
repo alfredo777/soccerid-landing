@@ -149,7 +149,7 @@
   <div class="au-doc">
     <div class="au-doc__b">
       <strong>{{this.name}}</strong>
-      <small>{{this.meta}}</small>
+      <small>{{this.category}}{{#if this.docDate}} · {{this.docDate}}{{/if}}{{#if this.meta}} · {{this.meta}}{{/if}}</small>
     </div>
     <a href="{{this.url}}" target="_blank" rel="noopener" class="view">Ver</a>
     <form method="POST" action="/panel/admin/document/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar documento?')">
@@ -166,6 +166,17 @@
     <div class="au-row2">
       <div class="au-f"><label>Nombre del documento</label><input type="text" name="name" placeholder="Ej. Contrato de inversión" required></div>
       <div class="au-f"><label>Enlace (Google Drive)</label><input type="url" name="url" placeholder="https://drive.google.com/..." required></div>
+    </div>
+    <div class="au-row2">
+      <div class="au-f"><label>Categoría</label>
+        <select name="category">
+          <option value="Legal">Legal</option>
+          <option value="Financiero">Financiero</option>
+          <option value="Evidencia">Evidencia</option>
+          <option value="General" selected>General</option>
+        </select>
+      </div>
+      <div class="au-f"><label>Fecha del documento</label><input type="date" name="doc_date"></div>
     </div>
     <button type="submit" class="au-save" style="background:var(--pn-ink);">Agregar documento</button>
   </form>

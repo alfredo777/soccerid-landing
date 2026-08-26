@@ -39,6 +39,14 @@ function monthYear(dateVal) {
 function safeParse(str, fallback) {
   try { return JSON.parse(str); } catch (_) { return fallback; }
 }
+// Fecha corta para sellos de trazabilidad: "2026-08-24" → "24 ago 2026"
+const MONTHS_ES_SHORT = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+function shortDate(str) {
+  if (!str) return '';
+  const d = new Date(String(str) + 'T12:00:00');
+  if (isNaN(d)) return String(str);
+  return `${d.getDate()} ${MONTHS_ES_SHORT[d.getMonth()]} ${d.getFullYear()}`;
+}
 
 // ── Ediciones: parseo de textareas "a | b | c" (una por línea) ↔ arreglo de objetos ──
 const ED_KEYS = {
@@ -191,7 +199,14 @@ async function buildPanelData(user) {
 
   // Hitos
   const mileRows = await knex('milestones').orderBy([{ column: 'sort', order: 'asc' }, { column: 'id', order: 'asc' }]);
-  const milestones = mileRows.map(m => ({ title: m.title, date: m.date_label, done: !!m.done, highlight: !!m.highlight }));
+  const MILE_STATUS = { completado: 'Completado', en_curso: 'En curso', pendiente: 'Pendiente' };
+  const milestones = mileRows.map(m => {
+    const status = m.status || (m.done ? 'completado' : 'pendiente');
+    return {
+      title: m.title, date: m.date_label, done: status === 'completado', inProgress: status === 'en_curso',
+      highlight: !!m.highlight, owner: m.owner || '', status, statusLabel: MILE_STATUS[status] || 'Pendiente'
+    };
+  });
 
   // Calendario (mes en foco)
   const fmonth = config.focus.month, fyear = config.focus.year;
@@ -210,7 +225,15 @@ async function buildPanelData(user) {
 
   // Documentos personalizados del usuario (contratos y documentos legales)
   const docRows = await knex('user_documents').where({ user_id: user.id }).orderBy('id', 'desc');
-  const userDocuments = docRows.map(d => ({ id: d.id, name: d.name, url: d.url, meta: d.meta, ext: d.ext }));
+  const userDocuments = docRows.map(d => ({
+    id: d.id, name: d.name, url: d.url, meta: d.meta, ext: d.ext,
+    category: d.category || 'General', docDate: shortDate(d.doc_date)
+  }));
+  // Agrupados por categoría para la página de documentos
+  const DOC_CATS = ['Legal', 'Financiero', 'Evidencia', 'General'];
+  const documentGroups = DOC_CATS
+    .map(cat => ({ category: cat, docs: userDocuments.filter(d => d.category === cat) }))
+    .filter(g => g.docs.length);
 
   // Fecha/hora del evento para el contador (desde la config editable)
   const eventDateISO = `${cfg.eventDate || '2027-03-27'}T${cfg.eventTime || '19:00'}:00-05:00`;
@@ -223,9 +246,18 @@ async function buildPanelData(user) {
     advisor: advisor,
     documents: userDocuments,
     userDocuments,
+    documentGroups,
     sharedFolder: cfg.sharedFolder || null,
     user: panelUser,
     userBenefits: resolvedBenefits,
+    // Etapa actual del proyecto (banda de estado)
+    stage: {
+      label: cfg.stageLabel || '', step: cfg.stageStep, total: cfg.stageTotal,
+      note: cfg.stageNote || '', pct: (cfg.stageTotal ? Math.round((Number(cfg.stageStep) / Number(cfg.stageTotal)) * 100) : 0),
+      updated: shortDate(cfg.stageUpdated)
+    },
+    // Sello de trazabilidad para las cifras de inversión
+    trace: { source: cfg.returnSource || '', updated: shortDate(cfg.returnUpdated) },
     stats,
     distribution,
     donut,
@@ -409,7 +441,11 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     const users = await knex('users').whereNot({ role: 'admin' }).orderBy('id', 'desc');
     const news = await knex('news').orderBy([{ column: 'featured', order: 'desc' }, { column: 'sort', order: 'asc' }]);
     const events = await knex('events').orderBy([{ column: 'year' }, { column: 'month' }, { column: 'day' }]);
-    const milestones = await knex('milestones').orderBy('sort');
+    const MILE_LABELS = { completado: 'Completado', en_curso: 'En curso', pendiente: 'Pendiente' };
+    const milestones = (await knex('milestones').orderBy('sort')).map(m => {
+      const status = m.status || (m.done ? 'completado' : 'pendiente');
+      return Object.assign({}, m, { status, statusLabel: MILE_LABELS[status] || 'Pendiente', owner: m.owner || '' });
+    });
     const notifications = await knex('notifications').orderBy('id', 'desc');
     const allDocs = await knex('user_documents').orderBy('id', 'desc');
     const docsByUser = {};
@@ -616,7 +652,10 @@ router.post('/admin/user/:id/document', auth.requireAdmin, async (req, res, next
     const url = (req.body.url || '').trim();
     if (!name || !url) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Nombre y enlace son obligatorios'));
     if (!/^https?:\/\//i.test(url)) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El enlace debe empezar con http:// o https://'));
-    await knex('user_documents').insert({ user_id: user.id, name, url, meta: 'Google Drive', ext: null });
+    const CATS = ['Legal', 'Financiero', 'Evidencia', 'General'];
+    const category = CATS.includes(req.body.category) ? req.body.category : 'General';
+    const docDate = (req.body.doc_date || '').trim() || null;
+    await knex('user_documents').insert({ user_id: user.id, name, url, meta: 'Google Drive', ext: null, category, doc_date: docDate });
     const back = req.body.redirect === 'account' ? `/panel/admin/user/${user.id}?type=ok&msg=${encodeURIComponent('Documento agregado')}` : '/panel/admin?type=ok&msg=' + encodeURIComponent(`Documento agregado a ${user.name}`);
     res.redirect(back);
   } catch (e) {
@@ -691,12 +730,16 @@ router.post('/admin/event/:id/delete', auth.requireAdmin, async (req, res, next)
 });
 
 // Hitos / cronograma
+const MILE_STATUSES = ['pendiente', 'en_curso', 'completado'];
 router.post('/admin/milestone', auth.requireAdmin, async (req, res, next) => {
   try {
+    const status = MILE_STATUSES.includes(req.body.status) ? req.body.status : 'pendiente';
     await knex('milestones').insert({
       title: (req.body.title || '').trim(),
       date_label: (req.body.date_label || '').trim(),
-      done: req.body.done ? true : false,
+      owner: (req.body.owner || '').trim() || null,
+      status,
+      done: status === 'completado',
       highlight: req.body.highlight ? true : false,
       sort: parseInt(req.body.sort || '99', 10) || 99
     });
@@ -793,10 +836,13 @@ router.post('/admin/event/:id/update', auth.requireAdmin, async (req, res, next)
 
 router.post('/admin/milestone/:id/update', auth.requireAdmin, async (req, res, next) => {
   try {
+    const status = MILE_STATUSES.includes(req.body.status) ? req.body.status : 'pendiente';
     await knex('milestones').where({ id: req.params.id }).update({
       title: (req.body.title || '').trim(),
       date_label: (req.body.date_label || '').trim(),
-      done: req.body.done ? true : false,
+      owner: (req.body.owner || '').trim() || null,
+      status,
+      done: status === 'completado',
       highlight: req.body.highlight ? true : false,
       updated_at: knex.fn.now()
     });
@@ -972,7 +1018,15 @@ router.post('/admin/settings/dashboard', auth.requireAdmin, async (req, res, nex
       investorSplit: num(b.investor_split, 50),
       projectCost: num(b.project_cost, 1000000),
       ticketPrice: num(b.ticket_price, 100),
-      referenceAttendance: num(b.reference_attendance, 21800)
+      referenceAttendance: num(b.reference_attendance, 21800),
+      // Etapa actual del proyecto + trazabilidad
+      stageLabel: (b.stage_label || '').trim(),
+      stageStep: num(b.stage_step, 1),
+      stageTotal: num(b.stage_total, 6),
+      stageNote: (b.stage_note || '').trim(),
+      stageUpdated: (b.stage_updated || '').trim(),
+      returnSource: (b.return_source || '').trim(),
+      returnUpdated: (b.return_updated || '').trim()
     });
     res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Configuración del dashboard actualizada') + '#configuracion');
   } catch (e) { next(e); }
@@ -1032,7 +1086,7 @@ router.get('/admin/user/:id', auth.requireAdmin, async (req, res, next) => {
     const ret = computeReturn(user, cfg);
 
     const docRows = await knex('user_documents').where({ user_id: user.id }).orderBy('id', 'desc');
-    const documents = docRows.map(d => ({ id: d.id, name: d.name, url: d.url, meta: d.meta, ext: d.ext }));
+    const documents = docRows.map(d => ({ id: d.id, name: d.name, url: d.url, meta: d.meta, ext: d.ext, category: d.category || 'General', docDate: shortDate(d.doc_date) }));
 
     res.render('panel/admin-user', {
       layout: 'panel',

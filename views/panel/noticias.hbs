@@ -80,7 +80,7 @@
       <div class="nw-rail__list">
         {{#each panel.milestones}}
         <div class="nw-mile">
-          <div class="nw-mile__ico" style="color: {{#if this.highlight}}var(--pn-purple){{else}}{{#if this.done}}var(--pn-ink){{else}}var(--pn-muted){{/if}}{{/if}}">
+          <div class="nw-mile__ico" style="color: {{#if this.done}}#1E8E5A{{else}}{{#if this.inProgress}}var(--pn-purple){{else}}var(--pn-muted){{/if}}{{/if}}">
             {{#if this.done}}
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12.5 11 15 16 9.5"/></svg>
             {{else}}
@@ -89,7 +89,7 @@
           </div>
           <div class="nw-mile__b">
             <strong>{{this.title}}</strong>
-            <small>{{this.date}}{{#if this.done}} · Completado{{/if}}</small>
+            <small>{{this.date}} · {{this.statusLabel}}{{#if this.owner}} · {{this.owner}}{{/if}}</small>
           </div>
         </div>
         {{/each}}

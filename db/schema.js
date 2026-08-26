@@ -183,6 +183,24 @@ async function ensureSchema() {
       await knex.schema.alterTable('users', builder);
     }
   }
+
+  // Documentos: categoría (Legal / Financiero / Evidencia / General) y fecha del documento
+  if (await knex.schema.hasTable('user_documents') && !(await knex.schema.hasColumn('user_documents', 'category'))) {
+    await knex.schema.alterTable('user_documents', (t) => t.string('category').defaultTo('General'));
+  }
+  if (await knex.schema.hasTable('user_documents') && !(await knex.schema.hasColumn('user_documents', 'doc_date'))) {
+    await knex.schema.alterTable('user_documents', (t) => t.string('doc_date'));
+  }
+
+  // Hitos: responsable y estado explícito (pendiente | en_curso | completado)
+  if (await knex.schema.hasTable('milestones') && !(await knex.schema.hasColumn('milestones', 'owner'))) {
+    await knex.schema.alterTable('milestones', (t) => t.string('owner'));
+  }
+  if (await knex.schema.hasTable('milestones') && !(await knex.schema.hasColumn('milestones', 'status'))) {
+    await knex.schema.alterTable('milestones', (t) => t.string('status').defaultTo('pendiente'));
+    // Migra los existentes: los marcados "done" pasan a "completado"
+    await knex('milestones').where({ done: true }).update({ status: 'completado' });
+  }
 }
 
 async function seed() {

@@ -53,30 +53,31 @@
   </a>
   {{/if}}
 
-  {{#if panel.userDocuments.length}}
-  <div class="dc-section">Tus documentos</div>
-  {{/if}}
-
-  {{#each panel.userDocuments}}
+  {{#each panel.documentGroups}}
+  <div class="dc-section">{{this.category}}</div>
+  {{#each this.docs}}
   <div class="dc-item">
     <div class="dc-ic">
       {{#if this.ext}}<span>{{this.ext}}</span>{{else}}<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/></svg>{{/if}}
     </div>
     <div class="dc-b">
       <strong>{{this.name}}</strong>
-      <small>{{this.meta}}</small>
+      <small class="pn-stamp">
+        {{#if this.docDate}}<span>{{this.docDate}}</span><span class="sep">·</span>{{/if}}<span>{{this.meta}}</span>
+      </small>
     </div>
     <a class="dc-dl" href="{{this.url}}" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
       Abrir
     </a>
   </div>
-  {{else}}
-  {{#unless panel.sharedFolder}}
+  {{/each}}
+  {{/each}}
+
+  {{#unless panel.userDocuments.length}}{{#unless panel.sharedFolder}}
   <div class="dc-empty">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/></svg>
     <p>Aún no hay documentos compartidos contigo.<br>Cuando SOCCER iD suba tus contratos, aparecerán aquí.</p>
   </div>
-  {{/unless}}
-  {{/each}}
+  {{/unless}}{{/unless}}
 </div>

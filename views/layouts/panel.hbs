@@ -222,6 +222,25 @@
     .pn-collapse__head .pn-chevron { transition: transform .2s; }
     .pn-collapse.is-closed .pn-collapse__head .pn-chevron { transform: rotate(-90deg); }
 
+    /* Sello de trazabilidad reutilizable: "Actualizado {fecha} · Fuente: {texto}" */
+    .pn-stamp { display:inline-flex; align-items:center; gap:7px; font-size:11px; font-weight:600; color:var(--pn-muted); }
+    .pn-stamp svg { width:13px; height:13px; stroke:currentColor; fill:none; flex-shrink:0; }
+    .pn-stamp b { font-weight:700; color:var(--pn-ink-2); }
+    .pn-stamp .sep { opacity:.5; }
+
+    /* Banda de etapa actual del proyecto */
+    .pn-stage { display:flex; align-items:center; gap:18px; padding:18px 22px; border-radius:16px; background:var(--pn-ink); color:#fff; margin-bottom:22px; flex-wrap:wrap; }
+    .pn-stage__badge { font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; background:rgba(255,255,255,.14); padding:6px 12px; border-radius:20px; flex-shrink:0; }
+    .pn-stage__b { flex:1; min-width:200px; }
+    .pn-stage__b strong { display:block; font-size:16px; font-weight:800; }
+    .pn-stage__b span { font-size:13px; color:rgba(255,255,255,.72); font-weight:500; }
+    .pn-stage__prog { width:180px; flex-shrink:0; }
+    .pn-stage__prog small { font-size:11px; font-weight:700; color:rgba(255,255,255,.6); display:block; margin-bottom:6px; }
+    .pn-stage__bar { height:8px; border-radius:20px; background:rgba(255,255,255,.16); overflow:hidden; }
+    .pn-stage__bar i { display:block; height:100%; border-radius:20px; background:var(--pn-purple); }
+    .pn-stage__updated { font-size:11px; color:rgba(255,255,255,.5); font-weight:600; flex-basis:100%; }
+    @media (max-width:640px){ .pn-stage__prog { width:100%; } }
+
     @media (max-width: 1024px) {
       .pn-content { padding: 8px 18px 40px; }
       .pn-top { padding: 18px 18px 12px; }

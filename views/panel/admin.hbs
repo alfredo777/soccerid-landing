@@ -308,9 +308,14 @@
     <form class="pn-card ad-form" method="POST" action="/panel/admin/milestone">
       <h3>Agregar hito</h3>
       <div class="ad-f"><label>Título</label><input type="text" name="title" required></div>
-      <div class="ad-f"><label>Fecha (texto)</label><input type="text" name="date_label" placeholder="Sep 2026"></div>
-      <label class="ad-check"><input type="checkbox" name="done" value="1"> Completado</label>
-      <label class="ad-check" style="margin-top:8px;"><input type="checkbox" name="highlight" value="1"> Destacar (partido)</label>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Fecha (texto)</label><input type="text" name="date_label" placeholder="Sep 2026"></div>
+        <div class="ad-f"><label>Estado</label>
+          <select name="status"><option value="pendiente">Pendiente</option><option value="en_curso">En curso</option><option value="completado">Completado</option></select>
+        </div>
+      </div>
+      <div class="ad-f"><label>Responsable</label><input type="text" name="owner" placeholder="Ej. Dirección financiera"></div>
+      <label class="ad-check"><input type="checkbox" name="highlight" value="1"> Destacar (partido)</label>
       <button type="submit" class="ad-btn" style="margin-top:14px;">Agregar hito</button>
     </form>
 
@@ -319,14 +324,14 @@
       <div class="ad-list">
         {{#each milestones}}
         <div class="ad-item">
-          <div class="ad-item__av" style="background: {{#if this.highlight}}#6C3CE0{{else}}{{#if this.done}}#1E8E5A{{else}}#8A8F98{{/if}}{{/if}}">{{#if this.done}}✓{{else}}○{{/if}}</div>
+          <div class="ad-item__av" style="background: {{#eq this.status 'completado'}}#1E8E5A{{else}}{{#eq this.status 'en_curso'}}#6C3CE0{{else}}#8A8F98{{/eq}}{{/eq}}">{{#eq this.status 'completado'}}✓{{else}}{{#eq this.status 'en_curso'}}◐{{else}}○{{/eq}}{{/eq}}</div>
           <div class="ad-item__b">
             <strong>{{this.title}}</strong>
-            <small>{{this.date_label}}{{#if this.done}} · Completado{{/if}}{{#if this.highlight}} · Destacado{{/if}}</small>
+            <small>{{this.date_label}} · {{this.statusLabel}}{{#if this.owner}} · {{this.owner}}{{/if}}{{#if this.highlight}} · Destacado{{/if}}</small>
           </div>
           <div class="ad-actions">
             <button type="button" class="primary" onclick="openMile(this)"
-              data-id="{{this.id}}" data-title="{{this.title}}" data-date="{{this.date_label}}" data-done="{{#if this.done}}1{{/if}}" data-highlight="{{#if this.highlight}}1{{/if}}">Editar</button>
+              data-id="{{this.id}}" data-title="{{this.title}}" data-date="{{this.date_label}}" data-status="{{this.status}}" data-owner="{{this.owner}}" data-highlight="{{#if this.highlight}}1{{/if}}">Editar</button>
             <form method="POST" action="/panel/admin/milestone/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar hito?')"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
@@ -587,6 +592,23 @@
       </div>
     </div>
 
+    <h3 style="margin-top:24px;">Estado del proyecto</h3>
+    <p class="ad-hint" style="margin-bottom:14px;">Banda destacada arriba del dashboard que indica en qué etapa va el proyecto.</p>
+    <div class="ad-f"><label>Etapa actual</label><input type="text" name="stage_label" value="{{dashboardConfig.stageLabel}}" placeholder="Comercialización"></div>
+    <div class="ad-row2">
+      <div class="ad-f"><label>Número de etapa</label><input type="number" name="stage_step" value="{{dashboardConfig.stageStep}}" min="0" step="1"></div>
+      <div class="ad-f"><label>Total de etapas</label><input type="number" name="stage_total" value="{{dashboardConfig.stageTotal}}" min="1" step="1"></div>
+    </div>
+    <div class="ad-f"><label>Nota de la etapa</label><input type="text" name="stage_note" value="{{dashboardConfig.stageNote}}" placeholder="Venta de patrocinios y preventa de boletos en curso."></div>
+    <div class="ad-f" style="max-width:50%;"><label>Actualizado el</label><input type="date" name="stage_updated" value="{{dashboardConfig.stageUpdated}}"></div>
+
+    <h3 style="margin-top:24px;">Trazabilidad de las cifras</h3>
+    <p class="ad-hint" style="margin-bottom:14px;">Sello "Actualizado · Fuente" que aparece bajo las cifras de inversión en el dashboard.</p>
+    <div class="ad-row2">
+      <div class="ad-f"><label>Fuente de los datos</label><input type="text" name="return_source" value="{{dashboardConfig.returnSource}}" placeholder="Modelo financiero SOCCER iD"></div>
+      <div class="ad-f"><label>Actualizado el</label><input type="date" name="return_updated" value="{{dashboardConfig.returnUpdated}}"></div>
+    </div>
+
     <button type="submit" class="ad-btn" style="margin-top:18px;">Guardar configuración</button>
   </form>
 </section>
@@ -677,9 +699,14 @@
     <div class="ad-modal__body">
       <form method="POST" id="form-mile">
         <div class="ad-f"><label>Título</label><input type="text" name="title" id="em-title" required></div>
-        <div class="ad-f"><label>Fecha (texto)</label><input type="text" name="date_label" id="em-date"></div>
-        <label class="ad-check"><input type="checkbox" name="done" id="em-done" value="1"> Completado</label>
-        <label class="ad-check" style="margin-top:8px;"><input type="checkbox" name="highlight" id="em-highlight" value="1"> Destacar (partido)</label>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Fecha (texto)</label><input type="text" name="date_label" id="em-date"></div>
+          <div class="ad-f"><label>Estado</label>
+            <select name="status" id="em-status"><option value="pendiente">Pendiente</option><option value="en_curso">En curso</option><option value="completado">Completado</option></select>
+          </div>
+        </div>
+        <div class="ad-f"><label>Responsable</label><input type="text" name="owner" id="em-owner" placeholder="Ej. Dirección financiera"></div>
+        <label class="ad-check"><input type="checkbox" name="highlight" id="em-highlight" value="1"> Destacar (partido)</label>
         <button type="submit" class="ad-btn" style="margin-top:14px;">Guardar cambios</button>
       </form>
     </div>
@@ -934,7 +961,8 @@
     document.getElementById('form-mile').action = '/panel/admin/milestone/'+d.id+'/update';
     document.getElementById('em-title').value = d.title;
     document.getElementById('em-date').value = d.date;
-    document.getElementById('em-done').checked = (d.done === '1');
+    document.getElementById('em-status').value = (d.status || 'pendiente');
+    document.getElementById('em-owner').value = (d.owner || '');
     document.getElementById('em-highlight').checked = (d.highlight === '1');
     openModal('modal-mile');
   }

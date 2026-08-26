@@ -91,6 +91,21 @@
   @media (max-width: 520px) { .db-stats { grid-template-columns: 1fr; } .db-cat__meta { gap:20px; flex-wrap:wrap; } .db-cat__amount { font-size:38px; } }
 </style>
 
+{{#if panel.stage.label}}
+<div class="pn-stage">
+  <span class="pn-stage__badge">Etapa {{panel.stage.step}} de {{panel.stage.total}}</span>
+  <div class="pn-stage__b">
+    <strong>{{panel.stage.label}}</strong>
+    {{#if panel.stage.note}}<span>{{panel.stage.note}}</span>{{/if}}
+  </div>
+  <div class="pn-stage__prog">
+    <small>Avance del proyecto · {{panel.stage.pct}}%</small>
+    <div class="pn-stage__bar"><i style="width: {{panel.stage.pct}}%"></i></div>
+  </div>
+  {{#if panel.stage.updated}}<div class="pn-stage__updated">Actualizado {{panel.stage.updated}}</div>{{/if}}
+</div>
+{{/if}}
+
 <div class="db-chips">
   <a href="#mi-inversion" class="db-chip is-active" data-anchor>{{#eq panel.user.role 'sponsor'}}Mi patrocinio{{else}}Mi inversión{{/eq}}</a>
   <a href="#beneficios" class="db-chip" data-anchor>Beneficios</a>
@@ -130,6 +145,13 @@
         {{/eq}}
       </div>
     </div>
+
+    {{#if panel.trace.source}}
+    <div class="pn-stamp" style="margin:-8px 2px 0;">
+      <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+      {{#if panel.trace.updated}}<span>Actualizado <b>{{panel.trace.updated}}</b></span><span class="sep">·</span>{{/if}}<span>Fuente: <b>{{panel.trace.source}}</b></span>
+    </div>
+    {{/if}}
 
     <!-- Stats -->
     <div class="db-stats">
