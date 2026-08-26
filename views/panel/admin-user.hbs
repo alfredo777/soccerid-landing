@@ -1,0 +1,199 @@
+<style>
+  .au-top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+  .au-back { display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--pn-ink-2); }
+  .au-back:hover { color:var(--pn-purple); }
+  .au-back svg { width:16px; height:16px; stroke:currentColor; fill:none; }
+  .au-preview { display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border-radius:12px; background:var(--pn-ink); color:#fff; font-size:13px; font-weight:800; }
+  .au-preview svg { width:16px; height:16px; stroke:#fff; fill:none; }
+
+  .au-flash { padding:13px 18px; border-radius:13px; font-size:13px; font-weight:700; margin-bottom:20px; }
+  .au-flash.ok { background:#EAF7F0; color:#1E8E5A; }
+  .au-flash.error { background:#FDECEC; color:#C0392B; }
+
+  .au-idbar { display:flex; align-items:center; gap:14px; padding:16px 20px; border-radius:16px; background:var(--pn-purple-soft); border:1px solid #E4DAFA; margin-bottom:22px; }
+  .au-idbar__av { width:46px; height:46px; border-radius:13px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:16px; flex-shrink:0; }
+  .au-idbar__b strong { display:block; font-size:15px; font-weight:800; }
+  .au-idbar__b small { font-size:12px; color:var(--pn-ink-2); font-weight:600; }
+  .au-idbar__tag { margin-left:auto; font-size:11px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:var(--pn-ink-2); background:#fff; padding:6px 12px; border-radius:20px; }
+
+  .au-sec { padding:22px; margin-bottom:18px; }
+  .au-sec h3 { font-size:15px; font-weight:800; margin-bottom:4px; }
+  .au-sec .au-sub { font-size:12px; color:var(--pn-muted); font-weight:600; margin-bottom:16px; }
+  .au-f { margin-bottom:14px; }
+  .au-f label { display:block; font-size:12px; font-weight:700; color:var(--pn-ink-2); margin-bottom:6px; }
+  .au-f input, .au-f select, .au-f textarea {
+    width:100%; padding:11px 13px; border:1px solid var(--pn-border); border-radius:11px;
+    font-family:inherit; font-size:14px; color:var(--pn-ink); background:#fff; box-sizing:border-box;
+  }
+  .au-f textarea { resize:vertical; min-height:90px; line-height:1.5; }
+  .au-f input:focus, .au-f select:focus, .au-f textarea:focus { outline:none; border-color:var(--pn-purple); }
+  .au-hint { font-size:12px; color:var(--pn-muted); margin-top:6px; line-height:1.4; }
+  .au-row2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  @media (max-width:640px){ .au-row2 { grid-template-columns:1fr; } }
+  .au-check { display:flex; align-items:center; gap:9px; font-size:13px; font-weight:700; color:var(--pn-ink); cursor:pointer; margin-top:4px; }
+  .au-check input { width:auto; }
+  .au-save { width:100%; padding:15px; border:none; border-radius:13px; background:var(--pn-purple); color:#fff; font-size:15px; font-weight:800; cursor:pointer; }
+  .au-save:hover { background:var(--pn-purple-dark); }
+
+  .au-doc { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--pn-border); }
+  .au-doc:last-of-type { border-bottom:none; }
+  .au-doc__b { flex:1; min-width:0; }
+  .au-doc__b strong { display:block; font-size:14px; font-weight:700; }
+  .au-doc__b small { font-size:12px; color:var(--pn-muted); }
+  .au-doc a.view { font-size:12px; font-weight:700; color:var(--pn-purple); }
+  .au-doc button { border:1px solid var(--pn-border); background:#fff; border-radius:9px; padding:6px 10px; font-size:12px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
+  .au-doc button:hover { border-color:#E7B3B3; color:#C0392B; }
+</style>
+
+<div class="au-top">
+  <a href="/panel/admin#usuarios" class="au-back">
+    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+    Volver a usuarios
+  </a>
+  <a href="/panel/admin/preview/user/{{account.id}}" target="_blank" rel="noopener" class="au-preview">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+    Ver su panel
+  </a>
+</div>
+
+{{#if flash}}<div class="au-flash {{flashType}}">{{flash}}</div>{{/if}}
+
+<div class="au-idbar">
+  <div class="au-idbar__av" id="auAvatar" style="background: {{account.color}}">{{account.name.[0]}}</div>
+  <div class="au-idbar__b">
+    <strong>{{account.name}}</strong>
+    <small>{{account.email}} · {{account.memberId}}</small>
+  </div>
+  <span class="au-idbar__tag">{{#if account.isSponsor}}Patrocinador{{else}}Inversionista{{/if}}</span>
+</div>
+
+<form method="POST" action="/panel/admin/user/{{account.id}}/update">
+  <input type="hidden" name="redirect" value="account">
+
+  <!-- Perfil -->
+  <div class="pn-card au-sec">
+    <h3>Perfil</h3>
+    <div class="au-sub">Datos básicos de la cuenta.</div>
+    <div class="au-row2">
+      <div class="au-f"><label>Nombre</label><input type="text" name="name" value="{{account.name}}" required></div>
+      <div class="au-f"><label>Email</label><input type="email" name="email" value="{{account.email}}" required></div>
+    </div>
+    <div class="au-row2">
+      <div class="au-f"><label>Tipo de cuenta</label>
+        <select name="role" id="auRole"><option value="investor">Inversionista</option><option value="sponsor">Patrocinador</option></select>
+      </div>
+      <div class="au-f"><label>Categoría</label><select name="category" id="auCat"></select></div>
+    </div>
+    <div class="au-row2">
+      <div class="au-f"><label>Monto (USD)</label><input type="number" name="amount" id="auAmount" value="{{account.amountRaw}}" min="0" step="1000"></div>
+      <div class="au-f" style="display:flex;align-items:flex-end;"><label class="au-check"><input type="checkbox" name="active" value="1" {{#if account.active}}checked{{/if}}> Cuenta activa</label></div>
+    </div>
+  </div>
+
+  <!-- Inversión y retorno -->
+  <div class="pn-card au-sec">
+    <h3>Inversión y retorno</h3>
+    <div class="au-sub">Cómo se calcula el retorno que ve esta cuenta en su panel.</div>
+    <div class="au-row2">
+      <div class="au-f"><label>Tipo de inversión</label>
+        <select name="investment_type" id="auInvType">
+          <option value="fijo">Retorno fijo</option>
+          <option value="riesgo">Participación a riesgo</option>
+        </select>
+      </div>
+      <div class="au-f"><label>Rendimiento a mostrar (%)</label>
+        <input type="number" name="return_rate" value="{{account.returnRate}}" min="0" step="0.5" placeholder="Automático">
+        <div class="au-hint">Vacío = cálculo automático (actual: <strong>{{account.computedReturn}}</strong> · {{account.computedReturnPct}}).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Asesor -->
+  <div class="pn-card au-sec">
+    <h3>Asesor de esta cuenta</h3>
+    <div class="au-sub">Vacío = usa el asesor global{{#if account.globalAdvisor.name}} ({{account.globalAdvisor.name}}){{/if}}.</div>
+    <div class="au-row2">
+      <div class="au-f"><label>Nombre</label><input type="text" name="adv_name" value="{{account.advName}}" placeholder="{{account.globalAdvisor.name}}"></div>
+      <div class="au-f"><label>Rol / puesto</label><input type="text" name="adv_role" value="{{account.advRole}}" placeholder="{{account.globalAdvisor.role}}"></div>
+    </div>
+    <div class="au-row2">
+      <div class="au-f"><label>Teléfono (visible)</label><input type="text" name="adv_phone" value="{{account.advPhone}}" placeholder="{{account.globalAdvisor.phone}}"></div>
+      <div class="au-f"><label>WhatsApp (solo números)</label><input type="text" name="adv_whatsapp" value="{{account.advWhatsapp}}" placeholder="{{account.globalAdvisor.whatsapp}}"></div>
+    </div>
+  </div>
+
+  <!-- Beneficios -->
+  <div class="pn-card au-sec">
+    <h3>Beneficios de esta cuenta</h3>
+    <div class="au-sub">Uno por línea. Vacío = beneficios de su categoría.</div>
+    <div class="au-f"><textarea name="benefits" rows="5" placeholder="{{#each account.categoryBenefits}}{{this}}&#10;{{/each}}">{{account.benefitsText}}</textarea></div>
+  </div>
+
+  {{#if account.isSponsor}}
+  <!-- Activaciones (patrocinador) -->
+  <div class="pn-card au-sec">
+    <h3>Activaciones</h3>
+    <div class="au-sub">Texto que ve el patrocinador en su tarjeta de "Activaciones".</div>
+    <div class="au-f"><input type="text" name="activations" value="{{account.activations}}" placeholder="Incluidas"></div>
+  </div>
+  {{/if}}
+
+  <button type="submit" class="au-save">Guardar cambios</button>
+</form>
+
+<!-- Documentos -->
+<div class="pn-card au-sec" style="margin-top:18px;">
+  <h3>Contratos y documentos</h3>
+  <div class="au-sub">Documentos privados visibles solo para esta cuenta.</div>
+  {{#each account.documents}}
+  <div class="au-doc">
+    <div class="au-doc__b">
+      <strong>{{this.name}}</strong>
+      <small>{{this.meta}}</small>
+    </div>
+    <a href="{{this.url}}" target="_blank" rel="noopener" class="view">Ver</a>
+    <form method="POST" action="/panel/admin/document/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar documento?')">
+      <input type="hidden" name="redirect" value="{{../account.id}}">
+      <button type="submit">Eliminar</button>
+    </form>
+  </div>
+  {{else}}
+  <p style="font-size:13px;color:var(--pn-muted);padding:6px 0 12px;">Sin documentos todavía.</p>
+  {{/each}}
+
+  <form method="POST" action="/panel/admin/user/{{account.id}}/document" style="border-top:1px solid var(--pn-border); padding-top:16px; margin-top:8px;">
+    <input type="hidden" name="redirect" value="account">
+    <div class="au-row2">
+      <div class="au-f"><label>Nombre del documento</label><input type="text" name="name" placeholder="Ej. Contrato de inversión" required></div>
+      <div class="au-f"><label>Enlace (Google Drive)</label><input type="url" name="url" placeholder="https://drive.google.com/..." required></div>
+    </div>
+    <button type="submit" class="au-save" style="background:var(--pn-ink);">Agregar documento</button>
+  </form>
+</div>
+
+<script>
+  var AU_INVESTOR = {{{json investorTiers}}};
+  var AU_SPONSOR = {{{json sponsorTiers}}};
+  var AU_CURRENT = { role: '{{account.role}}', category: '{{account.category}}', invtype: '{{account.investmentType}}' };
+
+  var roleSel = document.getElementById('auRole');
+  var catSel = document.getElementById('auCat');
+  var amountInp = document.getElementById('auAmount');
+  var invTypeSel = document.getElementById('auInvType');
+
+  function fillCats(role, selected){
+    var tiers = role === 'sponsor' ? AU_SPONSOR : AU_INVESTOR;
+    catSel.innerHTML = tiers.map(function(t){
+      return '<option value="'+t.key+'" data-amt="'+t.amount+'"'+(t.key===selected?' selected':'')+'>'+t.label+'</option>';
+    }).join('');
+  }
+  roleSel.value = AU_CURRENT.role;
+  fillCats(AU_CURRENT.role, AU_CURRENT.category);
+  invTypeSel.value = AU_CURRENT.invtype;
+
+  roleSel.addEventListener('change', function(){ fillCats(roleSel.value); });
+  catSel.addEventListener('change', function(){
+    var o = catSel.options[catSel.selectedIndex];
+    if (o && (!amountInp.value || amountInp.value === '0')) amountInp.value = o.getAttribute('data-amt') || '';
+  });
+</script>

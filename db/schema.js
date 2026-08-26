@@ -170,6 +170,19 @@ async function ensureSchema() {
       t.string('investment_type').defaultTo('fijo');
     });
   }
+
+  // Overrides por cuenta (si están vacíos, el panel hereda el valor global/categoría)
+  const userOverrideCols = [
+    ['advisor', (t) => t.text('advisor')],              // JSON {name, role, phone, whatsapp}
+    ['benefits', (t) => t.text('benefits')],            // JSON array de beneficios
+    ['return_rate', (t) => t.float('return_rate')],     // % de rendimiento a mostrar
+    ['activations', (t) => t.string('activations')]     // texto de "Activaciones" (patrocinador)
+  ];
+  for (const [col, builder] of userOverrideCols) {
+    if (await knex.schema.hasTable('users') && !(await knex.schema.hasColumn('users', col))) {
+      await knex.schema.alterTable('users', builder);
+    }
+  }
 }
 
 async function seed() {

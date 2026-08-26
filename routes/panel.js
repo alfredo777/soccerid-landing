@@ -119,7 +119,16 @@ async function buildPanelData(user) {
   const tier = findTier(tiers, user.role, user.category) || { label: user.category || '—', color: '#6C3CE0', bg: '#EFE9FC', benefits: [] };
 
   const amountLabel = formatUSD(user.amount);
-  const ret = computeReturn(user, cfg); // retorno según tipo de inversión
+  const ret = computeReturn(user, cfg); // retorno según tipo de inversión (con override por cuenta)
+
+  // ── Overrides por cuenta: si están definidos, tienen prioridad sobre lo global/categoría ──
+  const advOverride = safeParse(user.advisor, null);
+  const advisor = (advOverride && advOverride.name) ? Object.assign({}, advOverride, {
+    initials: initialsOf(advOverride.name)
+  }) : cfg.advisor;
+  const benefitsOverride = safeParse(user.benefits, null);
+  const resolvedBenefits = (Array.isArray(benefitsOverride) && benefitsOverride.length) ? benefitsOverride : (tier.benefits || []);
+  const activationsText = (user.activations && String(user.activations).trim()) ? String(user.activations).trim() : 'Incluidas';
   // Fecha corta del evento para el subtítulo del contador (ej. "27 marzo 2027")
   const evShort = (() => {
     try {
@@ -152,7 +161,7 @@ async function buildPanelData(user) {
   const stats = isSponsor ? [
     { label: 'Monto patrocinado', value: amountLabel, icon: 'wallet', accent: '#6C3CE0' },
     { label: 'Categoría', value: tier.label, sub: 'Patrocinador', icon: 'diamond', accent: '#14141B' },
-    { label: 'Activaciones', value: 'Incluidas', sub: 'Según categoría', icon: 'trend', accent: '#14141B' },
+    { label: 'Activaciones', value: activationsText, sub: 'Según categoría', icon: 'trend', accent: '#14141B' },
     { label: 'Faltan para el partido', value: '—', sub: evShort, icon: 'clock', accent: '#14141B', countdown: true }
   ] : [
     { label: 'Monto invertido', value: amountLabel, icon: 'wallet', accent: '#6C3CE0' },
@@ -211,12 +220,12 @@ async function buildPanelData(user) {
     eventLabel: cfg.eventLabel || config.eventLabel,
     eventDateISO,
     unread: notifs.unread,
-    advisor: cfg.advisor,
+    advisor: advisor,
     documents: userDocuments,
     userDocuments,
     sharedFolder: cfg.sharedFolder || null,
     user: panelUser,
-    userBenefits: tier.benefits || [],
+    userBenefits: resolvedBenefits,
     stats,
     distribution,
     donut,
@@ -606,13 +615,21 @@ router.post('/admin/user/:id/document', auth.requireAdmin, async (req, res, next
     if (!name || !url) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Nombre y enlace son obligatorios'));
     if (!/^https?:\/\//i.test(url)) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El enlace debe empezar con http:// o https://'));
     await knex('user_documents').insert({ user_id: user.id, name, url, meta: 'Google Drive', ext: null });
-    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Documento agregado a ${user.name}`));
+    const back = req.body.redirect === 'account' ? `/panel/admin/user/${user.id}?type=ok&msg=${encodeURIComponent('Documento agregado')}` : '/panel/admin?type=ok&msg=' + encodeURIComponent(`Documento agregado a ${user.name}`);
+    res.redirect(back);
   } catch (e) {
     res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message));
   }
 });
 router.post('/admin/document/:id/delete', auth.requireAdmin, async (req, res, next) => {
-  try { await knex('user_documents').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=Documento+eliminado'); } catch (e) { next(e); }
+  try {
+    const doc = await knex('user_documents').where({ id: req.params.id }).first();
+    await knex('user_documents').where({ id: req.params.id }).del();
+    // req.body.redirect trae el id del usuario cuando se elimina desde la página por-cuenta
+    const uid = (req.body.redirect && /^\d+$/.test(String(req.body.redirect))) ? req.body.redirect : (doc && doc.user_id);
+    const back = req.body.redirect ? `/panel/admin/user/${uid}?type=ok&msg=Documento+eliminado` : '/panel/admin?type=ok&msg=Documento+eliminado';
+    res.redirect(back);
+  } catch (e) { next(e); }
 });
 
 // Subida de imagen genérica (AJAX) → devuelve JSON { url }
@@ -701,17 +718,36 @@ router.post('/admin/user/:id/update', auth.requireAdmin, async (req, res, next) 
     // Estado: activo sólo si ya tiene contraseña; si no, permanece invitado
     let status = req.body.active ? 'active' : 'disabled';
     if (!user.password_hash) status = 'invited';
+
+    // Overrides por cuenta (vacío = hereda el valor global/categoría → se guarda null)
+    const b = req.body;
+    const advName = (b.adv_name || '').trim();
+    const advisorOverride = advName ? JSON.stringify({
+      name: advName, role: (b.adv_role || '').trim(),
+      phone: (b.adv_phone || '').trim(), whatsapp: (b.adv_whatsapp || '').replace(/[^0-9]/g, '')
+    }) : null;
+    const benefitsList = (b.benefits || '').split('\n').map(s => s.trim()).filter(Boolean);
+    const benefitsOverride = benefitsList.length ? JSON.stringify(benefitsList) : null;
+    const returnRate = (b.return_rate === undefined || String(b.return_rate).trim() === '') ? null : (parseFloat(b.return_rate));
+    const activations = (b.activations || '').trim() || null;
+
     await knex('users').where({ id: user.id }).update({
-      name: (req.body.name || user.name).trim(),
+      name: (b.name || user.name).trim(),
       email,
-      role: req.body.role === 'sponsor' ? 'sponsor' : 'investor',
-      category: (req.body.category || '').trim(),
-      amount: parseInt(req.body.amount || '0', 10) || 0,
-      investment_type: req.body.investment_type === 'riesgo' ? 'riesgo' : 'fijo',
+      role: b.role === 'sponsor' ? 'sponsor' : 'investor',
+      category: (b.category || '').trim(),
+      amount: parseInt(b.amount || '0', 10) || 0,
+      investment_type: b.investment_type === 'riesgo' ? 'riesgo' : 'fijo',
+      advisor: advisorOverride,
+      benefits: benefitsOverride,
+      return_rate: (returnRate === null || isNaN(returnRate)) ? null : returnRate,
+      activations,
       status,
       updated_at: knex.fn.now()
     });
-    res.redirect('/panel/admin?type=ok&msg=Usuario+actualizado');
+    // Si viene de la página por-cuenta, regresa a ella; si no, a la lista
+    const back = b.redirect === 'account' ? `/panel/admin/user/${user.id}?type=ok&msg=${encodeURIComponent('Cuenta actualizada')}` : '/panel/admin?type=ok&msg=Usuario+actualizado';
+    res.redirect(back);
   } catch (e) { next(e); }
 });
 
@@ -980,8 +1016,81 @@ router.post('/admin/leads/email', auth.requireAdmin, async (req, res, next) => {
 });
 
 // ════════════════════════════════════════════════
+// EDICIÓN POR CUENTA (una página por inversionista/patrocinador)
+// ════════════════════════════════════════════════
+router.get('/admin/user/:id', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const user = await knex('users').where({ id: req.params.id }).first();
+    if (!user || user.role === 'admin') return res.redirect('/panel/admin?type=error&msg=Usuario+no+encontrado');
+    const cfg = await getDashboardConfig();
+    const tiers = await getTiers();
+    const tier = findTier(tiers, user.role, user.category);
+    const advOverride = safeParse(user.advisor, null);
+    const benefitsOverride = safeParse(user.benefits, null);
+    const ret = computeReturn(user, cfg);
+
+    const docRows = await knex('user_documents').where({ user_id: user.id }).orderBy('id', 'desc');
+    const documents = docRows.map(d => ({ id: d.id, name: d.name, url: d.url, meta: d.meta, ext: d.ext }));
+
+    res.render('panel/admin-user', {
+      layout: 'panel',
+      title: `Editar cuenta · ${user.name} · SOCCER iD`,
+      pageHeading: `Editar cuenta de ${user.name}`,
+      pageSub: 'Todo lo que edites aquí afecta únicamente el panel de esta cuenta',
+      active: 'admin',
+      panel: buildAdminPanel(req.panelUser),
+      flash: req.query.msg,
+      flashType: req.query.type,
+      account: {
+        id: user.id, name: user.name, email: user.email, role: user.role,
+        isSponsor: user.role === 'sponsor',
+        color: (tier && tier.color) || '#8A8F98',
+        category: user.category || '', amountRaw: user.amount || 0,
+        investmentType: user.investment_type === 'riesgo' ? 'riesgo' : 'fijo',
+        status: user.status, active: user.status === 'active',
+        memberId: user.member_id || '—',
+        // overrides
+        advName: advOverride ? advOverride.name : '', advRole: advOverride ? advOverride.role : '',
+        advPhone: advOverride ? advOverride.phone : '', advWhatsapp: advOverride ? advOverride.whatsapp : '',
+        benefitsText: Array.isArray(benefitsOverride) ? benefitsOverride.join('\n') : '',
+        returnRate: (user.return_rate === null || user.return_rate === undefined) ? '' : user.return_rate,
+        activations: user.activations || '',
+        // valores heredados (para mostrar como placeholder / referencia)
+        globalAdvisor: cfg.advisor || {},
+        categoryBenefits: (tier && tier.benefits) || [],
+        computedReturnPct: ret.returnPct, computedReturn: ret.projectedReturn,
+        documents, docCount: documents.length
+      },
+      investorTiers: tiers.filter(t => t.role === 'investor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
+      sponsorTiers: tiers.filter(t => t.role === 'sponsor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
+      s3: require('../lib/uploads').s3Enabled
+    });
+  } catch (e) { next(e); }
+});
+
+// ════════════════════════════════════════════════
 // VISTA PREVIA (admin ve el panel como inversionista/patrocinador)
 // ════════════════════════════════════════════════
+// Vista previa del panel real de una cuenta específica (debe ir antes de :role)
+router.get('/admin/preview/user/:id', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const user = await knex('users').where({ id: req.params.id }).first();
+    if (!user || user.role === 'admin') return res.redirect('/panel/admin?type=error&msg=Usuario+no+encontrado');
+    const roleLabel = user.role === 'sponsor' ? 'Patrocinador' : 'Inversionista';
+    res.render('panel/dashboard', {
+      layout: 'panel',
+      title: `Vista previa · ${user.name} · SOCCER iD`,
+      pageHeading: `Vista previa · ${user.name}`,
+      pageSub: `Así ve su panel esta cuenta (${roleLabel})`,
+      active: 'dashboard',
+      previewRole: user.role,
+      previewLabel: user.name,
+      previewUserId: user.id,
+      panel: await buildPanelData(user)
+    });
+  } catch (e) { next(e); }
+});
+
 router.get('/admin/preview/:role', auth.requireAdmin, async (req, res, next) => {
   try {
     const role = req.params.role === 'sponsor' ? 'sponsor' : 'investor';

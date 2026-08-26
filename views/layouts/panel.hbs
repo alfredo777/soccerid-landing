@@ -501,9 +501,13 @@
         <div class="pn-preview-banner">
           <div>
             <strong>Vista previa · {{previewLabel}}</strong>
+            {{#if previewUserId}}
+            <span>Así ve su panel esta cuenta. Solo lectura.</span>
+            {{else}}
             <span>Así se ve el portal para un {{previewLabel}}. Datos de ejemplo, solo lectura.</span>
+            {{/if}}
           </div>
-          <a class="pn-preview-exit" href="/panel/admin">Salir de la vista previa</a>
+          <a class="pn-preview-exit" href="{{#if previewUserId}}/panel/admin/user/{{previewUserId}}{{else}}/panel/admin{{/if}}">Salir de la vista previa</a>
         </div>
         {{/if}}
         {{{body}}}

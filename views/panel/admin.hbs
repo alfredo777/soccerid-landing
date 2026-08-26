@@ -202,9 +202,7 @@
           </div>
           <span class="ad-status {{this.status}}">{{this.status}}</span>
           <div class="ad-actions">
-            <button type="button" class="primary" onclick="openUser(this)"
-              data-id="{{this.id}}" data-name="{{this.name}}" data-email="{{this.email}}" data-role="{{this.role}}" data-category="{{this.category}}" data-amount="{{this.amountRaw}}" data-status="{{this.status}}" data-invtype="{{this.investmentType}}">Editar</button>
-            <button type="button" onclick="openDocs(this)" data-id="{{this.id}}" data-name="{{this.name}}">Docs{{#if this.docCount}} ({{this.docCount}}){{/if}}</button>
+            <button type="button" class="primary" onclick="location.href='/panel/admin/user/{{this.id}}'">Editar cuenta{{#if this.docCount}} · {{this.docCount}} doc{{/if}}</button>
             <form method="POST" action="/panel/admin/user/{{this.id}}/resend"><button type="submit">Reenviar</button></form>
             <form method="POST" action="/panel/admin/user/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar a {{this.name}}?')"><button type="submit" class="danger">Eliminar</button></form>
           </div>
