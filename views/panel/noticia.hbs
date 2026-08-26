@@ -1,0 +1,50 @@
+<style>
+  .na-wrap { max-width: 760px; }
+  .na-back { display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--pn-ink-2); margin-bottom:18px; }
+  .na-back:hover { color:var(--pn-purple); }
+  .na-back svg { width:16px; height:16px; stroke:currentColor; fill:none; }
+
+  .na-card { background:#fff; border:1px solid var(--pn-border); border-radius:20px; overflow:hidden; box-shadow:var(--pn-shadow); }
+  .na-hero { position:relative; }
+  .na-hero img { width:100%; max-height:360px; object-fit:cover; display:block; }
+  .na-tag {
+    position:absolute; top:16px; left:16px; display:inline-flex; align-items:center; gap:7px;
+    font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.5px;
+    padding:7px 14px; border-radius:20px; background:#fff; color:var(--pn-ink);
+  }
+  .na-tag .d { width:7px; height:7px; border-radius:50%; }
+  .na-body { padding: 30px 34px 36px; }
+  .na-body h1 { font-size:28px; font-weight:900; letter-spacing:-.5px; line-height:1.2; margin-bottom:10px; }
+  .na-date { font-size:13px; color:var(--pn-muted); font-weight:700; margin-bottom:22px; }
+  .na-lead { font-size:16px; font-weight:600; color:var(--pn-ink); line-height:1.6; margin-bottom:18px; }
+  .na-text { font-size:15px; color:var(--pn-ink-2); line-height:1.75; white-space:pre-line; }
+  .na-text p { margin-bottom:14px; }
+
+  @media (max-width:640px){ .na-body { padding: 24px 20px 28px; } .na-body h1 { font-size:23px; } }
+</style>
+
+<div class="na-wrap">
+  <a href="/panel/noticias" class="na-back">
+    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+    Volver a Estado del evento
+  </a>
+
+  <article class="na-card">
+    {{#if article.image}}
+    <div class="na-hero">
+      <img src="{{article.image}}" alt="">
+      <span class="na-tag"><span class="d" style="background: {{article.tagColor}}"></span>{{article.tag}}</span>
+    </div>
+    {{/if}}
+    <div class="na-body">
+      <h1>{{article.title}}</h1>
+      {{#if article.date}}<div class="na-date">{{article.date}}</div>{{/if}}
+      {{#if article.excerpt}}<p class="na-lead">{{article.excerpt}}</p>{{/if}}
+      {{#if article.body}}
+      <div class="na-text">{{article.body}}</div>
+      {{else}}
+      <p class="na-text" style="color:var(--pn-muted);">Esta nota aún no tiene contenido ampliado.</p>
+      {{/if}}
+    </div>
+  </article>
+</div>

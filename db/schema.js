@@ -201,6 +201,38 @@ async function ensureSchema() {
     // Migra los existentes: los marcados "done" pasan a "completado"
     await knex('milestones').where({ done: true }).update({ status: 'completado' });
   }
+
+  // Uso del capital: rubros con presupuestado vs ejercido (bloque "Uso del capital")
+  if (!(await knex.schema.hasTable('capital_items'))) {
+    await knex.schema.createTable('capital_items', (t) => {
+      t.increments('id').primary();
+      t.string('label').notNullable();       // rubro
+      t.bigInteger('budget').defaultTo(0);    // presupuestado
+      t.bigInteger('spent').defaultTo(0);     // ejercido
+      t.string('note');                       // detalle
+      t.string('source');                     // fuente/responsable del dato
+      t.integer('sort').defaultTo(0);
+      t.timestamps(true, true);
+    });
+  }
+
+  // Noticias: contenido completo para la vista de lectura
+  if (await knex.schema.hasTable('news') && !(await knex.schema.hasColumn('news', 'body'))) {
+    await knex.schema.alterTable('news', (t) => t.text('body'));
+  }
+
+  // Riesgos: matriz simple (bloque "Cronograma, riesgos y distribución")
+  if (!(await knex.schema.hasTable('risks'))) {
+    await knex.schema.createTable('risks', (t) => {
+      t.increments('id').primary();
+      t.string('title').notNullable();
+      t.string('level').defaultTo('medio');   // alto | medio | bajo
+      t.text('mitigation');                    // plan de mitigación
+      t.string('status').defaultTo('monitoreo'); // abierto | monitoreo | mitigado
+      t.integer('sort').defaultTo(0);
+      t.timestamps(true, true);
+    });
+  }
 }
 
 async function seed() {
@@ -361,6 +393,29 @@ async function seed() {
       audience: 'all'
     });
     console.log('  ✓ Notificación de bienvenida sembrada');
+  }
+
+  // Uso del capital (rubros iniciales)
+  if (await knex.schema.hasTable('capital_items') && !(await knex('capital_items').first())) {
+    await knex('capital_items').insert([
+      { label: 'Renta y operación de estadio', budget: 350000, spent: 120000, note: 'Shell Energy Stadium', source: 'Contrato de sede', sort: 1 },
+      { label: 'Participación de equipos', budget: 300000, spent: 150000, note: 'Garantías Tigres y Cruz Azul', source: 'Contratos deportivos', sort: 2 },
+      { label: 'Producción y transmisión', budget: 180000, spent: 40000, note: 'ESPN / TUDN', source: 'Proveedores audiovisuales', sort: 3 },
+      { label: 'Marketing y comercialización', budget: 120000, spent: 55000, note: 'Preventa y patrocinios', source: 'Área comercial', sort: 4 },
+      { label: 'Operación y contingencias', budget: 50000, spent: 12000, note: 'Logística y reserva', source: 'Dirección de operaciones', sort: 5 }
+    ]);
+    console.log('  ✓ Uso del capital sembrado');
+  }
+
+  // Riesgos (matriz inicial)
+  if (await knex.schema.hasTable('risks') && !(await knex('risks').first())) {
+    await knex('risks').insert([
+      { title: 'Venta de boletos por debajo del punto de equilibrio', level: 'alto', mitigation: 'Preventa a inversionistas, campañas segmentadas y alianzas con boleteras.', status: 'monitoreo', sort: 1 },
+      { title: 'Retraso en cierre de patrocinios', level: 'medio', mitigation: 'Pipeline comercial diversificado y metas por trimestre.', status: 'monitoreo', sort: 2 },
+      { title: 'Clima el día del partido', level: 'bajo', mitigation: 'Estadio con opciones de cobertura; seguro de evento.', status: 'abierto', sort: 3 },
+      { title: 'Disponibilidad de los equipos', level: 'medio', mitigation: 'Contratos firmados con cláusulas y fechas confirmadas.', status: 'mitigado', sort: 4 }
+    ]);
+    console.log('  ✓ Riesgos sembrados');
   }
 }
 

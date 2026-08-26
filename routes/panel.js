@@ -235,6 +235,64 @@ async function buildPanelData(user) {
     .map(cat => ({ category: cat, docs: userDocuments.filter(d => d.category === cat) }))
     .filter(g => g.docs.length);
 
+  // ── Ventas y punto de equilibrio ──
+  const capacity = Number(cfg.capacity) || 21800;
+  const ticketPrice = Number(cfg.ticketPrice) || 100;
+  const projectCost = Number(cfg.projectCost) || 1000000;
+  const breakEven = Number(cfg.breakEvenTickets) > 0 ? Number(cfg.breakEvenTickets) : Math.round(projectCost / (ticketPrice || 1));
+  const ticketsSold = Math.max(0, Number(cfg.ticketsSold) || 0);
+  const clamp = (n) => Math.max(0, Math.min(100, Math.round(n)));
+  const sales = {
+    sold: ticketsSold,
+    soldLabel: ticketsSold.toLocaleString('es-MX'),
+    capacity, capacityLabel: capacity.toLocaleString('es-MX'),
+    breakEven, breakEvenLabel: breakEven.toLocaleString('es-MX'),
+    occupancyPct: capacity ? clamp((ticketsSold / capacity) * 100) : 0,
+    soldPct: capacity ? clamp((ticketsSold / capacity) * 100) : 0,
+    breakEvenPct: capacity ? clamp((breakEven / capacity) * 100) : 0,
+    boxOffice: formatUSD(ticketsSold * ticketPrice),
+    goalBoxOffice: formatUSD(capacity * ticketPrice),
+    pastBreakEven: ticketsSold >= breakEven,
+    toBreakEven: Math.max(0, breakEven - ticketsSold),
+    toBreakEvenLabel: Math.max(0, breakEven - ticketsSold).toLocaleString('es-MX'),
+    updated: shortDate(cfg.salesUpdated),
+    source: cfg.returnSource || ''
+  };
+
+  // ── Uso del capital ──
+  const capRows = await knex('capital_items').orderBy([{ column: 'sort' }, { column: 'id' }]);
+  const capitalItems = capRows.map(c => {
+    const budget = Number(c.budget) || 0, spent = Number(c.spent) || 0;
+    return {
+      id: c.id, label: c.label, note: c.note || '', source: c.source || '',
+      budget, spent, budgetLabel: formatUSD(budget), spentLabel: formatUSD(spent),
+      pct: budget ? Math.min(100, Math.round((spent / budget) * 100)) : 0
+    };
+  });
+  const totalBudget = capitalItems.reduce((s, c) => s + c.budget, 0);
+  const totalSpent = capitalItems.reduce((s, c) => s + c.spent, 0);
+  // Capital comprometido = suma de aportaciones de inversionistas activos
+  const raisedRow = await knex('users').where({ role: 'investor', status: 'active' }).sum({ s: 'amount' }).first();
+  const capitalRaised = Number(raisedRow && raisedRow.s) || 0;
+  const capital = {
+    items: capitalItems,
+    totalBudget: formatUSD(totalBudget), totalSpent: formatUSD(totalSpent),
+    spentPct: totalBudget ? Math.min(100, Math.round((totalSpent / totalBudget) * 100)) : 0,
+    raised: formatUSD(capitalRaised), hasRaised: capitalRaised > 0,
+    budgetVsRaisedPct: capitalRaised ? Math.min(100, Math.round((totalBudget / capitalRaised) * 100)) : 0
+  };
+
+  // ── Riesgos ──
+  const RISK_COLOR = { alto: '#C0392B', medio: '#C79A2E', bajo: '#1E8E5A' };
+  const RISK_LEVEL = { alto: 'Alto', medio: 'Medio', bajo: 'Bajo' };
+  const RISK_STATUS = { abierto: 'Abierto', monitoreo: 'En monitoreo', mitigado: 'Mitigado' };
+  const riskRows = await knex('risks').orderBy([{ column: 'sort' }, { column: 'id' }]);
+  const risks = riskRows.map(r => ({
+    id: r.id, title: r.title, mitigation: r.mitigation || '',
+    level: r.level, levelLabel: RISK_LEVEL[r.level] || 'Medio', color: RISK_COLOR[r.level] || '#C79A2E',
+    status: r.status, statusLabel: RISK_STATUS[r.status] || 'En monitoreo'
+  }));
+
   // Fecha/hora del evento para el contador (desde la config editable)
   const eventDateISO = `${cfg.eventDate || '2027-03-27'}T${cfg.eventTime || '19:00'}:00-05:00`;
 
@@ -258,6 +316,9 @@ async function buildPanelData(user) {
     },
     // Sello de trazabilidad para las cifras de inversión
     trace: { source: cfg.returnSource || '', updated: shortDate(cfg.returnUpdated) },
+    sales,
+    capital,
+    risks,
     stats,
     distribution,
     donut,
@@ -377,6 +438,28 @@ router.get('/noticias', auth.requireAuth, async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+// Vista de lectura de una noticia (inversionistas y patrocinadores)
+router.get('/noticias/:id', auth.requireAuth, async (req, res, next) => {
+  try {
+    if (req.panelUser.role === 'admin') return res.redirect('/panel/admin#noticias');
+    const n = await knex('news').where({ id: req.params.id }).first();
+    if (!n) return res.redirect('/panel/noticias');
+    const article = {
+      id: n.id, tag: n.tag, tagColor: n.tag_color, title: n.title,
+      excerpt: n.excerpt, body: n.body || '', image: n.image, date: n.date_label
+    };
+    res.render('panel/noticia', {
+      layout: 'panel',
+      title: `${n.title} · SOCCER iD Investor Hub`,
+      pageHeading: 'Estado del evento',
+      pageSub: 'Avances, anuncios y prensa de SOCCER iD CUP 2027',
+      active: 'noticias',
+      article,
+      panel: await buildPanelData(req.panelUser)
+    });
+  } catch (e) { next(e); }
+});
+
 router.get('/calendario', auth.requireAuth, async (req, res, next) => {
   try {
     if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
@@ -447,6 +530,25 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       return Object.assign({}, m, { status, statusLabel: MILE_LABELS[status] || 'Pendiente', owner: m.owner || '' });
     });
     const notifications = await knex('notifications').orderBy('id', 'desc');
+
+    // Uso del capital + riesgos (para el admin)
+    const RISK_LBL = { alto: 'Alto', medio: 'Medio', bajo: 'Bajo' };
+    const RISK_ST = { abierto: 'Abierto', monitoreo: 'En monitoreo', mitigado: 'Mitigado' };
+    const RISK_CLR = { alto: '#C0392B', medio: '#C79A2E', bajo: '#1E8E5A' };
+    const capitalItems = (await knex('capital_items').orderBy([{ column: 'sort' }, { column: 'id' }])).map(c => {
+      const budget = Number(c.budget) || 0, spent = Number(c.spent) || 0;
+      return {
+        id: c.id, label: c.label, budget, spent,
+        budgetLabel: formatUSD(budget), spentLabel: formatUSD(spent), note: c.note || '', source: c.source || '', sort: c.sort,
+        pct: budget ? Math.min(100, Math.round((spent / budget) * 100)) : 0,
+        over: spent > budget
+      };
+    });
+    const risksAdmin = (await knex('risks').orderBy([{ column: 'sort' }, { column: 'id' }])).map(r => ({
+      id: r.id, title: r.title, level: r.level, levelLabel: RISK_LBL[r.level] || 'Medio', color: RISK_CLR[r.level] || '#C79A2E',
+      mitigation: r.mitigation || '', status: r.status, statusLabel: RISK_ST[r.status] || 'En monitoreo', sort: r.sort
+    }));
+
     const allDocs = await knex('user_documents').orderBy('id', 'desc');
     const docsByUser = {};
     allDocs.forEach(d => { (docsByUser[d.user_id] = docsByUser[d.user_id] || []).push({ id: d.id, name: d.name, url: d.url, meta: d.meta }); });
@@ -574,7 +676,10 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
       notifyEmails,
-      dashboardConfig: await getDashboardConfig()
+      dashboardConfig: await getDashboardConfig(),
+      capitalItems, risksAdmin,
+      capitalTotalBudget: formatUSD(capitalItems.reduce((s, c) => s + Number(c.budget), 0)),
+      capitalTotalSpent: formatUSD(capitalItems.reduce((s, c) => s + Number(c.spent), 0))
     });
   } catch (e) { next(e); }
 });
@@ -696,6 +801,7 @@ router.post('/admin/news', auth.requireAdmin, upload.single('imageFile'), async 
       tag, tag_color: tagColors[tag] || '#6C3CE0',
       title: (req.body.title || '').trim(),
       excerpt: (req.body.excerpt || '').trim(),
+      body: (req.body.body || '').trim() || null,
       image,
       date_label: (req.body.date_label || '').trim(),
       size: req.body.size === 'tall' ? 'tall' : 'short',
@@ -748,6 +854,88 @@ router.post('/admin/milestone', auth.requireAdmin, async (req, res, next) => {
 });
 router.post('/admin/milestone/:id/delete', auth.requireAdmin, async (req, res, next) => {
   try { await knex('milestones').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=Hito+eliminado#cronograma'); } catch (e) { next(e); }
+});
+
+// ── Uso del capital (rubros) ──
+function capitalBody(b) {
+  return {
+    label: (b.label || '').trim(),
+    budget: parseInt(b.budget || '0', 10) || 0,
+    spent: parseInt(b.spent || '0', 10) || 0,
+    note: (b.note || '').trim() || null,
+    source: (b.source || '').trim() || null,
+    sort: parseInt(b.sort || '99', 10) || 99
+  };
+}
+router.post('/admin/capital', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const data = capitalBody(req.body);
+    if (!data.label) return res.redirect('/panel/admin?type=error&msg=El+rubro+es+obligatorio#capital');
+    await knex('capital_items').insert(data);
+    res.redirect('/panel/admin?type=ok&msg=Rubro+agregado#capital');
+  } catch (e) { next(e); }
+});
+router.post('/admin/capital/:id/update', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const data = capitalBody(req.body); delete data.sort;
+    await knex('capital_items').where({ id: req.params.id }).update(Object.assign(data, { updated_at: knex.fn.now() }));
+    res.redirect('/panel/admin?type=ok&msg=Rubro+actualizado#capital');
+  } catch (e) { next(e); }
+});
+router.post('/admin/capital/:id/delete', auth.requireAdmin, async (req, res, next) => {
+  try { await knex('capital_items').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=Rubro+eliminado#capital'); } catch (e) { next(e); }
+});
+
+// ── Riesgos ──
+const RISK_LEVELS = ['alto', 'medio', 'bajo'];
+const RISK_STATES = ['abierto', 'monitoreo', 'mitigado'];
+function riskBody(b) {
+  return {
+    title: (b.title || '').trim(),
+    level: RISK_LEVELS.includes(b.level) ? b.level : 'medio',
+    mitigation: (b.mitigation || '').trim() || null,
+    status: RISK_STATES.includes(b.status) ? b.status : 'monitoreo',
+    sort: parseInt(b.sort || '99', 10) || 99
+  };
+}
+router.post('/admin/risk', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const data = riskBody(req.body);
+    if (!data.title) return res.redirect('/panel/admin?type=error&msg=El+riesgo+es+obligatorio#riesgos');
+    await knex('risks').insert(data);
+    res.redirect('/panel/admin?type=ok&msg=Riesgo+agregado#riesgos');
+  } catch (e) { next(e); }
+});
+router.post('/admin/risk/:id/update', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const data = riskBody(req.body); delete data.sort;
+    await knex('risks').where({ id: req.params.id }).update(Object.assign(data, { updated_at: knex.fn.now() }));
+    res.redirect('/panel/admin?type=ok&msg=Riesgo+actualizado#riesgos');
+  } catch (e) { next(e); }
+});
+router.post('/admin/risk/:id/delete', auth.requireAdmin, async (req, res, next) => {
+  try { await knex('risks').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=Riesgo+eliminado#riesgos'); } catch (e) { next(e); }
+});
+
+// ── Reordenar (flechas ▲▼): normaliza `sort` y sube/baja un elemento ──
+const REORDER_TABLES = { capital: { table: 'capital_items', hash: 'capital' }, risk: { table: 'risks', hash: 'riesgos' }, milestone: { table: 'milestones', hash: 'cronograma' } };
+router.post('/admin/:kind/:id/move', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const cfg = REORDER_TABLES[req.params.kind];
+    if (!cfg) return res.redirect('/panel/admin');
+    const dir = req.body.dir === 'up' ? -1 : 1;
+    const rows = await knex(cfg.table).orderBy([{ column: 'sort' }, { column: 'id' }]);
+    const idx = rows.findIndex(r => String(r.id) === String(req.params.id));
+    const swap = idx + dir;
+    if (idx !== -1 && swap >= 0 && swap < rows.length) {
+      const tmp = rows[idx]; rows[idx] = rows[swap]; rows[swap] = tmp;
+    }
+    // Reasigna sort consecutivo para dejar el orden consistente
+    for (let i = 0; i < rows.length; i++) {
+      await knex(cfg.table).where({ id: rows[i].id }).update({ sort: i + 1 });
+    }
+    res.redirect(`/panel/admin?type=ok&msg=Orden+actualizado#${cfg.hash}`);
+  } catch (e) { next(e); }
 });
 
 // ── Edición ──
@@ -807,6 +995,7 @@ router.post('/admin/news/:id/update', auth.requireAdmin, upload.single('imageFil
       tag, tag_color: tagColors[tag] || '#6C3CE0',
       title: (req.body.title || '').trim(),
       excerpt: (req.body.excerpt || '').trim(),
+      body: (req.body.body || '').trim() || null,
       image,
       date_label: (req.body.date_label || '').trim(),
       size: req.body.size === 'tall' ? 'tall' : 'short',
@@ -991,44 +1180,55 @@ router.post('/admin/settings/notify', auth.requireAdmin, async (req, res, next) 
   } catch (e) { next(e); }
 });
 
-// Configuración del dashboard del inversionista (asesor, carpeta, evento, retorno)
+// Configuración del dashboard — guardado PARCIAL por grupo.
+// Cada tarjeta envía un `group` y solo esos campos se actualizan (el resto se conserva).
 router.post('/admin/settings/dashboard', auth.requireAdmin, async (req, res, next) => {
   try {
     const b = req.body;
-    const num = (v, d) => { const n = parseFloat(v); return isNaN(n) ? d : n; };
-    const sharedName = (b.sf_name || '').trim();
-    const sharedUrl = (b.sf_url || '').trim();
-    await saveDashboardConfig({
-      advisor: {
-        name: (b.adv_name || '').trim(),
-        role: (b.adv_role || '').trim(),
-        phone: (b.adv_phone || '').trim(),
-        whatsapp: (b.adv_whatsapp || '').replace(/[^0-9]/g, ''),
-        initials: ''
-      },
-      sharedFolder: sharedUrl ? {
-        name: sharedName || 'Carpeta compartida',
-        description: (b.sf_desc || '').trim(),
-        url: sharedUrl
-      } : null,
-      eventDate: (b.event_date || '').trim() || '2027-03-27',
-      eventTime: (b.event_time || '').trim() || '19:00',
-      eventLabel: (b.event_label || '').trim(),
-      fixedRate: num(b.fixed_rate, 25),
-      investorSplit: num(b.investor_split, 50),
-      projectCost: num(b.project_cost, 1000000),
-      ticketPrice: num(b.ticket_price, 100),
-      referenceAttendance: num(b.reference_attendance, 21800),
-      // Etapa actual del proyecto + trazabilidad
-      stageLabel: (b.stage_label || '').trim(),
-      stageStep: num(b.stage_step, 1),
-      stageTotal: num(b.stage_total, 6),
-      stageNote: (b.stage_note || '').trim(),
-      stageUpdated: (b.stage_updated || '').trim(),
-      returnSource: (b.return_source || '').trim(),
-      returnUpdated: (b.return_updated || '').trim()
-    });
-    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Configuración del dashboard actualizada') + '#configuracion');
+    const num = (v, d) => { const n = parseFloat(String(v).replace(/[^0-9.\-]/g, '')); return isNaN(n) ? d : n; };
+    const group = b.group || 'all';
+    const patch = {};
+
+    if (group === 'advisor' || group === 'all') {
+      patch.advisor = {
+        name: (b.adv_name || '').trim(), role: (b.adv_role || '').trim(),
+        phone: (b.adv_phone || '').trim(), whatsapp: (b.adv_whatsapp || '').replace(/[^0-9]/g, ''), initials: ''
+      };
+    }
+    if (group === 'folder' || group === 'all') {
+      const sharedUrl = (b.sf_url || '').trim();
+      patch.sharedFolder = sharedUrl ? { name: (b.sf_name || '').trim() || 'Carpeta compartida', description: (b.sf_desc || '').trim(), url: sharedUrl } : null;
+    }
+    if (group === 'event' || group === 'all') {
+      patch.eventDate = (b.event_date || '').trim() || '2027-03-27';
+      patch.eventTime = (b.event_time || '').trim() || '19:00';
+      patch.eventLabel = (b.event_label || '').trim();
+    }
+    if (group === 'invest' || group === 'all') {
+      patch.fixedRate = num(b.fixed_rate, 25);
+      patch.investorSplit = num(b.investor_split, 50);
+      patch.projectCost = num(b.project_cost, 1000000);
+      patch.ticketPrice = num(b.ticket_price, 100);
+      patch.referenceAttendance = num(b.reference_attendance, 21800);
+    }
+    if (group === 'sales' || group === 'all') {
+      patch.ticketsSold = num(b.tickets_sold, 0);
+      patch.salesUpdated = (b.sales_updated || '').trim();
+      patch.breakEvenTickets = (b.break_even_tickets === undefined || String(b.break_even_tickets).trim() === '') ? '' : num(b.break_even_tickets, '');
+    }
+    if (group === 'stage' || group === 'all') {
+      patch.stageLabel = (b.stage_label || '').trim();
+      patch.stageStep = num(b.stage_step, 1);
+      patch.stageTotal = num(b.stage_total, 6);
+      patch.stageNote = (b.stage_note || '').trim();
+      patch.stageUpdated = (b.stage_updated || '').trim();
+    }
+    if (group === 'trace' || group === 'all') {
+      patch.returnSource = (b.return_source || '').trim();
+      patch.returnUpdated = (b.return_updated || '').trim();
+    }
+    await saveDashboardConfig(patch);
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Configuración guardada') + '#configuracion');
   } catch (e) { next(e); }
 });
 

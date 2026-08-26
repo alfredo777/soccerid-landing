@@ -1,5 +1,7 @@
 <style>
-  .ad-tabs { display:flex; gap:8px; margin: 6px 0 22px; flex-wrap:wrap; }
+  .ad-tabs { display:flex; align-items:center; gap:8px; margin: 6px 0 22px; flex-wrap:wrap; }
+  .ad-tabtitle { font-size:15px; font-weight:800; color:var(--pn-ink); margin-left:6px; }
+  @media (max-width:860px){ .ad-tabtitle { display:none; } }
   .ad-tab {
     position:relative; width:44px; height:44px; border-radius:13px;
     background:#fff; border:1px solid var(--pn-border); color:var(--pn-ink-2);
@@ -42,9 +44,16 @@
   .ad-sec { display:none; }
   .ad-sec.is-active { display:block; }
 
-  .ad-flash { padding:13px 18px; border-radius:13px; font-size:13px; font-weight:700; margin-bottom:20px; }
-  .ad-flash.ok { background:#EAF7F0; color:#1E8E5A; }
-  .ad-flash.error { background:#FDECEC; color:#C0392B; }
+  /* Toast flotante (feedback no bloqueante que se auto-oculta) */
+  .ad-toast { position:fixed; right:24px; bottom:24px; z-index:200; display:flex; align-items:center; gap:11px;
+    padding:14px 18px; border-radius:13px; font-size:13.5px; font-weight:700; color:#fff; background:var(--pn-ink);
+    box-shadow:0 12px 34px rgba(20,20,27,.28); max-width:min(420px,calc(100vw - 48px));
+    transform:translateY(16px); opacity:0; transition:transform .28s cubic-bezier(.4,0,.2,1), opacity .28s; }
+  .ad-toast.is-show { transform:translateY(0); opacity:1; }
+  .ad-toast.ok { background:#1E8E5A; }
+  .ad-toast.error { background:#C0392B; }
+  .ad-toast svg { width:18px; height:18px; stroke:#fff; fill:none; flex-shrink:0; }
+  @media (max-width:560px){ .ad-toast { right:16px; left:16px; bottom:16px; } }
 
   .ad-grid { display:grid; grid-template-columns: 360px 1fr; gap:22px; align-items:start; }
   @media (max-width:1000px){ .ad-grid{ grid-template-columns:1fr; } }
@@ -61,6 +70,40 @@
   .ad-check input { width:auto; }
   .ad-btn { width:100%; padding:13px; border:none; border-radius:12px; background:var(--pn-purple); color:#fff; font-size:14px; font-weight:800; font-family:inherit; cursor:pointer; margin-top:6px; }
   .ad-btn:hover { background:#5A2FC7; }
+
+  /* Encabezado de sección con enlace "Ver en el panel" */
+  .ad-sechead { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:0 0 18px; flex-wrap:wrap; }
+  .ad-seelink { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:800; color:var(--pn-purple); background:var(--pn-purple-soft); padding:9px 15px; border-radius:11px; flex-shrink:0; }
+  .ad-seelink:hover { background:#E4DAFA; }
+  .ad-seelink svg { width:15px; height:15px; stroke:currentColor; fill:none; }
+
+  /* Configuración en tarjetas independientes */
+  .ad-cfggrid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; align-items:start; }
+  @media (max-width:900px){ .ad-cfggrid{ grid-template-columns:1fr; } }
+
+  /* Campo de dinero: prefijo $ + formato en vivo */
+  .ad-money { position:relative; display:flex; align-items:center; }
+  .ad-money > span { position:absolute; left:13px; font-size:13px; font-weight:800; color:var(--pn-muted); pointer-events:none; }
+  .ad-money__in { padding-left:26px !important; }
+  .ad-money__fmt { font-size:12px; font-weight:700; color:var(--pn-purple); margin-top:5px; min-height:15px; }
+  .ad-money__warn { color:#C0392B; }
+
+  /* Barra de progreso en la lista de capital */
+  .ad-capbar { height:6px; border-radius:20px; background:#F1F0F5; overflow:hidden; margin-top:7px; max-width:280px; }
+  .ad-capbar i { display:block; height:100%; border-radius:20px; background:var(--pn-purple); }
+  .ad-capbar.over i { background:#C0392B; }
+  .ad-item__pct { font-size:12px; font-weight:800; color:var(--pn-ink-2); flex-shrink:0; }
+
+  /* Chips de color (nivel/estado de riesgo) */
+  .ad-chips { display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; }
+  .ad-chip2 { font-size:10.5px; font-weight:800; padding:3px 9px; border-radius:20px; letter-spacing:.2px; }
+
+  /* Flechas de reordenar */
+  .ad-move { display:flex; flex-direction:column; gap:2px; flex-shrink:0; }
+  .ad-move button { border:1px solid var(--pn-border); background:#fff; border-radius:7px; width:26px; height:19px; padding:0; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--pn-ink-2); }
+  .ad-move button:hover { background:var(--pn-purple-soft); color:var(--pn-purple); border-color:#DCCFF7; }
+  .ad-move button:disabled { opacity:.35; cursor:default; }
+  .ad-move svg { width:12px; height:12px; stroke:currentColor; fill:none; }
 
   .ad-list { padding:6px 4px; }
   .ad-item { display:flex; align-items:center; gap:14px; padding:14px 16px; border-bottom:1px solid var(--pn-border); }
@@ -108,14 +151,22 @@
   .ad-tier textarea { min-height:120px; }
 
   /* Modal */
-  .ad-modal { position:fixed; inset:0; background:rgba(20,20,27,.5); z-index:100; display:none; align-items:center; justify-content:center; padding:20px; }
-  .ad-modal.is-open { display:flex; }
-  .ad-modal__card { background:#fff; border-radius:18px; width:100%; max-width:440px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,.25); }
-  .ad-modal__head { display:flex; align-items:center; justify-content:space-between; padding:20px 22px; border-bottom:1px solid var(--pn-border); position:sticky; top:0; background:#fff; }
-  .ad-modal__head h3 { font-size:16px; font-weight:800; }
-  .ad-modal__close { background:none; border:none; cursor:pointer; padding:4px; }
-  .ad-modal__close svg { width:20px; height:20px; stroke:var(--pn-ink-2); }
-  .ad-modal__body { padding:20px 22px 22px; }
+  /* Panel deslizante (drawer) — reemplaza a los modales centrados */
+  .ad-modal { position:fixed; inset:0; background:rgba(20,20,27,.45); z-index:100; display:flex; justify-content:flex-end;
+    opacity:0; pointer-events:none; transition:opacity .22s ease; }
+  .ad-modal.is-open { opacity:1; pointer-events:auto; }
+  .ad-modal__card { background:#fff; width:100%; max-width:480px; height:100%; max-height:100%; overflow-y:auto;
+    box-shadow:-16px 0 48px rgba(20,20,27,.18); border-radius:0;
+    transform:translateX(100%); transition:transform .26s cubic-bezier(.4,0,.2,1); }
+  .ad-modal.is-open .ad-modal__card { transform:translateX(0); }
+  .ad-modal__card[style*="max-width:640"], .ad-modal__card[style*="max-width:560"] { max-width:640px; }
+  .ad-modal__head { display:flex; align-items:center; justify-content:space-between; padding:22px 24px; border-bottom:1px solid var(--pn-border); position:sticky; top:0; background:#fff; z-index:1; }
+  .ad-modal__head h3 { font-size:17px; font-weight:800; }
+  .ad-modal__close { background:#F6F5F9; border:none; cursor:pointer; padding:0; width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; }
+  .ad-modal__close:hover { background:#ECEAF2; }
+  .ad-modal__close svg { width:18px; height:18px; stroke:var(--pn-ink-2); }
+  .ad-modal__body { padding:22px 24px 28px; }
+  @media (max-width:560px){ .ad-modal__card { max-width:100%; } }
   .ad-langtabs { display:flex; gap:8px; margin:18px 0 14px; border-bottom:1px solid var(--pn-border); }
   .ad-langtab { padding:8px 14px; background:none; border:none; border-bottom:2px solid transparent; font-family:inherit; font-size:13px; font-weight:800; color:var(--pn-ink-2); cursor:pointer; }
   .ad-langtab.is-active { color:var(--pn-purple); border-bottom-color:var(--pn-purple); }
@@ -125,7 +176,16 @@
   .ad-select-sm { border:1px solid var(--pn-border); border-radius:9px; padding:7px 8px; font-size:12px; font-weight:700; font-family:inherit; color:var(--pn-ink-2); background:#fff; cursor:pointer; }
 </style>
 
-{{#if flash}}<div class="ad-flash {{#eq flashType 'error'}}error{{else}}ok{{/eq}}">{{flash}}</div>{{/if}}
+{{#if flash}}
+<div class="ad-toast {{#eq flashType 'error'}}error{{else}}ok{{/eq}}" id="adToast">
+  {{#eq flashType 'error'}}
+  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  {{else}}
+  <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+  {{/eq}}
+  <span>{{flash}}</span>
+</div>
+{{/if}}
 
 <nav class="ad-crumb" aria-label="Ruta">
   <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
@@ -165,9 +225,16 @@
   <button type="button" class="ad-tab" data-tab="leads" data-label="Prospectos" title="Prospectos" aria-label="Prospectos">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
   </button>
+  <button type="button" class="ad-tab" data-tab="capital" data-label="Uso del capital" title="Uso del capital" aria-label="Uso del capital">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+  </button>
+  <button type="button" class="ad-tab" data-tab="riesgos" data-label="Riesgos" title="Riesgos" aria-label="Riesgos">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+  </button>
   <button type="button" class="ad-tab" data-tab="configuracion" data-label="Configuración" title="Configuración" aria-label="Configuración">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
   </button>
+  <div class="ad-tabtitle" id="adTabTitle">Usuarios</div>
 </div>
 
 <!-- USUARIOS -->
@@ -222,7 +289,8 @@
       <h3>Publicar noticia</h3>
       <div class="ad-f"><label>Categoría</label><select name="tag"><option>Anuncio</option><option>Actualización</option><option>Prensa</option></select></div>
       <div class="ad-f"><label>Título</label><input type="text" name="title" required></div>
-      <div class="ad-f"><label>Extracto</label><textarea name="excerpt"></textarea></div>
+      <div class="ad-f"><label>Extracto</label><textarea name="excerpt" placeholder="Resumen corto que se ve en la tarjeta"></textarea></div>
+      <div class="ad-f"><label>Contenido completo</label><textarea name="body" rows="5" placeholder="Texto completo de la nota (se muestra al abrir 'Leer más')"></textarea></div>
       <div class="ad-f"><label>Imagen</label><input type="file" name="imageFile" accept="image/*">
         <div class="ad-hint">{{#if s3}}Se subirá a Amazon S3.{{else}}Se guardará localmente (configura S3 para producción).{{/if}} O pega una URL abajo.</div>
       </div>
@@ -248,7 +316,7 @@
           </div>
           <div class="ad-actions">
             <button type="button" class="primary" onclick="openNews(this)"
-              data-id="{{this.id}}" data-tag="{{this.tag}}" data-title="{{this.title}}" data-excerpt="{{this.excerpt}}" data-image="{{this.image}}" data-date="{{this.date_label}}" data-size="{{this.size}}" data-featured="{{#if this.featured}}1{{/if}}">Editar</button>
+              data-id="{{this.id}}" data-tag="{{this.tag}}" data-title="{{this.title}}" data-excerpt="{{this.excerpt}}" data-body="{{this.body}}" data-image="{{this.image}}" data-date="{{this.date_label}}" data-size="{{this.size}}" data-featured="{{#if this.featured}}1{{/if}}">Editar</button>
             <form method="POST" action="/panel/admin/news/{{this.id}}/notify" onsubmit="return confirm('¿Compartir esta noticia como notificación (email) a todos los usuarios?')"><button type="submit">Compartir</button></form>
             <form method="POST" action="/panel/admin/news/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar noticia?')"><button type="submit" class="danger">Eliminar</button></form>
           </div>
@@ -329,6 +397,10 @@
             <strong>{{this.title}}</strong>
             <small>{{this.date_label}} · {{this.statusLabel}}{{#if this.owner}} · {{this.owner}}{{/if}}{{#if this.highlight}} · Destacado{{/if}}</small>
           </div>
+          <div class="ad-move">
+            <form method="POST" action="/panel/admin/milestone/{{this.id}}/move"><input type="hidden" name="dir" value="up"><button type="submit" {{#if @first}}disabled{{/if}} title="Subir"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></button></form>
+            <form method="POST" action="/panel/admin/milestone/{{this.id}}/move"><input type="hidden" name="dir" value="down"><button type="submit" {{#if @last}}disabled{{/if}} title="Bajar"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></form>
+          </div>
           <div class="ad-actions">
             <button type="button" class="primary" onclick="openMile(this)"
               data-id="{{this.id}}" data-title="{{this.title}}" data-date="{{this.date_label}}" data-status="{{this.status}}" data-owner="{{this.owner}}" data-highlight="{{#if this.highlight}}1{{/if}}">Editar</button>
@@ -383,7 +455,12 @@
 
 <!-- CATEGORÍAS -->
 <section class="ad-sec" id="sec-categorias">
-  <p class="ad-note">Edita el nombre, color, monto, cupo y beneficios de cada categoría. Los cambios se reflejan en el panel de inversionistas y patrocinadores.</p>
+  <div class="ad-sechead">
+    <p class="ad-note" style="margin:0;">Edita nombre, color, monto, cupo y beneficios de cada categoría. Se reflejan en el panel de inversionistas y patrocinadores.</p>
+    <a class="ad-seelink" href="/panel/admin/preview/investor" target="_blank" rel="noopener">Ver en el panel
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+    </a>
+  </div>
   <div class="ad-catgrid">
     {{#each tiers}}
     <form class="pn-card ad-tier" method="POST" action="/panel/admin/tier/{{this.id}}/update">
@@ -545,72 +622,207 @@
   </div>
 </section>
 
-<!-- CONFIGURACIÓN DEL DASHBOARD -->
-<section class="ad-sec" id="sec-configuracion">
-  <p class="ad-note">Personaliza lo que ven <strong>todos los inversionistas</strong> en su dashboard: asesor, carpeta compartida, fecha del evento y los parámetros de retorno de cada tipo de inversión.</p>
-  <form class="pn-card ad-form" method="POST" action="/panel/admin/settings/dashboard" style="max-width:720px;">
-
-    <h3>Asesor de inversionistas</h3>
-    <div class="ad-row2">
-      <div class="ad-f"><label>Nombre</label><input type="text" name="adv_name" value="{{dashboardConfig.advisor.name}}"></div>
-      <div class="ad-f"><label>Rol / puesto</label><input type="text" name="adv_role" value="{{dashboardConfig.advisor.role}}"></div>
-    </div>
-    <div class="ad-row2">
-      <div class="ad-f"><label>Teléfono (visible)</label><input type="text" name="adv_phone" value="{{dashboardConfig.advisor.phone}}" placeholder="+1 786 784 4303"></div>
-      <div class="ad-f"><label>WhatsApp (solo números)</label><input type="text" name="adv_whatsapp" value="{{dashboardConfig.advisor.whatsapp}}" placeholder="17867844303"></div>
-    </div>
-
-    <h3 style="margin-top:24px;">Carpeta compartida (Google Drive)</h3>
-    <div class="ad-f"><label>Título</label><input type="text" name="sf_name" value="{{dashboardConfig.sharedFolder.name}}" placeholder="Carpeta compartida — SOCCER iD CUP 2027"></div>
-    <div class="ad-f"><label>Descripción</label><input type="text" name="sf_desc" value="{{dashboardConfig.sharedFolder.description}}" placeholder="Documentación general del proyecto para todos los inversionistas."></div>
-    <div class="ad-f"><label>Enlace</label><input type="url" name="sf_url" value="{{dashboardConfig.sharedFolder.url}}" placeholder="https://drive.google.com/drive/folders/...">
-      <div class="ad-hint">Deja el enlace vacío para ocultar la carpeta del dashboard.</div>
-    </div>
-
-    <h3 style="margin-top:24px;">Evento y cuenta regresiva</h3>
-    <div class="ad-row2">
-      <div class="ad-f"><label>Fecha del partido</label><input type="date" name="event_date" value="{{dashboardConfig.eventDate}}"></div>
-      <div class="ad-f"><label>Hora (24h)</label><input type="time" name="event_time" value="{{dashboardConfig.eventTime}}"></div>
-    </div>
-    <div class="ad-f"><label>Etiqueta del evento (texto)</label><input type="text" name="event_label" value="{{dashboardConfig.eventLabel}}" placeholder="Sábado, 27 de marzo 2027"></div>
-
-    <h3 style="margin-top:24px;">Retorno fijo</h3>
-    <div class="ad-f" style="max-width:50%;"><label>Tasa de retorno (%)</label><input type="number" name="fixed_rate" value="{{dashboardConfig.fixedRate}}" min="0" step="0.5">
-      <div class="ad-hint">Retorno proyectado = monto × (1 + tasa/100).</div>
-    </div>
-
-    <h3 style="margin-top:24px;">Participación a riesgo (50/50)</h3>
-    <p class="ad-hint" style="margin-bottom:14px;">Se usa para proyectar la utilidad ilustrativa de los inversionistas a riesgo, con la misma lógica de la calculadora pública.</p>
-    <div class="ad-row2">
-      <div class="ad-f"><label>Reparto a inversionistas (%)</label><input type="number" name="investor_split" value="{{dashboardConfig.investorSplit}}" min="0" max="100" step="1"></div>
-      <div class="ad-f"><label>Costo del proyecto (USD)</label><input type="number" name="project_cost" value="{{dashboardConfig.projectCost}}" min="0" step="10000"></div>
-    </div>
-    <div class="ad-row2">
-      <div class="ad-f"><label>Precio de boleto (USD)</label><input type="number" name="ticket_price" value="{{dashboardConfig.ticketPrice}}" min="0" step="10"></div>
-      <div class="ad-f"><label>Asistencia de referencia</label><input type="number" name="reference_attendance" value="{{dashboardConfig.referenceAttendance}}" min="0" step="500">
-        <div class="ad-hint">Escenario para la proyección (default: estadio lleno).</div>
+<!-- USO DEL CAPITAL -->
+<section class="ad-sec" id="sec-capital">
+  <div class="ad-sechead">
+    <p class="ad-note" style="margin:0;">Rubros de <strong>uso del capital</strong>: presupuestado vs. ejercido. Total: <strong>{{capitalTotalSpent}}</strong> ejercido de {{capitalTotalBudget}}.</p>
+    <a class="ad-seelink" href="/panel/admin/preview/investor" target="_blank" rel="noopener">Ver en el panel
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+    </a>
+  </div>
+  <div class="ad-grid">
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/capital">
+      <h3>Agregar rubro</h3>
+      <div class="ad-f"><label>Rubro</label><input type="text" name="label" required placeholder="Ej. Producción y transmisión"></div>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Presupuestado</label>
+          <div class="ad-money"><span>$</span><input class="ad-money__in" type="number" name="budget" min="0" step="1000" value="0"></div>
+          <div class="ad-money__fmt"></div>
+        </div>
+        <div class="ad-f"><label>Ejercido</label>
+          <div class="ad-money"><span>$</span><input class="ad-money__in" type="number" name="spent" min="0" step="1000" value="0"></div>
+          <div class="ad-money__fmt"></div>
+        </div>
+      </div>
+      <div class="ad-f"><label>Detalle</label><input type="text" name="note" placeholder="Nota breve"></div>
+      <div class="ad-f"><label>Fuente del dato</label><input type="text" name="source" placeholder="Ej. Área financiera"></div>
+      <button type="submit" class="ad-btn">Agregar rubro</button>
+    </form>
+    <div class="pn-card">
+      <div class="pn-card__head"><h3>Rubros ({{capitalItems.length}})</h3></div>
+      <div class="ad-list">
+        {{#each capitalItems}}
+        <div class="ad-item">
+          <div class="ad-item__av" style="background:{{#if this.over}}#C0392B{{else}}#6C3CE0{{/if}}; font-size:12px;">{{this.pct}}%</div>
+          <div class="ad-item__b">
+            <strong>{{this.label}}</strong>
+            <small>{{this.spentLabel}} / {{this.budgetLabel}}{{#if this.source}} · {{this.source}}{{/if}}</small>
+            <div class="ad-capbar {{#if this.over}}over{{/if}}"><i style="width: {{this.pct}}%"></i></div>
+          </div>
+          <div class="ad-move">
+            <form method="POST" action="/panel/admin/capital/{{this.id}}/move"><input type="hidden" name="dir" value="up"><button type="submit" {{#if @first}}disabled{{/if}} title="Subir"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></button></form>
+            <form method="POST" action="/panel/admin/capital/{{this.id}}/move"><input type="hidden" name="dir" value="down"><button type="submit" {{#if @last}}disabled{{/if}} title="Bajar"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></form>
+          </div>
+          <div class="ad-actions">
+            <button type="button" class="primary" onclick="openCapital(this)"
+              data-id="{{this.id}}" data-label="{{this.label}}" data-budget="{{this.budget}}" data-spent="{{this.spent}}" data-note="{{this.note}}" data-source="{{this.source}}">Editar</button>
+            <form method="POST" action="/panel/admin/capital/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar rubro?')"><button type="submit" class="danger">Eliminar</button></form>
+          </div>
+        </div>
+        {{else}}
+        <div class="ad-empty">No hay rubros. Agrega el primero.</div>
+        {{/each}}
       </div>
     </div>
+  </div>
+</section>
 
-    <h3 style="margin-top:24px;">Estado del proyecto</h3>
-    <p class="ad-hint" style="margin-bottom:14px;">Banda destacada arriba del dashboard que indica en qué etapa va el proyecto.</p>
-    <div class="ad-f"><label>Etapa actual</label><input type="text" name="stage_label" value="{{dashboardConfig.stageLabel}}" placeholder="Comercialización"></div>
-    <div class="ad-row2">
-      <div class="ad-f"><label>Número de etapa</label><input type="number" name="stage_step" value="{{dashboardConfig.stageStep}}" min="0" step="1"></div>
-      <div class="ad-f"><label>Total de etapas</label><input type="number" name="stage_total" value="{{dashboardConfig.stageTotal}}" min="1" step="1"></div>
+<!-- RIESGOS -->
+<section class="ad-sec" id="sec-riesgos">
+  <div class="ad-sechead">
+    <p class="ad-note" style="margin:0;">Matriz de <strong>riesgos y mitigación</strong> visible para los inversionistas.</p>
+    <a class="ad-seelink" href="/panel/admin/preview/investor" target="_blank" rel="noopener">Ver en el panel
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+    </a>
+  </div>
+  <div class="ad-grid">
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/risk">
+      <h3>Agregar riesgo</h3>
+      <div class="ad-f"><label>Riesgo</label><input type="text" name="title" required placeholder="Ej. Retraso en patrocinios"></div>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Nivel</label><select name="level"><option value="alto">Alto</option><option value="medio" selected>Medio</option><option value="bajo">Bajo</option></select></div>
+        <div class="ad-f"><label>Estado</label><select name="status"><option value="abierto">Abierto</option><option value="monitoreo" selected>En monitoreo</option><option value="mitigado">Mitigado</option></select></div>
+      </div>
+      <div class="ad-f"><label>Mitigación</label><textarea name="mitigation" rows="3" placeholder="Plan de mitigación"></textarea></div>
+      <button type="submit" class="ad-btn">Agregar riesgo</button>
+    </form>
+    <div class="pn-card">
+      <div class="pn-card__head"><h3>Riesgos ({{risksAdmin.length}})</h3></div>
+      <div class="ad-list">
+        {{#each risksAdmin}}
+        <div class="ad-item">
+          <div class="ad-item__av" style="background:{{this.color}};">!</div>
+          <div class="ad-item__b">
+            <strong>{{this.title}}</strong>
+            <div class="ad-chips">
+              <span class="ad-chip2" style="color:{{this.color}}; background:{{this.color}}1A;">Riesgo {{this.levelLabel}}</span>
+              <span class="ad-chip2" style="color:var(--pn-ink-2); background:#F1F0F5;">{{this.statusLabel}}</span>
+            </div>
+          </div>
+          <div class="ad-move">
+            <form method="POST" action="/panel/admin/risk/{{this.id}}/move"><input type="hidden" name="dir" value="up"><button type="submit" {{#if @first}}disabled{{/if}} title="Subir"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></button></form>
+            <form method="POST" action="/panel/admin/risk/{{this.id}}/move"><input type="hidden" name="dir" value="down"><button type="submit" {{#if @last}}disabled{{/if}} title="Bajar"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></form>
+          </div>
+          <div class="ad-actions">
+            <button type="button" class="primary" onclick="openRisk(this)"
+              data-id="{{this.id}}" data-title="{{this.title}}" data-level="{{this.level}}" data-status="{{this.status}}" data-mitigation="{{this.mitigation}}">Editar</button>
+            <form method="POST" action="/panel/admin/risk/{{this.id}}/delete" onsubmit="return confirm('¿Eliminar riesgo?')"><button type="submit" class="danger">Eliminar</button></form>
+          </div>
+        </div>
+        {{else}}
+        <div class="ad-empty">No hay riesgos registrados.</div>
+        {{/each}}
+      </div>
     </div>
-    <div class="ad-f"><label>Nota de la etapa</label><input type="text" name="stage_note" value="{{dashboardConfig.stageNote}}" placeholder="Venta de patrocinios y preventa de boletos en curso."></div>
-    <div class="ad-f" style="max-width:50%;"><label>Actualizado el</label><input type="date" name="stage_updated" value="{{dashboardConfig.stageUpdated}}"></div>
+  </div>
+</section>
 
-    <h3 style="margin-top:24px;">Trazabilidad de las cifras</h3>
-    <p class="ad-hint" style="margin-bottom:14px;">Sello "Actualizado · Fuente" que aparece bajo las cifras de inversión en el dashboard.</p>
-    <div class="ad-row2">
+<!-- CONFIGURACIÓN DEL DASHBOARD -->
+<section class="ad-sec" id="sec-configuracion">
+  <div class="ad-sechead">
+    <p class="ad-note" style="margin:0;">Personaliza lo que ven <strong>todos los inversionistas</strong>. Cada tarjeta se guarda por separado.</p>
+    <a class="ad-seelink" href="/panel/admin/preview/investor" target="_blank" rel="noopener">Ver en el panel
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+    </a>
+  </div>
+
+  <div class="ad-cfggrid">
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/settings/dashboard">
+      <input type="hidden" name="group" value="advisor">
+      <h3>Asesor de inversionistas</h3>
+      <div class="ad-f"><label>Nombre</label><input type="text" name="adv_name" value="{{dashboardConfig.advisor.name}}"></div>
+      <div class="ad-f"><label>Rol / puesto</label><input type="text" name="adv_role" value="{{dashboardConfig.advisor.role}}"></div>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Teléfono</label><input type="text" name="adv_phone" value="{{dashboardConfig.advisor.phone}}" placeholder="+1 786 784 4303"></div>
+        <div class="ad-f"><label>WhatsApp</label><input type="text" name="adv_whatsapp" value="{{dashboardConfig.advisor.whatsapp}}" placeholder="17867844303"></div>
+      </div>
+      <button type="submit" class="ad-btn">Guardar asesor</button>
+    </form>
+
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/settings/dashboard">
+      <input type="hidden" name="group" value="folder">
+      <h3>Carpeta compartida (Drive)</h3>
+      <div class="ad-f"><label>Título</label><input type="text" name="sf_name" value="{{dashboardConfig.sharedFolder.name}}" placeholder="Carpeta compartida — SOCCER iD CUP 2027"></div>
+      <div class="ad-f"><label>Descripción</label><input type="text" name="sf_desc" value="{{dashboardConfig.sharedFolder.description}}" placeholder="Documentación general del proyecto."></div>
+      <div class="ad-f"><label>Enlace</label><input type="url" name="sf_url" value="{{dashboardConfig.sharedFolder.url}}" placeholder="https://drive.google.com/drive/folders/...">
+        <div class="ad-hint">Vacío = se oculta la carpeta del dashboard.</div>
+      </div>
+      <button type="submit" class="ad-btn">Guardar carpeta</button>
+    </form>
+
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/settings/dashboard">
+      <input type="hidden" name="group" value="event">
+      <h3>Evento y cuenta regresiva</h3>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Fecha del partido</label><input type="date" name="event_date" value="{{dashboardConfig.eventDate}}"></div>
+        <div class="ad-f"><label>Hora (24h)</label><input type="time" name="event_time" value="{{dashboardConfig.eventTime}}"></div>
+      </div>
+      <div class="ad-f"><label>Etiqueta del evento</label><input type="text" name="event_label" value="{{dashboardConfig.eventLabel}}" placeholder="Sábado, 27 de marzo 2027"></div>
+      <button type="submit" class="ad-btn">Guardar evento</button>
+    </form>
+
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/settings/dashboard">
+      <input type="hidden" name="group" value="invest">
+      <h3>Parámetros de inversión</h3>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Retorno fijo (%)</label><input type="number" name="fixed_rate" value="{{dashboardConfig.fixedRate}}" min="0" step="0.5"></div>
+        <div class="ad-f"><label>Reparto a riesgo (%)</label><input type="number" name="investor_split" value="{{dashboardConfig.investorSplit}}" min="0" max="100" step="1"></div>
+      </div>
+      <div class="ad-f"><label>Costo del proyecto (USD)</label>
+        <div class="ad-money"><span>$</span><input class="ad-money__in" type="number" name="project_cost" value="{{dashboardConfig.projectCost}}" min="0" step="10000"></div>
+        <div class="ad-money__fmt"></div>
+      </div>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Precio de boleto (USD)</label>
+          <div class="ad-money"><span>$</span><input class="ad-money__in" type="number" name="ticket_price" value="{{dashboardConfig.ticketPrice}}" min="0" step="10"></div>
+        </div>
+        <div class="ad-f"><label>Asistencia ref.</label><input type="number" name="reference_attendance" value="{{dashboardConfig.referenceAttendance}}" min="0" step="500"></div>
+      </div>
+      <button type="submit" class="ad-btn">Guardar parámetros</button>
+    </form>
+
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/settings/dashboard">
+      <input type="hidden" name="group" value="sales">
+      <h3>Ventas y punto de equilibrio</h3>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Boletos vendidos</label><input type="number" name="tickets_sold" value="{{dashboardConfig.ticketsSold}}" min="0" step="100"></div>
+        <div class="ad-f"><label>Break-even (boletos)</label><input type="number" name="break_even_tickets" value="{{dashboardConfig.breakEvenTickets}}" min="0" step="100" placeholder="Automático"></div>
+      </div>
+      <div class="ad-f"><label>Corte de ventas al</label><input type="date" name="sales_updated" value="{{dashboardConfig.salesUpdated}}"></div>
+      <button type="submit" class="ad-btn">Guardar ventas</button>
+    </form>
+
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/settings/dashboard">
+      <input type="hidden" name="group" value="stage">
+      <h3>Estado del proyecto</h3>
+      <div class="ad-f"><label>Etapa actual</label><input type="text" name="stage_label" value="{{dashboardConfig.stageLabel}}" placeholder="Comercialización"></div>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Número de etapa</label><input type="number" name="stage_step" value="{{dashboardConfig.stageStep}}" min="0" step="1"></div>
+        <div class="ad-f"><label>Total de etapas</label><input type="number" name="stage_total" value="{{dashboardConfig.stageTotal}}" min="1" step="1"></div>
+      </div>
+      <div class="ad-f"><label>Nota de la etapa</label><input type="text" name="stage_note" value="{{dashboardConfig.stageNote}}" placeholder="Venta de patrocinios y preventa en curso."></div>
+      <div class="ad-f"><label>Actualizado el</label><input type="date" name="stage_updated" value="{{dashboardConfig.stageUpdated}}"></div>
+      <button type="submit" class="ad-btn">Guardar etapa</button>
+    </form>
+
+    <form class="pn-card ad-form" method="POST" action="/panel/admin/settings/dashboard">
+      <input type="hidden" name="group" value="trace">
+      <h3>Trazabilidad de las cifras</h3>
       <div class="ad-f"><label>Fuente de los datos</label><input type="text" name="return_source" value="{{dashboardConfig.returnSource}}" placeholder="Modelo financiero SOCCER iD"></div>
       <div class="ad-f"><label>Actualizado el</label><input type="date" name="return_updated" value="{{dashboardConfig.returnUpdated}}"></div>
-    </div>
-
-    <button type="submit" class="ad-btn" style="margin-top:18px;">Guardar configuración</button>
-  </form>
+      <button type="submit" class="ad-btn">Guardar trazabilidad</button>
+    </form>
+  </div>
 </section>
 
 <!-- ═══ MODALES DE EDICIÓN ═══ -->
@@ -660,6 +872,7 @@
         <div class="ad-f"><label>Categoría</label><select name="tag" id="en-tag"><option>Anuncio</option><option>Actualización</option><option>Prensa</option></select></div>
         <div class="ad-f"><label>Título</label><input type="text" name="title" id="en-title" required></div>
         <div class="ad-f"><label>Extracto</label><textarea name="excerpt" id="en-excerpt"></textarea></div>
+        <div class="ad-f"><label>Contenido completo</label><textarea name="body" id="en-body" rows="5"></textarea></div>
         <div class="ad-f"><label>Reemplazar imagen</label><input type="file" name="imageFile" accept="image/*"><div class="ad-hint">Deja vacío para conservar la actual.</div></div>
         <div class="ad-f"><label>URL de imagen</label><input type="text" name="image" id="en-image"></div>
         <div class="ad-row2">
@@ -708,6 +921,47 @@
         <div class="ad-f"><label>Responsable</label><input type="text" name="owner" id="em-owner" placeholder="Ej. Dirección financiera"></div>
         <label class="ad-check"><input type="checkbox" name="highlight" id="em-highlight" value="1"> Destacar (partido)</label>
         <button type="submit" class="ad-btn" style="margin-top:14px;">Guardar cambios</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="ad-modal" id="modal-capital">
+  <div class="ad-modal__card">
+    <div class="ad-modal__head"><h3>Editar rubro</h3><button class="ad-modal__close" onclick="closeModal('modal-capital')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+    <div class="ad-modal__body">
+      <form method="POST" id="form-capital">
+        <div class="ad-f"><label>Rubro</label><input type="text" name="label" id="ec-label" required></div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Presupuestado</label>
+            <div class="ad-money"><span>$</span><input class="ad-money__in" type="number" name="budget" id="ec-budget" min="0" step="1000"></div>
+            <div class="ad-money__fmt"></div>
+          </div>
+          <div class="ad-f"><label>Ejercido</label>
+            <div class="ad-money"><span>$</span><input class="ad-money__in" type="number" name="spent" id="ec-spent" min="0" step="1000"></div>
+            <div class="ad-money__fmt"></div>
+          </div>
+        </div>
+        <div class="ad-f"><label>Detalle</label><input type="text" name="note" id="ec-note"></div>
+        <div class="ad-f"><label>Fuente del dato</label><input type="text" name="source" id="ec-source"></div>
+        <button type="submit" class="ad-btn" style="margin-top:8px;">Guardar cambios</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="ad-modal" id="modal-risk">
+  <div class="ad-modal__card">
+    <div class="ad-modal__head"><h3>Editar riesgo</h3><button class="ad-modal__close" onclick="closeModal('modal-risk')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+    <div class="ad-modal__body">
+      <form method="POST" id="form-risk">
+        <div class="ad-f"><label>Riesgo</label><input type="text" name="title" id="er-title" required></div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Nivel</label><select name="level" id="er-level"><option value="alto">Alto</option><option value="medio">Medio</option><option value="bajo">Bajo</option></select></div>
+          <div class="ad-f"><label>Estado</label><select name="status" id="er-status"><option value="abierto">Abierto</option><option value="monitoreo">En monitoreo</option><option value="mitigado">Mitigado</option></select></div>
+        </div>
+        <div class="ad-f"><label>Mitigación</label><textarea name="mitigation" id="er-mitigation" rows="3"></textarea></div>
+        <button type="submit" class="ad-btn" style="margin-top:8px;">Guardar cambios</button>
       </form>
     </div>
   </div>
@@ -919,6 +1173,7 @@
     document.getElementById('en-tag').value = d.tag;
     document.getElementById('en-title').value = d.title;
     document.getElementById('en-excerpt').value = d.excerpt;
+    document.getElementById('en-body').value = (d.body || '');
     document.getElementById('en-image').value = d.image;
     document.getElementById('en-date').value = d.date;
     document.getElementById('en-size').value = d.size;
@@ -967,6 +1222,28 @@
     openModal('modal-mile');
   }
 
+  function openCapital(btn){
+    var d = btn.dataset;
+    document.getElementById('form-capital').action = '/panel/admin/capital/'+d.id+'/update';
+    document.getElementById('ec-label').value = d.label;
+    document.getElementById('ec-budget').value = d.budget;
+    document.getElementById('ec-spent').value = d.spent;
+    document.getElementById('ec-note').value = d.note || '';
+    document.getElementById('ec-source').value = d.source || '';
+    document.getElementById('ec-budget').dispatchEvent(new Event('input'));
+    document.getElementById('ec-spent').dispatchEvent(new Event('input'));
+    openModal('modal-capital');
+  }
+  function openRisk(btn){
+    var d = btn.dataset;
+    document.getElementById('form-risk').action = '/panel/admin/risk/'+d.id+'/update';
+    document.getElementById('er-title').value = d.title;
+    document.getElementById('er-level').value = d.level;
+    document.getElementById('er-status').value = d.status;
+    document.getElementById('er-mitigation').value = d.mitigation || '';
+    openModal('modal-risk');
+  }
+
   // Tabs
   var tabs = document.querySelectorAll('.ad-tab');
   // La barra de ruta de móvil toma el nombre de la pestaña, para no duplicar la lista
@@ -977,6 +1254,9 @@
   }
   function activate(name){
     setCrumb(name);
+    var title = document.getElementById('adTabTitle');
+    var tb = document.querySelector('.ad-tab[data-tab="' + name + '"]');
+    if (title && tb) title.textContent = tb.getAttribute('data-label') || '';
     tabs.forEach(function(t){ t.classList.toggle('is-active', t.dataset.tab === name); });
     document.querySelectorAll('.ad-sec').forEach(function(s){ s.classList.toggle('is-active', s.id === 'sec-'+name); });
     // Sincroniza el estado activo del menú lateral del admin
@@ -1090,5 +1370,50 @@
       if (e.key === 'Enter'){ var first = panel.querySelector('.pn-search__opt'); if (first){ e.preventDefault(); first.click(); } }
     });
     box.addEventListener('focus', function(){ if (box.value.trim()){ INDEX = buildIndex(); render(box.value); } });
+  })();
+
+  // ── Toast: mostrar, auto-ocultar y limpiar el ?msg de la URL ──
+  (function(){
+    var t = document.getElementById('adToast');
+    if (!t) return;
+    requestAnimationFrame(function(){ t.classList.add('is-show'); });
+    var hide = function(){ t.classList.remove('is-show'); setTimeout(function(){ t.remove(); }, 300); };
+    var timer = setTimeout(hide, 3800);
+    t.addEventListener('click', function(){ clearTimeout(timer); hide(); });
+    // Quita ?type/?msg de la URL para que no reaparezca al refrescar
+    if (history.replaceState){
+      var u = new URL(window.location.href);
+      u.searchParams.delete('msg'); u.searchParams.delete('type');
+      history.replaceState(null, '', u.pathname + u.search + u.hash);
+    }
+  })();
+
+  // ── Campos de dinero: prefijo $, formato en vivo y validación ejercido ≤ presupuestado ──
+  (function(){
+    function fmt(n){ return isNaN(n) ? '' : 'USD $' + Number(n).toLocaleString('en-US'); }
+    function updateOne(inp){
+      var wrap = inp.closest('.ad-money');
+      var cap = wrap && wrap.nextElementSibling;
+      if (cap && cap.classList.contains('ad-money__fmt')){
+        var v = parseFloat(inp.value);
+        cap.textContent = inp.value === '' ? '' : fmt(v);
+      }
+    }
+    // Validación: en un mismo formulario, spent (ejercido) no debe superar budget (presupuestado)
+    function validatePair(form){
+      var budget = form.querySelector('[name=budget]'), spent = form.querySelector('[name=spent]');
+      if (!budget || !spent) return;
+      var cap = spent.closest('.ad-f') && spent.closest('.ad-f').querySelector('.ad-money__fmt');
+      var b = parseFloat(budget.value), s = parseFloat(spent.value);
+      if (cap){
+        if (!isNaN(b) && !isNaN(s) && s > b){ cap.classList.add('ad-money__warn'); cap.textContent = 'Ejercido supera lo presupuestado'; }
+        else { cap.classList.remove('ad-money__warn'); cap.textContent = spent.value === '' ? '' : fmt(s); }
+      }
+    }
+    document.querySelectorAll('.ad-money__in').forEach(function(inp){
+      updateOne(inp);
+      inp.addEventListener('input', function(){ updateOne(inp); var f = inp.closest('form'); if (f) validatePair(f); });
+    });
+    document.querySelectorAll('form').forEach(function(f){ if (f.querySelector('[name=budget]') && f.querySelector('[name=spent]')) validatePair(f); });
   })();
 </script>

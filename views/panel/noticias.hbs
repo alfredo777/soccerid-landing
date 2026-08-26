@@ -12,7 +12,10 @@
     break-inside: avoid; width:100%; margin: 0 0 18px;
     background:#fff; border:1px solid var(--pn-border); border-radius:18px;
     box-shadow: var(--pn-shadow); overflow:hidden; display:inline-block;
+    color:inherit; text-decoration:none; transition: box-shadow .15s, transform .15s;
   }
+  .nw-card:hover { box-shadow: 0 10px 30px rgba(76,43,166,0.12); transform: translateY(-2px); }
+  .nw-card:hover .nw-readmore { text-decoration: underline; }
   .nw-card__imgwrap { position:relative; }
   .nw-card img { width:100%; display:block; object-fit:cover; }
   .nw-card.is-tall img { height: 240px; }
@@ -54,7 +57,7 @@
   <div class="nw-main">
     <div class="nw-masonry">
       {{#each panel.news}}
-      <article class="nw-card {{#if this.size}}is-{{this.size}}{{else}}is-short{{/if}}">
+      <a href="/panel/noticias/{{this.id}}" class="nw-card {{#if this.size}}is-{{this.size}}{{else}}is-short{{/if}}">
         <div class="nw-card__imgwrap">
           <img src="{{this.image}}" alt="">
           <span class="nw-card__tag"><span class="d" style="background: {{this.tagColor}}"></span>{{this.tag}}</span>
@@ -69,7 +72,7 @@
             </span>
           </div>
         </div>
-      </article>
+      </a>
       {{/each}}
     </div>
   </div>
