@@ -237,9 +237,6 @@
   <button type="button" class="ad-tab" data-tab="capital" data-label="Uso del capital" title="Uso del capital" aria-label="Uso del capital">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
   </button>
-  <button type="button" class="ad-tab" data-tab="riesgos" data-label="Riesgos" title="Riesgos" aria-label="Riesgos">
-    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-  </button>
   <button type="button" class="ad-tab" data-tab="configuracion" data-label="Configuración" title="Configuración" aria-label="Configuración">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
   </button>
@@ -686,56 +683,6 @@
   </div>
 </section>
 
-<!-- RIESGOS -->
-<section class="ad-sec" id="sec-riesgos">
-  <div class="ad-sechead">
-    <p class="ad-note" style="margin:0;">Matriz de <strong>riesgos y mitigación</strong> visible para los inversionistas.</p>
-    <a class="ad-seelink" href="/panel/admin/preview/investor" target="_blank" rel="noopener">Ver en el panel
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
-    </a>
-  </div>
-  <div class="ad-grid">
-    <form class="pn-card ad-form" method="POST" action="/panel/admin/risk">
-      <h3>Agregar riesgo</h3>
-      <div class="ad-f"><label>Riesgo</label><input type="text" name="title" required placeholder="Ej. Retraso en patrocinios"></div>
-      <div class="ad-row2">
-        <div class="ad-f"><label>Nivel</label><select name="level"><option value="alto">Alto</option><option value="medio" selected>Medio</option><option value="bajo">Bajo</option></select></div>
-        <div class="ad-f"><label>Estado</label><select name="status"><option value="abierto">Abierto</option><option value="monitoreo" selected>En monitoreo</option><option value="mitigado">Mitigado</option></select></div>
-      </div>
-      <div class="ad-f"><label>Mitigación</label><textarea name="mitigation" rows="3" placeholder="Plan de mitigación"></textarea></div>
-      <button type="submit" class="ad-btn">Agregar riesgo</button>
-    </form>
-    <div class="pn-card">
-      <div class="pn-card__head"><h3>Riesgos ({{risksAdmin.length}})</h3></div>
-      <div class="ad-list">
-        {{#each risksAdmin}}
-        <div class="ad-item">
-          <div class="ad-item__av" style="background:{{this.color}};">!</div>
-          <div class="ad-item__b">
-            <strong>{{this.title}}</strong>
-            <div class="ad-chips">
-              <span class="ad-chip2" style="color:{{this.color}}; background:{{this.color}}1A;">Riesgo {{this.levelLabel}}</span>
-              <span class="ad-chip2" style="color:var(--pn-ink-2); background:#F1F0F5;">{{this.statusLabel}}</span>
-            </div>
-          </div>
-          <div class="ad-move">
-            <form method="POST" action="/panel/admin/risk/{{this.id}}/move"><input type="hidden" name="dir" value="up"><button type="submit" {{#if @first}}disabled{{/if}} title="Subir"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></button></form>
-            <form method="POST" action="/panel/admin/risk/{{this.id}}/move"><input type="hidden" name="dir" value="down"><button type="submit" {{#if @last}}disabled{{/if}} title="Bajar"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></form>
-          </div>
-          <div class="ad-actions">
-            <button type="button" class="primary" onclick="openRisk(this)"
-              data-id="{{this.id}}" data-title="{{this.title}}" data-level="{{this.level}}" data-status="{{this.status}}" data-mitigation="{{this.mitigation}}">Editar</button>
-            <form method="POST" action="/panel/admin/risk/{{this.id}}/delete" data-confirm="¿Eliminar riesgo?"><button type="submit" class="danger">Eliminar</button></form>
-          </div>
-        </div>
-        {{else}}
-        <div class="ad-empty">No hay riesgos registrados.</div>
-        {{/each}}
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- CONFIGURACIÓN DEL DASHBOARD -->
 <section class="ad-sec" id="sec-configuracion">
   <div class="ad-sechead">
@@ -802,13 +749,12 @@
 
     <form class="pn-card ad-form" method="POST" action="/panel/admin/settings/dashboard">
       <input type="hidden" name="group" value="sales">
-      <h3>Ventas y punto de equilibrio</h3>
+      <h3>Venta en taquilla</h3>
       <div class="ad-row2">
         <div class="ad-f"><label>Boletos vendidos</label><input type="number" name="tickets_sold" value="{{dashboardConfig.ticketsSold}}" min="0" step="100"></div>
-        <div class="ad-f"><label>Break-even (boletos)</label><input type="number" name="break_even_tickets" value="{{dashboardConfig.breakEvenTickets}}" min="0" step="100" placeholder="Automático"></div>
+        <div class="ad-f"><label>Corte de ventas al</label><input type="date" name="sales_updated" value="{{dashboardConfig.salesUpdated}}"></div>
       </div>
-      <div class="ad-f"><label>Corte de ventas al</label><input type="date" name="sales_updated" value="{{dashboardConfig.salesUpdated}}"></div>
-      <button type="submit" class="ad-btn">Guardar ventas</button>
+      <button type="submit" class="ad-btn">Guardar taquilla</button>
     </form>
 
     <form class="pn-card ad-form" method="POST" action="/panel/admin/settings/dashboard">

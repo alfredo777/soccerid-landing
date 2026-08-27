@@ -3,7 +3,7 @@
   .db-chip { padding: 10px 20px; border-radius: 13px; background:#fff; border:1px solid var(--pn-border); font-size:13px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; text-decoration:none; }
   .db-chip:hover { background: var(--pn-purple-soft); color: var(--pn-purple); border-color:#E4DAFA; }
   .db-chip.is-active { background: var(--pn-purple); color:#fff; border-color: var(--pn-purple); }
-  #mi-inversion, #ventas, #uso-capital, #beneficios, #distribucion, #riesgos { scroll-margin-top: 92px; }
+  #mi-inversion, #ventas, #uso-capital, #beneficios, #distribucion { scroll-margin-top: 92px; }
   html { scroll-behavior: smooth; }
 
   .db-grid { display:grid; grid-template-columns: 1fr 348px; gap: 22px; align-items:start; }
@@ -153,9 +153,8 @@
 
 <div class="db-chips">
   <a href="#mi-inversion" class="db-chip is-active" data-anchor>{{#eq panel.user.role 'sponsor'}}Mi patrocinio{{else}}Mi inversión{{/eq}}</a>
-  <a href="#ventas" class="db-chip" data-anchor>Ventas</a>
+  <a href="#ventas" class="db-chip" data-anchor>Taquilla</a>
   {{#if panel.capital.items.length}}<a href="#uso-capital" class="db-chip" data-anchor>Uso del capital</a>{{/if}}
-  {{#if panel.risks.length}}<a href="#riesgos" class="db-chip" data-anchor>Riesgos</a>{{/if}}
   <a href="/panel/documentos" class="db-chip">Documentos y evidencias</a>
   <a href="/panel/calendario" class="db-chip">Cronograma</a>
 </div>
@@ -216,10 +215,10 @@
       {{/each}}
     </div>
 
-    <!-- Ventas y punto de equilibrio -->
+    <!-- Venta en taquilla -->
     <div class="pn-card" id="ventas">
       <div class="pn-card__head">
-        <h3>Ventas y punto de equilibrio</h3>
+        <h3>Venta en taquilla</h3>
         {{#if panel.sales.updated}}<span class="pn-card__link" style="color:var(--pn-muted)">Al {{panel.sales.updated}}</span>{{/if}}
       </div>
       <div class="db-sales">
@@ -229,23 +228,15 @@
         </div>
         <div class="db-track">
           <div class="db-track__fill" style="width: {{panel.sales.soldPct}}%"></div>
-          <div class="db-track__be" style="left: {{panel.sales.breakEvenPct}}%"><span>Break-even · {{panel.sales.breakEvenLabel}}</span></div>
         </div>
         <div class="db-sales__foot">
           <div class="db-sales__m"><small>Taquilla estimada</small><strong>{{panel.sales.boxOffice}}</strong></div>
           <div class="db-sales__m"><small>Meta (lleno)</small><strong>{{panel.sales.goalBoxOffice}}</strong></div>
-          <div class="db-sales__m"><small>Punto de equilibrio</small>
-            {{#if panel.sales.pastBreakEven}}
-            <span class="db-sales__flag ok">✓ Superado</span>
-            {{else}}
-            <span class="db-sales__flag no">Faltan {{panel.sales.toBreakEvenLabel}} boletos</span>
-            {{/if}}
-          </div>
         </div>
         {{#if panel.user.isRisk}}
         <p class="pn-stamp" style="margin-top:16px;">
           <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg>
-          <span>Tu utilidad a riesgo crece a partir del punto de equilibrio.</span>
+          <span>Tu utilidad a riesgo evoluciona con la taquilla del evento.</span>
         </p>
         {{/if}}
       </div>
@@ -286,28 +277,6 @@
           </div>
           <div class="db-cap__bar"><i style="width: {{this.pct}}%"></i></div>
           {{#if this.note}}<div class="db-cap__note">{{this.note}}{{#if this.source}} · Fuente: {{this.source}}{{/if}}</div>{{/if}}
-        </div>
-        {{/each}}
-      </div>
-    </div>
-    {{/if}}
-
-    <!-- Riesgos -->
-    {{#if panel.risks.length}}
-    <div class="pn-card" id="riesgos">
-      <div class="pn-card__head"><h3>Riesgos y mitigación</h3></div>
-      <div class="db-risks">
-        {{#each panel.risks}}
-        <div class="db-risk">
-          <span class="db-risk__dot" style="background: {{this.color}}"></span>
-          <div class="db-risk__b">
-            <strong>{{this.title}}</strong>
-            {{#if this.mitigation}}<p>{{this.mitigation}}</p>{{/if}}
-            <div class="db-risk__tags">
-              <span class="db-risk__tag" style="color:{{this.color}}; background:{{this.color}}1A;">Riesgo {{this.levelLabel}}</span>
-              <span class="db-risk__tag" style="color:var(--pn-ink-2); background:#F1F0F5;">{{this.statusLabel}}</span>
-            </div>
-          </div>
         </div>
         {{/each}}
       </div>
