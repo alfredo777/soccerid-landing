@@ -1,0 +1,38 @@
+{
+  "es": {
+    "handle": "soccerid7",
+    "profileUrl": "https://www.instagram.com/soccerid7",
+    "title": "En Instagram",
+    "profileCta": "Ver perfil",
+    "openLabel": "Ver nuestro Instagram",
+    "closeLabel": "Cerrar",
+    "prevLabel": "Anterior",
+    "nextLabel": "Siguiente",
+    "posts": [
+      { "code": "DcpcWIKvZiT", "type": "reel" },
+      { "code": "DcMfG8jRguB", "type": "reel" },
+      { "code": "DX53EeHN8pa", "type": "reel" },
+      { "code": "DXdP3foDEGX", "type": "reel" },
+      { "code": "DcHnbW8P5SR", "type": "reel" },
+      { "code": "Dbhmy-FBrTC", "type": "reel" }
+    ]
+  },
+  "en": {
+    "handle": "soccerid7",
+    "profileUrl": "https://www.instagram.com/soccerid7",
+    "title": "On Instagram",
+    "profileCta": "View profile",
+    "openLabel": "See our Instagram",
+    "closeLabel": "Close",
+    "prevLabel": "Previous",
+    "nextLabel": "Next",
+    "posts": [
+      { "code": "DcpcWIKvZiT", "type": "reel" },
+      { "code": "DcMfG8jRguB", "type": "reel" },
+      { "code": "DX53EeHN8pa", "type": "reel" },
+      { "code": "DXdP3foDEGX", "type": "reel" },
+      { "code": "DcHnbW8P5SR", "type": "reel" },
+      { "code": "Dbhmy-FBrTC", "type": "reel" }
+    ]
+  }
+}

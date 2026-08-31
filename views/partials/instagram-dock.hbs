@@ -1,0 +1,243 @@
+{{#if instagram_gallery.posts}}
+<style>
+  /* ==========================================================================
+     DOCK FLOTANTE (Instagram apilado sobre WhatsApp) + SLIDE DE REELS
+     ========================================================================== */
+  .sid-dock { position:fixed; right:20px; bottom:22px; z-index:9990; display:flex; flex-direction:column; gap:12px; }
+  .sid-dock__btn {
+    width:56px; height:56px; border-radius:50%; border:0; padding:0; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; color:#fff;
+    box-shadow:0 10px 28px rgba(0,0,0,0.45); transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .sid-dock__btn svg { width:28px; height:28px; }
+  .sid-dock__btn:hover { transform:translateY(-3px) scale(1.05); }
+  .sid-dock__btn--ig {
+    background:linear-gradient(45deg,#F58529 0%,#FEDA77 22%,#DD2A7B 52%,#8134AF 76%,#515BD4 100%);
+  }
+  .sid-dock__btn--ig:hover { box-shadow:0 14px 34px rgba(221,42,123,0.55); }
+  .sid-dock__btn--wa { background:linear-gradient(135deg,var(--color-whatsapp,#25D366),var(--color-whatsapp-dark,#128C7E)); }
+  .sid-dock__btn--wa:hover { box-shadow:0 14px 34px rgba(37,211,102,0.45); }
+
+  /* Overlay: velo translúcido, no lightbox negra */
+  .ig-gal { position:fixed; inset:0; z-index:10060; display:none; }
+  .ig-gal.is-open { display:block; }
+  .ig-gal__scrim {
+    position:absolute; inset:0; background:rgba(8,5,20,0.72);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  }
+  .ig-gal__panel {
+    position:relative; z-index:1; margin:auto; height:100%;
+    max-width:900px; padding:18px 20px; display:flex; flex-direction:column; gap:12px;
+    animation:igGalIn .28s cubic-bezier(.2,.8,.3,1);
+  }
+  @keyframes igGalIn { from { opacity:0; transform:translateY(18px) scale(.98); } to { opacity:1; transform:none; } }
+
+  .ig-gal__head { display:flex; align-items:center; gap:12px; flex-shrink:0; }
+  .ig-gal__brand { display:flex; align-items:center; gap:9px; color:#fff; font-weight:800; font-size:15px; }
+  .ig-gal__mark {
+    width:30px; height:30px; border-radius:9px; flex-shrink:0;
+    background:linear-gradient(45deg,#F58529 0%,#FEDA77 22%,#DD2A7B 52%,#8134AF 76%,#515BD4 100%);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ig-gal__mark svg { width:18px; height:18px; color:#fff; }
+  .ig-gal__profile {
+    margin-left:auto; color:rgba(255,255,255,0.75); font-size:12px; font-weight:800;
+    letter-spacing:.6px; text-transform:uppercase; text-decoration:none;
+    border:1px solid rgba(255,255,255,0.18); border-radius:10px; padding:7px 13px; transition:background .2s, color .2s;
+  }
+  .ig-gal__profile:hover { background:rgba(255,255,255,0.1); color:#fff; }
+  .ig-gal__close {
+    width:38px; height:38px; border-radius:50%; border:1px solid rgba(255,255,255,0.18);
+    background:rgba(255,255,255,0.06); color:#fff; cursor:pointer; font-size:22px; line-height:1;
+    display:flex; align-items:center; justify-content:center; transition:background .2s;
+  }
+  .ig-gal__close:hover { background:rgba(255,255,255,0.16); }
+
+  /* Cuerpo: solo el slide, con las flechas a los costados */
+  .ig-gal__body { flex:1; min-height:0; display:flex; align-items:center; justify-content:center; gap:14px; }
+  .ig-gal__slide { flex:0 1 auto; height:100%; min-height:0; display:flex; flex-direction:column; align-items:center; gap:10px; }
+  .ig-gal__stage {
+    position:relative; flex:0 0 auto; width:380px; height:700px; max-width:100%; max-height:100%;
+    border-radius:16px; overflow:hidden; background:#000; border:1px solid rgba(255,255,255,0.1);
+  }
+  .ig-gal__stage iframe { width:100%; height:100%; border:0; display:block; }
+  .ig-gal__stage.is-loading::before {
+    content:''; position:absolute; inset:0; z-index:1; background:rgba(10,10,26,0.85);
+    background-image:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);
+    background-size:200% 100%; animation:igGalShimmer 1.1s linear infinite;
+  }
+  @keyframes igGalShimmer { from { background-position:200% 0; } to { background-position:-200% 0; } }
+
+  /* Puntos + contador debajo del slide */
+  .ig-gal__bar { display:flex; align-items:center; justify-content:center; gap:12px; flex-shrink:0; }
+  .ig-gal__dots { display:flex; align-items:center; gap:7px; }
+  .ig-gal__dot {
+    width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.25);
+    border:0; padding:0; cursor:pointer; transition:width .25s ease, background .25s ease;
+  }
+  .ig-gal__dot.is-active { width:22px; border-radius:20px; background:#DD2A7B; }
+  .ig-gal__count { color:rgba(255,255,255,0.45); font-size:12px; font-weight:700; font-variant-numeric:tabular-nums; }
+
+  .ig-gal__arrow {
+    width:46px; height:46px; border-radius:50%; border:1px solid rgba(255,255,255,0.15);
+    background:rgba(255,255,255,0.07); color:#fff; cursor:pointer; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; transition:background .2s, border-color .2s;
+  }
+  .ig-gal__arrow:hover { background:rgba(221,42,123,0.6); border-color:rgba(221,42,123,0.6); }
+  .ig-gal__arrow svg { width:20px; height:20px; }
+
+  @media (max-width:900px) {
+    .sid-dock { right:14px; bottom:88px; }
+    .sid-dock__btn { width:50px; height:50px; }
+    .sid-dock__btn svg { width:25px; height:25px; }
+    .ig-gal__panel { padding:14px; gap:10px; }
+    .ig-gal__body { gap:0; }
+    .ig-gal__slide { flex:1; width:100%; }
+    .ig-gal__stage { width:100%; height:min(700px, 100%); flex:0 0 auto; }
+    /* En móvil las flechas bajan a la barra, para no comerse el ancho del reel */
+    .ig-gal__body > .ig-gal__arrow { display:none; }
+    .ig-gal__bar { gap:16px; }
+    .ig-gal__bar .ig-gal__arrow { display:flex; width:40px; height:40px; }
+    .ig-gal__profile { display:none; }
+  }
+  @media (min-width:901px) {
+    .ig-gal__bar .ig-gal__arrow { display:none; }
+  }
+</style>
+
+<div class="sid-dock">
+  <button type="button" class="sid-dock__btn sid-dock__btn--ig" id="sidIgOpen"
+          aria-label="{{instagram_gallery.openLabel}}" title="{{instagram_gallery.openLabel}}">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+  </button>
+  <a class="sid-dock__btn sid-dock__btn--wa" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp"
+     href="https://wa.me/12315158991?text={{#if isEs}}Hola!%20Quiero%20m%C3%A1s%20informaci%C3%B3n%20de%20SOCCER%20iD{{else}}Hi!%20I%27d%20like%20more%20info%20about%20SOCCER%20iD{{/if}}">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+  </a>
+</div>
+
+<div class="ig-gal" id="igGal" role="dialog" aria-modal="true" aria-label="{{instagram_gallery.title}}">
+  <div class="ig-gal__scrim" data-ig-close></div>
+  <div class="ig-gal__panel">
+    <div class="ig-gal__head">
+      <span class="ig-gal__brand">
+        <span class="ig-gal__mark">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+        </span>
+        @{{instagram_gallery.handle}}
+      </span>
+      <a class="ig-gal__profile" href="{{instagram_gallery.profileUrl}}" target="_blank" rel="noopener">{{instagram_gallery.profileCta}}</a>
+      <button type="button" class="ig-gal__close" data-ig-close aria-label="{{instagram_gallery.closeLabel}}">&times;</button>
+    </div>
+
+    <div class="ig-gal__body">
+      <button type="button" class="ig-gal__arrow" data-ig-prev aria-label="{{instagram_gallery.prevLabel}}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+
+      <div class="ig-gal__slide">
+        <div class="ig-gal__stage" id="igGalStage"></div>
+        <div class="ig-gal__bar">
+          <button type="button" class="ig-gal__arrow" data-ig-prev aria-label="{{instagram_gallery.prevLabel}}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <span class="ig-gal__dots" id="igGalDots"></span>
+          <span class="ig-gal__count" id="igGalCount"></span>
+          <button type="button" class="ig-gal__arrow" data-ig-next aria-label="{{instagram_gallery.nextLabel}}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <button type="button" class="ig-gal__arrow" data-ig-next aria-label="{{instagram_gallery.nextLabel}}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script type="application/json" id="igGalData">[{{#each instagram_gallery.posts}}{{#unless @first}},{{/unless}}{"code":"{{this.code}}","type":"{{#if this.type}}{{this.type}}{{else}}p{{/if}}"}{{/each}}]</script>
+
+<script>
+  (function(){
+    var gal = document.getElementById('igGal');
+    var data = document.getElementById('igGalData');
+    if (!gal || !data) return;
+
+    var posts = [];
+    try { posts = JSON.parse(data.textContent) || []; } catch (e) { return; }
+    if (!posts.length) return;
+
+    var stage = document.getElementById('igGalStage');
+    var cntEl = document.getElementById('igGalCount');
+    var dotsEl = document.getElementById('igGalDots');
+    var current = 0, prevOverflow = '';
+
+    // Puntos de navegación
+    var dots = posts.map(function(_, i){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'ig-gal__dot';
+      b.setAttribute('aria-label', 'Ir a ' + (i + 1));
+      b.addEventListener('click', function(){ render(i); });
+      dotsEl.appendChild(b);
+      return b;
+    });
+
+    function render(i){
+      current = (i + posts.length) % posts.length;
+      var post = posts[current];
+      // El iframe se crea al vuelo: la página no carga los reels al arrancar.
+      stage.classList.add('is-loading');
+      var frame = document.createElement('iframe');
+      frame.setAttribute('scrolling', 'no');
+      frame.setAttribute('frameborder', '0');
+      frame.setAttribute('allowtransparency', 'true');
+      frame.setAttribute('allowfullscreen', '');
+      frame.addEventListener('load', function(){ stage.classList.remove('is-loading'); });
+      frame.src = 'https://www.instagram.com/' + (post.type || 'p') + '/' + post.code + '/embed';
+      stage.innerHTML = '';
+      stage.appendChild(frame);
+
+      cntEl.textContent = (current + 1) + ' / ' + posts.length;
+      dots.forEach(function(d, n){ d.classList.toggle('is-active', n === current); });
+    }
+
+    function open(){
+      prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      gal.classList.add('is-open');
+      render(0);
+    }
+
+    function close(){
+      gal.classList.remove('is-open');
+      document.body.style.overflow = prevOverflow;
+      stage.innerHTML = '';   // corta la carga del embed al cerrar
+    }
+
+    var opener = document.getElementById('sidIgOpen');
+    if (opener) opener.addEventListener('click', open);
+
+    gal.querySelectorAll('[data-ig-prev]').forEach(function(el){ el.addEventListener('click', function(){ render(current - 1); }); });
+    gal.querySelectorAll('[data-ig-next]').forEach(function(el){ el.addEventListener('click', function(){ render(current + 1); }); });
+    gal.querySelectorAll('[data-ig-close]').forEach(function(el){ el.addEventListener('click', close); });
+
+    document.addEventListener('keydown', function(e){
+      if (!gal.classList.contains('is-open')) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') render(current - 1);
+      else if (e.key === 'ArrowRight') render(current + 1);
+    });
+
+    // Swipe en el panel (el iframe se queda con sus propios toques, para poder reproducir)
+    var x0 = null;
+    gal.querySelector('.ig-gal__panel').addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, { passive: true });
+    gal.querySelector('.ig-gal__panel').addEventListener('touchend', function(e){
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 50) render(current + (dx < 0 ? 1 : -1));
+      x0 = null;
+    }, { passive: true });
+  })();
+</script>
+{{/if}}
