@@ -1664,14 +1664,35 @@ body {
     position: absolute;
     top: 14px;
     right: 14px;
-    background: rgba(251,191,36,0.1);
-    color: #fbbf24;
-    border: 1px solid rgba(251,191,36,0.2);
-    padding: 4px 10px;
-    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #F5484A, #E11D48);
+    color: #fff;
+    padding: 5px 12px 5px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.18);
     font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    box-shadow: 0 4px 14px rgba(225,29,72,0.45);
+}
+
+.event-clasico::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 0 0 rgba(255,255,255,0.7);
+    animation: clasicoPulse 1.8s ease-out infinite;
+}
+
+@keyframes clasicoPulse {
+    0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.6); }
+    70% { box-shadow: 0 0 0 6px rgba(255,255,255,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
 }
 
 .event-body {
