@@ -254,6 +254,7 @@ app.use((req, res, next) => {
   res.locals.version = APP_VERSION;
   res.locals.baseUrl = BASE_URL;
   res.locals.isProduction = isProduction;
+  res.locals.turnstileSiteKey = process.env.TURNSTILE_SITE_KEY || '';
   next();
 });
 

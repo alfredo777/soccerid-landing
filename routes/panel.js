@@ -14,6 +14,7 @@ const { sendInvite, sendNotification } = require('../lib/panelMailer');
 const { sendLeadEmail } = require('../lib/project2027');
 const { uploadImage, uploadDocument } = require('../lib/uploads');
 const { getDashboardConfig, saveDashboardConfig, computeReturn } = require('../lib/panelSettings');
+const turnstile = require('../lib/turnstile');
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
 
@@ -362,6 +363,12 @@ router.get('/login', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
+  // Verificación anti-bot (Cloudflare Turnstile). Si no hay secret configurado, se omite.
+  const tsToken = req.body['cf-turnstile-response'];
+  const clientIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.ip;
+  const tsOk = await turnstile.verify(tsToken, clientIp, 'login');
+  if (!tsOk) return res.redirect('/panel/login?error=captcha');
+
   const email = (req.body.email || '').trim().toLowerCase();
   const password = req.body.password || '';
   const user = await knex('users').where({ email }).first();

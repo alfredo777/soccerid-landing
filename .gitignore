@@ -2,3 +2,8 @@
 node_modules/
 data/
 uploads/panel/
+
+# Claves y secretos locales — nunca subir a GitHub
+*.local.md
+.env
+.env.*

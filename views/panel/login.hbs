@@ -6,6 +6,7 @@
   <title>Acceso · SOCCER iD Investor Hub</title>
   <meta name="robots" content="noindex, nofollow">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+  {{#if turnstileSiteKey}}<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>{{/if}}
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#F5F4F8;color:#14141B;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;-webkit-font-smoothing:antialiased;}
@@ -40,7 +41,7 @@
     <div class="lg-body">
       <h1>Iniciar sesión</h1>
       <p>Accede a tu panel privado de SOCCER iD CUP 2027.</p>
-      {{#if error}}<div class="lg-err">Correo o contraseña incorrectos.</div>{{/if}}
+      {{#if error}}<div class="lg-err">{{#eq error 'captcha'}}Verificación de seguridad fallida. Intenta de nuevo.{{else}}Correo o contraseña incorrectos.{{/eq}}</div>{{/if}}
       {{#if ok}}<div class="lg-ok">Cuenta activada. Ya puedes iniciar sesión.</div>{{/if}}
       <form method="POST" action="/panel/login">
         <div class="lg-field">
@@ -51,6 +52,9 @@
           <label for="password">Contraseña</label>
           <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••">
         </div>
+        {{#if turnstileSiteKey}}
+        <div class="cf-turnstile" data-sitekey="{{turnstileSiteKey}}" data-action="login" style="margin-bottom:16px;"></div>
+        {{/if}}
         <button type="submit" class="lg-btn">Entrar</button>
       </form>
       <div class="lg-foot">¿Problemas para acceder? <a href="https://wa.me/17867844303" target="_blank">Contáctanos</a></div>
