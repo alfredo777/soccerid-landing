@@ -274,9 +274,6 @@
     /* Pantallas más bajas todavía (portátiles de 768px, ventanas reducidas):
        la cuenta regresiva se cede —también está en el dashboard— y los enlaces
        se compactan, antes que dejar "Vista previa" fuera de alcance. */
-    @media (max-height: 820px) {
-      .pn-side__event { display: none; }
-    }
     @media (max-height: 760px) {
       .pn-side__brand { padding: 14px 20px 10px; min-height: 0; }
       .pn-link { padding: 8px 12px; }
@@ -336,6 +333,12 @@
         <button class="pn-collapse-btn" id="pnRailToggle" aria-label="Colapsar menú">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         </button>
+      </div>
+
+      <div class="pn-side__event">
+        <small>Cuenta regresiva</small>
+        <strong id="pnSideCountdown">— días</strong>
+        <span>{{panel.eventLabel}}</span>
       </div>
 
       <nav class="pn-nav">
@@ -496,12 +499,6 @@
         </div>
         {{/eq}}
       </nav>
-
-      <div class="pn-side__event">
-        <small>Cuenta regresiva</small>
-        <strong id="pnSideCountdown">— días</strong>
-        <span>{{panel.eventLabel}}</span>
-      </div>
 
       <div class="pn-side__foot">
         <div class="pn-owner">

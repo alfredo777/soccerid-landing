@@ -353,21 +353,21 @@
     {{#if panel.simulator}}
     <!-- Simulador · Escenario por asistencia (solo riesgo) -->
     <div class="pn-card" id="simulador">
-      <div class="pn-card__head"><h3>Simulador · Escenario por asistencia</h3></div>
+      <div class="pn-card__head"><h3>Simulador · ¿Cuánto podrías ganar?</h3></div>
       <div class="db-sim"
         data-capital="{{panel.simulator.capital}}" data-budget="{{panel.simulator.budget}}"
         data-capacity="{{panel.simulator.capacity}}" data-ticket="{{panel.simulator.ticketPrice}}"
         data-ded="{{panel.simulator.deductionsPct}}" data-rebate="{{panel.simulator.rebatePer}}"
         data-cap="{{panel.simulator.capPct}}" data-split="{{panel.simulator.split}}">
-        <p class="db-sim__note">Supone boleto promedio ${{panel.simulator.ticketPrice}} USD, deducciones de {{panel.simulator.deductionsPct}}% y rebate de ${{panel.simulator.rebatePer}} por asistente.</p>
-        <div class="db-sim__att"><span id="simAtt">—</span> <span>asistentes</span></div>
+        <p class="db-sim__note">Mueve la barra para ver, según cuánta gente asista, cuánto podrías recibir. Es un ejemplo: suponemos boleto de ${{panel.simulator.ticketPrice}} en promedio, {{panel.simulator.deductionsPct}}% de deducciones y ${{panel.simulator.rebatePer}} de rebate por asistente.</p>
+        <div class="db-sim__att"><span id="simAtt">—</span> <span>asistentes de {{panel.simulator.capacity}}</span></div>
         <input type="range" id="simRange" class="db-sim__range" min="0" max="{{panel.simulator.capacity}}" step="100">
         <div class="db-sim__out">
-          <div><small>Ingreso neto estimado</small><strong id="simNet">—</strong></div>
-          <div><small>Utilidad del evento</small><strong id="simProfit">—</strong></div>
-          <div><small>Retorno estimado del perfil</small><strong class="hl">{{panel.simulator.profitLabel}}</strong></div>
+          <div><small>Lo que recauda el evento (neto)</small><strong id="simNet">—</strong></div>
+          <div><small>Ganancia del evento</small><strong id="simProfit">—</strong></div>
+          <div><small>Tu retorno estimado</small><strong class="hl" id="simReturn">—</strong></div>
         </div>
-        <p class="db-sim__foot">Ejercicio ilustrativo. El retorno está sujeto al contrato y tiene un tope de {{panel.simulator.capPct}}% sobre el capital.</p>
+        <p class="db-sim__foot">Ejemplo ilustrativo: tu retorno cambia con la asistencia, pero tu retorno real depende de tu contrato y no puede pasar del {{panel.simulator.capPct}}% de tu capital ({{panel.user.amount}}).</p>
       </div>
     </div>
     {{/if}}
@@ -558,17 +558,25 @@
     if (!sim) return;
     var n = function(k){ return parseFloat(sim.getAttribute('data-' + k)) || 0; };
     var capacity = n('capacity'), ticket = n('ticket'), ded = n('ded'), rebate = n('rebate'), budget = n('budget');
+    var capital = n('capital'), split = n('split'), capPct = n('cap');
     var range = document.getElementById('simRange');
-    var elAtt = document.getElementById('simAtt'), elNet = document.getElementById('simNet'), elProfit = document.getElementById('simProfit');
+    var elAtt = document.getElementById('simAtt'), elNet = document.getElementById('simNet'),
+        elProfit = document.getElementById('simProfit'), elReturn = document.getElementById('simReturn');
     var usd = function(v){ return 'USD ' + Math.round(v).toLocaleString('en-US'); };
+    // Participación efectiva del perfil sobre la utilidad del evento (modelo 50/50)
+    var effShare = budget > 0 ? (capital / budget) * (split / 100) : 0;
+    var tope = capital * (capPct / 100);
     function render(){
       var att = parseInt(range.value, 10) || 0;
       var bruto = att * ticket;
       var neto = bruto * (1 - ded / 100) - att * rebate;
       var utilidad = neto - budget;
+      // Retorno del perfil: su parte de la utilidad, nunca negativo, con tope sobre el capital
+      var retorno = Math.min(Math.max(utilidad, 0) * effShare, tope);
       elAtt.textContent = att.toLocaleString('en-US');
       elNet.textContent = usd(Math.max(0, neto));
       elProfit.textContent = usd(utilidad);
+      if (elReturn) elReturn.textContent = usd(retorno);
     }
     range.value = Math.round(capacity * 0.7); // escenario inicial
     range.addEventListener('input', render);
