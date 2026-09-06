@@ -5,6 +5,8 @@ uploads/panel/
 
 # Claves y secretos locales — nunca subir a GitHub
 *.local.md
+*.local.json
+client_secret_*.json
 .env
 .env.*
 

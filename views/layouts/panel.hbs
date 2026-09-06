@@ -298,6 +298,27 @@
 
       .pn-nav { overscroll-behavior: contain; }
     }
+    /* Video tour: lightbox (web) / drawer lateral (móvil) */
+    .pn-tour { position: fixed; inset: 0; z-index: 120; display: none; }
+    .pn-tour.is-open { display: block; }
+    .pn-tour__backdrop { position: absolute; inset: 0; background: rgba(14,14,20,.72); }
+    .pn-tour__panel { position: absolute; background: #0E0E14; overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,.5); }
+    .pn-tour__head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; color: #fff; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .pn-tour__head strong { font-size: 14px; font-weight: 800; }
+    .pn-tour__x { background: rgba(255,255,255,.1); border: none; width: 34px; height: 34px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .pn-tour__x svg { width: 18px; height: 18px; stroke: #fff; }
+    .pn-tour__video { background: #000; }
+    .pn-tour__video video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
+    @media (min-width: 861px) {
+      .pn-tour__panel { top: 50%; left: 50%; transform: translate(-50%,-50%) scale(.96); opacity: 0; transition: transform .25s, opacity .25s; width: min(960px, 92vw); border-radius: 18px; }
+      .pn-tour.is-open .pn-tour__panel { transform: translate(-50%,-50%) scale(1); opacity: 1; }
+      .pn-tour__video { aspect-ratio: 16 / 9; }
+    }
+    @media (max-width: 860px) {
+      .pn-tour__panel { top: 0; right: 0; height: 100%; width: min(88vw, 420px); transform: translateX(100%); transition: transform .28s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; }
+      .pn-tour.is-open .pn-tour__panel { transform: translateX(0); }
+      .pn-tour__video { flex: 1; }
+    }
   </style>
 </head>
 <body>
@@ -413,6 +434,12 @@
               <svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
               <span class="pn-label">Mi inversión</span>
             </a>
+            {{#if panel.tour}}
+            <a href="#" class="pn-link" id="pnTourBtn" title="Ver video tour">
+              <svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><polygon points="10 9 15 12 10 15 10 9" fill="currentColor" stroke="none"/></svg>
+              <span class="pn-label">Video tour</span>
+            </a>
+            {{/if}}
           </div>
         </div>
 
@@ -538,7 +565,43 @@
     </div>
   </div>
 
+  {{#if panel.tour}}
+  <!-- Video tour (re-ver): lightbox en web, drawer lateral en móvil -->
+  <div class="pn-tour" id="pnTour" data-web="{{panel.tour.video}}" data-mobile="{{panel.tour.videoMobile}}" aria-hidden="true">
+    <div class="pn-tour__backdrop" data-tourclose></div>
+    <div class="pn-tour__panel">
+      <div class="pn-tour__head">
+        <strong>Video tour · {{panel.tour.label}}</strong>
+        <button class="pn-tour__x" data-tourclose aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="pn-tour__video"><video id="pnTourVideo" controls playsinline preload="none"></video></div>
+    </div>
+  </div>
+  {{/if}}
+
   <script>
+    // Video tour (re-ver)
+    (function(){
+      var t = document.getElementById('pnTour'); if (!t) return;
+      var v = document.getElementById('pnTourVideo');
+      var btn = document.getElementById('pnTourBtn');
+      function open(e){ if (e) e.preventDefault();
+        var src = window.matchMedia('(max-width:860px)').matches ? t.getAttribute('data-mobile') : t.getAttribute('data-web');
+        if (v.getAttribute('src') !== src) v.setAttribute('src', src);
+        t.classList.add('is-open'); t.setAttribute('aria-hidden','false');
+        var side = document.getElementById('pnSide'); if (side) side.classList.remove('is-open');
+        var ov = document.getElementById('pnOverlay'); if (ov) ov.classList.remove('is-open');
+        try { v.currentTime = 0; v.play(); } catch(_){}
+      }
+      function close(){ t.classList.remove('is-open'); t.setAttribute('aria-hidden','true'); try { v.pause(); } catch(_){} }
+      if (btn) btn.addEventListener('click', open);
+      t.querySelectorAll('[data-tourclose]').forEach(function(x){ x.addEventListener('click', close); });
+      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+      window.__openTour = open;
+    })();
+
     // Sidebar group collapsibles
     document.querySelectorAll('[data-group]').forEach(function(btn){
       btn.addEventListener('click', function(){ btn.closest('.pn-group').classList.toggle('is-collapsed'); });

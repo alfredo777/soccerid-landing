@@ -161,6 +161,75 @@
   .db-fixed-note p { font-size:13px; color:var(--pn-ink-2); line-height:1.5; }
 </style>
 
+{{#if panel.showOnboarding}}
+<style>
+  .ob { position: fixed; inset: 0; z-index: 200; background: radial-gradient(1200px 700px at 50% 25%, #241a48 0%, #0E0E14 60%); display: flex; align-items: center; justify-content: center; text-align: center; color: #fff; padding: 24px; opacity: 1; transition: opacity .5s; }
+  .ob.is-hiding { opacity: 0; }
+  .ob__step { display: none; width: 100%; max-width: 980px; }
+  .ob__step.is-active { display: block; animation: obIn .5s ease; }
+  @keyframes obIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .ob__logo { width: 76px; height: 76px; margin: 0 auto 22px; border-radius: 22px; background: rgba(108,60,224,.18); border: 1px solid rgba(108,60,224,.4); display: flex; align-items: center; justify-content: center; }
+  .ob__logo img { width: 48px; height: 48px; }
+  .ob__kicker { font-size: 11px; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: #A78BE6; margin-bottom: 12px; }
+  .ob__title { font-size: clamp(26px, 5vw, 44px); font-weight: 900; letter-spacing: -.5px; line-height: 1.08; }
+  .ob__sub { font-size: 15px; color: rgba(255,255,255,.7); margin-top: 14px; }
+  .ob__btn { margin-top: 30px; background: var(--pn-purple); color: #fff; border: none; font-family: inherit; font-size: 16px; font-weight: 800; padding: 16px 40px; border-radius: 15px; cursor: pointer; box-shadow: 0 14px 34px rgba(108,60,224,.4); transition: background .15s, transform .15s; }
+  .ob__btn:hover { background: #5A2FC7; transform: translateY(-1px); }
+  .ob__btn:disabled { background: #3a3550; color: rgba(255,255,255,.5); box-shadow: none; cursor: default; transform: none; }
+  .ob__skip { display: inline-block; margin-top: 18px; background: none; border: none; color: rgba(255,255,255,.5); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; opacity: 0; transition: opacity .4s; }
+  .ob__skip.is-show { opacity: 1; }
+  .ob__skip:hover { color: #fff; }
+  .ob__frame { position: relative; width: 100%; max-width: 900px; margin: 0 auto; border-radius: 18px; overflow: hidden; background: #000; box-shadow: 0 30px 80px rgba(0,0,0,.55); border: 1px solid rgba(108,60,224,.3); }
+  .ob__frame video { display: block; width: 100%; max-height: 74vh; object-fit: contain; background: #000; }
+  .ob__check { width: 84px; height: 84px; margin: 0 auto 24px; border-radius: 50%; background: rgba(108,60,224,.18); border: 1px solid rgba(108,60,224,.45); display: flex; align-items: center; justify-content: center; }
+  .ob__check svg { width: 42px; height: 42px; stroke: #A78BE6; }
+  @media (max-width: 640px) { .ob__frame video { max-height: 62vh; } }
+</style>
+<div class="ob" id="ob" data-web="{{panel.tour.video}}" data-mobile="{{panel.tour.videoMobile}}">
+  <!-- 1) Portada -->
+  <div class="ob__step is-active" id="obCover">
+    <div class="ob__logo"><img src="/assets/images/iconsoccerid.png" alt="SOCCER iD"></div>
+    <div class="ob__kicker">SOCCER iD · Experiencia VIP</div>
+    <h1 class="ob__title">Bienvenido a tu<br>experiencia VIP de inversionista</h1>
+    <p class="ob__sub">Un recorrido rápido por tu panel · {{panel.tour.label}}</p>
+    <div><button class="ob__btn" id="obStart">Comenzar</button></div>
+    <button class="ob__skip" id="obSkip">Saltar intro</button>
+  </div>
+  <!-- 2) Video -->
+  <div class="ob__step" id="obStage">
+    <div class="ob__frame"><video id="obVideo" playsinline controls preload="auto"></video></div>
+    <div><button class="ob__btn" id="obContinue" disabled>Continuar</button></div>
+  </div>
+  <!-- 3) Bienvenida -->
+  <div class="ob__step" id="obWelcome">
+    <div class="ob__check"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <h1 class="ob__title">Bienvenido a la experiencia VIP<br>de inversionista de SOCCER iD</h1>
+  </div>
+</div>
+<script>
+  (function(){
+    var ob = document.getElementById('ob'); if (!ob) return;
+    var cover = document.getElementById('obCover'), stage = document.getElementById('obStage'), welcome = document.getElementById('obWelcome');
+    var start = document.getElementById('obStart'), cont = document.getElementById('obContinue'), skip = document.getElementById('obSkip');
+    var v = document.getElementById('obVideo');
+    var html = document.documentElement; html.style.overflow = 'hidden';
+    function show(step){ [cover, stage, welcome].forEach(function(s){ s.classList.toggle('is-active', s === step); }); }
+    function mark(){ fetch('/panel/onboarded', { method: 'POST', headers: { 'Content-Type': 'application/json' } }).catch(function(){}); }
+    function finish(){ mark(); ob.classList.add('is-hiding'); setTimeout(function(){ ob.remove(); html.style.overflow = ''; }, 550); }
+    setTimeout(function(){ skip.classList.add('is-show'); }, 6000);
+    start.addEventListener('click', function(){
+      var src = window.matchMedia('(max-width:860px)').matches ? ob.getAttribute('data-mobile') : ob.getAttribute('data-web');
+      v.setAttribute('src', src); show(stage);
+      try { v.play(); } catch(_){}
+    });
+    v.addEventListener('ended', function(){ cont.disabled = false; });
+    v.addEventListener('error', function(){ cont.disabled = false; });
+    cont.addEventListener('click', function(){ try { v.pause(); } catch(_){} show(welcome); setTimeout(finish, 3200); });
+    skip.addEventListener('click', function(){ try { v.pause(); } catch(_){} finish(); });
+  })();
+</script>
+{{/if}}
+
 {{#if panel.stage.label}}
 <div class="pn-stage">
   <span class="pn-stage__badge">Etapa {{panel.stage.step}} de {{panel.stage.total}}</span>

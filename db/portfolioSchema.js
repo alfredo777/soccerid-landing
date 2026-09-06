@@ -129,6 +129,10 @@ async function ensurePortfolioSchema() {
     // El admin existente pasa a superadmin
     await knex('users').where({ role: 'admin' }).update({ is_superadmin: true });
   }
+  // Onboarding: marca cuándo el inversionista completó el video de bienvenida
+  if (await knex.schema.hasTable('users') && !(await knex.schema.hasColumn('users', 'onboarded_at'))) {
+    await knex.schema.alterTable('users', (t) => t.bigInteger('onboarded_at'));
+  }
   if (!(await knex.schema.hasTable('event_admins'))) {
     await knex.schema.createTable('event_admins', (t) => {
       t.increments('id').primary();

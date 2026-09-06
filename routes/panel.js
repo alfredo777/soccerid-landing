@@ -334,9 +334,21 @@ async function buildPanelData(user) {
     progress: invEvent.progress_pct
   } : null;
 
+  // Video tour de bienvenida (por modalidad) + onboarding la primera vez
+  const isInvestor = user.role === 'investor';
+  const tour = isInvestor ? {
+    modality: ret.type,
+    label: ret.typeLabel,
+    video: `/assets/videos/onboarding/tour-${ret.type}-web.mp4`,
+    videoMobile: `/assets/videos/onboarding/tour-${ret.type}-mobile.mp4`
+  } : null;
+  const showOnboarding = isInvestor && !user.onboarded_at;
+
   return {
     simulator,
     eventPerf,
+    tour,
+    showOnboarding,
     org: config.org,
     eventLabel: cfg.eventLabel || config.eventLabel,
     eventDateISO,
@@ -559,6 +571,14 @@ router.get('/documentos', auth.requireAuth, async (req, res, next) => {
       panel: await buildPanelData(req.panelUser)
     });
   } catch (e) { next(e); }
+});
+
+// Marca el onboarding (video de bienvenida) como completado — AJAX
+router.post('/onboarded', auth.requireAuth, async (req, res) => {
+  try {
+    await knex('users').where({ id: req.panelUser.id }).update({ onboarded_at: Date.now() });
+    res.json({ ok: true });
+  } catch (e) { res.status(500).json({ ok: false }); }
 });
 
 // ════════════════════════════════════════════════
