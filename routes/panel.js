@@ -15,6 +15,7 @@ const { sendLeadEmail } = require('../lib/project2027');
 const { uploadImage, uploadDocument } = require('../lib/uploads');
 const { getDashboardConfig, saveDashboardConfig, computeReturn } = require('../lib/panelSettings');
 const turnstile = require('../lib/turnstile');
+const google = require('../lib/googleAuth');
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
 
@@ -410,7 +411,7 @@ function buildAdminPanel(user) {
 router.get('/login', async (req, res) => {
   const user = await auth.getUserFromRequest(req);
   if (user) return res.redirect(user.role === 'admin' ? '/panel/admin' : '/panel');
-  res.render('panel/login', { layout: false, error: req.query.error, ok: req.query.ok });
+  res.render('panel/login', { layout: false, error: req.query.error, ok: req.query.ok, googleEnabled: google.enabled() });
 });
 
 router.post('/login', async (req, res) => {
@@ -432,6 +433,36 @@ router.post('/login', async (req, res) => {
 
 router.get('/logout', (req, res) => { auth.clearSession(res); res.redirect('/panel/login'); });
 router.post('/logout', (req, res) => { auth.clearSession(res); res.redirect('/panel/login'); });
+
+// ── Login con Google (acceso por invitación + Gmail) ──
+router.get('/auth/google', (req, res) => {
+  if (!google.enabled()) return res.redirect('/panel/login?error=1');
+  const state = google.makeState();
+  res.cookie('g_state', state, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', maxAge: 10 * 60 * 1000 });
+  res.redirect(google.authUrl(state));
+});
+
+router.get('/auth/google/callback', async (req, res) => {
+  try {
+    if (!google.enabled()) return res.redirect('/panel/login?error=1');
+    const { code, state } = req.query;
+    const saved = req.cookies ? req.cookies.g_state : null;
+    res.clearCookie('g_state');
+    if (!code || !state || state !== saved) return res.redirect('/panel/login?error=google');
+    const profile = await google.exchangeAndVerify(code);
+    if (!profile.email || !profile.emailVerified) return res.redirect('/panel/login?error=google');
+    // Contraste con la invitación: el correo de Google debe existir en users (no admin)
+    const user = await knex('users').whereRaw('LOWER(email) = ?', [profile.email]).first();
+    if (!user || user.role === 'admin') return res.redirect('/panel/login?error=noinvite');
+    await knex('users').where({ id: user.id }).update({
+      google_sub: profile.sub, status: 'active',
+      invite_token: null, invite_expires: null, updated_at: knex.fn.now()
+    });
+    const fresh = await knex('users').where({ id: user.id }).first();
+    auth.issueSession(res, fresh);
+    res.redirect('/panel');
+  } catch (e) { res.redirect('/panel/login?error=google'); }
+});
 
 // Activación (crear contraseña desde invitación)
 router.get('/activar/:token', async (req, res) => {

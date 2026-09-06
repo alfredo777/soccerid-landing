@@ -133,6 +133,10 @@ async function ensurePortfolioSchema() {
   if (await knex.schema.hasTable('users') && !(await knex.schema.hasColumn('users', 'onboarded_at'))) {
     await knex.schema.alterTable('users', (t) => t.bigInteger('onboarded_at'));
   }
+  // Login con Google: subject id de la cuenta de Google vinculada
+  if (await knex.schema.hasTable('users') && !(await knex.schema.hasColumn('users', 'google_sub'))) {
+    await knex.schema.alterTable('users', (t) => t.string('google_sub'));
+  }
   if (!(await knex.schema.hasTable('event_admins'))) {
     await knex.schema.createTable('event_admins', (t) => {
       t.increments('id').primary();
