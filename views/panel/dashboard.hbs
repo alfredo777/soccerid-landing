@@ -134,6 +134,31 @@
 
   @media (max-width: 1100px) { .db-grid { grid-template-columns: 1fr; } }
   @media (max-width: 520px) { .db-stats { grid-template-columns: 1fr; } .db-cat__meta { gap:20px; flex-wrap:wrap; } .db-cat__amount { font-size:38px; } }
+
+  /* Desempeño del evento (riesgo) */
+  .db-perf { display:flex; gap:16px; padding: 4px 22px 22px; flex-wrap:wrap; }
+  .db-perf > div { flex:1; min-width:120px; background:var(--pn-purple-soft); border-radius:14px; padding:14px 16px; }
+  .db-perf small { display:block; font-size:11px; color:var(--pn-ink-2); font-weight:700; text-transform:uppercase; letter-spacing:.4px; margin-bottom:5px; }
+  .db-perf strong { font-size:18px; font-weight:900; letter-spacing:-.4px; }
+
+  /* Simulador (riesgo) */
+  .db-sim { padding: 4px 22px 22px; }
+  .db-sim__note { font-size:12.5px; color:var(--pn-ink-2); margin-bottom:16px; }
+  .db-sim__att { font-size:26px; font-weight:900; color:var(--pn-purple); letter-spacing:-.5px; margin-bottom:4px; }
+  .db-sim__att span { font-size:13px; font-weight:700; color:var(--pn-muted); }
+  .db-sim__range { width:100%; accent-color: var(--pn-purple); height:6px; margin:10px 0 20px; }
+  .db-sim__out { display:flex; gap:14px; flex-wrap:wrap; }
+  .db-sim__out > div { flex:1; min-width:150px; border:1px solid var(--pn-border); border-radius:14px; padding:14px 16px; }
+  .db-sim__out small { display:block; font-size:11px; color:var(--pn-muted); font-weight:700; text-transform:uppercase; letter-spacing:.4px; margin-bottom:6px; }
+  .db-sim__out strong { font-size:19px; font-weight:900; letter-spacing:-.4px; }
+  .db-sim__out .hl { color:var(--pn-purple); }
+  .db-sim__foot { font-size:11.5px; color:var(--pn-muted); margin-top:14px; }
+
+  /* Aviso modalidad fija */
+  .db-fixed-note { display:flex; gap:15px; align-items:flex-start; padding: 20px 22px 24px; }
+  .db-fixed-note svg { width:26px; height:26px; stroke:var(--pn-purple); flex-shrink:0; margin-top:2px; }
+  .db-fixed-note strong { display:block; font-size:15px; font-weight:800; margin-bottom:4px; }
+  .db-fixed-note p { font-size:13px; color:var(--pn-ink-2); line-height:1.5; }
 </style>
 
 {{#if panel.stage.label}}
@@ -153,7 +178,10 @@
 
 <div class="db-chips">
   <a href="#mi-inversion" class="db-chip is-active" data-anchor>{{#eq panel.user.role 'sponsor'}}Mi patrocinio{{else}}Mi inversión{{/eq}}</a>
-  <a href="#ventas" class="db-chip" data-anchor>Taquilla</a>
+  {{#if panel.user.isRisk}}
+  <a href="#desempeno" class="db-chip" data-anchor>Desempeño</a>
+  <a href="#simulador" class="db-chip" data-anchor>Simulador</a>
+  {{/if}}
   {{#if panel.capital.items.length}}<a href="#uso-capital" class="db-chip" data-anchor>Uso del capital</a>{{/if}}
   <a href="/panel/documentos" class="db-chip">Documentos y evidencias</a>
   <a href="/panel/calendario" class="db-chip">Cronograma</a>
@@ -215,7 +243,20 @@
       {{/each}}
     </div>
 
-    <!-- Venta en taquilla -->
+    {{#if panel.user.isRisk}}
+    {{#if panel.eventPerf}}
+    <!-- Desempeño del evento (solo riesgo) -->
+    <div class="pn-card" id="desempeno">
+      <div class="pn-card__head"><h3>Desempeño del evento</h3><span class="pn-card__link" style="color:var(--pn-muted)">Variables de tu modalidad</span></div>
+      <div class="db-perf">
+        <div><small>Presupuesto</small><strong>{{panel.eventPerf.budget}}</strong></div>
+        <div><small>Ingreso proyectado</small><strong>{{panel.eventPerf.projectedIncome}}</strong></div>
+        <div><small>Avance operativo</small><strong>{{panel.eventPerf.progress}}%</strong></div>
+      </div>
+    </div>
+    {{/if}}
+
+    <!-- Venta en taquilla (solo riesgo: es sensible a tu utilidad) -->
     <div class="pn-card" id="ventas">
       <div class="pn-card__head">
         <h3>Venta en taquilla</h3>
@@ -233,14 +274,47 @@
           <div class="db-sales__m"><small>Taquilla estimada</small><strong>{{panel.sales.boxOffice}}</strong></div>
           <div class="db-sales__m"><small>Meta (lleno)</small><strong>{{panel.sales.goalBoxOffice}}</strong></div>
         </div>
-        {{#if panel.user.isRisk}}
         <p class="pn-stamp" style="margin-top:16px;">
           <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg>
           <span>Tu utilidad a riesgo evoluciona con la taquilla del evento.</span>
         </p>
-        {{/if}}
       </div>
     </div>
+
+    {{#if panel.simulator}}
+    <!-- Simulador · Escenario por asistencia (solo riesgo) -->
+    <div class="pn-card" id="simulador">
+      <div class="pn-card__head"><h3>Simulador · Escenario por asistencia</h3></div>
+      <div class="db-sim"
+        data-capital="{{panel.simulator.capital}}" data-budget="{{panel.simulator.budget}}"
+        data-capacity="{{panel.simulator.capacity}}" data-ticket="{{panel.simulator.ticketPrice}}"
+        data-ded="{{panel.simulator.deductionsPct}}" data-rebate="{{panel.simulator.rebatePer}}"
+        data-cap="{{panel.simulator.capPct}}" data-split="{{panel.simulator.split}}">
+        <p class="db-sim__note">Supone boleto promedio ${{panel.simulator.ticketPrice}} USD, deducciones de {{panel.simulator.deductionsPct}}% y rebate de ${{panel.simulator.rebatePer}} por asistente.</p>
+        <div class="db-sim__att"><span id="simAtt">—</span> <span>asistentes</span></div>
+        <input type="range" id="simRange" class="db-sim__range" min="0" max="{{panel.simulator.capacity}}" step="100">
+        <div class="db-sim__out">
+          <div><small>Ingreso neto estimado</small><strong id="simNet">—</strong></div>
+          <div><small>Utilidad del evento</small><strong id="simProfit">—</strong></div>
+          <div><small>Retorno estimado del perfil</small><strong class="hl">{{panel.simulator.profitLabel}}</strong></div>
+        </div>
+        <p class="db-sim__foot">Ejercicio ilustrativo. El retorno está sujeto al contrato y tiene un tope de {{panel.simulator.capPct}}% sobre el capital.</p>
+      </div>
+    </div>
+    {{/if}}
+
+    {{else}}
+    <!-- Modalidad fija: sin taquilla ni sensibilidad del evento -->
+    <div class="pn-card" id="ventas">
+      <div class="db-fixed-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+        <div>
+          <strong>Tu retorno no cambia con la asistencia</strong>
+          <p>Esta vista omite asistentes, precio de boleto, presupuesto y sensibilidad del evento porque no modifican el rendimiento contractual.</p>
+        </div>
+      </div>
+    </div>
+    {{/if}}
 
     <!-- Benefits collapsible -->
     <div class="pn-card pn-collapse" id="beneficios">
@@ -407,5 +481,28 @@
         chips.forEach(function(x){ x.classList.toggle('is-active', x === c); });
       });
     });
+  })();
+  // Simulador "Escenario por asistencia" (solo riesgo). Ilustrativo: NO cambia el
+  // retorno pactado del perfil (ese viene del contrato / computeReturn).
+  (function(){
+    var sim = document.querySelector('.db-sim');
+    if (!sim) return;
+    var n = function(k){ return parseFloat(sim.getAttribute('data-' + k)) || 0; };
+    var capacity = n('capacity'), ticket = n('ticket'), ded = n('ded'), rebate = n('rebate'), budget = n('budget');
+    var range = document.getElementById('simRange');
+    var elAtt = document.getElementById('simAtt'), elNet = document.getElementById('simNet'), elProfit = document.getElementById('simProfit');
+    var usd = function(v){ return 'USD ' + Math.round(v).toLocaleString('en-US'); };
+    function render(){
+      var att = parseInt(range.value, 10) || 0;
+      var bruto = att * ticket;
+      var neto = bruto * (1 - ded / 100) - att * rebate;
+      var utilidad = neto - budget;
+      elAtt.textContent = att.toLocaleString('en-US');
+      elNet.textContent = usd(Math.max(0, neto));
+      elProfit.textContent = usd(utilidad);
+    }
+    range.value = Math.round(capacity * 0.7); // escenario inicial
+    range.addEventListener('input', render);
+    render();
   })();
 </script>

@@ -127,8 +127,22 @@ async function buildPanelData(user) {
   const isSponsor = user.role === 'sponsor';
   const tier = findTier(tiers, user.role, user.category) || { label: user.category || '—', color: '#6C3CE0', bg: '#EFE9FC', benefits: [] };
 
-  const amountLabel = formatUSD(user.amount);
-  const ret = computeReturn(user, cfg); // retorno según tipo de inversión (con override por cuenta)
+  // Inversión activa del usuario en el portafolio (si existe). Alimenta el cálculo
+  // SIN cambiar la fórmula: capital/modalidad/retorno vienen de la inversión y se
+  // pasan a computeReturn (return_pct actúa como el override return_rate).
+  let investment = null, invEvent = null;
+  try {
+    investment = await knex('investments').where({ user_id: user.id })
+      .orderByRaw("CASE state WHEN 'activa' THEN 0 ELSE 1 END")
+      .orderBy([{ column: 'sort' }, { column: 'id' }]).first();
+    if (investment) invEvent = await knex('portfolio_events').where({ id: investment.event_id }).first();
+  } catch (_) {}
+  const effUser = investment ? Object.assign({}, user, {
+    amount: investment.capital, investment_type: investment.modality, return_rate: investment.return_pct
+  }) : user;
+
+  const amountLabel = formatUSD(effUser.amount);
+  const ret = computeReturn(effUser, cfg); // retorno según tipo de inversión (con override por cuenta)
 
   // ── Overrides por cuenta: si están definidos, tienen prioridad sobre lo global/categoría ──
   const advOverride = safeParse(user.advisor, null);
@@ -297,7 +311,32 @@ async function buildPanelData(user) {
   // Fecha/hora del evento para el contador (desde la config editable)
   const eventDateISO = `${cfg.eventDate || '2027-03-27'}T${cfg.eventTime || '19:00'}:00-05:00`;
 
+  // ── Simulador "Escenario por asistencia" (solo participación a riesgo) ──
+  // Ejercicio ilustrativo; NO sustituye a computeReturn (que da las cifras oficiales).
+  const se = invEvent || {};
+  const simulator = ret.isRisk ? {
+    capital: Number(effUser.amount) || 0,
+    budget: Number(se.budget || cfg.projectCost) || 0,
+    capacity: Number(se.capacity || cfg.capacity) || 21800,
+    ticketPrice: Number(se.ticket_price || cfg.ticketPrice) || 100,
+    deductionsPct: se.deductions_pct != null ? Number(se.deductions_pct) : 15,
+    rebatePer: se.rebate_per != null ? Number(se.rebate_per) : 5,
+    capPct: se.cap_pct != null ? Number(se.cap_pct) : 50,
+    split: Number(se.investor_split || cfg.investorSplit) || 50,
+    // Retorno pactado del perfil (viene de computeReturn — NO se recalcula aquí)
+    profitLabel: ret.profit
+  } : null;
+  // Desempeño del evento (para la modalidad a riesgo)
+  const eventPerf = (ret.isRisk && invEvent) ? {
+    title: invEvent.title,
+    budget: formatUSD(invEvent.budget),
+    projectedIncome: formatUSD(invEvent.projected_income),
+    progress: invEvent.progress_pct
+  } : null;
+
   return {
+    simulator,
+    eventPerf,
     org: config.org,
     eventLabel: cfg.eventLabel || config.eventLabel,
     eventDateISO,

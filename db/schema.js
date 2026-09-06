@@ -422,6 +422,11 @@ async function seed() {
 async function init() {
   await ensureSchema();
   await seed();
+  // Sistema de inversionistas multi-evento (aditivo)
+  const { ensurePortfolioSchema } = require('./portfolioSchema');
+  const { seedPortfolio } = require('./portfolioSeed');
+  await ensurePortfolioSchema();
+  await seedPortfolio();
   console.log('✓ Base de datos del panel lista');
 }
 

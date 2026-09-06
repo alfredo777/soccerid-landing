@@ -7,3 +7,6 @@ uploads/panel/
 *.local.md
 .env
 .env.*
+
+# Media generada del demo (no subir)
+video-demo/
