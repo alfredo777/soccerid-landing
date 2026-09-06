@@ -419,6 +419,31 @@ async function seed() {
   }
 }
 
+// Auto-corrige valores corruptos (carácter de reemplazo �) en dashboard_config.
+// Idempotente: solo actúa si detecta corrupción. Sanea local y producción al arrancar.
+async function sanitizeDashboardConfig() {
+  try {
+    const BAD = '�';
+    const row = await knex('app_settings').where({ key: 'dashboard_config' }).first();
+    if (!row || !row.value || !row.value.includes(BAD)) return;
+    const cfg = JSON.parse(row.value);
+    if (typeof cfg.stageLabel === 'string' && cfg.stageLabel.includes(BAD)) {
+      cfg.stageLabel = 'Comercialización';
+    }
+    const strip = (s) => s.split(BAD).join('');
+    for (const k of Object.keys(cfg)) {
+      if (typeof cfg[k] === 'string') cfg[k] = strip(cfg[k]);
+      else if (cfg[k] && typeof cfg[k] === 'object') {
+        for (const k2 of Object.keys(cfg[k])) {
+          if (typeof cfg[k][k2] === 'string') cfg[k][k2] = strip(cfg[k][k2]);
+        }
+      }
+    }
+    await knex('app_settings').where({ key: 'dashboard_config' }).update({ value: JSON.stringify(cfg) });
+    console.log('  ✓ dashboard_config saneado (encoding)');
+  } catch (_) {}
+}
+
 async function init() {
   await ensureSchema();
   await seed();
@@ -427,6 +452,7 @@ async function init() {
   const { seedPortfolio } = require('./portfolioSeed');
   await ensurePortfolioSchema();
   await seedPortfolio();
+  await sanitizeDashboardConfig();
   console.log('✓ Base de datos del panel lista');
 }
 

@@ -343,7 +343,9 @@ async function buildPanelData(user) {
     video: `/assets/videos/onboarding/tour-${ret.type}-web.mp4`,
     videoMobile: `/assets/videos/onboarding/tour-${ret.type}-mobile.mp4`
   } : null;
-  const showOnboarding = isInvestor && !user.onboarded_at;
+  // Onboarding de primer login DESACTIVADO (a pedido): el video queda solo en el
+  // menú "Video tour" (lightbox/drawer). Se conserva el código por si se reactiva.
+  const showOnboarding = false;
 
   return {
     simulator,
