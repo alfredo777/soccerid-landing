@@ -228,6 +228,10 @@ async function buildPanelData(user, opts = {}) {
     image: n.image, date: n.date_label, size: n.size, featured: !!n.featured
   }));
 
+  // Categorias presentes en las noticias: alimentan los chips de filtro para que
+  // siempre coincidan con lo que el admin publica (no una lista fija).
+  const newsTags = [...new Set(news.map(n => n.tag).filter(Boolean))];
+
   // Hitos
   const mileRows = await knex('milestones').orderBy([{ column: 'sort', order: 'asc' }, { column: 'id', order: 'asc' }]);
   const MILE_STATUS = { completado: 'Completado', en_curso: 'En curso', pendiente: 'Pendiente' };
@@ -414,6 +418,29 @@ async function buildPanelData(user, opts = {}) {
     faqs = faqRows.map(f => ({ question: f.question, answer: f.answer || '' }));
   } catch (_) {}
 
+  // Indice del buscador de la barra superior. El FAQ va primero a proposito:
+  // es lo que mas se busca y lo que responde dudas sin abrir otra seccion.
+  const searchIndex = [];
+  faqs.forEach(f => searchIndex.push({
+    g: 'Preguntas frecuentes', t: f.question, s: String(f.answer).slice(0, 120), u: '/panel/faq'
+  }));
+  news.forEach(n => searchIndex.push({
+    g: 'Noticias', t: n.title, s: [n.tag, n.date].filter(Boolean).join(' · '), u: '/panel/noticias/' + n.id
+  }));
+  milestones.forEach(m => searchIndex.push({
+    g: 'Cronograma', t: m.title, s: [m.date, m.statusLabel].filter(Boolean).join(' · '), u: '/panel/calendario#cronograma'
+  }));
+  [
+    { t: 'Inicio', s: 'Resumen de tu inversión', u: '/panel' },
+    { t: 'Estado del evento', s: 'Avances, anuncios y prensa', u: '/panel/noticias' },
+    { t: 'Notificaciones', s: 'Avisos y comunicaciones', u: '/panel/notificaciones' },
+    { t: 'Calendario', s: 'Fechas clave del evento', u: '/panel/calendario' },
+    { t: 'Cronograma', s: 'Hitos del proyecto', u: '/panel/calendario#cronograma' },
+    { t: 'Documentos', s: 'Data room y contratos', u: '/panel/documentos' },
+    { t: 'Presentación', s: 'Propuesta de la edición', u: '/panel/presentacion' }
+  ].concat(faqs.length ? [{ t: 'Preguntas frecuentes', s: 'Dudas comunes', u: '/panel/faq' }] : [])
+    .forEach(x => searchIndex.push(Object.assign({ g: 'Secciones' }, x)));
+
   return {
     simulator,
     eventPerf,
@@ -423,6 +450,7 @@ async function buildPanelData(user, opts = {}) {
     presentation,
     presentationTitle,
     faqs,
+    searchIndex,
     tour,
     showOnboarding,
     org: config.org,
@@ -453,6 +481,7 @@ async function buildPanelData(user, opts = {}) {
     donutC: Math.round(C * 100) / 100,
     investorTotal: total,
     news,
+    newsTags,
     milestones,
     calendarCells: cells,
     calendar: {
@@ -592,7 +621,7 @@ router.get('/', auth.requireAuth, async (req, res, next) => {
 
 router.get('/noticias', auth.requireAuth, async (req, res, next) => {
   try {
-    if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
+    if (req.panelUser.role === 'admin') return res.redirect('/panel/admin#noticias');
     res.render('panel/noticias', {
       layout: 'panel',
       title: 'Noticias · SOCCER iD Investor Hub',

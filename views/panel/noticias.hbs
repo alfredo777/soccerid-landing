@@ -1,6 +1,6 @@
 <style>
   .nw-chips { display:flex; gap:10px; margin: 6px 0 22px; flex-wrap:wrap; }
-  .nw-chip { padding: 10px 20px; border-radius: 13px; background:#fff; border:1px solid var(--pn-border); font-size:13px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
+  .nw-chip { padding: 10px 20px; border-radius: 13px; background:#fff; border:1px solid var(--pn-border); font-family: inherit; font-size:13px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
   .nw-chip.is-active { background: var(--pn-purple); color:#fff; border-color: var(--pn-purple); }
 
   .nw-grid { display:grid; grid-template-columns: 1fr 320px; gap: 22px; align-items:start; }
@@ -35,29 +35,41 @@
 
   /* Rail */
   .nw-rail { display:flex; flex-direction:column; gap: 18px; }
-  .nw-mile { display:flex; gap:12px; align-items:flex-start; padding: 13px 0; border-bottom:1px solid var(--pn-border); }
-  .nw-mile:last-child { border-bottom:none; padding-bottom:0; }
-  .nw-mile__ico { flex-shrink:0; margin-top:1px; }
-  .nw-mile__b strong { display:block; font-size:14px; font-weight:700; }
-  .nw-mile__b small { font-size:12px; color:var(--pn-muted); font-weight:600; }
-  .nw-rail__list { padding: 6px 20px 20px; }
+
+  /* Estado vacio */
+  .nw-empty {
+    background:#fff; border:1px dashed var(--pn-border); border-radius:18px;
+    padding: 46px 28px; text-align:center; color:var(--pn-muted);
+  }
+  .nw-empty svg { color: var(--pn-muted); opacity:.7; margin-bottom:14px; }
+  .nw-empty strong { display:block; font-size:16px; font-weight:800; color:var(--pn-ink); margin-bottom:7px; }
+  .nw-empty p { font-size:13.5px; line-height:1.6; max-width:420px; margin:0 auto; }
 
   @media (max-width: 1100px) { .nw-grid { grid-template-columns: 1fr; } }
   @media (max-width: 640px) { .nw-masonry { column-count: 1; } }
 </style>
 
-<div class="nw-chips">
-  <div class="nw-chip is-active">Todas</div>
-  <div class="nw-chip">Anuncios</div>
-  <div class="nw-chip">Actualizaciones</div>
-  <div class="nw-chip">Prensa</div>
+{{#if panel.newsTags.length}}
+<div class="nw-chips" id="nwChips">
+  <button type="button" class="nw-chip is-active" data-tag="">Todas</button>
+  {{#each panel.newsTags}}
+  <button type="button" class="nw-chip" data-tag="{{this}}">{{this}}</button>
+  {{/each}}
 </div>
+{{/if}}
 
 <div class="nw-grid">
   <div class="nw-main">
+    {{#unless panel.news.length}}
+    <div class="nw-empty">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13v14H6a2 2 0 0 1-2-2V5z"/><path d="M17 8h2a1 1 0 0 1 1 1v8a2 2 0 0 1-2 2"/><line x1="7" y1="9" x2="14" y2="9"/><line x1="7" y1="13" x2="14" y2="13"/></svg>
+      <strong>Aún no hay noticias publicadas</strong>
+      <p>Cuando el equipo publique avances, anuncios o notas de prensa de la edición, aparecerán aquí.</p>
+    </div>
+    {{/unless}}
     <div class="nw-masonry">
       {{#each panel.news}}
-      <a href="/panel/noticias/{{this.id}}" class="nw-card {{#if this.size}}is-{{this.size}}{{else}}is-short{{/if}}">
+      <a href="/panel/noticias/{{this.id}}" class="nw-card {{#if this.size}}is-{{this.size}}{{else}}is-short{{/if}}" data-tag="{{this.tag}}">
         <div class="nw-card__imgwrap">
           <img src="{{this.image}}" alt="">
           <span class="nw-card__tag"><span class="d" style="background: {{this.tagColor}}"></span>{{this.tag}}</span>
@@ -75,30 +87,13 @@
       </a>
       {{/each}}
     </div>
+    <div class="nw-empty" id="nwNoMatch" hidden>
+      <strong>Sin noticias en esta categoría</strong>
+      <p>Prueba con otra categoría o vuelve a &laquo;Todas&raquo;.</p>
+    </div>
   </div>
 
   <aside class="nw-rail">
-    <div class="pn-card">
-      <div class="pn-card__head"><h3>Próximos hitos</h3></div>
-      <div class="nw-rail__list">
-        {{#each panel.milestones}}
-        <div class="nw-mile">
-          <div class="nw-mile__ico" style="color: {{#if this.done}}#1E8E5A{{else}}{{#if this.inProgress}}var(--pn-purple){{else}}var(--pn-muted){{/if}}{{/if}}">
-            {{#if this.done}}
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5 12.5 11 15 16 9.5"/></svg>
-            {{else}}
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
-            {{/if}}
-          </div>
-          <div class="nw-mile__b">
-            <strong>{{this.title}}</strong>
-            <small>{{this.date}} · {{this.statusLabel}}{{#if this.owner}} · {{this.owner}}{{/if}}</small>
-          </div>
-        </div>
-        {{/each}}
-      </div>
-    </div>
-
     <div class="pn-card">
       <div class="pn-card__head"><h3>Tu categoría</h3></div>
       <div style="padding: 6px 20px 20px;">
@@ -109,3 +104,27 @@
     </div>
   </aside>
 </div>
+
+<script>
+  // Filtro por categoria de los chips. Antes eran divs decorativos sin efecto.
+  (function () {
+    var chips = document.getElementById('nwChips');
+    if (!chips) return;
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.nw-card[data-tag]'));
+    var noMatch = document.getElementById('nwNoMatch');
+
+    chips.addEventListener('click', function (e) {
+      var btn = e.target.closest('.nw-chip');
+      if (!btn) return;
+      var tag = btn.getAttribute('data-tag');
+      chips.querySelectorAll('.nw-chip').forEach(function (c) { c.classList.toggle('is-active', c === btn); });
+      var shown = 0;
+      cards.forEach(function (card) {
+        var match = !tag || card.getAttribute('data-tag') === tag;
+        card.style.display = match ? '' : 'none';
+        if (match) shown++;
+      });
+      if (noMatch) noMatch.hidden = shown > 0;
+    });
+  })();
+</script>

@@ -278,6 +278,22 @@ Detalles:
   desde el admin (por edición).
 - [ ] Estado vacío con mensaje; en multievento, filtrar por **edición activa** (cada
   edición tiene su calendario/cronograma).
+- [ ] **Vinculación con Google Calendar** (el **API ya está habilitado** en Google Cloud;
+  falta implementar). Alcance:
+  - [ ] Sincronizar las **actividades del calendario del panel** con un calendario de
+    Google (crear/actualizar/eliminar eventos; guardar `google_event_id` en la tabla
+    de actividades para evitar duplicados).
+  - [ ] Definir modo: **calendario de la organización** (service account con calendario
+    compartido) y/o **calendario del usuario** (OAuth por inversionista para que agregue
+    los hitos/actividades a su propia agenda).
+  - [ ] Botón **"Agregar a mi Google Calendar"** por actividad/hito + opción de
+    **suscripción** (iCal/ICS feed) como alternativa sin OAuth.
+  - [ ] Credenciales: reutilizar el proyecto de Google ya creado (mismas
+    `GOOGLE_CLIENT_ID/SECRET` del login, agregando el scope de Calendar) o una service
+    account; guardar en `*.local.md` gitignored + env vars de Heroku. Se relaciona con
+    la sección **"Login con Google (en pausa)"**.
+  - [ ] Filtrar por **edición activa** y respetar tipos de actividad (etapas vs
+    actividades) al exportar.
 
 ## Noticias
 - [ ] En **"Publicar noticia"** (admin) agregar campo **URL de la nota** (enlace al artículo original).
