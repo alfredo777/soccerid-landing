@@ -410,7 +410,7 @@
       <div class="db-cap">
         <div class="db-cap__tot">
           <div><b>{{panel.capital.totalSpent}}</b> <small>ejercido de {{panel.capital.totalBudget}} presupuestado</small></div>
-          {{#if panel.capital.hasRaised}}<span class="pill">Capital comprometido: {{panel.capital.raised}}</span>{{/if}}
+          {{! Capital comprometido oculto al inversionista (info de negocio, solo admin) }}
         </div>
         {{#each panel.capital.items}}
         <div class="db-cap__row">
