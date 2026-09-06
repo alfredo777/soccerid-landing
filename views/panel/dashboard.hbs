@@ -85,16 +85,6 @@
   .db-benefits li svg { width:21px; height:21px; flex-shrink:0; margin-top:1px; }
 
   /* Distribution */
-  .db-dist { display:flex; align-items:center; gap: 28px; padding: 6px 22px 24px; flex-wrap:wrap; }
-  .db-donut { position:relative; width:158px; height:158px; flex-shrink:0; }
-  .db-donut__hole { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-  .db-donut__hole strong { font-size:28px; font-weight:900; line-height:1; }
-  .db-donut__hole small { font-size:11px; color:var(--pn-muted); font-weight:700; }
-  .db-legend { flex:1; display:flex; flex-direction:column; gap:11px; min-width:170px; }
-  .db-legend__row { display:flex; align-items:center; gap:11px; font-size:13px; }
-  .db-legend__row .sw { width:11px; height:11px; border-radius:4px; flex-shrink:0; }
-  .db-legend__row span { font-weight:600; }
-  .db-legend__row b { margin-left:auto; font-weight:900; }
 
   /* Rail: my membership mini */
   .db-mini { border-radius: 18px; padding: 22px; color:#fff; position:relative; overflow:hidden; }
@@ -467,32 +457,6 @@
     </div>
     {{/if}}
 
-    <!-- Distribution -->
-    <div class="pn-card" id="distribucion">
-      <div class="pn-card__head"><h3>Distribución de inversionistas</h3><span class="pn-card__link" style="color:var(--pn-ink-2)">{{panel.investorTotal}} en total</span></div>
-      <div class="db-dist">
-        <div class="db-donut">
-          <svg width="158" height="158" viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r="54" fill="none" stroke="#F1F0F5" stroke-width="12"/>
-            {{#each panel.donut}}
-            <circle cx="60" cy="60" r="54" fill="none" stroke="{{this.color}}" stroke-width="12"
-              stroke-dasharray="{{this.len}} {{../panel.donutC}}"
-              transform="rotate({{this.angle}} 60 60)" stroke-linecap="butt"/>
-            {{/each}}
-          </svg>
-          <div class="db-donut__hole"><strong>{{panel.investorTotal}}</strong><small>inversionistas</small></div>
-        </div>
-        <div class="db-legend">
-          {{#each panel.distribution}}
-          <div class="db-legend__row">
-            <span class="sw" style="background: {{this.color}}"></span>
-            <span>{{this.label}}</span>
-            <b>{{this.count}}</b>
-          </div>
-          {{/each}}
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- Right rail -->

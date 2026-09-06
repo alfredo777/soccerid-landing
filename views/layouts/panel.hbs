@@ -151,6 +151,13 @@
     .pn-burger svg { width: 24px; height: 24px; stroke: var(--pn-ink); }
     .pn-top__title h1 { font-size: 24px; font-weight: 800; letter-spacing: -.4px; }
     .pn-top__title p { font-size: 13px; color: var(--pn-ink-2); margin-top: 3px; }
+    .pn-preview-actions { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+    .pn-preview-mod { display:flex; border:1px solid rgba(255,255,255,.45); border-radius:11px; overflow:hidden; }
+    .pn-preview-mod a {
+      padding: 7px 14px; font-size: 12px; font-weight: 800; text-decoration:none;
+      color: inherit; opacity: .8;
+    }
+    .pn-preview-mod a.is-active { background: rgba(255,255,255,.9); color: var(--pn-ink); opacity: 1; }
     .pn-search {
       margin-left: auto; display: flex; align-items: center; gap: 8px;
       background: var(--pn-card); border: 1px solid var(--pn-border);
@@ -566,7 +573,15 @@
             <span>Así se ve el portal para un {{previewLabel}}. Datos de ejemplo, solo lectura.</span>
             {{/if}}
           </div>
-          <a class="pn-preview-exit" href="{{#if previewUserId}}/panel/admin/user/{{previewUserId}}{{else}}/panel/admin{{/if}}">Salir de la vista previa</a>
+          <div class="pn-preview-actions">
+            {{#if previewModality}}
+            <div class="pn-preview-mod" role="group" aria-label="Modalidad de la vista previa">
+              <a href="/panel/admin/preview/investor?modality=fijo" class="{{#eq previewModality 'fijo'}}is-active{{/eq}}">Retorno fijo</a>
+              <a href="/panel/admin/preview/investor?modality=riesgo" class="{{#eq previewModality 'riesgo'}}is-active{{/eq}}">A riesgo</a>
+            </div>
+            {{/if}}
+            <a class="pn-preview-exit" href="{{#if previewUserId}}/panel/admin/user/{{previewUserId}}{{else}}/panel/admin{{/if}}">Salir de la vista previa</a>
+          </div>
         </div>
         {{/if}}
         {{{body}}}

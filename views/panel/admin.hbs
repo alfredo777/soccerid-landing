@@ -307,6 +307,9 @@
         <div class="ad-hint">{{#if s3}}Se subirá a Amazon S3.{{else}}Se guardará localmente (configura S3 para producción).{{/if}} O pega una URL abajo.</div>
       </div>
       <div class="ad-f"><label>URL de imagen (opcional)</label><input type="text" name="image" placeholder="/assets/images/gallery/cup2025/6.jpg"></div>
+      <div class="ad-f"><label>URL de la nota (opcional)</label><input type="url" name="source_url" placeholder="https://ejemplo.com/nota-original">
+        <div class="ad-hint">Enlace al artículo original. Se muestra como «Ver original» y abre en pestaña nueva.</div>
+      </div>
       <div class="ad-row2">
         <div class="ad-f"><label>Fecha (texto)</label><input type="text" name="date_label" placeholder="12 Jul 2026"></div>
         <div class="ad-f"><label>Tamaño</label><select name="size"><option value="short">Normal</option><option value="tall">Grande</option></select></div>
@@ -328,7 +331,7 @@
           </div>
           <div class="ad-actions">
             <button type="button" class="primary" onclick="openNews(this)"
-              data-id="{{this.id}}" data-tag="{{this.tag}}" data-title="{{this.title}}" data-excerpt="{{this.excerpt}}" data-body="{{this.body}}" data-image="{{this.image}}" data-date="{{this.date_label}}" data-size="{{this.size}}" data-featured="{{#if this.featured}}1{{/if}}">Editar</button>
+              data-id="{{this.id}}" data-tag="{{this.tag}}" data-title="{{this.title}}" data-excerpt="{{this.excerpt}}" data-body="{{this.body}}" data-image="{{this.image}}" data-date="{{this.date_label}}" data-size="{{this.size}}" data-featured="{{#if this.featured}}1{{/if}}" data-source="{{this.source_url}}">Editar</button>
             <form method="POST" action="/panel/admin/news/{{this.id}}/notify" data-confirm="¿Compartir esta noticia como notificación (email) a todos los usuarios?"><button type="submit">Compartir</button></form>
             <form method="POST" action="/panel/admin/news/{{this.id}}/delete" data-confirm="¿Eliminar noticia?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
@@ -923,6 +926,7 @@
         <div class="ad-f"><label>Contenido completo</label><textarea name="body" id="en-body" rows="5"></textarea></div>
         <div class="ad-f"><label>Reemplazar imagen</label><input type="file" name="imageFile" accept="image/*"><div class="ad-hint">Deja vacío para conservar la actual.</div></div>
         <div class="ad-f"><label>URL de imagen</label><input type="text" name="image" id="en-image"></div>
+        <div class="ad-f"><label>URL de la nota (opcional)</label><input type="url" name="source_url" id="en-source" placeholder="https://ejemplo.com/nota-original"></div>
         <div class="ad-row2">
           <div class="ad-f"><label>Fecha (texto)</label><input type="text" name="date_label" id="en-date"></div>
           <div class="ad-f"><label>Tamaño</label><select name="size" id="en-size"><option value="short">Normal</option><option value="tall">Grande</option></select></div>
@@ -1428,6 +1432,7 @@
     document.getElementById('en-body').value = (d.body || '');
     document.getElementById('en-image').value = d.image;
     document.getElementById('en-date').value = d.date;
+    document.getElementById('en-source').value = (d.source || '');
     document.getElementById('en-size').value = d.size;
     document.getElementById('en-featured').checked = (d.featured === '1');
     openModal('modal-news');

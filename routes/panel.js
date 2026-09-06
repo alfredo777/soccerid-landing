@@ -641,7 +641,8 @@ router.get('/noticias/:id', auth.requireAuth, async (req, res, next) => {
     if (!n) return res.redirect('/panel/noticias');
     const article = {
       id: n.id, tag: n.tag, tagColor: n.tag_color, title: n.title,
-      excerpt: n.excerpt, body: n.body || '', image: n.image, date: n.date_label
+      excerpt: n.excerpt, body: n.body || '', image: n.image, date: n.date_label,
+      sourceUrl: n.source_url || ''
     };
     res.render('panel/noticia', {
       layout: 'panel',
@@ -1068,6 +1069,17 @@ router.post('/admin/upload', auth.requireAdmin, upload.single('image'), async (r
   }
 });
 
+// Enlace a la nota original: solo http/https, para no dejar pasar un javascript:
+// dentro de un href. Devuelve null si viene vacio o no es una URL usable.
+function sourceUrl(v) {
+  const raw = String(v == null ? '' : v).trim();
+  if (!raw) return null;
+  try {
+    const u = new URL(raw);
+    return (u.protocol === 'http:' || u.protocol === 'https:') ? u.href : null;
+  } catch (_) { return null; }
+}
+
 // Noticias
 router.post('/admin/news', auth.requireAdmin, upload.single('imageFile'), async (req, res, next) => {
   try {
@@ -1085,6 +1097,7 @@ router.post('/admin/news', auth.requireAdmin, upload.single('imageFile'), async 
       date_label: (req.body.date_label || '').trim(),
       size: req.body.size === 'tall' ? 'tall' : 'short',
       featured: req.body.featured ? true : false,
+      source_url: sourceUrl(req.body.source_url),
       sort: parseInt(req.body.sort || '99', 10) || 99
     });
     res.redirect('/panel/admin?type=ok&msg=Noticia+publicada#noticias');
@@ -1279,6 +1292,7 @@ router.post('/admin/news/:id/update', auth.requireAdmin, upload.single('imageFil
       date_label: (req.body.date_label || '').trim(),
       size: req.body.size === 'tall' ? 'tall' : 'short',
       featured: req.body.featured ? true : false,
+      source_url: sourceUrl(req.body.source_url),
       updated_at: knex.fn.now()
     });
     res.redirect('/panel/admin?type=ok&msg=Noticia+actualizada#noticias');
@@ -1756,6 +1770,9 @@ router.get('/admin/preview/user/:id', auth.requireAdmin, async (req, res, next) 
 router.get('/admin/preview/:role', auth.requireAdmin, async (req, res, next) => {
   try {
     const role = req.params.role === 'sponsor' ? 'sponsor' : 'investor';
+    // Sin esto el usuario de ejemplo siempre cae en 'fijo' y no habia forma de
+    // previsualizar la vista de riesgo (desempeno + simulador).
+    const modality = req.query.modality === 'riesgo' ? 'riesgo' : 'fijo';
     const tiers = await getTiers();
     const roleTiers = tiers.filter(t => t.role === role);
     // Toma la categoría de mayor monto como ejemplo representativo
@@ -1766,6 +1783,7 @@ router.get('/admin/preview/:role', auth.requireAdmin, async (req, res, next) => 
       role,
       category: tier ? tier.key : '',
       amount: tier ? tier.amount : 0,
+      investment_type: modality,
       member_id: role === 'sponsor' ? 'SIDC-S01' : 'SIDC-D01',
       created_at: null,
       notifications_seen_id: 0
@@ -1779,6 +1797,7 @@ router.get('/admin/preview/:role', auth.requireAdmin, async (req, res, next) => 
       active: 'dashboard',
       previewRole: role,
       previewLabel: roleLabel,
+      previewModality: role === 'investor' ? modality : '',
       panel: await buildPanelData(sampleUser)
     });
   } catch (e) { next(e); }

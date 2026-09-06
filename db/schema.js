@@ -220,6 +220,10 @@ async function ensureSchema() {
   if (await knex.schema.hasTable('news') && !(await knex.schema.hasColumn('news', 'body'))) {
     await knex.schema.alterTable('news', (t) => t.text('body'));
   }
+  // Noticias: enlace a la nota original (se muestra como "Ver original").
+  if (await knex.schema.hasTable('news') && !(await knex.schema.hasColumn('news', 'source_url'))) {
+    await knex.schema.alterTable('news', (t) => t.text('source_url'));
+  }
   // Noticias: ampliar columnas que pueden llevar texto/URL largo (evita
   // "value too long for type character varying(255)" en Postgres). Solo pg;
   // sqlite es de tipado dinámico y no tiene ese límite.

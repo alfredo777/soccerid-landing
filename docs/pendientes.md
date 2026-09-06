@@ -36,9 +36,10 @@ Arquitectura:
 
 
 ## Panel estadístico del ADMIN (no para inversionistas)
-- [ ] **Mover "Distribución de inversionistas" (donut por categoría) fuera de la vista
-  del inversionista** → es info del negocio, solo para el **admin**. Hoy se muestra en
-  el dashboard del inversionista (`views/panel/dashboard.hbs`); quitarla de ahí.
+- [x] ~~Mover "Distribución de inversionistas" (donut por categoría) fuera de la vista
+  del inversionista~~ **HECHO**: se quitó de `views/panel/dashboard.hbs` (con su CSS).
+  Los datos (`panel.donut`, `panel.distribution`, `panel.investorTotal`) se siguen
+  calculando en `buildPanelData` y están listos para el panel del admin de abajo.
 - [ ] Crear un **panel estadístico en el admin** con métricas del portafolio/edición:
   distribución de inversionistas por categoría (donut), capital captado vs objetivo,
   # inversiones por modalidad (fijo/riesgo), retornos proyectados, boletos vendidos /
@@ -54,10 +55,11 @@ Arquitectura:
 
 
 ## Vista previa del admin
-- [ ] En **"Ver como inversionista"** poder **elegir modalidad**: ver como **Fijo** o como **Riesgo**.
-  Hoy `/panel/admin/preview/investor` usa un usuario de ejemplo que cae en `fijo` por defecto.
-  Propuesta: `?modality=fijo|riesgo` (o un toggle) para previsualizar cada render
-  (fijo = aviso "tu retorno no cambia"; riesgo = desempeño + simulador).
+- [x] ~~Elegir modalidad en "Ver como inversionista"~~ **HECHO**:
+  `/panel/admin/preview/investor?modality=fijo|riesgo` + toggle en el banner de vista
+  previa. Verificado que cada modalidad rinde su contenido (fijo: retorno fijo y el
+  aviso de por qué se omite el simulador; riesgo: desempeño, participación efectiva
+  y simulador).
 
 ## Login con Google (en pausa)
 - [ ] Desplegar cuando el **admin esté listo con las invitaciones**.
@@ -296,9 +298,11 @@ Detalles:
     actividades) al exportar.
 
 ## Noticias
-- [ ] En **"Publicar noticia"** (admin) agregar campo **URL de la nota** (enlace al artículo original).
-- [ ] En la nota (panel/vista) mostrar un enlace **"Ver original"** que abra en **pestaña nueva** (`target="_blank"` + `rel="noopener"`).
-- [ ] Requiere columna nueva en `news` (p. ej. `source_url`) + campo en el form de alta/edición.
+- [x] ~~URL de la nota original + "Ver original"~~ **HECHO**: columna `news.source_url`
+  (migración con guarda `hasColumn`), campo en alta y edición del admin, y enlace
+  "Ver original" con `target="_blank"` + `rel="noopener noreferrer"`. El URL se valida
+  server-side (`sourceUrl()` en routes/panel.js): solo http/https, para que no entre
+  un `javascript:` en el href.
 
 ## Videos
 - [ ] **Voz natural** en los videos (hoy voz offline provisional). Falta elegir proveedor + API key (ElevenLabs / OpenAI / Google TTS). Al tenerla se regeneran y se reemplazan los archivos.
