@@ -11,12 +11,9 @@ Preparado el 6 sep 2026. Falta desplegar **2 commits** a Heroku:
 
 ## Antes de desplegar
 
-- [ ] **Decidir qué hacer con el login de Google.** Las credenciales ya están en
-  Heroku, así que el botón "Continuar con Google" **ya está visible en
-  soccerid.co/panel/login**. La pantalla de consentimiento sigue en *Testing*:
-  quien no esté en la lista de test users verá un error de Google al intentarlo.
-  Opciones: publicar la pantalla de consentimiento, agregar test users, o quitar
-  `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` hasta que las invitaciones estén listas.
+Nada pendiente. El tema de Google ya se resolvió el 6 sep: **queda oculto a
+propósito** (credenciales quitadas de Heroku + `GOOGLE_LOGIN=0`). No hay que
+tocar nada antes de subir; ver sección 6 de `docs/google-auth.md`.
 
 ## Desplegar
 
@@ -47,6 +44,9 @@ verificado:
   vista del calendario.
 - [ ] El calendario abre en el mes actual y las flechas navegan.
 - [ ] `/panel/faq` carga el acordeón.
+- [ ] **El login NO muestra nada de Google.** Tras el deploy el interruptor
+  `GOOGLE_LOGIN=0` toma el relevo de las credenciales quitadas; confirmar que
+  sigue sin aparecer el botón.
 - [ ] Las 4 ediciones aparecen y cada una muestra su presentación.
 - [ ] **Subir una imagen desde el admin** (noticia o edición): con S3 ya
   configurado, la URL debe quedar en `soccerid-landing.s3.us-east-1.amazonaws.com`
@@ -58,6 +58,9 @@ verificado:
 - `@aws-sdk/client-s3` es dependencia normal (no opcional), así que
   `NPM_CONFIG_OMIT=optional` no la omite. La única opcional es `better-sqlite3`,
   que solo se usa en local.
+- Las variables de Heroku se pueden reponer solas con
+  `node scripts/heroku-env.js --apply` (lee los `*.local.md` gitignored; nunca
+  imprime valores). Sube Google **oculto** salvo que se pase `--google-on`.
 - El callback de Google se deriva de `BASE_URL`, que no está seteada en Heroku;
   en producción cae por defecto en `https://soccerid.co/panel/auth/google/callback`,
   que coincide con el dominio del app.

@@ -121,3 +121,48 @@ invitado). Así "se contrasta contra el de la invitación".
 - [ ] Setear `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` en Heroku y local.
 - [ ] Implementar `lib/googleAuth.js` + rutas + columna `google_sub` + botón.
 - [ ] Probar: invitado entra; no-invitado es rechazado; correo no verificado rechazado.
+
+---
+
+## 6. Estado actual: OCULTO a proposito (6 sep 2026)
+
+**Decision del usuario: no se debe ver nada de Google en el panel por ahora.**
+La razon es la pantalla de consentimiento: sigue en *Testing*, asi que quien no
+este en la lista de test users recibe un error de Google al presionar el boton.
+
+Como quedo en produccion:
+
+| Variable | Estado | Efecto |
+|---|---|---|
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | **quitadas** de Heroku (release v245) | `enabled()` es false → sin boton y rutas cerradas |
+| `GOOGLE_LOGIN` | `0` (release v246) | Interruptor: mantiene todo oculto **aunque vuelvan las credenciales** |
+| `GOOGLE_API_KEY` | sigue puesta | No se ve en la UI; es para el trabajo de Google Calendar |
+
+Se hicieron las dos cosas a proposito. Quitar las credenciales es lo unico que
+entiende el codigo **ya desplegado**; el interruptor `GOOGLE_LOGIN` es nuevo
+(`lib/googleAuth.js`) y solo surte efecto **despues del proximo deploy**. Asi
+queda cubierto antes y despues.
+
+Verificado en `https://soccerid.co/panel/login`: cero botones, cero texto
+"Continuar con Google" (solo quedan reglas CSS sin usar dentro del `<style>`),
+y `/panel/auth/google` redirige a `/panel/login?error=1`.
+
+### Volver a ponerlo (automatico)
+
+Las variables se cargan solas desde `google-keys.local.md` y `s3-keys.local.md`
+(gitignored), sin copiarlas a mano:
+
+```
+node scripts/heroku-env.js              # ensayo: dice que haria, no toca nada
+node scripts/heroku-env.js --apply      # las sube con Google OCULTO (GOOGLE_LOGIN=0)
+```
+
+Para que el boton se vea, **primero** publicar la pantalla de consentimiento (o
+agregar test users) y luego:
+
+```
+node scripts/heroku-env.js --apply --google-on   # GOOGLE_LOGIN=1
+```
+
+El interruptor acepta `0|off|false|no` para apagar; cualquier otra cosa (o no
+definirlo) deja mandando la regla de siempre: hay login si hay client id + secret.
