@@ -220,6 +220,18 @@ async function ensureSchema() {
   if (await knex.schema.hasTable('news') && !(await knex.schema.hasColumn('news', 'body'))) {
     await knex.schema.alterTable('news', (t) => t.text('body'));
   }
+  // Noticias: ampliar columnas que pueden llevar texto/URL largo (evita
+  // "value too long for type character varying(255)" en Postgres). Solo pg;
+  // sqlite es de tipado dinámico y no tiene ese límite.
+  if (knex.__isPg && await knex.schema.hasTable('news')) {
+    try {
+      await knex.schema.alterTable('news', (t) => {
+        t.text('title').notNullable().alter();
+        t.text('image').alter();
+        t.text('excerpt').alter();
+      });
+    } catch (_) {}
+  }
 
   // Riesgos: matriz simple (bloque "Cronograma, riesgos y distribución")
   if (!(await knex.schema.hasTable('risks'))) {
