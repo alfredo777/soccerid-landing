@@ -418,6 +418,21 @@ async function buildPanelData(user, opts = {}) {
     faqs = faqRows.map(f => ({ question: f.question, answer: f.answer || '' }));
   } catch (_) {}
 
+  // Perfil editable por el propio usuario (drawer "Mi perfil").
+  const profile = {
+    name: user.name || '',
+    email: user.email || '',
+    language: user.language === 'en' ? 'en' : 'es',
+    phone: user.phone || '',
+    phoneExtra: user.phone_extra || '',
+    emailExtra: user.email_extra || '',
+    assistantEmail: user.assistant_email || '',
+    assistantPhone: user.assistant_phone || '',
+    // Por defecto el correo va encendido y el SMS apagado (aun no hay proveedor).
+    notifyEmail: user.notify_email == null ? true : !!user.notify_email,
+    notifySms: !!user.notify_sms
+  };
+
   // Indice del buscador de la barra superior. El FAQ va primero a proposito:
   // es lo que mas se busca y lo que responde dudas sin abrir otra seccion.
   const searchIndex = [];
@@ -450,6 +465,7 @@ async function buildPanelData(user, opts = {}) {
     presentation,
     presentationTitle,
     faqs,
+    profile,
     searchIndex,
     tour,
     showOnboarding,
@@ -614,6 +630,8 @@ router.get('/', auth.requireAuth, async (req, res, next) => {
         ? 'Tu patrocinio en SOCCER iD CUP 2027, con cada etapa y cada activación a la vista'
         : 'Tu inversión en SOCCER iD CUP 2027, con cada etapa y cada cifra a la vista',
       active: 'dashboard',
+      flash: req.query.msg || '',
+      flashType: req.query.type === 'error' ? 'error' : 'ok',
       panel: await buildPanelData(req.panelUser)
     });
   } catch (e) { next(e); }
@@ -653,6 +671,58 @@ router.get('/noticias/:id', auth.requireAuth, async (req, res, next) => {
       article,
       panel: await buildPanelData(req.panelUser)
     });
+  } catch (e) { next(e); }
+});
+
+// ── Perfil: el usuario edita sus propios datos (drawer "Mi perfil") ──
+// Solo se tocan campos suyos; categoria, monto y modalidad siguen siendo del admin.
+
+const norm = (v) => String(v == null ? '' : v).trim();
+// Guarda el correo solo si parece un correo; si no, se descarta en vez de
+// escribir basura que luego rebota en los envios.
+const optEmail = (v) => { const e = norm(v).toLowerCase(); return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e) ? e : null; };
+// Telefono: deja digitos y el + inicial; util para SMS mas adelante.
+const optPhone = (v) => { const p = norm(v).replace(/[^\d+]/g, ''); return p.length >= 7 ? p.slice(0, 20) : null; };
+
+router.post('/perfil', auth.requireAuth, async (req, res, next) => {
+  try {
+    if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
+    const b = req.body;
+    const language = b.language === 'en' ? 'en' : 'es';
+    await knex('users').where({ id: req.panelUser.id }).update({
+      language,
+      phone: optPhone(b.phone),
+      phone_extra: optPhone(b.phone_extra),
+      email_extra: optEmail(b.email_extra),
+      assistant_email: optEmail(b.assistant_email),
+      assistant_phone: optPhone(b.assistant_phone),
+      notify_email: !!b.notify_email,
+      notify_sms: !!b.notify_sms,
+      updated_at: knex.fn.now()
+    });
+    // El idioma se integra con el del sitio, que se resuelve por cookie `lang`.
+    res.cookie('lang', language, { maxAge: 365 * 24 * 60 * 60 * 1000, path: '/', sameSite: 'lax' });
+    res.redirect('/panel?type=ok&msg=' + encodeURIComponent('Perfil actualizado'));
+  } catch (e) { next(e); }
+});
+
+router.post('/perfil/password', auth.requireAuth, async (req, res, next) => {
+  try {
+    if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
+    const b = req.body;
+    const actual = String(b.current_password || '');
+    const nueva = String(b.new_password || '');
+    const back = (msg, type) => res.redirect('/panel?type=' + type + '&msg=' + encodeURIComponent(msg) + '#perfil');
+
+    const row = await knex('users').where({ id: req.panelUser.id }).first();
+    if (!auth.verifyPassword(actual, row && row.password_hash)) return back('Tu contraseña actual no es correcta', 'error');
+    if (nueva.length < 8) return back('La nueva contraseña debe tener al menos 8 caracteres', 'error');
+    if (nueva !== String(b.new_password2 || '')) return back('Las contraseñas nuevas no coinciden', 'error');
+    if (nueva === actual) return back('La nueva contraseña debe ser distinta de la actual', 'error');
+
+    await knex('users').where({ id: req.panelUser.id })
+      .update({ password_hash: auth.hashPassword(nueva), updated_at: knex.fn.now() });
+    back('Contraseña actualizada', 'ok');
   } catch (e) { next(e); }
 });
 

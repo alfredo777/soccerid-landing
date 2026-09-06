@@ -160,27 +160,28 @@ Feature:
 
 > Nota: cifras ilustrativas sujetas a contrato; editables desde el admin.
 
-## Editar perfil de inversionista (autogestión)
-Que el inversionista pueda editar su propio perfil desde el panel (en **drawer lateral**):
-- [ ] **Cambiar idioma** (es / en) — preferencia de idioma del panel.
-- [ ] **Cambiar contraseña** (pide contraseña actual + nueva; usa bcrypt existente).
-- [ ] **Número de celular extra** (además del principal).
-- [ ] **Email extra** (además del principal).
-- [ ] **Email de asistente**.
-- [ ] **Teléfono de asistente**.
-- [ ] **Activar/desactivar notificaciones por email** y **por SMS** (preferencias de canal).
+## Editar perfil de inversionista (autogestión) — HECHO
+Drawer "Mi perfil" (se abre desde el chip de usuario, arriba a la derecha). Cubre
+idioma, contraseña, celular y correo extra, datos del asistente y preferencias de
+canal. Columnas nuevas en `users`: `language`, `phone`, `phone_extra`, `email_extra`,
+`assistant_email`, `assistant_phone`, `notify_email`, `notify_sms`.
 
-Modelo de datos (columnas nuevas en `users`):
-`language`, `phone`, `phone_extra`, `email_extra`, `assistant_email`, `assistant_phone`,
-`notify_email` (bool), `notify_sms` (bool).
+Detalles de la implementación:
+- Nombre y correo principal se muestran **deshabilitados**: siguen siendo del admin.
+  Categoría, monto y modalidad tampoco se tocan aquí.
+- Los correos y teléfonos se validan en el servidor; lo que no parece correo o
+  teléfono se descarta en vez de guardarse (evita basura que rebote en los envíos).
+- El idioma escribe la cookie `lang`, que es como el sitio resuelve el idioma.
+  **Ojo:** las vistas del panel siguen solo en español; la preferencia queda guardada
+  y aplica al sitio público. Traducir el panel es trabajo aparte.
+- Cambio de contraseña: pide la actual (bcrypt existente), mínimo 8, confirmación y
+  que sea distinta de la actual.
+- El drawer no se renderiza para admin ni en la vista previa.
 
-Notas:
-- Las **preferencias de canal** se conectan con la sección de Notificaciones (respetar
-  `notify_email`/`notify_sms` al enviar) y con SMS (Twilio).
-- El **idioma** debe integrarse con el sistema de idioma existente del sitio (es/en).
-- Emails/teléfonos extra y de asistente pueden ser **destinatarios adicionales** en
-  invitaciones/notificaciones/envíos.
-- Considerar el mismo "Editar perfil" para **patrocinadores**.
+Pendiente de esta sección:
+- [ ] Mismo "Editar perfil" para **patrocinadores** (hoy el drawer se arma para
+  cualquier no-admin, falta revisar qué campos aplican).
+- [ ] Respetar `notify_email` / `notify_sms` **al enviar** (va con Notificaciones).
 
 ## Notificaciones (mejora + mapa de dónde se necesitan)
 Ampliar el sistema de notificaciones (hoy: tabla `notifications`, audiencia

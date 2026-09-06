@@ -176,7 +176,16 @@ async function ensureSchema() {
     ['advisor', (t) => t.text('advisor')],              // JSON {name, role, phone, whatsapp}
     ['benefits', (t) => t.text('benefits')],            // JSON array de beneficios
     ['return_rate', (t) => t.float('return_rate')],     // % de rendimiento a mostrar
-    ['activations', (t) => t.string('activations')]     // texto de "Activaciones" (patrocinador)
+    ['activations', (t) => t.string('activations')],    // texto de "Activaciones" (patrocinador)
+    // Autogestion del perfil (el usuario los edita desde su panel)
+    ['language', (t) => t.string('language').defaultTo('es')],   // es | en
+    ['phone', (t) => t.string('phone')],
+    ['phone_extra', (t) => t.string('phone_extra')],
+    ['email_extra', (t) => t.string('email_extra')],
+    ['assistant_email', (t) => t.string('assistant_email')],
+    ['assistant_phone', (t) => t.string('assistant_phone')],
+    ['notify_email', (t) => t.boolean('notify_email').defaultTo(true)],
+    ['notify_sms', (t) => t.boolean('notify_sms').defaultTo(false)]
   ];
   for (const [col, builder] of userOverrideCols) {
     if (await knex.schema.hasTable('users') && !(await knex.schema.hasColumn('users', col))) {
