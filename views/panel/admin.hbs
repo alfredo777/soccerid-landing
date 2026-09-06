@@ -225,6 +225,12 @@
   <button type="button" class="ad-tab" data-tab="ediciones" data-label="Ediciones" title="Ediciones" aria-label="Ediciones">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 5.4L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.6-.6z"/></svg>
   </button>
+  <button type="button" class="ad-tab" data-tab="eventos" data-label="Eventos (multievento)" title="Eventos" aria-label="Eventos">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/></svg>
+  </button>
+  <button type="button" class="ad-tab" data-tab="faq" data-label="FAQ" title="FAQ" aria-label="FAQ">
+    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+  </button>
   <button type="button" class="ad-tab" data-tab="codigos" data-label="Códigos" title="Códigos" aria-label="Códigos">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
   </button>
@@ -514,6 +520,93 @@
       </div>
       {{else}}
       <div class="ad-empty">No hay ediciones. Crea la primera.</div>
+      {{/each}}
+    </div>
+  </div>
+</section>
+
+<!-- EVENTOS (multievento = ediciones por año) -->
+<section class="ad-sec" id="sec-eventos">
+  <style>
+    .ad-evgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px; }
+    .ad-evcard { padding:20px; }
+    .ad-evcard__top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+    .ad-evcode { font-size:12px; font-weight:900; letter-spacing:1px; padding:8px 12px; border-radius:11px; }
+    .ad-evtags { display:flex; gap:6px; }
+    .ad-evphase { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:var(--pn-ink-2); background:#F1F0F5; padding:4px 10px; border-radius:20px; }
+    .ad-evdemo { font-size:10.5px; font-weight:800; text-transform:uppercase; color:#B77A1E; background:#FFF4E5; padding:4px 10px; border-radius:20px; }
+    .ad-evtitle { font-size:19px; font-weight:900; letter-spacing:-.3px; display:block; }
+    .ad-evmatch { font-size:13px; font-weight:700; color:var(--pn-purple); margin-top:2px; }
+    .ad-evmeta { font-size:12px; color:var(--pn-muted); margin-top:4px; }
+    .ad-evbar { margin:14px 0; }
+    .ad-evbar small { font-size:11px; font-weight:700; color:var(--pn-ink-2); }
+    .ad-evtrack { height:7px; border-radius:20px; background:#F1F0F5; overflow:hidden; margin-top:6px; }
+    .ad-evtrack i { display:block; height:100%; border-radius:20px; }
+    .ad-evstats { display:flex; gap:10px; border-top:1px solid var(--pn-border); padding-top:14px; }
+    .ad-evstats > div { flex:1; }
+    .ad-evstats b { display:block; font-size:15px; font-weight:900; }
+    .ad-evstats span { font-size:10.5px; color:var(--pn-muted); font-weight:700; text-transform:uppercase; letter-spacing:.3px; }
+  </style>
+  <div class="ad-sechead">
+    <p class="ad-note" style="margin:0;">Ediciones por año del portafolio. Cada edición alimenta la parte pública y el panel del inversionista (info, paquetes, presentación, cronología).</p>
+    <button type="button" class="ad-btn" style="width:auto; padding:10px 16px; margin:0;" onclick="openPortfolio()">+ Nueva edición</button>
+  </div>
+  <div class="ad-evgrid">
+    {{#each portfolioEditions}}
+    <div class="pn-card ad-evcard">
+      <div class="ad-evcard__top">
+        <span class="ad-evcode" style="background:{{this.accent}}22; color:{{this.accent}}">{{#if this.code}}{{this.code}}{{else}}{{this.year}}{{/if}}</span>
+        <div class="ad-evtags">
+          <span class="ad-evphase">{{this.phaseLabel}}</span>
+          {{#if this.isDemo}}<span class="ad-evdemo">Demo</span>{{/if}}
+        </div>
+      </div>
+      <strong class="ad-evtitle">{{this.title}}</strong>
+      <div class="ad-evmatch">{{this.match}}</div>
+      <div class="ad-evmeta">{{#if this.venue}}{{this.venue}} · {{/if}}{{this.city}}</div>
+      <div class="ad-evmeta">{{this.dateLabel}}</div>
+      <div class="ad-evbar">
+        <small>{{this.phaseLabel}} · {{this.progress}}%</small>
+        <div class="ad-evtrack"><i style="width:{{this.progress}}%; background:{{this.accent}}"></i></div>
+      </div>
+      <div class="ad-evstats">
+        <div><b>{{this.budgetLabel}}</b><span>Presupuesto</span></div>
+        <div><b>{{this.investments}}</b><span>Inversiones</span></div>
+        <div><b>{{this.packages}}</b><span>Paquetes</span></div>
+      </div>
+      <div class="ad-actions" style="margin-top:14px;">
+        <button type="button" class="primary" onclick="openPortfolio('{{this.id}}')">Editar</button>
+        <button type="button" onclick="openPackages('{{this.id}}')">Paquetes ({{this.packages}})</button>
+        <form method="POST" action="/panel/admin/portfolio/{{this.id}}/delete" data-confirm="¿Eliminar la edición {{this.title}}?"><button type="submit" class="danger">Eliminar</button></form>
+      </div>
+    </div>
+    {{else}}
+    <div class="ad-empty">No hay ediciones. Crea la primera.</div>
+    {{/each}}
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="ad-sec" id="sec-faq">
+  <div class="ad-sechead">
+    <p class="ad-note" style="margin:0;">Preguntas frecuentes que ven inversionistas y patrocinadores en su panel. Segmentadas por audiencia.</p>
+    <button type="button" class="ad-btn" style="width:auto; padding:10px 16px; margin:0;" onclick="openFaq()">+ Nueva pregunta</button>
+  </div>
+  <div class="pn-card">
+    <div class="ad-list">
+      {{#each faqsAdmin}}
+      <div class="ad-item">
+        <div class="ad-item__b">
+          <strong>{{this.question}}</strong>
+          <small>{{this.audienceLabel}}{{#unless this.is_active}} · (inactiva){{/unless}}</small>
+        </div>
+        <div class="ad-actions">
+          <button type="button" class="primary" onclick="openFaq('{{this.id}}')">Editar</button>
+          <form method="POST" action="/panel/admin/faq/{{this.id}}/delete" data-confirm="¿Eliminar esta pregunta?"><button type="submit" class="danger">Eliminar</button></form>
+        </div>
+      </div>
+      {{else}}
+      <div class="ad-empty">No hay preguntas. Crea la primera.</div>
       {{/each}}
     </div>
   </div>
@@ -973,6 +1066,210 @@
     </div>
   </div>
 </div>
+
+<div class="ad-modal" id="modal-portfolio">
+  <div class="ad-modal__card" style="max-width:640px;">
+    <div class="ad-modal__head"><h3 id="pf-modal-title">Nueva edición</h3><button class="ad-modal__close" onclick="closeModal('modal-portfolio')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+    <div class="ad-modal__body">
+      <form method="POST" id="form-portfolio" action="/panel/admin/portfolio">
+        <div class="ad-row2">
+          <div class="ad-f"><label>Año</label><input type="number" name="year" id="pf-year" placeholder="2027"></div>
+          <div class="ad-f"><label>Código (siglas)</label><input type="text" name="code" id="pf-code" maxlength="4" placeholder="HOU"></div>
+        </div>
+        <div class="ad-f"><label>Título</label><input type="text" name="title" id="pf-title" required placeholder="Houston 2027"></div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Subtítulo</label><input type="text" name="subtitle" id="pf-subtitle" placeholder="SOCCER iD CUP"></div>
+          <div class="ad-f"><label>Equipos</label><input type="text" name="match" id="pf-match" placeholder="Tigres vs Cruz Azul"></div>
+        </div>
+        <div class="ad-f"><label>Descripción</label><textarea name="description" id="pf-description" rows="2"></textarea></div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Sede</label><input type="text" name="venue" id="pf-venue" placeholder="Shell Energy Stadium"></div>
+          <div class="ad-f"><label>Ciudad</label><input type="text" name="city" id="pf-city" placeholder="Houston"></div>
+        </div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>País</label><input type="text" name="country" id="pf-country" placeholder="Estados Unidos"></div>
+          <div class="ad-f"><label>Fecha del evento</label><input type="date" name="event_date" id="pf-event_date"></div>
+        </div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Fase</label><select name="phase" id="pf-phase"><option value="planeacion">Planeación</option><option value="negociacion">Negociación</option><option value="produccion">Producción</option><option value="evento">Evento</option><option value="cierre">Cierre</option></select></div>
+          <div class="ad-f"><label>Avance (%)</label><input type="number" name="progress_pct" id="pf-progress_pct" min="0" max="100" placeholder="46"></div>
+        </div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Etiqueta de la fecha</label><input type="text" name="date_phase" id="pf-date_phase" placeholder="Planeación / Concluido"></div>
+          <div class="ad-f"><label>Color de acento</label><input type="color" name="accent" id="pf-accent" value="#6C3CE0" style="height:42px; padding:4px;"></div>
+        </div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Presupuesto (USD)</label><input type="number" name="budget" id="pf-budget" step="1000" placeholder="1000000"></div>
+          <div class="ad-f"><label>Ingreso proyectado (USD)</label><input type="number" name="projected_income" id="pf-projected_income" step="1000" placeholder="2180000"></div>
+        </div>
+        <label class="ad-check" style="margin:6px 0 12px;"><input type="checkbox" name="is_demo" id="pf-is_demo" value="1"> Marcar como DATOS DEMO</label>
+
+        <div style="border-top:1px solid var(--pn-border); padding-top:14px; margin-top:6px;">
+          <p class="ad-note" style="margin:0 0 12px;">Presentación de la edición (la ve el inversionista)</p>
+          <div class="ad-f"><label>Presentación (ES) <em>— líneas en blanco = párrafos · "## " título · "- " viñeta</em></label><textarea name="presentation_es" id="pf-presentation_es" rows="6" placeholder="## La oportunidad&#10;Texto de la propuesta...&#10;&#10;- Punto 1&#10;- Punto 2"></textarea></div>
+          <div class="ad-f"><label>Presentación (EN)</label><textarea name="presentation_en" id="pf-presentation_en" rows="6"></textarea></div>
+        </div>
+
+        <div style="border-top:1px solid var(--pn-border); padding-top:14px; margin-top:6px;">
+          <p class="ad-note" style="margin:0 0 12px;">Parámetros del simulador (modalidad a riesgo)</p>
+          <div class="ad-row2">
+            <div class="ad-f"><label>Capacidad</label><input type="number" name="capacity" id="pf-capacity" placeholder="21800"></div>
+            <div class="ad-f"><label>Boleto promedio (USD)</label><input type="number" name="ticket_price" id="pf-ticket_price" placeholder="100"></div>
+          </div>
+          <div class="ad-row2">
+            <div class="ad-f"><label>Deducciones (%)</label><input type="number" name="deductions_pct" id="pf-deductions_pct" placeholder="15"></div>
+            <div class="ad-f"><label>Rebate por asistente (USD)</label><input type="number" name="rebate_per" id="pf-rebate_per" placeholder="5"></div>
+          </div>
+          <div class="ad-row2">
+            <div class="ad-f"><label>Tope (% sobre capital)</label><input type="number" name="cap_pct" id="pf-cap_pct" placeholder="50"></div>
+            <div class="ad-f"><label>Reparto inversionista (%)</label><input type="number" name="investor_split" id="pf-investor_split" placeholder="50"></div>
+          </div>
+        </div>
+        <button type="submit" class="ad-btn" style="margin-top:8px;">Guardar edición</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  window.__portfolioForms = {{{json portfolioForms}}};
+  function openPortfolio(id){
+    var f = document.getElementById('form-portfolio');
+    var fields = ['code','year','title','subtitle','match','description','venue','city','country','event_date','date_phase','phase','progress_pct','accent','presentation_es','presentation_en','budget','projected_income','capacity','ticket_price','deductions_pct','rebate_per','cap_pct','investor_split'];
+    var data = (window.__portfolioForms || []).filter(function(x){ return String(x.id) === String(id); })[0];
+    if (id && data){
+      document.getElementById('pf-modal-title').textContent = 'Editar edición · ' + (data.title || '');
+      f.action = '/panel/admin/portfolio/' + id + '/update';
+      fields.forEach(function(k){ var el = document.getElementById('pf-' + k); if (el) el.value = (data[k] != null ? data[k] : ''); });
+      document.getElementById('pf-is_demo').checked = !!data.is_demo;
+    } else {
+      document.getElementById('pf-modal-title').textContent = 'Nueva edición';
+      f.action = '/panel/admin/portfolio';
+      f.reset();
+      document.getElementById('pf-accent').value = '#6C3CE0';
+    }
+    openModal('modal-portfolio');
+  }
+</script>
+
+<div class="ad-modal" id="modal-packages">
+  <div class="ad-modal__card" style="max-width:560px;">
+    <div class="ad-modal__head"><h3>Paquetes · <span id="pk-ev-title"></span></h3><button class="ad-modal__close" onclick="closeModal('modal-packages')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+    <div class="ad-modal__body">
+      <div id="pk-list" class="ad-list" style="padding:0; margin-bottom:16px;"></div>
+      <form method="POST" id="form-package" action="">
+        <h3 id="pk-form-title" style="font-size:14px; font-weight:800; margin-bottom:12px;">Nuevo paquete</h3>
+        <div class="ad-f"><label>Nombre</label><input type="text" name="name" id="pk-name" required placeholder="Retorno fijo"></div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Modalidad</label><select name="modality" id="pk-modality"><option value="fijo">Retorno fijo</option><option value="riesgo">Participación a riesgo</option><option value="patrocinio">Patrocinio</option></select></div>
+          <div class="ad-f"><label>Monto / mínimo (USD)</label><input type="number" name="amount" id="pk-amount" step="1000" placeholder="30000"></div>
+        </div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Retorno / % (ref)</label><input type="number" name="return_pct" id="pk-return_pct" step="0.1" placeholder="25"></div>
+          <div class="ad-f"><label>Cupo (0 = sin límite)</label><input type="number" name="count" id="pk-count" placeholder="0"></div>
+        </div>
+        <div class="ad-f"><label>Alcance</label>
+          <select name="user_id" id="pk-user_id">
+            <option value="">General (todos los inversionistas del evento)</option>
+            {{#each investorsList}}<option value="{{this.id}}">Privado · {{this.name}} ({{this.email}})</option>{{/each}}
+          </select>
+          <div class="ad-hint">Privado = solo esa persona lo ve/recibe. La inversión individual sigue definiendo sus términos reales.</div>
+        </div>
+        <div class="ad-f"><label>Beneficios (uno por línea)</label><textarea name="benefits" id="pk-benefits" rows="4"></textarea></div>
+        <label class="ad-check" style="margin:2px 0 12px;"><input type="checkbox" name="is_active" id="pk-is_active" value="1" checked> Activo</label>
+        <div style="display:flex; gap:8px;">
+          <button type="submit" class="ad-btn" style="margin:0;">Guardar paquete</button>
+          <button type="button" class="ad-btn" style="margin:0; width:auto; padding:13px 16px; background:#F1F0F5; color:var(--pn-ink-2);" onclick="resetPackageForm()">Limpiar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  window.__portfolioPackages = {{{json portfolioPackages}}};
+  var __pkEventId = null;
+  function resetPackageForm(){
+    var f = document.getElementById('form-package');
+    f.reset(); document.getElementById('pk-is_active').checked = true;
+    document.getElementById('pk-form-title').textContent = 'Nuevo paquete';
+    if (__pkEventId) f.action = '/panel/admin/portfolio/' + __pkEventId + '/package';
+  }
+  function renderPackages(eventId){
+    var list = document.getElementById('pk-list');
+    var pkgs = (window.__portfolioPackages || {})[eventId] || [];
+    if (!pkgs.length){ list.innerHTML = '<div class="ad-empty" style="padding:16px;">Sin paquetes. Agrega el primero abajo.</div>'; return; }
+    list.innerHTML = pkgs.map(function(p){
+      return '<div class="ad-item" style="padding:12px 4px;">'
+        + '<div class="ad-item__b"><strong>' + p.name + (p.user_id?(' · 🔒 ' + p.assignee):' · General') + (p.is_active?'':' · (inactivo)') + '</strong>'
+        + '<small>' + p.modalityLabel + ' · ' + p.amountLabel + (p.return_pct?(' · ' + p.return_pct + '%'):'') + (p.count?(' · cupo ' + p.count):'') + '</small></div>'
+        + '<div class="ad-actions">'
+        + '<button type="button" class="primary" onclick="editPackage(' + p.id + ')">Editar</button>'
+        + '<form method="POST" action="/panel/admin/package/' + p.id + '/delete" data-confirm="¿Eliminar el paquete ' + p.name.replace(/"/g,'') + '?"><button type="submit" class="danger">Eliminar</button></form>'
+        + '</div></div>';
+    }).join('');
+  }
+  function openPackages(eventId){
+    __pkEventId = eventId;
+    var ed = (window.__portfolioForms || []).filter(function(x){ return String(x.id) === String(eventId); })[0];
+    document.getElementById('pk-ev-title').textContent = ed ? ed.title : '';
+    renderPackages(eventId);
+    resetPackageForm();
+    openModal('modal-packages');
+  }
+  function editPackage(id){
+    var pkgs = (window.__portfolioPackages || {})[__pkEventId] || [];
+    var p = pkgs.filter(function(x){ return String(x.id) === String(id); })[0];
+    if (!p) return;
+    document.getElementById('pk-form-title').textContent = 'Editar paquete';
+    document.getElementById('form-package').action = '/panel/admin/package/' + id + '/update';
+    document.getElementById('pk-name').value = p.name || '';
+    document.getElementById('pk-modality').value = p.modality || 'fijo';
+    document.getElementById('pk-amount').value = p.amount || '';
+    document.getElementById('pk-return_pct').value = p.return_pct || '';
+    document.getElementById('pk-count').value = p.count || '';
+    document.getElementById('pk-benefits').value = p.benefits || '';
+    document.getElementById('pk-user_id').value = p.user_id ? String(p.user_id) : '';
+    document.getElementById('pk-is_active').checked = !!p.is_active;
+  }
+</script>
+
+<div class="ad-modal" id="modal-faq">
+  <div class="ad-modal__card">
+    <div class="ad-modal__head"><h3 id="faq-modal-title">Nueva pregunta</h3><button class="ad-modal__close" onclick="closeModal('modal-faq')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+    <div class="ad-modal__body">
+      <form method="POST" id="form-faq" action="/panel/admin/faq">
+        <div class="ad-f"><label>Audiencia</label><select name="audience" id="faq-audience"><option value="all">General (todos)</option><option value="investor">Inversionistas</option><option value="sponsor">Patrocinadores</option></select></div>
+        <div class="ad-f"><label>Pregunta</label><input type="text" name="question" id="faq-question" required></div>
+        <div class="ad-f"><label>Respuesta</label><textarea name="answer" id="faq-answer" rows="5"></textarea></div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Orden</label><input type="number" name="sort" id="faq-sort" placeholder="0"></div>
+          <div class="ad-f"><label>Estado</label><label class="ad-check" style="padding-top:10px;"><input type="checkbox" name="is_active" id="faq-is_active" value="1" checked> Activa</label></div>
+        </div>
+        <button type="submit" class="ad-btn">Guardar pregunta</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  window.__faqForms = {{{json faqsAdmin}}};
+  function openFaq(id){
+    var f = document.getElementById('form-faq');
+    var d = (window.__faqForms || []).filter(function(x){ return String(x.id) === String(id); })[0];
+    if (id && d){
+      document.getElementById('faq-modal-title').textContent = 'Editar pregunta';
+      f.action = '/panel/admin/faq/' + id + '/update';
+      document.getElementById('faq-audience').value = d.audience;
+      document.getElementById('faq-question').value = d.question || '';
+      document.getElementById('faq-answer').value = d.answer || '';
+      document.getElementById('faq-sort').value = d.sort || '';
+      document.getElementById('faq-is_active').checked = !!d.is_active;
+    } else {
+      document.getElementById('faq-modal-title').textContent = 'Nueva pregunta';
+      f.action = '/panel/admin/faq';
+      f.reset(); document.getElementById('faq-is_active').checked = true;
+    }
+    openModal('modal-faq');
+  }
+</script>
 
 <div class="ad-modal" id="modal-lead">
   <div class="ad-modal__card">

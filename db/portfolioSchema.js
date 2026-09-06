@@ -43,6 +43,40 @@ async function ensurePortfolioSchema() {
     });
   }
 
+  // Edición por año + presentación (la presentación pertenece a la edición)
+  for (const [col, builder] of [
+    ['year', (t) => t.integer('year')],
+    ['match', (t) => t.string('match')],                 // "Tigres vs Cruz Azul"
+    ['presentation_es', (t) => t.text('presentation_es')],
+    ['presentation_en', (t) => t.text('presentation_en')]
+  ]) {
+    if (await knex.schema.hasTable('portfolio_events') && !(await knex.schema.hasColumn('portfolio_events', col))) {
+      await knex.schema.alterTable('portfolio_events', builder);
+    }
+  }
+
+  // ── Paquetes de inversión por edición ──
+  if (!(await knex.schema.hasTable('event_packages'))) {
+    await knex.schema.createTable('event_packages', (t) => {
+      t.increments('id').primary();
+      t.integer('event_id').notNullable();
+      t.string('name').notNullable();
+      t.string('modality').defaultTo('fijo');   // fijo | riesgo | patrocinio
+      t.bigInteger('amount').defaultTo(0);       // monto / mínimo
+      t.float('return_pct').defaultTo(0);        // % (fijo) o tope/ref (riesgo)
+      t.integer('count').defaultTo(0);           // cupo (0 = sin límite)
+      t.text('benefits');                        // JSON array o texto por línea
+      t.integer('user_id');                      // null = general; con valor = paquete privado para esa persona
+      t.boolean('is_active').defaultTo(true);
+      t.integer('sort').defaultTo(0);
+      t.timestamps(true, true);
+    });
+  }
+  // Paquete privado (para una sola persona) en instalaciones existentes
+  if (await knex.schema.hasTable('event_packages') && !(await knex.schema.hasColumn('event_packages', 'user_id'))) {
+    await knex.schema.alterTable('event_packages', (t) => t.integer('user_id'));
+  }
+
   // ── Inversiones (inversionista × evento) ──
   if (!(await knex.schema.hasTable('investments'))) {
     await knex.schema.createTable('investments', (t) => {
@@ -118,6 +152,19 @@ async function ensurePortfolioSchema() {
       t.string('status').defaultTo('activo');    // activo | concluido
       t.string('comm_date');
       t.boolean('is_demo').defaultTo(false);
+      t.integer('sort').defaultTo(0);
+      t.timestamps(true, true);
+    });
+  }
+
+  // ── FAQ editable (por audiencia) ──
+  if (!(await knex.schema.hasTable('faqs'))) {
+    await knex.schema.createTable('faqs', (t) => {
+      t.increments('id').primary();
+      t.string('audience').defaultTo('all');   // all | investor | sponsor
+      t.string('question').notNullable();
+      t.text('answer');
+      t.boolean('is_active').defaultTo(true);
       t.integer('sort').defaultTo(0);
       t.timestamps(true, true);
     });

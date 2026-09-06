@@ -443,6 +443,12 @@
               <span class="pn-label">Video tour</span>
             </a>
             {{/if}}
+            {{#if panel.presentation}}
+            <a href="/panel/presentacion" class="pn-link {{#eq active 'presentacion'}}is-active{{/eq}}" title="Presentación del evento">
+              <svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20v14H2z"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+              <span class="pn-label">Presentación</span>
+            </a>
+            {{/if}}
           </div>
         </div>
 
@@ -461,6 +467,12 @@
               <span class="pn-label">Notificaciones</span>
               {{#if panel.unread}}<span class="pn-link__badge" style="background:var(--pn-purple);color:#fff;">{{panel.unread}}</span>{{/if}}
             </a>
+            {{#if panel.faqs.length}}
+            <a href="/panel/faq" class="pn-link {{#eq active 'faq'}}is-active{{/eq}}" title="Preguntas frecuentes">
+              <svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <span class="pn-label">Preguntas frecuentes</span>
+            </a>
+            {{/if}}
           </div>
         </div>
 

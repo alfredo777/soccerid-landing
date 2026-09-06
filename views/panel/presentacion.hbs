@@ -1,0 +1,32 @@
+<style>
+  .pr-wrap { max-width: 840px; }
+  .pr-head { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .pr-head__badge { font-size:11px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--pn-purple); background:var(--pn-purple-soft); padding:6px 12px; border-radius:20px; }
+  .pr-card { padding: 32px 36px; }
+  .pr-card h3 { font-size:20px; font-weight:900; margin: 24px 0 10px; letter-spacing:-.3px; color:var(--pn-ink); }
+  .pr-card h3:first-child { margin-top:0; }
+  .pr-card p { font-size:15px; line-height:1.65; color:var(--pn-ink-2); margin-bottom:14px; }
+  .pr-card ul { margin: 0 0 16px; padding-left: 4px; list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .pr-card li { font-size:15px; line-height:1.5; color:var(--pn-ink); padding-left:26px; position:relative; }
+  .pr-card li::before { content:'✓'; position:absolute; left:0; color:var(--pn-purple); font-weight:900; }
+  .pr-empty { padding:60px 20px; text-align:center; color:var(--pn-muted); }
+  .pr-empty svg { width:44px; height:44px; stroke:var(--pn-muted); margin-bottom:14px; }
+  @media (max-width: 560px) { .pr-card { padding: 22px 20px; } }
+</style>
+<div class="pr-wrap">
+  {{#if panel.presentationTitle}}
+  <div class="pr-head">
+    <span class="pr-head__badge">{{panel.presentationTitle}}</span>
+  </div>
+  {{/if}}
+  {{#if panel.presentation}}
+  <div class="pn-card pr-card">
+    {{{panel.presentation}}}
+  </div>
+  {{else}}
+  <div class="pn-card pr-empty">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/></svg>
+    <p>Aún no hay una presentación para esta edición.</p>
+  </div>
+  {{/if}}
+</div>

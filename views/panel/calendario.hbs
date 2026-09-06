@@ -6,9 +6,9 @@
   .cl-cal__month { font-size:22px; font-weight:900; letter-spacing:-.4px; }
   .cl-cal__month span { color: var(--pn-muted); font-weight:700; }
   .cl-nav { margin-left:auto; display:flex; gap:8px; }
-  .cl-nav button { width:38px; height:38px; border-radius:11px; border:1px solid var(--pn-border); background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; }
-  .cl-nav button:hover { background: var(--pn-purple-soft); }
-  .cl-nav button svg { width:16px; height:16px; stroke:var(--pn-ink); }
+  .cl-nav a { width:38px; height:38px; border-radius:11px; border:1px solid var(--pn-border); background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .cl-nav a:hover { background: var(--pn-purple-soft); }
+  .cl-nav a svg { width:16px; height:16px; stroke:var(--pn-ink); }
 
   .cl-week { display:grid; grid-template-columns: repeat(7, 1fr); gap:8px; margin-bottom:10px; }
   .cl-week span { text-align:center; font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.5px; color:var(--pn-muted); }
@@ -66,8 +66,8 @@
     <div class="cl-cal__top">
       <div class="cl-cal__month">{{panel.calendar.monthLabel}} <span>{{panel.calendar.year}}</span></div>
       <div class="cl-nav">
-        <button aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-        <button aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        <a aria-label="Mes anterior" href="/panel/calendario?y={{panel.calendar.prev.y}}&m={{panel.calendar.prev.m}}"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></a>
+        <a aria-label="Mes siguiente" href="/panel/calendario?y={{panel.calendar.next.y}}&m={{panel.calendar.next.m}}"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></a>
       </div>
     </div>
 

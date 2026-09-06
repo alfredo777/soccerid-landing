@@ -50,6 +50,21 @@ function shortDate(str) {
   return `${d.getDate()} ${MONTHS_ES_SHORT[d.getMonth()]} ${d.getFullYear()}`;
 }
 
+// Renderiza el texto de la presentación a HTML seguro (escapa; soporta párrafos,
+// "## " títulos y "- " viñetas). El contenido se escapa antes de armar el HTML.
+function renderPresentation(text) {
+  if (!text) return '';
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return String(text).split(/\n{2,}/).map((block) => {
+    const lines = block.split('\n');
+    if (lines.length && lines.every(l => /^\s*-\s+/.test(l))) {
+      return '<ul>' + lines.map(l => '<li>' + esc(l.replace(/^\s*-\s+/, '')) + '</li>').join('') + '</ul>';
+    }
+    if (/^\s*##\s+/.test(block)) return '<h3>' + esc(block.replace(/^\s*##\s+/, '').trim()) + '</h3>';
+    return '<p>' + esc(block).replace(/\n/g, '<br>') + '</p>';
+  }).join('');
+}
+
 // ── Ediciones: parseo de textareas "a | b | c" (una por línea) ↔ arreglo de objetos ──
 const ED_KEYS = {
   stats: ['value', 'label', 'sub'],
@@ -121,7 +136,7 @@ async function notificationsForUser(user) {
 }
 
 // ── Ensambla el objeto `panel` para un usuario (inversionista/patrocinador) ──
-async function buildPanelData(user) {
+async function buildPanelData(user, opts = {}) {
   const config = loadConfig();
   const cfg = await getDashboardConfig();
   const tiers = await getTiers();
@@ -224,8 +239,10 @@ async function buildPanelData(user) {
     };
   });
 
-  // Calendario (mes en foco)
-  const fmonth = config.focus.month, fyear = config.focus.year;
+  // Calendario: mes solicitado; por defecto el MES ACTUAL
+  const _now = new Date();
+  const fmonth = (opts.calMonth >= 1 && opts.calMonth <= 12) ? opts.calMonth : (_now.getMonth() + 1);
+  const fyear = (opts.calYear >= 2000 && opts.calYear <= 2100) ? opts.calYear : _now.getFullYear();
   const evRows = await knex('events').where({ month: fmonth, year: fyear }).orderBy('day');
   const events = evRows.map(e => ({ day: e.day, title: e.title, type: e.type, color: e.color, match: !!e.is_match }));
   const firstWeekday = new Date(fyear, fmonth - 1, 1).getDay();
@@ -335,6 +352,43 @@ async function buildPanelData(user) {
     progress: invEvent.progress_pct
   } : null;
 
+  // Paquetes disponibles para el inversionista: generales del evento + privados suyos
+  let packages = [];
+  if (invEvent) {
+    const MOD_LBL = { fijo: 'Retorno fijo', riesgo: 'Participación a riesgo', patrocinio: 'Patrocinio' };
+    const pkRows = await knex('event_packages').where({ event_id: invEvent.id, is_active: true })
+      .andWhere(function () { this.whereNull('user_id').orWhere('user_id', user.id); })
+      .orderBy([{ column: 'sort' }, { column: 'id' }]);
+    packages = pkRows.map(p => ({
+      name: p.name,
+      modality: p.modality,
+      modalityLabel: MOD_LBL[p.modality] || p.modality,
+      amountLabel: formatUSD(p.amount || 0),
+      returnPct: p.return_pct || 0,
+      benefits: (p.benefits || '').split('\n').map(s => s.trim()).filter(Boolean),
+      isPrivate: !!p.user_id,
+      isMine: p.modality === ret.type
+    }));
+  }
+
+  // Data room de la edición: documentos visibles para el inversionista (all + su modalidad),
+  // agrupados por carpeta, con estatus.
+  let dataRoom = [], dataRoomCount = 0;
+  if (invEvent) {
+    const DOC_ST = { revision: 'En revisión', aprobado: 'Aprobado', firmado: 'Firmado' };
+    const drRows = await knex('event_documents').where({ event_id: invEvent.id })
+      .andWhere(function () { this.where('visibility', 'all').orWhere('visibility', ret.type); })
+      .orderBy([{ column: 'sort' }, { column: 'id' }]);
+    dataRoomCount = drRows.length;
+    const byFolder = {};
+    drRows.forEach(d => {
+      (byFolder[d.folder] = byFolder[d.folder] || []).push({
+        name: d.name, url: d.url || '', status: d.status, statusLabel: DOC_ST[d.status] || d.status
+      });
+    });
+    dataRoom = Object.keys(byFolder).map(f => ({ folder: f, docs: byFolder[f] }));
+  }
+
   // Video tour de bienvenida (por modalidad) + onboarding la primera vez
   const isInvestor = user.role === 'investor';
   const tour = isInvestor ? {
@@ -347,9 +401,28 @@ async function buildPanelData(user) {
   // menú "Video tour" (lightbox/drawer). Se conserva el código por si se reactiva.
   const showOnboarding = false;
 
+  // Presentación de la edición (la que ve el inversionista)
+  const presentation = invEvent ? renderPresentation(invEvent.presentation_es) : '';
+  const presentationTitle = invEvent ? invEvent.title : '';
+
+  // FAQ visible para este usuario (general + su rol)
+  let faqs = [];
+  try {
+    const faqRows = await knex('faqs').where({ is_active: true })
+      .andWhere(function () { this.where('audience', 'all').orWhere('audience', user.role); })
+      .orderBy([{ column: 'sort' }, { column: 'id' }]);
+    faqs = faqRows.map(f => ({ question: f.question, answer: f.answer || '' }));
+  } catch (_) {}
+
   return {
     simulator,
     eventPerf,
+    packages,
+    dataRoom,
+    dataRoomCount,
+    presentation,
+    presentationTitle,
+    faqs,
     tour,
     showOnboarding,
     org: config.org,
@@ -385,6 +458,8 @@ async function buildPanelData(user) {
     calendar: {
       monthLabel: MONTHS_ES_CAP[fmonth - 1],
       year: String(fyear),
+      prev: { y: fmonth === 1 ? fyear - 1 : fyear, m: fmonth === 1 ? 12 : fmonth - 1 },
+      next: { y: fmonth === 12 ? fyear + 1 : fyear, m: fmonth === 12 ? 1 : fmonth + 1 },
       agendaDate: config.matchAgendaDate,
       agenda: config.matchAgenda
     }
@@ -560,7 +635,7 @@ router.get('/calendario', auth.requireAuth, async (req, res, next) => {
       pageHeading: 'Calendario y cronograma',
       pageSub: 'Fechas clave rumbo al 27 de marzo de 2027',
       active: 'calendario',
-      panel: await buildPanelData(req.panelUser)
+      panel: await buildPanelData(req.panelUser, { calMonth: parseInt(req.query.m, 10) || 0, calYear: parseInt(req.query.y, 10) || 0 })
     });
   } catch (e) { next(e); }
 });
@@ -601,6 +676,34 @@ router.get('/documentos', auth.requireAuth, async (req, res, next) => {
       pageHeading: 'Documentos y evidencias',
       pageSub: 'Contratos, documentación legal y evidencias del proyecto compartidos contigo',
       active: 'documentos',
+      panel: await buildPanelData(req.panelUser)
+    });
+  } catch (e) { next(e); }
+});
+
+router.get('/presentacion', auth.requireAuth, async (req, res, next) => {
+  try {
+    if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
+    res.render('panel/presentacion', {
+      layout: 'panel',
+      title: 'Presentación · SOCCER iD Investor Hub',
+      pageHeading: 'Presentación del evento',
+      pageSub: 'La propuesta de esta edición',
+      active: 'presentacion',
+      panel: await buildPanelData(req.panelUser)
+    });
+  } catch (e) { next(e); }
+});
+
+router.get('/faq', auth.requireAuth, async (req, res, next) => {
+  try {
+    if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
+    res.render('panel/faq', {
+      layout: 'panel',
+      title: 'Preguntas frecuentes · SOCCER iD Investor Hub',
+      pageHeading: 'Preguntas frecuentes',
+      pageSub: 'Respuestas a las dudas más comunes',
+      active: 'faq',
       panel: await buildPanelData(req.panelUser)
     });
   } catch (e) { next(e); }
@@ -734,6 +837,54 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       when: fmtWhen(a.created_at)
     }));
 
+    // Ediciones del portafolio (multievento)
+    const PHASE_LBL = { planeacion: 'Planeación', negociacion: 'Negociación', produccion: 'Producción', evento: 'Evento', cierre: 'Cierre' };
+    const peRows = await knex('portfolio_events').orderBy([{ column: 'sort' }, { column: 'year' }]);
+    const pkCounts = await knex('event_packages').select('event_id').count({ n: '*' }).groupBy('event_id');
+    const invAgg = await knex('investments').select('event_id').count({ n: '*' }).sum({ cap: 'capital' }).groupBy('event_id');
+    const pkMap = {}; pkCounts.forEach(r => { pkMap[r.event_id] = Number(r.n); });
+    const invMap = {}; invAgg.forEach(r => { invMap[r.event_id] = { n: Number(r.n), cap: Number(r.cap) || 0 }; });
+    const portfolioEditions = peRows.map(e => ({
+      id: e.id, year: e.year, title: e.title, match: e.match || '', subtitle: e.subtitle || '',
+      city: e.city || '', venue: e.venue || '', dateLabel: e.event_date || '',
+      phase: e.phase, phaseLabel: PHASE_LBL[e.phase] || e.phase, progress: e.progress_pct || 0,
+      budgetLabel: formatUSD(e.budget || 0), isDemo: !!e.is_demo, accent: e.accent || '#6C3CE0', code: e.code || '',
+      packages: pkMap[e.id] || 0, investments: (invMap[e.id] || {}).n || 0, capitalLabel: formatUSD((invMap[e.id] || {}).cap || 0)
+    }));
+    // Datos completos para prellenar el formulario (drawer) de edición
+    const portfolioForms = peRows.map(e => ({
+      id: e.id, code: e.code || '', year: e.year || '', title: e.title || '', subtitle: e.subtitle || '',
+      match: e.match || '', description: e.description || '', venue: e.venue || '', city: e.city || '', country: e.country || '',
+      event_date: e.event_date || '', date_phase: e.date_phase || '', budget: e.budget || 0, projected_income: e.projected_income || 0,
+      phase: e.phase || 'planeacion', progress_pct: e.progress_pct || 0, is_demo: !!e.is_demo, accent: e.accent || '#6C3CE0',
+      presentation_es: e.presentation_es || '', presentation_en: e.presentation_en || '',
+      capacity: e.capacity || 0, ticket_price: e.ticket_price || 0, deductions_pct: e.deductions_pct || 0,
+      rebate_per: e.rebate_per || 0, cap_pct: e.cap_pct || 0, investor_split: e.investor_split || 0
+    }));
+
+    // Paquetes por edición (agrupados)
+    const MOD_LBL = { fijo: 'Retorno fijo', riesgo: 'Participación a riesgo', patrocinio: 'Patrocinio' };
+    const pkgRows = await knex('event_packages').orderBy([{ column: 'event_id' }, { column: 'sort' }, { column: 'id' }]);
+    const nameById = {}; users.forEach(u => { nameById[u.id] = u.name; });
+    const portfolioPackages = {};
+    pkgRows.forEach(p => {
+      (portfolioPackages[p.event_id] = portfolioPackages[p.event_id] || []).push({
+        id: p.id, event_id: p.event_id, name: p.name, modality: p.modality, modalityLabel: MOD_LBL[p.modality] || p.modality,
+        amount: p.amount || 0, amountLabel: formatUSD(p.amount || 0), return_pct: p.return_pct || 0, count: p.count || 0,
+        benefits: p.benefits || '', is_active: !!p.is_active,
+        user_id: p.user_id || '', assignee: p.user_id ? (nameById[p.user_id] || 'Inversionista') : ''
+      });
+    });
+    // Inversionistas para asignar paquetes privados
+    const investorsList = users.filter(u => u.role === 'investor').map(u => ({ id: u.id, name: u.name, email: u.email }));
+
+    // FAQ (admin)
+    const AUD_LBL = { all: 'General', investor: 'Inversionistas', sponsor: 'Patrocinadores' };
+    const faqsAdmin = (await knex('faqs').orderBy([{ column: 'sort' }, { column: 'id' }])).map(f => ({
+      id: f.id, audience: f.audience, audienceLabel: AUD_LBL[f.audience] || f.audience,
+      question: f.question, answer: f.answer || '', is_active: !!f.is_active, sort: f.sort
+    }));
+
     const notifyRow = await knex('app_settings').where({ key: 'notify_emails' }).first();
     const notifyEmails = notifyRow ? (notifyRow.value || '') : '';
 
@@ -776,7 +927,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       accessLog: accessView,
       notifyEmails,
       dashboardConfig: await getDashboardConfig(),
-      capitalItems, risksAdmin,
+      capitalItems, risksAdmin, portfolioEditions, portfolioForms, portfolioPackages, investorsList, faqsAdmin,
       capitalTotalBudget: formatUSD(capitalItems.reduce((s, c) => s + Number(c.budget), 0)),
       capitalTotalSpent: formatUSD(capitalItems.reduce((s, c) => s + Number(c.spent), 0))
     });
@@ -1224,6 +1375,133 @@ router.post('/admin/edition/:id/delete', auth.requireAdmin, async (req, res, nex
   try {
     await knex('editions').where({ id: req.params.id }).del();
     res.redirect('/panel/admin?type=ok&msg=Edici%C3%B3n+eliminada#ediciones');
+  } catch (e) { next(e); }
+});
+
+// ════════════════════════════════════════════════
+// EVENTOS DEL PORTAFOLIO (multievento = ediciones por año)
+// ════════════════════════════════════════════════
+const PORTFOLIO_PHASES = ['planeacion', 'negociacion', 'produccion', 'evento', 'cierre'];
+function portfolioBody(b) {
+  const num = (v) => parseInt(String(v || '').replace(/[^0-9]/g, ''), 10) || 0;
+  return {
+    code: (b.code || '').trim() || null,
+    year: parseInt(b.year, 10) || null,
+    title: (b.title || '').trim(),
+    subtitle: (b.subtitle || '').trim() || null,
+    match: (b.match || '').trim() || null,
+    description: (b.description || '').trim() || null,
+    venue: (b.venue || '').trim() || null,
+    city: (b.city || '').trim() || null,
+    country: (b.country || '').trim() || null,
+    event_date: (b.event_date || '').trim() || null,
+    date_phase: (b.date_phase || '').trim() || null,
+    budget: num(b.budget),
+    projected_income: num(b.projected_income),
+    phase: PORTFOLIO_PHASES.includes(b.phase) ? b.phase : 'planeacion',
+    progress_pct: Math.max(0, Math.min(100, num(b.progress_pct))),
+    is_demo: b.is_demo ? true : false,
+    accent: (b.accent || '#6C3CE0').trim(),
+    presentation_es: (b.presentation_es || '').trim() || null,
+    presentation_en: (b.presentation_en || '').trim() || null,
+    capacity: num(b.capacity),
+    ticket_price: num(b.ticket_price),
+    deductions_pct: num(b.deductions_pct),
+    rebate_per: num(b.rebate_per),
+    cap_pct: num(b.cap_pct),
+    investor_split: num(b.investor_split)
+  };
+}
+router.post('/admin/portfolio', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const data = portfolioBody(req.body);
+    if (!data.title) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El título es obligatorio') + '#eventos');
+    const max = await knex('portfolio_events').max({ m: 'sort' }).first();
+    data.sort = (Number(max && max.m) || 0) + 1;
+    await knex('portfolio_events').insert(data);
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Edición creada') + '#eventos');
+  } catch (e) { next(e); }
+});
+router.post('/admin/portfolio/:id/update', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const data = portfolioBody(req.body);
+    await knex('portfolio_events').where({ id: req.params.id }).update(Object.assign(data, { updated_at: knex.fn.now() }));
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Edición actualizada') + '#eventos');
+  } catch (e) { next(e); }
+});
+router.post('/admin/portfolio/:id/delete', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    await knex('event_packages').where({ event_id: id }).del();
+    await knex('portfolio_events').where({ id }).del();
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Edición eliminada') + '#eventos');
+  } catch (e) { next(e); }
+});
+
+// ── FAQ (admin) ──
+function faqBody(b) {
+  return {
+    audience: ['all', 'investor', 'sponsor'].includes(b.audience) ? b.audience : 'all',
+    question: (b.question || '').trim(),
+    answer: (b.answer || '').trim() || null,
+    is_active: b.is_active ? true : false,
+    sort: parseInt(b.sort || '0', 10) || 0
+  };
+}
+router.post('/admin/faq', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const data = faqBody(req.body);
+    if (!data.question) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('La pregunta es obligatoria') + '#faq');
+    if (!data.sort) { const max = await knex('faqs').max({ m: 'sort' }).first(); data.sort = (Number(max && max.m) || 0) + 1; }
+    await knex('faqs').insert(data);
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Pregunta agregada') + '#faq');
+  } catch (e) { next(e); }
+});
+router.post('/admin/faq/:id/update', auth.requireAdmin, async (req, res, next) => {
+  try {
+    await knex('faqs').where({ id: req.params.id }).update(Object.assign(faqBody(req.body), { updated_at: knex.fn.now() }));
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Pregunta actualizada') + '#faq');
+  } catch (e) { next(e); }
+});
+router.post('/admin/faq/:id/delete', auth.requireAdmin, async (req, res, next) => {
+  try { await knex('faqs').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Pregunta eliminada') + '#faq'); } catch (e) { next(e); }
+});
+
+// ── Paquetes de inversión por edición ──
+function packageBody(b) {
+  const num = (v) => parseInt(String(v || '').replace(/[^0-9]/g, ''), 10) || 0;
+  return {
+    name: (b.name || '').trim(),
+    modality: ['fijo', 'riesgo', 'patrocinio'].includes(b.modality) ? b.modality : 'fijo',
+    amount: num(b.amount),
+    return_pct: parseFloat(String(b.return_pct || '').replace(/[^0-9.]/g, '')) || 0,
+    count: num(b.count),
+    benefits: (b.benefits || '').trim() || null,
+    user_id: (b.user_id && /^\d+$/.test(String(b.user_id))) ? parseInt(b.user_id, 10) : null, // null = general
+    is_active: b.is_active ? true : false
+  };
+}
+router.post('/admin/portfolio/:eventId/package', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const data = packageBody(req.body);
+    if (!data.name) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El nombre del paquete es obligatorio') + '#eventos');
+    data.event_id = parseInt(req.params.eventId, 10);
+    const max = await knex('event_packages').where({ event_id: data.event_id }).max({ m: 'sort' }).first();
+    data.sort = (Number(max && max.m) || 0) + 1;
+    await knex('event_packages').insert(data);
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Paquete agregado') + '#eventos');
+  } catch (e) { next(e); }
+});
+router.post('/admin/package/:id/update', auth.requireAdmin, async (req, res, next) => {
+  try {
+    await knex('event_packages').where({ id: req.params.id }).update(Object.assign(packageBody(req.body), { updated_at: knex.fn.now() }));
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Paquete actualizado') + '#eventos');
+  } catch (e) { next(e); }
+});
+router.post('/admin/package/:id/delete', auth.requireAdmin, async (req, res, next) => {
+  try {
+    await knex('event_packages').where({ id: req.params.id }).del();
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Paquete eliminado') + '#eventos');
   } catch (e) { next(e); }
 });
 

@@ -132,6 +132,21 @@
   .db-doc__dl { margin-left:auto; }
   .db-doc__dl svg { width:17px; height:17px; stroke:var(--pn-muted); }
 
+  /* Paquetes de inversión */
+  .db-pkgs { display:flex; flex-direction:column; gap:14px; padding: 6px 22px 22px; }
+  .db-pkg { border:1px solid var(--pn-border); border-radius:16px; padding:16px 18px; }
+  .db-pkg.is-mine { border-color:#DCCFF7; background:var(--pn-purple-soft); }
+  .db-pkg__top { display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .db-pkg__top strong { font-size:16px; font-weight:800; }
+  .db-pkg__tags { display:flex; gap:6px; }
+  .db-pkg__tag { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.3px; padding:4px 9px; border-radius:20px; }
+  .db-pkg__tag.mine { background:var(--pn-purple); color:#fff; }
+  .db-pkg__tag.priv { background:#14141B; color:#fff; }
+  .db-pkg__meta { font-size:13px; font-weight:700; color:var(--pn-ink-2); margin-top:4px; }
+  .db-pkg__benefits { list-style:none; margin-top:10px; display:flex; flex-direction:column; gap:6px; }
+  .db-pkg__benefits li { font-size:13px; color:var(--pn-ink); padding-left:18px; position:relative; line-height:1.4; }
+  .db-pkg__benefits li::before { content:'✓'; position:absolute; left:0; color:var(--pn-purple); font-weight:900; }
+
   @media (max-width: 1100px) { .db-grid { grid-template-columns: 1fr; } }
   @media (max-width: 520px) { .db-stats { grid-template-columns: 1fr; } .db-cat__meta { gap:20px; flex-wrap:wrap; } .db-cat__amount { font-size:38px; } }
 
@@ -402,6 +417,32 @@
         </ul>
       </div>
     </div>
+
+    <!-- Paquetes de inversión (del evento + privados del inversionista) -->
+    {{#if panel.packages.length}}
+    <div class="pn-card" id="paquetes">
+      <div class="pn-card__head"><h3>Paquetes de inversión</h3><span class="pn-card__link" style="color:var(--pn-muted)">Disponibles para este evento</span></div>
+      <div class="db-pkgs">
+        {{#each panel.packages}}
+        <div class="db-pkg {{#if this.isMine}}is-mine{{/if}}">
+          <div class="db-pkg__top">
+            <strong>{{this.name}}</strong>
+            <div class="db-pkg__tags">
+              {{#if this.isMine}}<span class="db-pkg__tag mine">Tu modalidad</span>{{/if}}
+              {{#if this.isPrivate}}<span class="db-pkg__tag priv">Exclusivo para ti</span>{{/if}}
+            </div>
+          </div>
+          <div class="db-pkg__meta">{{this.modalityLabel}} · desde {{this.amountLabel}}{{#if this.returnPct}} · hasta {{this.returnPct}}%{{/if}}</div>
+          {{#if this.benefits.length}}
+          <ul class="db-pkg__benefits">
+            {{#each this.benefits}}<li>{{this}}</li>{{/each}}
+          </ul>
+          {{/if}}
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
 
     <!-- Uso del capital -->
     {{#if panel.capital.items.length}}

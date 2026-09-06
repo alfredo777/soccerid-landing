@@ -1,0 +1,31 @@
+<style>
+  .fq-wrap { max-width: 820px; }
+  .fq { border:1px solid var(--pn-border); border-radius:14px; background:#fff; box-shadow:var(--pn-shadow); margin-bottom:12px; overflow:hidden; }
+  .fq__q { display:flex; align-items:center; gap:14px; width:100%; text-align:left; background:none; border:none; cursor:pointer; font-family:inherit; padding:18px 20px; font-size:15px; font-weight:700; color:var(--pn-ink); }
+  .fq__q .chev { margin-left:auto; transition:transform .2s; flex-shrink:0; }
+  .fq.is-open .fq__q .chev { transform:rotate(180deg); }
+  .fq__q svg { width:16px; height:16px; stroke:var(--pn-ink-2); }
+  .fq__a { display:none; padding:0 20px 20px; font-size:14px; line-height:1.6; color:var(--pn-ink-2); }
+  .fq.is-open .fq__a { display:block; }
+  .fq-empty { padding:60px 20px; text-align:center; color:var(--pn-muted); }
+</style>
+<div class="fq-wrap">
+  {{#if panel.faqs.length}}
+  {{#each panel.faqs}}
+  <div class="fq">
+    <button type="button" class="fq__q" data-faq>
+      {{this.question}}
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="fq__a">{{this.answer}}</div>
+  </div>
+  {{/each}}
+  {{else}}
+  <div class="pn-card fq-empty">Aún no hay preguntas frecuentes.</div>
+  {{/if}}
+</div>
+<script>
+  document.querySelectorAll('[data-faq]').forEach(function(b){
+    b.addEventListener('click', function(){ b.closest('.fq').classList.toggle('is-open'); });
+  });
+</script>
