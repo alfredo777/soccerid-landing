@@ -387,8 +387,10 @@ Pendiente de esta sección:
   Cuando toque: sincronizar actividades (guardando `google_event_id` para no duplicar),
   decidir entre calendario de la organización (service account) y calendario del usuario
   (OAuth), botón "Agregar a mi Google Calendar" y feed iCal como alternativa sin OAuth.
-- [ ] Que la etapa y la actividad se vean como **una sola línea de tiempo** (hoy conviven,
-  pero cada una con su vista).
+- [x] ~~Una sola línea de tiempo~~ **HECHO**: bloque "Todo en orden" en el calendario, con
+  etapas y actividades juntas de la más antigua a la más próxima, marcando lo ya pasado y
+  resaltando lo de hoy. Convivían, pero cada una en su vista, y para saber qué pasa antes
+  de qué había que ir mirando las dos. Solo entran las que tienen fecha real.
 - [x] ~~Tipos de actividad configurables~~ **HECHO**: se agregan desde Configuración con su
   color y aparecen en los dos formularios del calendario. Los de fábrica **no se pueden
   borrar** (los usan las actividades ya cargadas) y **un tipo propio en uso tampoco**: el

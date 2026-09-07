@@ -59,6 +59,19 @@
     .cl-day.has-ev::after { content:''; width:6px; height:6px; border-radius:50%; background:var(--pn-purple); display:block; margin-top:auto; }
     .cl-day.is-match.has-ev::after { background:#fff; }
   }
+
+  /* Línea de tiempo única (etapas + actividades) */
+  .cl-linea__nota { font-size:12px; color:var(--pn-muted); font-weight:600; margin:-6px 0 12px; line-height:1.5; }
+  .cl-linea { position:relative; padding-left:6px; }
+  .cl-linea__it { display:flex; gap:11px; padding:9px 0; border-top:1px solid var(--pn-border); }
+  .cl-linea__it:first-child { border-top:none; }
+  .cl-linea__it.is-pasado { opacity:.55; }
+  .cl-linea__it.is-hoy { background:var(--pn-purple-soft); border-radius:10px; padding-left:8px; padding-right:8px; opacity:1; }
+  .cl-linea__dot { width:9px; height:9px; border-radius:50%; margin-top:6px; flex-shrink:0; }
+  .cl-linea__b { min-width:0; }
+  .cl-linea__b strong { display:block; font-size:13.5px; font-weight:800; }
+  .cl-linea__b small { font-size:11.5px; color:var(--pn-muted); font-weight:600; display:block; }
+  .cl-linea__f { color:var(--pn-purple); font-weight:800; text-transform:uppercase; letter-spacing:.3px; }
 </style>
 
 <div class="cl-grid">
@@ -130,6 +143,25 @@
         {{/each}}
       </div>
     </div>
+
+    {{#if panel.timeline.length}}
+    <div class="pn-card" id="linea">
+      <div class="pn-card__head"><h3>Todo en orden</h3></div>
+      <p class="cl-linea__nota">Etapas y actividades juntas, de la m&aacute;s antigua a la m&aacute;s pr&oacute;xima.</p>
+      <div class="cl-linea">
+        {{#each panel.timeline}}
+        <div class="cl-linea__it {{#if this.pasado}}is-pasado{{/if}}{{#if this.esHoy}} is-hoy{{/if}}">
+          <span class="cl-linea__dot" style="background:{{this.color}}"></span>
+          <div class="cl-linea__b">
+            <small class="cl-linea__f">{{this.fechaLabel}}{{#if this.esHoy}} · hoy{{/if}}</small>
+            <strong>{{this.title}}</strong>
+            <small>{{#eq this.kind 'etapa'}}Etapa{{else}}Actividad{{/eq}}{{#if this.meta}} · {{this.meta}}{{/if}}</small>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
 
     <div class="cl-count">
       <div class="cl-count__num" id="clCountdown">—</div>

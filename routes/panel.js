@@ -327,6 +327,39 @@ async function buildPanelData(user, opts = {}) {
     cells.push({ day, events: dayEvents, match: dayEvents.some(e => e.match) });
   }
 
+  // Línea de tiempo única: etapas del cronograma y actividades del calendario en
+  // una sola lista ordenada. Convivían pero cada una en su vista, y para saber
+  // qué pasa antes de qué había que ir mirando las dos.
+  const dosDig = (n) => String(n).padStart(2, '0');
+  const lineaEtapas = mileRows
+    .filter(m => m.start_date || m.end_date)
+    .map(m => ({
+      fecha: m.start_date || m.end_date,
+      kind: 'etapa', title: m.title,
+      meta: [m.date_label, MILE_STATUS[m.status || (m.done ? 'completado' : 'pendiente')] || '', m.owner].filter(Boolean).join(' · '),
+      color: (m.status === 'completado' || m.done) ? '#1E8E5A' : (m.status === 'en_curso' ? '#6C3CE0' : '#8A8F98')
+    }));
+  const lineaActividades = (await soloDeLaEdicion(knex('events')).orderBy([{ column: 'year' }, { column: 'month' }, { column: 'day' }]))
+    .map(e => ({
+      fecha: `${e.year}-${dosDig(e.month)}-${dosDig(e.day)}`,
+      kind: 'actividad', title: e.title,
+      meta: [e.time_label, e.type === 'Otro' ? (e.custom_type || 'Otro') : e.type, e.note].filter(Boolean).join(' · '),
+      color: e.color || '#6C3CE0'
+    }));
+
+  const hoyISO = new Date().toISOString().slice(0, 10);
+  const timeline = lineaEtapas.concat(lineaActividades)
+    .filter(x => /^\d{4}-\d{2}-\d{2}$/.test(x.fecha))
+    .sort((a, b) => a.fecha.localeCompare(b.fecha))
+    .map(x => {
+      const [a, m, d] = x.fecha.split('-');
+      return Object.assign({}, x, {
+        fechaLabel: `${parseInt(d, 10)} ${MONTHS_ES[parseInt(m, 10) - 1]} ${a}`,
+        pasado: x.fecha < hoyISO,
+        esHoy: x.fecha === hoyISO
+      });
+    });
+
   // Agenda del día del partido: vive en la base y pertenece a la edición. Antes
   // salía de panel_config.json, que en Heroku ni siquiera sobrevive al deploy.
   let matchAgenda = [];
@@ -607,6 +640,7 @@ async function buildPanelData(user, opts = {}) {
     newsTags,
     milestones,
     calendarCells: cells,
+    timeline,
     calendar: {
       monthLabel: MONTHS_ES_CAP[fmonth - 1],
       year: String(fyear),
