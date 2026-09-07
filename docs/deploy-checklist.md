@@ -20,6 +20,10 @@ Ver la sección 2b.
 | `9fafed6` | **Mapa de códigos 2027** + dueño asignado (issue 16) + arreglo del escapado de JSON |
 | `8ae5809` | **Alta de ediciones** con filas repetibles, uploader y vista previa (issue 17) |
 | `0d480b6` | **Página de gestión por edición** (issue 21) |
+| `50ff3fe` | Esta checklist, puesta al día |
+| `b2a0d8e` | **Edición activa** elegida por el admin + panorámica de ediciones para el inversionista |
+| `7d3cada` | Backlog al día |
+| `b3bfcb8` | **Una sola edición por año**: se unifican `editions` y `portfolio_events` |
 
 `bae433b` (multievento + FAQ + fix del calendario) fue el último desplegado.
 
@@ -105,7 +109,7 @@ Después, lo demás:
 - [ ] El calendario abre en el mes actual y las flechas navegan.
 - [ ] `/panel/faq` carga el acordeón.
 - [ ] **El login NO muestra nada de Google.**
-- [ ] Las 4 ediciones aparecen y cada una muestra su presentación.
+- [ ] Las ediciones aparecen y cada una muestra su presentación.
 - [ ] **Mi perfil**: el chip de usuario arriba a la derecha abre el drawer, guarda
   teléfono y preferencias, y el cambio de contraseña funciona. **El drawer no debe
   aparecer para el admin.**
@@ -114,8 +118,10 @@ Después, lo demás:
 - [ ] **Ediciones**: abrir el drawer de una edición existente y confirmar que las filas
   (estadísticas, imágenes, notas) salen cargadas y no vacías. Es lo que más se toca en
   este deploy: si algo salió mal en la conversión, se ve ahí.
-- [ ] **Gestión por edición**: admin → Eventos → "Gestionar". Que el Resumen muestre
+- [ ] **Gestión por edición**: admin → Ediciones → "Gestionar". Que el Resumen muestre
   capital y presupuesto reales, y que se pueda agregar un avance.
+- [ ] **Edición activa**: cambiarla desde Ediciones y confirmar que el panel del
+  inversionista pasa a mostrar esa edición, y que `/panel/ediciones` lista las demás.
 
 ## 4. Configurar Twilio (después del deploy, desde el admin)
 
