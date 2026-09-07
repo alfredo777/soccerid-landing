@@ -284,8 +284,12 @@ necesita poder pegar sus llaves sin depender de un deploy. Las env vars
   disponible, pero no se manda SMS de todo por default (cada uno cuesta).
 
 Pendiente de esta sección:
-- [ ] Que el inversionista elija **por tipo** qué quiere recibir (hoy la preferencia es
-  por canal, no por tipo).
+- [x] ~~Preferencias **por tipo**~~ **HECHO**: casillas en "Mi perfil" para cada tipo de
+  aviso. Lo que desmarca deja de llegarle por correo y SMS, pero **se sigue guardando en su
+  panel**: apagar un tipo es para que no le suene el teléfono, no para perder el registro.
+  Los **mensajes dirigidos a él no se pueden apagar**.
+  Se guarda lo **apagado** (`notify_off`), no lo encendido: así un tipo nuevo le llega a
+  todos por defecto en vez de a nadie hasta que lo activen uno por uno.
 - [x] ~~Disparador de **cambio de estatus de documento**~~ **HECHO**: al pasar a
   *aprobado* o *firmado* se avisa a los inversionistas de esa edición, respetando la
   visibilidad por modalidad del documento. Volverlo a "en revisión" **no** avisa: no es
@@ -294,7 +298,13 @@ Pendiente de esta sección:
   inversiones). Al registrar o modificar una inversión se le avisa al inversionista, por
   panel y correo. Al editar **solo avisa si cambió el monto, la modalidad, el retorno o la
   fecha de entrega**: corregir una nota interna no tiene por qué molestar a nadie.
-- [ ] Disparadores de **cambio de fase del evento** y **recordatorio de fecha de entrega**.
+- [x] ~~Disparador de **cambio de fase**~~ **HECHO**: al mover la fase de una edición se
+  avisa a sus inversionistas. Guardar la edición sin cambiar de fase no avisa: se edita a
+  cada rato y sería ruido.
+- [x] ~~**Recordatorio de fecha de entrega**~~ **HECHO**: `recordarEntregas()` avisa cuando
+  faltan 30 días o menos, **una sola vez** (marca `reminded_at`). Corre al arrancar y cada
+  24 h — no hay cron en Heroku sin add-on y el dyno se reinicia a diario, así que basta.
+  No recuerda fechas ya pasadas: avisar de algo que debió entregarse hace meses no ayuda.
 - [ ] Notificaciones **push** (requiere service worker; no está hecho).
 - [x] ~~Bandeja de notificaciones del admin~~ **HECHO**: "Tu bandeja" separada de
   "Enviadas". Arriba lo que el sistema le avisa a él (accesos con código, envíos); abajo

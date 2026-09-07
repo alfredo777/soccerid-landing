@@ -160,6 +160,11 @@ async function ensurePortfolioSchema() {
     });
   }
 
+  // Marca de "ya se le recordó la entrega", para no avisar lo mismo cada día.
+  if (await knex.schema.hasTable('investments') && !(await knex.schema.hasColumn('investments', 'reminded_at'))) {
+    await knex.schema.alterTable('investments', (t) => t.timestamp('reminded_at'));
+  }
+
   // ── Cronología / avances por evento ──
   if (!(await knex.schema.hasTable('event_updates'))) {
     await knex.schema.createTable('event_updates', (t) => {

@@ -706,6 +706,19 @@
                 </span>
               </label>
 
+              {{#if panel.profile.notifyTypes}}
+              <div class="pn-drawer__sec">&iquest;De qu&eacute; quieres enterarte?</div>
+              <p class="pn-f__hint" style="margin:-6px 0 10px;">Lo que desmarques deja de llegarte por correo y SMS.
+                En el panel se sigue guardando, para que puedas consultarlo cuando quieras.
+                Los <strong>mensajes dirigidos a ti</strong> llegan siempre.</p>
+              {{#each panel.profile.notifyTypes}}
+              <label class="pn-check">
+                <input type="checkbox" name="tipo_{{this.key}}" value="1" {{#if this.on}}checked{{/if}}>
+                <span>{{this.label}}</span>
+              </label>
+              {{/each}}
+              {{/if}}
+
               <button type="submit" class="pn-drawer__save">Guardar cambios</button>
             </form>
 

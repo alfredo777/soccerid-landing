@@ -277,7 +277,11 @@ async function ensureSchema() {
     ['assistant_email', (t) => t.string('assistant_email')],
     ['assistant_phone', (t) => t.string('assistant_phone')],
     ['notify_email', (t) => t.boolean('notify_email').defaultTo(true)],
-    ['notify_sms', (t) => t.boolean('notify_sms').defaultTo(false)]
+    ['notify_sms', (t) => t.boolean('notify_sms').defaultTo(false)],
+    // Tipos de aviso que NO quiere recibir, separados por comas. Se guarda lo
+    // apagado y no lo encendido: así un tipo nuevo llega a todos por defecto,
+    // en vez de a nadie hasta que cada quien lo active.
+    ['notify_off', (t) => t.string('notify_off')]
   ];
   for (const [col, builder] of userOverrideCols) {
     if (await knex.schema.hasTable('users') && !(await knex.schema.hasColumn('users', col))) {

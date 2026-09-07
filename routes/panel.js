@@ -529,7 +529,12 @@ async function buildPanelData(user, opts = {}) {
     assistantPhone: user.assistant_phone || '',
     // Por defecto el correo va encendido y el SMS apagado (aun no hay proveedor).
     notifyEmail: user.notify_email == null ? true : !!user.notify_email,
-    notifySms: !!user.notify_sms
+    notifySms: !!user.notify_sms,
+    // Casillas por tipo: marcadas = quiere recibirlo
+    notifyTypes: Object.keys(NOTIF_TYPES).filter(k => k !== 'directa').map(k => ({
+      key: k, label: NOTIF_TYPES[k].label,
+      on: String(user.notify_off || '').split(',').map(x => x.trim()).indexOf(k) === -1
+    }))
   };
 
   // Indice del buscador de la barra superior. El FAQ va primero a proposito:
@@ -800,6 +805,10 @@ router.post('/perfil', auth.requireAuth, async (req, res, next) => {
       assistant_phone: optPhone(b.assistant_phone),
       notify_email: !!b.notify_email,
       notify_sms: !!b.notify_sms,
+      // Llega lo que quiere recibir; se guarda lo contrario
+      notify_off: Object.keys(NOTIF_TYPES)
+        .filter(k => k !== 'directa' && !b['tipo_' + k])
+        .join(',') || null,
       updated_at: knex.fn.now()
     });
     // El idioma se integra con el del sitio, que se resuelve por cookie `lang`.
@@ -2067,7 +2076,24 @@ router.post('/admin/portfolio/:id/update', auth.requireAdmin, async (req, res) =
     data.data_es = data_es;
     data.data_en = data_en;
     await knex('portfolio_events').where({ id: row.id }).update(Object.assign(data, { updated_at: knex.fn.now() }));
-    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Edición ${data.year} actualizada`) + '#eventos');
+
+    // Cambiar de fase es de las pocas cosas que el inversionista quiere saber sin
+    // pedirlo. El resto de la edición se edita a cada rato y no se avisa.
+    let avisados = 0;
+    if (row.phase !== data.phase) {
+      const ids = [...new Set((await knex('investments').where({ event_id: row.id })).map(i => i.user_id))];
+      for (const uid of ids) {
+        const r = await notify({
+          type: 'actividad', userId: uid, channels: ['in-app', 'email'], eventId: row.id,
+          title: `${data.title} pasó a ${PHASE_LABELS[data.phase] || data.phase}`,
+          body: `La edición avanzó de ${PHASE_LABELS[row.phase] || row.phase} a ${PHASE_LABELS[data.phase] || data.phase}` +
+            (data.progress_pct ? ` · ${data.progress_pct}% de avance` : '') + '.'
+        }).catch(() => ({ recipients: 0 }));
+        avisados += r.recipients;
+      }
+    }
+    const extra = avisados ? ` · avisados ${avisados} por el cambio de fase` : '';
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Edición ${data.year} actualizada${extra}`) + '#eventos');
   } catch (e) {
     res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#eventos');
   }

@@ -1087,7 +1087,15 @@ app.listen(PORT, () => {
   console.log('');
 
   // Inicializar base de datos del panel de inversionistas
-  require('./db/schema').init().catch(err => {
+  require('./db/schema').init().then(() => {
+    // Recordatorios de fecha de entrega: una pasada al arrancar y otra cada 24 h.
+    // No hay cron en Heroku sin add-on, y el dyno se reinicia al menos a diario,
+    // así que esto basta. La marca `reminded_at` evita repetir el mismo aviso.
+    const { recordarEntregas } = require('./lib/panelNotify');
+    const revisar = () => recordarEntregas().catch(e => console.error('✗ Recordatorios de entrega:', e.message));
+    setTimeout(revisar, 30000);
+    setInterval(revisar, 24 * 60 * 60 * 1000).unref();
+  }).catch(err => {
     console.error('✗ Error inicializando base de datos del panel:', err.message);
   });
 });
