@@ -115,35 +115,27 @@ Pendiente de esta sección:
   de Y): requiere saber con qué código entró Z, y hoy es el mismo código.
 
 
-## Presentación / Propuesta dentro del panel (inversionista)
-- [ ] Agregar una sección **"Presentación"** (o "Propuesta 2027") en el panel del
-  inversionista que reproduzca el contenido de la propuesta pública
-  (soccerid.co/en/socceridcup2027) **como la presentación original**: qué es la CUP,
-  evento (Tigres vs Cruz Azul, Houston, 27 mar 2027), estructuras de inversión
-  (fijo / a riesgo), proyecciones e ingresos, punto de equilibrio, uso del capital,
-  timeline, experiencia (ediciones 2023/24/25) y contacto.
-- [ ] Reutilizar la **fuente de contenido existente** (`contents/cup_project_2027.json`
-  y la vista `socceridcup-project2027`) para no duplicar; renderizarla con el estilo
-  del panel (marca) y responsive.
-- [ ] **La presentación PERTENECE a la edición** (es un atributo de cada edición, no
-  global): cada edición 2023/2024/2025/2027 tiene su propia presentación/propuesta.
-  Guardarla como parte del modelo de edición (campos de contenido ES/EN por edición).
-- [ ] En el panel se muestra la presentación de la **edición activa**.
-- [ ] **Editable** desde el admin junto con el resto de datos de la edición (ver
-  sección "Ediciones" y "Multievento = ediciones").
+## Presentación / Propuesta dentro del panel — HECHO
+Sección "Presentación" en el panel del inversionista (`/panel/presentacion`,
+`views/panel/presentacion.hbs`). **La presentación pertenece a la edición**: se guarda en
+`portfolio_events.presentation_es` / `presentation_en` y se edita desde el admin junto con
+el resto de la edición. El inversionista ve la de su edición activa.
 
-## FAQ editable (inversionistas y patrocinadores)
-Sección de **Preguntas frecuentes** en el panel, **editable desde el admin**,
-segmentada por audiencia (inversionista / patrocinador / general).
+Pendiente de esta sección:
+- [ ] Traer más bloques de la propuesta pública (uso del capital, punto de equilibrio,
+  timeline) en vez de solo el texto de la edición.
 
-Feature:
-- [ ] Modelo `faqs`: `id`, `audience` (all|investor|sponsor), `question`, `answer`,
-  `sort`, `is_active`, timestamps. (Opcional ES/EN.)
-- [ ] Admin: CRUD en **drawer lateral** (agregar/editar/ordenar/activar).
-- [ ] Panel del inversionista/patrocinador: sección "Preguntas frecuentes"
-  (acordeón), filtrada por su audiencia.
-- [ ] Semilla inicial con el contenido de abajo (basado en el admin y en
-  soccerid.co/en/socceridcup2027). Marcar cifras como **ilustrativas**.
+## FAQ editable (inversionistas y patrocinadores) — HECHO
+Tabla `faqs` (audiencia, pregunta, respuesta, orden, activa), CRUD en drawer desde el
+admin (pestaña FAQ) y vista `/panel/faq` con acordeón filtrado por audiencia. El buscador
+del panel **indexa el FAQ primero**, que era el otro pedido.
+
+Pendiente de esta sección:
+- [ ] Reordenar arrastrando (hoy es por número de orden).
+- [ ] Versión ES/EN de cada pregunta.
+
+El contenido inicial de referencia queda abajo.
+
 
 ### Contenido inicial — Inversionistas
 - **¿Qué es la SOCCER iD CUP 2027?** Evento internacional de futbol operado por SOCCER iD;
@@ -286,33 +278,25 @@ Detalles:
   códigos a persona: email y/o teléfono, ver sección de mapa de relaciones).
 - UI en el admin: elegir canal (email / SMS / ambos) al invitar o al enviar código.
 
-## Navegación y separación de secciones
-- [ ] **"Calendario" y "Cronograma" (sidebar) van a la misma URL** (`/panel/calendario`)
-  → parece que no funciona. Separar: Cronograma con su propia vista/ancla, o dejar una
-  sola entrada "Calendario y cronograma".
-- [ ] **"Estado del evento" está mezclado**: muestra el **cronograma** (que también está
-  en Calendario y cronograma) + las **noticias**. Separar: dejar esa sección como
-  **"Noticias"** (solo noticias) y que el cronograma viva únicamente en la sección de
-  cronograma. Evitar duplicar el cronograma.
+## Navegación y separación de secciones — HECHO
+- Cronograma dejó de duplicarse: vive solo en `/panel/calendario#cronograma` y el enlace
+  del sidebar apunta ahí.
+- "Estado del evento" quedó como **Noticias** (solo noticias), sin el cronograma dentro.
 
-## Bugs / a revisar
-- [ ] **"Ver todas" en noticias manda al Home del dashboard**, no al listado de
-  noticias. Corregir el enlace "Ver todas ›" para que vaya a `/panel/noticias`.
-- [ ] **El buscador (search) no funciona** (barra superior del panel). En vistas del
-  inversionista filtra elementos `[data-searchable]` que no existen → no hace nada.
-  Definir qué debe buscar (noticias, documentos, hitos, inversiones, secciones) y
-  hacerlo funcional; en admin delega en `window.__pnSearch`.
-  - [ ] **Indexar preferentemente el FAQ**: el buscador debe priorizar/mostrar
-    resultados del FAQ (preguntas y respuestas) además de las secciones.
-- [ ] **"Estado del evento" se ve vacío** (vista del inversionista, `/panel/noticias`).
-  El centro no muestra tarjetas de noticias aunque el sidebar (Próximos hitos, Tu
-  categoría) sí carga. Revisar: ¿hay noticias en esa BD?, ¿el listado filtra por algo
-  (evento/edición) y no encuentra?, ¿o el template no renderiza cuando la lista viene
-  poblada? Al ligar noticias a la edición activa, contemplar estado vacío con mensaje.
+
+## Bugs / a revisar — HECHO
+- ~~"Ver todas" mandaba al Home~~: el `href` siempre estuvo bien; lo que fallaba era el
+  redirect del **admin** al entrar a `/panel/noticias`. Va a `#noticias`.
+- ~~El buscador no funcionaba~~: filtraba `[data-searchable]`, que no existía. Ahora hay
+  un índice armado en el servidor (`searchIndex`) con **FAQ primero**, más noticias,
+  hitos y secciones, con teclado y resaltado.
+- ~~"Estado del evento" se veía vacío~~: la página no explicaba que no había noticias.
+  Ahora tiene estado vacío con mensaje, y chips de categoría que filtran.
+
 
 ## Calendario ↔ Cronograma (unificados y editables)
-- [ ] **El calendario no despliega nada** (`/panel/calendario`). Revisar: usa
-  `config.focus.month/year` + tabla `events`; si no hay eventos ese mes/año se ve vacío.
+- [x] ~~**El calendario no despliega nada**~~ **HECHO**: abría en un mes fijo de
+  configuración. Ahora abre en el **mes actual** y las flechas navegan (`?y=&m=`).
 - [ ] **Calendario y cronograma a la vez** (una sola fuente por fecha, mostrada como
   calendario Y como línea de tiempo). Ligar hitos ↔ actividades del calendario.
 - [ ] **Cronograma = ETAPAS** (estructura macro). Las etapas son **dinámicas y
@@ -413,22 +397,25 @@ Pendiente de esta sección:
 Objetivo inmediato: llenar con **info real** las ediciones **2023 / 2024 / 2025** y
 poner **2027** con info real + **paquetes de inversión reales**.
 
-Modelo de datos (unificar/enlazar):
-- [ ] Ligar `portfolio_events` ↔ `editions` por año/edición (una relación 1:1 por año,
-  o consolidar en una sola entidad "edición" con campos públicos + de inversión).
-  Regla: **una edición por año**; editar en un solo lugar impacta ambas vistas.
-- [ ] Migrar los `portfolio_events` demo (Houston 2027 / Austin 2025 / Orlando 2024)
-  a ediciones reales por año y agregar **2023**; marcar `is_demo=false` al cargar real.
+Hecho:
+- [x] Datos reales cargados en `portfolio_events` (2023 San José, 2024 Orlando,
+  2025 Austin, 2027 Houston), sin `is_demo`.
+- [x] CRUD de ediciones con los campos públicos (match, sede, fecha, banner, stats,
+  media) y los de inversión (presupuesto, ingreso proyectado, fase, avance).
+- [x] **Paquetes de inversión** por edición: nombre, monto, modalidad, % retorno,
+  beneficios, cupo, y además **paquetes privados** para una sola persona (`user_id`).
 
-Admin (ediciones):
-- [ ] CRUD de **ediciones por año** con datos reales (2023/24/25 pasadas, 2027 activa),
-  incluyendo los campos públicos (match, sede, fecha, banner, stats, media) y los de
-  inversión (presupuesto, ingreso proyectado, fase, avance).
-- [ ] **Paquetes de inversión** por edición (nuevo, sobre todo 2027): nombre, monto,
-  modalidad (fijo/riesgo), % retorno, beneficios, cupo. (Confirmar si además hay
-  paquetes de patrocinio.)
-- [ ] Selector de **edición activa** en el panel del inversionista + secciones que
-  respetan la edición seleccionada.
+Lo que sigue abierto y **es lo más importante que queda de estructura**:
+- [ ] **Siguen siendo dos tablas: `editions` y `portfolio_events`.** Las dos representan
+  un año y en el admin son **dos pestañas distintas** ("Ediciones" para lo público y
+  "Eventos" para el portafolio del inversionista). Hoy `editions` tiene 2023–2027 y
+  `portfolio_events` tiene 2023/24/25/27: **se pueden desincronizar**, y cargar el mismo
+  año dos veces es justo lo que la decisión de "una edición por año" quería evitar.
+  Ligarlas por año (1:1) o consolidarlas en una sola entidad.
+- [ ] **Selector de edición activa para el inversionista.** Hoy la edición que ve sale de
+  su **primera inversión** (`buildPanelData` toma la primera activa). Quien tenga capital
+  en dos ediciones solo ve una, sin manera de cambiar.
+- [ ] Confirmar si además de los paquetes de inversión hay **paquetes de patrocinio**.
 
 ### Resto del admin multievento (fases 1, 2, 4, 6) — HECHO lo de contenido
 
