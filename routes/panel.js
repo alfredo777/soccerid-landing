@@ -1136,6 +1136,129 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       question: f.question, answer: f.answer || '', is_active: !!f.is_active, sort: f.sort
     }));
 
+    // ── Panel estadístico del admin ──
+    // Todo es DERIVADO: se cuenta de lo que hay cargado. Nada se captura a mano,
+    // porque un número escrito a mano queda viejo en cuanto alguien agrega algo.
+    // Lo que depende del año se mide sobre la EDICIÓN ACTIVA (la que ven los
+    // inversionistas); lo que es del negocio completo va en total.
+    const edActiva = peRows.find(e => String(e.id) === activaId) || null;
+    const invRows = await knex('investments');
+    const invDeLaEdicion = edActiva ? invRows.filter(i => String(i.event_id) === String(edActiva.id)) : [];
+
+    const sumaCapital = (arr) => arr.reduce((n, i) => n + Number(i.capital || 0), 0);
+    const capTotal = sumaCapital(invRows);
+    const capEdicion = sumaCapital(invDeLaEdicion);
+    const fijoArr = invDeLaEdicion.filter(i => i.modality !== 'riesgo');
+    const riesgoArr = invDeLaEdicion.filter(i => i.modality === 'riesgo');
+    const capFijo = sumaCapital(fijoArr), capRiesgo = sumaCapital(riesgoArr);
+    const presupuesto = Number((edActiva || {}).budget || 0);
+
+    // Retorno proyectado: se usa la MISMA función del panel del inversionista,
+    // para que el admin no vea una cifra distinta a la que ve cada quien.
+    const cfgRet = await getDashboardConfig();
+    let retornoProyectado = 0;
+    invDeLaEdicion.forEach(i => {
+      const u = users.find(x => x.id === i.user_id) || {};
+      const r = computeReturn(Object.assign({}, u, {
+        amount: i.capital, investment_type: i.modality, return_rate: i.return_pct
+      }), cfgRet);
+      retornoProyectado += Number(String(r.profit).replace(/[^0-9.-]/g, '')) || 0;
+    });
+
+    // Inversionistas REALES por categoría, contra el cupo PLANEADO de cada una.
+    // La diferencia es justo lo que falta por vender.
+    const investorUsers = users.filter(u => u.role === 'investor');
+    const porCategoria = tiers.filter(t => t.role === 'investor').map(t => {
+      const reales = investorUsers.filter(u => u.category === t.key).length;
+      return { label: t.label, color: t.color, real: reales, cupo: t.count || 0 };
+    });
+    const totalReal = porCategoria.reduce((n, c) => n + c.real, 0);
+    const totalCupo = porCategoria.reduce((n, c) => n + c.cupo, 0);
+
+    // Dona de inversionistas reales (mismo cálculo que la del panel)
+    const CIRC = 2 * Math.PI * 54;
+    let acum = 0;
+    const donutReal = porCategoria.map(c => {
+      const frac = totalReal ? c.real / totalReal : 0;
+      const seg = {
+        color: c.color, label: c.label, real: c.real,
+        len: Math.round(frac * CIRC * 100) / 100,
+        angle: Math.round((totalReal ? acum / totalReal : 0) * 360 * 100) / 100 - 90
+      };
+      acum += c.real;
+      return seg;
+    });
+
+    // Data room de la edición activa por estatus
+    const drRows = edActiva ? await knex('event_documents').where({ event_id: edActiva.id }) : [];
+    const docsPorEstatus = ['revision', 'aprobado', 'firmado'].map(k => ({
+      key: k, label: DOC_STATES[k], n: drRows.filter(d => (d.status || 'revision') === k).length
+    }));
+
+    // Taquilla y punto de equilibrio (parámetros de la edición activa si los tiene)
+    const capAforo = Number((edActiva || {}).capacity || cfgRet.capacity || 0);
+    const precioBoleto = Number((edActiva || {}).ticket_price || cfgRet.ticketPrice || 0);
+    const vendidos = Number(cfgRet.ticketsSold || 0);
+    const equilibrio = Number(cfgRet.breakEvenTickets) ||
+      (precioBoleto ? Math.ceil((presupuesto || Number(cfgRet.projectCost) || 0) / precioBoleto) : 0);
+
+    const pct = (a, b) => b > 0 ? Math.min(100, Math.round((a / b) * 100)) : 0;
+    const LEAD_ST = { nuevo: 'Nuevos', contactado: 'Contactados', cliente: 'Clientes', descartado: 'Descartados' };
+
+    const stats = {
+      edicion: edActiva ? { title: edActiva.title, year: edActiva.year } : null,
+      capital: {
+        edicion: formatUSD(capEdicion), total: formatUSD(capTotal),
+        presupuesto: formatUSD(presupuesto),
+        cubiertoPct: pct(capEdicion, presupuesto),
+        // Sin presupuesto no se puede decir cuánto falta: un "$0 faltante" se lee
+        // como "ya está cubierto", que es justo lo contrario.
+        sinPresupuesto: presupuesto <= 0,
+        faltante: formatUSD(Math.max(0, presupuesto - capEdicion)),
+        retorno: formatUSD(retornoProyectado),
+        inversiones: invDeLaEdicion.length, inversionesTotal: invRows.length
+      },
+      modalidad: {
+        fijo: formatUSD(capFijo), riesgo: formatUSD(capRiesgo),
+        fijoN: fijoArr.length, riesgoN: riesgoArr.length,
+        fijoPct: pct(capFijo, capEdicion), riesgoPct: pct(capRiesgo, capEdicion)
+      },
+      inversionistas: {
+        activos: investorUsers.filter(u => u.status === 'active').length,
+        invitados: investorUsers.filter(u => u.status === 'invited').length,
+        inactivos: investorUsers.filter(u => u.status === 'disabled').length,
+        patrocinadores: users.filter(u => u.role === 'sponsor').length,
+        real: totalReal, cupo: totalCupo, cupoPct: pct(totalReal, totalCupo),
+        porCategoria, donut: donutReal, circ: Math.round(CIRC * 100) / 100
+      },
+      taquilla: {
+        vendidos: vendidos.toLocaleString('es-MX'),
+        aforo: capAforo.toLocaleString('es-MX'),
+        ocupacionPct: pct(vendidos, capAforo),
+        equilibrio: equilibrio.toLocaleString('es-MX'),
+        equilibrioPct: pct(equilibrio, capAforo),
+        superado: equilibrio > 0 && vendidos >= equilibrio,
+        faltan: Math.max(0, equilibrio - vendidos).toLocaleString('es-MX'),
+        ingreso: formatUSD(vendidos * precioBoleto)
+      },
+      documentos: { porEstatus: docsPorEstatus, total: drRows.length, porCuenta: allDocs.length },
+      codigos: {
+        total: codesView.length, usados: codesUsed, porUsar: codesUnused,
+        conDueno: codesAssigned, ajenos: codesLeaked,
+        accesos: allAccess.length,
+        dispositivosNuevos: allAccess.filter(a => a.new_device).length
+      },
+      prospectos: Object.keys(LEAD_ST).map(k => ({
+        label: LEAD_ST[k], n: leadsView.filter(l => l.status === k).length
+      })),
+      contenido: {
+        noticias: news.length, faqs: faqsAdmin.length, notificaciones: notifications.length,
+        avances: await knex('event_updates').count({ n: '*' }).first().then(r => Number(r.n)),
+        medios: await knex('event_media').count({ n: '*' }).first().then(r => Number(r.n)),
+        actividades: eventRowsAdmin.length, etapas: mileRowsAdmin.length
+      }
+    };
+
     const notifyRow = await knex('app_settings').where({ key: 'notify_emails' }).first();
     const notifyEmails = notifyRow ? (notifyRow.value || '') : '';
     const twilio = await panelSms.getPublicConfig();
@@ -1195,7 +1318,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       codesAssigned, codesLeaked, codeTags, relations,
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
-      notifyEmails, twilio, notifyPeople, notifTypes,
+      notifyEmails, twilio, notifyPeople, notifTypes, stats,
       actTypes: Object.keys(ACT_TYPES),
       dashboardConfig: await getDashboardConfig(),
       capitalItems, risksAdmin, portfolioEditions, portfolioForms, portfolioPackages, investorsList, faqsAdmin,

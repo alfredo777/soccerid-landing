@@ -40,11 +40,27 @@ Arquitectura:
   del inversionista~~ **HECHO**: se quitó de `views/panel/dashboard.hbs` (con su CSS).
   Los datos (`panel.donut`, `panel.distribution`, `panel.investorTotal`) se siguen
   calculando en `buildPanelData` y están listos para el panel del admin de abajo.
-- [ ] Crear un **panel estadístico en el admin** con métricas del portafolio/edición:
-  distribución de inversionistas por categoría (donut), capital captado vs objetivo,
-  # inversiones por modalidad (fijo/riesgo), retornos proyectados, boletos vendidos /
-  punto de equilibrio, documentos/estatus, accesos y códigos (uso), leads por estado.
-- [ ] Respetar preferencia de UI (drawers) y ligarlo a la **edición activa** (multievento).
+- [x] **Panel estadístico en el admin** — HECHO. Pestaña "Estadísticas", ligada a la
+  **edición activa**. Todo es derivado: se cuenta de lo cargado, no se captura.
+  - Capital comprometido de la edición y % del presupuesto, cuánto falta por levantar
+    (y si la edición no tiene presupuesto lo dice, en vez de un "$0 faltante" que se lee
+    como "ya está cubierto"), capital de todas las ediciones.
+  - **Retorno proyectado con la misma función `computeReturn` del panel del
+    inversionista**, para que el admin no vea una cifra distinta a la que ve cada quien
+    (incluye los overrides de retorno por inversión).
+  - Reparto fijo / riesgo en monto, número y porcentaje.
+  - **Dona de inversionistas reales contra el cupo planeado** de cada categoría: la
+    diferencia es lo que falta por vender.
+  - Cuentas por estado (activos, invitados, inactivos, patrocinadores).
+  - Taquilla: vendidos, aforo, ingreso y punto de equilibrio, avisando si ya se superó.
+  - Data room de la edición por estatus + documentos por cuenta.
+  - Códigos 2027 (usados, por usar, con dueño, usados por otra persona), accesos y
+    dispositivos nuevos.
+  - Prospectos por estado y conteo de contenido publicado.
+
+Pendiente de esta sección:
+- [ ] Comparativo entre ediciones (hoy se ve una a la vez, la activa).
+- [ ] Evolución en el tiempo (hoy son cifras de corte, sin serie histórica).
 
 ## Convención de UI (preferencia)
 - **Preferir panel lateral (drawer) sobre lightbox/modal centrado.** Para ver/crear/editar,

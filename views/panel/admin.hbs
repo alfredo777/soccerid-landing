@@ -251,6 +251,9 @@
 <div class="ad-tabs">
   <button type="button" class="ad-tab is-active" data-tab="usuarios" data-label="Usuarios" title="Usuarios" aria-label="Usuarios">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  <button type="button" class="ad-tab" data-tab="estadisticas" data-label="Estadísticas" title="Estadísticas" aria-label="Estadísticas">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="13"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="9"/></svg>
+  </button>
   <button type="button" class="ad-tab" data-tab="noticias" data-label="Noticias" title="Noticias" aria-label="Noticias">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13v14H6a2 2 0 0 1-2-2V5z"/><path d="M17 8h2a1 1 0 0 1 1 1v8a2 2 0 0 1-2 2"/><line x1="7" y1="9" x2="14" y2="9"/><line x1="7" y1="13" x2="14" y2="13"/></svg>
   </button>
@@ -337,6 +340,192 @@
       </div>
     </div>
   </div>
+
+<!-- ESTADÍSTICAS -->
+<section class="ad-sec" id="sec-estadisticas">
+  <style>
+    .st-note { margin:0 0 18px; padding:12px 15px; border-radius:12px; background:var(--pn-purple-soft); color:var(--pn-ink-2); font-size:12.5px; line-height:1.55; }
+    .st-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; margin-bottom:22px; }
+    .st-card { padding:20px; }
+    .st-card h4 { font-size:11.5px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:var(--pn-muted); margin-bottom:10px; }
+    .st-big { font-size:26px; font-weight:900; letter-spacing:-.5px; line-height:1.1; }
+    .st-sub { font-size:12px; color:var(--pn-muted); font-weight:600; margin-top:4px; }
+    .st-bar { height:9px; border-radius:20px; background:#F1F0F5; overflow:hidden; margin:12px 0 7px; display:flex; }
+    .st-bar i { display:block; height:100%; }
+    .st-legend { font-size:11.5px; color:var(--pn-muted); font-weight:600; line-height:1.7; }
+    .st-legend i { display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:6px; vertical-align:middle; }
+    .st-two { display:grid; grid-template-columns:minmax(220px,300px) 1fr; gap:24px; align-items:center; }
+    @media (max-width:720px){ .st-two { grid-template-columns:1fr; } }
+    .st-donut { position:relative; width:100%; max-width:210px; margin:0 auto; }
+    .st-donut svg { width:100%; height:auto; transform:rotate(-90deg); }
+    .st-donut__mid { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .st-donut__mid b { font-size:28px; font-weight:900; line-height:1; }
+    .st-donut__mid span { font-size:11px; color:var(--pn-muted); font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
+    .st-rows { width:100%; }
+    .st-row { display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--pn-border); font-size:13px; }
+    .st-row:last-child { border-bottom:none; }
+    .st-row i { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+    .st-row strong { flex:1; font-weight:700; }
+    .st-row span { font-weight:800; color:var(--pn-ink-2); }
+    .st-row small { color:var(--pn-muted); font-weight:600; font-size:11.5px; }
+    .st-mini { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; }
+    .st-mini div { background:#FBFAFD; border:1px solid var(--pn-border); border-radius:12px; padding:12px 14px; }
+    .st-mini b { display:block; font-size:19px; font-weight:900; line-height:1.15; }
+    .st-mini span { font-size:11px; color:var(--pn-muted); font-weight:700; }
+    .st-flag { display:inline-block; padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.3px; }
+    .st-flag--ok { background:#DEF7EC; color:#03543F; }
+    .st-flag--warn { background:#FEF3C7; color:#92400E; }
+  </style>
+
+  <p class="st-note">Todo lo de aquí se <strong>cuenta solo</strong> a partir de lo cargado en el panel; no hay cifras escritas a mano.
+    Lo que depende del año se mide sobre la <strong>edición activa</strong>{{#if stats.edicion}} (<strong>{{stats.edicion.title}}</strong>){{/if}};
+    los códigos, prospectos y contenido son del negocio completo.</p>
+
+  <!-- Capital -->
+  <div class="st-grid">
+    <div class="pn-card st-card">
+      <h4>Capital comprometido</h4>
+      <div class="st-big">{{stats.capital.edicion}}</div>
+      <div class="st-sub">{{stats.capital.inversiones}} inversión(es) en esta edición</div>
+      <div class="st-bar"><i style="width:{{stats.capital.cubiertoPct}}%; background:var(--pn-purple);"></i></div>
+      <div class="st-legend">{{stats.capital.cubiertoPct}}% del presupuesto ({{stats.capital.presupuesto}})</div>
+    </div>
+    <div class="pn-card st-card">
+      <h4>Falta por levantar</h4>
+      {{#if stats.capital.sinPresupuesto}}
+      <div class="st-big" style="color:var(--pn-muted);">—</div>
+      <div class="st-sub">esta edición no tiene presupuesto definido</div>
+      {{else}}
+      <div class="st-big">{{stats.capital.faltante}}</div>
+      <div class="st-sub">para cubrir el presupuesto de la edición</div>
+      {{/if}}
+    </div>
+    <div class="pn-card st-card">
+      <h4>Retorno proyectado</h4>
+      <div class="st-big">{{stats.capital.retorno}}</div>
+      <div class="st-sub">utilidad a repartir, con la misma fórmula que ve el inversionista</div>
+    </div>
+    <div class="pn-card st-card">
+      <h4>Capital en todas las ediciones</h4>
+      <div class="st-big">{{stats.capital.total}}</div>
+      <div class="st-sub">{{stats.capital.inversionesTotal}} inversión(es) en total</div>
+    </div>
+  </div>
+
+  <!-- Modalidad + categorías -->
+  <div class="st-grid">
+    <div class="pn-card st-card">
+      <h4>Reparto por modalidad</h4>
+      <div class="st-bar">
+        <i style="width:{{stats.modalidad.fijoPct}}%; background:#6C3CE0;"></i>
+        <i style="width:{{stats.modalidad.riesgoPct}}%; background:#D97706;"></i>
+      </div>
+      <div class="st-legend">
+        <i style="background:#6C3CE0;"></i>Retorno fijo · {{stats.modalidad.fijo}} ({{stats.modalidad.fijoN}})<br>
+        <i style="background:#D97706;"></i>Participación a riesgo · {{stats.modalidad.riesgo}} ({{stats.modalidad.riesgoN}})
+      </div>
+    </div>
+    <div class="pn-card st-card">
+      <h4>Cuentas</h4>
+      <div class="st-mini">
+        <div><b>{{stats.inversionistas.activos}}</b><span>Activos</span></div>
+        <div><b>{{stats.inversionistas.invitados}}</b><span>Invitados</span></div>
+        <div><b>{{stats.inversionistas.inactivos}}</b><span>Inactivos</span></div>
+        <div><b>{{stats.inversionistas.patrocinadores}}</b><span>Patrocinadores</span></div>
+      </div>
+    </div>
+    <div class="pn-card st-card">
+      <h4>Taquilla</h4>
+      <div class="st-big">{{stats.taquilla.vendidos}}</div>
+      <div class="st-sub">de {{stats.taquilla.aforo}} lugares · {{stats.taquilla.ingreso}}</div>
+      <div class="st-bar"><i style="width:{{stats.taquilla.ocupacionPct}}%; background:#0E9F6E;"></i></div>
+      <div class="st-legend">
+        {{#if stats.taquilla.superado}}<span class="st-flag st-flag--ok">Punto de equilibrio superado</span>
+        {{else}}<span class="st-flag st-flag--warn">Faltan {{stats.taquilla.faltan}} boletos</span>{{/if}}
+        <br>Equilibrio en {{stats.taquilla.equilibrio}} boletos
+      </div>
+    </div>
+  </div>
+
+  <!-- Distribución de inversionistas -->
+  <div class="pn-card st-card" style="margin-bottom:22px;">
+    <h4>Inversionistas por categoría — reales contra cupo</h4>
+    <div class="st-two">
+      <div class="st-donut">
+        <svg viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="54" fill="none" stroke="#F1F0F5" stroke-width="12"></circle>
+          {{#each stats.inversionistas.donut}}
+          <circle cx="60" cy="60" r="54" fill="none" stroke="{{this.color}}" stroke-width="12"
+            stroke-dasharray="{{this.len}} {{../stats.inversionistas.circ}}"
+            transform="rotate({{this.angle}} 60 60)"></circle>
+          {{/each}}
+        </svg>
+        <div class="st-donut__mid">
+          <b>{{stats.inversionistas.real}}</b>
+          <span>de {{stats.inversionistas.cupo}}</span>
+        </div>
+      </div>
+      <div class="st-rows">
+        {{#each stats.inversionistas.porCategoria}}
+        <div class="st-row">
+          <i style="background:{{this.color}}"></i>
+          <strong>{{this.label}}</strong>
+          <span>{{this.real}}</span>
+          <small>de {{this.cupo}}</small>
+        </div>
+        {{else}}
+        <div class="st-row"><small>No hay categorías configuradas.</small></div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+
+  <!-- Documentos, códigos, prospectos, contenido -->
+  <div class="st-grid">
+    <div class="pn-card st-card">
+      <h4>Data room de la edición</h4>
+      <div class="st-rows">
+        {{#each stats.documentos.porEstatus}}
+        <div class="st-row"><strong>{{this.label}}</strong><span>{{this.n}}</span></div>
+        {{/each}}
+        <div class="st-row"><strong>Documentos por cuenta</strong><span>{{stats.documentos.porCuenta}}</span></div>
+      </div>
+    </div>
+
+    <div class="pn-card st-card">
+      <h4>Códigos 2027</h4>
+      <div class="st-mini">
+        <div><b>{{stats.codigos.usados}}</b><span>Usados</span></div>
+        <div><b>{{stats.codigos.porUsar}}</b><span>Por usar</span></div>
+        <div><b>{{stats.codigos.conDueno}}</b><span>Con dueño</span></div>
+        <div><b>{{stats.codigos.ajenos}}</b><span>Usados por otro</span></div>
+      </div>
+      <div class="st-legend" style="margin-top:10px;">{{stats.codigos.accesos}} acceso(s) · {{stats.codigos.dispositivosNuevos}} dispositivo(s) nuevo(s)</div>
+    </div>
+
+    <div class="pn-card st-card">
+      <h4>Prospectos</h4>
+      <div class="st-rows">
+        {{#each stats.prospectos}}
+        <div class="st-row"><strong>{{this.label}}</strong><span>{{this.n}}</span></div>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="pn-card st-card">
+      <h4>Contenido publicado</h4>
+      <div class="st-mini">
+        <div><b>{{stats.contenido.noticias}}</b><span>Noticias</span></div>
+        <div><b>{{stats.contenido.avances}}</b><span>Avances</span></div>
+        <div><b>{{stats.contenido.medios}}</b><span>En medios</span></div>
+        <div><b>{{stats.contenido.actividades}}</b><span>Actividades</span></div>
+        <div><b>{{stats.contenido.etapas}}</b><span>Etapas</span></div>
+        <div><b>{{stats.contenido.faqs}}</b><span>FAQ</span></div>
+        <div><b>{{stats.contenido.notificaciones}}</b><span>Notificaciones</span></div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- NOTICIAS -->
 <section class="ad-sec" id="sec-noticias">
@@ -2197,6 +2386,7 @@
     box.setAttribute('placeholder', 'Buscar usuarios, noticias, eventos…');
 
     var SECTION = {
+      estadisticas: { label: 'Estadísticas', color: '#0E9F6E' },
       noticias: { label: 'Noticias', color: '#6C3CE0' },
       calendario: { label: 'Eventos', color: '#A78BE6' },
       cronograma: { label: 'Cronograma', color: '#1E8E5A' },
@@ -2208,7 +2398,7 @@
       mapa: { label: 'Mapa de códigos', color: '#D97706' },
       leads: { label: 'Prospectos', color: '#6C3CE0' }
     };
-    var ORDER = ['Inversionistas','Patrocinadores','Prospectos','Noticias','Ediciones','Cronograma','Categorías','Notificaciones','Códigos','Accesos','Mapa de códigos'];
+    var ORDER = ['Inversionistas','Patrocinadores','Prospectos','Estadísticas','Noticias','Ediciones','Cronograma','Categorías','Notificaciones','Códigos','Accesos','Mapa de códigos'];
 
     function buildIndex(){
       var idx = [];
