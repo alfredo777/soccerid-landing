@@ -182,6 +182,12 @@
   .ad-langsec { display:none; }
   .ad-langsec.is-active { display:block; }
   .ad-f label em { font-style:normal; color:var(--pn-muted); font-weight:600; }
+  .is-drag { cursor:grab; }
+  .is-drag:active { cursor:grabbing; }
+  .is-dragging { opacity:.4; }
+  .is-over { box-shadow:inset 0 3px 0 var(--pn-purple); }
+  .faq-en { display:inline-block; padding:1px 7px; border-radius:999px; background:#DEF7EC; color:#03543F; font-size:10px; font-weight:800; }
+  .faq-noen { display:inline-block; padding:1px 7px; border-radius:999px; background:#F3F4F6; color:#6B7280; font-size:10px; font-weight:800; }
   .ad-multi { display:inline-block; margin-top:3px; padding:1px 9px; border-radius:999px; background:var(--pn-purple-soft); color:var(--pn-purple); font-size:11px; font-weight:800; }
   .ad-select-sm { border:1px solid var(--pn-border); border-radius:9px; padding:7px 8px; font-size:12px; font-weight:700; font-family:inherit; color:var(--pn-ink-2); background:#fff; cursor:pointer; }
   .ad-actions__link { display:inline-flex; align-items:center; padding:7px 12px; border-radius:9px; background:var(--pn-purple); color:#fff; font-size:12px; font-weight:800; }
@@ -1010,12 +1016,13 @@
     <button type="button" class="ad-btn" style="width:auto; padding:10px 16px; margin:0;" onclick="openFaq()">+ Nueva pregunta</button>
   </div>
   <div class="pn-card">
-    <div class="ad-list">
+    <p class="ad-hint" style="margin:0 0 10px;">Arrastra una pregunta para cambiarle el lugar. El orden se guarda solo.</p>
+    <div class="ad-list" id="faqList" data-kind="faq">
       {{#each faqsAdmin}}
-      <div class="ad-item">
+      <div class="ad-item is-drag" draggable="true" data-id="{{this.id}}">
         <div class="ad-item__b">
           <strong>{{this.question}}</strong>
-          <small>{{this.audienceLabel}}{{#unless this.is_active}} · (inactiva){{/unless}}</small>
+          <small>{{this.audienceLabel}}{{#unless this.is_active}} · (inactiva){{/unless}}{{#if this.traducida}} · <span class="faq-en">EN</span>{{else}} · <span class="faq-noen">sin inglés</span>{{/if}}</small>
         </div>
         <div class="ad-actions">
           <button type="button" class="primary" onclick="openFaq('{{this.id}}')">Editar</button>
@@ -1835,6 +1842,14 @@
         <div class="ad-f"><label>Audiencia</label><select name="audience" id="faq-audience"><option value="all">General (todos)</option><option value="investor">Inversionistas</option><option value="sponsor">Patrocinadores</option></select></div>
         <div class="ad-f"><label>Pregunta</label><input type="text" name="question" id="faq-question" required></div>
         <div class="ad-f"><label>Respuesta</label><textarea name="answer" id="faq-answer" rows="5"></textarea></div>
+
+        <div style="border-top:1px solid var(--pn-border); padding-top:14px; margin-top:4px;">
+          <p class="ad-hint" style="margin:0 0 12px;"><strong>Versión en inglés</strong> — opcional. Si la dejas vacía,
+            a quien tenga el panel en inglés le sale la versión en español, en vez de un hueco.</p>
+          <div class="ad-f"><label>Question (EN)</label><input type="text" name="question_en" id="faq-question_en"></div>
+          <div class="ad-f"><label>Answer (EN)</label><textarea name="answer_en" id="faq-answer_en" rows="5"></textarea></div>
+        </div>
+
         <div class="ad-row2">
           <div class="ad-f"><label>Orden</label><input type="number" name="sort" id="faq-sort" placeholder="0"></div>
           <div class="ad-f"><label>Estado</label><label class="ad-check" style="padding-top:10px;"><input type="checkbox" name="is_active" id="faq-is_active" value="1" checked> Activa</label></div>
@@ -1846,6 +1861,58 @@
 </div>
 <script>
   window.__faqForms = {{{jsonScript faqsAdmin}}};
+  // ── Arrastrar para reordenar ──
+  // Una sola implementación para las dos listas: la del FAQ (guarda en el
+  // servidor) y las filas del editor de ediciones (solo mueven el estado local).
+  function arrastrable(cont, alSoltar){
+    if (!cont) return;
+    var origen = null;
+    cont.addEventListener('dragstart', function(e){
+      origen = e.target.closest('[draggable="true"]');
+      if (!origen) return;
+      origen.classList.add('is-dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      try { e.dataTransfer.setData('text/plain', ''); } catch (_) {}
+    });
+    cont.addEventListener('dragend', function(){
+      if (origen) origen.classList.remove('is-dragging');
+      cont.querySelectorAll('.is-over').forEach(function(x){ x.classList.remove('is-over'); });
+      origen = null;
+    });
+    cont.addEventListener('dragover', function(e){
+      var sobre = e.target.closest('[draggable="true"]');
+      if (!origen || !sobre || sobre === origen) return;
+      e.preventDefault();
+      cont.querySelectorAll('.is-over').forEach(function(x){ x.classList.remove('is-over'); });
+      sobre.classList.add('is-over');
+    });
+    cont.addEventListener('drop', function(e){
+      var sobre = e.target.closest('[draggable="true"]');
+      if (!origen || !sobre || sobre === origen) return;
+      e.preventDefault();
+      var hijos = [].slice.call(cont.querySelectorAll('[draggable="true"]'));
+      var de = hijos.indexOf(origen), a = hijos.indexOf(sobre);
+      cont.insertBefore(origen, de < a ? sobre.nextSibling : sobre);
+      sobre.classList.remove('is-over');
+      alSoltar(de, a, cont);
+    });
+  }
+
+  // FAQ: al soltar se manda el orden completo y se avisa si no se pudo guardar
+  var faqCont = document.getElementById('faqList');
+  arrastrable(faqCont, function(){
+    var ids = [].slice.call(faqCont.querySelectorAll('[data-id]')).map(function(x){ return x.dataset.id; });
+    fetch('/panel/admin/faq/reorder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      credentials: 'same-origin',
+      body: 'ids=' + encodeURIComponent(ids.join(','))
+    })
+      .then(function(r){ return r.json(); })
+      .then(function(j){ if (!j || !j.ok) alert('No se pudo guardar el orden: ' + ((j && j.error) || 'error')); })
+      .catch(function(e){ alert('No se pudo guardar el orden: ' + e.message); });
+  });
+
   function openFaq(id){
     var f = document.getElementById('form-faq');
     var d = (window.__faqForms || []).filter(function(x){ return String(x.id) === String(id); })[0];
@@ -1855,6 +1922,8 @@
       document.getElementById('faq-audience').value = d.audience;
       document.getElementById('faq-question').value = d.question || '';
       document.getElementById('faq-answer').value = d.answer || '';
+      document.getElementById('faq-question_en').value = d.question_en || '';
+      document.getElementById('faq-answer_en').value = d.answer_en || '';
       document.getElementById('faq-sort').value = d.sort || '';
       document.getElementById('faq-is_active').checked = !!d.is_active;
     } else {
@@ -1983,7 +2052,7 @@
       html += '<div class="ed-empty-rows">Sin ' + kind.uno + 's todavía.</div>';
     }
     filas.forEach(function(fila, i){
-      html += '<div class="ed-row" data-i="' + i + '">'
+      html += '<div class="ed-row" draggable="true" data-i="' + i + '">'
         + '<div class="ed-row__head">'
         + '<span class="ed-row__n">' + kind.uno.toUpperCase() + ' ' + (i + 1) + '</span>'
         + '<span class="ed-row__btns">'
@@ -2013,6 +2082,12 @@
       html += '<button type="button" class="ed-add" style="margin-top:7px;" onclick="edSubirVarias(this)">Subir varias imágenes</button>';
     }
     caja.innerHTML = html;
+    // El arrastre se vuelve a enganchar en cada dibujo: el HTML se reemplaza entero
+    arrastrable(caja, function(de, a){
+      var arr = edState[name];
+      arr.splice(a, 0, arr.splice(de, 1)[0]);
+      edRender(name);
+    });
   }
 
   function edAdd(name){

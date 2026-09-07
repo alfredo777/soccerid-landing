@@ -155,8 +155,13 @@ admin (pestaña FAQ) y vista `/panel/faq` con acordeón filtrado por audiencia. 
 del panel **indexa el FAQ primero**, que era el otro pedido.
 
 Pendiente de esta sección:
-- [ ] Reordenar arrastrando (hoy es por número de orden).
-- [ ] Versión ES/EN de cada pregunta.
+- [x] ~~Reordenar arrastrando~~ **HECHO**: se arrastra la pregunta en la lista y el orden
+  se guarda solo (endpoint `/admin/:kind/reorder`, que reescribe los `sort` completos).
+  De paso quedó limpio el orden del FAQ, que traía números repetidos.
+- [x] ~~Versión ES/EN de cada pregunta~~ **HECHO**: columnas `question_en` / `answer_en`,
+  campos en el drawer y distintivo "EN" / "sin inglés" en la lista. **El idioma sale de la
+  preferencia del propio usuario**, y si una pregunta no está traducida se muestra en
+  español en vez de dejar el hueco vacío. Probado cambiando el idioma del perfil.
 
 El contenido inicial de referencia queda abajo.
 
@@ -419,8 +424,9 @@ Notas de implementación:
   tecla, el cursor saltaría fuera del campo.
 
 Pendiente de esta sección:
-- [ ] Arrastrar para reordenar (hoy es con flechas, que funciona pero es más lento con
-  muchas filas).
+- [x] ~~Arrastrar para reordenar~~ **HECHO**: las filas del editor (estadísticas, notas,
+  imágenes, patrocinadores, videos) se arrastran. Las flechas siguen ahí para quien las
+  prefiera.
 - [x] ~~Subir varias imágenes de golpe a la galería~~ **HECHO**: botón "Subir varias" en la galería. Van de una en una por dentro (subir 20 en paralelo satura el dyno) y avisa cuántas fallaron.
 - [x] ~~Vista previa en inglés~~ **HECHO**: la previa tiene botones ES/EN y cae al español
   cuando el campo en inglés está vacío, igual que hace el sitio. Avisa si falta el título

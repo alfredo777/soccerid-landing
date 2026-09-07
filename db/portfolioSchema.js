@@ -222,6 +222,19 @@ async function ensurePortfolioSchema() {
     });
   }
 
+  // FAQ en inglés. Opcional: si está vacío se usa el español, igual que en el
+  // resto del sitio, para no dejar huecos si alguien no traduce una pregunta.
+  if (await knex.schema.hasTable('faqs')) {
+    for (const [col, builder] of [
+      ['question_en', (t) => t.string('question_en')],
+      ['answer_en', (t) => t.text('answer_en')]
+    ]) {
+      if (!(await knex.schema.hasColumn('faqs', col))) {
+        await knex.schema.alterTable('faqs', builder);
+      }
+    }
+  }
+
   // ── FAQ editable (por audiencia) ──
   if (!(await knex.schema.hasTable('faqs'))) {
     await knex.schema.createTable('faqs', (t) => {

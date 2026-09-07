@@ -508,7 +508,13 @@ async function buildPanelData(user, opts = {}) {
     const faqRows = await knex('faqs').where({ is_active: true })
       .andWhere(function () { this.where('audience', 'all').orWhere('audience', user.role); })
       .orderBy([{ column: 'sort' }, { column: 'id' }]);
-    faqs = faqRows.map(f => ({ question: f.question, answer: f.answer || '' }));
+    // El idioma sale de la preferencia del propio usuario; si la pregunta no está
+    // traducida se muestra en español en vez de dejar el hueco vacío.
+    const enIngles = user.language === 'en';
+    faqs = faqRows.map(f => ({
+      question: (enIngles && f.question_en) ? f.question_en : f.question,
+      answer: ((enIngles && f.answer_en) ? f.answer_en : f.answer) || ''
+    }));
   } catch (_) {}
 
   // Perfil editable por el propio usuario (drawer "Mi perfil").
@@ -1139,7 +1145,9 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     const AUD_LBL = { all: 'General', investor: 'Inversionistas', sponsor: 'Patrocinadores' };
     const faqsAdmin = (await knex('faqs').orderBy([{ column: 'sort' }, { column: 'id' }])).map(f => ({
       id: f.id, audience: f.audience, audienceLabel: AUD_LBL[f.audience] || f.audience,
-      question: f.question, answer: f.answer || '', is_active: !!f.is_active, sort: f.sort
+      question: f.question, answer: f.answer || '', is_active: !!f.is_active, sort: f.sort,
+      question_en: f.question_en || '', answer_en: f.answer_en || '',
+      traducida: !!(f.question_en && f.answer_en)
     }));
 
     // ── Panel estadístico del admin ──
@@ -1768,7 +1776,30 @@ router.post('/admin/risk/:id/delete', auth.requireAdmin, async (req, res, next) 
 });
 
 // ── Reordenar (flechas ▲▼): normaliza `sort` y sube/baja un elemento ──
-const REORDER_TABLES = { capital: { table: 'capital_items', hash: 'capital' }, risk: { table: 'risks', hash: 'riesgos' }, milestone: { table: 'milestones', hash: 'cronograma' } };
+const REORDER_TABLES = { capital: { table: 'capital_items', hash: 'capital' }, risk: { table: 'risks', hash: 'riesgos' }, milestone: { table: 'milestones', hash: 'cronograma' }, faq: { table: 'faqs', hash: 'faq' } };
+// Guarda el orden completo tras arrastrar. Se manda la lista entera de ids y se
+// reescriben los `sort`: mover de a uno con flechas funciona, pero con muchas
+// filas es lentísimo.
+router.post('/admin/:kind/reorder', auth.requireAdmin, async (req, res) => {
+  try {
+    const cfg = REORDER_TABLES[req.params.kind];
+    if (!cfg) return res.status(400).json({ error: 'Lista desconocida' });
+    const ids = String(req.body.ids || '').split(',').map(x => parseInt(x, 10)).filter(Boolean);
+    if (!ids.length) return res.status(400).json({ error: 'Orden vacío' });
+    // Solo se tocan filas que existen de verdad en esa tabla
+    const reales = new Set((await knex(cfg.table).whereIn('id', ids).select('id')).map(r => r.id));
+    let n = 0;
+    for (const id of ids) {
+      if (!reales.has(id)) continue;
+      n++;
+      await knex(cfg.table).where({ id }).update({ sort: n });
+    }
+    res.json({ ok: true, ordenadas: n });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
 router.post('/admin/:kind/:id/move', auth.requireAdmin, async (req, res, next) => {
   try {
     const cfg = REORDER_TABLES[req.params.kind];
@@ -2080,6 +2111,8 @@ function faqBody(b) {
   return {
     audience: ['all', 'investor', 'sponsor'].includes(b.audience) ? b.audience : 'all',
     question: (b.question || '').trim(),
+    question_en: (b.question_en || '').trim() || null,
+    answer_en: (b.answer_en || '').trim() || null,
     answer: (b.answer || '').trim() || null,
     is_active: b.is_active ? true : false,
     sort: parseInt(b.sort || '0', 10) || 0
