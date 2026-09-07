@@ -472,7 +472,7 @@
       <div class="ad-f"><label>Canales</label>
         <label class="ad-check"><input type="checkbox" checked disabled> En el panel (siempre)</label>
         <label class="ad-check"><input type="checkbox" name="ch_email" value="1" checked> Email</label>
-        <label class="ad-check"><input type="checkbox" name="ch_sms" value="1"{{#unless twilio.ready}} disabled{{/unless}}> SMS{{#unless twilio.ready}} — configura Twilio en Configuración{{/unless}}</label>
+        <label class="ad-check"><input type="checkbox" name="ch_sms" value="1"{{#unless twilio.ready}} disabled{{/unless}}> SMS{{#unless twilio.ready}} — pega las llaves de Twilio en Configuración para activarlo{{/unless}}</label>
         <div class="ad-hint">Se respeta lo que cada persona eligió en su perfil: si apagó el email o el SMS, no le llega por ahí (en el panel sí).</div>
       </div>
 
@@ -929,11 +929,13 @@
     <div class="pn-card ad-form tw-card">
       <h3>SMS (Twilio)
         {{#if twilio.ready}}<span class="tw-pill tw-on">Activo</span>
-        {{else}}{{#if twilio.configured}}<span class="tw-pill tw-off">Apagado</span>
-        {{else}}<span class="tw-pill tw-off">Sin configurar</span>{{/if}}{{/if}}
+        {{else}}{{#if twilio.partial}}<span class="tw-pill tw-off">Falta {{twilio.missingLabel}}</span>
+        {{else}}<span class="tw-pill tw-off">Sin llaves</span>{{/if}}{{/if}}
       </h3>
       <p class="ad-hint" style="margin:-4px 0 14px;">Las llaves se pegan aquí, no hacen falta variables de entorno ni desplegar.
         Están en <strong>Twilio Console → Account Info</strong>. El token se guarda en la base de datos del panel y ya no se vuelve a mostrar completo.</p>
+      <p class="tw-rule">En cuanto estén las tres llaves, el canal SMS <strong>se activa solo</strong>. No hay otro
+        interruptor que prender. Para apagarlo, borra las credenciales con el botón de abajo.</p>
 
       <form method="POST" action="/panel/admin/settings/twilio">
         <div class="ad-f"><label>Account SID</label>
@@ -947,12 +949,10 @@
           <input type="text" name="from" value="{{twilio.from}}" placeholder="+15551234567" autocomplete="off">
           <div class="ad-hint">El número que compraste en Twilio (formato +52...) o un Messaging Service SID (MG...).</div>
         </div>
-        <label class="ad-check"><input type="checkbox" name="enabled" value="1"{{#if twilio.enabled}} checked{{/if}}> Enviar SMS de verdad</label>
-        <div class="ad-hint" style="margin-bottom:12px;">Desmarcado = las notificaciones siguen saliendo por panel y email, el SMS solo se registra en el log.</div>
         <button type="submit" class="ad-btn">Guardar Twilio</button>
       </form>
 
-      {{#if twilio.configured}}
+      {{#if twilio.ready}}
       <form method="POST" action="/panel/admin/settings/twilio/test" class="tw-test">
         <div class="ad-f"><label>Probar envío</label>
           <input type="text" name="to" placeholder="+521234567890" autocomplete="off">
@@ -961,7 +961,7 @@
         <button type="submit" class="ad-btn ad-btn--ghost">Enviar SMS de prueba</button>
       </form>
       <form method="POST" action="/panel/admin/settings/twilio/clear" data-confirm="¿Borrar las credenciales de Twilio? El SMS dejará de funcionar.">
-        <button type="submit" class="ad-btn ad-btn--ghost tw-danger">Borrar credenciales</button>
+        <button type="submit" class="ad-btn ad-btn--ghost tw-danger">Borrar credenciales y apagar el SMS</button>
       </form>
       {{/if}}
     </div>
@@ -971,6 +971,7 @@
     .tw-on { background:#DEF7EC; color:#03543F; }
     .tw-off { background:#F3F4F6; color:#6B7280; }
     .tw-card .tw-test { margin-top:18px; padding-top:16px; border-top:1px solid var(--pn-border); }
+    .tw-rule { margin:0 0 16px; padding:11px 13px; border-radius:11px; background:var(--pn-purple-soft); color:var(--pn-ink-2); font-size:12.5px; line-height:1.55; }
     .ad-btn--ghost { background:#fff; color:var(--pn-purple); border:1px solid var(--pn-border); }
     .ad-btn--ghost:hover { background:var(--pn-purple-soft); }
     .tw-danger { margin-top:10px; color:#B42318; }

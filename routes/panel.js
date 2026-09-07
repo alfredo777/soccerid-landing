@@ -1729,17 +1729,19 @@ router.post('/admin/settings/twilio', auth.requireAdmin, async (req, res, next) 
     const sid = (req.body.account_sid || '').trim();
     const token = (req.body.auth_token || '').trim();
     const from = (req.body.from || '').trim();
-    const enabled = !!req.body.enabled;
     if (sid && !/^AC[0-9a-f]{32}$/i.test(sid)) {
       return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El Account SID de Twilio empieza con AC y tiene 34 caracteres') + '#configuracion');
     }
     if (from && !/^(\+\d{8,15}|MG[0-9a-f]{32})$/i.test(from)) {
       return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El remitente debe ser un número en formato +521234567890 o un Messaging Service SID (MG...)') + '#configuracion');
     }
-    await panelSms.saveConfig({ account_sid: sid, auth_token: token, from, enabled });
+    await panelSms.saveConfig({ account_sid: sid, auth_token: token, from });
+    // Con las tres llaves puestas el SMS queda activo solo; si falta alguna, se dice cuál.
     const cfg = await panelSms.getPublicConfig();
-    const aviso = enabled && !cfg.configured ? ' — faltan datos, el SMS sigue apagado' : '';
-    res.redirect('/panel/admin?type=' + (aviso ? 'error' : 'ok') + '&msg=' + encodeURIComponent('Twilio guardado' + aviso) + '#configuracion');
+    const msg = cfg.ready
+      ? 'Twilio guardado — el canal SMS quedó activo'
+      : `Twilio guardado, pero falta ${cfg.missingLabel}: el SMS sigue apagado`;
+    res.redirect('/panel/admin?type=' + (cfg.ready ? 'ok' : 'error') + '&msg=' + encodeURIComponent(msg) + '#configuracion');
   } catch (e) {
     res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#configuracion');
   }

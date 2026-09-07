@@ -217,15 +217,21 @@ cambiar una env var reinicia el dyno y hay que entrar por consola, y el organiza
 necesita poder pegar sus llaves sin depender de un deploy. Las env vars
 `TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_FROM` siguen sirviendo de respaldo.
 
+- **Las llaves son el interruptor** (decisión del usuario): con SID, token y remitente
+  puestos, el canal SMS queda activo solo. No hay un switch aparte que se pueda quedar
+  apagado por olvido después de pegar las credenciales. Para apagarlo se borran las
+  credenciales.
 - El token **nunca se vuelve a mostrar**: la vista solo recibe una máscara (`••••••••1234`).
   Si se deja el campo vacío al guardar, se conserva el que ya estaba.
 - Se valida el formato del SID (`AC` + 32 hex) y del remitente (`+52...` o `MG...`) antes
   de guardar, para no descubrir el error hasta el primer envío.
-- Interruptor **"Enviar SMS de verdad"** aparte de las credenciales: se pueden dejar
-  guardadas y apagadas.
+- Si faltan llaves, el admin dice **cuál** falta ("Falta el Auth Token y el remitente"),
+  no un "no funciona" a secas.
 - Botón de **SMS de prueba** y de **borrar credenciales**. El error de Twilio se muestra
   tal cual (probado: con llaves falsas responde "Authenticate", no truena).
-- Mientras no haya Twilio configurado, la casilla de SMS del formulario sale deshabilitada.
+- Mientras no estén las llaves, la casilla de SMS del formulario sale deshabilitada.
+- Marcar SMS **en cada notificación** sigue siendo decisión por mensaje: el canal está
+  disponible, pero no se manda SMS de todo por default (cada uno cuesta).
 
 Pendiente de esta sección:
 - [ ] Que el inversionista elija **por tipo** qué quiere recibir (hoy la preferencia es
