@@ -287,14 +287,22 @@ async function buildPanelData(user, opts = {}) {
   // siempre coincidan con lo que el admin publica (no una lista fija).
   const newsTags = [...new Set(news.map(n => n.tag).filter(Boolean))];
 
-  // Hitos
-  const mileRows = await knex('milestones').orderBy([{ column: 'sort', order: 'asc' }, { column: 'id', order: 'asc' }]);
+  // Etapas del cronograma de la edición activa. Las que no tienen edición son de
+  // antes de que el cronograma se separara por año: se siguen mostrando, si no el
+  // panel se habría quedado vacío de golpe al migrar.
+  const soloDeLaEdicion = (q) => q.where(function () {
+    this.whereNull('event_id');
+    if (invEvent) this.orWhere('event_id', invEvent.id);
+  });
+  const mileRows = await soloDeLaEdicion(knex('milestones'))
+    .orderBy([{ column: 'sort', order: 'asc' }, { column: 'id', order: 'asc' }]);
   const MILE_STATUS = { completado: 'Completado', en_curso: 'En curso', pendiente: 'Pendiente' };
   const milestones = mileRows.map(m => {
     const status = m.status || (m.done ? 'completado' : 'pendiente');
     return {
       title: m.title, date: m.date_label, done: status === 'completado', inProgress: status === 'en_curso',
-      highlight: !!m.highlight, owner: m.owner || '', status, statusLabel: MILE_STATUS[status] || 'Pendiente'
+      highlight: !!m.highlight, owner: m.owner || '', status, statusLabel: MILE_STATUS[status] || 'Pendiente',
+      description: m.description || '', startDate: m.start_date || '', endDate: m.end_date || ''
     };
   });
 
@@ -302,8 +310,14 @@ async function buildPanelData(user, opts = {}) {
   const _now = new Date();
   const fmonth = (opts.calMonth >= 1 && opts.calMonth <= 12) ? opts.calMonth : (_now.getMonth() + 1);
   const fyear = (opts.calYear >= 2000 && opts.calYear <= 2100) ? opts.calYear : _now.getFullYear();
-  const evRows = await knex('events').where({ month: fmonth, year: fyear }).orderBy('day');
-  const events = evRows.map(e => ({ day: e.day, title: e.title, type: e.type, color: e.color, match: !!e.is_match }));
+  const evRows = await soloDeLaEdicion(knex('events').where({ month: fmonth, year: fyear })).orderBy('day');
+  const events = evRows.map(e => ({
+    day: e.day, title: e.title,
+    // Si el tipo es "Otro", lo que importa es lo que escribió el organizador
+    type: e.type === 'Otro' ? (e.custom_type || 'Otro') : e.type,
+    color: e.color, match: !!e.is_match,
+    time: e.time_label || '', note: e.note || ''
+  }));
   const firstWeekday = new Date(fyear, fmonth - 1, 1).getDay();
   const daysInMonth = new Date(fyear, fmonth, 0).getDate();
   const cells = [];
@@ -312,6 +326,17 @@ async function buildPanelData(user, opts = {}) {
     const dayEvents = events.filter(e => e.day === day);
     cells.push({ day, events: dayEvents, match: dayEvents.some(e => e.match) });
   }
+
+  // Agenda del día del partido: vive en la base y pertenece a la edición. Antes
+  // salía de panel_config.json, que en Heroku ni siquiera sobrevive al deploy.
+  let matchAgenda = [];
+  try {
+    const agRows = await soloDeLaEdicion(knex('match_agenda')).orderBy([{ column: 'sort' }, { column: 'id' }]);
+    matchAgenda = agRows.map(a => ({
+      time: a.time_label || '', title: a.title, sub: a.sub || '', color: a.color || '#6C3CE0'
+    }));
+  } catch (_) {}
+  if (!matchAgenda.length) matchAgenda = config.matchAgenda || [];
 
   const notifs = await notificationsForUser(user);
 
@@ -571,7 +596,7 @@ async function buildPanelData(user, opts = {}) {
       prev: { y: fmonth === 1 ? fyear - 1 : fyear, m: fmonth === 1 ? 12 : fmonth - 1 },
       next: { y: fmonth === 12 ? fyear + 1 : fyear, m: fmonth === 12 ? 1 : fmonth + 1 },
       agendaDate: config.matchAgendaDate,
-      agenda: config.matchAgenda
+      agenda: matchAgenda
     }
   };
 }
@@ -911,11 +936,31 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     const tiers = await getTiers();
     const users = await knex('users').whereNot({ role: 'admin' }).orderBy('id', 'desc');
     const news = await knex('news').orderBy([{ column: 'featured', order: 'desc' }, { column: 'sort', order: 'asc' }]);
-    const events = await knex('events').orderBy([{ column: 'year' }, { column: 'month' }, { column: 'day' }]);
+    // Una edición por año, así que el año es el orden natural. `sort` quedaba
+    // desalineado en cuanto se creaba una edición fuera de secuencia.
+    const peRows = await knex('portfolio_events').orderBy('year');
+
+    const eventRowsAdmin = await knex('events').orderBy([{ column: 'year' }, { column: 'month' }, { column: 'day' }]);
+    const edicionPorId = {};
+    peRows.forEach(e => { edicionPorId[e.id] = e; });
+    const events = eventRowsAdmin.map(e => Object.assign({}, e, {
+      typeLabel: e.type === 'Otro' ? (e.custom_type || 'Otro') : e.type,
+      customType: e.custom_type || '', time: e.time_label || '', note: e.note || '',
+      eventId: e.event_id || '',
+      editionLabel: e.event_id && edicionPorId[e.event_id] ? edicionPorId[e.event_id].title : ''
+    }));
+
     const MILE_LABELS = { completado: 'Completado', en_curso: 'En curso', pendiente: 'Pendiente' };
-    const milestones = (await knex('milestones').orderBy('sort')).map(m => {
+    const mileRowsAdmin = await knex('milestones').orderBy([{ column: 'sort' }, { column: 'id' }]);
+    const milestones = mileRowsAdmin.map((m, i) => {
       const status = m.status || (m.done ? 'completado' : 'pendiente');
-      return Object.assign({}, m, { status, statusLabel: MILE_LABELS[status] || 'Pendiente', owner: m.owner || '' });
+      return Object.assign({}, m, {
+        status, statusLabel: MILE_LABELS[status] || 'Pendiente', owner: m.owner || '',
+        description: m.description || '', startDate: m.start_date || '', endDate: m.end_date || '',
+        eventId: m.event_id || '',
+        editionLabel: m.event_id && edicionPorId[m.event_id] ? edicionPorId[m.event_id].title : '',
+        isFirst: i === 0, isLast: i === mileRowsAdmin.length - 1
+      });
     });
     const notifications = await knex('notifications').orderBy('id', 'desc');
 
@@ -1018,9 +1063,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
 
     // Ediciones del portafolio (multievento)
     const PHASE_LBL = PHASE_LABELS;
-    // Una edición por año, así que el año es el orden natural. `sort` quedaba
-    // desalineado en cuanto se creaba una edición fuera de secuencia.
-    const peRows = await knex('portfolio_events').orderBy('year');
+    // (peRows ya se consultó arriba: la usan el calendario y el cronograma)
     const pkCounts = await knex('event_packages').select('event_id').count({ n: '*' }).groupBy('event_id');
     const invAgg = await knex('investments').select('event_id').count({ n: '*' }).sum({ cap: 'capital' }).groupBy('event_id');
     const pkMap = {}; pkCounts.forEach(r => { pkMap[r.event_id] = Number(r.n); });
@@ -1153,6 +1196,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
       notifyEmails, twilio, notifyPeople, notifTypes,
+      actTypes: Object.keys(ACT_TYPES),
       dashboardConfig: await getDashboardConfig(),
       capitalItems, risksAdmin, portfolioEditions, portfolioForms, portfolioPackages, investorsList, faqsAdmin,
       capitalTotalBudget: formatUSD(capitalItems.reduce((s, c) => s + Number(c.budget), 0)),
@@ -1319,42 +1363,112 @@ router.post('/admin/news/:id/delete', auth.requireAdmin, async (req, res, next) 
 });
 
 // Eventos del calendario
-router.post('/admin/event', auth.requireAdmin, async (req, res, next) => {
+// Tipos de actividad del calendario. "Otro" abre un campo de texto para escribir
+// el tipo a mano: el organizador hace cosas que no cabían en la lista corta.
+const ACT_TYPES = {
+  'Evento': '#6C3CE0',
+  'Partido': '#6C3CE0',
+  'Actualización': '#A78BE6',
+  'Patrocinio': '#14141B',
+  'Prensa': '#8A8F98',
+  'Logística': '#0891B2',
+  'Meeting': '#0E9F6E',
+  'Meet & greet': '#D97706',
+  'Junta de inversionistas': '#DB2777',
+  'Otro': '#8A8F98'
+};
+
+// Datos de una actividad, con el mismo saneo al crear y al editar.
+// Devuelve { data } o { error }.
+function actividadBody(b) {
+  const type = ACT_TYPES[b.type] ? b.type : 'Evento';
+  const custom = (b.custom_type || '').trim().slice(0, 40);
+  if (type === 'Otro' && !custom) return { error: 'Escribe qué tipo de actividad es' };
+  const title = (b.title || '').trim();
+  if (!title) return { error: 'La actividad necesita título' };
+
+  const day = parseInt(b.day, 10), month = parseInt(b.month, 10), year = parseInt(b.year, 10);
+  if (!(day >= 1 && day <= 31)) return { error: 'El día debe estar entre 1 y 31' };
+  if (!(month >= 1 && month <= 12)) return { error: 'El mes debe estar entre 1 y 12' };
+  if (!(year >= 2000 && year <= 2100)) return { error: 'El año debe estar entre 2000 y 2100' };
+  // Un 31 de febrero se guarda igual y luego no aparece en ningún mes del calendario
+  if (new Date(year, month - 1, day).getDate() !== day) {
+    return { error: `El ${day}/${month}/${year} no existe` };
+  }
+
+  const hora = (b.time_label || '').trim();
+  if (hora && !/^\d{1,2}:\d{2}$/.test(hora)) return { error: 'La hora va como 19:00' };
+
+  return {
+    data: {
+      day, month, year, title,
+      type, custom_type: type === 'Otro' ? custom : null,
+      color: ACT_TYPES[type],
+      is_match: type === 'Partido',
+      time_label: hora || null,
+      note: (b.note || '').trim() || null,
+      event_id: parseInt(b.event_id, 10) || null
+    }
+  };
+}
+
+router.post('/admin/event', auth.requireAdmin, async (req, res) => {
   try {
-    const typeColors = { 'Evento': '#6C3CE0', 'Actualización': '#A78BE6', 'Patrocinio': '#14141B', 'Prensa': '#8A8F98', 'Partido': '#6C3CE0' };
-    const type = req.body.type || 'Evento';
-    await knex('events').insert({
-      day: parseInt(req.body.day, 10) || 1,
-      month: parseInt(req.body.month, 10) || 3,
-      year: parseInt(req.body.year, 10) || 2027,
-      title: (req.body.title || '').trim(),
-      type, color: typeColors[type] || '#6C3CE0',
-      is_match: type === 'Partido'
-    });
-    res.redirect('/panel/admin?type=ok&msg=Evento+agregado#calendario');
-  } catch (e) { next(e); }
+    const { data, error } = actividadBody(req.body);
+    if (error) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(error) + '#calendario');
+    await knex('events').insert(data);
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Actividad agregada') + '#calendario');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#calendario');
+  }
 });
 router.post('/admin/event/:id/delete', auth.requireAdmin, async (req, res, next) => {
-  try { await knex('events').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=Evento+eliminado#calendario'); } catch (e) { next(e); }
+  try { await knex('events').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=Actividad+eliminada#calendario'); } catch (e) { next(e); }
 });
 
 // Hitos / cronograma
 const MILE_STATUSES = ['pendiente', 'en_curso', 'completado'];
-router.post('/admin/milestone', auth.requireAdmin, async (req, res, next) => {
-  try {
-    const status = MILE_STATUSES.includes(req.body.status) ? req.body.status : 'pendiente';
-    await knex('milestones').insert({
-      title: (req.body.title || '').trim(),
-      date_label: (req.body.date_label || '').trim(),
-      owner: (req.body.owner || '').trim() || null,
+// Una etapa del cronograma. Las etapas no son un set fijo: se agregan, se
+// editan, se reordenan y se borran, y cada edición puede tener las suyas.
+function etapaBody(b) {
+  const title = (b.title || '').trim();
+  if (!title) return { error: 'La etapa necesita nombre' };
+  const status = MILE_STATUSES.includes(b.status) ? b.status : 'pendiente';
+  const fecha = (v) => {
+    const d = String(v == null ? '' : v).trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : null;
+  };
+  const desde = fecha(b.start_date), hasta = fecha(b.end_date);
+  if (desde && hasta && hasta < desde) return { error: 'La fecha de fin es anterior a la de inicio' };
+  return {
+    data: {
+      title,
+      date_label: (b.date_label || '').trim(),
+      owner: (b.owner || '').trim() || null,
+      description: (b.description || '').trim() || null,
+      start_date: desde, end_date: hasta,
       status,
       done: status === 'completado',
-      highlight: req.body.highlight ? true : false,
-      sort: parseInt(req.body.sort || '99', 10) || 99
-    });
-    res.redirect('/panel/admin?type=ok&msg=Hito+agregado#cronograma');
-  } catch (e) { next(e); }
+      highlight: b.highlight ? true : false,
+      event_id: parseInt(b.event_id, 10) || null
+    }
+  };
+}
+
+router.post('/admin/milestone', auth.requireAdmin, async (req, res) => {
+  try {
+    const { data, error } = etapaBody(req.body);
+    if (error) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(error) + '#cronograma');
+    // Se agrega al final salvo que se pida otro lugar
+    const max = await knex('milestones').max({ m: 'sort' }).first();
+    data.sort = parseInt(req.body.sort, 10) || ((Number(max && max.m) || 0) + 1);
+    await knex('milestones').insert(data);
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Etapa agregada') + '#cronograma');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#cronograma');
+  }
 });
+
 router.post('/admin/milestone/:id/delete', auth.requireAdmin, async (req, res, next) => {
   try { await knex('milestones').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=Hito+eliminado#cronograma'); } catch (e) { next(e); }
 });
@@ -1510,37 +1624,26 @@ router.post('/admin/news/:id/update', auth.requireAdmin, upload.single('imageFil
   } catch (e) { next(e); }
 });
 
-router.post('/admin/event/:id/update', auth.requireAdmin, async (req, res, next) => {
+router.post('/admin/event/:id/update', auth.requireAdmin, async (req, res) => {
   try {
-    const typeColors = { 'Evento': '#6C3CE0', 'Actualización': '#A78BE6', 'Patrocinio': '#14141B', 'Prensa': '#8A8F98', 'Partido': '#6C3CE0' };
-    const type = req.body.type || 'Evento';
-    await knex('events').where({ id: req.params.id }).update({
-      day: parseInt(req.body.day, 10) || 1,
-      month: parseInt(req.body.month, 10) || 3,
-      year: parseInt(req.body.year, 10) || 2027,
-      title: (req.body.title || '').trim(),
-      type, color: typeColors[type] || '#6C3CE0',
-      is_match: type === 'Partido',
-      updated_at: knex.fn.now()
-    });
-    res.redirect('/panel/admin?type=ok&msg=Evento+actualizado#calendario');
-  } catch (e) { next(e); }
+    const { data, error } = actividadBody(req.body);
+    if (error) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(error) + '#calendario');
+    await knex('events').where({ id: req.params.id }).update(Object.assign(data, { updated_at: knex.fn.now() }));
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Actividad actualizada') + '#calendario');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#calendario');
+  }
 });
 
-router.post('/admin/milestone/:id/update', auth.requireAdmin, async (req, res, next) => {
+router.post('/admin/milestone/:id/update', auth.requireAdmin, async (req, res) => {
   try {
-    const status = MILE_STATUSES.includes(req.body.status) ? req.body.status : 'pendiente';
-    await knex('milestones').where({ id: req.params.id }).update({
-      title: (req.body.title || '').trim(),
-      date_label: (req.body.date_label || '').trim(),
-      owner: (req.body.owner || '').trim() || null,
-      status,
-      done: status === 'completado',
-      highlight: req.body.highlight ? true : false,
-      updated_at: knex.fn.now()
-    });
-    res.redirect('/panel/admin?type=ok&msg=Hito+actualizado#cronograma');
-  } catch (e) { next(e); }
+    const { data, error } = etapaBody(req.body);
+    if (error) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(error) + '#cronograma');
+    await knex('milestones').where({ id: req.params.id }).update(Object.assign(data, { updated_at: knex.fn.now() }));
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Etapa actualizada') + '#cronograma');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#cronograma');
+  }
 });
 
 // Categorías (tiers): editar etiqueta, color, monto, cupo y beneficios
@@ -1798,13 +1901,14 @@ router.get('/admin/evento/:id', auth.requireAdmin, async (req, res, next) => {
     const ev = await knex('portfolio_events').where({ id: req.params.id }).first();
     if (!ev) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Edición no encontrada') + '#eventos');
 
-    const [updates, docs, media, comms, invs, packages] = await Promise.all([
+    const [updates, docs, media, comms, invs, packages, agenda] = await Promise.all([
       knex('event_updates').where({ event_id: ev.id }).orderBy([{ column: 'update_date', order: 'desc' }, { column: 'id', order: 'desc' }]),
       knex('event_documents').where({ event_id: ev.id }).orderBy([{ column: 'folder' }, { column: 'sort' }, { column: 'id' }]),
       knex('event_media').where({ event_id: ev.id }).orderBy([{ column: 'media_date', order: 'desc' }, { column: 'id', order: 'desc' }]),
       knex('event_communications').where({ event_id: ev.id }).orderBy('id', 'desc'),
       knex('investments').where({ event_id: ev.id }),
-      knex('event_packages').where({ event_id: ev.id })
+      knex('event_packages').where({ event_id: ev.id }),
+      knex('match_agenda').where({ event_id: ev.id }).orderBy([{ column: 'sort' }, { column: 'id' }])
     ]);
 
     const users = await knex('users').whereNot({ role: 'admin' });
@@ -1872,6 +1976,9 @@ router.get('/admin/evento/:id', auth.requireAdmin, async (req, res, next) => {
         id: c.id, title: c.title, body: c.body || '', audience: c.audience || 'all',
         audienceLabel: VISIBILITY[c.audience] || c.audience,
         status: c.status || 'activo', date: c.comm_date || ''
+      })),
+      agenda: agenda.map(a => ({
+        id: a.id, time: a.time_label || '', title: a.title, sub: a.sub || '', color: a.color || '#6C3CE0'
       })),
       investments: invs.map(i => ({
         id: i.id, name: (userById[i.user_id] || {}).name || 'Cuenta eliminada',
@@ -1973,6 +2080,32 @@ router.post('/admin/evento/:id/medio/:mid/delete', auth.requireAdmin, async (req
     const n = await knex('event_media').where({ id: req.params.mid, event_id: req.params.id }).del();
     res.redirect(evBack(req.params.id, !!n, n ? 'Nota eliminada' : 'Esa nota no es de esta edición', 'medios'));
   } catch (e) { res.redirect(evBack(req.params.id, false, e.message, 'medios')); }
+});
+
+// ── Agenda del día del partido (por edición) ──
+router.post('/admin/evento/:id/agenda', auth.requireAdmin, async (req, res) => {
+  const id = req.params.id;
+  try {
+    const title = (req.body.title || '').trim();
+    if (!title) return res.redirect(evBack(id, false, 'El bloque necesita título', 'agenda'));
+    const hora = (req.body.time_label || '').trim();
+    if (hora && !/^\d{1,2}:\d{2}$/.test(hora)) return res.redirect(evBack(id, false, 'La hora va como 19:00', 'agenda'));
+    const max = await knex('match_agenda').where({ event_id: id }).max({ m: 'sort' }).first();
+    await knex('match_agenda').insert({
+      event_id: id, title,
+      time_label: hora || null,
+      sub: (req.body.sub || '').trim() || null,
+      color: /^#[0-9a-f]{6}$/i.test(req.body.color || '') ? req.body.color : '#6C3CE0',
+      sort: (Number(max && max.m) || 0) + 1
+    });
+    res.redirect(evBack(id, true, 'Bloque agregado a la agenda', 'agenda'));
+  } catch (e) { res.redirect(evBack(id, false, e.message, 'agenda')); }
+});
+router.post('/admin/evento/:id/agenda/:aid/delete', auth.requireAdmin, async (req, res) => {
+  try {
+    const n = await knex('match_agenda').where({ id: req.params.aid, event_id: req.params.id }).del();
+    res.redirect(evBack(req.params.id, !!n, n ? 'Bloque eliminado' : 'Ese bloque no es de esta edición', 'agenda'));
+  } catch (e) { res.redirect(evBack(req.params.id, false, e.message, 'agenda')); }
 });
 
 // ── Comunicaciones por edición y modalidad ──

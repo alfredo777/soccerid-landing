@@ -392,37 +392,56 @@
 <section class="ad-sec" id="sec-calendario">
   <div class="ad-grid">
     <form class="pn-card ad-form" method="POST" action="/panel/admin/event">
-      <h3>Agregar evento</h3>
-      <div class="ad-f"><label>Título</label><input type="text" name="title" required></div>
+      <h3>Agregar actividad</h3>
+      <p class="ad-hint" style="margin:-4px 0 12px;">Todo lo que se haga, no solo las fechas del evento: juntas, prensa, logística, meet &amp; greets.</p>
+      <div class="ad-f"><label>Título</label><input type="text" name="title" required placeholder="Junta con inversionistas"></div>
       <div class="ad-row2">
-        <div class="ad-f"><label>Día</label><input type="number" name="day" min="1" max="31" required></div>
-        <div class="ad-f"><label>Tipo</label><select name="type"><option>Evento</option><option>Actualización</option><option>Patrocinio</option><option>Prensa</option><option>Partido</option></select></div>
+        <div class="ad-f"><label>Tipo</label>
+          <select name="type" id="ac-type" onchange="acTipo('ac')">
+            {{#each actTypes}}<option value="{{this}}">{{this}}</option>{{/each}}
+          </select>
+        </div>
+        <div class="ad-f"><label>Edición</label>
+          <select name="event_id">
+            <option value="">Todas (sin edición)</option>
+            {{#each portfolioEditions}}<option value="{{this.id}}"{{#if this.isActiveEdition}} selected{{/if}}>{{this.year}} · {{this.title}}</option>{{/each}}
+          </select>
+        </div>
       </div>
-      <div class="ad-row2">
+      <div class="ad-f" id="ac-custom-wrap" style="display:none;"><label>¿Qué tipo de actividad es?</label>
+        <input type="text" name="custom_type" id="ac-custom" maxlength="40" placeholder="Ej. Firma de contrato">
+      </div>
+      <div class="ad-row3">
+        <div class="ad-f"><label>Día</label><input type="number" name="day" min="1" max="31" required></div>
         <div class="ad-f"><label>Mes</label><input type="number" name="month" min="1" max="12" value="3"></div>
         <div class="ad-f"><label>Año</label><input type="number" name="year" value="2027"></div>
+      </div>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Hora <em>(opcional)</em></label><input type="text" name="time_label" placeholder="19:00"></div>
+        <div class="ad-f"><label>Nota <em>(opcional)</em></label><input type="text" name="note" placeholder="Sala de juntas"></div>
       </div>
       <button type="submit" class="ad-btn">Agregar al calendario</button>
     </form>
 
     <div class="pn-card">
-      <div class="pn-card__head"><h3>Eventos ({{events.length}})</h3></div>
+      <div class="pn-card__head"><h3>Actividades ({{events.length}})</h3></div>
       <div class="ad-list">
         {{#each events}}
         <div class="ad-item">
           <div class="ad-item__av" style="background: {{this.color}}">{{this.day}}</div>
           <div class="ad-item__b">
             <strong>{{this.title}}</strong>
-            <small>{{this.day}}/{{this.month}}/{{this.year}} · {{this.type}}</small>
+            <small>{{this.day}}/{{this.month}}/{{this.year}}{{#if this.time}} · {{this.time}}{{/if}} · {{this.typeLabel}}{{#if this.editionLabel}} · {{this.editionLabel}}{{else}} · todas las ediciones{{/if}}</small>
           </div>
           <div class="ad-actions">
             <button type="button" class="primary" onclick="openEvent(this)"
-              data-id="{{this.id}}" data-title="{{this.title}}" data-day="{{this.day}}" data-month="{{this.month}}" data-year="{{this.year}}" data-type="{{this.type}}">Editar</button>
+              data-id="{{this.id}}" data-title="{{this.title}}" data-day="{{this.day}}" data-month="{{this.month}}" data-year="{{this.year}}" data-type="{{this.type}}"
+              data-custom="{{this.customType}}" data-time="{{this.time}}" data-note="{{this.note}}" data-event="{{this.eventId}}">Editar</button>
             <form method="POST" action="/panel/admin/event/{{this.id}}/delete" data-confirm="¿Eliminar evento?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
         {{else}}
-        <div class="ad-empty">No hay eventos.</div>
+        <div class="ad-empty">Todavía no hay actividades en el calendario.</div>
         {{/each}}
       </div>
     </div>
@@ -433,28 +452,42 @@
 <section class="ad-sec" id="sec-cronograma">
   <div class="ad-grid">
     <form class="pn-card ad-form" method="POST" action="/panel/admin/milestone">
-      <h3>Agregar hito</h3>
-      <div class="ad-f"><label>Título</label><input type="text" name="title" required></div>
+      <h3>Agregar etapa</h3>
+      <p class="ad-hint" style="margin:-4px 0 12px;">Las etapas son las tuyas: agrega, edita, reordena y borra las que quieras.
+        Planeación → Negociación → Producción → Evento → Cierre es solo un punto de partida.</p>
+      <div class="ad-f"><label>Nombre de la etapa</label><input type="text" name="title" required placeholder="Negociación de sede"></div>
       <div class="ad-row2">
         <div class="ad-f"><label>Fecha (texto)</label><input type="text" name="date_label" placeholder="Sep 2026"></div>
         <div class="ad-f"><label>Estado</label>
           <select name="status"><option value="pendiente">Pendiente</option><option value="en_curso">En curso</option><option value="completado">Completado</option></select>
         </div>
       </div>
+      <div class="ad-row2">
+        <div class="ad-f"><label>Inicio <em>(opcional)</em></label><input type="date" name="start_date"></div>
+        <div class="ad-f"><label>Fin <em>(opcional)</em></label><input type="date" name="end_date"></div>
+      </div>
+      <div class="ad-f"><label>Edición</label>
+        <select name="event_id">
+          <option value="">Todas (sin edición)</option>
+          {{#each portfolioEditions}}<option value="{{this.id}}"{{#if this.isActiveEdition}} selected{{/if}}>{{this.year}} · {{this.title}}</option>{{/each}}
+        </select>
+      </div>
       <div class="ad-f"><label>Responsable</label><input type="text" name="owner" placeholder="Ej. Dirección financiera"></div>
+      <div class="ad-f"><label>Descripción <em>(opcional)</em></label><textarea name="description" rows="2" placeholder="Qué incluye esta etapa."></textarea></div>
       <label class="ad-check"><input type="checkbox" name="highlight" value="1"> Destacar (partido)</label>
-      <button type="submit" class="ad-btn" style="margin-top:14px;">Agregar hito</button>
+      <button type="submit" class="ad-btn" style="margin-top:14px;">Agregar etapa</button>
     </form>
 
     <div class="pn-card">
-      <div class="pn-card__head"><h3>Cronograma ({{milestones.length}})</h3></div>
+      <div class="pn-card__head"><h3>Etapas ({{milestones.length}})</h3></div>
       <div class="ad-list">
         {{#each milestones}}
         <div class="ad-item">
           <div class="ad-item__av" style="background: {{#eq this.status 'completado'}}#1E8E5A{{else}}{{#eq this.status 'en_curso'}}#6C3CE0{{else}}#8A8F98{{/eq}}{{/eq}}">{{#eq this.status 'completado'}}✓{{else}}{{#eq this.status 'en_curso'}}◐{{else}}○{{/eq}}{{/eq}}</div>
           <div class="ad-item__b">
             <strong>{{this.title}}</strong>
-            <small>{{this.date_label}} · {{this.statusLabel}}{{#if this.owner}} · {{this.owner}}{{/if}}{{#if this.highlight}} · Destacado{{/if}}</small>
+            <small>{{this.date_label}} · {{this.statusLabel}}{{#if this.owner}} · {{this.owner}}{{/if}}{{#if this.editionLabel}} · {{this.editionLabel}}{{else}} · todas las ediciones{{/if}}{{#if this.highlight}} · Destacado{{/if}}</small>
+            {{#if this.description}}<small>{{this.description}}</small>{{/if}}
           </div>
           <div class="ad-move">
             <form method="POST" action="/panel/admin/milestone/{{this.id}}/move"><input type="hidden" name="dir" value="up"><button type="submit" {{#if @first}}disabled{{/if}} title="Subir"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></button></form>
@@ -462,12 +495,13 @@
           </div>
           <div class="ad-actions">
             <button type="button" class="primary" onclick="openMile(this)"
-              data-id="{{this.id}}" data-title="{{this.title}}" data-date="{{this.date_label}}" data-status="{{this.status}}" data-owner="{{this.owner}}" data-highlight="{{#if this.highlight}}1{{/if}}">Editar</button>
-            <form method="POST" action="/panel/admin/milestone/{{this.id}}/delete" data-confirm="¿Eliminar hito?"><button type="submit" class="danger">Eliminar</button></form>
+              data-id="{{this.id}}" data-title="{{this.title}}" data-date="{{this.date_label}}" data-status="{{this.status}}" data-owner="{{this.owner}}" data-highlight="{{#if this.highlight}}1{{/if}}"
+              data-desc="{{this.description}}" data-start="{{this.startDate}}" data-end="{{this.endDate}}" data-event="{{this.eventId}}">Editar</button>
+            <form method="POST" action="/panel/admin/milestone/{{this.id}}/delete" data-confirm="¿Eliminar esta etapa?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
         {{else}}
-        <div class="ad-empty">No hay hitos.</div>
+        <div class="ad-empty">Todavía no hay etapas en el cronograma.</div>
         {{/each}}
       </div>
     </div>
@@ -1150,17 +1184,34 @@
 
 <div class="ad-modal" id="modal-event">
   <div class="ad-modal__card">
-    <div class="ad-modal__head"><h3>Editar evento</h3><button class="ad-modal__close" onclick="closeModal('modal-event')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+    <div class="ad-modal__head"><h3>Editar actividad</h3><button class="ad-modal__close" onclick="closeModal('modal-event')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
     <div class="ad-modal__body">
       <form method="POST" id="form-event">
         <div class="ad-f"><label>Título</label><input type="text" name="title" id="ee-title" required></div>
         <div class="ad-row2">
-          <div class="ad-f"><label>Día</label><input type="number" name="day" id="ee-day" min="1" max="31"></div>
-          <div class="ad-f"><label>Tipo</label><select name="type" id="ee-type"><option>Evento</option><option>Actualización</option><option>Patrocinio</option><option>Prensa</option><option>Partido</option></select></div>
+          <div class="ad-f"><label>Tipo</label>
+            <select name="type" id="ee-type" onchange="acTipo('ee')">
+              {{#each actTypes}}<option value="{{this}}">{{this}}</option>{{/each}}
+            </select>
+          </div>
+          <div class="ad-f"><label>Edición</label>
+            <select name="event_id" id="ee-event">
+              <option value="">Todas (sin edición)</option>
+              {{#each portfolioEditions}}<option value="{{this.id}}">{{this.year}} · {{this.title}}</option>{{/each}}
+            </select>
+          </div>
         </div>
-        <div class="ad-row2">
+        <div class="ad-f" id="ee-custom-wrap" style="display:none;"><label>¿Qué tipo de actividad es?</label>
+          <input type="text" name="custom_type" id="ee-custom" maxlength="40" placeholder="Ej. Firma de contrato">
+        </div>
+        <div class="ad-row3">
+          <div class="ad-f"><label>Día</label><input type="number" name="day" id="ee-day" min="1" max="31"></div>
           <div class="ad-f"><label>Mes</label><input type="number" name="month" id="ee-month" min="1" max="12"></div>
           <div class="ad-f"><label>Año</label><input type="number" name="year" id="ee-year"></div>
+        </div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Hora <em>(opcional)</em></label><input type="text" name="time_label" id="ee-time" placeholder="19:00"></div>
+          <div class="ad-f"><label>Nota <em>(opcional)</em></label><input type="text" name="note" id="ee-note"></div>
         </div>
         <button type="submit" class="ad-btn" style="margin-top:6px;">Guardar cambios</button>
       </form>
@@ -1170,7 +1221,7 @@
 
 <div class="ad-modal" id="modal-mile">
   <div class="ad-modal__card">
-    <div class="ad-modal__head"><h3>Editar hito</h3><button class="ad-modal__close" onclick="closeModal('modal-mile')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+    <div class="ad-modal__head"><h3>Editar etapa</h3><button class="ad-modal__close" onclick="closeModal('modal-mile')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
     <div class="ad-modal__body">
       <form method="POST" id="form-mile">
         <div class="ad-f"><label>Título</label><input type="text" name="title" id="em-title" required></div>
@@ -1180,7 +1231,18 @@
             <select name="status" id="em-status"><option value="pendiente">Pendiente</option><option value="en_curso">En curso</option><option value="completado">Completado</option></select>
           </div>
         </div>
+        <div class="ad-row2">
+          <div class="ad-f"><label>Inicio <em>(opcional)</em></label><input type="date" name="start_date" id="em-start"></div>
+          <div class="ad-f"><label>Fin <em>(opcional)</em></label><input type="date" name="end_date" id="em-end"></div>
+        </div>
+        <div class="ad-f"><label>Edición</label>
+          <select name="event_id" id="em-event">
+            <option value="">Todas (sin edición)</option>
+            {{#each portfolioEditions}}<option value="{{this.id}}">{{this.year}} · {{this.title}}</option>{{/each}}
+          </select>
+        </div>
         <div class="ad-f"><label>Responsable</label><input type="text" name="owner" id="em-owner" placeholder="Ej. Dirección financiera"></div>
+        <div class="ad-f"><label>Descripción</label><textarea name="description" id="em-desc" rows="2"></textarea></div>
         <label class="ad-check"><input type="checkbox" name="highlight" id="em-highlight" value="1"> Destacar (partido)</label>
         <button type="submit" class="ad-btn" style="margin-top:14px;">Guardar cambios</button>
       </form>
@@ -2016,6 +2078,17 @@
     document.getElementById('en-featured').checked = (d.featured === '1');
     openModal('modal-news');
   }
+  // El tipo "Otro" abre un campo para escribirlo; con cualquier otro se esconde.
+  function acTipo(pref){
+    var sel = document.getElementById(pref + '-type');
+    var wrap = document.getElementById(pref + '-custom-wrap');
+    if (!sel || !wrap) return;
+    var otro = sel.value === 'Otro';
+    wrap.style.display = otro ? '' : 'none';
+    var inp = document.getElementById(pref + '-custom');
+    if (inp) inp.required = otro;
+  }
+
   function openEvent(btn){
     var d = btn.dataset;
     document.getElementById('form-event').action = '/panel/admin/event/'+d.id+'/update';
@@ -2024,6 +2097,11 @@
     document.getElementById('ee-month').value = d.month;
     document.getElementById('ee-year').value = d.year;
     document.getElementById('ee-type').value = d.type;
+    document.getElementById('ee-custom').value = d.custom || '';
+    document.getElementById('ee-time').value = d.time || '';
+    document.getElementById('ee-note').value = d.note || '';
+    document.getElementById('ee-event').value = d.event || '';
+    acTipo('ee');
     openModal('modal-event');
   }
   function openDocs(btn){
@@ -2055,6 +2133,10 @@
     document.getElementById('em-status').value = (d.status || 'pendiente');
     document.getElementById('em-owner').value = (d.owner || '');
     document.getElementById('em-highlight').checked = (d.highlight === '1');
+    document.getElementById('em-desc').value = (d.desc || '');
+    document.getElementById('em-start').value = (d.start || '');
+    document.getElementById('em-end').value = (d.end || '');
+    document.getElementById('em-event').value = (d.event || '');
     openModal('modal-mile');
   }
 

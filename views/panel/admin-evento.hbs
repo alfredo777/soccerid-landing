@@ -99,6 +99,7 @@
   <a href="#evidencias">Evidencias</a>
   <a href="#medios">En medios</a>
   <a href="#comunicaciones">Comunicaciones</a>
+  <a href="#agenda">Agenda del partido</a>
   <a href="#inversiones">Inversiones</a>
 </nav>
 
@@ -321,6 +322,41 @@
       <label class="ev-check"><input type="checkbox" name="notificar" value="1" checked> Avisarles ahora (panel + email)</label>
       <div class="ev-hint" style="margin:-6px 0 12px;">Solo les llega a los inversionistas que tienen una inversión en <strong>esta</strong> edición, y de la modalidad elegida. Se respeta si alguien apagó el correo en su perfil.</div>
       <button type="submit" class="ev-btn">Guardar comunicación</button>
+    </form>
+  </div>
+</section>
+
+<!-- AGENDA DEL PARTIDO -->
+<section class="pn-card ev-sec" id="agenda">
+  <h3>Agenda del día del partido ({{agenda.length}})</h3>
+  <p class="ev-sub">Lo que pasa el día del evento, en orden: Fan Fest, hospitality, alfombra roja, kickoff.
+    El inversionista la ve en su calendario. Antes vivía en un archivo del proyecto y no había dónde editarla
+    — y en Heroku ese archivo ni siquiera sobrevive al deploy.</p>
+  {{#each agenda}}
+  <div class="ev-item">
+    <div class="ev-item__b">
+      <strong>{{#if this.time}}{{this.time}} · {{/if}}{{this.title}}</strong>
+      {{#if this.sub}}<small>{{this.sub}}</small>{{/if}}
+    </div>
+    <div class="ev-item__act">
+      <form method="POST" action="/panel/admin/evento/{{../ev.id}}/agenda/{{this.id}}/delete" data-confirm="¿Eliminar este bloque de la agenda?">
+        <button type="submit" class="danger">Eliminar</button>
+      </form>
+    </div>
+  </div>
+  {{else}}
+  <div class="ev-empty">Esta edición no tiene agenda del día del partido.</div>
+  {{/each}}
+
+  <div class="ev-formwrap">
+    <form method="POST" action="/panel/admin/evento/{{ev.id}}/agenda">
+      <div class="ev-row2">
+        <div class="ev-f"><label>Hora</label><input type="text" name="time_label" placeholder="19:00"></div>
+        <div class="ev-f"><label>Color</label><input type="color" name="color" value="#6C3CE0" style="height:44px; padding:4px;"></div>
+      </div>
+      <div class="ev-f"><label>Título</label><input type="text" name="title" required placeholder="Kickoff — Tigres vs Cruz Azul"></div>
+      <div class="ev-f"><label>Detalle</label><input type="text" name="sub" placeholder="Shell Energy Stadium"></div>
+      <button type="submit" class="ev-btn">Agregar a la agenda</button>
     </form>
   </div>
 </section>

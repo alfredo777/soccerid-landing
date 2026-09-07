@@ -294,48 +294,50 @@ Detalles:
   Ahora tiene estado vacío con mensaje, y chips de categoría que filtran.
 
 
-## Calendario ↔ Cronograma (unificados y editables)
-- [x] ~~**El calendario no despliega nada**~~ **HECHO**: abría en un mes fijo de
-  configuración. Ahora abre en el **mes actual** y las flechas navegan (`?y=&m=`).
-- [ ] **Calendario y cronograma a la vez** (una sola fuente por fecha, mostrada como
-  calendario Y como línea de tiempo). Ligar hitos ↔ actividades del calendario.
-- [ ] **Cronograma = ETAPAS** (estructura macro). Las etapas son **dinámicas y
-  editables**, NO un set fijo: se pueden **agregar, editar, reordenar y eliminar**
-  (nombre, orden, estado, fechas). Vista **cronograma por etapas**.
-  - (Las etapas por defecto Planeación→Negociación→Producción→Evento→Cierre son solo
-    un punto de partida; cada edición puede tener sus propias etapas.)
-- [ ] **Calendario = ACTIVIDADES por tipo** (además de las etapas): eventos, meetings,
-  meet & greets, **junta de inversionistas**, prensa, **logística**, etc. Tipos de
-  actividad configurables. Muestra todo lo que se haga, no solo las etapas.
-  - [ ] Ampliar el select **"Tipo"** actual (Evento, Actualización, Patrocinio, Prensa,
-    Partido) con más tipos: **Logística, Meeting, Meet & greet, Junta de inversionistas,
-    Otro**.
-  - [ ] Opción **"Otro"** → muestra un **campo de texto** (alert/input) para escribir el
-    tipo personalizado y guardarlo con la actividad.
-- [ ] **Todo editable desde el admin**: etapas (agregar/editar/orden/eliminar), tipos
-  de actividad, actividades del calendario, fechas y estados.
-- [ ] **"Agenda del partido" no es editable en el admin**: hoy la agenda del día del
-  evento (Fan Fest, Apertura de Hospitality, Alfombra roja, Kickoff, etc.) viene de
-  `contents/panel_config.json` (`matchAgenda`), no hay dónde editarla. Hacerla editable
-  desde el admin (por edición).
-- [ ] Estado vacío con mensaje; en multievento, filtrar por **edición activa** (cada
-  edición tiene su calendario/cronograma).
-- [ ] **Vinculación con Google Calendar** (el **API ya está habilitado** en Google Cloud;
-  falta implementar). Alcance:
-  - [ ] Sincronizar las **actividades del calendario del panel** con un calendario de
-    Google (crear/actualizar/eliminar eventos; guardar `google_event_id` en la tabla
-    de actividades para evitar duplicados).
-  - [ ] Definir modo: **calendario de la organización** (service account con calendario
-    compartido) y/o **calendario del usuario** (OAuth por inversionista para que agregue
-    los hitos/actividades a su propia agenda).
-  - [ ] Botón **"Agregar a mi Google Calendar"** por actividad/hito + opción de
-    **suscripción** (iCal/ICS feed) como alternativa sin OAuth.
-  - [ ] Credenciales: reutilizar el proyecto de Google ya creado (mismas
-    `GOOGLE_CLIENT_ID/SECRET` del login, agregando el scope de Calendar) o una service
-    account; guardar en `*.local.md` gitignored + env vars de Heroku. Se relaciona con
-    la sección **"Login con Google (en pausa)"**.
-  - [ ] Filtrar por **edición activa** y respetar tipos de actividad (etapas vs
-    actividades) al exportar.
+## Calendario ↔ Cronograma (editables y por edición) — HECHO, salvo Google Calendar
+
+Antes el calendario y el cronograma eran **globales**: con varias ediciones, lo de 2025 se
+mezclaba con lo de 2027. Ahora las actividades y las etapas **pertenecen a una edición** y
+el inversionista ve las de la **edición activa** (la que elige el admin).
+
+- [x] ~~El calendario no despliega nada~~: abre en el **mes actual** y las flechas navegan.
+- [x] **Calendario = actividades por tipo.** La lista corta se amplió: Evento, Partido,
+  Actualización, Patrocinio, Prensa, **Logística, Meeting, Meet & greet, Junta de
+  inversionistas** y **Otro**.
+- [x] **"Otro" abre un campo de texto** para escribir el tipo a mano, y eso es lo que se
+  muestra después. El organizador hace cosas que no caben en una lista cerrada.
+- [x] Las actividades tienen **hora y nota** opcionales.
+- [x] **Cronograma = etapas dinámicas**, no un set fijo: se agregan, editan, **reordenan**
+  (subir/bajar) y borran. Cada etapa puede tener descripción, fecha de inicio y de fin.
+- [x] **Todo por edición**, con opción "Todas (sin edición)" para lo que no dependa del año.
+  Las filas viejas, que no tenían edición, se siguen mostrando: si no, el panel se habría
+  quedado vacío de golpe al migrar.
+- [x] **Agenda del día del partido editable**. Vivía en `contents/panel_config.json`, donde
+  no había forma de tocarla desde el admin **y que en Heroku ni siquiera sobrevive al
+  deploy**. Ahora es la tabla `match_agenda`, por edición, con su sección en la página de
+  la edición. La migración **siembra lo que ya estaba en el JSON**, así que no se pierde.
+- [x] Estados vacíos con mensaje en actividades y etapas.
+
+Validación (todo en el servidor, no solo en el navegador):
+- Fechas que no existen se rechazan: un **31 de febrero** se guardaba igual y luego la
+  actividad no aparecía en ningún mes del calendario, sin explicación.
+- Día 1–31, mes 1–12, año 2000–2100; hora con formato `19:00`; título obligatorio.
+- Si el tipo es "Otro", hay que escribir cuál.
+- En las etapas, la fecha de fin no puede ser anterior a la de inicio.
+- Los bloques de agenda solo se borran desde su propia edición.
+
+Pendiente de esta sección:
+- [ ] **Vinculación con Google Calendar** — **diferido a propósito**: el API está
+  habilitado, pero la pantalla de consentimiento de Google sigue en *Testing* y el login
+  de Google está oculto. No tiene sentido construir sobre eso hasta que se publique.
+  Cuando toque: sincronizar actividades (guardando `google_event_id` para no duplicar),
+  decidir entre calendario de la organización (service account) y calendario del usuario
+  (OAuth), botón "Agregar a mi Google Calendar" y feed iCal como alternativa sin OAuth.
+- [ ] Que la etapa y la actividad se vean como **una sola línea de tiempo** (hoy conviven,
+  pero cada una con su vista).
+- [ ] Tipos de actividad configurables desde el admin (hoy la lista está en el código y
+  "Otro" cubre lo que falte).
+
 
 ## Noticias
 - [x] ~~URL de la nota original + "Ver original"~~ **HECHO**: columna `news.source_url`

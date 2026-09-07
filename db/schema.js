@@ -157,6 +157,52 @@ async function ensureSchema() {
     });
   }
 
+  // Calendario y cronograma por edición.
+  // Antes las actividades y las etapas eran globales: al haber varias ediciones,
+  // el calendario de 2025 se mezclaba con el de 2027.
+  if (await knex.schema.hasTable('events')) {
+    const evCols = [
+      ['event_id', (t) => t.integer('event_id')],
+      ['custom_type', (t) => t.string('custom_type')],   // cuando el tipo es "Otro"
+      ['time_label', (t) => t.string('time_label')],     // hora opcional de la actividad
+      ['note', (t) => t.string('note')]
+    ];
+    for (const [name, build] of evCols) {
+      if (!(await knex.schema.hasColumn('events', name))) {
+        await knex.schema.alterTable('events', (t) => build(t));
+      }
+    }
+  }
+
+  if (await knex.schema.hasTable('milestones')) {
+    const mileCols = [
+      ['event_id', (t) => t.integer('event_id')],
+      ['description', (t) => t.text('description')],
+      ['start_date', (t) => t.string('start_date')],
+      ['end_date', (t) => t.string('end_date')]
+    ];
+    for (const [name, build] of mileCols) {
+      if (!(await knex.schema.hasColumn('milestones', name))) {
+        await knex.schema.alterTable('milestones', (t) => build(t));
+      }
+    }
+  }
+
+  // Agenda del día del partido, por edición. Antes vivía en panel_config.json y
+  // no había dónde editarla: en Heroku ese archivo ni siquiera sobrevive al deploy.
+  if (!(await knex.schema.hasTable('match_agenda'))) {
+    await knex.schema.createTable('match_agenda', (t) => {
+      t.increments('id').primary();
+      t.integer('event_id');
+      t.string('time_label');
+      t.string('title').notNullable();
+      t.string('sub');
+      t.string('color').defaultTo('#6C3CE0');
+      t.integer('sort').defaultTo(0);
+      t.timestamps(true, true);
+    });
+  }
+
   // Códigos 2027 asignados a una persona + tags, para el mapa de relaciones.
   if (await knex.schema.hasTable('access_codes')) {
     const codeCols = [
@@ -454,6 +500,32 @@ async function seed() {
   }
   if (!(await knex('app_settings').where({ key: 'notify_emails' }).first())) {
     await knex('app_settings').insert({ key: 'notify_emails', value: process.env.NOTIFY_EMAILS || 'jardarubydv@gmail.com, leon@soccerid.co, 7leonr@gmail.com' });
+  }
+
+  // Agenda del día del partido: se trae de panel_config.json la primera vez, para
+  // no perder lo que ya estaba escrito ahí, y se cuelga de la edición próxima.
+  if (await knex.schema.hasTable('match_agenda') && !(await knex('match_agenda').first())) {
+    let agenda = [];
+    try {
+      agenda = require('../contents/panel_config.json').matchAgenda || [];
+    } catch (_) {}
+    if (agenda.length) {
+      let eventId = null;
+      try {
+        const ev = await knex('portfolio_events').where({ status: 'upcoming' }).first()
+          || await knex('portfolio_events').orderBy('year', 'desc').first();
+        eventId = ev ? ev.id : null;
+      } catch (_) {}
+      await knex('match_agenda').insert(agenda.map((a, i) => ({
+        event_id: eventId,
+        time_label: a.time || null,
+        title: a.title,
+        sub: a.sub || null,
+        color: a.color || '#6C3CE0',
+        sort: i + 1
+      })));
+      console.log(`  ✓ Agenda del partido sembrada (${agenda.length} bloques)`);
+    }
   }
 
   // Notificación de bienvenida
