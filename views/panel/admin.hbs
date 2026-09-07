@@ -228,6 +228,9 @@
   .ed-preview__thumbs img { width:54px; height:40px; object-fit:cover; border-radius:7px; border:1px solid var(--pn-border); }
   .ed-preview__list { font-size:12.5px; color:var(--pn-ink-2); line-height:1.7; }
   .ed-preview__warn { margin:0; padding:10px 18px; background:#FEF3C7; color:#92400E; font-size:12px; font-weight:700; }
+  .ed-preview__lang { display:flex; gap:6px; padding:10px 12px; border-bottom:1px solid var(--pn-border); background:#FBFAFD; }
+  .ed-preview__lang button { padding:5px 12px; border:1px solid var(--pn-border); border-radius:999px; background:#fff; font-family:inherit; font-size:11.5px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
+  .ed-preview__lang button.is-on { background:var(--pn-purple); border-color:var(--pn-purple); color:#fff; }
 </style>
 
 {{#if flash}}
@@ -1902,6 +1905,10 @@
       html += '</div>';
     });
     html += '<button type="button" class="ed-add" onclick="edAdd(\'' + name + '\')">+ Agregar ' + kind.uno + '</button>';
+    // La galería suele cargarse de golpe: pedir el archivo uno por uno era absurdo
+    if (name === 'images'){
+      html += '<button type="button" class="ed-add" style="margin-top:7px;" onclick="edSubirVarias(this)">Subir varias imágenes</button>';
+    }
     caja.innerHTML = html;
   }
 
@@ -1970,6 +1977,44 @@
       });
     });
   }
+  // Sube varios archivos y agrega una fila por cada uno, en orden.
+  function edSubirVarias(btn){
+    var inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = 'image/*';
+    inp.multiple = true;
+    inp.addEventListener('change', function(){
+      var files = [].slice.call(inp.files || []);
+      if (!files.length) return;
+      var texto = btn.textContent, hechas = 0, fallidas = 0;
+      btn.disabled = true;
+      // De una en una: subir 20 en paralelo satura el dyno y S3 responde 503
+      var siguiente = function(i){
+        if (i >= files.length){
+          btn.textContent = texto; btn.disabled = false;
+          edRender('images');
+          if (fallidas) alert(fallidas + ' de ' + files.length + ' imagen(es) no se pudieron subir.');
+          return;
+        }
+        btn.textContent = 'Subiendo ' + (i + 1) + ' de ' + files.length + '...';
+        var fd = new FormData();
+        fd.append('image', files[i]);
+        fetch('/panel/admin/upload', { method: 'POST', body: fd, credentials: 'same-origin' })
+          .then(function(r){ return r.json(); })
+          .then(function(j){
+            if (j && j.url){
+              (edState.images = edState.images || []).push({ src: j.url, alt: '' });
+              hechas++;
+            } else { fallidas++; }
+            siguiente(i + 1);
+          })
+          .catch(function(){ fallidas++; siguiente(i + 1); });
+      };
+      siguiente(0);
+    });
+    inp.click();
+  }
+
   function edUploadInto(id, btn){
     edPickFile(function(file){
       edSubir(file, btn, function(url){
@@ -1990,31 +2035,43 @@
 
   // Vista previa: lo que se va a guardar, con los datos que hay en el formulario
   // ahora mismo (no lo que está en la base).
+  var edPrevLang = 'es';
+  function edPreviewLang(l){ edPrevLang = l; edPreview(); }
+
   function edPreview(){
     var box = document.getElementById('ed-preview');
     var v = function(id){ var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+    var en = edPrevLang === 'en';
     var banner = v('ed-banner');
-    var titulo = v('ed-title_es') || v('pf-title') || '(sin título)';
+    // En inglés se cae al español cuando el campo está vacío, igual que el sitio
+    var titulo = (en ? (v('ed-title_en') || v('ed-title_es')) : v('ed-title_es')) || v('pf-title') || '(sin título)';
+    var descripcion = en ? (v('ed-description_en') || v('ed-description_es')) : v('ed-description_es');
     var meta = [v('pf-year'), v('pf-match'), v('pf-event_date'), v('pf-city'), v('pf-venue')].filter(Boolean).join(' · ');
-    var stats = (edState.stats_es || []).filter(function(x){ return x.value || x.label; });
+    var statsFuente = en ? (edState.stats_en && edState.stats_en.length ? edState.stats_en : edState.stats_es) : edState.stats_es;
+    var stats = (statsFuente || []).filter(function(x){ return x.value || x.label; });
     var imgs = (edState.images || []).filter(function(x){ return x.src; });
     var spons = (edState.sponsors || []).filter(function(x){ return x.src || x.alt; });
-    var notas = (edState.media_es || []).filter(function(x){ return x.title || x.url; });
+    var notasFuente = en ? (edState.media_en && edState.media_en.length ? edState.media_en : edState.media_es) : edState.media_es;
+    var notas = (notasFuente || []).filter(function(x){ return x.title || x.url; });
     var vids = (edState.videos || []).filter(function(x){ return x.id; });
 
     var avisos = [];
     if (!/^\d{4}$/.test(v('pf-year'))) avisos.push('el año debe tener 4 dígitos');
     if (!v('pf-title')) avisos.push('falta el título de la edición');
+    if (en && !v('ed-title_en')) avisos.push('sin título en inglés: la página en inglés usará el español');
     notas.forEach(function(n){ if (n.url && !/^https?:\/\//i.test(n.url)) avisos.push('la nota "' + (n.title || n.source) + '" tiene un enlace que no empieza con http'); });
     vids.forEach(function(x){ if (!/^[\w-]{6,20}$/.test(x.id)) avisos.push('"' + x.id + '" no parece un ID de YouTube'); });
 
-    var html = '';
+    var html = '<div class="ed-preview__lang">'
+      + '<button type="button" class="' + (en ? '' : 'is-on') + '" onclick="edPreviewLang(\'es\')">Español</button>'
+      + '<button type="button" class="' + (en ? 'is-on' : '') + '" onclick="edPreviewLang(\'en\')">English</button>'
+      + '</div>';
     if (avisos.length) html += '<p class="ed-preview__warn">Revisa: ' + esc(avisos.join(' · ')) + '</p>';
     html += '<div class="ed-preview__banner"' + (banner ? ' style="background-image:url(\'' + esc(banner) + '\')"' : '') + '></div>';
     html += '<div class="ed-preview__b">';
     html += '<h4>' + esc(titulo) + '</h4>';
     if (meta) html += '<p class="ed-preview__meta">' + esc(meta) + '</p>';
-    if (v('ed-description_es')) html += '<p class="ed-preview__desc">' + esc(v('ed-description_es')) + '</p>';
+    if (descripcion) html += '<p class="ed-preview__desc">' + esc(descripcion) + '</p>';
     if (stats.length){
       html += '<div class="ed-preview__stats">';
       stats.forEach(function(x){

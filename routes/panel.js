@@ -1447,6 +1447,18 @@ router.post('/admin/upload', auth.requireAdmin, upload.single('image'), async (r
   }
 });
 
+// Subida de documentos (PDF, Word, Excel, imagen) para el data room y las
+// evidencias. Es hermano de /admin/upload, que solo acepta imágenes.
+router.post('/admin/upload-doc', auth.requireAdmin, upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'No se recibió archivo' });
+    const { url, size } = await uploadDocument(req.file);
+    res.json({ url, name: req.file.originalname, size });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
 // Enlace a la nota original: solo http/https, para no dejar pasar un javascript:
 // dentro de un href. Devuelve null si viene vacio o no es una URL usable.
 function sourceUrl(v) {
@@ -2151,8 +2163,11 @@ router.post('/admin/evento/:id/documento', auth.requireAdmin, async (req, res) =
   try {
     const name = (req.body.name || '').trim();
     if (!name) return res.redirect(evBack(id, false, 'El documento necesita nombre', hash));
-    const url = sourceUrl(req.body.url);
-    if ((req.body.url || '').trim() && !url) {
+    // Un archivo subido queda como ruta del propio sitio ("/uploads/...") o como
+    // URL de S3; ambas valen. Lo que se rechaza es un enlace externo raro.
+    const crudo = (req.body.url || '').trim();
+    const url = crudo.startsWith('/') ? crudo : sourceUrl(crudo);
+    if (crudo && !url) {
       return res.redirect(evBack(id, false, 'El enlace debe empezar con http:// o https://', hash));
     }
     await knex('event_documents').insert({

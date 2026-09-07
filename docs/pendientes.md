@@ -400,9 +400,10 @@ Notas de implementación:
 Pendiente de esta sección:
 - [ ] Arrastrar para reordenar (hoy es con flechas, que funciona pero es más lento con
   muchas filas).
-- [ ] Subir varias imágenes de golpe a la galería.
-- [ ] Que la vista previa muestre también la versión en inglés (hoy previsualiza el
-  español, que es el idioma principal).
+- [x] ~~Subir varias imágenes de golpe a la galería~~ **HECHO**: botón "Subir varias" en la galería. Van de una en una por dentro (subir 20 en paralelo satura el dyno) y avisa cuántas fallaron.
+- [x] ~~Vista previa en inglés~~ **HECHO**: la previa tiene botones ES/EN y cae al español
+  cuando el campo en inglés está vacío, igual que hace el sitio. Avisa si falta el título
+  en inglés.
 
 
 ## Multievento LIGADO a las ediciones (por año) — pedido de León
@@ -527,5 +528,7 @@ Pendiente de esta sección:
   "Usuarios" es por cuenta, sin la suma multievento).
 - [ ] Finanzas más allá del resumen (retornos proyectados por edición, comparativo entre
   ediciones).
-- [ ] Subir archivos directo al data room y a evidencias (hoy se pega el enlace; el
-  uploader ya existe y se usa en Ediciones).
+- [x] ~~Subir archivos al data room y evidencias~~ **HECHO**: endpoint `/admin/upload-doc`
+  (PDF, Word, Excel o imagen) y botón "Subir archivo" en ambos formularios. Si el nombre
+  está vacío se rellena con el del archivo. Se siguen aceptando enlaces de Drive, y un
+  `javascript:` se sigue rechazando.

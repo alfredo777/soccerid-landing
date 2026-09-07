@@ -69,6 +69,11 @@
   .ev-pill--mod { background:var(--pn-purple-soft); color:var(--pn-purple); }
   .ev-empty { padding:26px 0; text-align:center; color:var(--pn-muted); font-size:13px; }
   .ev-formwrap { border-top:1px solid var(--pn-border); margin-top:16px; padding-top:18px; }
+  .ev-file { display:flex; gap:9px; align-items:center; }
+  .ev-file input { flex:1; min-width:0; }
+  .ev-file button { white-space:nowrap; padding:11px 14px; border:1px solid var(--pn-border); border-radius:11px; background:#fff; font-family:inherit; font-size:12.5px; font-weight:700; color:var(--pn-purple); cursor:pointer; }
+  .ev-file button:hover { background:var(--pn-purple-soft); }
+  .ev-file button[disabled] { opacity:.6; cursor:default; }
 </style>
 
 <div class="ev-top">
@@ -196,9 +201,14 @@
 
   <div class="ev-formwrap">
     <form method="POST" action="/panel/admin/evento/{{ev.id}}/documento">
-      <div class="ev-f"><label>Nombre</label><input type="text" name="name" required placeholder="Contrato de sede"></div>
-      <div class="ev-f"><label>Enlace</label><input type="url" name="url" placeholder="https://drive.google.com/...">
-        <div class="ev-hint">Solo http:// o https://. Si va vacío, el documento queda listado sin enlace.</div>
+      <div class="ev-f"><label>Nombre</label><input type="text" name="name" id="dr-name" required placeholder="Contrato de sede"></div>
+      <div class="ev-f"><label>Archivo o enlace</label>
+        <div class="ev-file">
+          <input type="text" name="url" id="dr-url" placeholder="https://drive.google.com/... o sube el archivo">
+          <button type="button" onclick="evSubir('dr-url','dr-name',this)">Subir archivo</button>
+        </div>
+        <div class="ev-hint">PDF, Word, Excel o imagen. También sirve pegar un enlace de Drive.
+          Si va vacío, el documento queda listado sin enlace.</div>
       </div>
       <div class="ev-row3">
         <div class="ev-f"><label>Carpeta</label>
@@ -241,8 +251,13 @@
     <form method="POST" action="/panel/admin/evento/{{ev.id}}/documento">
       <input type="hidden" name="folder" value="Evidencias">
       <input type="hidden" name="status" value="aprobado">
-      <div class="ev-f"><label>Nombre</label><input type="text" name="name" required placeholder="Fotos del recorrido de sede"></div>
-      <div class="ev-f"><label>Enlace</label><input type="url" name="url" placeholder="https://..."></div>
+      <div class="ev-f"><label>Nombre</label><input type="text" name="name" id="ev-name" required placeholder="Fotos del recorrido de sede"></div>
+      <div class="ev-f"><label>Archivo o enlace</label>
+        <div class="ev-file">
+          <input type="text" name="url" id="ev-url" placeholder="https://... o sube el archivo">
+          <button type="button" onclick="evSubir('ev-url','ev-name',this)">Subir archivo</button>
+        </div>
+      </div>
       <div class="ev-f"><label>Quién la ve</label>
         <select name="visibility">{{#each visibilities}}<option value="{{this.key}}">{{this.label}}</option>{{/each}}</select>
       </div>
@@ -379,6 +394,37 @@
 </section>
 
 <script>
+  // Subir un archivo al data room o a evidencias. Si el nombre está vacío, se
+  // rellena con el del archivo: escribirlo dos veces no aporta nada.
+  function evSubir(idUrl, idNombre, btn){
+    var inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = '.pdf,.doc,.docx,.xls,.xlsx,image/*';
+    inp.addEventListener('change', function(){
+      var f = inp.files && inp.files[0];
+      if (!f) return;
+      var texto = btn.textContent;
+      btn.textContent = 'Subiendo...';
+      btn.disabled = true;
+      var fd = new FormData();
+      fd.append('file', f);
+      fetch('/panel/admin/upload-doc', { method: 'POST', body: fd, credentials: 'same-origin' })
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          btn.textContent = texto; btn.disabled = false;
+          if (!j || !j.url) return alert('No se pudo subir: ' + ((j && j.error) || 'error desconocido'));
+          document.getElementById(idUrl).value = j.url;
+          var n = document.getElementById(idNombre);
+          if (n && !n.value.trim()) n.value = (j.name || '').replace(/\.[^.]+$/, '');
+        })
+        .catch(function(e){
+          btn.textContent = texto; btn.disabled = false;
+          alert('No se pudo subir: ' + e.message);
+        });
+    });
+    inp.click();
+  }
+
   // Confirmación antes de borrar, igual que en el resto del admin
   document.querySelectorAll('form[data-confirm]').forEach(function(f){
     f.addEventListener('submit', function(e){
