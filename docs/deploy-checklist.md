@@ -1,7 +1,7 @@
 # Qué hacer cuando se despliegue
 
-Nada de esto está en producción todavía. Al 7 sep 2026 hay **14 commits** en
-`origin/main` que `production` (Heroku) no tiene: desde `bb1bffc` hasta `b3bfcb8`.
+Nada de esto está en producción todavía. Al 7 sep 2026 hay **31 commits** en
+`origin/main` que `production` (Heroku) no tiene: desde `bb1bffc` hasta `78a17eb`.
 `origin/main` está al día; solo falta `production`.
 
 Los últimos cuatro (edición activa, unificación de ediciones y la puesta al día del
@@ -144,6 +144,20 @@ borran las credenciales con el botón de la misma tarjeta.
   entonces el login de Google se queda oculto.
 - [ ] **Restringir `GOOGLE_API_KEY`** en Google Cloud Console (por API y por
   referrer/IP). Hoy está sin restringir.
+
+## 6. Asistente de IA (después del deploy)
+
+Este deploy agrega una **dependencia npm nueva** (`@anthropic-ai/sdk`). Heroku la instala
+sola con `npm install`; solo hay que confirmar en el log del build que aparece.
+
+- [ ] Subir la llave: `node scripts/heroku-env.js --apply` (lee
+  `anthropic-key.local.md`, gitignored; nunca imprime valores).
+- [ ] En el admin, entrar a Noticias y confirmar que sale el botón **"Redactar con IA"**.
+  Si no sale, es que la variable no llegó: el asistente se esconde solo cuando falta.
+- [ ] Generar una noticia de prueba y **no guardarla**, para comprobar el circuito
+  completo sin ensuciar el portal.
+- [ ] **Rotar la API key** en console.anthropic.com: la actual se envió por chat en texto
+  plano. Al rotarla se actualiza el `.local.md` y se vuelve a correr el script.
 
 ## Notas
 
