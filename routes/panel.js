@@ -1294,7 +1294,17 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       })),
       docsByUser,
       news, events, milestones,
-      notifications: notifications.map(n => {
+      // Bandeja del organizador: lo que el sistema le avisó a él (accesos con
+      // código, envíos). Va aparte del log de lo que él mandó, que es otra cosa.
+      adminInbox: notifications.filter(n => n.audience === 'admin').slice(0, 40).map(n => {
+        const t = NOTIF_TYPES[n.type] || NOTIF_TYPES.comunicado;
+        return {
+          id: n.id, title: n.title, body: n.body || '',
+          typeLabel: t.label, typeColor: t.color,
+          date: new Date(n.created_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+        };
+      }),
+      notifications: notifications.filter(n => n.audience !== 'admin').map(n => {
         const t = NOTIF_TYPES[n.type] || NOTIF_TYPES.comunicado;
         const dest = n.user_id ? (users.find(u => u.id === n.user_id) || null) : null;
         const chans = String(n.channels || 'in-app').split(',').filter(Boolean);
@@ -2183,8 +2193,30 @@ router.post('/admin/evento/:id/documento', auth.requireAdmin, async (req, res) =
 router.post('/admin/evento/:id/documento/:did/estado', auth.requireAdmin, async (req, res) => {
   try {
     const estado = DOC_STATES[req.body.status] ? req.body.status : 'revision';
-    const n = await knex('event_documents').where({ id: req.params.did, event_id: req.params.id }).update({ status: estado, updated_at: knex.fn.now() });
-    res.redirect(evBack(req.params.id, !!n, n ? `Documento marcado como ${DOC_STATES[estado].toLowerCase()}` : 'Ese documento no es de esta edición', 'dataroom'));
+    const doc = await knex('event_documents').where({ id: req.params.did, event_id: req.params.id }).first();
+    const n = doc ? await knex('event_documents').where({ id: doc.id }).update({ status: estado, updated_at: knex.fn.now() }) : 0;
+    if (!n) return res.redirect(evBack(req.params.id, false, 'Ese documento no es de esta edición', 'dataroom'));
+
+    // Solo se avisa cuando el documento AVANZA a aprobado o firmado. Volverlo a
+    // "en revisión" no es noticia para nadie, y avisar de cada cambio sería ruido.
+    let avisados = 0;
+    if ((estado === 'aprobado' || estado === 'firmado') && doc.status !== estado) {
+      const vis = doc.visibility || 'all';
+      let q = knex('investments').where({ event_id: req.params.id });
+      if (vis !== 'all') q = q.andWhere({ modality: vis });
+      const ids = [...new Set((await q).map(i => i.user_id))];
+      for (const uid of ids) {
+        const r = await notify({
+          type: 'documento', userId: uid, channels: ['in-app', 'email'],
+          eventId: parseInt(req.params.id, 10) || null,
+          title: `Documento ${DOC_STATES[estado].toLowerCase()}: ${doc.name}`,
+          body: `El documento "${doc.name}" quedó ${DOC_STATES[estado].toLowerCase()} en el data room de la edición.`
+        });
+        avisados += r.recipients;
+      }
+    }
+    const extra = avisados ? ` · avisados ${avisados}` : '';
+    res.redirect(evBack(req.params.id, true, `Documento marcado como ${DOC_STATES[estado].toLowerCase()}${extra}`, 'dataroom'));
   } catch (e) { res.redirect(evBack(req.params.id, false, e.message, 'dataroom')); }
 });
 router.post('/admin/evento/:id/documento/:did/delete', auth.requireAdmin, async (req, res) => {
@@ -2389,6 +2421,56 @@ router.post('/admin/code/:id/assign', auth.requireAdmin, async (req, res, next) 
       ? `Código ${c.code} asignado a ${name || email || phoneRaw}` + (previos.length ? ` (${previos.length} acceso(s) recalculado(s))` : '')
       : `Código ${c.code} sin dueño`;
     res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(msg) + '#codigos');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#codigos');
+  }
+});
+
+// Manda el código a la persona a la que se le asignó. Reutiliza el mailer y el
+// canal de SMS que ya existen; no hay un tercer camino de envío.
+router.post('/admin/code/:id/enviar', auth.requireAdmin, async (req, res) => {
+  try {
+    const c = await knex('access_codes').where({ id: req.params.id }).first();
+    if (!c) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Código no encontrado') + '#codigos');
+    if (!c.assignee_email && !c.assignee_phone) {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Ese código no tiene correo ni teléfono de dueño') + '#codigos');
+    }
+    const quiereEmail = !!req.body.por_email, quiereSms = !!req.body.por_sms;
+    if (!quiereEmail && !quiereSms) {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Elige al menos un canal') + '#codigos');
+    }
+
+    const nombre = c.assignee_name || 'Hola';
+    const enlace = `${process.env.BASE_URL || 'https://soccerid.co'}/es/socceridcup2027`;
+    const cuerpo = `Tu código de acceso a la propuesta SOCCER iD CUP 2027 es ${c.code}.\nEntra en ${enlace} y escríbelo cuando te lo pida.`;
+
+    const partes = [], fallos = [];
+    if (quiereEmail) {
+      if (!c.assignee_email) fallos.push('no tiene correo');
+      else {
+        const r = await sendNotification({ to: c.assignee_email, name: nombre, title: 'Tu código de acceso a la propuesta 2027', body: cuerpo });
+        r && r.sent ? partes.push('email enviado') : fallos.push('el correo no salió (¿SMTP configurado?)');
+      }
+    }
+    if (quiereSms) {
+      if (!c.assignee_phone) fallos.push('no tiene teléfono');
+      else {
+        const r = await panelSms.sendSms({ to: c.assignee_phone, body: cuerpo });
+        r && r.sent ? partes.push('SMS enviado') : fallos.push('SMS: ' + ((r && r.error) || 'no salió'));
+      }
+    }
+
+    // Queda registrado para el organizador, sin volver a mandar correo: el aviso
+    // ya salió arriba y duplicarlo solo estorba.
+    await notifyAdmins({
+      type: 'envio', channels: [],
+      title: `Código ${c.code} enviado a ${c.assignee_name || c.assignee_email || c.assignee_phone}`,
+      body: [partes.join(' · '), fallos.join(' · ')].filter(Boolean).join(' | ')
+    }).catch(() => {});
+
+    const ok = partes.length > 0;
+    const msg = [partes.join(' · '), fallos.length ? 'Falló: ' + fallos.join(' · ') : ''].filter(Boolean).join('. ');
+    res.redirect('/panel/admin?type=' + (ok && !fallos.length ? 'ok' : 'error') + '&msg=' + encodeURIComponent(msg || 'No se envió nada') + '#codigos');
   } catch (e) {
     res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#codigos');
   }

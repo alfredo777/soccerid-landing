@@ -123,8 +123,11 @@ como una simulación de fuerzas).
   por reenvío y repartidores en el mapa.
 
 Pendiente de esta sección:
-- [ ] **Mandar el código al dueño** por email/SMS desde el mismo drawer (el canal SMS ya
-  existe; ver Notificaciones e Invitaciones).
+- [x] ~~**Mandar el código al dueño** por email/SMS desde el mismo drawer~~ **HECHO**:
+  botón "Enviar código" en el drawer del dueño, con casillas de correo y SMS. Reutiliza el
+  mailer y el canal de Twilio; no hay un tercer camino de envío. Si un canal falla lo dice
+  (p. ej. "faltan las llaves de Twilio") en vez de dar por bueno el envío. Queda registrado
+  en la bandeja del organizador, sin mandar un correo extra por el mismo hecho.
 - [ ] Vista de timeline por dueño (hoy el orden cronológico se ve por código, en el
   historial de accesos).
 - [ ] Cadena de más de un salto (si Y reparte a Z, hoy Z cuelga del dueño original, no
@@ -267,12 +270,18 @@ necesita poder pegar sus llaves sin depender de un deploy. Las env vars
 Pendiente de esta sección:
 - [ ] Que el inversionista elija **por tipo** qué quiere recibir (hoy la preferencia es
   por canal, no por tipo).
-- [ ] Disparadores que faltan del mapa: cambio de estatus de un documento
-  (revisión→aprobado→firmado), asignación de inversión creada/actualizada, cambio de
-  fase del evento y recordatorio de fecha de entrega.
+- [x] ~~Disparador de **cambio de estatus de documento**~~ **HECHO**: al pasar a
+  *aprobado* o *firmado* se avisa a los inversionistas de esa edición, respetando la
+  visibilidad por modalidad del documento. Volverlo a "en revisión" **no** avisa: no es
+  noticia para nadie y avisar de cada cambio sería ruido.
+- [ ] Disparador de **inversión creada/actualizada**: hoy no se puede hacer porque **no
+  existe alta de inversiones desde el admin** (las inversiones solo entran por el seed).
+  Va junto con el CRUD de inversiones.
+- [ ] Disparadores de **cambio de fase del evento** y **recordatorio de fecha de entrega**.
 - [ ] Notificaciones **push** (requiere service worker; no está hecho).
-- [ ] Bandeja de notificaciones para el admin (hoy las suyas viven en el log de
-  "Enviadas", mezcladas con las que él mandó).
+- [x] ~~Bandeja de notificaciones del admin~~ **HECHO**: "Tu bandeja" separada de
+  "Enviadas". Arriba lo que el sistema le avisa a él (accesos con código, envíos); abajo
+  lo que él mandó. Antes estaba todo revuelto en una sola lista.
 
 
 ## Invitaciones por SMS + Email (diseño personalizado)
