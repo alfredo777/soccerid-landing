@@ -13,6 +13,15 @@ const path = require('path');
 const fs = require('fs');
 const knex = require('./knex');
 
+// Las páginas PÚBLICAS solo muestran ediciones reales. Los eventos con
+// `is_demo` son casos de demostración del panel del inversionista (Houston,
+// Austin, Orlando: partidos de ejemplo con inversiones y medios sembrados) y no
+// deben aparecer en el sitio público ni en la propuesta 2027. Se excluyen aquí,
+// sin borrarlos: siguen vivos para el panel. `is_demo` nulo cuenta como real.
+function soloReales(q) {
+  return q.where(b => b.where('is_demo', false).orWhereNull('is_demo'));
+}
+
 function readJson(file) {
   try { return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'contents', file), 'utf8')); }
   catch (_) { return null; }
@@ -26,7 +35,7 @@ function parse(row, lang) {
 // Timeline de la página /socceridcup — { year, match, city, link, tone }
 async function timeline(lang) {
   try {
-    const rows = await knex('portfolio_events').orderBy('year');
+    const rows = await soloReales(knex('portfolio_events')).orderBy('year');
     if (rows && rows.length) {
       return rows.map(r => {
         const d = parse(r, lang);
@@ -53,7 +62,7 @@ async function timeline(lang) {
 async function detail(year, lang) {
   year = String(year);
   try {
-    const rows = await knex('portfolio_events').where({ status: 'past' }).orderBy('year');
+    const rows = await soloReales(knex('portfolio_events').where({ status: 'past' })).orderBy('year');
     if (rows && rows.length) {
       const idx = rows.findIndex(r => String(r.year) === year);
       if (idx === -1) return null;
@@ -90,7 +99,7 @@ function marcarDestacada(links, year) {
 
 async function mediaLinks(lang) {
   try {
-    const rows = await knex('portfolio_events').where({ status: 'past' }).orderBy('year');
+    const rows = await soloReales(knex('portfolio_events').where({ status: 'past' })).orderBy('year');
     if (rows && rows.length) {
       let out = [];
       rows.forEach(r => {
