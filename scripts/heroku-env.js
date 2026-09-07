@@ -26,11 +26,20 @@ const googleOn = process.argv.includes('--google-on');
 const WANTED = {
   's3-keys.local.md': ['S3_BUCKET', 'AWS_REGION', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY'],
   'google-keys.local.md': ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_API_KEY'],
-  'anthropic-key.local.md': ['ANTHROPIC_API_KEY']
+  'anthropic-key.local.md': ['ANTHROPIC_API_KEY'],
+  'turnstile-keys.local.md': ['TURNSTILE_SITE_KEY', 'TURNSTILE_SECRET_KEY']
 };
 
-// Las tablas son `| \`VAR\` | \`valor\` (comentario) |`: tomamos el primer
-// fragmento entre backticks de cada celda.
+// Turnstile se puede APAGAR para probar en produccion sin el CAPTCHA:
+//   node scripts/heroku-env.js --turnstile-off   # quita las 2 vars (login sin captcha)
+// y REACTIVAR despues:
+//   node scripts/heroku-env.js --apply           # las repone (incluye Turnstile)
+const turnstileOff = process.argv.includes('--turnstile-off');
+
+// La `VAR` y su `valor` van entre backticks; el nombre puede estar en cualquier
+// celda (unos archivos usan `| \`VAR\` | \`valor\` |`, otros meten una columna de
+// descripcion antes). Se busca el primer backtick-cell que sea un NOMBRE_MAYUS y
+// el siguiente como valor.
 function parse(file) {
   const full = path.join(ROOT, file);
   if (!fs.existsSync(full)) {
@@ -39,10 +48,27 @@ function parse(file) {
   }
   const out = {};
   fs.readFileSync(full, 'utf8').split('\n').forEach(line => {
-    const m = line.match(/^\|\s*`([A-Z][A-Z0-9_]+)`\s*\|\s*`([^`]+)`/);
+    const m = line.match(/`([A-Z][A-Z0-9_]+)`\s*\|\s*`([^`]+)`/);
     if (m && WANTED[file].includes(m[1])) out[m[1]] = m[2];
   });
   return out;
+}
+
+// ── Apagar Turnstile (para probar en produccion sin CAPTCHA) ──
+// Quita SITE_KEY y SECRET_KEY: sin SECRET el server omite la verificacion, sin
+// SITE el widget no aparece. El login queda abierto. Reactivar con --apply.
+if (turnstileOff) {
+  const keys = ['TURNSTILE_SITE_KEY', 'TURNSTILE_SECRET_KEY'];
+  console.log(`App: ${APP}`);
+  console.log(`Apagando Turnstile: se quitan ${keys.join(', ')}`);
+  if (!apply) {
+    console.log('\nEnsayo. Agrega --apply para quitarlas de verdad (reinicia el dyno).');
+    process.exit(0);
+  }
+  execFileSync('heroku', ['config:unset', ...keys, '--app', APP], { stdio: 'inherit', shell: process.platform === 'win32' });
+  console.log('\nTurnstile APAGADO. El login ya no pide CAPTCHA.');
+  console.log('Cuando termines de probar, reactivalo con: node scripts/heroku-env.js --apply');
+  process.exit(0);
 }
 
 const vars = {};
@@ -56,6 +82,7 @@ console.log(`App: ${APP}`);
 console.log(`Variables encontradas (${nombres.length}): ${nombres.join(', ')}`);
 if (faltantes.length) console.log(`No encontradas: ${faltantes.join(', ')}`);
 console.log(`Login de Google: ${googleOn ? 'VISIBLE (GOOGLE_LOGIN=1)' : 'oculto (GOOGLE_LOGIN=0)'}`);
+console.log(`Turnstile: ${vars.TURNSTILE_SECRET_KEY ? 'ACTIVO (CAPTCHA en login)' : 'no encontrado en los .local.md'}`);
 
 if (!apply) {
   console.log('\nEnsayo. Agrega --apply para setearlas de verdad (reinicia el dyno).');
