@@ -12,3 +12,6 @@ client_secret_*.json
 
 # Media generada del demo (no subir)
 video-demo/
+
+# Respaldos locales de datos (no versionar)
+backups/
