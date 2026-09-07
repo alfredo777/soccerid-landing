@@ -1753,11 +1753,44 @@
   </div>
 </div>
 
+<style>
+  /* Asistente por pasos del alta/edición de edición: parte el formulario largo
+     en 4 pestañas para que se vea qué es cada cosa, en vez de un solo scroll. */
+  .pf-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:0 0 4px; }
+  .pf-stepbtn { display:flex; align-items:center; gap:9px; padding:11px 13px; border:1px solid var(--pn-border);
+    border-radius:12px; background:#fff; font-family:inherit; font-size:12.5px; font-weight:800; color:var(--pn-muted);
+    cursor:pointer; text-align:left; transition:.12s; }
+  .pf-stepbtn:hover { border-color:#DCCFF7; color:var(--pn-ink-2); }
+  .pf-stepbtn.is-active { background:var(--pn-purple); border-color:var(--pn-purple); color:#fff; box-shadow:0 8px 18px rgba(108,60,224,.22); }
+  .pf-num { display:inline-flex; align-items:center; justify-content:center; width:21px; height:21px; border-radius:50%;
+    background:var(--pn-purple-soft); color:var(--pn-purple); font-size:11px; font-weight:900; flex-shrink:0; }
+  .pf-stepbtn.is-active .pf-num { background:rgba(255,255,255,.25); color:#fff; }
+  .pf-stepname { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pf-stephint { font-size:12px; color:var(--pn-muted); line-height:1.5; margin:14px 0 16px; padding:11px 14px;
+    background:var(--pn-purple-soft); border-radius:11px; }
+  .pf-step { display:none; }
+  .pf-step.is-active { display:block; animation:pfFade .18s ease; }
+  @keyframes pfFade { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:none; } }
+  .pf-nav { display:flex; justify-content:space-between; gap:10px; margin:18px 0 4px; }
+  .pf-navbtn { display:inline-flex; align-items:center; gap:7px; padding:11px 17px; border:1px solid var(--pn-border);
+    border-radius:12px; background:#fff; font-family:inherit; font-size:13px; font-weight:800; color:var(--pn-ink-2); cursor:pointer; }
+  .pf-navbtn:hover { border-color:var(--pn-purple); color:var(--pn-purple); }
+  .pf-navbtn--next { background:var(--pn-purple); border-color:var(--pn-purple); color:#fff; }
+  @media (max-width:620px){ .pf-steps { grid-template-columns:repeat(2,1fr); } .pf-stepname { font-size:12px; } }
+</style>
 <div class="ad-modal" id="modal-portfolio">
-  <div class="ad-modal__card" style="max-width:640px;">
+  <div class="ad-modal__card" style="max-width:720px;">
     <div class="ad-modal__head"><h3 id="pf-modal-title">Nueva edición</h3><button class="ad-modal__close" onclick="closeModal('modal-portfolio')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
     <div class="ad-modal__body">
+      <div class="pf-steps" id="pf-steps">
+        <button type="button" class="pf-stepbtn is-active" data-goto="1" onclick="pfStep(1)"><span class="pf-num">1</span><span class="pf-stepname">Datos básicos</span></button>
+        <button type="button" class="pf-stepbtn" data-goto="2" onclick="pfStep(2)"><span class="pf-num">2</span><span class="pf-stepname">Página pública</span></button>
+        <button type="button" class="pf-stepbtn" data-goto="3" onclick="pfStep(3)"><span class="pf-num">3</span><span class="pf-stepname">Presentación</span></button>
+        <button type="button" class="pf-stepbtn" data-goto="4" onclick="pfStep(4)"><span class="pf-num">4</span><span class="pf-stepname">Inversión</span></button>
+      </div>
       <form method="POST" id="form-portfolio" action="/panel/admin/portfolio">
+        <div class="pf-step is-active" data-step="1">
+        <p class="pf-stephint">Lo esencial de la edición: qué partido es, dónde y cuándo, y en qué fase va. Esto alimenta la tarjeta y el resto de las vistas.</p>
         <div class="ad-row2">
           <div class="ad-f"><label>Año</label><input type="number" name="year" id="pf-year" placeholder="2027"></div>
           <div class="ad-f"><label>Código (siglas)</label><input type="text" name="code" id="pf-code" maxlength="4" placeholder="HOU"></div>
@@ -1797,8 +1830,9 @@
           <div class="ad-f"><label>Ingreso proyectado (USD)</label><input type="number" name="projected_income" id="pf-projected_income" step="1000" placeholder="2180000"></div>
         </div>
         <label class="ad-check" style="margin:6px 0 12px;"><input type="checkbox" name="is_demo" id="pf-is_demo" value="1"> Marcar como DATOS DEMO</label>
+        </div><!-- /paso 1 -->
 
-        <div style="border-top:1px solid var(--pn-border); padding-top:16px; margin-top:10px;">
+        <div class="pf-step" data-step="2">
           <p class="ad-note" style="margin:0 0 6px;"><strong>Contenido público</strong> — lo que se ve en la landing y en la página de la edición.</p>
           <p class="ed-hint-block">Los datos de arriba (año, partido, sede, ciudad, fecha) se usan también aquí, así que
             <strong>no hay que repetirlos</strong>. Lo de abajo se escribe por idioma: si dejas el inglés vacío, la
@@ -1845,7 +1879,7 @@
           <input type="hidden" name="videos_json" id="ed-json-videos">
         </div>
 
-        <div style="border-top:1px solid var(--pn-border); padding-top:14px; margin-top:6px;">
+        <div class="pf-step" data-step="3">
           <p class="ad-note" style="margin:0 0 12px;">Presentación de la edición (la ve el inversionista)
             {{#if aiOn}}<button type="button" class="ai-btn" style="float:right;" data-task="presentacion" data-label="Presentación"
               data-fields='{"texto":"pf-presentation_es"}'
@@ -1855,8 +1889,8 @@
           <div class="ad-f"><label>Presentación (EN)</label><textarea name="presentation_en" id="pf-presentation_en" rows="6"></textarea></div>
         </div>
 
-        <div style="border-top:1px solid var(--pn-border); padding-top:14px; margin-top:6px;">
-          <p class="ad-note" style="margin:0 0 12px;">Parámetros del simulador (modalidad a riesgo)</p>
+        <div class="pf-step" data-step="4">
+          <p class="ad-note" style="margin:0 0 12px;">Presupuesto e ingreso proyectado, y los parámetros del simulador (modalidad a riesgo).</p>
           <div class="ad-row2">
             <div class="ad-f"><label>Capacidad</label><input type="number" name="capacity" id="pf-capacity" placeholder="21800"></div>
             <div class="ad-f"><label>Boleto promedio (USD)</label><input type="number" name="ticket_price" id="pf-ticket_price" placeholder="100"></div>
@@ -1869,6 +1903,10 @@
             <div class="ad-f"><label>Tope (% sobre capital)</label><input type="number" name="cap_pct" id="pf-cap_pct" placeholder="50"></div>
             <div class="ad-f"><label>Reparto inversionista (%)</label><input type="number" name="investor_split" id="pf-investor_split" placeholder="50"></div>
           </div>
+        </div>
+        <div class="pf-nav">
+          <button type="button" class="pf-navbtn" id="pf-prev" onclick="pfStep(pfCur-1)">‹ Anterior</button>
+          <button type="button" class="pf-navbtn pf-navbtn--next" id="pf-next" onclick="pfStep(pfCur+1)">Siguiente ›</button>
         </div>
         <div class="ed-actions">
           <button type="button" class="ad-btn ad-btn--ghost" onclick="edPreview()">Vista previa</button>
@@ -1888,6 +1926,19 @@
     'event_date','date_phase','phase','status','progress_pct','accent','presentation_es','presentation_en',
     'budget','projected_income','capacity','ticket_price','deductions_pct','rebate_per','cap_pct','investor_split'];
   var PF_PUBLICO = ['banner','att_value','att_label_es','att_label_en','title_es','title_en','description_es','description_en'];
+
+  // Asistente por pasos del drawer de edición (1 Datos · 2 Público · 3 Presentación · 4 Inversión)
+  var pfCur = 1;
+  function pfStep(n){
+    n = Math.max(1, Math.min(4, n));
+    pfCur = n;
+    document.querySelectorAll('#modal-portfolio .pf-step').forEach(function(s){ s.classList.toggle('is-active', s.getAttribute('data-step') === String(n)); });
+    document.querySelectorAll('#pf-steps .pf-stepbtn').forEach(function(b){ b.classList.toggle('is-active', b.getAttribute('data-goto') === String(n)); });
+    var prev = document.getElementById('pf-prev'), next = document.getElementById('pf-next');
+    if (prev) prev.style.visibility = n <= 1 ? 'hidden' : 'visible';
+    if (next) next.style.visibility = n >= 4 ? 'hidden' : 'visible';
+    var body = document.querySelector('#modal-portfolio .ad-modal__body'); if (body) body.scrollTop = 0;
+  }
 
   function openPortfolio(id){
     var f = document.getElementById('form-portfolio');
@@ -1921,6 +1972,7 @@
     var prev = document.getElementById('ed-preview');
     if (prev){ prev.hidden = true; prev.innerHTML = ''; }
     setEditionLang('es');
+    pfStep(1);
     openModal('modal-portfolio');
   }
 </script>
