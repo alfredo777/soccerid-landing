@@ -1053,6 +1053,35 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     // Mapa de relaciones: quién repartió su código y quién acabó entrando con él
     const relations = codeMap.buildRelations(codeRows, allAccess);
 
+    // Timeline por dueño: sus accesos en orden, juntando todos sus códigos.
+    // El mapa dice QUIÉN entró con el código de quién; esto dice CUÁNDO, que es
+    // lo que hace falta para llamar a alguien en el momento adecuado.
+    const codigosPorDueno = {};
+    codeRows.forEach(c => {
+      const k = codeMap.normEmail(c.assignee_email) || codeMap.normPhone(c.assignee_phone) || codeMap.normName(c.assignee_name);
+      if (!k) return;
+      (codigosPorDueno[k] = codigosPorDueno[k] || { label: c.assignee_name || c.assignee_email || c.assignee_phone, codigos: [] }).codigos.push(c.code);
+    });
+    const ownerTimeline = Object.keys(codigosPorDueno).map(k => {
+      const d = codigosPorDueno[k];
+      const suyos = allAccess
+        .filter(a => d.codigos.indexOf(a.code) !== -1)
+        .sort((x, y) => new Date(y.created_at) - new Date(x.created_at))
+        .slice(0, 25)
+        .map(a => ({
+          code: a.code, name: a.name || 'Sin nombre', email: a.email || '',
+          when: fmtWhen(a.created_at),
+          owner: isOwner(a), other: isOther(a),
+          whoLabel: isOwner(a) ? 'El dueño' : (isOther(a) ? 'Otra persona' : 'Sin confirmar')
+        }));
+      return {
+        label: d.label, codigos: d.codigos.join(', '),
+        total: suyos.length,
+        ajenos: suyos.filter(x => x.other).length,
+        accesos: suyos
+      };
+    }).filter(x => x.total > 0).sort((a, b) => b.ajenos - a.ajenos || b.total - a.total);
+
     // Prospectos (leads) + historial de accesos por prospecto
     const leadRows = await knex('leads').orderBy('id', 'desc');
     const leadsHistory = {};
@@ -1430,11 +1459,12 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       investorTiers: tiers.filter(t => t.role === 'investor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
       sponsorTiers: tiers.filter(t => t.role === 'sponsor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
       codes: codesView, codesUsed, codesUnused, codesHistory,
-      codesAssigned, codesLeaked, codeTags, relations,
+      codesAssigned, codesLeaked, codeTags, relations, ownerTimeline,
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
       notifyEmails, twilio, notifyPeople, notifTypes, stats,
-      actTypes: Object.keys(ACT_TYPES),
+      actTypes: Object.keys(await todosLosTipos()),
+      actTypesExtra: await tiposExtra(),
       dashboardConfig: await getDashboardConfig(),
       capitalItems, risksAdmin, portfolioEditions, portfolioForms, portfolioPackages, investorsList, faqsAdmin,
       capitalTotalBudget: formatUSD(capitalItems.reduce((s, c) => s + Number(c.budget), 0)),
@@ -1628,10 +1658,65 @@ const ACT_TYPES = {
   'Otro': '#8A8F98'
 };
 
+// Tipos que el organizador agregó desde Configuración. Se guardan aparte de los
+// de fábrica para que estos últimos no se puedan borrar por accidente: son los
+// que usan las actividades ya cargadas.
+async function tiposExtra() {
+  try {
+    const row = await knex('app_settings').where({ key: 'activity_types' }).first();
+    const arr = JSON.parse((row && row.value) || '[]');
+    return Array.isArray(arr) ? arr.filter(x => x && x.name).slice(0, 30) : [];
+  } catch (_) { return []; }
+}
+
+// Lista completa: los de fábrica más los del admin. "Otro" siempre al final.
+async function todosLosTipos() {
+  const extra = await tiposExtra();
+  const out = Object.assign({}, ACT_TYPES);
+  delete out.Otro;
+  extra.forEach(t => { out[t.name] = t.color || '#8A8F98'; });
+  out.Otro = ACT_TYPES.Otro;
+  return out;
+}
+
+router.post('/admin/settings/tipos-actividad', auth.requireAdmin, async (req, res) => {
+  try {
+    const nombre = (req.body.name || '').trim().slice(0, 40);
+    const color = /^#[0-9a-f]{6}$/i.test(req.body.color || '') ? req.body.color : '#8A8F98';
+    const actuales = await tiposExtra();
+
+    if (req.body.borrar) {
+      const quedan = actuales.filter(t => t.name !== req.body.borrar);
+      // No se borra un tipo que alguna actividad está usando: quedaría huérfana
+      const enUso = await knex('events').where({ type: req.body.borrar }).first();
+      if (enUso) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(`"${req.body.borrar}" lo usa alguna actividad: cámbiale el tipo primero`) + '#configuracion');
+      await guardarTipos(quedan);
+      return res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Tipo eliminado') + '#configuracion');
+    }
+
+    if (!nombre) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Escribe el nombre del tipo') + '#configuracion');
+    if (ACT_TYPES[nombre] || actuales.some(t => t.name === nombre)) {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(`"${nombre}" ya existe`) + '#configuracion');
+    }
+    await guardarTipos(actuales.concat([{ name: nombre, color }]));
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Tipo "${nombre}" agregado`) + '#configuracion');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#configuracion');
+  }
+});
+
+async function guardarTipos(lista) {
+  const value = JSON.stringify(lista);
+  const ex = await knex('app_settings').where({ key: 'activity_types' }).first();
+  if (ex) await knex('app_settings').where({ key: 'activity_types' }).update({ value });
+  else await knex('app_settings').insert({ key: 'activity_types', value });
+}
+
 // Datos de una actividad, con el mismo saneo al crear y al editar.
 // Devuelve { data } o { error }.
-function actividadBody(b) {
-  const type = ACT_TYPES[b.type] ? b.type : 'Evento';
+function actividadBody(b, tipos) {
+  const TIPOS = tipos || ACT_TYPES;
+  const type = TIPOS[b.type] ? b.type : 'Evento';
   const custom = (b.custom_type || '').trim().slice(0, 40);
   if (type === 'Otro' && !custom) return { error: 'Escribe qué tipo de actividad es' };
   const title = (b.title || '').trim();
@@ -1653,7 +1738,7 @@ function actividadBody(b) {
     data: {
       day, month, year, title,
       type, custom_type: type === 'Otro' ? custom : null,
-      color: ACT_TYPES[type],
+      color: TIPOS[type],
       is_match: type === 'Partido',
       time_label: hora || null,
       note: (b.note || '').trim() || null,
@@ -1664,7 +1749,7 @@ function actividadBody(b) {
 
 router.post('/admin/event', auth.requireAdmin, async (req, res) => {
   try {
-    const { data, error } = actividadBody(req.body);
+    const { data, error } = actividadBody(req.body, await todosLosTipos());
     if (error) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(error) + '#calendario');
     await knex('events').insert(data);
     res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Actividad agregada') + '#calendario');
@@ -1899,7 +1984,7 @@ router.post('/admin/news/:id/update', auth.requireAdmin, upload.single('imageFil
 
 router.post('/admin/event/:id/update', auth.requireAdmin, async (req, res) => {
   try {
-    const { data, error } = actividadBody(req.body);
+    const { data, error } = actividadBody(req.body, await todosLosTipos());
     if (error) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(error) + '#calendario');
     await knex('events').where({ id: req.params.id }).update(Object.assign(data, { updated_at: knex.fn.now() }));
     res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Actividad actualizada') + '#calendario');

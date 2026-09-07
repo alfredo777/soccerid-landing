@@ -133,8 +133,10 @@ Pendiente de esta sección:
   mailer y el canal de Twilio; no hay un tercer camino de envío. Si un canal falla lo dice
   (p. ej. "faltan las llaves de Twilio") en vez de dar por bueno el envío. Queda registrado
   en la bandeja del organizador, sin mandar un correo extra por el mismo hecho.
-- [ ] Vista de timeline por dueño (hoy el orden cronológico se ve por código, en el
-  historial de accesos).
+- [x] ~~Timeline por dueño~~ **HECHO**: debajo del mapa, "Quién entró y cuándo" junta los
+  accesos de **todos los códigos de cada dueño** en orden. El mapa dice *quién entró con el
+  código de quién*; esto dice *cuándo*, que es lo que sirve para llamar a alguien en el
+  momento justo. Primero los repartidores con más entradas ajenas.
 - [ ] Cadena de más de un salto (si Y reparte a Z, hoy Z cuelga del dueño original, no
   de Y): requiere saber con qué código entró Z, y hoy es el mismo código.
 
@@ -387,8 +389,10 @@ Pendiente de esta sección:
   (OAuth), botón "Agregar a mi Google Calendar" y feed iCal como alternativa sin OAuth.
 - [ ] Que la etapa y la actividad se vean como **una sola línea de tiempo** (hoy conviven,
   pero cada una con su vista).
-- [ ] Tipos de actividad configurables desde el admin (hoy la lista está en el código y
-  "Otro" cubre lo que falte).
+- [x] ~~Tipos de actividad configurables~~ **HECHO**: se agregan desde Configuración con su
+  color y aparecen en los dos formularios del calendario. Los de fábrica **no se pueden
+  borrar** (los usan las actividades ya cargadas) y **un tipo propio en uso tampoco**: el
+  admin dice que primero hay que cambiarle el tipo a esas actividades.
 
 
 ## Noticias
