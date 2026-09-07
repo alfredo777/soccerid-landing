@@ -25,7 +25,8 @@ const googleOn = process.argv.includes('--google-on');
 // Solo las variables que el codigo realmente lee. Si agregas una, ponla aqui.
 const WANTED = {
   's3-keys.local.md': ['S3_BUCKET', 'AWS_REGION', 'AWS_ACCESS_KEY_ID', 'AWS_SECRET_ACCESS_KEY'],
-  'google-keys.local.md': ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_API_KEY']
+  'google-keys.local.md': ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GOOGLE_API_KEY'],
+  'anthropic-key.local.md': ['ANTHROPIC_API_KEY']
 };
 
 // Las tablas son `| \`VAR\` | \`valor\` (comentario) |`: tomamos el primer

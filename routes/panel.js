@@ -17,6 +17,7 @@ const { getDashboardConfig, saveDashboardConfig, computeReturn } = require('../l
 const { notify, notifyAdmins, TYPES: NOTIF_TYPES } = require('../lib/panelNotify');
 const panelSms = require('../lib/panelSms');
 const codeMap = require('../lib/codeMap');
+const ai = require('../lib/ai');
 const turnstile = require('../lib/turnstile');
 const google = require('../lib/googleAuth');
 
@@ -1497,6 +1498,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
       notifyEmails, twilio, notifyPeople, notifTypes, stats,
+      aiOn: ai.disponible(), aiModelo: ai.MODELO,
       actTypes: Object.keys(await todosLosTipos()),
       actTypesExtra: await tiposExtra(),
       dashboardConfig: await getDashboardConfig(),
@@ -1623,6 +1625,38 @@ router.post('/admin/upload', auth.requireAdmin, upload.single('image'), async (r
     res.json({ url });
   } catch (e) {
     res.status(400).json({ error: e.message });
+  }
+});
+
+// ── Asistente de contenidos (Claude Haiku 4.5) ──
+// Devuelve una PROPUESTA en JSON. No escribe nada en la base: el admin la revisa,
+// la edita si quiere y la aplica al formulario, que es quien guarda.
+router.post('/admin/ai', auth.requireAdmin, async (req, res) => {
+  try {
+    if (!ai.disponible()) return res.status(503).json({ error: 'El asistente no está configurado (falta ANTHROPIC_API_KEY)' });
+
+    // Contexto del evento activo, para que no escriba sobre una edición que no es
+    let contexto = '';
+    try {
+      const cfg = await getDashboardConfig();
+      const eds = await knex('portfolio_events').orderBy('year', 'desc');
+      const ed = eds.find(e => String(e.id) === String(cfg.activeEditionId)) || eds[0];
+      if (ed) {
+        contexto = [ed.title, ed.match, ed.venue, ed.city, ed.event_date,
+          ed.year ? `edición ${ed.year}` : ''].filter(Boolean).join(' · ');
+      }
+    } catch (_) {}
+
+    const r = await ai.generar({
+      tarea: req.body.tarea,
+      instruccion: req.body.instruccion,
+      actual: req.body.actual,
+      contexto
+    });
+    if (!r.ok) return res.status(400).json({ error: r.error });
+    res.json(r);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
 });
 

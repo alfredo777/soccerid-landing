@@ -182,6 +182,14 @@
   .ad-langsec { display:none; }
   .ad-langsec.is-active { display:block; }
   .ad-f label em { font-style:normal; color:var(--pn-muted); font-weight:600; }
+  .ai-chip { display:inline-block; margin-left:8px; padding:2px 10px; border-radius:999px; background:var(--pn-purple-soft); color:var(--pn-purple); font-size:11px; font-weight:800; vertical-align:middle; }
+  .ai-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 11px; border:1px solid #DCCFF7; border-radius:9px; background:var(--pn-purple-soft); color:var(--pn-purple); font-family:inherit; font-size:11.5px; font-weight:800; cursor:pointer; }
+  .ai-btn:hover { background:#E4DAFA; }
+  .ai-btn svg { width:13px; height:13px; stroke:currentColor; fill:none; }
+  .ad-modal__sep { height:1px; background:var(--pn-border); margin:18px 0; }
+  .ai-campo { margin-bottom:12px; }
+  .ai-campo label { display:block; font-size:11.5px; font-weight:800; color:var(--pn-muted); text-transform:uppercase; letter-spacing:.3px; margin-bottom:5px; }
+  .ai-campo textarea { width:100%; border:1px solid var(--pn-border); border-radius:11px; padding:11px 13px; font-family:inherit; font-size:13.5px; line-height:1.55; color:var(--pn-ink); background:#fff; resize:vertical; }
   .is-drag { cursor:grab; }
   .is-drag:active { cursor:grabbing; }
   .is-dragging { opacity:.4; }
@@ -617,11 +625,15 @@
 <section class="ad-sec" id="sec-noticias">
   <div class="ad-grid">
     <form class="pn-card ad-form" method="POST" action="/panel/admin/news" enctype="multipart/form-data">
-      <h3>Publicar noticia</h3>
+      <h3>Publicar noticia
+        {{#if aiOn}}<button type="button" class="ai-btn" style="float:right;" data-task="noticia" data-label="Noticia"
+          data-fields='{"title":"nw-title","excerpt":"nw-excerpt","content":"nw-body"}'
+          onclick="aiOpen(this)"><svg viewBox="0 0 24 24" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3"/><rect x="4" y="6" width="16" height="12" rx="3"/><circle cx="9" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1" fill="currentColor" stroke="none"/></svg> Redactar con IA</button>{{/if}}
+      </h3>
       <div class="ad-f"><label>Categoría</label><select name="tag"><option>Anuncio</option><option>Actualización</option><option>Prensa</option></select></div>
-      <div class="ad-f"><label>Título</label><input type="text" name="title" required></div>
-      <div class="ad-f"><label>Extracto</label><textarea name="excerpt" placeholder="Resumen corto que se ve en la tarjeta"></textarea></div>
-      <div class="ad-f"><label>Contenido completo</label><textarea name="body" rows="5" placeholder="Texto completo de la nota (se muestra al abrir 'Leer más')"></textarea></div>
+      <div class="ad-f"><label>Título</label><input type="text" name="title" id="nw-title" required></div>
+      <div class="ad-f"><label>Extracto</label><textarea name="excerpt" id="nw-excerpt" placeholder="Resumen corto que se ve en la tarjeta"></textarea></div>
+      <div class="ad-f"><label>Contenido completo</label><textarea name="body" id="nw-body" rows="5" placeholder="Texto completo de la nota (se muestra al abrir 'Leer más')"></textarea></div>
       <div class="ad-f"><label>Imagen</label><input type="file" name="imageFile" accept="image/*">
         <div class="ad-hint">{{#if s3}}Se subirá a Amazon S3.{{else}}Se guardará localmente (configura S3 para producción).{{/if}} O pega una URL abajo.</div>
       </div>
@@ -788,8 +800,13 @@
   <div class="ad-grid">
     <form class="pn-card ad-form" method="POST" action="/panel/admin/notify">
       <h3>Enviar notificación</h3>
-      <div class="ad-f"><label>Título</label><input type="text" name="title" required placeholder="Ej. Nueva fecha confirmada"></div>
-      <div class="ad-f"><label>Mensaje</label><textarea name="body" placeholder="Escribe el comunicado..."></textarea></div>
+      {{#if aiOn}}
+      <button type="button" class="ai-btn" style="margin-bottom:12px;" data-task="comunicado" data-label="Comunicación"
+        data-fields='{"title":"nf-title","body":"nf-body"}'
+        onclick="aiOpen(this)"><svg viewBox="0 0 24 24" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3"/><rect x="4" y="6" width="16" height="12" rx="3"/><circle cx="9" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1" fill="currentColor" stroke="none"/></svg> Redactar con IA</button>
+      {{/if}}
+      <div class="ad-f"><label>Título</label><input type="text" name="title" id="nf-title" required placeholder="Ej. Nueva fecha confirmada"></div>
+      <div class="ad-f"><label>Mensaje</label><textarea name="body" id="nf-body" placeholder="Escribe el comunicado..."></textarea></div>
 
       <div class="ad-f"><label>¿A quién?</label>
         <div class="nf-seg">
@@ -1742,7 +1759,11 @@
         </div>
 
         <div style="border-top:1px solid var(--pn-border); padding-top:14px; margin-top:6px;">
-          <p class="ad-note" style="margin:0 0 12px;">Presentación de la edición (la ve el inversionista)</p>
+          <p class="ad-note" style="margin:0 0 12px;">Presentación de la edición (la ve el inversionista)
+            {{#if aiOn}}<button type="button" class="ai-btn" style="float:right;" data-task="presentacion" data-label="Presentación"
+              data-fields='{"texto":"pf-presentation_es"}'
+              onclick="aiOpen(this)"><svg viewBox="0 0 24 24" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3"/><rect x="4" y="6" width="16" height="12" rx="3"/><circle cx="9" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1" fill="currentColor" stroke="none"/></svg> Redactar con IA</button>{{/if}}
+          </p>
           <div class="ad-f"><label>Presentación (ES) <em>— líneas en blanco = párrafos · "## " título · "- " viñeta</em></label><textarea name="presentation_es" id="pf-presentation_es" rows="6" placeholder="## La oportunidad&#10;Texto de la propuesta...&#10;&#10;- Punto 1&#10;- Punto 2"></textarea></div>
           <div class="ad-f"><label>Presentación (EN)</label><textarea name="presentation_en" id="pf-presentation_en" rows="6"></textarea></div>
         </div>
@@ -1904,12 +1925,22 @@
     <div class="ad-modal__body">
       <form method="POST" id="form-faq" action="/panel/admin/faq">
         <div class="ad-f"><label>Audiencia</label><select name="audience" id="faq-audience"><option value="all">General (todos)</option><option value="investor">Inversionistas</option><option value="sponsor">Patrocinadores</option></select></div>
+        {{#if aiOn}}
+        <button type="button" class="ai-btn" style="margin-bottom:12px;" data-task="faq" data-label="Pregunta frecuente"
+          data-fields='{"question":"faq-question","answer":"faq-answer"}'
+          onclick="aiOpen(this)"><svg viewBox="0 0 24 24" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3"/><rect x="4" y="6" width="16" height="12" rx="3"/><circle cx="9" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1" fill="currentColor" stroke="none"/></svg> Redactar con IA</button>
+        {{/if}}
         <div class="ad-f"><label>Pregunta</label><input type="text" name="question" id="faq-question" required></div>
         <div class="ad-f"><label>Respuesta</label><textarea name="answer" id="faq-answer" rows="5"></textarea></div>
 
         <div style="border-top:1px solid var(--pn-border); padding-top:14px; margin-top:4px;">
           <p class="ad-hint" style="margin:0 0 12px;"><strong>Versión en inglés</strong> — opcional. Si la dejas vacía,
             a quien tenga el panel en inglés le sale la versión en español, en vez de un hueco.</p>
+          {{#if aiOn}}
+          <button type="button" class="ai-btn" style="margin-bottom:12px;" data-task="traducir_en" data-label="Traducir al inglés"
+            data-fields='{"texto":"faq-answer_en"}'
+            onclick="aiOpen(this)"><svg viewBox="0 0 24 24" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3"/><rect x="4" y="6" width="16" height="12" rx="3"/><circle cx="9" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1" fill="currentColor" stroke="none"/></svg> Traducir la respuesta</button>
+          {{/if}}
           <div class="ad-f"><label>Question (EN)</label><input type="text" name="question_en" id="faq-question_en"></div>
           <div class="ad-f"><label>Answer (EN)</label><textarea name="answer_en" id="faq-answer_en" rows="5"></textarea></div>
         </div>
@@ -1977,6 +2008,97 @@
       .catch(function(e){ alert('No se pudo guardar el orden: ' + e.message); });
   });
 
+  // ── Asistente de contenidos ──
+  // El botón declara qué tarea pedir y a qué campos del formulario va la
+  // propuesta. Así un solo drawer sirve para noticias, FAQ, presentación y lo
+  // que venga después, sin duplicar pantallas.
+  var aiCfg = null;
+  function aiOpen(btn){
+    aiCfg = { tarea: btn.dataset.task, campos: JSON.parse(btn.dataset.fields || '{}'), label: btn.dataset.label || '' };
+    document.getElementById('ai-tarea-label').textContent = aiCfg.label;
+    document.getElementById('ai-instruccion').value = '';
+    document.getElementById('ai-salida').hidden = true;
+    document.getElementById('ai-campos').innerHTML = '';
+    // "Partir de lo que ya está escrito" solo tiene sentido si hay algo escrito
+    var hay = Object.keys(aiCfg.campos).some(function(k){
+      var el = document.getElementById(aiCfg.campos[k]);
+      return el && el.value.trim();
+    });
+    document.getElementById('ai-usar').checked = hay;
+    document.getElementById('ai-usar-wrap').style.display = hay ? '' : 'none';
+    openModal('modal-ai');
+  }
+
+  function aiTextoActual(){
+    return Object.keys(aiCfg.campos).map(function(k){
+      var el = document.getElementById(aiCfg.campos[k]);
+      return el && el.value.trim() ? el.value.trim() : '';
+    }).filter(Boolean).join('\n\n');
+  }
+
+  function aiGenerar(){
+    var btn = document.getElementById('ai-generar');
+    var texto = btn.textContent;
+    btn.textContent = 'Escribiendo...';
+    btn.disabled = true;
+    fetch('/panel/admin/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        tarea: aiCfg.tarea,
+        instruccion: document.getElementById('ai-instruccion').value,
+        actual: document.getElementById('ai-usar').checked ? aiTextoActual() : ''
+      })
+    })
+      .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
+      .then(function(res){
+        btn.textContent = texto; btn.disabled = false;
+        if (!res.ok) return alert(res.j.error || 'No se pudo generar');
+        aiPintar(res.j);
+      })
+      .catch(function(e){
+        btn.textContent = texto; btn.disabled = false;
+        alert('No se pudo generar: ' + e.message);
+      });
+  }
+
+  function aiPintar(r){
+    var cont = document.getElementById('ai-campos');
+    var aviso = document.getElementById('ai-aviso');
+    aviso.hidden = !r.aviso;
+    aviso.textContent = r.aviso || '';
+    var html = '';
+    if (r.campos){
+      Object.keys(aiCfg.campos).forEach(function(k){
+        if (r.campos[k] === undefined) return;
+        var filas = r.campos[k].length > 220 ? 8 : 2;
+        html += '<div class="ai-campo"><label>' + esc(k) + '</label>'
+          + '<textarea data-k="' + esc(k) + '" rows="' + filas + '">' + esc(r.campos[k]) + '</textarea></div>';
+      });
+    } else {
+      var unico = Object.keys(aiCfg.campos)[0] || 'texto';
+      html += '<div class="ai-campo"><label>' + esc(unico) + '</label>'
+        + '<textarea data-k="' + esc(unico) + '" rows="10">' + esc(r.texto || '') + '</textarea></div>';
+    }
+    cont.innerHTML = html;
+    document.getElementById('ai-uso').textContent = r.uso
+      ? ('Generado con Claude Haiku 4.5 · ' + r.uso.entrada + ' tokens de entrada, ' + r.uso.salida + ' de salida.')
+      : '';
+    document.getElementById('ai-salida').hidden = false;
+  }
+
+  function aiAplicar(){
+    var n = 0;
+    document.querySelectorAll('#ai-campos textarea[data-k]').forEach(function(t){
+      var destino = aiCfg.campos[t.dataset.k];
+      var el = destino && document.getElementById(destino);
+      if (el){ el.value = t.value; n++; }
+    });
+    closeModal('modal-ai');
+    if (!n) alert('No se pudo pasar el texto al formulario.');
+  }
+
   function openFaq(id){
     var f = document.getElementById('form-faq');
     var d = (window.__faqForms || []).filter(function(x){ return String(x.id) === String(id); })[0];
@@ -2032,6 +2154,42 @@
     </div>
   </div>
 </div>
+
+{{#if aiOn}}
+<div class="ad-modal" id="modal-ai">
+  <div class="ad-modal__card">
+    <div class="ad-modal__head">
+      <h3>Asistente <span id="ai-tarea-label" class="ai-chip"></span></h3>
+      <button class="ad-modal__close" onclick="closeModal('modal-ai')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>
+    </div>
+    <div class="ad-modal__body">
+      <p class="ad-hint" style="margin:0 0 14px;">Le dices qué quieres y te propone un texto.
+        <strong>No guarda nada</strong>: lo revisas, lo editas aquí mismo y decides si lo pasas al formulario.</p>
+
+      <div class="ad-f">
+        <label>¿Qué quieres que escriba?</label>
+        <textarea id="ai-instruccion" rows="3" placeholder="Ej. Avisar que se firmó el contrato de sede, sin dar el monto porque todavía no lo tengo"></textarea>
+        <div class="ad-hint">Si te falta un dato, díselo: lo deja marcado entre corchetes en vez de inventarlo.</div>
+      </div>
+
+      <label class="ad-check" id="ai-usar-wrap"><input type="checkbox" id="ai-usar" value="1"> Partir de lo que ya está escrito en el formulario</label>
+
+      <button type="button" class="ad-btn" id="ai-generar" onclick="aiGenerar()">Generar propuesta</button>
+
+      <div id="ai-salida" hidden>
+        <div class="ad-modal__sep"></div>
+        <p class="ad-hint" id="ai-aviso" style="margin:0 0 10px;" hidden></p>
+        <div id="ai-campos"></div>
+        <div style="display:flex; gap:10px; margin-top:6px;">
+          <button type="button" class="ad-btn" onclick="aiAplicar()">Pasar al formulario</button>
+          <button type="button" class="ad-btn ad-btn--ghost" onclick="aiGenerar()">Probar otra vez</button>
+        </div>
+        <p class="ad-hint" id="ai-uso" style="margin:10px 0 0;"></p>
+      </div>
+    </div>
+  </div>
+</div>
+{{/if}}
 
 <div class="ad-modal" id="modal-code-assign">
   <div class="ad-modal__card">

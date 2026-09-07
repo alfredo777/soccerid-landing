@@ -1,38 +1,34 @@
 # Pendientes del panel
 
-## Asistente de contenidos con IA — Anthropic Claude Haiku (IMPORTANTE)
-Integrar **Claude Haiku** en el admin para **crear y modificar contenidos** de la
-landing y del panel. El admin escribe una instrucción, elige **sobre qué elemento**
-escribir/modificar, la IA genera una propuesta y el admin la **revisa/edita antes de
-guardar** (siempre editable).
+## Asistente de contenidos con IA — Claude Haiku 4.5 — HECHO
 
-Casos de uso:
-- **Redacción de noticias**: generar título, extracto y contenido; reescribir/mejorar,
-  ajustar tono, traducir ES/EN.
-- **Extracción de imágenes de notas**: dado el **URL de la nota original**, extraer la
-  imagen principal (og:image) y las imágenes del artículo para usarlas en la noticia
-  (combinar fetch/parse del HTML + IA para elegir/pie de foto).
-- **Creación/modificación de CUALQUIER elemento de la landing y el panel**: ediciones
-  (info, presentación ES/EN, stats, media), FAQ, textos de secciones, descripciones,
-  comunicaciones, beneficios/paquetes, etc.
-- **Admin define el objetivo**: seleccionar el elemento/sección + escribir la
-  instrucción ("sobre este elemento, escribe/ajusta…") → propuesta → aplicar.
+Botón **"Redactar con IA"** en el admin. La IA **propone**, el admin **revisa, edita y
+aplica**: nada se escribe solo en la base. La propuesta llega a un drawer con los campos
+editables y solo pasa al formulario si el admin le da "Pasar al formulario".
 
-Arquitectura:
-- **Proveedor**: Anthropic API con **Claude Haiku** (modelo `claude-haiku-4-5-20251001`).
-  Requiere `ANTHROPIC_API_KEY` (guardar en `*.local.md` gitignored + env/Heroku).
-- `lib/ai.js` server-side (SDK `@anthropic-ai/sdk` o fetch) con funciones por tarea
-  (redactar noticia, reescribir, traducir, extraer/seleccionar imágenes, generar
-  presentación de edición, etc.). **Antes de implementar, leer la skill `claude-api`**
-  (model ids, params, streaming, tool use) — no codear de memoria.
-- UI en admin: botón/panel **"Asistente IA"** por sección (drawer lateral, según
-  preferencia): campo de instrucción + selector de elemento + vista previa editable +
-  "Aplicar/Guardar".
-- Seguridad/control: la IA **propone**, el admin **aprueba y edita**; registrar qué se
-  generó. Manejar límites/costos y errores del API.
-- Imágenes: la extracción puede subir la imagen elegida al uploader existente
-  (`/panel/admin/upload` → S3).
+- **Modelo `claude-haiku-4-5`** (decisión del usuario). Es previo a la familia 4.6, así que
+  **no** lleva `effort` ni thinking adaptativo: esos parámetros dan error en este modelo.
+- SDK oficial `@anthropic-ai/sdk`, no HTTP a mano.
+- Tareas: **noticia** (título + extracto + cuerpo), **FAQ** (pregunta + respuesta),
+  **presentación** de la edición, **comunicación**, y sobre un texto existente:
+  **mejorar**, **acortar**, **traducir a inglés/español**.
+- **Sabe de qué edición se está hablando**: el endpoint le pasa el contexto de la edición
+  activa (título, partido, sede, fecha), para que no escriba sobre el año equivocado.
+- **No inventa cifras.** El prompt se lo prohíbe explícitamente: si le falta un dato lo deja
+  entre corchetes. Probado pidiéndole "di cuánto capital llevamos levantado": se negó y
+  pidió los datos reales en vez de inventar un número.
+- **Sin `ANTHROPIC_API_KEY` el asistente no aparece** y el endpoint responde 503. El admin
+  sigue funcionando igual; no se rompe nada.
+- Solo admin: un inversionista que llame al endpoint termina en su panel.
 
+Pendiente de esta sección:
+- [ ] **Rotar la API key**: se envió por chat en texto plano. Está en
+  `anthropic-key.local.md` (gitignored) y se sube con `node scripts/heroku-env.js --apply`.
+- [ ] **Extraer la imagen de una nota** a partir de su URL (og:image + imágenes del
+  artículo) y subirla con el uploader. Necesita fetch + parseo del HTML, aparte de la IA.
+- [ ] Botón de IA también en la página por edición (avances, comunicaciones, data room):
+  hoy vive en la pantalla principal del admin.
+- [ ] Registrar qué se generó y quién lo aplicó, para poder auditarlo después.
 
 
 ## Panel estadístico del ADMIN (no para inversionistas)
