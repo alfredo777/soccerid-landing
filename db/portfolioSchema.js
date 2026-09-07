@@ -55,6 +55,60 @@ async function ensurePortfolioSchema() {
     }
   }
 
+  // ── Unificación: el contenido público vive en la MISMA fila que el portafolio ──
+  // Antes había dos tablas para el mismo año (`editions` para la parte pública y
+  // `portfolio_events` para la del inversionista) y se podían desincronizar.
+  // `portfolio_events` es la que sobrevive porque paquetes, inversiones, avances,
+  // documentos, medios y comunicaciones ya cuelgan de su `event_id`.
+  for (const [col, builder] of [
+    ['status', (t) => t.string('status').defaultTo('past')],   // past | upcoming | pause
+    ['data_es', (t) => t.text('data_es')],                     // contenido público ES
+    ['data_en', (t) => t.text('data_en')]                      // contenido público EN
+  ]) {
+    if (await knex.schema.hasTable('portfolio_events') && !(await knex.schema.hasColumn('portfolio_events', col))) {
+      await knex.schema.alterTable('portfolio_events', builder);
+    }
+  }
+
+  // Copia de una sola vez desde `editions`. No borra la tabla vieja: si algo sale
+  // mal, los datos siguen ahí. Solo toca filas que aún no tienen contenido público,
+  // así que repetirla no pisa lo que el admin haya editado después.
+  if (await knex.schema.hasTable('editions') && await knex.schema.hasTable('portfolio_events')) {
+    const viejas = await knex('editions');
+    for (const ed of viejas) {
+      const anio = parseInt(ed.year, 10);
+      if (!anio) continue;
+      const actual = await knex('portfolio_events').where({ year: anio }).first();
+      let contenido = {};
+      try { contenido = JSON.parse(ed.data_es || '{}') || {}; } catch (_) {}
+
+      if (actual) {
+        if (!actual.data_es) {
+          await knex('portfolio_events').where({ id: actual.id }).update({
+            data_es: ed.data_es, data_en: ed.data_en, status: ed.status || 'past'
+          });
+        }
+      } else {
+        // Año que existía solo del lado público (p. ej. 2026, pausa por Mundial):
+        // se crea su fila para que no se pierda al unificar.
+        await knex('portfolio_events').insert({
+          year: anio,
+          title: contenido.title || `SOCCER iD CUP ${anio}`,
+          match: contenido.match || null,
+          city: contenido.city || null,
+          venue: contenido.venue || null,
+          event_date: contenido.date || null,
+          status: ed.status || 'past',
+          phase: ed.status === 'past' ? 'cierre' : 'planeacion',
+          data_es: ed.data_es, data_en: ed.data_en,
+          sort: ed.sort || anio,
+          is_demo: false
+        });
+        console.log(`  ✓ Edición ${anio} traída de la tabla vieja al portafolio`);
+      }
+    }
+  }
+
   // ── Paquetes de inversión por edición ──
   if (!(await knex.schema.hasTable('event_packages'))) {
     await knex.schema.createTable('event_packages', (t) => {

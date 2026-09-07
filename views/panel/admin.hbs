@@ -251,7 +251,6 @@
 <div class="ad-tabs">
   <button type="button" class="ad-tab is-active" data-tab="usuarios" data-label="Usuarios" title="Usuarios" aria-label="Usuarios">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-  </button>
   <button type="button" class="ad-tab" data-tab="noticias" data-label="Noticias" title="Noticias" aria-label="Noticias">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h13v14H6a2 2 0 0 1-2-2V5z"/><path d="M17 8h2a1 1 0 0 1 1 1v8a2 2 0 0 1-2 2"/><line x1="7" y1="9" x2="14" y2="9"/><line x1="7" y1="13" x2="14" y2="13"/></svg>
   </button>
@@ -267,10 +266,8 @@
   <button type="button" class="ad-tab" data-tab="notificaciones" data-label="Notificaciones" title="Notificaciones" aria-label="Notificaciones">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
   </button>
-  <button type="button" class="ad-tab" data-tab="ediciones" data-label="Ediciones" title="Ediciones" aria-label="Ediciones">
-    <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 5.4L20 8l-4 4 1 6-5-3-5 3 1-6-4-4 5.6-.6z"/></svg>
   </button>
-  <button type="button" class="ad-tab" data-tab="eventos" data-label="Eventos (multievento)" title="Eventos" aria-label="Eventos">
+  <button type="button" class="ad-tab" data-tab="eventos" data-label="Ediciones" title="Ediciones" aria-label="Ediciones">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="14" y1="14" x2="16" y2="14"/></svg>
   </button>
   <button type="button" class="ad-tab" data-tab="faq" data-label="FAQ" title="FAQ" aria-label="FAQ">
@@ -340,7 +337,6 @@
       </div>
     </div>
   </div>
-</section>
 
 <!-- NOTICIAS -->
 <section class="ad-sec" id="sec-noticias">
@@ -600,35 +596,9 @@
 </section>
 
 <!-- EDICIONES -->
-<section class="ad-sec" id="sec-ediciones">
-  <p class="ad-note">Gestiona las ediciones de la SOCCER iD CUP que aparecen en la página pública (timeline y páginas de detalle). Contenido en español e inglés. Estado <strong>Pasada</strong> genera su página; <strong>Próxima</strong>/<strong>Pausa</strong> solo aparecen en el timeline.</p>
-  <div class="pn-card">
-    <div class="pn-card__head">
-      <h3>Ediciones ({{editions.length}})</h3>
-      <button type="button" class="ad-btn" style="width:auto; padding:10px 16px; margin:0;" onclick="openEdition()">+ Nueva edición</button>
-    </div>
-    <div class="ad-list">
-      {{#each editions}}
-      <div class="ad-item">
-        <div class="ad-item__av" style="background: {{#eq this.status 'past'}}#6C3CE0{{else}}{{#eq this.status 'pause'}}#eab308{{else}}#A78BE6{{/eq}}{{/eq}}">{{this.year}}</div>
-        <div class="ad-item__b">
-          <strong>{{#if this.match}}{{this.match}}{{else}}—{{/if}}</strong>
-          <small>{{this.city}}{{#if this.city}} · {{/if}}{{this.statusLabel}}{{#if this.imageCount}} · {{this.imageCount}} fotos{{/if}}</small>
-        </div>
-        <div class="ad-actions">
-          {{#eq this.status 'past'}}<a href="/es/socceridcup/{{this.year}}" target="_blank" rel="noopener" style="border:1px solid var(--pn-border);background:#fff;border-radius:9px;padding:7px 10px;font-size:12px;font-weight:700;color:var(--pn-ink-2);text-decoration:none;">Ver</a>{{/eq}}
-          <button type="button" class="primary" onclick="openEdition('{{this.id}}')">Editar</button>
-          <form method="POST" action="/panel/admin/edition/{{this.id}}/delete" data-confirm="¿Eliminar la edición {{this.year}}?"><button type="submit" class="danger">Eliminar</button></form>
-        </div>
-      </div>
-      {{else}}
-      <div class="ad-empty">No hay ediciones. Crea la primera.</div>
-      {{/each}}
-    </div>
-  </div>
 </section>
 
-<!-- EVENTOS (multievento = ediciones por año) -->
+<!-- EDICIONES (una por año: contenido público + portafolio de inversión) -->
 <section class="ad-sec" id="sec-eventos">
   <style>
     .ad-evgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:18px; }
@@ -1259,79 +1229,6 @@
   </div>
 </div>
 
-<div class="ad-modal" id="modal-edition">
-  <div class="ad-modal__card" style="max-width:640px;">
-    <div class="ad-modal__head"><h3 id="ed-modal-title">Nueva edición</h3><button class="ad-modal__close" onclick="closeModal('modal-edition')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
-    <div class="ad-modal__body">
-      <form method="POST" id="form-edition">
-        <div class="ad-row2">
-          <div class="ad-f"><label>Año</label><input type="text" name="year" id="ed-year" required placeholder="2027"></div>
-          <div class="ad-f"><label>Estado</label><select name="status" id="ed-status"><option value="past">Pasada (con página)</option><option value="upcoming">Próxima</option><option value="pause">Pausa</option></select></div>
-        </div>
-        <div class="ad-row2">
-          <div class="ad-f"><label>Equipos</label><input type="text" name="match" id="ed-match" placeholder="Tigres vs Pumas"></div>
-          <div class="ad-f"><label>Orden (timeline)</label><input type="number" name="sort" id="ed-sort" placeholder="2027"></div>
-        </div>
-        <div class="ad-row2">
-          <div class="ad-f"><label>Fecha (texto)</label><input type="text" name="date" id="ed-date" placeholder="27 Mar 2027"></div>
-          <div class="ad-f"><label>Ciudad</label><input type="text" name="city" id="ed-city" placeholder="Austin, TX"></div>
-        </div>
-        <div class="ad-row2">
-          <div class="ad-f"><label>Sede</label><input type="text" name="venue" id="ed-venue" placeholder="Q2 Stadium"></div>
-          <div class="ad-f"><label>Banner <span class="ed-shared">compartido</span></label>
-            <div class="ed-img">
-              <input type="text" name="banner" id="ed-banner" placeholder="/assets/images/... o sube una">
-              <button type="button" onclick="edUploadInto('ed-banner', this)">Subir</button>
-              <img id="ed-banner-thumb" alt="" hidden>
-            </div>
-          </div>
-        </div>
-        <div class="ad-f" style="max-width:50%;"><label>Asistentes (valor) <span class="ed-shared">compartido</span></label><input type="text" name="att_value" id="ed-att_value" placeholder="13,000"></div>
-
-        <p class="ed-hint-block">Lo de arriba es <strong>igual en los dos idiomas</strong>. Lo de abajo se escribe
-          por idioma: si dejas el inglés vacío, la página en inglés usa el texto en español.</p>
-
-        <div class="ad-langtabs">
-          <button type="button" class="ad-langtab is-active" data-lang="es">Español</button>
-          <button type="button" class="ad-langtab" data-lang="en">English</button>
-        </div>
-        <div class="ad-langsec is-active" data-langsec="es">
-          <div class="ad-f"><label>Título (ES)</label><input type="text" name="title_es" id="ed-title_es" placeholder="SOCCER iD CUP 2027"></div>
-          <div class="ad-f"><label>Mensaje / descripción (ES)</label><textarea name="description_es" id="ed-description_es"></textarea></div>
-          <div class="ad-f"><label>Etiqueta de asistentes (ES)</label><input type="text" name="att_label_es" id="ed-att_label_es" placeholder="ASISTENTES"></div>
-          <div class="ed-group"><label class="ed-group__t">Estadísticas (ES)</label><div class="ed-rows" data-rows="stats_es" data-kind="stats"></div></div>
-          <div class="ed-group"><label class="ed-group__t">Notas en medios (ES)</label><div class="ed-rows" data-rows="media_es" data-kind="media"></div></div>
-        </div>
-        <div class="ad-langsec" data-langsec="en">
-          <div class="ad-f"><label>Title (EN)</label><input type="text" name="title_en" id="ed-title_en" placeholder="SOCCER iD CUP 2027"></div>
-          <div class="ad-f"><label>Message / description (EN)</label><textarea name="description_en" id="ed-description_en"></textarea></div>
-          <div class="ad-f"><label>Attendance label (EN)</label><input type="text" name="att_label_en" id="ed-att_label_en" placeholder="ATTENDEES"></div>
-          <div class="ed-group"><label class="ed-group__t">Stats (EN)</label><div class="ed-rows" data-rows="stats_en" data-kind="stats"></div></div>
-          <div class="ed-group"><label class="ed-group__t">Media coverage (EN)</label><div class="ed-rows" data-rows="media_en" data-kind="media"></div></div>
-        </div>
-
-        <div class="ed-group"><label class="ed-group__t">Imágenes <span class="ed-shared">compartido</span></label><div class="ed-rows" data-rows="images" data-kind="images"></div></div>
-        <div class="ed-group"><label class="ed-group__t">Patrocinadores <span class="ed-shared">compartido</span></label><div class="ed-rows" data-rows="sponsors" data-kind="sponsors"></div></div>
-        <div class="ed-group"><label class="ed-group__t">Videos <span class="ed-shared">compartido</span></label><div class="ed-rows" data-rows="videos" data-kind="videos"></div></div>
-
-        <input type="hidden" name="stats_es_json" id="ed-json-stats_es">
-        <input type="hidden" name="stats_en_json" id="ed-json-stats_en">
-        <input type="hidden" name="media_es_json" id="ed-json-media_es">
-        <input type="hidden" name="media_en_json" id="ed-json-media_en">
-        <input type="hidden" name="images_json" id="ed-json-images">
-        <input type="hidden" name="sponsors_json" id="ed-json-sponsors">
-        <input type="hidden" name="videos_json" id="ed-json-videos">
-
-        <div class="ed-actions">
-          <button type="button" class="ad-btn ad-btn--ghost" onclick="edPreview()">Vista previa</button>
-          <button type="submit" class="ad-btn">Guardar edición</button>
-        </div>
-        <div id="ed-preview" class="ed-preview" hidden></div>
-      </form>
-    </div>
-  </div>
-</div>
-
 <div class="ad-modal" id="modal-portfolio">
   <div class="ad-modal__card" style="max-width:640px;">
     <div class="ad-modal__head"><h3 id="pf-modal-title">Nueva edición</h3><button class="ad-modal__close" onclick="closeModal('modal-portfolio')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
@@ -1359,6 +1256,14 @@
           <div class="ad-f"><label>Fase</label><select name="phase" id="pf-phase"><option value="planeacion">Planeación</option><option value="negociacion">Negociación</option><option value="produccion">Producción</option><option value="evento">Evento</option><option value="cierre">Cierre</option></select></div>
           <div class="ad-f"><label>Avance (%)</label><input type="number" name="progress_pct" id="pf-progress_pct" min="0" max="100" placeholder="46"></div>
         </div>
+        <div class="ad-f"><label>Estado en el sitio público</label>
+          <select name="status" id="pf-status">
+            <option value="past">Pasada — tiene su página en el sitio</option>
+            <option value="upcoming">Próxima — aparece como "por venir"</option>
+            <option value="pause">Pausa — ese año no hubo edición</option>
+          </select>
+          <div class="ad-hint">Decide cómo sale en el timeline público y si tiene página propia.</div>
+        </div>
         <div class="ad-row2">
           <div class="ad-f"><label>Etiqueta de la fecha</label><input type="text" name="date_phase" id="pf-date_phase" placeholder="Planeación / Concluido"></div>
           <div class="ad-f"><label>Color de acento</label><input type="color" name="accent" id="pf-accent" value="#6C3CE0" style="height:42px; padding:4px;"></div>
@@ -1368,6 +1273,53 @@
           <div class="ad-f"><label>Ingreso proyectado (USD)</label><input type="number" name="projected_income" id="pf-projected_income" step="1000" placeholder="2180000"></div>
         </div>
         <label class="ad-check" style="margin:6px 0 12px;"><input type="checkbox" name="is_demo" id="pf-is_demo" value="1"> Marcar como DATOS DEMO</label>
+
+        <div style="border-top:1px solid var(--pn-border); padding-top:16px; margin-top:10px;">
+          <p class="ad-note" style="margin:0 0 6px;"><strong>Contenido público</strong> — lo que se ve en la landing y en la página de la edición.</p>
+          <p class="ed-hint-block">Los datos de arriba (año, partido, sede, ciudad, fecha) se usan también aquí, así que
+            <strong>no hay que repetirlos</strong>. Lo de abajo se escribe por idioma: si dejas el inglés vacío, la
+            página en inglés usa el texto en español.</p>
+
+          <div class="ad-f"><label>Banner</label>
+            <div class="ed-img">
+              <input type="text" name="banner" id="ed-banner" placeholder="/assets/images/... o sube una">
+              <button type="button" onclick="edUploadInto('ed-banner', this)">Subir</button>
+              <img id="ed-banner-thumb" alt="" hidden>
+            </div>
+          </div>
+          <div class="ad-f" style="max-width:50%;"><label>Asistentes (valor) <span class="ed-shared">compartido</span></label><input type="text" name="att_value" id="ed-att_value" placeholder="13,000"></div>
+
+          <div class="ad-langtabs">
+            <button type="button" class="ad-langtab is-active" data-lang="es">Español</button>
+            <button type="button" class="ad-langtab" data-lang="en">English</button>
+          </div>
+          <div class="ad-langsec is-active" data-langsec="es">
+            <div class="ad-f"><label>Título público (ES)</label><input type="text" name="title_es" id="ed-title_es" placeholder="SOCCER iD CUP 2027"></div>
+            <div class="ad-f"><label>Descripción (ES)</label><textarea name="description_es" id="ed-description_es"></textarea></div>
+            <div class="ad-f"><label>Etiqueta de asistentes (ES)</label><input type="text" name="att_label_es" id="ed-att_label_es" placeholder="ASISTENTES"></div>
+            <div class="ed-group"><label class="ed-group__t">Estadísticas (ES)</label><div class="ed-rows" data-rows="stats_es" data-kind="stats"></div></div>
+            <div class="ed-group"><label class="ed-group__t">Notas en medios (ES)</label><div class="ed-rows" data-rows="media_es" data-kind="media"></div></div>
+          </div>
+          <div class="ad-langsec" data-langsec="en">
+            <div class="ad-f"><label>Public title (EN)</label><input type="text" name="title_en" id="ed-title_en" placeholder="SOCCER iD CUP 2027"></div>
+            <div class="ad-f"><label>Description (EN)</label><textarea name="description_en" id="ed-description_en"></textarea></div>
+            <div class="ad-f"><label>Attendance label (EN)</label><input type="text" name="att_label_en" id="ed-att_label_en" placeholder="ATTENDEES"></div>
+            <div class="ed-group"><label class="ed-group__t">Stats (EN)</label><div class="ed-rows" data-rows="stats_en" data-kind="stats"></div></div>
+            <div class="ed-group"><label class="ed-group__t">Media coverage (EN)</label><div class="ed-rows" data-rows="media_en" data-kind="media"></div></div>
+          </div>
+
+          <div class="ed-group"><label class="ed-group__t">Imágenes <span class="ed-shared">compartido</span></label><div class="ed-rows" data-rows="images" data-kind="images"></div></div>
+          <div class="ed-group"><label class="ed-group__t">Patrocinadores <span class="ed-shared">compartido</span></label><div class="ed-rows" data-rows="sponsors" data-kind="sponsors"></div></div>
+          <div class="ed-group"><label class="ed-group__t">Videos <span class="ed-shared">compartido</span></label><div class="ed-rows" data-rows="videos" data-kind="videos"></div></div>
+
+          <input type="hidden" name="stats_es_json" id="ed-json-stats_es">
+          <input type="hidden" name="stats_en_json" id="ed-json-stats_en">
+          <input type="hidden" name="media_es_json" id="ed-json-media_es">
+          <input type="hidden" name="media_en_json" id="ed-json-media_en">
+          <input type="hidden" name="images_json" id="ed-json-images">
+          <input type="hidden" name="sponsors_json" id="ed-json-sponsors">
+          <input type="hidden" name="videos_json" id="ed-json-videos">
+        </div>
 
         <div style="border-top:1px solid var(--pn-border); padding-top:14px; margin-top:6px;">
           <p class="ad-note" style="margin:0 0 12px;">Presentación de la edición (la ve el inversionista)</p>
@@ -1390,28 +1342,57 @@
             <div class="ad-f"><label>Reparto inversionista (%)</label><input type="number" name="investor_split" id="pf-investor_split" placeholder="50"></div>
           </div>
         </div>
-        <button type="submit" class="ad-btn" style="margin-top:8px;">Guardar edición</button>
+        <div class="ed-actions">
+          <button type="button" class="ad-btn ad-btn--ghost" onclick="edPreview()">Vista previa</button>
+          <button type="submit" class="ad-btn">Guardar edición</button>
+        </div>
+        <div id="ed-preview" class="ed-preview" hidden></div>
       </form>
     </div>
   </div>
 </div>
 <script>
   window.__portfolioForms = {{{jsonScript portfolioForms}}};
+  // Una sola edición por año: este drawer guarda identidad, contenido público,
+  // presentación e inversión de una vez. Antes esto estaba partido en dos
+  // pestañas que podían quedar contando cosas distintas del mismo año.
+  var PF_IDENTIDAD = ['code','year','title','subtitle','match','description','venue','city','country',
+    'event_date','date_phase','phase','status','progress_pct','accent','presentation_es','presentation_en',
+    'budget','projected_income','capacity','ticket_price','deductions_pct','rebate_per','cap_pct','investor_split'];
+  var PF_PUBLICO = ['banner','att_value','att_label_es','att_label_en','title_es','title_en','description_es','description_en'];
+
   function openPortfolio(id){
     var f = document.getElementById('form-portfolio');
-    var fields = ['code','year','title','subtitle','match','description','venue','city','country','event_date','date_phase','phase','progress_pct','accent','presentation_es','presentation_en','budget','projected_income','capacity','ticket_price','deductions_pct','rebate_per','cap_pct','investor_split'];
     var data = (window.__portfolioForms || []).filter(function(x){ return String(x.id) === String(id); })[0];
+
     if (id && data){
       document.getElementById('pf-modal-title').textContent = 'Editar edición · ' + (data.title || '');
       f.action = '/panel/admin/portfolio/' + id + '/update';
-      fields.forEach(function(k){ var el = document.getElementById('pf-' + k); if (el) el.value = (data[k] != null ? data[k] : ''); });
+      PF_IDENTIDAD.forEach(function(k){ var el = document.getElementById('pf-' + k); if (el) el.value = (data[k] != null ? data[k] : ''); });
+      PF_PUBLICO.forEach(function(k){ var el = document.getElementById('ed-' + k); if (el) el.value = (data[k] != null ? data[k] : ''); });
       document.getElementById('pf-is_demo').checked = !!data.is_demo;
     } else {
       document.getElementById('pf-modal-title').textContent = 'Nueva edición';
       f.action = '/panel/admin/portfolio';
       f.reset();
       document.getElementById('pf-accent').value = '#6C3CE0';
+      PF_PUBLICO.forEach(function(k){ var el = document.getElementById('ed-' + k); if (el) el.value = ''; });
     }
+
+    var thumb = document.getElementById('ed-banner-thumb');
+    if (thumb){
+      var b = document.getElementById('ed-banner').value;
+      thumb.hidden = !b;
+      if (b) thumb.src = b;
+    }
+    var filas = (data && data.rows) || {};
+    Object.keys(ED_JSON_FIELDS).forEach(function(name){
+      edState[name] = (filas[name] || []).map(function(o){ return Object.assign({}, o); });
+      edRender(name);
+    });
+    var prev = document.getElementById('ed-preview');
+    if (prev){ prev.hidden = true; prev.innerHTML = ''; }
+    setEditionLang('es');
     openModal('modal-portfolio');
   }
 </script>
@@ -1604,9 +1585,6 @@
   var INVESTOR_TIERS = {{{jsonScript investorTiers}}};
   var SPONSOR_TIERS = {{{jsonScript sponsorTiers}}};
   var USER_DOCS = {{{jsonScript docsByUser}}};
-  var EDITIONS_FORMS = {{{jsonScript editionsForms}}};
-  var EDITION_FIELDS = ['year','status','sort','match','date','city','venue','banner','att_value','att_label_es','att_label_en','title_es','title_en','description_es','description_en','stats_es','stats_en','media_es','media_en','sponsors','videos','images'];
-
   function setEditionLang(l){
     document.querySelectorAll('.ad-langtab').forEach(function(b){ b.classList.toggle('is-active', b.dataset.lang === l); });
     document.querySelectorAll('.ad-langsec').forEach(function(s){ s.classList.toggle('is-active', s.dataset.langsec === l); });
@@ -1765,8 +1743,8 @@
     var box = document.getElementById('ed-preview');
     var v = function(id){ var el = document.getElementById(id); return el ? el.value.trim() : ''; };
     var banner = v('ed-banner');
-    var titulo = v('ed-title_es') || '(sin título)';
-    var meta = [v('ed-year'), v('ed-match'), v('ed-date'), v('ed-city'), v('ed-venue')].filter(Boolean).join(' · ');
+    var titulo = v('ed-title_es') || v('pf-title') || '(sin título)';
+    var meta = [v('pf-year'), v('pf-match'), v('pf-event_date'), v('pf-city'), v('pf-venue')].filter(Boolean).join(' · ');
     var stats = (edState.stats_es || []).filter(function(x){ return x.value || x.label; });
     var imgs = (edState.images || []).filter(function(x){ return x.src; });
     var spons = (edState.sponsors || []).filter(function(x){ return x.src || x.alt; });
@@ -1774,8 +1752,8 @@
     var vids = (edState.videos || []).filter(function(x){ return x.id; });
 
     var avisos = [];
-    if (!/^\d{4}$/.test(v('ed-year'))) avisos.push('el año debe tener 4 dígitos');
-    if (!v('ed-title_es')) avisos.push('falta el título en español');
+    if (!/^\d{4}$/.test(v('pf-year'))) avisos.push('el año debe tener 4 dígitos');
+    if (!v('pf-title')) avisos.push('falta el título de la edición');
     notas.forEach(function(n){ if (n.url && !/^https?:\/\//i.test(n.url)) avisos.push('la nota "' + (n.title || n.source) + '" tiene un enlace que no empieza con http'); });
     vids.forEach(function(x){ if (!/^[\w-]{6,20}$/.test(x.id)) avisos.push('"' + x.id + '" no parece un ID de YouTube'); });
 
@@ -1810,33 +1788,8 @@
     box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  function openEdition(id){
-    var data = id ? EDITIONS_FORMS.filter(function(e){ return String(e.id) === String(id); })[0] : null;
-    document.getElementById('ed-modal-title').textContent = data ? ('Editar edición ' + data.year) : 'Nueva edición';
-    document.getElementById('form-edition').action = data ? ('/panel/admin/edition/' + data.id + '/update') : '/panel/admin/edition';
-    EDITION_FIELDS.forEach(function(f){
-      var el = document.getElementById('ed-' + f);
-      if (!el) return;
-      el.value = data ? (data[f] == null ? '' : data[f]) : (f === 'status' ? 'past' : '');
-    });
-    var thumb = document.getElementById('ed-banner-thumb');
-    if (thumb){
-      var b = document.getElementById('ed-banner').value;
-      thumb.hidden = !b;
-      if (b) thumb.src = b;
-    }
-    var filas = (data && data.rows) || {};
-    Object.keys(ED_JSON_FIELDS).forEach(function(name){
-      edState[name] = (filas[name] || []).map(function(o){ return Object.assign({}, o); });
-      edRender(name);
-    });
-    var prev = document.getElementById('ed-preview');
-    if (prev){ prev.hidden = true; prev.innerHTML = ''; }
-    setEditionLang('es');
-    openModal('modal-edition');
-  }
-
-  var formEdicion = document.getElementById('form-edition');
+  // Al guardar la edición, las filas repetibles se serializan a los inputs ocultos
+  var formEdicion = document.getElementById('form-portfolio');
   if (formEdicion) formEdicion.addEventListener('submit', edSerialize);
   document.querySelectorAll('.ad-langtab').forEach(function(b){ b.addEventListener('click', function(){ setEditionLang(b.dataset.lang); }); });
 
@@ -2167,13 +2120,13 @@
       cronograma: { label: 'Cronograma', color: '#1E8E5A' },
       categorias: { label: 'Categorías', color: '#14141B' },
       notificaciones: { label: 'Notificaciones', color: '#6C3CE0' },
-      ediciones: { label: 'Ediciones', color: '#6C3CE0' },
+      eventos: { label: 'Ediciones', color: '#6C3CE0' },
       codigos: { label: 'Códigos', color: '#1E8E5A' },
       accesos: { label: 'Accesos', color: '#8A8F98' },
       mapa: { label: 'Mapa de códigos', color: '#D97706' },
       leads: { label: 'Prospectos', color: '#6C3CE0' }
     };
-    var ORDER = ['Inversionistas','Patrocinadores','Prospectos','Noticias','Eventos','Cronograma','Categorías','Notificaciones','Ediciones','Códigos','Accesos','Mapa de códigos'];
+    var ORDER = ['Inversionistas','Patrocinadores','Prospectos','Noticias','Ediciones','Cronograma','Categorías','Notificaciones','Códigos','Accesos','Mapa de códigos'];
 
     function buildIndex(){
       var idx = [];

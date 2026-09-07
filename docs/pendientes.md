@@ -405,24 +405,46 @@ Hecho:
 - [x] **Paquetes de inversión** por edición: nombre, monto, modalidad, % retorno,
   beneficios, cupo, y además **paquetes privados** para una sola persona (`user_id`).
 
-### DECISIÓN DEL USUARIO (7 sep 2026): cerrar el hueco de las dos tablas
+### Una sola edición por año — HECHO (era decisión del usuario, 7 sep 2026)
 
-**Hay que unificar `editions` y `portfolio_events`.** Instrucción explícita del usuario.
-Las dos representan un año y en el admin son **dos pestañas distintas** ("Ediciones" para
-lo público y "Eventos" para el portafolio del inversionista). Hoy `editions` tiene
-2023–2027 y `portfolio_events` tiene 2023/24/25/27: **se pueden desincronizar**, y cargar
-el mismo año dos veces es justo lo que la regla de "una edición por año" quería evitar.
-**Cuanto más contenido se cargue, más cara sale la unificación** — por eso no conviene
-dejarlo para después.
+Ya no hay dos tablas ni dos pestañas para el mismo año. **`portfolio_events` es la única
+edición**: ahí viven juntos el contenido público y los datos de inversión.
 
-- [ ] Unificar en **una sola entidad "edición"** con los campos públicos (match, sede,
-  fecha, banner, stats, media, presentación ES/EN) y los de inversión (presupuesto,
-  ingreso proyectado, fase, avance, paquetes). Una pestaña, un alta, un año.
-- [ ] Plan: ligar por año primero (1:1, sin perder datos), mover las lecturas a la
-  entidad unificada, y solo entonces retirar la tabla sobrante. **Migración con guarda,
-  sin borrar nada hasta comprobar que la parte pública y la del inversionista leen bien.**
-- [ ] Ojo con los años que hoy existen en una tabla y no en la otra (2026 está en
-  `editions` como "pausa por Mundial" y no está en `portfolio_events`).
+Sobrevivió `portfolio_events` porque paquetes, inversiones, avances, documentos, medios y
+comunicaciones ya colgaban de su `event_id`: mover el contenido público hacia ella toca
+una tabla, al revés habría tocado seis.
+
+- [x] Migración con guarda: `portfolio_events` gana `status`, `data_es` y `data_en`, y se
+  copia el contenido de `editions` emparejando por año. **No borra la tabla vieja** — sus
+  datos siguen ahí por si hiciera falta mirarlos, pero ya nadie le escribe.
+- [x] **2026 se rescató**: existía solo del lado público ("pausa por Mundial") y ahora
+  tiene su fila en el portafolio. La copia solo toca filas sin contenido público, así que
+  repetir la migración no pisa lo que el admin haya editado después.
+- [x] `db/editions.js` (todo lo público: timeline, página por año, hemeroteca) lee de la
+  tabla unificada. El respaldo por JSON sigue intacto.
+- [x] El admin quedó con **una sola pestaña "Ediciones"**. Su drawer guarda de una vez
+  identidad, estado público, contenido ES/EN con filas repetibles, presentación,
+  presupuesto y parámetros del simulador.
+- [x] Se retiraron las rutas `/admin/edition*` y el armado de datos de la tabla vieja.
+
+Robustez del alta/edición:
+- [x] **Un año, una edición**: el servidor rechaza crear o mover una edición a un año que
+  ya existe, y lo dice con el año ("edita la que ya está").
+- [x] Año validado (4 dígitos, 2000–2100) y título obligatorio, en el servidor.
+- [x] **No se borra una edición con inversiones registradas**: son registros de dinero de
+  gente real; el mensaje dice cuántas hay y dónde quitarlas.
+- [x] Al borrar una edición sin inversiones se van con ella sus paquetes, avances,
+  documentos, medios y comunicaciones, para no dejar filas apuntando a un `event_id` que
+  ya no existe.
+- [x] Si se borra la edición que estaba marcada como activa, la configuración vuelve a
+  automática en vez de dejar al panel apuntando a algo que no está.
+- [x] Las ediciones se ordenan por **año** (antes por un `sort` que se desalineaba al
+  crear una fuera de secuencia).
+
+Pendiente de esta sección:
+- [ ] Retirar la tabla `editions` del esquema cuando haya pasado un tiempo en producción
+  y se confirme que no hace falta.
+- [ ] Migrar también el `sort` viejo o quitarlo, ya que el orden lo da el año.
 
 ### DECISIÓN DEL USUARIO (7 sep 2026): edición activa la elige el ADMIN
 

@@ -1,8 +1,13 @@
 /**
  * Lectura de ediciones de la SOCCER iD CUP para las páginas públicas.
- * Fuente principal: tabla `editions` (Postgres/SQLite). Respaldo: archivos JSON
- * (cup_editions.json / gallery_pages.json) por si la DB está vacía o falla, para
- * que el sitio público nunca deje de renderizar.
+ *
+ * Fuente principal: tabla `portfolio_events`, que es **la única edición por año**:
+ * ahí vive tanto el contenido público (`data_es` / `data_en`) como los datos de
+ * inversión. Antes esto leía la tabla `editions`, que era una segunda lista del
+ * mismo año y se podía desincronizar; su contenido se copió aquí en la migración.
+ *
+ * Respaldo: archivos JSON (cup_editions.json / gallery_pages.json) por si la DB
+ * está vacía o falla, para que el sitio público nunca deje de renderizar.
  */
 const path = require('path');
 const fs = require('fs');
@@ -21,12 +26,12 @@ function parse(row, lang) {
 // Timeline de la página /socceridcup — { year, match, city, link, tone }
 async function timeline(lang) {
   try {
-    const rows = await knex('editions').orderBy([{ column: 'sort' }, { column: 'year' }]);
+    const rows = await knex('portfolio_events').orderBy('year');
     if (rows && rows.length) {
       return rows.map(r => {
         const d = parse(r, lang);
         return {
-          year: r.year, match: d.match || '', city: d.city || '',
+          year: r.year, match: d.match || r.match || '', city: d.city || r.city || '',
           link: r.status === 'past',
           tone: r.status === 'pause' ? 'pause' : (r.status === 'upcoming' ? 'soon' : '')
         };
@@ -48,7 +53,7 @@ async function timeline(lang) {
 async function detail(year, lang) {
   year = String(year);
   try {
-    const rows = await knex('editions').where({ status: 'past' }).orderBy([{ column: 'sort' }, { column: 'year' }]);
+    const rows = await knex('portfolio_events').where({ status: 'past' }).orderBy('year');
     if (rows && rows.length) {
       const idx = rows.findIndex(r => String(r.year) === year);
       if (idx === -1) return null;
@@ -85,7 +90,7 @@ function marcarDestacada(links, year) {
 
 async function mediaLinks(lang) {
   try {
-    const rows = await knex('editions').where({ status: 'past' }).orderBy('year');
+    const rows = await knex('portfolio_events').where({ status: 'past' }).orderBy('year');
     if (rows && rows.length) {
       let out = [];
       rows.forEach(r => {

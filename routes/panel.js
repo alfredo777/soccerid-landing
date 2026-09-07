@@ -110,7 +110,8 @@ function buildEditionData(body) {
   const shared = {
     year: (body.year || '').trim(),
     match: (body.match || '').trim(),
-    date: (body.date || '').trim(),
+    // Una sola fecha para la edición: el formulario unificado manda `event_date`.
+    date: (body.date || body.event_date || '').trim(),
     city: (body.city || '').trim(),
     venue: (body.venue || '').trim(),
     banner: (body.banner || '').trim(),
@@ -943,39 +944,6 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     const roleLabel = (u) => u.role === 'sponsor' ? 'Patrocinador' : 'Inversionista';
     const tierLabel = (u) => { const t = findTier(tiers, u.role, u.category); return t ? t.label : '—'; };
 
-    // Ediciones de la CUP
-    const editionRows = await knex('editions').orderBy([{ column: 'sort' }, { column: 'year' }]);
-    const statusLabels = { past: 'Pasada', upcoming: 'Próxima', pause: 'Pausa' };
-    const editionsView = editionRows.map(r => {
-      const es = safeParse(r.data_es, {}) || {};
-      const en = safeParse(r.data_en, {}) || {};
-      return {
-        id: r.id, year: r.year, status: r.status, statusLabel: statusLabels[r.status] || r.status,
-        sort: r.sort, match: es.match || '', city: es.city || '', title: es.title || '',
-        imageCount: (es.images || []).length,
-        form: {
-          id: r.id, year: r.year, status: r.status, sort: r.sort,
-          match: es.match || '', date: es.date || '', city: es.city || '', venue: es.venue || '', banner: es.banner || '',
-          att_value: (es.attendance || {}).value || '',
-          att_label_es: (es.attendance || {}).label || '', att_label_en: (en.attendance || {}).label || '',
-          title_es: es.title || '', title_en: en.title || '',
-          description_es: es.description || '', description_en: en.description || '',
-          stats_es: edJoin(es.stats, ED_KEYS.stats), stats_en: edJoin(en.stats, ED_KEYS.stats),
-          media_es: edJoin(es.mediaLinks, ED_KEYS.media), media_en: edJoin(en.mediaLinks, ED_KEYS.media),
-          sponsors: edJoin(es.sponsors, ED_KEYS.sponsors),
-          videos: edJoin(es.videos, ED_KEYS.videos),
-          images: edJoin(es.images, ED_KEYS.images),
-          // Mismos datos como arreglos: es lo que consumen las filas repetibles
-          // del formulario. El texto de arriba se queda por compatibilidad.
-          rows: {
-            stats_es: es.stats || [], stats_en: en.stats || [],
-            media_es: es.mediaLinks || [], media_en: en.mediaLinks || [],
-            sponsors: es.sponsors || [], videos: es.videos || [], images: es.images || []
-          }
-        }
-      };
-    });
-
     // Registro de accesos: una sola consulta, se deriva todo (por código y por prospecto)
     const allAccess = await knex('access_log').orderBy('id', 'desc');
     const fmtWhen = (d) => d ? new Date(d).toLocaleString('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
@@ -1050,7 +1018,9 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
 
     // Ediciones del portafolio (multievento)
     const PHASE_LBL = PHASE_LABELS;
-    const peRows = await knex('portfolio_events').orderBy([{ column: 'sort' }, { column: 'year' }]);
+    // Una edición por año, así que el año es el orden natural. `sort` quedaba
+    // desalineado en cuanto se creaba una edición fuera de secuencia.
+    const peRows = await knex('portfolio_events').orderBy('year');
     const pkCounts = await knex('event_packages').select('event_id').count({ n: '*' }).groupBy('event_id');
     const invAgg = await knex('investments').select('event_id').count({ n: '*' }).sum({ cap: 'capital' }).groupBy('event_id');
     const pkMap = {}; pkCounts.forEach(r => { pkMap[r.event_id] = Number(r.n); });
@@ -1072,16 +1042,33 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       budgetLabel: formatUSD(e.budget || 0), isDemo: !!e.is_demo, accent: e.accent || '#6C3CE0', code: e.code || '',
       packages: pkMap[e.id] || 0, investments: (invMap[e.id] || {}).n || 0, capitalLabel: formatUSD((invMap[e.id] || {}).cap || 0)
     }));
-    // Datos completos para prellenar el formulario (drawer) de edición
-    const portfolioForms = peRows.map(e => ({
-      id: e.id, code: e.code || '', year: e.year || '', title: e.title || '', subtitle: e.subtitle || '',
-      match: e.match || '', description: e.description || '', venue: e.venue || '', city: e.city || '', country: e.country || '',
-      event_date: e.event_date || '', date_phase: e.date_phase || '', budget: e.budget || 0, projected_income: e.projected_income || 0,
-      phase: e.phase || 'planeacion', progress_pct: e.progress_pct || 0, is_demo: !!e.is_demo, accent: e.accent || '#6C3CE0',
-      presentation_es: e.presentation_es || '', presentation_en: e.presentation_en || '',
-      capacity: e.capacity || 0, ticket_price: e.ticket_price || 0, deductions_pct: e.deductions_pct || 0,
-      rebate_per: e.rebate_per || 0, cap_pct: e.cap_pct || 0, investor_split: e.investor_split || 0
-    }));
+    // Datos completos para prellenar el formulario (drawer) de edición.
+    // Incluye el contenido público, que desde la unificación vive en la misma fila.
+    const portfolioForms = peRows.map(e => {
+      const pes = safeParse(e.data_es, {}) || {};
+      const pen = safeParse(e.data_en, {}) || {};
+      return {
+        id: e.id, code: e.code || '', year: e.year || '', title: e.title || '', subtitle: e.subtitle || '',
+        match: e.match || '', description: e.description || '', venue: e.venue || '', city: e.city || '', country: e.country || '',
+        event_date: e.event_date || '', date_phase: e.date_phase || '', budget: e.budget || 0, projected_income: e.projected_income || 0,
+        phase: e.phase || 'planeacion', status: e.status || 'past',
+        progress_pct: e.progress_pct || 0, is_demo: !!e.is_demo, accent: e.accent || '#6C3CE0',
+        presentation_es: e.presentation_es || '', presentation_en: e.presentation_en || '',
+        capacity: e.capacity || 0, ticket_price: e.ticket_price || 0, deductions_pct: e.deductions_pct || 0,
+        rebate_per: e.rebate_per || 0, cap_pct: e.cap_pct || 0, investor_split: e.investor_split || 0,
+        // Contenido público (el que ve la landing): textos por idioma y colecciones
+        banner: pes.banner || '',
+        title_es: pes.title || '', title_en: pen.title || '',
+        description_es: pes.description || '', description_en: pen.description || '',
+        att_value: (pes.attendance || {}).value || '',
+        att_label_es: (pes.attendance || {}).label || '', att_label_en: (pen.attendance || {}).label || '',
+        rows: {
+          stats_es: pes.stats || [], stats_en: pen.stats || [],
+          media_es: pes.mediaLinks || [], media_en: pen.mediaLinks || [],
+          sponsors: pes.sponsors || [], videos: pes.videos || [], images: pes.images || []
+        }
+      };
+    });
 
     // Paquetes por edición (agrupados)
     const MOD_LBL = { fijo: 'Retorno fijo', riesgo: 'Participación a riesgo', patrocinio: 'Patrocinio' };
@@ -1161,8 +1148,6 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       })),
       investorTiers: tiers.filter(t => t.role === 'investor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
       sponsorTiers: tiers.filter(t => t.role === 'sponsor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
-      editions: editionsView,
-      editionsForms: editionsView.map(e => e.form),
       codes: codesView, codesUsed, codesUnused, codesHistory,
       codesAssigned, codesLeaked, codeTags, relations,
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
@@ -1631,44 +1616,9 @@ router.post('/admin/news/:id/notify', auth.requireAdmin, async (req, res, next) 
 // ════════════════════════════════════════════════
 // EDICIONES DE LA CUP (contenido público administrable)
 // ════════════════════════════════════════════════
-router.post('/admin/edition', auth.requireAdmin, async (req, res, next) => {
-  try {
-    const year = edValidYear(req.body.year);
-    if (!year) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El año debe tener 4 dígitos, entre 2000 y 2100') + '#ediciones');
-    const existing = await knex('editions').where({ year }).first();
-    if (existing) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Ya existe una edición con ese año') + '#ediciones');
-    const status = ['past', 'upcoming', 'pause'].includes(req.body.status) ? req.body.status : 'past';
-    const sort = parseInt(req.body.sort || year, 10) || 0;
-    const { data_es, data_en } = buildEditionData(req.body);
-    await knex('editions').insert({ year, status, sort, data_es, data_en });
-    res.redirect('/panel/admin?type=ok&msg=Edici%C3%B3n+creada#ediciones');
-  } catch (e) { next(e); }
-});
-
-router.post('/admin/edition/:id/update', auth.requireAdmin, async (req, res, next) => {
-  try {
-    const row = await knex('editions').where({ id: req.params.id }).first();
-    if (!row) return res.redirect('/panel/admin?type=error&msg=Edici%C3%B3n+no+encontrada#ediciones');
-    const year = edValidYear(req.body.year) || row.year;
-    if (req.body.year && !edValidYear(req.body.year)) {
-      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El año debe tener 4 dígitos, entre 2000 y 2100') + '#ediciones');
-    }
-    const chocan = await knex('editions').where({ year }).whereNot({ id: row.id }).first();
-    if (chocan) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Ya existe otra edición con ese año') + '#ediciones');
-    const status = ['past', 'upcoming', 'pause'].includes(req.body.status) ? req.body.status : 'past';
-    const sort = parseInt(req.body.sort || year, 10) || 0;
-    const { data_es, data_en } = buildEditionData(req.body);
-    await knex('editions').where({ id: row.id }).update({ year, status, sort, data_es, data_en, updated_at: knex.fn.now() });
-    res.redirect('/panel/admin?type=ok&msg=Edici%C3%B3n+actualizada#ediciones');
-  } catch (e) { next(e); }
-});
-
-router.post('/admin/edition/:id/delete', auth.requireAdmin, async (req, res, next) => {
-  try {
-    await knex('editions').where({ id: req.params.id }).del();
-    res.redirect('/panel/admin?type=ok&msg=Edici%C3%B3n+eliminada#ediciones');
-  } catch (e) { next(e); }
-});
+// Las rutas /admin/edition* se retiraron al unificar: la edición (pública y de
+// inversión) se guarda en /admin/portfolio. La tabla `editions` sigue existiendo
+// con sus datos por si hiciera falta mirarla, pero ya nadie le escribe.
 
 // ════════════════════════════════════════════════
 // EVENTOS DEL PORTAFOLIO (multievento = ediciones por año)
@@ -1692,6 +1642,9 @@ function portfolioBody(b) {
     budget: num(b.budget),
     projected_income: num(b.projected_income),
     phase: PORTFOLIO_PHASES.includes(b.phase) ? b.phase : 'planeacion',
+    // Estado de la parte pública: decide si la edición tiene página propia
+    // (`past`), si es la que viene (`upcoming`) o si ese año no hubo (`pause`).
+    status: ['past', 'upcoming', 'pause'].includes(b.status) ? b.status : 'past',
     progress_pct: Math.max(0, Math.min(100, num(b.progress_pct))),
     is_demo: b.is_demo ? true : false,
     accent: (b.accent || '#6C3CE0').trim(),
@@ -1705,30 +1658,83 @@ function portfolioBody(b) {
     investor_split: num(b.investor_split)
   };
 }
-router.post('/admin/portfolio', auth.requireAdmin, async (req, res, next) => {
+// Una edición = un año = una fila. Aquí se guarda TODO: identidad, contenido
+// público (data_es/data_en), presentación e inversión. No hay una segunda tabla
+// con el mismo año que se pueda desincronizar.
+async function edicionValida(body, idActual) {
+  const year = edValidYear(body.year);
+  if (!year) return 'El año debe tener 4 dígitos, entre 2000 y 2100';
+  if (!String(body.title || '').trim()) return 'El título es obligatorio';
+  let q = knex('portfolio_events').where({ year: parseInt(year, 10) });
+  if (idActual) q = q.whereNot({ id: idActual });
+  if (await q.first()) return `Ya existe la edición ${year}. Una edición por año: edita la que ya está.`;
+  return null;
+}
+
+router.post('/admin/portfolio', auth.requireAdmin, async (req, res) => {
   try {
+    const error = await edicionValida(req.body, null);
+    if (error) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(error) + '#eventos');
     const data = portfolioBody(req.body);
-    if (!data.title) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El título es obligatorio') + '#eventos');
+    const { data_es, data_en } = buildEditionData(req.body);
+    data.data_es = data_es;
+    data.data_en = data_en;
     const max = await knex('portfolio_events').max({ m: 'sort' }).first();
     data.sort = (Number(max && max.m) || 0) + 1;
     await knex('portfolio_events').insert(data);
-    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Edición creada') + '#eventos');
-  } catch (e) { next(e); }
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Edición ${data.year} creada`) + '#eventos');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#eventos');
+  }
 });
-router.post('/admin/portfolio/:id/update', auth.requireAdmin, async (req, res, next) => {
+router.post('/admin/portfolio/:id/update', auth.requireAdmin, async (req, res) => {
   try {
+    const row = await knex('portfolio_events').where({ id: req.params.id }).first();
+    if (!row) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Edición no encontrada') + '#eventos');
+    const error = await edicionValida(req.body, row.id);
+    if (error) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(error) + '#eventos');
     const data = portfolioBody(req.body);
-    await knex('portfolio_events').where({ id: req.params.id }).update(Object.assign(data, { updated_at: knex.fn.now() }));
-    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Edición actualizada') + '#eventos');
-  } catch (e) { next(e); }
+    const { data_es, data_en } = buildEditionData(req.body);
+    data.data_es = data_es;
+    data.data_en = data_en;
+    await knex('portfolio_events').where({ id: row.id }).update(Object.assign(data, { updated_at: knex.fn.now() }));
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Edición ${data.year} actualizada`) + '#eventos');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#eventos');
+  }
 });
-router.post('/admin/portfolio/:id/delete', auth.requireAdmin, async (req, res, next) => {
+router.post('/admin/portfolio/:id/delete', auth.requireAdmin, async (req, res) => {
   try {
     const id = req.params.id;
+    const ev = await knex('portfolio_events').where({ id }).first();
+    if (!ev) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Edición no encontrada') + '#eventos');
+
+    // Con inversiones registradas no se borra: son registros de dinero de gente
+    // real. Primero hay que sacarlos desde la cuenta de cada inversionista.
+    const conCapital = await knex('investments').where({ event_id: id }).count({ n: '*' }).first();
+    if (Number(conCapital.n) > 0) {
+      return res.redirect('/panel/admin?type=error&msg=' +
+        encodeURIComponent(`${ev.title} tiene ${conCapital.n} inversión(es) registrada(s). Quítalas primero desde la cuenta de cada inversionista.`) + '#eventos');
+    }
+
+    // Lo demás sí cuelga de la edición y se va con ella: si no, quedan filas
+    // apuntando a un event_id que ya no existe.
     await knex('event_packages').where({ event_id: id }).del();
+    await knex('event_updates').where({ event_id: id }).del();
+    await knex('event_documents').where({ event_id: id }).del();
+    await knex('event_media').where({ event_id: id }).del();
+    await knex('event_communications').where({ event_id: id }).del();
     await knex('portfolio_events').where({ id }).del();
-    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Edición eliminada') + '#eventos');
-  } catch (e) { next(e); }
+
+    // Si era la edición activa, se vuelve automática en vez de dejar al panel
+    // apuntando a algo que ya no está.
+    const cfg = await getDashboardConfig();
+    if (String(cfg.activeEditionId) === String(id)) await saveDashboardConfig({ activeEditionId: '' });
+
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Edición ${ev.title} eliminada`) + '#eventos');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#eventos');
+  }
 });
 
 // ── FAQ (admin) ──
