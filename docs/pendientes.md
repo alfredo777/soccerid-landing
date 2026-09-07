@@ -282,9 +282,10 @@ Pendiente de esta sección:
   *aprobado* o *firmado* se avisa a los inversionistas de esa edición, respetando la
   visibilidad por modalidad del documento. Volverlo a "en revisión" **no** avisa: no es
   noticia para nadie y avisar de cada cambio sería ruido.
-- [ ] Disparador de **inversión creada/actualizada**: hoy no se puede hacer porque **no
-  existe alta de inversiones desde el admin** (las inversiones solo entran por el seed).
-  Va junto con el CRUD de inversiones.
+- [x] ~~Disparador de **inversión creada/actualizada**~~ **HECHO** (junto con el CRUD de
+  inversiones). Al registrar o modificar una inversión se le avisa al inversionista, por
+  panel y correo. Al editar **solo avisa si cambió el monto, la modalidad, el retorno o la
+  fecha de entrega**: corregir una nota interna no tiene por qué molestar a nadie.
 - [ ] Disparadores de **cambio de fase del evento** y **recordatorio de fecha de entrega**.
 - [ ] Notificaciones **push** (requiere service worker; no está hecho).
 - [x] ~~Bandeja de notificaciones del admin~~ **HECHO**: "Tu bandeja" separada de
@@ -537,14 +538,23 @@ Detalles de implementación:
 - Los enlaces pasan por el mismo validador que las noticias: solo `http://` y `https://`
   (probado con un `javascript:`, rechazado).
 
+Hecho después:
+- [x] **CRUD de inversiones desde el admin** (sección "Inversiones" de la página por
+  edición): alta, edición y baja, con validación de capital, porcentaje y fechas.
+  **Una inversión por persona y edición** — dos filas del mismo par se pisan entre sí,
+  porque el panel toma la primera activa. Todo acotado por `event_id`. Es lo que alimenta
+  el retorno del inversionista y las cifras del resumen, así que era el hueco más grande
+  que quedaba del lado operativo.
+
 Pendiente de esta sección:
 - [ ] **Roles por evento** (`event_admins` ya existe como tabla): admin por edición además
   del superadmin. Es un cambio al modelo de permisos y no conviene meterlo junto con todo
   lo demás sin haber desplegado nada todavía.
 - [ ] **Sidebar "Sistema de Inversionistas"** en lugar de las tabs de iconos: es rehacer
   la navegación del admin completo, no una sección.
-- [ ] **Directorio global de inversionistas** con el agregado de todos sus eventos (hoy
-  "Usuarios" es por cuenta, sin la suma multievento).
+- [x] ~~**Directorio global de inversionistas**~~ **HECHO**: cada cuenta de la lista muestra
+  su **capital sumado de todas las ediciones** y en cuáles participa. Antes solo se veía el
+  monto de su ficha, que se queda corto en cuanto alguien invierte en más de un año.
 - [ ] Finanzas más allá del resumen (retornos proyectados por edición, comparativo entre
   ediciones).
 - [x] ~~Subir archivos al data room y evidencias~~ **HECHO**: endpoint `/admin/upload-doc`

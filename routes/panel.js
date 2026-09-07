@@ -1290,6 +1290,17 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       }
     };
 
+    // Capital de cada persona sumando todas sus ediciones
+    const invPorUsuario = {};
+    invRows.forEach(i => {
+      const ed = peRows.find(e => String(e.id) === String(i.event_id));
+      const reg = invPorUsuario[i.user_id] = invPorUsuario[i.user_id] || { capital: 0, ediciones: [] };
+      reg.capital += Number(i.capital || 0);
+      const etiqueta = ed ? String(ed.year || ed.title) : '—';
+      if (reg.ediciones.indexOf(etiqueta) === -1) reg.ediciones.push(etiqueta);
+    });
+    Object.values(invPorUsuario).forEach(r => r.ediciones.sort());
+
     const notifyRow = await knex('app_settings').where({ key: 'notify_emails' }).first();
     const notifyEmails = notifyRow ? (notifyRow.value || '') : '';
     const twilio = await panelSms.getPublicConfig();
@@ -1314,7 +1325,14 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       flash: req.query.msg,
       flashType: req.query.type,
       s3: require('../lib/uploads').s3Enabled,
-      users: users.map(u => ({
+      users: users.map(u => Object.assign({
+        // Directorio global: lo que esta persona tiene en TODAS las ediciones.
+        // La lista mostraba solo el monto de su ficha, que se queda corto en
+        // cuanto alguien invierte en más de un año.
+        edicionesN: invPorUsuario[u.id] ? invPorUsuario[u.id].ediciones.length : 0,
+        capitalTotal: invPorUsuario[u.id] ? formatUSD(invPorUsuario[u.id].capital) : null,
+        edicionesLabel: invPorUsuario[u.id] ? invPorUsuario[u.id].ediciones.join(', ') : ''
+      }, {
         id: u.id, name: u.name, email: u.email, role: u.role, roleLabel: roleLabel(u),
         category: u.category || '', tierLabel: tierLabel(u), amountRaw: u.amount || 0,
         amount: formatUSD(u.amount), status: u.status,
@@ -2161,9 +2179,19 @@ router.get('/admin/evento/:id', auth.requireAdmin, async (req, res, next) => {
       investments: invs.map(i => ({
         id: i.id, name: (userById[i.user_id] || {}).name || 'Cuenta eliminada',
         email: (userById[i.user_id] || {}).email || '',
+        userId: i.user_id,
         modality: i.modality, modalityLabel: i.modality === 'riesgo' ? 'Participación a riesgo' : 'Retorno fijo',
-        capital: formatUSD(i.capital), returnPct: i.return_pct || 0, state: i.state || 'activa'
+        capital: formatUSD(i.capital), capitalRaw: Number(i.capital) || 0,
+        returnPct: i.return_pct || 0, state: i.state || 'activa',
+        stateLabel: INV_STATES[i.state] || 'Activa',
+        investDate: i.invest_date || '', deliveryDate: i.delivery_date || '', notes: i.notes || ''
       })),
+      // A quién se le puede registrar capital en esta edición
+      candidatos: users.filter(u => u.role !== 'admin').map(u => ({
+        id: u.id, name: u.name, roleLabel: u.role === 'sponsor' ? 'Patrocinador' : 'Inversionista',
+        yaTiene: invs.some(i => i.user_id === u.id)
+      })),
+      invStates: Object.keys(INV_STATES).map(k => ({ key: k, label: INV_STATES[k] })),
       phases: PORTFOLIO_PHASES.map(k => ({ key: k, label: PHASE_LABELS[k] || k })),
       folders: DR_FOLDERS.filter(f => f !== 'Evidencias'),
       docStates: Object.keys(DOC_STATES).map(k => ({ key: k, label: DOC_STATES[k] })),
@@ -2283,6 +2311,102 @@ router.post('/admin/evento/:id/medio/:mid/delete', auth.requireAdmin, async (req
     const n = await knex('event_media').where({ id: req.params.mid, event_id: req.params.id }).del();
     res.redirect(evBack(req.params.id, !!n, n ? 'Nota eliminada' : 'Esa nota no es de esta edición', 'medios'));
   } catch (e) { res.redirect(evBack(req.params.id, false, e.message, 'medios')); }
+});
+
+// ── Inversiones de la edición ──
+// Es el alta que faltaba: hasta ahora las inversiones solo entraban por el seed,
+// así que no había forma de registrar capital nuevo ni de avisarle a nadie.
+const INV_STATES = { activa: 'Activa', cerrada: 'Cerrada', pausa: 'En pausa' };
+
+function inversionBody(b) {
+  const userId = parseInt(b.user_id, 10) || null;
+  if (!userId) return { error: 'Elige a quién le corresponde la inversión' };
+  const capital = Math.max(0, parseInt(String(b.capital || '').replace(/[^0-9]/g, ''), 10) || 0);
+  if (!capital) return { error: 'El capital tiene que ser mayor a cero' };
+  const pct = b.return_pct === '' || b.return_pct == null ? null : Number(b.return_pct);
+  if (pct !== null && (isNaN(pct) || pct < 0 || pct > 500)) return { error: 'El porcentaje de retorno no es válido' };
+  const fecha = (v) => {
+    const d = String(v == null ? '' : v).trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : null;
+  };
+  const alta = fecha(b.invest_date), entrega = fecha(b.delivery_date);
+  if (alta && entrega && entrega < alta) return { error: 'La fecha de entrega es anterior a la de inversión' };
+  return {
+    data: {
+      user_id: userId,
+      modality: b.modality === 'riesgo' ? 'riesgo' : 'fijo',
+      capital,
+      return_pct: pct,
+      invest_date: alta, delivery_date: entrega,
+      state: INV_STATES[b.state] ? b.state : 'activa',
+      notes: (b.notes || '').trim() || null
+    }
+  };
+}
+
+// Avisa al inversionista de su propia inversión. Es un dato de su dinero: se
+// entera por el panel y por correo si lo tiene activado, nunca por SMS masivo.
+async function avisarInversion(eventId, data, esNueva) {
+  const ev = await knex('portfolio_events').where({ id: eventId }).first();
+  const donde = ev ? ev.title : 'la edición';
+  const modalidad = data.modality === 'riesgo' ? 'participación a riesgo' : 'retorno fijo';
+  return notify({
+    type: 'inversion', userId: data.user_id, channels: ['in-app', 'email'],
+    eventId: parseInt(eventId, 10) || null,
+    title: esNueva ? `Tu inversión en ${donde} quedó registrada` : `Se actualizó tu inversión en ${donde}`,
+    body: `${formatUSD(data.capital)} en ${modalidad}` +
+      (data.return_pct ? ` · retorno pactado ${data.return_pct}%` : '') +
+      (data.delivery_date ? ` · entrega ${data.delivery_date}` : '') +
+      '.\nEntra al portal para ver el detalle.'
+  }).catch(() => ({ recipients: 0, emailed: 0 }));
+}
+
+router.post('/admin/evento/:id/inversion', auth.requireAdmin, async (req, res) => {
+  const id = req.params.id;
+  try {
+    const { data, error } = inversionBody(req.body);
+    if (error) return res.redirect(evBack(id, false, error, 'inversiones'));
+    const dest = await knex('users').where({ id: data.user_id }).first();
+    if (!dest || dest.role === 'admin') return res.redirect(evBack(id, false, 'Esa cuenta no puede tener inversión', 'inversiones'));
+    // Una inversión por persona y edición: dos filas del mismo par se pisan entre
+    // sí en el panel, que toma la primera activa.
+    const ya = await knex('investments').where({ event_id: id, user_id: data.user_id }).first();
+    if (ya) return res.redirect(evBack(id, false, `${dest.name} ya tiene una inversión en esta edición: edítala`, 'inversiones'));
+
+    const max = await knex('investments').where({ event_id: id }).max({ m: 'sort' }).first();
+    await knex('investments').insert(Object.assign({}, data, { event_id: id, sort: (Number(max && max.m) || 0) + 1 }));
+    const aviso = req.body.notificar ? await avisarInversion(id, data, true) : null;
+    const extra = aviso ? ` · avisado (email a ${aviso.emailed})` : '';
+    res.redirect(evBack(id, true, `Inversión de ${dest.name} registrada${extra}`, 'inversiones'));
+  } catch (e) { res.redirect(evBack(id, false, e.message, 'inversiones')); }
+});
+
+router.post('/admin/evento/:id/inversion/:iid/update', auth.requireAdmin, async (req, res) => {
+  const id = req.params.id;
+  try {
+    const fila = await knex('investments').where({ id: req.params.iid, event_id: id }).first();
+    if (!fila) return res.redirect(evBack(id, false, 'Esa inversión no es de esta edición', 'inversiones'));
+    const { data, error } = inversionBody(Object.assign({}, req.body, { user_id: fila.user_id }));
+    if (error) return res.redirect(evBack(id, false, error, 'inversiones'));
+    await knex('investments').where({ id: fila.id }).update(Object.assign({}, data, { updated_at: knex.fn.now() }));
+
+    // Solo se avisa si cambió algo que al inversionista le importa: el monto, la
+    // modalidad, el retorno o la fecha de entrega. Corregir una nota no es noticia.
+    const cambioReal = Number(fila.capital) !== data.capital ||
+      fila.modality !== data.modality ||
+      Number(fila.return_pct || 0) !== Number(data.return_pct || 0) ||
+      (fila.delivery_date || null) !== data.delivery_date;
+    const aviso = (req.body.notificar && cambioReal) ? await avisarInversion(id, data, false) : null;
+    const extra = aviso ? ` · avisado (email a ${aviso.emailed})` : (req.body.notificar && !cambioReal ? ' · sin cambios que avisar' : '');
+    res.redirect(evBack(id, true, `Inversión actualizada${extra}`, 'inversiones'));
+  } catch (e) { res.redirect(evBack(id, false, e.message, 'inversiones')); }
+});
+
+router.post('/admin/evento/:id/inversion/:iid/delete', auth.requireAdmin, async (req, res) => {
+  try {
+    const n = await knex('investments').where({ id: req.params.iid, event_id: req.params.id }).del();
+    res.redirect(evBack(req.params.id, !!n, n ? 'Inversión eliminada' : 'Esa inversión no es de esta edición', 'inversiones'));
+  } catch (e) { res.redirect(evBack(req.params.id, false, e.message, 'inversiones')); }
 });
 
 // ── Agenda del día del partido (por edición) ──

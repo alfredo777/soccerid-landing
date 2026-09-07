@@ -379,21 +379,115 @@
 <!-- INVERSIONES -->
 <section class="pn-card ev-sec" id="inversiones">
   <h3>Inversiones ({{investments.length}})</h3>
-  <p class="ev-sub">Quién tiene capital en esta edición. Se administran desde la cuenta de cada inversionista.</p>
+  <p class="ev-sub">Quién tiene capital en esta edición. Es lo que alimenta el retorno que ve cada inversionista
+    en su panel y las cifras del resumen, así que conviene tenerlo al día.</p>
   {{#each investments}}
   <div class="ev-item">
     <div class="ev-item__b">
       <strong>{{this.name}}</strong>
-      <small><span class="ev-pill ev-pill--mod">{{this.modalityLabel}}</span>{{this.capital}}{{#if this.returnPct}} · {{this.returnPct}}%{{/if}} · {{this.state}}</small>
-      {{#if this.email}}<small>{{this.email}}</small>{{/if}}
+      <small><span class="ev-pill ev-pill--mod">{{this.modalityLabel}}</span>{{this.capital}}{{#if this.returnPct}} · retorno {{this.returnPct}}%{{/if}} · {{this.stateLabel}}</small>
+      <small>
+        {{#if this.email}}{{this.email}}{{/if}}
+        {{#if this.investDate}} · desde {{this.investDate}}{{/if}}
+        {{#if this.deliveryDate}} · entrega {{this.deliveryDate}}{{/if}}
+      </small>
+      {{#if this.notes}}<p>{{this.notes}}</p>{{/if}}
+    </div>
+    <div class="ev-item__act">
+      <button type="button" onclick="invEditar(this)"
+        data-id="{{this.id}}" data-name="{{this.name}}" data-modality="{{this.modality}}"
+        data-capital="{{this.capitalRaw}}" data-pct="{{this.returnPct}}" data-state="{{this.state}}"
+        data-invest="{{this.investDate}}" data-delivery="{{this.deliveryDate}}" data-notes="{{this.notes}}">Editar</button>
+      <form method="POST" action="/panel/admin/evento/{{../ev.id}}/inversion/{{this.id}}/delete" data-confirm="¿Eliminar la inversión de {{this.name}}? Es un registro de dinero: asegúrate.">
+        <button type="submit" class="danger">Eliminar</button>
+      </form>
     </div>
   </div>
   {{else}}
   <div class="ev-empty">Nadie tiene inversión registrada en esta edición.</div>
   {{/each}}
+
+  <div class="ev-formwrap">
+    <h4 id="inv-form-title" style="font-size:13.5px; font-weight:800; margin-bottom:12px;">Registrar inversión</h4>
+    <form method="POST" id="form-inversion" action="/panel/admin/evento/{{ev.id}}/inversion">
+      <div class="ev-f" id="inv-user-wrap"><label>¿De quién?</label>
+        <select name="user_id" id="inv-user">
+          <option value="">— Elige la cuenta —</option>
+          {{#each candidatos}}
+          <option value="{{this.id}}"{{#if this.yaTiene}} disabled{{/if}}>{{this.name}} · {{this.roleLabel}}{{#if this.yaTiene}} (ya tiene inversión aquí){{/if}}</option>
+          {{/each}}
+        </select>
+        <div class="ev-hint">Una inversión por persona y edición. Si ya tiene, edítala en la lista de arriba.</div>
+      </div>
+      <div class="ev-f" id="inv-quien" style="display:none;"><label>Inversión de</label><input type="text" id="inv-quien-nombre" disabled></div>
+
+      <div class="ev-row2">
+        <div class="ev-f"><label>Capital (USD)</label><input type="number" name="capital" id="inv-capital" min="0" step="1000" required placeholder="100000"></div>
+        <div class="ev-f"><label>Modalidad</label>
+          <select name="modality" id="inv-modality">
+            <option value="fijo">Retorno fijo</option>
+            <option value="riesgo">Participación a riesgo</option>
+          </select>
+        </div>
+      </div>
+      <div class="ev-row3">
+        <div class="ev-f"><label>Retorno pactado (%)</label><input type="number" name="return_pct" id="inv-pct" min="0" max="500" step="0.5" placeholder="25">
+          <div class="ev-hint">Vacío = usa el global.</div>
+        </div>
+        <div class="ev-f"><label>Fecha de inversión</label><input type="date" name="invest_date" id="inv-invest"></div>
+        <div class="ev-f"><label>Fecha de entrega</label><input type="date" name="delivery_date" id="inv-delivery"></div>
+      </div>
+      <div class="ev-f"><label>Estado</label>
+        <select name="state" id="inv-state">
+          {{#each invStates}}<option value="{{this.key}}">{{this.label}}</option>{{/each}}
+        </select>
+      </div>
+      <div class="ev-f"><label>Notas <em>(internas)</em></label><input type="text" name="notes" id="inv-notes" placeholder="Referencia del contrato, condiciones..."></div>
+      <label class="ev-check"><input type="checkbox" name="notificar" id="inv-notif" value="1" checked> Avisarle (panel + email)</label>
+      <div class="ev-hint" style="margin:-6px 0 12px;">Al editar solo se avisa si cambia el monto, la modalidad, el retorno o la fecha de entrega. Corregir una nota no molesta a nadie.</div>
+      <div style="display:flex; gap:10px;">
+        <button type="submit" class="ev-btn" id="inv-submit">Registrar inversión</button>
+        <button type="button" class="ev-btn" id="inv-cancel" style="display:none; background:#fff; color:var(--pn-ink-2); border:1px solid var(--pn-border);" onclick="invCancelar()">Cancelar</button>
+      </div>
+    </form>
+  </div>
 </section>
 
 <script>
+  // Editar una inversión reutiliza el mismo formulario del alta: dos formularios
+  // idénticos en la misma página se desincronizan en cuanto se toca uno.
+  var invAccionAlta = document.getElementById('form-inversion') ? document.getElementById('form-inversion').action : '';
+  function invEditar(btn){
+    var d = btn.dataset;
+    var f = document.getElementById('form-inversion');
+    f.action = invAccionAlta + '/' + d.id + '/update';
+    document.getElementById('inv-form-title').textContent = 'Editar inversión';
+    document.getElementById('inv-submit').textContent = 'Guardar cambios';
+    document.getElementById('inv-cancel').style.display = '';
+    document.getElementById('inv-user-wrap').style.display = 'none';
+    document.getElementById('inv-user').removeAttribute('required');
+    document.getElementById('inv-quien').style.display = '';
+    document.getElementById('inv-quien-nombre').value = d.name || '';
+    document.getElementById('inv-capital').value = d.capital || '';
+    document.getElementById('inv-modality').value = d.modality || 'fijo';
+    document.getElementById('inv-pct').value = d.pct && d.pct !== '0' ? d.pct : '';
+    document.getElementById('inv-invest').value = d.invest || '';
+    document.getElementById('inv-delivery').value = d.delivery || '';
+    document.getElementById('inv-state').value = d.state || 'activa';
+    document.getElementById('inv-notes').value = d.notes || '';
+    document.getElementById('inv-form-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function invCancelar(){
+    var f = document.getElementById('form-inversion');
+    f.reset();
+    f.action = invAccionAlta;
+    document.getElementById('inv-form-title').textContent = 'Registrar inversión';
+    document.getElementById('inv-submit').textContent = 'Registrar inversión';
+    document.getElementById('inv-cancel').style.display = 'none';
+    document.getElementById('inv-user-wrap').style.display = '';
+    document.getElementById('inv-quien').style.display = 'none';
+  }
+
   // Subir un archivo al data room o a evidencias. Si el nombre está vacío, se
   // rellena con el del archivo: escribirlo dos veces no aporta nada.
   function evSubir(idUrl, idNombre, btn){

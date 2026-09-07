@@ -182,6 +182,7 @@
   .ad-langsec { display:none; }
   .ad-langsec.is-active { display:block; }
   .ad-f label em { font-style:normal; color:var(--pn-muted); font-weight:600; }
+  .ad-multi { display:inline-block; margin-top:3px; padding:1px 9px; border-radius:999px; background:var(--pn-purple-soft); color:var(--pn-purple); font-size:11px; font-weight:800; }
   .ad-select-sm { border:1px solid var(--pn-border); border-radius:9px; padding:7px 8px; font-size:12px; font-weight:700; font-family:inherit; color:var(--pn-ink-2); background:#fff; cursor:pointer; }
   .ad-actions__link { display:inline-flex; align-items:center; padding:7px 12px; border-radius:9px; background:var(--pn-purple); color:#fff; font-size:12px; font-weight:800; }
   .ad-actions__link:hover { background:#5A2FC7; }
@@ -329,6 +330,7 @@
           <div class="ad-item__b">
             <strong>{{this.name}}</strong>
             <small>{{this.email}} · {{this.roleLabel}} {{this.tierLabel}} · {{this.amount}}{{#eq this.role 'investor'}} · {{this.investmentTypeLabel}}{{/eq}}</small>
+            {{#if this.edicionesN}}<small class="ad-multi">{{this.capitalTotal}} en {{this.edicionesN}} edición(es): {{this.edicionesLabel}}</small>{{/if}}
           </div>
           <span class="ad-status {{this.status}}">{{this.status}}</span>
           <div class="ad-actions">
