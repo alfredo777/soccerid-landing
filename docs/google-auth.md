@@ -196,9 +196,14 @@ coincide con la que manda el servidor.
 https://www.googleapis.com/auth/calendar.events
 ```
 
-Ver y editar eventos. No pide correo ni nada más. **Hay que agregarlo a la
-pantalla de consentimiento**, y eso reabre la verificación: mientras siga en
-*Testing*, solo funciona para los test users.
+Ver y editar eventos. No pide correo ni nada más.
+
+**Ya está agregado a la pantalla de consentimiento** (usuario, 7 sep 2026).
+Mientras la app siga en *Testing* **no hace falta verificación de Google**: basta
+con que la cuenta que se conecte esté en la lista de usuarios de prueba. La
+verificación solo entra en juego al publicar a Producción. Al conectar aparece el
+aviso de "Google no ha verificado esta aplicación" → *Configuración avanzada → Ir
+a soccerid.co*; es lo normal en Testing, no un error.
 
 ### Cómo funciona
 

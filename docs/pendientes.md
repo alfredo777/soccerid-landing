@@ -22,8 +22,10 @@ editables y solo pasa al formulario si el admin le da "Pasar al formulario".
 - Solo admin: un inversionista que llame al endpoint termina en su panel.
 
 Pendiente de esta sección:
-- [ ] **Rotar la API key**: se envió por chat en texto plano. Está en
-  `anthropic-key.local.md` (gitignored) y se sube con `node scripts/heroku-env.js --apply`.
+- [ ] **Rotar la API key** — **el usuario decidió usarla así por ahora y rotarla después**
+  (7 sep 2026). Se envió por chat en texto plano. Está en `anthropic-key.local.md`
+  (gitignored) y se sube con `node scripts/heroku-env.js --apply`. Al rotarla se actualiza
+  ese archivo y se vuelve a correr el script.
 - [x] ~~**Extraer la imagen de una nota** desde su URL~~ **HECHO**: botón "Traer de la nota"
   junto al enlace original. Saca **imagen, titular y resumen** (og: / twitter: y, si no,
   las `<img>` del artículo descartando iconos y píxeles de tracking). El admin elige cuál
