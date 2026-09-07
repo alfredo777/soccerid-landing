@@ -391,6 +391,12 @@
     .st-dot { display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:7px; vertical-align:middle; }
     .st-minibar { display:inline-block; width:52px; height:6px; border-radius:20px; background:#F1F0F5; overflow:hidden; vertical-align:middle; margin-right:7px; }
     .st-minibar i { display:block; height:100%; }
+    .st-serie { display:flex; gap:12px; align-items:flex-end; overflow-x:auto; padding-bottom:4px; }
+    .st-serie__col { display:flex; flex-direction:column; align-items:center; gap:6px; min-width:64px; }
+    .st-serie__bar { width:34px; height:110px; background:#F1F0F5; border-radius:9px; display:flex; align-items:flex-end; overflow:hidden; }
+    .st-serie__bar i { display:block; width:100%; background:var(--pn-purple); border-radius:9px; }
+    .st-serie__val { font-size:11px; font-weight:800; color:var(--pn-ink-2); white-space:nowrap; }
+    .st-serie__lbl { font-size:10.5px; font-weight:700; color:var(--pn-muted); text-transform:uppercase; letter-spacing:.3px; }
   </style>
 
   <p class="st-note">Todo lo de aquí se <strong>cuenta solo</strong> a partir de lo cargado en el panel; no hay cifras escritas a mano.
@@ -496,13 +502,34 @@
     </div>
   </div>
 
+  <!-- Serie histórica -->
+  <div class="pn-card st-card" style="margin-bottom:22px;">
+    <h4>Capital acumulado en el tiempo</h4>
+    {{#if stats.serie.hay}}
+    <p class="st-sub" style="margin-bottom:14px;">Total levantado a la fecha: <strong>{{stats.serie.total}}</strong>{{#if stats.serie.sinFecha}} · {{stats.serie.sinFecha}} inversión(es) sin fecha capturada, no entran en la gráfica{{/if}}</p>
+    <div class="st-serie">
+      {{#each stats.serie.puntos}}
+      <div class="st-serie__col" title="{{this.label}}: {{this.total}} (+{{this.delta}})">
+        <div class="st-serie__bar"><i style="height:{{this.pct}}%"></i></div>
+        <span class="st-serie__val">{{this.total}}</span>
+        <span class="st-serie__lbl">{{this.label}}</span>
+      </div>
+      {{/each}}
+    </div>
+    {{else}}
+    <p class="st-sub">Todavía no se puede dibujar: hace falta capturar la <strong>fecha de inversión</strong>
+      en cada registro (Ediciones → Gestionar → Inversiones). Sin fechas no hay serie que mostrar,
+      y prefiero decirlo a inventar una línea.</p>
+    {{/if}}
+  </div>
+
   <!-- Comparativo entre ediciones -->
   <div class="pn-card st-card" style="margin-bottom:22px;">
     <h4>Comparativo entre ediciones</h4>
     <div class="st-comp">
       <table>
         <thead>
-          <tr><th>Edición</th><th>Capital</th><th>Presupuesto</th><th>Cubierto</th><th>Inv.</th><th>Paq.</th><th>Docs</th><th>Avances</th></tr>
+          <tr><th>Edición</th><th>Capital</th><th>Presupuesto</th><th>Cubierto</th><th>Retorno proy.</th><th>Ingreso proy.</th><th>Inv.</th><th>Paq.</th><th>Docs</th><th>Avances</th></tr>
         </thead>
         <tbody>
           {{#each stats.comparativo}}
@@ -520,6 +547,8 @@
               {{this.cubiertoPct}}%
               {{/if}}
             </td>
+            <td>{{this.retorno}}</td>
+            <td>{{this.ingresoProyectado}}</td>
             <td>{{this.inversiones}}</td>
             <td>{{this.paquetes}}</td>
             <td>{{this.documentos}}</td>

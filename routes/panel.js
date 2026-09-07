@@ -1222,7 +1222,18 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       const suyas = invRows.filter(i => String(i.event_id) === String(e.id));
       const cap = sumaCapital(suyas);
       const pres = Number(e.budget || 0);
+      // Retorno proyectado de cada edición, con la misma fórmula del panel
+      let ret = 0;
+      suyas.forEach(i => {
+        const u = users.find(x => x.id === i.user_id) || {};
+        const r = computeReturn(Object.assign({}, u, {
+          amount: i.capital, investment_type: i.modality, return_rate: i.return_pct
+        }), cfgRet);
+        ret += Number(String(r.profit).replace(/[^0-9.-]/g, '')) || 0;
+      });
       return {
+        retorno: ret > 0 ? formatUSD(ret) : '—',
+        ingresoProyectado: Number(e.projected_income || 0) > 0 ? formatUSD(e.projected_income) : '—',
         year: e.year, title: e.title, accent: e.accent || '#6C3CE0',
         activa: String(e.id) === activaId,
         capital: formatUSD(cap), presupuesto: pres > 0 ? formatUSD(pres) : '—',
@@ -1235,7 +1246,35 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       };
     });
 
+    // Serie histórica: capital acumulado por mes, según la fecha de cada inversión.
+    // Si nadie tiene fecha no se inventa nada: la vista lo dice y pide capturarlas.
+    const conFecha = invRows.filter(i => /^\d{4}-\d{2}-\d{2}$/.test(String(i.invest_date || '')));
+    const porMes = {};
+    conFecha.forEach(i => {
+      const mes = String(i.invest_date).slice(0, 7);
+      porMes[mes] = (porMes[mes] || 0) + Number(i.capital || 0);
+    });
+    const meses = Object.keys(porMes).sort();
+    let acumulado = 0;
+    const MES_CORTO = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+    const serieCruda = meses.map(m => {
+      acumulado += porMes[m];
+      const [a, mm] = m.split('-');
+      return { mes: m, label: MES_CORTO[parseInt(mm, 10) - 1] + ' ' + a.slice(2), delta: porMes[m], total: acumulado };
+    });
+    const topSerie = serieCruda.length ? serieCruda[serieCruda.length - 1].total : 0;
+    const serie = {
+      puntos: serieCruda.map(x => ({
+        label: x.label, total: formatUSD(x.total), delta: formatUSD(x.delta),
+        pct: topSerie ? Math.max(3, Math.round((x.total / topSerie) * 100)) : 0
+      })),
+      hay: serieCruda.length > 0,
+      sinFecha: invRows.length - conFecha.length,
+      total: formatUSD(topSerie)
+    };
+
     const stats = {
+      serie,
       comparativo,
       edicion: edActiva ? { title: edActiva.title, year: edActiva.year } : null,
       capital: {

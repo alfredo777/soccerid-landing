@@ -62,7 +62,10 @@ Pendiente de esta sección:
 - [x] ~~Comparativo entre ediciones~~ **HECHO**: tabla con una fila por edición (capital,
   presupuesto, % cubierto, inversiones, paquetes, documentos y avances), con la activa
   resaltada. Las ediciones sin presupuesto muestran "—" en vez de un 0% engañoso.
-- [ ] Evolución en el tiempo (hoy son cifras de corte, sin serie histórica).
+- [x] ~~Evolución en el tiempo~~ **HECHO**: gráfica de **capital acumulado por mes**, a
+  partir de la fecha de cada inversión. Si nadie tiene fecha capturada **no dibuja una
+  línea inventada**: dice qué falta y dónde capturarlo. También avisa cuántas inversiones
+  quedaron fuera por no tener fecha.
 
 ## Convención de UI (preferencia)
 - **Preferir panel lateral (drawer) sobre lightbox/modal centrado.** Para ver/crear/editar,
@@ -555,8 +558,9 @@ Pendiente de esta sección:
 - [x] ~~**Directorio global de inversionistas**~~ **HECHO**: cada cuenta de la lista muestra
   su **capital sumado de todas las ediciones** y en cuáles participa. Antes solo se veía el
   monto de su ficha, que se queda corto en cuanto alguien invierte en más de un año.
-- [ ] Finanzas más allá del resumen (retornos proyectados por edición, comparativo entre
-  ediciones).
+- [x] ~~Finanzas por edición~~ **HECHO**: el comparativo trae ahora **retorno proyectado**
+  (con la misma fórmula del panel del inversionista) e **ingreso proyectado** por edición,
+  junto al capital, presupuesto y % cubierto.
 - [x] ~~Subir archivos al data room y evidencias~~ **HECHO**: endpoint `/admin/upload-doc`
   (PDF, Word, Excel o imagen) y botón "Subir archivo" en ambos formularios. Si el nombre
   está vacío se rellena con el del archivo. Se siguen aceptando enlaces de Drive, y un
