@@ -437,10 +437,45 @@
       <h3>Enviar notificación</h3>
       <div class="ad-f"><label>Título</label><input type="text" name="title" required placeholder="Ej. Nueva fecha confirmada"></div>
       <div class="ad-f"><label>Mensaje</label><textarea name="body" placeholder="Escribe el comunicado..."></textarea></div>
-      <div class="ad-f"><label>Audiencia</label>
-        <select name="audience"><option value="all">Todos</option><option value="investor">Solo inversionistas</option><option value="sponsor">Solo patrocinadores</option></select>
+
+      <div class="ad-f"><label>¿A quién?</label>
+        <div class="nf-seg">
+          <label><input type="radio" name="target" value="audience" checked onchange="nfTarget()"> A un segmento</label>
+          <label><input type="radio" name="target" value="user" onchange="nfTarget()"> A una persona</label>
+        </div>
       </div>
-      <label class="ad-check"><input type="checkbox" name="sendEmail" value="1" checked> Enviar también por email</label>
+
+      <div id="nf-aud">
+        <div class="ad-row2">
+          <div class="ad-f"><label>Audiencia</label>
+            <select name="audience"><option value="all">Todos</option><option value="investor">Solo inversionistas</option><option value="sponsor">Solo patrocinadores</option></select>
+          </div>
+          <div class="ad-f"><label>Tipo</label>
+            <select name="notif_type">
+              {{#each notifTypes}}<option value="{{this.key}}"{{#eq this.key 'comunicado'}} selected{{/eq}}>{{this.label}}</option>{{/each}}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="ad-f" id="nf-user" style="display:none;">
+        <label>Destinatario</label>
+        <select name="user_id">
+          <option value="">— Elige a la persona —</option>
+          {{#each notifyPeople}}
+          <option value="{{this.id}}">{{this.name}} · {{this.roleLabel}}{{#unless this.hasPhone}} (sin teléfono){{/unless}}</option>
+          {{/each}}
+        </select>
+        <div class="ad-hint">Solo esa persona la ve en su panel. Nadie más.</div>
+      </div>
+
+      <div class="ad-f"><label>Canales</label>
+        <label class="ad-check"><input type="checkbox" checked disabled> En el panel (siempre)</label>
+        <label class="ad-check"><input type="checkbox" name="ch_email" value="1" checked> Email</label>
+        <label class="ad-check"><input type="checkbox" name="ch_sms" value="1"{{#unless twilio.ready}} disabled{{/unless}}> SMS{{#unless twilio.ready}} — configura Twilio en Configuración{{/unless}}</label>
+        <div class="ad-hint">Se respeta lo que cada persona eligió en su perfil: si apagó el email o el SMS, no le llega por ahí (en el panel sí).</div>
+      </div>
+
       <button type="submit" class="ad-btn" style="margin-top:14px;">Enviar notificación</button>
     </form>
 
@@ -454,7 +489,12 @@
           </div>
           <div class="ad-item__b">
             <strong>{{this.title}}</strong>
-            <small>{{this.date}} · {{#eq this.audience 'all'}}Todos{{/eq}}{{#eq this.audience 'investor'}}Inversionistas{{/eq}}{{#eq this.audience 'sponsor'}}Patrocinadores{{/eq}}</small>
+            <small>
+              <span class="nf-tag" style="background:{{this.typeColor}}1a;color:{{this.typeColor}};">{{this.typeLabel}}</span>
+              {{this.date}} ·
+              {{#if this.toLabel}}{{this.toLabel}}{{else}}{{#eq this.audience 'all'}}Todos{{/eq}}{{#eq this.audience 'investor'}}Inversionistas{{/eq}}{{#eq this.audience 'sponsor'}}Patrocinadores{{/eq}}{{/if}}
+              · {{this.channelsLabel}}{{#if this.sentEmail}} · {{this.sentEmail}} email{{/if}}{{#if this.sentSms}} · {{this.sentSms}} SMS{{/if}}
+            </small>
           </div>
           <div class="ad-actions">
             <form method="POST" action="/panel/admin/notification/{{this.id}}/delete" data-confirm="¿Eliminar notificación?"><button type="submit" class="danger">Eliminar</button></form>
@@ -466,6 +506,18 @@
       </div>
     </div>
   </div>
+  <style>
+    .nf-seg { display:flex; gap:18px; flex-wrap:wrap; }
+    .nf-seg label { display:flex; align-items:center; gap:7px; font-size:13.5px; font-weight:600; color:var(--pn-ink-2); cursor:pointer; }
+    .nf-tag { display:inline-block; padding:2px 8px; border-radius:999px; font-size:10.5px; font-weight:800; letter-spacing:.3px; margin-right:6px; text-transform:uppercase; }
+  </style>
+  <script>
+    function nfTarget() {
+      var toUser = document.querySelector('input[name="target"][value="user"]').checked;
+      document.getElementById('nf-user').style.display = toUser ? '' : 'none';
+      document.getElementById('nf-aud').style.display = toUser ? 'none' : '';
+    }
+  </script>
 </section>
 
 <!-- CATEGORÍAS -->
@@ -873,7 +925,57 @@
       <div class="ad-f"><label>Actualizado el</label><input type="date" name="return_updated" value="{{dashboardConfig.returnUpdated}}"></div>
       <button type="submit" class="ad-btn">Guardar trazabilidad</button>
     </form>
+
+    <div class="pn-card ad-form tw-card">
+      <h3>SMS (Twilio)
+        {{#if twilio.ready}}<span class="tw-pill tw-on">Activo</span>
+        {{else}}{{#if twilio.configured}}<span class="tw-pill tw-off">Apagado</span>
+        {{else}}<span class="tw-pill tw-off">Sin configurar</span>{{/if}}{{/if}}
+      </h3>
+      <p class="ad-hint" style="margin:-4px 0 14px;">Las llaves se pegan aquí, no hacen falta variables de entorno ni desplegar.
+        Están en <strong>Twilio Console → Account Info</strong>. El token se guarda en la base de datos del panel y ya no se vuelve a mostrar completo.</p>
+
+      <form method="POST" action="/panel/admin/settings/twilio">
+        <div class="ad-f"><label>Account SID</label>
+          <input type="text" name="account_sid" value="{{twilio.account_sid}}" placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+        </div>
+        <div class="ad-f"><label>Auth Token</label>
+          <input type="password" name="auth_token" placeholder="{{#if twilio.hasToken}}{{twilio.tokenMask}} — déjalo vacío para conservarlo{{else}}Pega el Auth Token{{/if}}" autocomplete="new-password">
+          <div class="ad-hint">{{#if twilio.hasToken}}Ya hay un token guardado. Solo escribe aquí si lo vas a cambiar.{{else}}Todavía no hay token guardado.{{/if}}</div>
+        </div>
+        <div class="ad-f"><label>Remitente</label>
+          <input type="text" name="from" value="{{twilio.from}}" placeholder="+15551234567" autocomplete="off">
+          <div class="ad-hint">El número que compraste en Twilio (formato +52...) o un Messaging Service SID (MG...).</div>
+        </div>
+        <label class="ad-check"><input type="checkbox" name="enabled" value="1"{{#if twilio.enabled}} checked{{/if}}> Enviar SMS de verdad</label>
+        <div class="ad-hint" style="margin-bottom:12px;">Desmarcado = las notificaciones siguen saliendo por panel y email, el SMS solo se registra en el log.</div>
+        <button type="submit" class="ad-btn">Guardar Twilio</button>
+      </form>
+
+      {{#if twilio.configured}}
+      <form method="POST" action="/panel/admin/settings/twilio/test" class="tw-test">
+        <div class="ad-f"><label>Probar envío</label>
+          <input type="text" name="to" placeholder="+521234567890" autocomplete="off">
+          <div class="ad-hint">Manda un SMS de prueba a ese número. Twilio lo cobra como cualquier mensaje.</div>
+        </div>
+        <button type="submit" class="ad-btn ad-btn--ghost">Enviar SMS de prueba</button>
+      </form>
+      <form method="POST" action="/panel/admin/settings/twilio/clear" data-confirm="¿Borrar las credenciales de Twilio? El SMS dejará de funcionar.">
+        <button type="submit" class="ad-btn ad-btn--ghost tw-danger">Borrar credenciales</button>
+      </form>
+      {{/if}}
+    </div>
   </div>
+  <style>
+    .tw-pill { display:inline-block; margin-left:9px; padding:3px 10px; border-radius:999px; font-size:10.5px; font-weight:800; letter-spacing:.4px; text-transform:uppercase; vertical-align:middle; }
+    .tw-on { background:#DEF7EC; color:#03543F; }
+    .tw-off { background:#F3F4F6; color:#6B7280; }
+    .tw-card .tw-test { margin-top:18px; padding-top:16px; border-top:1px solid var(--pn-border); }
+    .ad-btn--ghost { background:#fff; color:var(--pn-purple); border:1px solid var(--pn-border); }
+    .ad-btn--ghost:hover { background:var(--pn-purple-soft); }
+    .tw-danger { margin-top:10px; color:#B42318; }
+    .tw-danger:hover { background:#FEF2F2; }
+  </style>
 </section>
 
 <!-- ═══ MODALES DE EDICIÓN ═══ -->

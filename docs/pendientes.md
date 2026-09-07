@@ -181,38 +181,62 @@ Detalles de la implementación:
 Pendiente de esta sección:
 - [ ] Mismo "Editar perfil" para **patrocinadores** (hoy el drawer se arma para
   cualquier no-admin, falta revisar qué campos aplican).
-- [ ] Respetar `notify_email` / `notify_sms` **al enviar** (va con Notificaciones).
+- [x] Respetar `notify_email` / `notify_sms` **al enviar** — hecho en Notificaciones.
 
-## Notificaciones (mejora + mapa de dónde se necesitan)
-Ampliar el sistema de notificaciones (hoy: tabla `notifications`, audiencia
-all/investor/sponsor, badge in-app + email opcional) para cubrir **actividad,
-envíos, documentos, posts, códigos**, con **canales** (in-app / email / SMS / push)
-y notificaciones **directas** a un inversionista o patrocinador específico.
+## Notificaciones (tipos, directas y canales) — HECHO
+Todo pasa por un solo punto de envío: `lib/panelNotify.js` (`notify` para usuarios,
+`notifyAdmins` para el organizador). Nadie más manda notificaciones por su cuenta.
 
-Mapa de eventos → a quién notificar → canal sugerido:
+Lo que quedó construido:
+- Tabla `notifications` ampliada (migración idempotente en `db/schema.js`): `type`,
+  `user_id` (directa), `event_id`, `channels`, `sent_email`, `sent_sms`.
+  **`channels` es una lista** ('in-app,email') y no un solo valor, porque una misma
+  notificación sale por varios lados a la vez.
+- Tipos: actividad · envío · documento · post · código · inversión · directa · comunicado.
+  Cada uno con su etiqueta de color, visible para el inversionista y en el log del admin.
+- **Directas 1 a 1**: el admin elige "A una persona". Solo esa persona la ve; el filtro
+  de `notificationsForUser` deja pasar las de su audiencia **sin destinatario** más las
+  suyas propias. Verificado: el otro inversionista no la ve.
+- **Canales**: in-app siempre; email por `lib/panelMailer.js` (el mailer que ya existía,
+  no se creó otro camino); SMS por `lib/panelSms.js` (Twilio por HTTPS directo, sin
+  agregar dependencias al build).
+- **Respeta las preferencias del perfil** (`notify_email` / `notify_sms`): a quien apagó
+  el email no le llega correo, a quien no aceptó SMS no le llega SMS. In-app siempre
+  llega, para que nadie se quede sin ver un mensaje dirigido a él.
+- El admin ve cuántos correos y SMS salieron de verdad (`sent_email` / `sent_sms`), no
+  cuántos se intentaron.
+- Disparadores ya conectados: **noticia compartida** (tipo post), **documento nuevo**
+  para su dueño (tipo documento, con `silent=1` para cargar sin avisar) y **acceso con
+  código 2027** al log del organizador (sin email: ese aviso ya salía por otro lado, no
+  tiene caso mandarlo dos veces).
 
-| Evento (disparador) | Destinatario | Canal |
-|---|---|---|
-| **Actividad / avances** (nuevo hito o avance en cronología, cambio de fase del evento) | Inversionistas/patrocinadores del evento | in-app + email |
-| **Envíos** (invitación enviada, código enviado, correo/SMS entregado o fallido) | Admin (confirmación) + destinatario | in-app (admin) / email · SMS al destinatario |
-| **Documentos** (nuevo doc compartido; cambio de estatus revisión→aprobado→firmado) | Inversionista/patrocinador dueño del doc | in-app + email |
-| **Posts / Noticias** (nueva noticia publicada o compartida) | Audiencia (todos/inversionistas/patrocinadores) | in-app + email opcional |
-| **Códigos 2027** (código usado, nuevo acceso, **acceso de otra persona** distinta al dueño → referido) | Admin (seguimiento) | in-app + email (resumen) |
-| **Inversión** (asignación creada/actualizada, retorno/fecha de entrega próxima) | Inversionista de esa inversión | in-app + email |
-| **Comunicaciones oficiales** por evento/modalidad | Segmento (fijo/riesgo/todos) | in-app + email |
+### Las llaves de Twilio se ponen desde el admin
+Configuración → tarjeta **SMS (Twilio)**: Account SID, Auth Token y remitente. Se guardan
+en `app_settings` (clave `twilio_config`), **no** en variables de entorno: en Heroku
+cambiar una env var reinicia el dyno y hay que entrar por consola, y el organizador
+necesita poder pegar sus llaves sin depender de un deploy. Las env vars
+`TWILIO_ACCOUNT_SID` / `TWILIO_AUTH_TOKEN` / `TWILIO_FROM` siguen sirviendo de respaldo.
 
-Directas (1 a 1):
-- [ ] **Notificación directa a un inversionista** específico (desde el admin o desde su cuenta): mensaje dirigido, con canal elegible (in-app/email/SMS).
-- [ ] **Notificación directa a un patrocinador** específico, igual.
-- [ ] Requiere `notifications` con `user_id` (destinatario individual) además de `audience`.
+- El token **nunca se vuelve a mostrar**: la vista solo recibe una máscara (`••••••••1234`).
+  Si se deja el campo vacío al guardar, se conserva el que ya estaba.
+- Se valida el formato del SID (`AC` + 32 hex) y del remitente (`+52...` o `MG...`) antes
+  de guardar, para no descubrir el error hasta el primer envío.
+- Interruptor **"Enviar SMS de verdad"** aparte de las credenciales: se pueden dejar
+  guardadas y apagadas.
+- Botón de **SMS de prueba** y de **borrar credenciales**. El error de Twilio se muestra
+  tal cual (probado: con llaves falsas responde "Authenticate", no truena).
+- Mientras no haya Twilio configurado, la casilla de SMS del formulario sale deshabilitada.
 
-Base a construir:
-- [ ] Modelo: `notifications` con `type` (actividad/envio/documento/post/codigo/inversion/directa),
-  `user_id` opcional (directa), `event_id` opcional, `channel` (in-app/email/sms).
-- [ ] **El canal email DEBE usar el mailer existente** (`lib/panelMailer.js`, nodemailer/SMTP-Mailgun);
-  no crear otro envío de correo aparte. Reutilizar/añadir plantillas ahí.
-- [ ] Preferencias por usuario (qué canales acepta) — opcional fase 2.
-- [ ] Canal **SMS/push** depende de proveedores (ver sección de invitaciones SMS).
+Pendiente de esta sección:
+- [ ] Que el inversionista elija **por tipo** qué quiere recibir (hoy la preferencia es
+  por canal, no por tipo).
+- [ ] Disparadores que faltan del mapa: cambio de estatus de un documento
+  (revisión→aprobado→firmado), asignación de inversión creada/actualizada, cambio de
+  fase del evento y recordatorio de fecha de entrega.
+- [ ] Notificaciones **push** (requiere service worker; no está hecho).
+- [ ] Bandeja de notificaciones para el admin (hoy las suyas viven en el log de
+  "Enviadas", mezcladas con las que él mandó).
+
 
 ## Invitaciones por SMS + Email (diseño personalizado)
 Poder enviar invitaciones **por SMS y por email**, con **diseño personalizado**
@@ -224,9 +248,11 @@ Detalles:
 - **Email**: ya existe envío vía nodemailer (`lib/panelMailer.js`, SMTP/Mailgun).
   Falta una **plantilla HTML de marca** personalizada (logo, colores SOCCER iD,
   botón CTA) para invitación de inversionista y para código 2027.
-- **SMS**: es **nuevo** → requiere proveedor (p. ej. **Twilio**) + credenciales
-  (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM`). Guardar en `*.local.md`
-  gitignored + env vars. Falta que el usuario dé la cuenta/credenciales.
+- **SMS**: el envío ya está listo (`lib/panelSms.js`, Twilio) y **las llaves se
+  configuran desde el admin** (Configuración → SMS (Twilio)); ver la sección de
+  Notificaciones. Falta que el usuario abra la cuenta de Twilio, compre un número y
+  pegue el Account SID / Auth Token ahí. Lo que falta de esta sección es solo usar ese
+  envío para **invitaciones y códigos**, no el canal en sí.
 - Requiere tener **teléfono** del destinatario (se conecta con la asignación de
   códigos a persona: email y/o teléfono, ver sección de mapa de relaciones).
 - UI en el admin: elegir canal (email / SMS / ambos) al invitar o al enviar código.

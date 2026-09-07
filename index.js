@@ -870,6 +870,14 @@ app.post('/api/project2027/verify', async (req, res) => {
     // Notificación por email a los administradores (el código de prueba NO envía correo)
     if (!isTest) {
       project2027.sendAccessNotification({ code, ip, userAgent, name, email, newDevice: !knownDevice }).catch(() => {});
+      // Además queda en el log de notificaciones del admin. Sin email: ya salió
+      // arriba y no tiene caso mandar el mismo aviso dos veces.
+      require('./lib/panelNotify').notifyAdmins({
+        type: 'codigo',
+        title: `Acceso con el código ${code}`,
+        body: `${name || 'Sin nombre'} · ${email || 'sin correo'}${knownDevice ? '' : ' · dispositivo nuevo'}`,
+        channels: []
+      }).catch(() => {});
     }
 
     return res.json({ ok: true });

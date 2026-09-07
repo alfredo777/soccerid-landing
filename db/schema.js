@@ -157,6 +157,28 @@ async function ensureSchema() {
     });
   }
 
+  // Notificaciones ampliadas: tipo, destinatario individual, edición y canales.
+  // `channels` guarda una lista separada por comas ('in-app,email'); in-app siempre está.
+  if (await knex.schema.hasTable('notifications')) {
+    const notifCols = [
+      ['type', (t) => t.string('type').defaultTo('comunicado')],
+      ['user_id', (t) => t.integer('user_id')],
+      ['event_id', (t) => t.integer('event_id')],
+      ['channels', (t) => t.string('channels').defaultTo('in-app')],
+      ['sent_email', (t) => t.integer('sent_email').defaultTo(0)],
+      ['sent_sms', (t) => t.integer('sent_sms').defaultTo(0)]
+    ];
+    for (const [name, build] of notifCols) {
+      if (!(await knex.schema.hasColumn('notifications', name))) {
+        await knex.schema.alterTable('notifications', (t) => build(t));
+      }
+    }
+    // Una notificación 'directa' sin destinatario no existe: son filas previas a
+    // esta migración (o de la primera versión, que puso mal el default).
+    await knex('notifications').whereNull('user_id').where({ type: 'directa' }).update({ type: 'comunicado' });
+    await knex('notifications').whereNull('type').update({ type: 'comunicado' });
+  }
+
   // Columna para rastrear la última notificación vista por usuario (idempotente)
   if (await knex.schema.hasTable('users') && !(await knex.schema.hasColumn('users', 'notifications_seen_id'))) {
     await knex.schema.alterTable('users', (t) => {

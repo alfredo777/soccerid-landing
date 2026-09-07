@@ -6,6 +6,9 @@
   .nt-ic svg { width:21px; height:21px; stroke:var(--pn-purple); }
   .nt-b { flex:1; min-width:0; }
   .nt-b h3 { font-size:16px; font-weight:800; margin-bottom:4px; }
+  .nt-tags { display:flex; gap:6px; flex-wrap:wrap; margin:0 0 8px; }
+  .nt-tag { display:inline-block; padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:800; letter-spacing:.3px; text-transform:uppercase; }
+  .nt-tag--dm { background:#14141b; color:#fff; }
   .nt-b p { font-size:14px; color:var(--pn-ink-2); line-height:1.55; white-space:pre-line; }
   .nt-b small { display:block; font-size:12px; color:var(--pn-muted); font-weight:600; margin-top:10px; }
   .nt-dot { position:absolute; top:20px; right:20px; width:9px; height:9px; border-radius:50%; background:var(--pn-purple); }
@@ -21,6 +24,10 @@
     </div>
     <div class="nt-b">
       <h3>{{this.title}}</h3>
+      <div class="nt-tags">
+        <span class="nt-tag" style="background:{{this.typeColor}}1a;color:{{this.typeColor}};">{{this.typeLabel}}</span>
+        {{#if this.direct}}<span class="nt-tag nt-tag--dm">Para ti</span>{{/if}}
+      </div>
       {{#if this.body}}<p>{{this.body}}</p>{{/if}}
       <small>{{this.date}}</small>
     </div>

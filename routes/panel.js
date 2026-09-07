@@ -14,6 +14,8 @@ const { sendInvite, sendNotification } = require('../lib/panelMailer');
 const { sendLeadEmail } = require('../lib/project2027');
 const { uploadImage, uploadDocument } = require('../lib/uploads');
 const { getDashboardConfig, saveDashboardConfig, computeReturn } = require('../lib/panelSettings');
+const { notify, notifyAdmins, TYPES: NOTIF_TYPES } = require('../lib/panelNotify');
+const panelSms = require('../lib/panelSms');
 const turnstile = require('../lib/turnstile');
 const google = require('../lib/googleAuth');
 
@@ -125,10 +127,14 @@ function findTier(tiers, role, key) {
   return tiers.find(t => t.role === role && t.key === key) || null;
 }
 
-// Notificaciones dirigidas a un usuario (audiencia 'all' o su rol)
+// Notificaciones dirigidas a un usuario: las de su audiencia (sin destinatario
+// individual) más las **directas** que le mandaron a él. Nunca las de otro usuario.
 async function notificationsForUser(user) {
   const rows = await knex('notifications')
-    .where('audience', 'all').orWhere('audience', user.role)
+    .where((q) => {
+      q.whereNull('user_id').andWhere((a) => a.where('audience', 'all').orWhere('audience', user.role));
+    })
+    .orWhere('user_id', user.id)
     .orderBy('id', 'desc');
   const seenId = user.notifications_seen_id || 0;
   const unread = rows.filter(n => n.id > seenId).length;
@@ -745,11 +751,16 @@ router.get('/notificaciones', auth.requireAuth, async (req, res, next) => {
     if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
     const { rows } = await notificationsForUser(req.panelUser);
     const seenId = req.panelUser.notifications_seen_id || 0;
-    const list = rows.map(n => ({
-      title: n.title, body: n.body,
-      date: new Date(n.created_at).toLocaleDateString('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'long', year: 'numeric' }),
-      unread: n.id > seenId
-    }));
+    const list = rows.map(n => {
+      const t = NOTIF_TYPES[n.type] || NOTIF_TYPES.comunicado;
+      return {
+        title: n.title, body: n.body,
+        typeLabel: t.label, typeColor: t.color,
+        direct: !!n.user_id,
+        date: new Date(n.created_at).toLocaleDateString('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'long', year: 'numeric' }),
+        unread: n.id > seenId
+      };
+    });
     // Marcar todas como vistas
     const maxId = rows.length ? Math.max(...rows.map(n => n.id)) : 0;
     if (maxId > seenId) await knex('users').where({ id: req.panelUser.id }).update({ notifications_seen_id: maxId });
@@ -987,6 +998,17 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
 
     const notifyRow = await knex('app_settings').where({ key: 'notify_emails' }).first();
     const notifyEmails = notifyRow ? (notifyRow.value || '') : '';
+    const twilio = await panelSms.getPublicConfig();
+
+    // Destinatarios posibles de una notificación directa (inversionistas y patrocinadores)
+    const notifyPeople = users.filter(u => u.role !== 'admin').map(u => ({
+      id: u.id, name: u.name, email: u.email,
+      roleLabel: u.role === 'sponsor' ? 'Patrocinador' : 'Inversionista',
+      hasPhone: !!u.phone, wantsEmail: u.notify_email == null ? true : !!u.notify_email, wantsSms: !!u.notify_sms
+    }));
+    const notifTypes = Object.keys(NOTIF_TYPES)
+      .filter(k => k !== 'directa')
+      .map(k => ({ key: k, label: NOTIF_TYPES[k].label }));
 
     res.render('panel/admin', {
       layout: 'panel',
@@ -1009,10 +1031,19 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       })),
       docsByUser,
       news, events, milestones,
-      notifications: notifications.map(n => ({
-        id: n.id, title: n.title, body: n.body, audience: n.audience,
-        date: new Date(n.created_at).toLocaleDateString('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'short', year: 'numeric' })
-      })),
+      notifications: notifications.map(n => {
+        const t = NOTIF_TYPES[n.type] || NOTIF_TYPES.comunicado;
+        const dest = n.user_id ? (users.find(u => u.id === n.user_id) || null) : null;
+        const chans = String(n.channels || 'in-app').split(',').filter(Boolean);
+        return {
+          id: n.id, title: n.title, body: n.body, audience: n.audience,
+          typeLabel: t.label, typeColor: t.color,
+          toLabel: dest ? dest.name : (n.audience === 'admin' ? 'Organizador' : null),
+          channelsLabel: chans.map(c => c === 'in-app' ? 'in-app' : c.toUpperCase()).join(' · '),
+          sentEmail: n.sent_email || 0, sentSms: n.sent_sms || 0,
+          date: new Date(n.created_at).toLocaleDateString('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'short', year: 'numeric' })
+        };
+      }),
       tiers: tiers.map(t => ({
         id: t.id, key: t.key, role: t.role, roleLabel: t.role === 'sponsor' ? 'Patrocinador' : 'Inversionista',
         label: t.label, color: t.color, amount: t.amount, count: t.count,
@@ -1025,7 +1056,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       codes: codesView, codesUsed, codesUnused, codesHistory,
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
-      notifyEmails,
+      notifyEmails, twilio, notifyPeople, notifTypes,
       dashboardConfig: await getDashboardConfig(),
       capitalItems, risksAdmin, portfolioEditions, portfolioForms, portfolioPackages, investorsList, faqsAdmin,
       capitalTotalBudget: formatUSD(capitalItems.reduce((s, c) => s + Number(c.budget), 0)),
@@ -1111,7 +1142,21 @@ router.post('/admin/user/:id/document', auth.requireAdmin, async (req, res, next
     const category = CATS.includes(req.body.category) ? req.body.category : 'General';
     const docDate = (req.body.doc_date || '').trim() || null;
     await knex('user_documents').insert({ user_id: user.id, name, url, meta: 'Google Drive', ext: null, category, doc_date: docDate });
-    const back = req.body.redirect === 'account' ? `/panel/admin/user/${user.id}?type=ok&msg=${encodeURIComponent('Documento agregado')}` : '/panel/admin?type=ok&msg=' + encodeURIComponent(`Documento agregado a ${user.name}`);
+    // Avisa al dueño del documento (in-app siempre, email si lo tiene activado).
+    // Con `silent=1` el admin puede cargar documentos sin avisar.
+    let avisado = false;
+    if (!req.body.silent && user.status === 'active') {
+      try {
+        await notify({
+          type: 'documento', userId: user.id, channels: ['in-app', 'email'],
+          title: `Nuevo documento: ${name}`,
+          body: `Se agregó "${name}" (${category}) a tus documentos. Entra al portal para consultarlo.`
+        });
+        avisado = true;
+      } catch (err) { console.error('  ✗ No se pudo notificar el documento:', err.message); }
+    }
+    const sufijo = avisado ? ' (se le avisó)' : '';
+    const back = req.body.redirect === 'account' ? `/panel/admin/user/${user.id}?type=ok&msg=${encodeURIComponent('Documento agregado' + sufijo)}` : '/panel/admin?type=ok&msg=' + encodeURIComponent(`Documento agregado a ${user.name}${sufijo}`);
     res.redirect(back);
   } catch (e) {
     res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message));
@@ -1419,23 +1464,43 @@ router.post('/admin/tier/:id/update', auth.requireAdmin, async (req, res, next) 
 });
 
 // ── Notificaciones ──
+// Un solo formulario cubre segmento (todos/inversionistas/patrocinadores) y
+// directa (un destinatario). Los canales van por casillas; in-app siempre.
 router.post('/admin/notify', auth.requireAdmin, async (req, res, next) => {
   try {
     const title = (req.body.title || '').trim();
     const body = (req.body.body || '').trim();
-    const audience = ['all', 'investor', 'sponsor'].includes(req.body.audience) ? req.body.audience : 'all';
     if (!title) return res.redirect('/panel/admin?type=error&msg=El+t%C3%ADtulo+es+obligatorio#notificaciones');
-    await knex('notifications').insert({ title, body, audience });
-    let emailed = 0;
-    if (req.body.sendEmail) {
-      let q = knex('users').where({ status: 'active' }).whereNot({ role: 'admin' });
-      if (audience !== 'all') q = q.andWhere({ role: audience });
-      const recipients = await q;
-      recipients.forEach(u => { sendNotification({ to: u.email, name: u.name, title, body }).catch(() => {}); });
-      emailed = recipients.length;
+
+    const target = req.body.target === 'user' ? 'user' : 'audience';
+    let userId = null;
+    if (target === 'user') {
+      userId = parseInt(req.body.user_id, 10) || null;
+      if (!userId) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Elige a quién va dirigida') + '#notificaciones');
+      const dest = await knex('users').where({ id: userId }).first();
+      if (!dest || dest.role === 'admin') return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Destinatario no válido') + '#notificaciones');
     }
-    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Notificación enviada${emailed ? ` (email a ${emailed})` : ''}`) + '#notificaciones');
-  } catch (e) { next(e); }
+    const channels = ['in-app'];
+    if (req.body.ch_email) channels.push('email');
+    if (req.body.ch_sms) channels.push('sms');
+
+    const r = await notify({
+      type: userId ? 'directa' : (req.body.notif_type || 'comunicado'),
+      title, body,
+      audience: req.body.audience,
+      userId,
+      eventId: parseInt(req.body.event_id, 10) || null,
+      channels
+    });
+    const partes = [`in-app a ${r.recipients}`];
+    if (channels.includes('email')) partes.push(`email a ${r.emailed}`);
+    if (channels.includes('sms')) partes.push(`SMS a ${r.smsed}`);
+    const aviso = r.errors.length ? ` — ${r.errors.length} fallo(s), revisa el log` : '';
+    res.redirect('/panel/admin?type=' + (r.errors.length ? 'error' : 'ok') + '&msg=' +
+      encodeURIComponent(`Notificación enviada (${partes.join(', ')})${aviso}`) + '#notificaciones');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#notificaciones');
+  }
 });
 
 router.post('/admin/notification/:id/delete', auth.requireAdmin, async (req, res, next) => {
@@ -1447,10 +1512,8 @@ router.post('/admin/news/:id/notify', auth.requireAdmin, async (req, res, next) 
   try {
     const n = await knex('news').where({ id: req.params.id }).first();
     if (!n) return res.redirect('/panel/admin?type=error&msg=Noticia+no+encontrada#noticias');
-    await knex('notifications').insert({ title: n.title, body: n.excerpt, audience: 'all' });
-    const recipients = await knex('users').where({ status: 'active' }).whereNot({ role: 'admin' });
-    recipients.forEach(u => { sendNotification({ to: u.email, name: u.name, title: n.title, body: n.excerpt }).catch(() => {}); });
-    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Noticia compartida con ${recipients.length} usuarios`) + '#noticias');
+    const r = await notify({ type: 'post', title: n.title, body: n.excerpt, audience: 'all', channels: ['in-app', 'email'] });
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Noticia compartida con ${r.recipients} usuarios (email a ${r.emailed})`) + '#noticias');
   } catch (e) { next(e); }
 });
 
@@ -1658,6 +1721,47 @@ router.post('/admin/code/:id/status', auth.requireAdmin, async (req, res, next) 
 
 router.post('/admin/code/:id/delete', auth.requireAdmin, async (req, res, next) => {
   try { await knex('access_codes').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=C%C3%B3digo+eliminado#codigos'); } catch (e) { next(e); }
+});
+
+// ── Twilio (SMS): las llaves se configuran aquí, no por variables de entorno ──
+router.post('/admin/settings/twilio', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const sid = (req.body.account_sid || '').trim();
+    const token = (req.body.auth_token || '').trim();
+    const from = (req.body.from || '').trim();
+    const enabled = !!req.body.enabled;
+    if (sid && !/^AC[0-9a-f]{32}$/i.test(sid)) {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El Account SID de Twilio empieza con AC y tiene 34 caracteres') + '#configuracion');
+    }
+    if (from && !/^(\+\d{8,15}|MG[0-9a-f]{32})$/i.test(from)) {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El remitente debe ser un número en formato +521234567890 o un Messaging Service SID (MG...)') + '#configuracion');
+    }
+    await panelSms.saveConfig({ account_sid: sid, auth_token: token, from, enabled });
+    const cfg = await panelSms.getPublicConfig();
+    const aviso = enabled && !cfg.configured ? ' — faltan datos, el SMS sigue apagado' : '';
+    res.redirect('/panel/admin?type=' + (aviso ? 'error' : 'ok') + '&msg=' + encodeURIComponent('Twilio guardado' + aviso) + '#configuracion');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#configuracion');
+  }
+});
+
+router.post('/admin/settings/twilio/test', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const to = (req.body.to || '').trim();
+    if (!to) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Pon un número para la prueba') + '#configuracion');
+    const r = await panelSms.sendSms({ to, body: 'SOCCER iD — SMS de prueba desde el panel. Si lo recibiste, Twilio quedó bien configurado.' });
+    const msg = r.sent ? `SMS de prueba enviado a ${to}` : `No se pudo enviar: ${r.error}`;
+    res.redirect('/panel/admin?type=' + (r.sent ? 'ok' : 'error') + '&msg=' + encodeURIComponent(msg) + '#configuracion');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#configuracion');
+  }
+});
+
+router.post('/admin/settings/twilio/clear', auth.requireAdmin, async (req, res, next) => {
+  try {
+    await panelSms.clearConfig();
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Credenciales de Twilio borradas') + '#configuracion');
+  } catch (e) { next(e); }
 });
 
 router.post('/admin/settings/notify', auth.requireAdmin, async (req, res, next) => {
