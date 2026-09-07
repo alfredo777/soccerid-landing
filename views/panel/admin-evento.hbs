@@ -157,14 +157,18 @@
 
   <div class="ev-formwrap">
     <form method="POST" action="/panel/admin/evento/{{ev.id}}/avance">
-      <div class="ev-f"><label>Título del avance</label><input type="text" name="title" required placeholder="Contrato de sede firmado"></div>
+      {{#if aiOn}}
+      <button type="button" class="ai-btn" style="margin-bottom:12px;" data-task="comunicado" data-label="Avance"
+        data-fields='{"title":"av-title","body":"av-desc"}' onclick="aiOpen(this)"><svg viewBox="0 0 24 24" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3"/><rect x="4" y="6" width="16" height="12" rx="3"/><circle cx="9" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1" fill="currentColor" stroke="none"/></svg> Redactar con IA</button>
+      {{/if}}
+      <div class="ev-f"><label>Título del avance</label><input type="text" name="title" id="av-title" required placeholder="Contrato de sede firmado"></div>
       <div class="ev-row2">
         <div class="ev-f"><label>Fecha</label><input type="date" name="update_date"></div>
         <div class="ev-f"><label>Fase</label>
           <select name="phase">{{#each phases}}<option value="{{this.key}}">{{this.label}}</option>{{/each}}</select>
         </div>
       </div>
-      <div class="ev-f"><label>Descripción</label><textarea name="description" placeholder="Qué pasó y qué significa para el proyecto."></textarea></div>
+      <div class="ev-f"><label>Descripción</label><textarea name="description" id="av-desc" placeholder="Qué pasó y qué significa para el proyecto."></textarea></div>
       <button type="submit" class="ev-btn">Agregar avance</button>
     </form>
   </div>
@@ -323,8 +327,12 @@
 
   <div class="ev-formwrap">
     <form method="POST" action="/panel/admin/evento/{{ev.id}}/comunicacion">
-      <div class="ev-f"><label>Título</label><input type="text" name="title" required placeholder="Cierre de la ronda de inversión"></div>
-      <div class="ev-f"><label>Mensaje</label><textarea name="body" placeholder="Escribe el comunicado..."></textarea></div>
+      {{#if aiOn}}
+      <button type="button" class="ai-btn" style="margin-bottom:12px;" data-task="comunicado" data-label="Comunicación"
+        data-fields='{"title":"cm-title","body":"cm-body"}' onclick="aiOpen(this)"><svg viewBox="0 0 24 24" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3"/><rect x="4" y="6" width="16" height="12" rx="3"/><circle cx="9" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1" fill="currentColor" stroke="none"/></svg> Redactar con IA</button>
+      {{/if}}
+      <div class="ev-f"><label>Título</label><input type="text" name="title" id="cm-title" required placeholder="Cierre de la ronda de inversión"></div>
+      <div class="ev-f"><label>Mensaje</label><textarea name="body" id="cm-body" placeholder="Escribe el comunicado..."></textarea></div>
       <div class="ev-row3">
         <div class="ev-f"><label>Para quién</label>
           <select name="audience">{{#each visibilities}}<option value="{{this.key}}">{{this.label}}</option>{{/each}}</select>
@@ -452,6 +460,8 @@
     </form>
   </div>
 </section>
+
+{{> ai-drawer}}
 
 <script>
   // Editar una inversión reutiliza el mismo formulario del alta: dos formularios

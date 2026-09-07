@@ -1514,6 +1514,22 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       accessLog: accessView,
       notifyEmails, twilio, notifyPeople, notifTypes, stats,
       aiOn: ai.disponible(), aiModelo: ai.MODELO,
+      aiLog: await (async () => {
+        try {
+          const filas = await knex('ai_log').orderBy('id', 'desc').limit(30);
+          const nombres = {};
+          users.forEach(u => { nombres[u.id] = u.name; });
+          const admins = await knex('users').where({ role: 'admin' });
+          admins.forEach(u => { nombres[u.id] = u.name; });
+          return filas.map(f => ({
+            tarea: f.tarea, instruccion: (f.instruccion || '').slice(0, 140),
+            quien: nombres[f.user_id] || 'Cuenta eliminada',
+            aplicado: !!f.aplicado, error: f.error || '',
+            tokens: (f.tokens_in || 0) + (f.tokens_out || 0),
+            fecha: new Date(f.created_at).toLocaleString('es-MX', { timeZone: 'America/Mexico_City', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+          }));
+        } catch (_) { return []; }
+      })(),
       gcal: await gcal.estado(),
       actTypes: Object.keys(await todosLosTipos()),
       actTypesExtra: await tiposExtra(),
@@ -1753,6 +1769,19 @@ router.post('/admin/calendar/sync', auth.requireAdmin, async (req, res) => {
   }
 });
 
+// El admin pasó la propuesta al formulario. Es lo que separa "lo pedí y no me
+// gustó" de "esto acabó publicándose".
+router.post('/admin/ai/aplicado', auth.requireAdmin, async (req, res) => {
+  try {
+    const id = parseInt(req.body.logId, 10);
+    if (!id) return res.json({ ok: false });
+    await knex('ai_log').where({ id, user_id: req.panelUser.id }).update({ aplicado: true, updated_at: knex.fn.now() });
+    res.json({ ok: true });
+  } catch (e) {
+    res.json({ ok: false });
+  }
+});
+
 // ── Leer una nota de prensa por su URL ──
 // Trae imagen, título y resumen para no copiarlos a mano. La comprobación de
 // la URL vive en la lib: pedir direcciones arbitrarias desde el servidor es
@@ -1804,8 +1833,25 @@ router.post('/admin/ai', auth.requireAdmin, async (req, res) => {
       actual: req.body.actual,
       contexto
     });
+
+    // Queda registrado siempre, salga bien o mal: si algo raro se publicó,
+    // se puede rastrear quién lo pidió. No se guarda el texto generado, solo
+    // la instrucción — el resultado ya vive en la noticia o el comunicado.
+    let logId = null;
+    try {
+      const [ins] = await knex('ai_log').insert({
+        user_id: req.panelUser.id,
+        tarea: String(req.body.tarea || '').slice(0, 40),
+        instruccion: String(req.body.instruccion || '').slice(0, 2000) || null,
+        tokens_in: (r.uso && r.uso.entrada) || 0,
+        tokens_out: (r.uso && r.uso.salida) || 0,
+        error: r.ok ? null : String(r.error || '').slice(0, 200)
+      }).returning('id');
+      logId = typeof ins === 'object' ? ins.id : ins;
+    } catch (_) {}
+
     if (!r.ok) return res.status(400).json({ error: r.error });
-    res.json(r);
+    res.json(Object.assign({ logId }, r));
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -2601,6 +2647,7 @@ router.get('/admin/evento/:id', auth.requireAdmin, async (req, res, next) => {
         yaTiene: invs.some(i => i.user_id === u.id)
       })),
       invStates: Object.keys(INV_STATES).map(k => ({ key: k, label: INV_STATES[k] })),
+      aiOn: ai.disponible(),
       phases: PORTFOLIO_PHASES.map(k => ({ key: k, label: PHASE_LABELS[k] || k })),
       folders: DR_FOLDERS.filter(f => f !== 'Evidencias'),
       docStates: Object.keys(DOC_STATES).map(k => ({ key: k, label: DOC_STATES[k] })),

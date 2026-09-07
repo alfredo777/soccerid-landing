@@ -1,0 +1,188 @@
+{{#if aiOn}}
+<style>
+  .ai-chip { display:inline-block; margin-left:8px; padding:2px 10px; border-radius:999px; background:var(--pn-purple-soft); color:var(--pn-purple); font-size:11px; font-weight:800; vertical-align:middle; }
+  .ai-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 11px; border:1px solid #DCCFF7; border-radius:9px; background:var(--pn-purple-soft); color:var(--pn-purple); font-family:inherit; font-size:11.5px; font-weight:800; cursor:pointer; }
+  .ai-btn:hover { background:#E4DAFA; }
+  .ai-btn svg { width:13px; height:13px; stroke:currentColor; fill:none; }
+  .ai-campo { margin-bottom:12px; }
+  .ai-campo label { display:block; font-size:11.5px; font-weight:800; color:var(--pn-muted); text-transform:uppercase; letter-spacing:.3px; margin-bottom:5px; }
+  .ai-campo textarea { width:100%; border:1px solid var(--pn-border); border-radius:11px; padding:11px 13px; font-family:inherit; font-size:13.5px; line-height:1.55; color:var(--pn-ink); background:#fff; resize:vertical; }
+  .ai-drawer { position:fixed; inset:0; background:rgba(20,20,27,.45); z-index:140; display:flex; justify-content:flex-end; opacity:0; pointer-events:none; transition:opacity .22s ease; }
+  .ai-drawer.is-open { opacity:1; pointer-events:auto; }
+  .ai-drawer__card { background:#fff; width:100%; max-width:480px; height:100%; overflow-y:auto; box-shadow:-16px 0 48px rgba(20,20,27,.18); transform:translateX(100%); transition:transform .26s cubic-bezier(.4,0,.2,1); }
+  .ai-drawer.is-open .ai-drawer__card { transform:translateX(0); }
+  .ai-drawer__head { display:flex; align-items:center; justify-content:space-between; padding:22px 24px; border-bottom:1px solid var(--pn-border); position:sticky; top:0; background:#fff; z-index:1; }
+  .ai-drawer__head h3 { font-size:17px; font-weight:800; }
+  .ai-drawer__x { background:#F6F5F9; border:none; cursor:pointer; width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; }
+  .ai-drawer__x svg { width:18px; height:18px; stroke:var(--pn-ink-2); fill:none; }
+  .ai-drawer__body { padding:22px 24px 28px; }
+  .ai-drawer__sep { height:1px; background:var(--pn-border); margin:18px 0; }
+  .ai-f { margin-bottom:13px; }
+  .ai-f label { display:block; font-size:12px; font-weight:700; color:var(--pn-ink-2); margin-bottom:6px; }
+  .ai-f textarea { width:100%; padding:11px 13px; border:1px solid var(--pn-border); border-radius:11px; font-family:inherit; font-size:14px; color:var(--pn-ink); background:#fff; box-sizing:border-box; resize:vertical; }
+  .ai-hint { font-size:11.5px; color:var(--pn-muted); margin-top:5px; line-height:1.45; }
+  .ai-check { display:flex; align-items:center; gap:9px; font-size:13px; font-weight:700; color:var(--pn-ink); cursor:pointer; margin:4px 0 14px; }
+  .ai-go { padding:12px 18px; border:none; border-radius:12px; background:var(--pn-purple); color:#fff; font-size:13.5px; font-weight:800; font-family:inherit; cursor:pointer; }
+  .ai-go:hover { background:#5A2FC7; }
+  .ai-go--ghost { background:#fff; color:var(--pn-purple); border:1px solid var(--pn-border); }
+  .ai-go--ghost:hover { background:var(--pn-purple-soft); }
+</style>
+
+<div class="ai-drawer" id="ai-drawer" aria-hidden="true">
+  <div class="ai-drawer__card" role="dialog" aria-modal="true" aria-label="Asistente de contenidos">
+    <div class="ai-drawer__head">
+      <h3>Asistente <span id="ai-tarea-label" class="ai-chip"></span></h3>
+      <button type="button" class="ai-drawer__x" onclick="aiCerrar()" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="ai-drawer__body">
+      <p class="ai-hint" style="margin:0 0 14px;">Le dices qu&eacute; quieres y te propone un texto.
+        <strong>No guarda nada</strong>: lo revisas, lo editas aqu&iacute; mismo y decides si lo pasas al formulario.</p>
+
+      <div class="ai-f">
+        <label>&iquest;Qu&eacute; quieres que escriba?</label>
+        <textarea id="ai-instruccion" rows="3" placeholder="Ej. Avisar que se firm&oacute; el contrato de sede, sin dar el monto porque todav&iacute;a no lo tengo"></textarea>
+        <div class="ai-hint">Si te falta un dato, d&iacute;selo: lo deja marcado entre corchetes en vez de inventarlo.</div>
+      </div>
+
+      <label class="ai-check" id="ai-usar-wrap"><input type="checkbox" id="ai-usar" value="1"> Partir de lo que ya est&aacute; escrito en el formulario</label>
+
+      <button type="button" class="ai-go" id="ai-generar" onclick="aiGenerar()">Generar propuesta</button>
+
+      <div id="ai-salida" hidden>
+        <div class="ai-drawer__sep"></div>
+        <p class="ai-hint" id="ai-aviso" style="margin:0 0 10px;" hidden></p>
+        <div id="ai-campos"></div>
+        <div style="display:flex; gap:10px; margin-top:6px;">
+          <button type="button" class="ai-go" onclick="aiAplicar()">Pasar al formulario</button>
+          <button type="button" class="ai-go ai-go--ghost" onclick="aiGenerar()">Probar otra vez</button>
+        </div>
+        <p class="ai-hint" id="ai-uso" style="margin:10px 0 0;"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Escape propio: este partial vive en dos pantallas y no puede depender de
+  // helpers definidos en una sola de ellas.
+  function aiEsc(s){ var d = document.createElement('div'); d.textContent = (s == null ? '' : s); return d.innerHTML; }
+
+  function aiCerrar(){
+    var d = document.getElementById('ai-drawer');
+    d.classList.remove('is-open');
+    d.setAttribute('aria-hidden', 'true');
+  }
+
+  // El botón declara qué tarea pedir y a qué campos del formulario va la
+  // propuesta. Así un solo drawer sirve para noticias, FAQ, presentación y lo
+  // que venga después, sin duplicar pantallas.
+  var aiCfg = null;
+  function aiOpen(btn){
+    aiCfg = { tarea: btn.dataset.task, campos: JSON.parse(btn.dataset.fields || '{}'), label: btn.dataset.label || '' };
+    document.getElementById('ai-tarea-label').textContent = aiCfg.label;
+    document.getElementById('ai-instruccion').value = '';
+    document.getElementById('ai-salida').hidden = true;
+    document.getElementById('ai-campos').innerHTML = '';
+    // "Partir de lo que ya está escrito" solo tiene sentido si hay algo escrito
+    var hay = Object.keys(aiCfg.campos).some(function(k){
+      var el = document.getElementById(aiCfg.campos[k]);
+      return el && el.value.trim();
+    });
+    document.getElementById('ai-usar').checked = hay;
+    document.getElementById('ai-usar-wrap').style.display = hay ? '' : 'none';
+    var d = document.getElementById('ai-drawer');
+    d.classList.add('is-open');
+    d.setAttribute('aria-hidden', 'false');
+    document.getElementById('ai-instruccion').focus();
+  }
+
+  function aiTextoActual(){
+    return Object.keys(aiCfg.campos).map(function(k){
+      var el = document.getElementById(aiCfg.campos[k]);
+      return el && el.value.trim() ? el.value.trim() : '';
+    }).filter(Boolean).join('\n\n');
+  }
+
+  function aiGenerar(){
+    var btn = document.getElementById('ai-generar');
+    var texto = btn.textContent;
+    btn.textContent = 'Escribiendo...';
+    btn.disabled = true;
+    fetch('/panel/admin/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({
+        tarea: aiCfg.tarea,
+        instruccion: document.getElementById('ai-instruccion').value,
+        actual: document.getElementById('ai-usar').checked ? aiTextoActual() : ''
+      })
+    })
+      .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
+      .then(function(res){
+        btn.textContent = texto; btn.disabled = false;
+        if (!res.ok) return alert(res.j.error || 'No se pudo generar');
+        aiPintar(res.j);
+      })
+      .catch(function(e){
+        btn.textContent = texto; btn.disabled = false;
+        alert('No se pudo generar: ' + e.message);
+      });
+  }
+
+  var aiLogId = null;
+
+  function aiPintar(r){
+    aiLogId = r.logId || null;
+    var cont = document.getElementById('ai-campos');
+    var aviso = document.getElementById('ai-aviso');
+    aviso.hidden = !r.aviso;
+    aviso.textContent = r.aviso || '';
+    var html = '';
+    if (r.campos){
+      Object.keys(aiCfg.campos).forEach(function(k){
+        if (r.campos[k] === undefined) return;
+        var filas = r.campos[k].length > 220 ? 8 : 2;
+        html += '<div class="ai-campo"><label>' + aiEsc(k) + '</label>'
+          + '<textarea data-k="' + aiEsc(k) + '" rows="' + filas + '">' + aiEsc(r.campos[k]) + '</textarea></div>';
+      });
+    } else {
+      var unico = Object.keys(aiCfg.campos)[0] || 'texto';
+      html += '<div class="ai-campo"><label>' + aiEsc(unico) + '</label>'
+        + '<textarea data-k="' + aiEsc(unico) + '" rows="10">' + aiEsc(r.texto || '') + '</textarea></div>';
+    }
+    cont.innerHTML = html;
+    document.getElementById('ai-uso').textContent = r.uso
+      ? ('Generado con Claude Haiku 4.5 · ' + r.uso.entrada + ' tokens de entrada, ' + r.uso.salida + ' de salida.')
+      : '';
+    document.getElementById('ai-salida').hidden = false;
+  }
+
+  function aiAplicar(){
+    var n = 0;
+    document.querySelectorAll('#ai-campos textarea[data-k]').forEach(function(t){
+      var destino = aiCfg.campos[t.dataset.k];
+      var el = destino && document.getElementById(destino);
+      if (el){ el.value = t.value; n++; }
+    });
+    aiCerrar();
+    if (!n) return alert('No se pudo pasar el texto al formulario.');
+    // Se marca en el registro: distingue lo que se pidió de lo que se usó
+    if (aiLogId) {
+      fetch('/panel/admin/ai/aplicado', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'same-origin',
+        body: JSON.stringify({ logId: aiLogId })
+      }).catch(function(){});
+    }
+  }
+
+  (function(){
+    var d = document.getElementById('ai-drawer');
+    if (!d) return;
+    d.addEventListener('click', function(e){ if (e.target === d) aiCerrar(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && d.classList.contains('is-open')) aiCerrar(); });
+  })();
+</script>
+{{/if}}

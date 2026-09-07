@@ -208,6 +208,23 @@ async function ensureSchema() {
     });
   }
 
+  // Registro de lo que generó el asistente de IA. Sirve para auditar después
+  // quién pidió qué y si acabó publicándose; no guarda el texto generado, solo
+  // la instrucción y el resultado de haberlo aplicado o no.
+  if (!(await knex.schema.hasTable('ai_log'))) {
+    await knex.schema.createTable('ai_log', (t) => {
+      t.increments('id').primary();
+      t.integer('user_id');
+      t.string('tarea');
+      t.text('instruccion');
+      t.integer('tokens_in').defaultTo(0);
+      t.integer('tokens_out').defaultTo(0);
+      t.boolean('aplicado').defaultTo(false);
+      t.string('error');
+      t.timestamps(true, true);
+    });
+  }
+
   // Códigos 2027 asignados a una persona + tags, para el mapa de relaciones.
   if (await knex.schema.hasTable('access_codes')) {
     const codeCols = [

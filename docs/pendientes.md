@@ -37,9 +37,14 @@ Pendiente de esta sección:
     límite de tamaño y de tiempo. Probado con `169.254.169.254`, `127.0.0.1` y `192.168.x`.
   - Probado contra una nota real de Medio Tiempo: trajo titular, fuente, resumen y 5
     imágenes, y la importación dejó el archivo en el almacenamiento propio.
-- [ ] Botón de IA también en la página por edición (avances, comunicaciones, data room):
-  hoy vive en la pantalla principal del admin.
-- [ ] Registrar qué se generó y quién lo aplicó, para poder auditarlo después.
+- [x] ~~Botón de IA en la página por edición~~ **HECHO**: el drawer se extrajo a un partial
+  (`views/partials/ai-drawer.hbs`) y ahora vive en las dos pantallas, sin duplicar código.
+  En la página por edición redacta **avances** y **comunicaciones**.
+- [x] ~~Registrar qué se generó y quién lo aplicó~~ **HECHO**: tabla `ai_log` y lista en
+  Configuración. Guarda tarea, instrucción, quién, tokens y **si acabó usándose o solo se
+  probó** — eso último es lo que separa "lo pedí y no me gustó" de "esto se publicó".
+  **No guarda el texto generado**: ese ya vive en la noticia o el comunicado, y duplicarlo
+  sería guardar lo mismo dos veces. Los intentos fallidos también quedan, con su error.
 
 
 ## Panel estadístico del ADMIN (no para inversionistas)
