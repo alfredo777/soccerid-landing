@@ -22,6 +22,11 @@ module.exports = {
   default: function(value, defaultValue) {
     return value || defaultValue;
   },
+  // Suma 1 (o n) a un número: útil para numerar desde 1 sobre {{@index}}.
+  inc: function(value, by) {
+    var n = typeof by === 'number' ? by : 1;
+    return (parseInt(value, 10) || 0) + n;
+  },
   times: function(n, options) {
     let result = '';
     for (let i = 0; i < n; i++) {

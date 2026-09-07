@@ -901,6 +901,22 @@ router.get('/calendario', auth.requireAuth, async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+// Cronograma del inversionista: NO es un calendario, es el proceso por etapas.
+// Cada etapa es una tarjeta que se abre para revisarse individualmente.
+router.get('/cronograma', auth.requireAuth, async (req, res, next) => {
+  try {
+    if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
+    res.render('panel/cronograma', {
+      layout: 'panel',
+      title: 'Cronograma · SOCCER iD Investor Hub',
+      pageHeading: 'Cronograma del proyecto',
+      pageSub: 'Las etapas del proceso rumbo al 27 de marzo de 2027. Abre cada una para ver el detalle.',
+      active: 'cronograma',
+      panel: await buildPanelData(req.panelUser)
+    });
+  } catch (e) { next(e); }
+});
+
 router.get('/notificaciones', auth.requireAuth, async (req, res, next) => {
   try {
     if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');

@@ -1,0 +1,103 @@
+<style>
+  .cr-intro { font-size:13px; color:var(--pn-ink-2); line-height:1.6; margin:0 0 20px; max-width:720px; }
+  .cr-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+  .cr-card { padding:20px; text-align:left; cursor:pointer; border:1px solid var(--pn-border); background:#fff;
+    border-radius:16px; font-family:inherit; transition:box-shadow .14s, transform .14s, border-color .14s; display:flex; flex-direction:column; gap:10px; }
+  .cr-card:hover { box-shadow:0 12px 30px rgba(20,20,27,.10); transform:translateY(-2px); border-color:#DCCFF7; }
+  .cr-card__top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .cr-num { font-size:11px; font-weight:900; color:var(--pn-muted); letter-spacing:.5px; }
+  .cr-badge { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.3px; padding:4px 10px; border-radius:20px; }
+  .cr-badge.completado { background:#DEF7EC; color:#03543F; }
+  .cr-badge.en_curso { background:#E1EFFE; color:#1E429F; }
+  .cr-badge.pendiente { background:#F1F0F5; color:var(--pn-ink-2); }
+  .cr-card__title { font-size:16px; font-weight:900; letter-spacing:-.2px; color:var(--pn-ink); line-height:1.25; }
+  .cr-card__date { font-size:12.5px; font-weight:700; color:var(--pn-purple); }
+  .cr-card__desc { font-size:12.5px; color:var(--pn-muted); line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .cr-card__foot { display:flex; align-items:center; gap:7px; font-size:12px; font-weight:700; color:var(--pn-muted); margin-top:auto; }
+  .cr-card__open { margin-left:auto; color:var(--pn-purple); font-weight:800; font-size:12px; }
+  .cr-empty { padding:40px 20px; text-align:center; color:var(--pn-muted); font-size:13px; }
+
+  /* Drawer de detalle de la etapa */
+  .cr-overlay { position:fixed; inset:0; background:rgba(20,20,27,.38); opacity:0; transition:opacity .2s; z-index:120; }
+  .cr-overlay.is-open { opacity:1; }
+  .cr-drawer { position:fixed; top:0; right:0; height:100%; width:min(440px,94vw); background:#fff; z-index:121;
+    box-shadow:-16px 0 40px rgba(20,20,27,.18); padding:26px; transform:translateX(100%); transition:transform .22s ease;
+    display:flex; flex-direction:column; gap:16px; overflow-y:auto; }
+  .cr-drawer.is-open { transform:none; }
+  .cr-drawer__head { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .cr-drawer__close { background:none; border:none; cursor:pointer; color:var(--pn-muted); padding:4px; line-height:0; }
+  .cr-drawer__close svg { width:22px; height:22px; }
+  .cr-drawer h3 { font-size:22px; font-weight:900; letter-spacing:-.3px; margin:0; color:var(--pn-ink); }
+  .cr-drawer__row { display:flex; gap:10px; align-items:flex-start; font-size:13.5px; }
+  .cr-drawer__row b { min-width:96px; color:var(--pn-muted); font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.3px; padding-top:2px; }
+  .cr-drawer__row span { color:var(--pn-ink); font-weight:600; }
+  .cr-drawer__desc { font-size:14px; color:var(--pn-ink-2); line-height:1.65; }
+  .cr-drawer__sep { border:none; border-top:1px solid var(--pn-border); margin:2px 0; }
+</style>
+
+<p class="cr-intro">{{pageSub}}</p>
+
+<div class="cr-grid">
+  {{#each panel.milestones}}
+  <button type="button" class="cr-card" onclick="crOpen({{@index}})">
+    <div class="cr-card__top">
+      <span class="cr-num">ETAPA {{inc @index}}</span>
+      <span class="cr-badge {{this.status}}">{{this.statusLabel}}</span>
+    </div>
+    <div class="cr-card__title">{{this.title}}</div>
+    {{#if this.date}}<div class="cr-card__date">{{this.date}}</div>{{/if}}
+    {{#if this.description}}<div class="cr-card__desc">{{this.description}}</div>{{/if}}
+    <div class="cr-card__foot">
+      {{#if this.owner}}<span>{{this.owner}}</span>{{/if}}
+      <span class="cr-card__open">Abrir →</span>
+    </div>
+  </button>
+  {{else}}
+  <div class="cr-empty">Aún no hay etapas en el cronograma.</div>
+  {{/each}}
+</div>
+
+<div class="cr-overlay" id="crOverlay" onclick="crClose()" hidden></div>
+<aside class="cr-drawer" id="crDrawer" hidden aria-hidden="true" aria-label="Detalle de la etapa">
+  <div class="cr-drawer__head">
+    <span class="cr-badge" id="crBadge"></span>
+    <button type="button" class="cr-drawer__close" onclick="crClose()" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+  </div>
+  <h3 id="crTitle"></h3>
+  <div class="cr-drawer__row"><b>Estado</b><span id="crStatus"></span></div>
+  <div class="cr-drawer__row" id="crDateRow"><b>Fecha</b><span id="crDate"></span></div>
+  <div class="cr-drawer__row" id="crOwnerRow"><b>Responsable</b><span id="crOwner"></span></div>
+  <hr class="cr-drawer__sep">
+  <div class="cr-drawer__desc" id="crDesc"></div>
+</aside>
+
+<script>
+  window.__cronograma = {{{jsonScript panel.milestones}}};
+  function crOpen(i){
+    var m = (window.__cronograma || [])[i];
+    if (!m) return;
+    var badge = document.getElementById('crBadge');
+    badge.textContent = m.statusLabel || '';
+    badge.className = 'cr-badge ' + (m.status || 'pendiente');
+    document.getElementById('crTitle').textContent = m.title || 'Etapa';
+    document.getElementById('crStatus').textContent = m.statusLabel || '';
+    var dr = document.getElementById('crDateRow'), dt = document.getElementById('crDate');
+    var fecha = m.date || [m.startDate, m.endDate].filter(Boolean).join(' — ');
+    if (fecha){ dt.textContent = fecha; dr.style.display = 'flex'; } else { dr.style.display = 'none'; }
+    var or = document.getElementById('crOwnerRow');
+    if (m.owner){ document.getElementById('crOwner').textContent = m.owner; or.style.display = 'flex'; } else { or.style.display = 'none'; }
+    var desc = document.getElementById('crDesc');
+    desc.textContent = m.description || 'Sin descripción adicional para esta etapa.';
+    var ov = document.getElementById('crOverlay'), d = document.getElementById('crDrawer');
+    ov.hidden = false; d.hidden = false; d.setAttribute('aria-hidden', 'false');
+    requestAnimationFrame(function(){ d.classList.add('is-open'); ov.classList.add('is-open'); });
+  }
+  function crClose(){
+    var ov = document.getElementById('crOverlay'), d = document.getElementById('crDrawer');
+    d.classList.remove('is-open'); ov.classList.remove('is-open');
+    setTimeout(function(){ d.hidden = true; d.setAttribute('aria-hidden', 'true'); ov.hidden = true; }, 220);
+  }
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') crClose(); });
+</script>
