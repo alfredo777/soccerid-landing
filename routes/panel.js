@@ -440,7 +440,12 @@ async function buildPanelData(user, opts = {}) {
   let packages = [];
   if (invEvent) {
     const MOD_LBL = { fijo: 'Retorno fijo', riesgo: 'Participación a riesgo', patrocinio: 'Patrocinio' };
+    // Un patrocinador no invierte: solo le tocan los paquetes de patrocinio.
+    // Antes veía "Retorno fijo" y "Participación a riesgo", y encima uno marcado
+    // como suyo, porque el tipo caía en 'fijo' por defecto.
+    const modsVisibles = isSponsor ? ['patrocinio'] : ['fijo', 'riesgo'];
     const pkRows = await knex('event_packages').where({ event_id: invEvent.id, is_active: true })
+      .whereIn('modality', modsVisibles)
       .andWhere(function () { this.whereNull('user_id').orWhere('user_id', user.id); })
       .orderBy([{ column: 'sort' }, { column: 'id' }]);
     packages = pkRows.map(p => ({
@@ -451,7 +456,8 @@ async function buildPanelData(user, opts = {}) {
       returnPct: p.return_pct || 0,
       benefits: (p.benefits || '').split('\n').map(s => s.trim()).filter(Boolean),
       isPrivate: !!p.user_id,
-      isMine: p.modality === ret.type
+      // "El tuyo" solo tiene sentido para el inversionista, que sí tiene modalidad
+      isMine: !isSponsor && p.modality === ret.type
     }));
   }
 

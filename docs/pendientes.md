@@ -213,8 +213,14 @@ Detalles de la implementación:
 - El drawer no se renderiza para admin ni en la vista previa.
 
 Pendiente de esta sección:
-- [ ] Mismo "Editar perfil" para **patrocinadores** (hoy el drawer se arma para
-  cualquier no-admin, falta revisar qué campos aplican).
+- [x] ~~Mismo "Editar perfil" para **patrocinadores**~~ **VERIFICADO**: el drawer ya
+  servía tal cual — todos sus campos (idioma, contacto, asistente, avisos, contraseña)
+  aplican igual a un patrocinador y no hay texto que hable de inversión. Probado con una
+  cuenta de patrocinador: abre, guarda y sus páginas cargan.
+  De paso salió un bug real: **el patrocinador veía los paquetes de inversión** ("Retorno
+  fijo" y "Participación a riesgo"), y encima uno marcado como suyo, porque su modalidad
+  caía en `fijo` por defecto. Ahora solo ve paquetes de **patrocinio**, y lo de "el tuyo"
+  es solo para inversionistas.
 - [x] Respetar `notify_email` / `notify_sms` **al enviar** — hecho en Notificaciones.
 
 ## Notificaciones (tipos, directas y canales) — HECHO
