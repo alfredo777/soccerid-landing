@@ -1,8 +1,16 @@
 # Qué hacer cuando se despliegue
 
-Nada de esto está en producción todavía. Al 7 sep 2026 hay **31 commits** en
-`origin/main` que `production` (Heroku) no tiene: desde `bb1bffc` hasta `78a17eb`.
+Nada de esto está en producción todavía. Al 7 sep 2026 hay **39 commits** en
+`origin/main` que `production` (Heroku) no tiene: desde `bb1bffc` hasta `6763eef`.
 `origin/main` está al día; solo falta `production`.
+
+**Auditoría previa al deploy (7 sep 2026): PASA.** 42 plantillas compilan, JS inline sin
+errores en las 11 páginas del panel, 103 rutas sin duplicados, cada formulario y `fetch`
+apunta a una ruta real, las migraciones son idempotentes (dos arranques seguidos no
+cambian ninguna de las 19 tablas), 10 flujos creación→visión verificados (noticia,
+actividad, etapa, notificación directa, inversión, comunicación y documento por modalidad,
+FAQ, edición activa, sitio público), rutas admin cerradas al inversionista y XSS escapado
+en la salida. La API key de Anthropic no aparece en ningún commit.
 
 Los últimos cuatro (edición activa, unificación de ediciones y la puesta al día del
 backlog) son los más delicados de este lote: tocan el modelo de datos de las ediciones.
@@ -24,6 +32,10 @@ Ver la sección 2b.
 | `b2a0d8e` | **Edición activa** elegida por el admin + panorámica de ediciones para el inversionista |
 | `7d3cada` | Backlog al día |
 | `b3bfcb8` | **Una sola edición por año**: se unifican `editions` y `portfolio_events` |
+| … | Notificaciones por tipo, cronograma/calendario por edición, panel estadístico, subidas al data room |
+| … | **Asistente de contenidos con IA** (Claude Haiku 4.5) + traer imagen/titular de una nota |
+| … | **Google Calendar** de la organización + **feed iCal** del inversionista (sin OAuth) |
+| `6763eef` | Términos/privacidad para Google, y varios pendientes chicos cerrados |
 
 `bae433b` (multievento + FAQ + fix del calendario) fue el último desplegado.
 
@@ -64,6 +76,10 @@ Todas son `ALTER TABLE ... ADD COLUMN` con guarda, **ninguna borra ni renombra n
 - `access_log`: `matched_owner`.
 - `portfolio_events`: `status`, `data_es`, `data_en` (contenido público, antes en la tabla
   `editions`).
+- `users`: `notify_off` (tipos de aviso que apagó). `events`: `google_event_id`,
+  `custom_type`, `time_label`, `note`. `milestones`: `event_id`, `description`,
+  `start_date`, `end_date`. `investments`: `reminded_at`. `access_codes`/`access_log`: ya
+  listadas arriba. Tablas nuevas: `match_agenda`, `ai_log`.
 
 Además corre **un UPDATE de una sola vez** sobre `notifications`: las filas anteriores a
 esta migración se marcan como `comunicado`. Es seguro repetirlo — una notificación
