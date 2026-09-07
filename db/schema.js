@@ -157,6 +157,30 @@ async function ensureSchema() {
     });
   }
 
+  // Códigos 2027 asignados a una persona + tags, para el mapa de relaciones.
+  if (await knex.schema.hasTable('access_codes')) {
+    const codeCols = [
+      ['assignee_name', (t) => t.string('assignee_name')],
+      ['assignee_email', (t) => t.string('assignee_email')],
+      ['assignee_phone', (t) => t.string('assignee_phone')],
+      ['tags', (t) => t.string('tags')],            // lista separada por comas
+      ['assigned_at', (t) => t.timestamp('assigned_at')]
+    ];
+    for (const [name, build] of codeCols) {
+      if (!(await knex.schema.hasColumn('access_codes', name))) {
+        await knex.schema.alterTable('access_codes', (t) => build(t));
+      }
+    }
+  }
+
+  // ¿Entró el dueño del código o alguien más? null = no se puede saber
+  // (el código no tiene dueño asignado, o quien entró no dejó correo).
+  if (await knex.schema.hasTable('access_log') && !(await knex.schema.hasColumn('access_log', 'matched_owner'))) {
+    await knex.schema.alterTable('access_log', (t) => {
+      t.boolean('matched_owner');
+    });
+  }
+
   // Notificaciones ampliadas: tipo, destinatario individual, edición y canales.
   // `channels` guarda una lista separada por comas ('in-app,email'); in-app siempre está.
   if (await knex.schema.hasTable('notifications')) {

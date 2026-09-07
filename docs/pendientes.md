@@ -66,31 +66,54 @@ Arquitectura:
 - [ ] Flujo de invitación: registrarse **con Google o con contraseña** (verificando el email); cuenta predefinida por la invitación.
 - [ ] Reactivar env vars en Heroku (`GOOGLE_CLIENT_ID/SECRET`, valores en `google-keys.local.md`) + publicar la pantalla de consentimiento.
 
-## Códigos: asignación a personas + mapa de relaciones
-Para los **códigos de la propuesta 2027** (página pública `/es/socceridcup2027`).
-Cada **código de acceso** se puede **asignar a una persona** y luego rastrear quién
-lo usó realmente, para armar un **mapa de relaciones** (seguimiento de referidos).
+## Códigos 2027: dueño asignado + mapa de relaciones — HECHO
+Cada código de la propuesta 2027 se puede **asignar a una persona**, y cuando alguien
+entra con él el panel dice si fue **el dueño** o **otra persona** — que es justo lo que
+interesa: significa que lo reenvió, y ahí hay un referido que perseguir.
 
-Modelo de datos:
-- En `access_codes` agregar **dueño/asignado**: `assignee_name`, `assignee_email`,
-  `assignee_phone` (email y/o teléfono, o ambos) y uno o varios **tags**
-  (ej. "León", "Arda", "Marcos", "cliente", "prensa"). Tabla `code_tags` o campo
-  JSON de tags.
-- `access_log` ya guarda nombre/email/IP/dispositivo por cada entrada. Al registrar
-  un acceso, **marcar si coincide con el asignado original** o es **otra persona**
-  (`matched_owner` boolean) → así sabemos si entró el dueño o alguien más con su código.
+Lo que quedó construido:
+- `access_codes` gana `assignee_name`, `assignee_email`, `assignee_phone`, `tags` y
+  `assigned_at`. `access_log` gana `matched_owner` (true / false / **null**).
+- **`null` es un tercer estado a propósito**, no un "false" disfrazado: significa que no
+  se puede saber (el código no tiene dueño, o quien entró no dejó datos comparables).
+  Decir "otra persona" sin base sería inventar un referido que no existe.
+- Comparación en `lib/codeMap.js`: primero correo, luego teléfono (normalizado a los
+  últimos 10 dígitos, así `+52 55 1234 5678` y `5512345678` son la misma persona) y al
+  final el nombre sin acentos. El nombre es el criterio débil y por eso es el último.
+- **Al asignar un dueño se recalculan los accesos que ya estaban registrados** con ese
+  código. Si no, el mapa arrancaría vacío para todo lo que pasó antes de asignar.
+- Drawer "Dueño del código" en la pestaña Códigos, con validación de correo y teléfono
+  y un botón para quitar el dueño. La lista muestra dueño, tags y cuántos accesos fueron
+  de otra persona.
+- El historial por código marca cada acceso como **EL DUEÑO** / **OTRA PERSONA** /
+  sin confirmar.
+- El aviso al organizador cuando se usa un código ahora dice si entró el dueño o no.
 
-Funcionalidad:
-- Vista de cada código: a quién se asignó (tag/persona) + lista de quiénes entraron
-  y si eran el dueño o "otra persona" (posible referido/reenvío).
-- **Mapa de relaciones gráfico**: nodo = persona/código; aristas = "el código de X
-  lo usó Y". Visualizar como **mapa mental / grafo de red / timeline** de accesos.
-  (Opciones de render: D3 force-graph, vis-network, o un timeline por código.)
-- Sirve para seguimiento: ver la difusión (quién invita/reparte a quién) y priorizar
-  contactos.
+### Mapa de relaciones (pestaña "Mapa de códigos")
+Grafo en **SVG dibujado a mano, sin librería** (nada de D3 ni vis-network: no hace falta
+meter una dependencia de 200 kB para esto, y el layout determinista no se mueve solo
+como una simulación de fuerzas).
 
-Relación con lo existente: se apoya en `access_codes`, `access_log` y `leads`
-(propuesta 2027).
+- Dos columnas: a la izquierda quien repartió el código, a la derecha quien entró con él.
+  Cada línea es *"el código de X lo usó Y"*, con el grosor según cuántos accesos.
+- **Línea sólida** = confirmado que no era el dueño. **Punteada** = no se pudo confirmar.
+  La distinción importa: una es un referido real y la otra es un dato incompleto.
+- Al pasar el mouse por un nodo se atenúa lo que no es su rama.
+- Chips para filtrar por tag.
+- Estados vacíos que explican qué falta hacer, en vez de un lienzo en blanco: "todavía no
+  hay nada que mapear" (sin dueños) y "nadie ha usado un código ajeno" (con dueños pero
+  sin reenvíos).
+- Tarjetas arriba: códigos con dueño, códigos usados por otra persona, personas alcanzadas
+  por reenvío y repartidores en el mapa.
+
+Pendiente de esta sección:
+- [ ] **Mandar el código al dueño** por email/SMS desde el mismo drawer (el canal SMS ya
+  existe; ver Notificaciones e Invitaciones).
+- [ ] Vista de timeline por dueño (hoy el orden cronológico se ve por código, en el
+  historial de accesos).
+- [ ] Cadena de más de un salto (si Y reparte a Z, hoy Z cuelga del dueño original, no
+  de Y): requiere saber con qué código entró Z, y hoy es el mismo código.
+
 
 ## Presentación / Propuesta dentro del panel (inversionista)
 - [ ] Agregar una sección **"Presentación"** (o "Propuesta 2027") en el panel del

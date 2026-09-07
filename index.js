@@ -854,9 +854,12 @@ app.post('/api/project2027/verify', async (req, res) => {
 
     const ip = req.headers['x-forwarded-for'] || req.ip;
     const userAgent = req.headers['user-agent'] || '';
+    // ¿Entró el dueño del código o alguien más? (null si no se puede saber)
+    const matchedOwner = require('./lib/codeMap').matchOwner(codeRow, { name, email });
     await knex('access_log').insert({
       code, lead_id: leadId, device_id: deviceId,
-      name: name || null, email: email || null, ip, user_agent: userAgent, new_device: !knownDevice
+      name: name || null, email: email || null, ip, user_agent: userAgent, new_device: !knownDevice,
+      matched_owner: matchedOwner
     });
 
     // Marca el código como usado (salvo el de prueba)
@@ -872,10 +875,13 @@ app.post('/api/project2027/verify', async (req, res) => {
       project2027.sendAccessNotification({ code, ip, userAgent, name, email, newDevice: !knownDevice }).catch(() => {});
       // Además queda en el log de notificaciones del admin. Sin email: ya salió
       // arriba y no tiene caso mandar el mismo aviso dos veces.
+      const quien = matchedOwner === false
+        ? ' · OTRA PERSONA, no el dueño del código'
+        : (matchedOwner === true ? ' · es el dueño del código' : '');
       require('./lib/panelNotify').notifyAdmins({
         type: 'codigo',
         title: `Acceso con el código ${code}`,
-        body: `${name || 'Sin nombre'} · ${email || 'sin correo'}${knownDevice ? '' : ' · dispositivo nuevo'}`,
+        body: `${name || 'Sin nombre'} · ${email || 'sin correo'}${knownDevice ? '' : ' · dispositivo nuevo'}${quien}`,
         channels: []
       }).catch(() => {});
     }

@@ -237,6 +237,9 @@
   <button type="button" class="ad-tab" data-tab="accesos" data-label="Accesos" title="Accesos" aria-label="Accesos">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16z"/><path d="M12 8v4l3 2"/></svg>
   </button>
+  <button type="button" class="ad-tab" data-tab="mapa" data-label="Mapa de códigos" title="Mapa de códigos" aria-label="Mapa de códigos">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="6" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.5 6.8 16.5 17.2"/><path d="M7.5 6h9"/></svg>
+  </button>
   <button type="button" class="ad-tab" data-tab="leads" data-label="Prospectos" title="Prospectos" aria-label="Prospectos">
     <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
   </button>
@@ -669,6 +672,12 @@
 
 <!-- CÓDIGOS -->
 <section class="ad-sec" id="sec-codigos">
+  <style>
+    .cd-flag { display:inline-block; margin-left:6px; padding:1px 8px; border-radius:999px; background:#FEF3C7; color:#92400E; font-size:10.5px; font-weight:800; }
+    .cd-owner { display:inline-block; padding:1px 8px; border-radius:999px; background:var(--pn-purple-soft); color:var(--pn-purple); font-size:10.5px; font-weight:800; }
+    .cd-none { color:var(--pn-muted); font-size:11.5px; }
+    .cd-tag { display:inline-block; margin-left:5px; padding:1px 8px; border-radius:999px; background:#F1F5F9; color:#475569; font-size:10.5px; font-weight:700; }
+  </style>
   <p class="ad-note">Códigos de acceso a la <strong>propuesta 2027</strong> (<a href="/es/socceridcup2027" target="_blank" rel="noopener" style="color:var(--pn-purple);font-weight:700;">ver página</a>). Al entrar desde un dispositivo nuevo se pide nombre y correo (quedan en <strong>Prospectos</strong>) y se registra en <strong>Accesos</strong>.</p>
   <div class="ad-grid">
     <div>
@@ -686,16 +695,27 @@
     </div>
 
     <div class="pn-card">
-      <div class="pn-card__head"><h3>Códigos ({{codes.length}})</h3><span class="ad-hint">{{codesUsed}} usados · {{codesUnused}} por usar</span></div>
+      <div class="pn-card__head"><h3>Códigos ({{codes.length}})</h3><span class="ad-hint">{{codesUsed}} usados · {{codesUnused}} por usar · {{codesAssigned}} con dueño</span></div>
       <div class="ad-list">
         {{#each codes}}
         <div class="ad-item">
           <div class="ad-item__av" style="background: {{#eq this.status 'used'}}#8A8F98{{else}}#1E8E5A{{/eq}}; font-size:13px;">{{#if this.isTest}}★{{else}}#{{/if}}</div>
           <div class="ad-item__b">
             <strong style="letter-spacing:2px;">{{this.code}}</strong>
-            <small>{{#if this.isTest}}Código de prueba · {{/if}}{{this.statusLabel}} · {{this.accesses}} accesos</small>
+            <small>
+              {{#if this.isTest}}Código de prueba · {{/if}}{{this.statusLabel}} · {{this.accesses}} accesos
+              {{#if this.otherAccesses}}<span class="cd-flag">{{this.otherAccesses}} de otra persona</span>{{/if}}
+            </small>
+            <small>
+              {{#if this.assigned}}<span class="cd-owner">{{this.assigneeName}}{{#unless this.assigneeName}}{{this.assigneeEmail}}{{/unless}}</span>{{else}}<span class="cd-none">Sin dueño asignado</span>{{/if}}
+              {{#each this.tags}}<span class="cd-tag">{{this}}</span>{{/each}}
+            </small>
           </div>
           <div class="ad-actions">
+            <button type="button" onclick="openCodeAssign(this)"
+              data-id="{{this.id}}" data-code="{{this.code}}"
+              data-name="{{this.assigneeName}}" data-email="{{this.assigneeEmail}}"
+              data-phone="{{this.assigneePhone}}" data-tags="{{this.tagsText}}">{{#if this.assigned}}Dueño{{else}}Asignar{{/if}}</button>
             <button type="button" onclick="openCodeHistory(this)" data-code="{{this.code}}">Accesos{{#if this.accesses}} ({{this.accesses}}){{/if}}</button>
             <form method="POST" action="/panel/admin/code/{{this.id}}/status">
               <select name="status" class="ad-select-sm" onchange="this.form.submit()">
@@ -730,6 +750,53 @@
       <div class="ad-empty">Aún no hay accesos registrados.</div>
       {{/each}}
     </div>
+  </div>
+</section>
+
+<!-- MAPA DE CÓDIGOS -->
+<section class="ad-sec" id="sec-mapa">
+  <style>
+    .mp-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:18px; }
+    .mp-stat { background:#fff; border:1px solid var(--pn-border); border-radius:14px; padding:15px 17px; box-shadow:var(--pn-shadow); }
+    .mp-stat b { display:block; font-size:24px; font-weight:800; line-height:1.1; }
+    .mp-stat span { font-size:12px; color:var(--pn-muted); font-weight:600; }
+    .mp-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+    .mp-chip { padding:7px 14px; border-radius:999px; border:1px solid var(--pn-border); background:#fff; font-family:inherit; font-size:12.5px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
+    .mp-chip.is-on { background:var(--pn-purple); border-color:var(--pn-purple); color:#fff; }
+    .mp-canvas { background:#fff; border:1px solid var(--pn-border); border-radius:16px; padding:8px; box-shadow:var(--pn-shadow); overflow-x:auto; }
+    .mp-canvas svg { display:block; width:100%; min-width:640px; }
+    .mp-node { cursor:default; }
+    .mp-node text { font-family:inherit; }
+    .mp-dim { opacity:.16; }
+    .mp-legend { display:flex; gap:16px; flex-wrap:wrap; margin-top:14px; font-size:12px; color:var(--pn-muted); font-weight:600; }
+    .mp-legend i { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:middle; }
+    .mp-empty { padding:54px 24px; text-align:center; color:var(--pn-muted); }
+    .mp-empty strong { display:block; color:var(--pn-ink); font-size:15px; margin-bottom:8px; }
+  </style>
+
+  <p class="ad-note">Quién repartió su código y quién acabó entrando con él. Se arma con los códigos que
+    tienen <strong>dueño asignado</strong> (pestaña Códigos, botón "Asignar"). Una línea significa
+    <em>"el código de X lo usó Y"</em>: ahí es donde aparecen los reenvíos y los referidos.</p>
+
+  <div class="mp-stats">
+    <div class="mp-stat"><b>{{codesAssigned}}</b><span>códigos con dueño</span></div>
+    <div class="mp-stat"><b>{{codesLeaked}}</b><span>códigos usados por otra persona</span></div>
+    <div class="mp-stat"><b>{{relations.visitors.length}}</b><span>personas alcanzadas por reenvío</span></div>
+    <div class="mp-stat"><b>{{relations.owners.length}}</b><span>repartidores en el mapa</span></div>
+  </div>
+
+  {{#if codeTags}}
+  <div class="mp-chips" id="mpChips">
+    <button type="button" class="mp-chip is-on" data-tag="">Todos</button>
+    {{#each codeTags}}<button type="button" class="mp-chip" data-tag="{{this}}">{{this}}</button>{{/each}}
+  </div>
+  {{/if}}
+
+  <div class="mp-canvas" id="mpCanvas"></div>
+  <div class="mp-legend">
+    <span><i style="background:#6C3CE0;"></i>Dueño del código</span>
+    <span><i style="background:#D97706;"></i>Entró con el código de alguien más</span>
+    <span>Línea sólida = confirmado que no era el dueño · punteada = no se pudo confirmar</span>
   </div>
 </section>
 
@@ -1238,7 +1305,7 @@
   </div>
 </div>
 <script>
-  window.__portfolioForms = {{{json portfolioForms}}};
+  window.__portfolioForms = {{{jsonScript portfolioForms}}};
   function openPortfolio(id){
     var f = document.getElementById('form-portfolio');
     var fields = ['code','year','title','subtitle','match','description','venue','city','country','event_date','date_phase','phase','progress_pct','accent','presentation_es','presentation_en','budget','projected_income','capacity','ticket_price','deductions_pct','rebate_per','cap_pct','investor_split'];
@@ -1292,7 +1359,7 @@
   </div>
 </div>
 <script>
-  window.__portfolioPackages = {{{json portfolioPackages}}};
+  window.__portfolioPackages = {{{jsonScript portfolioPackages}}};
   var __pkEventId = null;
   function resetPackageForm(){
     var f = document.getElementById('form-package');
@@ -1357,7 +1424,7 @@
   </div>
 </div>
 <script>
-  window.__faqForms = {{{json faqsAdmin}}};
+  window.__faqForms = {{{jsonScript faqsAdmin}}};
   function openFaq(id){
     var f = document.getElementById('form-faq');
     var d = (window.__faqForms || []).filter(function(x){ return String(x.id) === String(id); })[0];
@@ -1412,11 +1479,41 @@
   </div>
 </div>
 
+<div class="ad-modal" id="modal-code-assign">
+  <div class="ad-modal__card">
+    <div class="ad-modal__head"><h3>Dueño del código <span id="eca-code" style="letter-spacing:2px;"></span></h3><button class="ad-modal__close" onclick="closeModal('modal-code-assign')"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button></div>
+    <div class="ad-modal__body">
+      <p class="ad-hint" style="margin:0 0 16px;">A quién le diste este código. Cuando alguien entre con él, el panel compara
+        correo o teléfono y marca si fue <strong>el dueño</strong> o <strong>otra persona</strong> — ahí es donde se ven los
+        reenvíos y los referidos.</p>
+      <form method="POST" id="form-code-assign">
+        <div class="ad-f"><label>Nombre</label><input type="text" name="assignee_name" id="eca-name" placeholder="León Rangel"></div>
+        <div class="ad-f"><label>Correo</label><input type="email" name="assignee_email" id="eca-email" placeholder="leon@soccerid.co">
+          <div class="ad-hint">Es lo que mejor identifica: en la propuesta 2027 se pide correo al entrar.</div>
+        </div>
+        <div class="ad-f"><label>Teléfono</label><input type="text" name="assignee_phone" id="eca-phone" placeholder="+52 55 1234 5678"></div>
+        <div class="ad-f"><label>Tags</label><input type="text" name="tags" id="eca-tags" placeholder="socio, prensa, cliente">
+          <div class="ad-hint">Separados por comas. Sirven para agrupar en el mapa (quién reparte a quién).</div>
+        </div>
+        <p class="ad-hint" style="margin:0 0 12px;">Al guardar se vuelven a revisar los accesos que ya estaban registrados con este código.</p>
+        <button type="submit" class="ad-btn">Guardar dueño</button>
+      </form>
+      <form method="POST" id="form-code-clear" style="margin-top:10px;" data-confirm="¿Quitar el dueño de este código?">
+        <input type="hidden" name="assignee_name" value="">
+        <input type="hidden" name="assignee_email" value="">
+        <input type="hidden" name="assignee_phone" value="">
+        <input type="hidden" name="tags" value="">
+        <button type="submit" class="ad-btn ad-btn--ghost">Quitar dueño</button>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script>
-  var INVESTOR_TIERS = {{{json investorTiers}}};
-  var SPONSOR_TIERS = {{{json sponsorTiers}}};
-  var USER_DOCS = {{{json docsByUser}}};
-  var EDITIONS_FORMS = {{{json editionsForms}}};
+  var INVESTOR_TIERS = {{{jsonScript investorTiers}}};
+  var SPONSOR_TIERS = {{{jsonScript sponsorTiers}}};
+  var USER_DOCS = {{{jsonScript docsByUser}}};
+  var EDITIONS_FORMS = {{{jsonScript editionsForms}}};
   var EDITION_FIELDS = ['year','status','sort','match','date','city','venue','banner','att_value','att_label_es','att_label_en','title_es','title_en','description_es','description_en','stats_es','stats_en','media_es','media_en','sponsors','videos','images'];
 
   function setEditionLang(l){
@@ -1445,7 +1542,7 @@
     openModal('modal-lead');
   }
 
-  var LEADS_HISTORY = {{{json leadsHistory}}};
+  var LEADS_HISTORY = {{{jsonScript leadsHistory}}};
   function openLeadHistory(btn){
     var d = btn.dataset;
     document.getElementById('elh-name').textContent = d.name;
@@ -1469,7 +1566,125 @@
     openModal('modal-lead-history');
   }
 
-  var CODES_HISTORY = {{{json codesHistory}}};
+  var CODES_HISTORY = {{{jsonScript codesHistory}}};
+  // Mapa de relaciones de códigos
+  var RELATIONS = {{{jsonScript relations}}};
+  (function(){
+    var canvas = document.getElementById('mpCanvas');
+    if (!canvas) return;
+    var filtro = '';
+
+    function cortar(t, n){ t = String(t || ''); return t.length > n ? t.slice(0, n - 1) + '\u2026' : t; }
+
+    function dibujar(){
+      var owners = RELATIONS.owners.filter(function(o){
+        return !filtro || (o.tags || []).indexOf(filtro) !== -1;
+      });
+      var idsDuenio = {};
+      owners.forEach(function(o){ idsDuenio[o.id] = true; });
+      var edges = RELATIONS.edges.filter(function(e){ return idsDuenio[e.from]; });
+      var idsVis = {};
+      edges.forEach(function(e){ idsVis[e.to] = true; });
+      var visitors = RELATIONS.visitors.filter(function(v){ return idsVis[v.id]; });
+
+      if (!owners.length){
+        canvas.innerHTML = '<div class="mp-empty"><strong>Todavía no hay nada que mapear.</strong>'
+          + (RELATIONS.owners.length
+              ? 'Ningún código con ese tag.'
+              : 'Asigna un dueño a los códigos en la pestaña <b>Códigos</b>. En cuanto alguien entre con uno de ellos, aquí se dibuja la relación.')
+          + '</div>';
+        return;
+      }
+      if (!edges.length){
+        canvas.innerHTML = '<div class="mp-empty"><strong>Nadie ha usado un código ajeno.</strong>'
+          + 'Los códigos con dueño se han usado solo por su dueño (o no se han usado). Cuando alguien entre con un código que no es suyo, la relación aparece aquí.</div>';
+        return;
+      }
+
+      var FILA = 62, TOP = 34, W = 900, XO = 26, XV = W - 26;
+      var alto = Math.max(owners.length, visitors.length) * FILA + TOP + 30;
+      var posO = {}, posV = {};
+      owners.forEach(function(o, i){ posO[o.id] = TOP + i * FILA; });
+      visitors.forEach(function(v, i){ posV[v.id] = TOP + i * FILA; });
+
+      var out = '<svg viewBox="0 0 ' + W + ' ' + alto + '" role="img" aria-label="Mapa de relaciones de códigos">';
+
+      edges.forEach(function(e){
+        var y1 = posO[e.from], y2 = posV[e.to];
+        if (y1 == null || y2 == null) return;
+        var x1 = XO + 250, x2 = XV - 250, mx = (x1 + x2) / 2;
+        out += '<path class="mp-edge" data-from="' + e.from + '" data-to="' + e.to + '"'
+          + ' d="M' + x1 + ' ' + y1 + ' C' + mx + ' ' + y1 + ' ' + mx + ' ' + y2 + ' ' + x2 + ' ' + y2 + '"'
+          + ' fill="none" stroke="' + (e.confirmed ? '#D97706' : '#C7C3D4') + '" stroke-width="' + Math.min(1 + e.count, 4) + '"'
+          + (e.confirmed ? '' : ' stroke-dasharray="5 4"') + '>'
+          + '<title>' + esc(e.codes.join(', ')) + ' \u00b7 ' + e.count + ' acceso(s)</title></path>';
+      });
+
+      owners.forEach(function(o){
+        var y = posO[o.id];
+        out += '<g class="mp-node" data-id="' + o.id + '">'
+          + '<rect x="' + XO + '" y="' + (y - 19) + '" width="250" height="38" rx="11" fill="#EFE9FC" stroke="#DCCFF7"/>'
+          + '<text x="' + (XO + 13) + '" y="' + (y - 3) + '" font-size="12.5" font-weight="800" fill="#3B2A6B">' + esc(cortar(o.label, 26)) + '</text>'
+          + '<text x="' + (XO + 13) + '" y="' + (y + 12) + '" font-size="10.5" fill="#6C3CE0">'
+          + o.codes.length + ' código(s) \u00b7 ' + o.others + ' de otra persona</text>'
+          + '</g>';
+      });
+
+      visitors.forEach(function(v){
+        var y = posV[v.id];
+        out += '<g class="mp-node" data-id="' + v.id + '">'
+          + '<rect x="' + (XV - 250) + '" y="' + (y - 19) + '" width="250" height="38" rx="11" fill="#FEF6E7" stroke="#F5DFB4"/>'
+          + '<text x="' + (XV - 237) + '" y="' + (y - 3) + '" font-size="12.5" font-weight="800" fill="#7A4A08">' + esc(cortar(v.label, 26)) + '</text>'
+          + '<text x="' + (XV - 237) + '" y="' + (y + 12) + '" font-size="10.5" fill="#B4700C">'
+          + esc(cortar(v.email || 'sin correo', 30)) + ' \u00b7 ' + v.accesses + ' acceso(s)</text>'
+          + '</g>';
+      });
+
+      out += '</svg>';
+      canvas.innerHTML = out;
+
+      var svg = canvas.querySelector('svg');
+      svg.querySelectorAll('.mp-node').forEach(function(n){
+        n.addEventListener('mouseenter', function(){
+          var id = n.dataset.id;
+          svg.querySelectorAll('.mp-edge').forEach(function(pth){
+            var toca = pth.dataset.from === id || pth.dataset.to === id;
+            pth.classList.toggle('mp-dim', !toca);
+          });
+        });
+        n.addEventListener('mouseleave', function(){
+          svg.querySelectorAll('.mp-edge').forEach(function(pth){ pth.classList.remove('mp-dim'); });
+        });
+      });
+    }
+
+    var chips = document.getElementById('mpChips');
+    if (chips){
+      chips.addEventListener('click', function(e){
+        var b = e.target.closest('.mp-chip');
+        if (!b) return;
+        chips.querySelectorAll('.mp-chip').forEach(function(c){ c.classList.remove('is-on'); });
+        b.classList.add('is-on');
+        filtro = b.dataset.tag || '';
+        dibujar();
+      });
+    }
+    dibujar();
+  })();
+
+  function openCodeAssign(btn){
+    var d = btn.dataset;
+    document.getElementById('eca-code').textContent = d.code;
+    document.getElementById('form-code-assign').action = '/panel/admin/code/' + d.id + '/assign';
+    document.getElementById('form-code-clear').action = '/panel/admin/code/' + d.id + '/assign';
+    document.getElementById('eca-name').value = d.name || '';
+    document.getElementById('eca-email').value = d.email || '';
+    document.getElementById('eca-phone').value = d.phone || '';
+    document.getElementById('eca-tags').value = d.tags || '';
+    document.getElementById('form-code-clear').style.display = (d.name || d.email || d.phone) ? '' : 'none';
+    openModal('modal-code-assign');
+  }
+
   function openCodeHistory(btn){
     var code = btn.dataset.code;
     document.getElementById('ech-code').textContent = code;
@@ -1483,6 +1698,8 @@
         return '<div style="padding:12px 0;border-bottom:1px solid var(--pn-border);">'
           + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">'
           + '<strong style="font-size:13px;">' + esc(a.name) + '</strong>'
+          + (a.owner ? '<span style="font-size:10px;font-weight:800;background:#DEF7EC;color:#03543F;padding:2px 7px;border-radius:20px;">EL DUEÑO</span>' : '')
+          + (a.other ? '<span style="font-size:10px;font-weight:800;background:#FEF3C7;color:#92400E;padding:2px 7px;border-radius:20px;">OTRA PERSONA</span>' : '')
           + (a.newDevice ? '<span style="font-size:10px;font-weight:800;background:var(--pn-purple);color:#fff;padding:2px 7px;border-radius:20px;">DISP. NUEVO</span>' : '')
           + '</div>'
           + '<small style="color:var(--pn-purple);font-size:12px;display:block;font-weight:700;">' + esc(a.email) + '</small>'
@@ -1647,9 +1864,10 @@
       ediciones: { label: 'Ediciones', color: '#6C3CE0' },
       codigos: { label: 'Códigos', color: '#1E8E5A' },
       accesos: { label: 'Accesos', color: '#8A8F98' },
+      mapa: { label: 'Mapa de códigos', color: '#D97706' },
       leads: { label: 'Prospectos', color: '#6C3CE0' }
     };
-    var ORDER = ['Inversionistas','Patrocinadores','Prospectos','Noticias','Eventos','Cronograma','Categorías','Notificaciones','Ediciones','Códigos','Accesos'];
+    var ORDER = ['Inversionistas','Patrocinadores','Prospectos','Noticias','Eventos','Cronograma','Categorías','Notificaciones','Ediciones','Códigos','Accesos','Mapa de códigos'];
 
     function buildIndex(){
       var idx = [];

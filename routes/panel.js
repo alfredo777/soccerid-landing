@@ -16,6 +16,7 @@ const { uploadImage, uploadDocument } = require('../lib/uploads');
 const { getDashboardConfig, saveDashboardConfig, computeReturn } = require('../lib/panelSettings');
 const { notify, notifyAdmins, TYPES: NOTIF_TYPES } = require('../lib/panelNotify');
 const panelSms = require('../lib/panelSms');
+const codeMap = require('../lib/codeMap');
 const turnstile = require('../lib/turnstile');
 const google = require('../lib/googleAuth');
 
@@ -901,23 +902,42 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
 
     // Historial por código (cruzable con prospectos: incluye nombre/email/lead)
     const codesHistory = {};
+    const isOwner = (a) => a.matched_owner === true || a.matched_owner === 1;
+    const isOther = (a) => a.matched_owner === false || a.matched_owner === 0;
     allAccess.forEach(a => {
       (codesHistory[a.code] = codesHistory[a.code] || []).push({
         leadId: a.lead_id || null, name: a.name || '—', email: a.email || '—',
         ip: a.ip || '—', device: (a.device_id || '').slice(0, 10) || '—', newDevice: !!a.new_device,
+        owner: isOwner(a), other: isOther(a),
+        whoLabel: isOwner(a) ? 'El dueño' : (isOther(a) ? 'Otra persona' : 'Sin confirmar'),
         when: fmtWhen(a.created_at)
       });
     });
 
     // Códigos de acceso a la propuesta 2027
     const codeRows = await knex('access_codes').orderBy([{ column: 'status' }, { column: 'id' }]);
-    const codesView = codeRows.map(c => ({
-      id: c.id, code: c.code, status: c.status,
-      statusLabel: c.status === 'used' ? 'Usado' : 'Por usar', isTest: c.note === 'test',
-      accesses: (codesHistory[c.code] || []).length
-    }));
+    const codesView = codeRows.map(c => {
+      const h = allAccess.filter(a => a.code === c.code);
+      return {
+        id: c.id, code: c.code, status: c.status,
+        statusLabel: c.status === 'used' ? 'Usado' : 'Por usar', isTest: c.note === 'test',
+        accesses: h.length,
+        ownAccesses: h.filter(isOwner).length,
+        otherAccesses: h.filter(isOther).length,
+        assigneeName: c.assignee_name || '', assigneeEmail: c.assignee_email || '',
+        assigneePhone: c.assignee_phone || '', tagsText: c.tags || '',
+        tags: codeMap.parseTags(c.tags),
+        assigned: !!(c.assignee_name || c.assignee_email || c.assignee_phone)
+      };
+    });
     const codesUsed = codesView.filter(c => c.status === 'used').length;
     const codesUnused = codesView.filter(c => c.status === 'unused' && !c.isTest).length;
+    const codesAssigned = codesView.filter(c => c.assigned).length;
+    const codesLeaked = codesView.filter(c => c.otherAccesses > 0).length;
+    const codeTags = [...new Set(codesView.flatMap(c => c.tags))].sort();
+
+    // Mapa de relaciones: quién repartió su código y quién acabó entrando con él
+    const relations = codeMap.buildRelations(codeRows, allAccess);
 
     // Prospectos (leads) + historial de accesos por prospecto
     const leadRows = await knex('leads').orderBy('id', 'desc');
@@ -1054,6 +1074,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       editions: editionsView,
       editionsForms: editionsView.map(e => e.form),
       codes: codesView, codesUsed, codesUnused, codesHistory,
+      codesAssigned, codesLeaked, codeTags, relations,
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
       notifyEmails, twilio, notifyPeople, notifTypes,
@@ -1717,6 +1738,48 @@ router.post('/admin/code/:id/status', auth.requireAdmin, async (req, res, next) 
     await knex('access_codes').where({ id: req.params.id }).update({ status, updated_at: knex.fn.now() });
     res.redirect('/panel/admin?type=ok&msg=Estado+actualizado#codigos');
   } catch (e) { next(e); }
+});
+
+// Asignar el código a una persona (dueño) + tags para el mapa de relaciones
+router.post('/admin/code/:id/assign', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const c = await knex('access_codes').where({ id: req.params.id }).first();
+    if (!c) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Código no encontrado') + '#codigos');
+    const name = (req.body.assignee_name || '').trim().slice(0, 120);
+    const email = codeMap.normEmail(req.body.assignee_email);
+    const phoneRaw = (req.body.assignee_phone || '').replace(/[^\d+]/g, '');
+    if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El correo del dueño no es válido') + '#codigos');
+    }
+    if (phoneRaw && phoneRaw.replace(/\D/g, '').length < 8) {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El teléfono del dueño está incompleto') + '#codigos');
+    }
+    const tags = codeMap.parseTags(req.body.tags).join(', ');
+    const asignado = !!(name || email || phoneRaw);
+    await knex('access_codes').where({ id: c.id }).update({
+      assignee_name: name || null,
+      assignee_email: email || null,
+      assignee_phone: phoneRaw || null,
+      tags: tags || null,
+      assigned_at: asignado ? knex.fn.now() : null,
+      updated_at: knex.fn.now()
+    });
+
+    // Los accesos que ya estaban se re-evalúan contra el dueño nuevo: si no, el
+    // mapa arrancaría vacío para todo lo que pasó antes de asignar.
+    const updated = Object.assign({}, c, { assignee_name: name, assignee_email: email, assignee_phone: phoneRaw });
+    const previos = await knex('access_log').where({ code: c.code });
+    for (const a of previos) {
+      const m = codeMap.matchOwner(updated, { name: a.name, email: a.email });
+      await knex('access_log').where({ id: a.id }).update({ matched_owner: m });
+    }
+    const msg = asignado
+      ? `Código ${c.code} asignado a ${name || email || phoneRaw}` + (previos.length ? ` (${previos.length} acceso(s) recalculado(s))` : '')
+      : `Código ${c.code} sin dueño`;
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(msg) + '#codigos');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#codigos');
+  }
 });
 
 router.post('/admin/code/:id/delete', auth.requireAdmin, async (req, res, next) => {
