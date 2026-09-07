@@ -1,8 +1,12 @@
 # Qué hacer cuando se despliegue
 
-Nada de esto está en producción todavía. Al 7 sep 2026 hay **10 commits** en
-`origin/main` que `production` (Heroku) no tiene: desde `bb1bffc` hasta `0d480b6`.
+Nada de esto está en producción todavía. Al 7 sep 2026 hay **14 commits** en
+`origin/main` que `production` (Heroku) no tiene: desde `bb1bffc` hasta `b3bfcb8`.
 `origin/main` está al día; solo falta `production`.
+
+Los últimos cuatro (edición activa, unificación de ediciones y la puesta al día del
+backlog) son los más delicados de este lote: tocan el modelo de datos de las ediciones.
+Ver la sección 2b.
 
 | Commit | Qué trae |
 |---|---|
@@ -54,10 +58,32 @@ Todas son `ALTER TABLE ... ADD COLUMN` con guarda, **ninguna borra ni renombra n
 - `access_codes`: `assignee_name`, `assignee_email`, `assignee_phone`, `tags`,
   `assigned_at`.
 - `access_log`: `matched_owner`.
+- `portfolio_events`: `status`, `data_es`, `data_en` (contenido público, antes en la tabla
+  `editions`).
 
 Además corre **un UPDATE de una sola vez** sobre `notifications`: las filas anteriores a
 esta migración se marcan como `comunicado`. Es seguro repetirlo — una notificación
 `directa` sin destinatario no existe, así que la condición no vuelve a hacer match.
+
+## 2b. La migración que más hay que vigilar: la unificación de ediciones
+
+Este deploy junta `editions` y `portfolio_events` en una sola edición por año.
+La migración **copia** el contenido público a `portfolio_events` y **no borra** la tabla
+vieja, así que los datos originales siguen ahí si algo sale raro. Al arrancar, el log debe
+mostrar la línea `✓ Edición 2026 traída de la tabla vieja al portafolio` (o nada, si ya
+estaba). Verificar en producción, en este orden:
+
+- [ ] `/es/socceridcup` muestra el timeline con **todos los años** (2023 a 2027) y 2026
+  marcado como pausa.
+- [ ] `/es/socceridcup/2025` y `/en/socceridcup/2025` cargan con su contenido real
+  (partido, sede, estadísticas, galería y notas de prensa).
+- [ ] En el admin hay **una sola pestaña "Ediciones"**, con las 5, ordenadas por año.
+- [ ] Abrir una edición: el drawer trae identidad, contenido público con sus filas
+  cargadas (no vacías), presentación y parámetros de inversión.
+- [ ] Guardar sin cambiar nada y volver a abrir: nada se perdió.
+
+Si la parte pública se viera vacía, es que la copia no encontró los años; los datos siguen
+en `editions` y se puede volver a correr el arranque.
 
 ## 3. Verificar después (entrando como inversionista, no como admin)
 
