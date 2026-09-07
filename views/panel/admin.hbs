@@ -638,6 +638,12 @@
     .ad-evtags { display:flex; gap:6px; }
     .ad-evphase { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:var(--pn-ink-2); background:#F1F0F5; padding:4px 10px; border-radius:20px; }
     .ad-evdemo { font-size:10.5px; font-weight:800; text-transform:uppercase; color:#B77A1E; background:#FFF4E5; padding:4px 10px; border-radius:20px; }
+    .ad-evactiva { font-size:10.5px; font-weight:800; text-transform:uppercase; color:#03543F; background:#DEF7EC; padding:4px 10px; border-radius:20px; }
+    .ev-activa { display:flex; align-items:center; justify-content:space-between; gap:18px; padding:18px 20px; margin-bottom:18px; flex-wrap:wrap; }
+    .ev-activa strong { display:block; font-size:14px; font-weight:800; margin-bottom:3px; }
+    .ev-activa p { font-size:12.5px; color:var(--pn-ink-2); line-height:1.5; margin:0; max-width:560px; }
+    .ev-activa__ctrl { display:flex; gap:9px; align-items:center; }
+    .ev-activa select { border:1px solid var(--pn-border); border-radius:11px; padding:11px 13px; font-family:inherit; font-size:13.5px; font-weight:700; color:var(--pn-ink); background:#fff; }
     .ad-evtitle { font-size:19px; font-weight:900; letter-spacing:-.3px; display:block; }
     .ad-evmatch { font-size:13px; font-weight:700; color:var(--pn-purple); margin-top:2px; }
     .ad-evmeta { font-size:12px; color:var(--pn-muted); margin-top:4px; }
@@ -654,12 +660,30 @@
     <p class="ad-note" style="margin:0;">Ediciones por año del portafolio. Cada edición alimenta la parte pública y el panel del inversionista (info, paquetes, presentación, cronología).</p>
     <button type="button" class="ad-btn" style="width:auto; padding:10px 16px; margin:0;" onclick="openPortfolio()">+ Nueva edición</button>
   </div>
+
+  <form class="pn-card ev-activa" method="POST" action="/panel/admin/settings/edicion-activa">
+    <div>
+      <strong>Edición activa</strong>
+      <p>Es la que ven <strong>todos los inversionistas</strong> en su panel, con sus datos y estadísticas.
+        Lo decides tú: el inversionista no puede cambiarla. De las demás solo ve una ficha general.</p>
+    </div>
+    <div class="ev-activa__ctrl">
+      <select name="active_edition_id">
+        <option value="">Automática (la de mayor año)</option>
+        {{#each portfolioEditions}}
+        <option value="{{this.id}}"{{#if this.isActiveEdition}}{{#unless this.isAutoActive}} selected{{/unless}}{{/if}}>{{this.year}} · {{this.title}}</option>
+        {{/each}}
+      </select>
+      <button type="submit" class="ad-btn" style="width:auto; margin:0; padding:11px 18px;">Guardar</button>
+    </div>
+  </form>
   <div class="ad-evgrid">
     {{#each portfolioEditions}}
     <div class="pn-card ad-evcard">
       <div class="ad-evcard__top">
         <span class="ad-evcode" style="background:{{this.accent}}22; color:{{this.accent}}">{{#if this.code}}{{this.code}}{{else}}{{this.year}}{{/if}}</span>
         <div class="ad-evtags">
+          {{#if this.isActiveEdition}}<span class="ad-evactiva">{{#if this.isAutoActive}}Activa (auto){{else}}Activa{{/if}}</span>{{/if}}
           <span class="ad-evphase">{{this.phaseLabel}}</span>
           {{#if this.isDemo}}<span class="ad-evdemo">Demo</span>{{/if}}
         </div>

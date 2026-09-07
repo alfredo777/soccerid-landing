@@ -405,16 +405,41 @@ Hecho:
 - [x] **Paquetes de inversión** por edición: nombre, monto, modalidad, % retorno,
   beneficios, cupo, y además **paquetes privados** para una sola persona (`user_id`).
 
-Lo que sigue abierto y **es lo más importante que queda de estructura**:
-- [ ] **Siguen siendo dos tablas: `editions` y `portfolio_events`.** Las dos representan
-  un año y en el admin son **dos pestañas distintas** ("Ediciones" para lo público y
-  "Eventos" para el portafolio del inversionista). Hoy `editions` tiene 2023–2027 y
-  `portfolio_events` tiene 2023/24/25/27: **se pueden desincronizar**, y cargar el mismo
-  año dos veces es justo lo que la decisión de "una edición por año" quería evitar.
-  Ligarlas por año (1:1) o consolidarlas en una sola entidad.
-- [ ] **Selector de edición activa para el inversionista.** Hoy la edición que ve sale de
-  su **primera inversión** (`buildPanelData` toma la primera activa). Quien tenga capital
-  en dos ediciones solo ve una, sin manera de cambiar.
+### DECISIÓN DEL USUARIO (7 sep 2026): cerrar el hueco de las dos tablas
+
+**Hay que unificar `editions` y `portfolio_events`.** Instrucción explícita del usuario.
+Las dos representan un año y en el admin son **dos pestañas distintas** ("Ediciones" para
+lo público y "Eventos" para el portafolio del inversionista). Hoy `editions` tiene
+2023–2027 y `portfolio_events` tiene 2023/24/25/27: **se pueden desincronizar**, y cargar
+el mismo año dos veces es justo lo que la regla de "una edición por año" quería evitar.
+**Cuanto más contenido se cargue, más cara sale la unificación** — por eso no conviene
+dejarlo para después.
+
+- [ ] Unificar en **una sola entidad "edición"** con los campos públicos (match, sede,
+  fecha, banner, stats, media, presentación ES/EN) y los de inversión (presupuesto,
+  ingreso proyectado, fase, avance, paquetes). Una pestaña, un alta, un año.
+- [ ] Plan: ligar por año primero (1:1, sin perder datos), mover las lecturas a la
+  entidad unificada, y solo entonces retirar la tabla sobrante. **Migración con guarda,
+  sin borrar nada hasta comprobar que la parte pública y la del inversionista leen bien.**
+- [ ] Ojo con los años que hoy existen en una tabla y no en la otra (2026 está en
+  `editions` como "pausa por Mundial" y no está en `portfolio_events`).
+
+### DECISIÓN DEL USUARIO (7 sep 2026): edición activa la elige el ADMIN
+
+**El inversionista NO cambia de edición.** Nada de selector para él. En su lugar:
+
+- [x] **"Edición activa" desde el admin** — HECHO. Selector arriba de la pestaña Eventos
+  (`activeEditionId` en la config del dashboard) y distintivo "Activa" en la tarjeta.
+  Sin configurar queda en **automática**: la de mayor año, marcada "Activa (auto)".
+  `buildPanelData` ya no deduce la edición de la primera inversión del usuario.
+- [x] **Vista general de las otras ediciones** — HECHO: `/panel/ediciones`, solo lectura
+  (año, partido, sede, fecha), con la edición en curso destacada arriba. Sin datos de
+  inversión de ediciones ajenas. Entrada nueva en el menú.
+- Si el inversionista **no tiene inversión en la edición activa**, su panel no se queda en
+  blanco: las cifras salen de los datos de su cuenta y la vista de ediciones se lo dice.
+- El cambio es solo para admin (`requireAdmin`); un inversionista que intente el POST
+  termina en su panel.
+
 - [ ] Confirmar si además de los paquetes de inversión hay **paquetes de patrocinio**.
 
 ### Resto del admin multievento (fases 1, 2, 4, 6) — HECHO lo de contenido

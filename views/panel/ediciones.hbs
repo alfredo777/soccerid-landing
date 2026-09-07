@@ -1,0 +1,61 @@
+<style>
+  .ed-wrap { max-width: 900px; }
+  .ed-lead { font-size:13.5px; color:var(--pn-ink-2); line-height:1.6; margin-bottom:22px; }
+
+  .ed-now { padding:24px; margin-bottom:26px; border-left:4px solid var(--pn-purple); }
+  .ed-now__tag { display:inline-block; font-size:10.5px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:#03543F; background:#DEF7EC; padding:4px 11px; border-radius:20px; margin-bottom:10px; }
+  .ed-now h2 { font-size:22px; font-weight:900; letter-spacing:-.3px; margin-bottom:4px; }
+  .ed-now__match { font-size:14px; font-weight:700; color:var(--pn-purple); margin-bottom:6px; }
+  .ed-now__meta { font-size:13px; color:var(--pn-muted); font-weight:600; }
+  .ed-now__note { margin-top:14px; padding:11px 13px; border-radius:11px; background:#FEF3C7; color:#92400E; font-size:12.5px; font-weight:700; line-height:1.5; }
+
+  .ed-h3 { font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:var(--pn-muted); margin-bottom:14px; }
+  .ed-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:16px; }
+  .ed-card { padding:20px; }
+  .ed-card__year { display:inline-block; font-size:12px; font-weight:900; letter-spacing:1px; padding:6px 11px; border-radius:10px; color:#fff; margin-bottom:12px; }
+  .ed-card strong { display:block; font-size:16px; font-weight:800; letter-spacing:-.2px; }
+  .ed-card__match { font-size:13px; font-weight:700; color:var(--pn-ink-2); margin-top:3px; }
+  .ed-card__meta { font-size:12px; color:var(--pn-muted); font-weight:600; margin-top:6px; line-height:1.5; }
+
+  .ed-empty { padding:50px 20px; text-align:center; color:var(--pn-muted); font-size:13.5px; }
+</style>
+
+<div class="ed-wrap">
+  <p class="ed-lead">Estas son las ediciones de la SOCCER iD CUP. Tu panel muestra los datos y las cifras de la
+    <strong>edición en curso</strong>; de las demás queda aquí la ficha, como historial del proyecto.</p>
+
+  {{#if panel.activeEdition}}
+  <div class="pn-card ed-now">
+    <span class="ed-now__tag">Edición en curso</span>
+    <h2>{{panel.activeEdition.title}}</h2>
+    {{#if panel.activeEdition.match}}<div class="ed-now__match">{{panel.activeEdition.match}}</div>{{/if}}
+    <div class="ed-now__meta">
+      {{#if panel.activeEdition.venue}}{{panel.activeEdition.venue}}{{#if panel.activeEdition.city}} · {{/if}}{{/if}}{{panel.activeEdition.city}}{{#if panel.activeEdition.dateLabel}} · {{panel.activeEdition.dateLabel}}{{/if}}
+    </div>
+    {{#unless panel.activeEdition.investsHere}}
+    <p class="ed-now__note">Tu inversión no está registrada en esta edición. Las cifras de tu panel salen de los
+      datos de tu cuenta. Si crees que falta algo, escríbele a tu asesor.</p>
+    {{/unless}}
+  </div>
+  {{/if}}
+
+  {{#if panel.otherEditions.length}}
+  <p class="ed-h3">Otras ediciones</p>
+  <div class="ed-grid">
+    {{#each panel.otherEditions}}
+    <div class="pn-card ed-card">
+      <span class="ed-card__year" style="background:{{this.accent}}">{{this.year}}</span>
+      <strong>{{this.title}}</strong>
+      {{#if this.match}}<div class="ed-card__match">{{this.match}}</div>{{/if}}
+      <div class="ed-card__meta">
+        {{#if this.venue}}{{this.venue}}<br>{{/if}}
+        {{this.city}}{{#if this.dateLabel}} · {{this.dateLabel}}{{/if}}
+        {{#if this.subtitle}}<br>{{this.subtitle}}{{/if}}
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  {{else}}
+  <div class="ed-empty">Por ahora solo está registrada la edición en curso.</div>
+  {{/if}}
+</div>

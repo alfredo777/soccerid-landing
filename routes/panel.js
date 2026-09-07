@@ -178,16 +178,35 @@ async function buildPanelData(user, opts = {}) {
   const isSponsor = user.role === 'sponsor';
   const tier = findTier(tiers, user.role, user.category) || { label: user.category || '—', color: '#6C3CE0', bg: '#EFE9FC', benefits: [] };
 
-  // Inversión activa del usuario en el portafolio (si existe). Alimenta el cálculo
-  // SIN cambiar la fórmula: capital/modalidad/retorno vienen de la inversión y se
-  // pasan a computeReturn (return_pct actúa como el override return_rate).
-  let investment = null, invEvent = null;
+  // La edición que ve el inversionista la decide el ADMIN (config `activeEditionId`),
+  // no cada usuario: no hay selector de edición en el panel. Si no está configurada,
+  // se toma la de mayor año, que es la que está en curso.
+  let invEvent = null, otherEditions = [];
   try {
-    investment = await knex('investments').where({ user_id: user.id })
-      .orderByRaw("CASE state WHEN 'activa' THEN 0 ELSE 1 END")
-      .orderBy([{ column: 'sort' }, { column: 'id' }]).first();
-    if (investment) invEvent = await knex('portfolio_events').where({ id: investment.event_id }).first();
+    const editionRows = await knex('portfolio_events').orderBy([{ column: 'year', order: 'desc' }, { column: 'id', order: 'desc' }]);
+    const elegida = editionRows.find(e => String(e.id) === String(cfg.activeEditionId));
+    invEvent = elegida || editionRows[0] || null;
+    // Panorámica de las demás ediciones: solo lectura, sin nada de inversión.
+    otherEditions = editionRows.filter(e => !invEvent || e.id !== invEvent.id).map(e => ({
+      year: e.year || '', title: e.title, match: e.match || '',
+      venue: e.venue || '', city: e.city || '', dateLabel: e.event_date || '',
+      subtitle: e.subtitle || '', accent: e.accent || '#8A8F98'
+    }));
   } catch (_) {}
+
+  // Inversión del usuario EN esa edición. Alimenta el cálculo SIN cambiar la fórmula:
+  // capital/modalidad/retorno vienen de la inversión y se pasan a computeReturn
+  // (return_pct actúa como el override return_rate). Si no tiene inversión en la
+  // edición activa, se cae a los datos de su cuenta, como cuando no hay inversiones.
+  let investment = null;
+  try {
+    if (invEvent) {
+      investment = await knex('investments').where({ user_id: user.id, event_id: invEvent.id })
+        .orderByRaw("CASE state WHEN 'activa' THEN 0 ELSE 1 END")
+        .orderBy([{ column: 'sort' }, { column: 'id' }]).first() || null;
+    }
+  } catch (_) {}
+  const investsHere = !!investment;
   const effUser = investment ? Object.assign({}, user, {
     amount: investment.capital, investment_type: investment.modality, return_rate: investment.return_pct
   }) : user;
@@ -444,6 +463,13 @@ async function buildPanelData(user, opts = {}) {
   const presentation = invEvent ? renderPresentation(invEvent.presentation_es) : '';
   const presentationTitle = invEvent ? invEvent.title : '';
 
+  // Edición activa tal como se le presenta al inversionista (solo lectura)
+  const activeEdition = invEvent ? {
+    year: invEvent.year || '', title: invEvent.title, match: invEvent.match || '',
+    venue: invEvent.venue || '', city: invEvent.city || '', dateLabel: invEvent.event_date || '',
+    accent: invEvent.accent || '#6C3CE0', investsHere
+  } : null;
+
   // FAQ visible para este usuario (general + su rol)
   let faqs = [];
   try {
@@ -487,13 +513,16 @@ async function buildPanelData(user, opts = {}) {
     { t: 'Calendario', s: 'Fechas clave del evento', u: '/panel/calendario' },
     { t: 'Cronograma', s: 'Hitos del proyecto', u: '/panel/calendario#cronograma' },
     { t: 'Documentos', s: 'Data room y contratos', u: '/panel/documentos' },
-    { t: 'Presentación', s: 'Propuesta de la edición', u: '/panel/presentacion' }
+    { t: 'Presentación', s: 'Propuesta de la edición', u: '/panel/presentacion' },
+    { t: 'Ediciones', s: 'Edición en curso e historial', u: '/panel/ediciones' }
   ].concat(faqs.length ? [{ t: 'Preguntas frecuentes', s: 'Dudas comunes', u: '/panel/faq' }] : [])
     .forEach(x => searchIndex.push(Object.assign({ g: 'Secciones' }, x)));
 
   return {
     simulator,
     eventPerf,
+    activeEdition,
+    otherEditions,
     packages,
     dataRoom,
     dataRoomCount,
@@ -835,6 +864,22 @@ router.get('/presentacion', auth.requireAuth, async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+// Panorámica de ediciones para el inversionista: SOLO LECTURA. No cambia de
+// contexto — la edición activa la decide el admin.
+router.get('/ediciones', auth.requireAuth, async (req, res, next) => {
+  try {
+    if (req.panelUser.role === 'admin') return res.redirect('/panel/admin#eventos');
+    res.render('panel/ediciones', {
+      layout: 'panel',
+      title: 'Ediciones · SOCCER iD Investor Hub',
+      pageHeading: 'Ediciones de la CUP',
+      pageSub: 'La edición en curso y el historial del proyecto',
+      active: 'ediciones',
+      panel: await buildPanelData(req.panelUser)
+    });
+  } catch (e) { next(e); }
+});
+
 router.get('/faq', auth.requireAuth, async (req, res, next) => {
   try {
     if (req.panelUser.role === 'admin') return res.redirect('/panel/admin');
@@ -1010,7 +1055,17 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     const invAgg = await knex('investments').select('event_id').count({ n: '*' }).sum({ cap: 'capital' }).groupBy('event_id');
     const pkMap = {}; pkCounts.forEach(r => { pkMap[r.event_id] = Number(r.n); });
     const invMap = {}; invAgg.forEach(r => { invMap[r.event_id] = { n: Number(r.n), cap: Number(r.cap) || 0 }; });
-    const portfolioEditions = peRows.map(e => ({
+    // Cuál es la que ven los inversionistas hoy: la configurada o, si no hay, la de mayor año
+    const cfgDash = await getDashboardConfig();
+    const porAnio = [...peRows].sort((a, b) => (b.year || 0) - (a.year || 0) || b.id - a.id);
+    const activaAuto = porAnio[0] || null;
+    const activaId = peRows.some(e => String(e.id) === String(cfgDash.activeEditionId))
+      ? String(cfgDash.activeEditionId)
+      : (activaAuto ? String(activaAuto.id) : '');
+    const portfolioEditions = peRows.map(e => Object.assign({
+      isActiveEdition: String(e.id) === activaId,
+      isAutoActive: !cfgDash.activeEditionId && String(e.id) === activaId
+    }, {
       id: e.id, year: e.year, title: e.title, match: e.match || '', subtitle: e.subtitle || '',
       city: e.city || '', venue: e.venue || '', dateLabel: e.event_date || '',
       phase: e.phase, phaseLabel: PHASE_LBL[e.phase] || e.phase, progress: e.progress_pct || 0,
@@ -2121,6 +2176,24 @@ router.post('/admin/settings/notify', auth.requireAdmin, async (req, res, next) 
 
 // Configuración del dashboard — guardado PARCIAL por grupo.
 // Cada tarjeta envía un `group` y solo esos campos se actualizan (el resto se conserva).
+// La edición activa la decide el admin: es la que ven TODOS los inversionistas.
+// No hay selector del lado del inversionista, a propósito.
+router.post('/admin/settings/edicion-activa', auth.requireAdmin, async (req, res) => {
+  try {
+    const id = parseInt(req.body.active_edition_id, 10) || '';
+    if (id) {
+      const ex = await knex('portfolio_events').where({ id }).first();
+      if (!ex) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Esa edición no existe') + '#eventos');
+      await saveDashboardConfig({ activeEditionId: String(id) });
+      return res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Los inversionistas ahora ven ${ex.title}`) + '#eventos');
+    }
+    await saveDashboardConfig({ activeEditionId: '' });
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Edición activa automática (la de mayor año)') + '#eventos');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#eventos');
+  }
+});
+
 router.post('/admin/settings/dashboard', auth.requireAdmin, async (req, res, next) => {
   try {
     const b = req.body;
