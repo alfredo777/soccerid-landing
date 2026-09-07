@@ -11,11 +11,15 @@
 
   .ed-h3 { font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:var(--pn-muted); margin-bottom:14px; }
   .ed-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:16px; }
-  .ed-card { padding:20px; }
+  .ed-card { padding:20px; display:block; text-decoration:none; color:inherit; transition:box-shadow .14s, transform .14s, border-color .14s; border:1px solid var(--pn-border); }
+  .ed-card:hover { box-shadow:0 12px 30px rgba(20,20,27,.10); transform:translateY(-2px); border-color:#DCCFF7; }
   .ed-card__year { display:inline-block; font-size:12px; font-weight:900; letter-spacing:1px; padding:6px 11px; border-radius:10px; color:#fff; margin-bottom:12px; }
   .ed-card strong { display:block; font-size:16px; font-weight:800; letter-spacing:-.2px; }
   .ed-card__match { font-size:13px; font-weight:700; color:var(--pn-ink-2); margin-top:3px; }
   .ed-card__meta { font-size:12px; color:var(--pn-muted); font-weight:600; margin-top:6px; line-height:1.5; }
+  .ed-card__open { display:inline-block; margin-top:12px; font-size:12.5px; font-weight:800; color:var(--pn-purple); }
+  .ed-now__link { display:inline-block; margin-top:16px; font-size:13px; font-weight:800; color:var(--pn-purple); text-decoration:none; }
+  .ed-now__link:hover { text-decoration:underline; }
 
   .ed-empty { padding:50px 20px; text-align:center; color:var(--pn-muted); font-size:13.5px; }
 </style>
@@ -36,6 +40,7 @@
     <p class="ed-now__note">Tu inversión no está registrada en esta edición. Las cifras de tu panel salen de los
       datos de tu cuenta. Si crees que falta algo, escríbele a tu asesor.</p>
     {{/unless}}
+    {{#if panel.activeEdition.id}}<a class="ed-now__link" href="/panel/ediciones/{{panel.activeEdition.id}}">Ver la ficha completa →</a>{{/if}}
   </div>
   {{/if}}
 
@@ -43,7 +48,7 @@
   <p class="ed-h3">Otras ediciones</p>
   <div class="ed-grid">
     {{#each panel.otherEditions}}
-    <div class="pn-card ed-card">
+    <a class="pn-card ed-card" href="/panel/ediciones/{{this.id}}">
       <span class="ed-card__year" style="background:{{this.accent}}">{{this.year}}</span>
       <strong>{{this.title}}</strong>
       {{#if this.match}}<div class="ed-card__match">{{this.match}}</div>{{/if}}
@@ -52,7 +57,8 @@
         {{this.city}}{{#if this.dateLabel}} · {{this.dateLabel}}{{/if}}
         {{#if this.subtitle}}<br>{{this.subtitle}}{{/if}}
       </div>
-    </div>
+      <span class="ed-card__open">Ver ficha →</span>
+    </a>
     {{/each}}
   </div>
   {{else}}

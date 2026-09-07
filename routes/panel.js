@@ -193,7 +193,7 @@ async function buildPanelData(user, opts = {}) {
     invEvent = elegida || editionRows[0] || null;
     // Panorámica de las demás ediciones: solo lectura, sin nada de inversión.
     otherEditions = editionRows.filter(e => !invEvent || e.id !== invEvent.id).map(e => ({
-      year: e.year || '', title: e.title, match: e.match || '',
+      id: e.id, year: e.year || '', title: e.title, match: e.match || '',
       venue: e.venue || '', city: e.city || '', dateLabel: e.event_date || '',
       subtitle: e.subtitle || '', accent: e.accent || '#8A8F98'
     }));
@@ -539,7 +539,7 @@ async function buildPanelData(user, opts = {}) {
 
   // Edición activa tal como se le presenta al inversionista (solo lectura)
   const activeEdition = invEvent ? {
-    year: invEvent.year || '', title: invEvent.title, match: invEvent.match || '',
+    id: invEvent.id, year: invEvent.year || '', title: invEvent.title, match: invEvent.match || '',
     venue: invEvent.venue || '', city: invEvent.city || '', dateLabel: invEvent.event_date || '',
     accent: invEvent.accent || '#6C3CE0', investsHere
   } : null;
@@ -989,6 +989,59 @@ router.get('/ediciones', auth.requireAuth, async (req, res, next) => {
       pageSub: 'La edición en curso y el historial del proyecto',
       active: 'ediciones',
       panel: await buildPanelData(req.panelUser)
+    });
+  } catch (e) { next(e); }
+});
+
+// Ficha completa de UNA edición, con el diseño del panel (no la página pública).
+// Muestra la data que el admin cargó: portada, cifras, presentación, medios,
+// galería, patrocinadores, videos. Solo lectura. El admin también la puede ver
+// (para previsualizar lo que verá el inversionista de esa edición).
+function parseEdicionDetalle(e, lang) {
+  const raw = lang === 'en' ? (e.data_en || e.data_es) : e.data_es;
+  let d = {};
+  try { d = JSON.parse(raw || '{}') || {}; } catch (_) { d = {}; }
+  const pres = lang === 'en' ? (e.presentation_en || e.presentation_es) : e.presentation_es;
+  const arr = (x) => Array.isArray(x) ? x : [];
+  return {
+    id: e.id, year: e.year || d.year || '',
+    title: d.title || e.title || '',
+    match: e.match || d.match || '',
+    venue: e.venue || d.venue || '',
+    city: e.city || d.city || '',
+    dateLabel: e.event_date || d.date || '',
+    subtitle: e.subtitle || '',
+    accent: e.accent || '#6C3CE0',
+    status: e.status || 'past',
+    phaseLabel: PHASE_LABELS[e.phase] || '',
+    description: d.description || e.description || '',
+    banner: d.banner || '',
+    attValue: (d.attendance && d.attendance.value) || '',
+    attLabel: (d.attendance && d.attendance.label) || '',
+    stats: arr(d.stats),
+    mediaLinks: arr(d.mediaLinks),
+    images: arr(d.images),
+    sponsors: arr(d.sponsors),
+    videos: arr(d.videos),
+    presentation: renderPresentation(pres)
+  };
+}
+
+router.get('/ediciones/:id', auth.requireAuth, async (req, res, next) => {
+  try {
+    const e = await knex('portfolio_events').where({ id: req.params.id }).first();
+    if (!e) return next();
+    const lang = req.panelUser.language === 'en' ? 'en' : 'es';
+    const ed = parseEdicionDetalle(e, lang);
+    res.render('panel/edicion-detalle', {
+      layout: 'panel',
+      title: (ed.title || 'Edición') + ' · SOCCER iD Investor Hub',
+      pageHeading: ed.title || 'Edición',
+      pageSub: [ed.match, ed.city].filter(Boolean).join(' · '),
+      active: 'ediciones',
+      isAdminView: req.panelUser.role === 'admin',
+      panel: await buildPanelData(req.panelUser),
+      ed
     });
   } catch (e) { next(e); }
 });

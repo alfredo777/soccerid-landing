@@ -1052,6 +1052,7 @@
       </div>
       <div class="ad-actions" style="margin-top:14px;">
         <a class="ad-actions__link" href="/panel/admin/evento/{{this.id}}">Gestionar</a>
+        <a class="ad-actions__link" href="/panel/ediciones/{{this.id}}" target="_blank" rel="noopener">Ver ficha</a>
         <button type="button" class="primary" onclick="openPortfolio('{{this.id}}')">Editar</button>
         <button type="button" onclick="openPackages('{{this.id}}')">Paquetes ({{this.packages}})</button>
         <form method="POST" action="/panel/admin/portfolio/{{this.id}}/delete" data-confirm="¿Eliminar la edición {{this.title}}?"><button type="submit" class="danger">Eliminar</button></form>

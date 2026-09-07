@@ -1,0 +1,167 @@
+<style>
+  .ede-wrap { max-width: 940px; }
+  .ede-back { display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:800; color:var(--pn-muted); text-decoration:none; margin-bottom:16px; }
+  .ede-back:hover { color:var(--pn-purple); }
+  .ede-adminnote { display:flex; align-items:center; gap:9px; font-size:12.5px; font-weight:700; color:#92400E; background:#FEF3C7; border-radius:11px; padding:11px 14px; margin-bottom:18px; }
+
+  .ede-hero { position:relative; overflow:hidden; padding:0; margin-bottom:22px; }
+  .ede-hero__img { width:100%; height:220px; object-fit:cover; display:block; }
+  .ede-hero__no { height:120px; background:linear-gradient(135deg, var(--pn-purple) 0%, #A78BE6 100%); }
+  .ede-hero__body { padding:22px 24px; }
+  .ede-badge { display:inline-block; font-size:10.5px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; padding:5px 11px; border-radius:20px; margin-bottom:10px; }
+  .ede-badge.past { background:#DEF7EC; color:#03543F; }
+  .ede-badge.upcoming { background:#E1EFFE; color:#1E429F; }
+  .ede-badge.pause { background:#F1F0F5; color:var(--pn-ink-2); }
+  .ede-hero h2 { font-size:24px; font-weight:900; letter-spacing:-.4px; margin:0 0 4px; }
+  .ede-hero__match { font-size:15px; font-weight:800; color:var(--pn-purple); margin-bottom:6px; }
+  .ede-hero__meta { font-size:13px; color:var(--pn-muted); font-weight:600; }
+
+  .ede-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-bottom:22px; }
+  .ede-stat { padding:18px 20px; text-align:center; }
+  .ede-stat__v { font-size:26px; font-weight:900; letter-spacing:-.5px; color:var(--pn-ink); line-height:1.1; }
+  .ede-stat__l { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:var(--pn-muted); margin-top:5px; }
+  .ede-stat__s { font-size:11.5px; color:var(--pn-muted); margin-top:2px; }
+
+  .ede-sec { margin-bottom:22px; }
+  .ede-sec__h { font-size:13px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:var(--pn-muted); margin:0 0 12px; }
+  .ede-desc { font-size:14px; color:var(--pn-ink-2); line-height:1.7; }
+  .ede-pres { font-size:14px; color:var(--pn-ink-2); line-height:1.7; }
+  .ede-pres h3 { font-size:16px; font-weight:900; color:var(--pn-ink); margin:16px 0 6px; }
+  .ede-pres ul { margin:6px 0; padding-left:20px; }
+  .ede-pres li { margin-bottom:4px; }
+
+  .ede-gal { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; }
+  .ede-gal img { width:100%; height:130px; object-fit:cover; border-radius:12px; display:block; }
+
+  .ede-media { display:flex; flex-direction:column; gap:10px; }
+  .ede-medialink { display:flex; align-items:center; gap:14px; padding:14px 16px; text-decoration:none; color:inherit; }
+  .ede-medialink:hover { border-color:#DCCFF7; }
+  .ede-medialink img { width:60px; height:60px; object-fit:cover; border-radius:10px; flex-shrink:0; }
+  .ede-medialink__b strong { display:block; font-size:14px; font-weight:800; color:var(--pn-ink); }
+  .ede-medialink__b small { font-size:12px; color:var(--pn-muted); font-weight:600; }
+
+  .ede-videos { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px; }
+  .ede-video { position:relative; padding-bottom:56.25%; height:0; border-radius:14px; overflow:hidden; }
+  .ede-video iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
+
+  .ede-sponsors { display:flex; flex-wrap:wrap; gap:18px; align-items:center; }
+  .ede-sponsors img { height:44px; max-width:130px; object-fit:contain; }
+</style>
+
+<div class="ede-wrap">
+  <a class="ede-back" href="/panel/ediciones">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Todas las ediciones
+  </a>
+
+  {{#if isAdminView}}
+  <div class="ede-adminnote">
+    <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    Vista previa — así ve esta edición el inversionista.
+  </div>
+  {{/if}}
+
+  <div class="pn-card ede-hero">
+    {{#if ed.banner}}
+      <img class="ede-hero__img" src="{{ed.banner}}" alt="{{ed.title}}">
+    {{else}}
+      <div class="ede-hero__no"></div>
+    {{/if}}
+    <div class="ede-hero__body">
+      <span class="ede-badge {{ed.status}}">{{#eq ed.status 'past'}}Concluida{{else}}{{#eq ed.status 'upcoming'}}Próxima{{else}}Pausa{{/eq}}{{/eq}}{{#if ed.phaseLabel}} · {{ed.phaseLabel}}{{/if}}</span>
+      <h2>{{ed.title}}</h2>
+      {{#if ed.match}}<div class="ede-hero__match">{{ed.match}}</div>{{/if}}
+      <div class="ede-hero__meta">
+        {{#if ed.venue}}{{ed.venue}} · {{/if}}{{ed.city}}{{#if ed.dateLabel}} · {{ed.dateLabel}}{{/if}}
+      </div>
+    </div>
+  </div>
+
+  {{#if ed.attValue}}
+  <div class="ede-stats">
+    <div class="pn-card ede-stat">
+      <div class="ede-stat__v">{{ed.attValue}}</div>
+      <div class="ede-stat__l">{{#if ed.attLabel}}{{ed.attLabel}}{{else}}Asistentes{{/if}}</div>
+    </div>
+    {{#each ed.stats}}
+    <div class="pn-card ede-stat">
+      <div class="ede-stat__v">{{this.value}}</div>
+      <div class="ede-stat__l">{{this.label}}</div>
+      {{#if this.sub}}<div class="ede-stat__s">{{this.sub}}</div>{{/if}}
+    </div>
+    {{/each}}
+  </div>
+  {{else}}
+    {{#if ed.stats.length}}
+    <div class="ede-stats">
+      {{#each ed.stats}}
+      <div class="pn-card ede-stat">
+        <div class="ede-stat__v">{{this.value}}</div>
+        <div class="ede-stat__l">{{this.label}}</div>
+        {{#if this.sub}}<div class="ede-stat__s">{{this.sub}}</div>{{/if}}
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+  {{/if}}
+
+  {{#if ed.description}}
+  <div class="pn-card ede-sec" style="padding:22px 24px;">
+    <p class="ede-sec__h">La edición</p>
+    <p class="ede-desc">{{ed.description}}</p>
+  </div>
+  {{/if}}
+
+  {{#if ed.presentation}}
+  <div class="pn-card ede-sec" style="padding:22px 24px;">
+    <p class="ede-sec__h">Presentación</p>
+    <div class="ede-pres">{{{ed.presentation}}}</div>
+  </div>
+  {{/if}}
+
+  {{#if ed.mediaLinks.length}}
+  <div class="ede-sec">
+    <p class="ede-sec__h">En medios</p>
+    <div class="ede-media">
+      {{#each ed.mediaLinks}}
+      <a class="pn-card ede-medialink" href="{{this.url}}" target="_blank" rel="noopener">
+        {{#if this.image}}<img src="{{this.image}}" alt="">{{/if}}
+        <div class="ede-medialink__b">
+          <strong>{{this.title}}</strong>
+          {{#if this.source}}<small>{{this.source}}</small>{{/if}}
+        </div>
+      </a>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{#if ed.images.length}}
+  <div class="ede-sec">
+    <p class="ede-sec__h">Galería</p>
+    <div class="ede-gal">
+      {{#each ed.images}}<img src="{{this.src}}" alt="{{this.alt}}">{{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{#if ed.videos.length}}
+  <div class="ede-sec">
+    <p class="ede-sec__h">Videos</p>
+    <div class="ede-videos">
+      {{#each ed.videos}}
+      <div class="ede-video"><iframe src="https://www.youtube.com/embed/{{this.id}}" title="{{this.title}}" allowfullscreen loading="lazy"></iframe></div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{#if ed.sponsors.length}}
+  <div class="pn-card ede-sec" style="padding:22px 24px;">
+    <p class="ede-sec__h">Patrocinadores</p>
+    <div class="ede-sponsors">
+      {{#each ed.sponsors}}<img src="{{this.src}}" alt="{{this.alt}}">{{/each}}
+    </div>
+  </div>
+  {{/if}}
+</div>
