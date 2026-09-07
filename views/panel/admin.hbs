@@ -3,11 +3,13 @@
   .ad-tabtitle { font-size:15px; font-weight:800; color:var(--pn-ink); margin-left:6px; }
   @media (max-width:860px){ .ad-tabtitle { display:none; } }
   .ad-tab {
-    position:relative; width:44px; height:44px; border-radius:13px;
+    position:relative; min-height:40px; border-radius:12px; gap:8px;
     background:#fff; border:1px solid var(--pn-border); color:var(--pn-ink-2);
-    cursor:pointer; display:flex; align-items:center; justify-content:center;
-    padding:0; transition: background .15s, color .15s, border-color .15s;
+    cursor:pointer; display:inline-flex; align-items:center; justify-content:flex-start;
+    padding:0 14px 0 11px; font-family:inherit; transition: background .15s, color .15s, border-color .15s;
   }
+  /* El nombre visible de cada pestaña (antes solo se veía el icono) */
+  .ad-tab::after { content: attr(data-label); font-size:12.5px; font-weight:800; white-space:nowrap; }
   .ad-tab svg { width:20px; height:20px; stroke:currentColor; fill:none; }
   .ad-tab:hover { background:var(--pn-purple-soft); color:var(--pn-purple); border-color:#E4DAFA; }
   .ad-tab.is-active { background:var(--pn-purple); color:#fff; border-color:var(--pn-purple); box-shadow:0 8px 18px rgba(108,60,224,.24); }
@@ -31,8 +33,16 @@
   /* En móvil la navegación vive en el menú lateral, así que los chips sobran
      (ocupaban tres renglones). Se sustituyen por una barra de ruta. */
   .ad-crumb { display:none; }
+  .ad-navsel { display:none; }
   @media (max-width:860px){
     .ad-tabs { display:none; }
+    .ad-navsel { display:block; width:100%; margin:0 0 18px; padding:13px 15px;
+      border:1px solid var(--pn-border); border-radius:13px; background:#fff;
+      font-family:inherit; font-size:15px; font-weight:800; color:var(--pn-ink);
+      -webkit-appearance:none; appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236C3CE0' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 14px center; }
+    .ad-crumb { display:none !important; }
     .ad-crumb {
       display:flex; align-items:center; gap:8px; margin:6px 0 18px; padding:11px 14px;
       background:#fff; border:1px solid var(--pn-border); border-radius:13px;
@@ -255,6 +265,18 @@
   .ed-preview__lang { display:flex; gap:6px; padding:10px 12px; border-bottom:1px solid var(--pn-border); background:#FBFAFD; }
   .ed-preview__lang button { padding:5px 12px; border:1px solid var(--pn-border); border-radius:999px; background:#fff; font-family:inherit; font-size:11.5px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
   .ed-preview__lang button.is-on { background:var(--pn-purple); border-color:var(--pn-purple); color:#fff; }
+
+  /* Botón de ayuda "?" por sección */
+  .ad-help-btn { display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%;
+    border:1px solid var(--pn-border); background:#fff; color:var(--pn-purple); font-family:inherit; font-size:14px; font-weight:900;
+    cursor:pointer; margin-left:10px; vertical-align:middle; line-height:1; }
+  .ad-help-btn:hover { background:var(--pn-purple-soft); border-color:#DCCFF7; }
+  .ad-help-box { margin:0 0 18px; padding:15px 17px; border-radius:13px; background:var(--pn-purple-soft);
+    border:1px solid #E4DAFA; color:var(--pn-ink-2); font-size:13px; line-height:1.6; }
+  .ad-help-box[hidden] { display:none; }
+  .ad-help-box b { color:var(--pn-ink); }
+  .ad-help-box ul { margin:8px 0 0; padding-left:18px; }
+  .ad-help-box li { margin-bottom:4px; }
 </style>
 
 {{#if flash}}
@@ -274,6 +296,8 @@
   <svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
   <strong id="adCrumbSec" aria-live="polite">Usuarios</strong>
 </nav>
+
+<select class="ad-navsel" id="adNavSel" aria-label="Sección del administrador"></select>
 
 <div class="ad-tabs">
   <button type="button" class="ad-tab is-active" data-tab="usuarios" data-label="Usuarios" title="Usuarios" aria-label="Usuarios">
@@ -2840,6 +2864,8 @@
     var out = document.getElementById('adCrumbSec');
     var tab = document.querySelector('.ad-tab[data-tab="' + name + '"]');
     if (out && tab) out.textContent = (tab.getAttribute('data-label') || tab.textContent).trim();
+    var sel = document.getElementById('adNavSel');
+    if (sel && sel.value !== name) sel.value = name;
   }
   function activate(name){
     setCrumb(name);
@@ -2852,6 +2878,20 @@
     document.querySelectorAll('.pn-nav a[data-tab]').forEach(function(a){ a.classList.toggle('is-active', a.getAttribute('data-tab') === name); });
     // Limpia cualquier filtro de búsqueda al cambiar de sección
     var box = document.getElementById('pnSearch'); if (box && box.value){ box.value=''; box.dispatchEvent(new Event('input')); }
+  }
+  // Desplegable de secciones para móvil: se llena desde las mismas pestañas
+  var navSel = document.getElementById('adNavSel');
+  if (navSel){
+    tabs.forEach(function(t){
+      var o = document.createElement('option');
+      o.value = t.dataset.tab;
+      o.textContent = t.getAttribute('data-label') || t.dataset.tab;
+      navSel.appendChild(o);
+    });
+    navSel.addEventListener('change', function(){
+      activate(navSel.value);
+      history.replaceState(null, '', '/panel/admin#' + navSel.value);
+    });
   }
   tabs.forEach(function(t){ t.addEventListener('click', function(){ activate(t.dataset.tab); history.replaceState(null,'','/panel/admin#'+t.dataset.tab); }); });
   // Permite que el sidebar (layout) cambie de pestaña
@@ -3035,5 +3075,74 @@
       inp.addEventListener('input', function(){ updateOne(inp); var f = inp.closest('form'); if (f) validatePair(f); });
     });
     document.querySelectorAll('form').forEach(function(f){ if (f.querySelector('[name=budget]') && f.querySelector('[name=spent]')) validatePair(f); });
+  })();
+
+  // ── Ayuda "?" por sección: qué es y cómo se usa cada parte del admin ──
+  (function(){
+    var AYUDA = {
+      usuarios: '<b>Usuarios.</b> El directorio de inversionistas y patrocinadores.<ul>'
+        + '<li>Invita a alguien con el formulario de la izquierda: le llega un correo para activar su cuenta.</li>'
+        + '<li>Cada cuenta muestra su capital sumado de todas las ediciones.</li>'
+        + '<li>"Editar cuenta" abre su página: categoría, monto, documentos y ajustes que solo afectan a esa persona.</li></ul>',
+      estadisticas: '<b>Estadísticas.</b> Las cifras del negocio, contadas solas de lo que hay cargado (nada se captura a mano).<ul>'
+        + '<li>Lo que depende del año se mide sobre la <b>edición activa</b>; códigos, prospectos y contenido son del total.</li>'
+        + '<li>Incluye capital, retorno proyectado, reparto fijo/riesgo, taquilla, comparativo entre ediciones y serie histórica.</li></ul>',
+      noticias: '<b>Noticias.</b> Lo que el inversionista ve en "Estado del evento".<ul>'
+        + '<li>Publica con título, extracto, contenido e imagen (se sube a S3 o se pega una URL).</li>'
+        + '<li>"Traer de la nota" saca imagen y titular de un enlace de prensa.</li>'
+        + '<li>"Compartir" manda la noticia como notificación a todos.</li></ul>',
+      calendario: '<b>Calendario.</b> Las actividades del evento por fecha.<ul>'
+        + '<li>Agrega juntas, prensa, logística, meet &amp; greets, etc. "Otro" abre un campo para escribir el tipo.</li>'
+        + '<li>Cada actividad se liga a una edición (o a "todas"). El inversionista ve las de la edición activa.</li></ul>',
+      cronograma: '<b>Cronograma.</b> Las etapas macro del proyecto (Planeación → Cierre, o las tuyas).<ul>'
+        + '<li>Se agregan, editan, <b>reordenan arrastrando</b> y borran.</li>'
+        + '<li>Cada etapa puede tener fecha de inicio y fin, y ligarse a una edición.</li></ul>',
+      categorias: '<b>Categorías.</b> Los niveles de inversión y patrocinio.<ul>'
+        + '<li>Define nombre, color, monto, cupo y beneficios de cada una.</li>'
+        + '<li>Se reflejan en el panel del inversionista y en el cupo de las estadísticas.</li></ul>',
+      notificaciones: '<b>Notificaciones.</b> Avisos para los usuarios.<ul>'
+        + '<li>A un <b>segmento</b> (todos / inversionistas / patrocinadores) o <b>directa</b> a una persona.</li>'
+        + '<li>Canales: panel siempre, correo y SMS opcionales; se respeta lo que cada quien eligió en su perfil.</li>'
+        + '<li>"Tu bandeja" son los avisos que el sistema te manda a ti (accesos, envíos).</li></ul>',
+      eventos: '<b>Ediciones.</b> Cada edición por año: es la fuente única de lo público y lo de inversión.<ul>'
+        + '<li>El drawer edita identidad, contenido público (ES/EN), presentación, presupuesto y paquetes.</li>'
+        + '<li>"Edición activa" arriba: la que ven los inversionistas.</li>'
+        + '<li>"Gestionar" abre la página de la edición: cronología, data room, evidencias, medios, comunicaciones e inversiones.</li></ul>',
+      faq: '<b>FAQ.</b> Preguntas frecuentes que ve el inversionista.<ul>'
+        + '<li>Segmentadas por audiencia, con versión en inglés opcional.</li>'
+        + '<li>Se <b>reordenan arrastrando</b>.</li></ul>',
+      codigos: '<b>Códigos.</b> Los códigos de acceso a la propuesta pública 2027.<ul>'
+        + '<li>Genera o agrega códigos; "Asignar" les pone un dueño (nombre, correo, teléfono, tags).</li>'
+        + '<li>Con dueño, el sistema marca si quien entró fue él o alguien más (un referido).</li></ul>',
+      accesos: '<b>Accesos.</b> El registro de cada entrada a la propuesta 2027: quién, cuándo, IP y dispositivo.',
+      mapa: '<b>Mapa de códigos.</b> Quién repartió su código y quién acabó entrando con él.<ul>'
+        + '<li>El grafo muestra las relaciones; "Quién entró y cuándo" las ordena en el tiempo.</li></ul>',
+      leads: '<b>Prospectos.</b> Los correos capturados en la propuesta 2027.<ul>'
+        + '<li>Cambia su estado (nuevo, contactado, cliente) y mándales correo individual o masivo.</li></ul>',
+      capital: '<b>Uso del capital.</b> En qué se aplica el presupuesto, por rubro (presupuestado vs ejercido).',
+      configuracion: '<b>Configuración.</b> Los ajustes generales del panel.<ul>'
+        + '<li>Asesor, evento y cuenta regresiva, parámetros de inversión, taquilla y trazabilidad.</li>'
+        + '<li><b>SMS (Twilio)</b>, <b>Google Calendar</b> de la organización y los <b>tipos de actividad</b> propios.</li></ul>'
+    };
+    document.querySelectorAll('.ad-sec').forEach(function(sec){
+      var id = (sec.id || '').replace('sec-', '');
+      var texto = AYUDA[id];
+      if (!texto) return;
+      var h = sec.querySelector('h3, .ad-note, .ad-sechead');
+      // Botón "?" en el primer encabezado; si no hay, al inicio de la sección
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'ad-help-btn';
+      btn.textContent = '?';
+      btn.title = 'Cómo se usa esta sección';
+      var box = document.createElement('div');
+      box.className = 'ad-help-box';
+      box.hidden = true;
+      box.innerHTML = texto;
+      btn.addEventListener('click', function(){ box.hidden = !box.hidden; });
+      var anchor = sec.querySelector('h3');
+      if (anchor){ anchor.appendChild(btn); anchor.parentNode.insertBefore(box, anchor.nextSibling); }
+      else { var head = sec.firstElementChild; btn.style.marginLeft = '0'; sec.insertBefore(box, head); sec.insertBefore(btn, box); }
+    });
   })();
 </script>

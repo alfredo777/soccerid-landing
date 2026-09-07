@@ -5,7 +5,8 @@
  *
  *   node scripts/heroku-env.js              # muestra que haria, sin tocar nada
  *   node scripts/heroku-env.js --apply      # las setea (reinicia el dyno)
- *   node scripts/heroku-env.js --apply --google-on
+ *   node scripts/heroku-env.js --apply --google-on      # muestra el login de Google
+ *   node scripts/heroku-env.js --apply --calendar-on    # enciende Google Calendar
  *
  * Por defecto el login de Google queda OCULTO (GOOGLE_LOGIN=0), aunque suba las
  * credenciales: la pantalla de consentimiento sigue en Testing y quien no sea test
@@ -21,6 +22,11 @@ const APP = process.env.HEROKU_APP || 'soccerid-landing';
 const ROOT = path.join(__dirname, '..');
 const apply = process.argv.includes('--apply');
 const googleOn = process.argv.includes('--google-on');
+// Google Calendar tiene su propio interruptor, aparte del login: usa el scope
+// `calendar.events` que Google marca como sensible y exige verificacion de marca
+// antes de publicar. Por eso el DEFAULT es APAGADO (GOOGLE_CALENDAR=0); se
+// enciende explicitamente con --calendar-on cuando Google apruebe la marca.
+const calendarOn = process.argv.includes('--calendar-on');
 
 // Solo las variables que el codigo realmente lee. Si agregas una, ponla aqui.
 const WANTED = {
@@ -74,6 +80,7 @@ if (turnstileOff) {
 const vars = {};
 Object.keys(WANTED).forEach(f => Object.assign(vars, parse(f)));
 vars.GOOGLE_LOGIN = googleOn ? '1' : '0';
+vars.GOOGLE_CALENDAR = calendarOn ? '1' : '0';
 
 const faltantes = Object.values(WANTED).flat().filter(k => !(k in vars));
 const nombres = Object.keys(vars).sort();
@@ -82,6 +89,7 @@ console.log(`App: ${APP}`);
 console.log(`Variables encontradas (${nombres.length}): ${nombres.join(', ')}`);
 if (faltantes.length) console.log(`No encontradas: ${faltantes.join(', ')}`);
 console.log(`Login de Google: ${googleOn ? 'VISIBLE (GOOGLE_LOGIN=1)' : 'oculto (GOOGLE_LOGIN=0)'}`);
+console.log(`Google Calendar: ${calendarOn ? 'ACTIVO (GOOGLE_CALENDAR=1)' : 'APAGADO (GOOGLE_CALENDAR=0) — requiere verificacion de marca'}`);
 console.log(`Turnstile: ${vars.TURNSTILE_SECRET_KEY ? 'ACTIVO (CAPTCHA en login)' : 'no encontrado en los .local.md'}`);
 
 if (!apply) {
