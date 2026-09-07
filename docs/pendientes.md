@@ -363,22 +363,45 @@ Detalles:
 ## Videos
 - [ ] **Voz natural** en los videos (hoy voz offline provisional). Falta elegir proveedor + API key (ElevenLabs / OpenAI / Google TTS). Al tenerla se regeneran y se reemplazan los archivos.
 
-## Ediciones: hacer el alta/edición más intuitiva
-El formulario actual de ediciones (admin "Ediciones") es poco intuitivo: usa
-**textareas con formato de tubería** (`valor | etiqueta | sub`, una por línea) para
-stats, sponsors, media, videos e imágenes, y URLs pegadas a mano. Mejorar UX:
+## Ediciones: alta/edición más intuitiva — HECHO
+Se fueron los textareas con formato de tubería (`valor | etiqueta | sub`), que obligaban
+a recordar el orden de las columnas y se rompían con un pipe de más dentro de un texto.
 
-- [ ] Reemplazar los textareas "a | b | c" por **filas repetibles** (campos separados
-  por ítem, con botones **+ Agregar** / eliminar y reordenar).
-- [ ] **Subir imágenes** (banner, galería, sponsors) con el uploader existente
-  (`/panel/admin/upload` → S3) en vez de pegar URLs.
-- [ ] **Pestañas ES / EN** claras (ya existen) + indicar qué campos son compartidos vs
-  por idioma.
-- [ ] Placeholders/ayudas y validación (año, estado past/upcoming/pause).
-- [ ] **Previsualización** de la edición antes de guardar.
-- [ ] Todo en **drawer lateral** (según preferencia de UI) en vez de formulario denso.
-- [ ] Alinear con la unificación "multievento = ediciones" (mismos campos alimentan
-  público + inversionista; ver sección de multievento).
+Lo que quedó construido:
+- **Filas repetibles** para estadísticas, notas en medios, imágenes, patrocinadores y
+  videos: un campo por dato, con su etiqueta, y botones de **subir / bajar / eliminar**
+  por fila más un **+ Agregar**.
+- **Subida de imágenes** con el uploader que ya existía (`/panel/admin/upload` → S3 en
+  producción, disco local en desarrollo) para banner, galería, logos de patrocinadores e
+  imagen de las notas. Miniatura al lado del campo. Se sigue pudiendo pegar una URL.
+- **Qué es compartido y qué es por idioma** ahora se ve: los campos comunes llevan la
+  etiqueta *compartido* y hay una nota explicando que si el inglés se deja vacío, la
+  página en inglés cae al español.
+- **Validación del año en el servidor**, no solo en el navegador: 4 dígitos, entre 2000 y
+  2100, y no puede chocar con otra edición. Antes se podía guardar cualquier cosa y el
+  timeline público quedaba mal ordenado sin que nadie lo notara.
+- **Vista previa** dentro del mismo drawer: banner, título, datos, estadísticas y
+  miniaturas tal como van a quedar, con **avisos** de lo que está mal (año incompleto,
+  falta el título, un enlace de nota que no empieza con http, un ID de YouTube que no lo
+  parece). Es previa a guardar, con lo que hay en el formulario, no con lo que está en la
+  base.
+
+Notas de implementación:
+- Cada colección viaja como JSON en un input oculto (`stats_es_json`, `images_json`, ...).
+  **El formato viejo de tuberías se sigue aceptando** en el servidor: si llega un POST sin
+  el campo `_json`, se parsea como antes. Así no se rompe nada que quedara en caché.
+- El servidor filtra por claves conocidas y descarta las filas que quedaron vacías, así
+  que una fila de más en el formulario no ensucia los datos.
+- Al escribir en una fila se actualiza el estado sin redibujar; si se redibujara en cada
+  tecla, el cursor saltaría fuera del campo.
+
+Pendiente de esta sección:
+- [ ] Arrastrar para reordenar (hoy es con flechas, que funciona pero es más lento con
+  muchas filas).
+- [ ] Subir varias imágenes de golpe a la galería.
+- [ ] Que la vista previa muestre también la versión en inglés (hoy previsualiza el
+  español, que es el idioma principal).
+
 
 ## Multievento LIGADO a las ediciones (por año) — pedido de León
 **Decisión (usuario): el admin multievento va ligado a las ediciones.** Una

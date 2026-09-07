@@ -183,6 +183,49 @@
   .ad-langsec.is-active { display:block; }
   .ad-f label em { font-style:normal; color:var(--pn-muted); font-weight:600; }
   .ad-select-sm { border:1px solid var(--pn-border); border-radius:9px; padding:7px 8px; font-size:12px; font-weight:700; font-family:inherit; color:var(--pn-ink-2); background:#fff; cursor:pointer; }
+
+  /* Editor de filas repetibles (ediciones) */
+  .ed-shared { display:inline-block; margin-left:7px; padding:1px 8px; border-radius:999px; background:#F1F5F9; color:#475569; font-size:10px; font-weight:800; letter-spacing:.3px; text-transform:uppercase; vertical-align:middle; }
+  .ed-hint-block { margin:18px 0 4px; padding:11px 13px; border-radius:11px; background:var(--pn-purple-soft); color:var(--pn-ink-2); font-size:12.5px; line-height:1.55; }
+  .ed-group { margin:20px 0 0; }
+  .ed-group__t { display:block; font-size:12.5px; font-weight:800; color:var(--pn-ink); margin-bottom:9px; }
+  .ed-row { border:1px solid var(--pn-border); border-radius:13px; padding:12px 13px; margin-bottom:9px; background:#FCFCFD; }
+  .ed-row__head { display:flex; align-items:center; justify-content:space-between; margin-bottom:9px; }
+  .ed-row__n { font-size:11px; font-weight:800; color:var(--pn-muted); letter-spacing:.4px; }
+  .ed-row__btns { display:flex; gap:5px; }
+  .ed-row__btns button { width:26px; height:26px; border:1px solid var(--pn-border); border-radius:8px; background:#fff; cursor:pointer; font-size:12px; line-height:1; color:var(--pn-ink-2); font-family:inherit; }
+  .ed-row__btns button:hover { background:#F3F2F7; }
+  .ed-row__btns button.danger:hover { background:#FEF2F2; color:#B42318; border-color:#FCA5A5; }
+  .ed-row__btns button[disabled] { opacity:.3; cursor:default; }
+  .ed-fld { margin-bottom:9px; }
+  .ed-fld:last-child { margin-bottom:0; }
+  .ed-fld label { display:block; font-size:11px; font-weight:700; color:var(--pn-muted); margin-bottom:4px; }
+  .ed-fld input { width:100%; border:1px solid var(--pn-border); border-radius:9px; padding:9px 11px; font-size:13px; font-family:inherit; color:var(--pn-ink); background:#fff; }
+  .ed-fld input:focus { outline:none; border-color:var(--pn-purple); }
+  .ed-img { display:flex; gap:8px; align-items:center; }
+  .ed-img input { flex:1; min-width:0; }
+  .ed-img button { white-space:nowrap; padding:9px 12px; border:1px solid var(--pn-border); border-radius:9px; background:#fff; font-family:inherit; font-size:12px; font-weight:700; color:var(--pn-purple); cursor:pointer; }
+  .ed-img button:hover { background:var(--pn-purple-soft); }
+  .ed-img img { width:38px; height:38px; object-fit:cover; border-radius:8px; border:1px solid var(--pn-border); background:#F3F2F7; }
+  .ed-add { width:100%; padding:10px; border:1px dashed var(--pn-border); border-radius:11px; background:#fff; font-family:inherit; font-size:12.5px; font-weight:700; color:var(--pn-purple); cursor:pointer; }
+  .ed-add:hover { background:var(--pn-purple-soft); border-color:#DCCFF7; }
+  .ed-empty-rows { font-size:12.5px; color:var(--pn-muted); padding:6px 0 10px; }
+  .ed-actions { display:flex; gap:10px; margin-top:22px; }
+  .ed-actions .ad-btn { margin-top:0; }
+  .ed-preview { margin-top:18px; border:1px solid var(--pn-border); border-radius:14px; overflow:hidden; background:#fff; }
+  .ed-preview__banner { height:120px; background:#F3F2F7 center/cover no-repeat; }
+  .ed-preview__b { padding:16px 18px; }
+  .ed-preview__b h4 { font-size:16px; font-weight:800; margin-bottom:4px; }
+  .ed-preview__meta { font-size:12px; color:var(--pn-muted); font-weight:600; margin-bottom:10px; }
+  .ed-preview__desc { font-size:13px; color:var(--pn-ink-2); line-height:1.55; margin-bottom:12px; }
+  .ed-preview__stats { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+  .ed-preview__stat { background:var(--pn-purple-soft); border-radius:11px; padding:8px 12px; }
+  .ed-preview__stat b { display:block; font-size:16px; font-weight:800; color:var(--pn-purple); }
+  .ed-preview__stat span { font-size:10.5px; font-weight:700; color:var(--pn-ink-2); text-transform:uppercase; letter-spacing:.4px; }
+  .ed-preview__thumbs { display:flex; gap:7px; flex-wrap:wrap; }
+  .ed-preview__thumbs img { width:54px; height:40px; object-fit:cover; border-radius:7px; border:1px solid var(--pn-border); }
+  .ed-preview__list { font-size:12.5px; color:var(--pn-ink-2); line-height:1.7; }
+  .ed-preview__warn { margin:0; padding:10px 18px; background:#FEF3C7; color:#92400E; font-size:12px; font-weight:700; }
 </style>
 
 {{#if flash}}
@@ -1208,9 +1251,18 @@
         </div>
         <div class="ad-row2">
           <div class="ad-f"><label>Sede</label><input type="text" name="venue" id="ed-venue" placeholder="Q2 Stadium"></div>
-          <div class="ad-f"><label>Banner (URL)</label><input type="text" name="banner" id="ed-banner" placeholder="/assets/images/gallery/..."></div>
+          <div class="ad-f"><label>Banner <span class="ed-shared">compartido</span></label>
+            <div class="ed-img">
+              <input type="text" name="banner" id="ed-banner" placeholder="/assets/images/... o sube una">
+              <button type="button" onclick="edUploadInto('ed-banner', this)">Subir</button>
+              <img id="ed-banner-thumb" alt="" hidden>
+            </div>
+          </div>
         </div>
-        <div class="ad-f" style="max-width:50%;"><label>Asistentes (valor)</label><input type="text" name="att_value" id="ed-att_value" placeholder="13,000"></div>
+        <div class="ad-f" style="max-width:50%;"><label>Asistentes (valor) <span class="ed-shared">compartido</span></label><input type="text" name="att_value" id="ed-att_value" placeholder="13,000"></div>
+
+        <p class="ed-hint-block">Lo de arriba es <strong>igual en los dos idiomas</strong>. Lo de abajo se escribe
+          por idioma: si dejas el inglés vacío, la página en inglés usa el texto en español.</p>
 
         <div class="ad-langtabs">
           <button type="button" class="ad-langtab is-active" data-lang="es">Español</button>
@@ -1220,22 +1272,34 @@
           <div class="ad-f"><label>Título (ES)</label><input type="text" name="title_es" id="ed-title_es" placeholder="SOCCER iD CUP 2027"></div>
           <div class="ad-f"><label>Mensaje / descripción (ES)</label><textarea name="description_es" id="ed-description_es"></textarea></div>
           <div class="ad-f"><label>Etiqueta de asistentes (ES)</label><input type="text" name="att_label_es" id="ed-att_label_es" placeholder="ASISTENTES"></div>
-          <div class="ad-f"><label>Estadísticas (ES) — una por línea: <em>valor | etiqueta | subtítulo</em></label><textarea name="stats_es" id="ed-stats_es" rows="3" placeholder="13K | ASISTENTES | Q2 Stadium"></textarea></div>
-          <div class="ad-f"><label>Notas en medios (ES) — <em>título | fuente | url | imagen</em></label><textarea name="media_es" id="ed-media_es" rows="3"></textarea></div>
+          <div class="ed-group"><label class="ed-group__t">Estadísticas (ES)</label><div class="ed-rows" data-rows="stats_es" data-kind="stats"></div></div>
+          <div class="ed-group"><label class="ed-group__t">Notas en medios (ES)</label><div class="ed-rows" data-rows="media_es" data-kind="media"></div></div>
         </div>
         <div class="ad-langsec" data-langsec="en">
           <div class="ad-f"><label>Title (EN)</label><input type="text" name="title_en" id="ed-title_en" placeholder="SOCCER iD CUP 2027"></div>
           <div class="ad-f"><label>Message / description (EN)</label><textarea name="description_en" id="ed-description_en"></textarea></div>
           <div class="ad-f"><label>Attendance label (EN)</label><input type="text" name="att_label_en" id="ed-att_label_en" placeholder="ATTENDEES"></div>
-          <div class="ad-f"><label>Stats (EN) — one per line: <em>value | label | sub</em></label><textarea name="stats_en" id="ed-stats_en" rows="3" placeholder="13K | ATTENDEES | Q2 Stadium"></textarea></div>
-          <div class="ad-f"><label>Media coverage (EN) — <em>title | source | url | image</em></label><textarea name="media_en" id="ed-media_en" rows="3"></textarea></div>
+          <div class="ed-group"><label class="ed-group__t">Stats (EN)</label><div class="ed-rows" data-rows="stats_en" data-kind="stats"></div></div>
+          <div class="ed-group"><label class="ed-group__t">Media coverage (EN)</label><div class="ed-rows" data-rows="media_en" data-kind="media"></div></div>
         </div>
 
-        <div class="ad-f"><label>Imágenes (compartidas) — una por línea: <em>url | texto alternativo</em></label><textarea name="images" id="ed-images" rows="3" placeholder="/assets/images/gallery/cup2025/6.jpg | Acción del partido"></textarea></div>
-        <div class="ad-f"><label>Patrocinadores (compartidos) — <em>url logo | nombre</em></label><textarea name="sponsors" id="ed-sponsors" rows="2"></textarea></div>
-        <div class="ad-f"><label>Videos (compartidos) — <em>idYouTube | título</em></label><textarea name="videos" id="ed-videos" rows="2"></textarea></div>
+        <div class="ed-group"><label class="ed-group__t">Imágenes <span class="ed-shared">compartido</span></label><div class="ed-rows" data-rows="images" data-kind="images"></div></div>
+        <div class="ed-group"><label class="ed-group__t">Patrocinadores <span class="ed-shared">compartido</span></label><div class="ed-rows" data-rows="sponsors" data-kind="sponsors"></div></div>
+        <div class="ed-group"><label class="ed-group__t">Videos <span class="ed-shared">compartido</span></label><div class="ed-rows" data-rows="videos" data-kind="videos"></div></div>
 
-        <button type="submit" class="ad-btn" style="margin-top:8px;">Guardar edición</button>
+        <input type="hidden" name="stats_es_json" id="ed-json-stats_es">
+        <input type="hidden" name="stats_en_json" id="ed-json-stats_en">
+        <input type="hidden" name="media_es_json" id="ed-json-media_es">
+        <input type="hidden" name="media_en_json" id="ed-json-media_en">
+        <input type="hidden" name="images_json" id="ed-json-images">
+        <input type="hidden" name="sponsors_json" id="ed-json-sponsors">
+        <input type="hidden" name="videos_json" id="ed-json-videos">
+
+        <div class="ed-actions">
+          <button type="button" class="ad-btn ad-btn--ghost" onclick="edPreview()">Vista previa</button>
+          <button type="submit" class="ad-btn">Guardar edición</button>
+        </div>
+        <div id="ed-preview" class="ed-preview" hidden></div>
       </form>
     </div>
   </div>
@@ -1520,6 +1584,205 @@
     document.querySelectorAll('.ad-langtab').forEach(function(b){ b.classList.toggle('is-active', b.dataset.lang === l); });
     document.querySelectorAll('.ad-langsec').forEach(function(s){ s.classList.toggle('is-active', s.dataset.langsec === l); });
   }
+  // ── Editor de filas repetibles de las ediciones ──
+  // Sustituye a los textareas con formato "valor | etiqueta | sub", que obligaban
+  // a recordar el orden de las columnas y se rompían con un pipe de más.
+  var ED_KINDS = {
+    stats: { uno: 'estadística', fields: [
+      { k: 'value', l: 'Valor', ph: '13K' },
+      { k: 'label', l: 'Etiqueta', ph: 'ASISTENTES' },
+      { k: 'sub', l: 'Subtítulo', ph: 'Q2 Stadium' } ] },
+    media: { uno: 'nota', fields: [
+      { k: 'title', l: 'Título', ph: 'La CUP llenó el estadio' },
+      { k: 'source', l: 'Fuente', ph: 'ESPN' },
+      { k: 'url', l: 'Enlace', ph: 'https://...' },
+      { k: 'image', l: 'Imagen', img: true } ] },
+    images: { uno: 'imagen', fields: [
+      { k: 'src', l: 'Imagen', img: true },
+      { k: 'alt', l: 'Texto alternativo', ph: 'Acción del partido' } ] },
+    sponsors: { uno: 'patrocinador', fields: [
+      { k: 'src', l: 'Logo', img: true },
+      { k: 'alt', l: 'Nombre', ph: 'Adidas' } ] },
+    videos: { uno: 'video', fields: [
+      { k: 'id', l: 'ID de YouTube', ph: 'dQw4w9WgXcQ' },
+      { k: 'title', l: 'Título', ph: 'Resumen del partido' } ] }
+  };
+  var edState = {};
+
+  function edCaja(name){ return document.querySelector('.ed-rows[data-rows="' + name + '"]'); }
+
+  function edRender(name){
+    var caja = edCaja(name);
+    if (!caja) return;
+    var kind = ED_KINDS[caja.dataset.kind];
+    var filas = edState[name] || [];
+    var html = '';
+    if (!filas.length){
+      html += '<div class="ed-empty-rows">Sin ' + kind.uno + 's todavía.</div>';
+    }
+    filas.forEach(function(fila, i){
+      html += '<div class="ed-row" data-i="' + i + '">'
+        + '<div class="ed-row__head">'
+        + '<span class="ed-row__n">' + kind.uno.toUpperCase() + ' ' + (i + 1) + '</span>'
+        + '<span class="ed-row__btns">'
+        + '<button type="button" title="Subir" ' + (i === 0 ? 'disabled' : '') + ' onclick="edMove(\'' + name + '\',' + i + ',-1)">&uarr;</button>'
+        + '<button type="button" title="Bajar" ' + (i === filas.length - 1 ? 'disabled' : '') + ' onclick="edMove(\'' + name + '\',' + i + ',1)">&darr;</button>'
+        + '<button type="button" class="danger" title="Eliminar" onclick="edDel(\'' + name + '\',' + i + ')">&times;</button>'
+        + '</span></div>';
+      kind.fields.forEach(function(f){
+        var val = fila[f.k] == null ? '' : String(fila[f.k]);
+        html += '<div class="ed-fld"><label>' + f.l + '</label>';
+        if (f.img){
+          html += '<div class="ed-img">'
+            + '<input type="text" data-k="' + f.k + '" value="' + esc(val) + '" placeholder="URL o sube un archivo">'
+            + '<button type="button" onclick="edUploadRow(\'' + name + '\',' + i + ',\'' + f.k + '\',this)">Subir</button>'
+            + (val ? '<img src="' + esc(val) + '" alt="">' : '')
+            + '</div>';
+        } else {
+          html += '<input type="text" data-k="' + f.k + '" value="' + esc(val) + '" placeholder="' + esc(f.ph || '') + '">';
+        }
+        html += '</div>';
+      });
+      html += '</div>';
+    });
+    html += '<button type="button" class="ed-add" onclick="edAdd(\'' + name + '\')">+ Agregar ' + kind.uno + '</button>';
+    caja.innerHTML = html;
+  }
+
+  function edAdd(name){
+    var kind = ED_KINDS[edCaja(name).dataset.kind];
+    var fila = {};
+    kind.fields.forEach(function(f){ fila[f.k] = ''; });
+    (edState[name] = edState[name] || []).push(fila);
+    edRender(name);
+  }
+  function edDel(name, i){
+    edState[name].splice(i, 1);
+    edRender(name);
+  }
+  function edMove(name, i, d){
+    var arr = edState[name], j = i + d;
+    if (j < 0 || j >= arr.length) return;
+    var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    edRender(name);
+  }
+
+  // Se escribe directo en el estado, sin redibujar: si redibujáramos en cada
+  // tecla, el cursor saltaría fuera del campo.
+  document.addEventListener('input', function(e){
+    var input = e.target.closest ? e.target.closest('.ed-rows input[data-k]') : null;
+    if (!input) return;
+    var caja = input.closest('.ed-rows'), fila = input.closest('.ed-row');
+    if (!caja || !fila) return;
+    var name = caja.dataset.rows, i = parseInt(fila.dataset.i, 10);
+    if (edState[name] && edState[name][i]) edState[name][i][input.dataset.k] = input.value;
+  });
+
+  // Subida de imágenes al mismo endpoint que ya existía (S3 si está configurado)
+  function edPickFile(cb){
+    var inp = document.createElement('input');
+    inp.type = 'file';
+    inp.accept = 'image/*';
+    inp.addEventListener('change', function(){
+      if (inp.files && inp.files[0]) cb(inp.files[0]);
+    });
+    inp.click();
+  }
+  function edSubir(file, btn, cb){
+    var texto = btn.textContent;
+    btn.textContent = 'Subiendo...';
+    btn.disabled = true;
+    var fd = new FormData();
+    fd.append('image', file);
+    fetch('/panel/admin/upload', { method: 'POST', body: fd, credentials: 'same-origin' })
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        btn.textContent = texto; btn.disabled = false;
+        if (j && j.url) cb(j.url);
+        else alert('No se pudo subir: ' + ((j && j.error) || 'error desconocido'));
+      })
+      .catch(function(err){
+        btn.textContent = texto; btn.disabled = false;
+        alert('No se pudo subir: ' + err.message);
+      });
+  }
+  function edUploadRow(name, i, key, btn){
+    edPickFile(function(file){
+      edSubir(file, btn, function(url){
+        edState[name][i][key] = url;
+        edRender(name);
+      });
+    });
+  }
+  function edUploadInto(id, btn){
+    edPickFile(function(file){
+      edSubir(file, btn, function(url){
+        document.getElementById(id).value = url;
+        var th = document.getElementById(id + '-thumb');
+        if (th){ th.src = url; th.hidden = false; }
+      });
+    });
+  }
+
+  function edSerialize(){
+    Object.keys(ED_JSON_FIELDS).forEach(function(name){
+      var el = document.getElementById('ed-json-' + name);
+      if (el) el.value = JSON.stringify(edState[name] || []);
+    });
+  }
+  var ED_JSON_FIELDS = { stats_es: 1, stats_en: 1, media_es: 1, media_en: 1, images: 1, sponsors: 1, videos: 1 };
+
+  // Vista previa: lo que se va a guardar, con los datos que hay en el formulario
+  // ahora mismo (no lo que está en la base).
+  function edPreview(){
+    var box = document.getElementById('ed-preview');
+    var v = function(id){ var el = document.getElementById(id); return el ? el.value.trim() : ''; };
+    var banner = v('ed-banner');
+    var titulo = v('ed-title_es') || '(sin título)';
+    var meta = [v('ed-year'), v('ed-match'), v('ed-date'), v('ed-city'), v('ed-venue')].filter(Boolean).join(' · ');
+    var stats = (edState.stats_es || []).filter(function(x){ return x.value || x.label; });
+    var imgs = (edState.images || []).filter(function(x){ return x.src; });
+    var spons = (edState.sponsors || []).filter(function(x){ return x.src || x.alt; });
+    var notas = (edState.media_es || []).filter(function(x){ return x.title || x.url; });
+    var vids = (edState.videos || []).filter(function(x){ return x.id; });
+
+    var avisos = [];
+    if (!/^\d{4}$/.test(v('ed-year'))) avisos.push('el año debe tener 4 dígitos');
+    if (!v('ed-title_es')) avisos.push('falta el título en español');
+    notas.forEach(function(n){ if (n.url && !/^https?:\/\//i.test(n.url)) avisos.push('la nota "' + (n.title || n.source) + '" tiene un enlace que no empieza con http'); });
+    vids.forEach(function(x){ if (!/^[\w-]{6,20}$/.test(x.id)) avisos.push('"' + x.id + '" no parece un ID de YouTube'); });
+
+    var html = '';
+    if (avisos.length) html += '<p class="ed-preview__warn">Revisa: ' + esc(avisos.join(' · ')) + '</p>';
+    html += '<div class="ed-preview__banner"' + (banner ? ' style="background-image:url(\'' + esc(banner) + '\')"' : '') + '></div>';
+    html += '<div class="ed-preview__b">';
+    html += '<h4>' + esc(titulo) + '</h4>';
+    if (meta) html += '<p class="ed-preview__meta">' + esc(meta) + '</p>';
+    if (v('ed-description_es')) html += '<p class="ed-preview__desc">' + esc(v('ed-description_es')) + '</p>';
+    if (stats.length){
+      html += '<div class="ed-preview__stats">';
+      stats.forEach(function(x){
+        html += '<div class="ed-preview__stat"><b>' + esc(x.value) + '</b><span>' + esc(x.label) + '</span></div>';
+      });
+      html += '</div>';
+    }
+    if (imgs.length){
+      html += '<div class="ed-preview__thumbs">';
+      imgs.slice(0, 12).forEach(function(x){ html += '<img src="' + esc(x.src) + '" alt="' + esc(x.alt || '') + '">'; });
+      html += '</div>';
+    }
+    var resumen = [];
+    if (notas.length) resumen.push(notas.length + ' nota(s) en medios');
+    if (spons.length) resumen.push(spons.length + ' patrocinador(es)');
+    if (vids.length) resumen.push(vids.length + ' video(s)');
+    if (resumen.length) html += '<p class="ed-preview__list" style="margin-top:10px;">' + esc(resumen.join(' · ')) + '</p>';
+    html += '</div>';
+
+    box.innerHTML = html;
+    box.hidden = false;
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
   function openEdition(id){
     var data = id ? EDITIONS_FORMS.filter(function(e){ return String(e.id) === String(id); })[0] : null;
     document.getElementById('ed-modal-title').textContent = data ? ('Editar edición ' + data.year) : 'Nueva edición';
@@ -1529,9 +1792,25 @@
       if (!el) return;
       el.value = data ? (data[f] == null ? '' : data[f]) : (f === 'status' ? 'past' : '');
     });
+    var thumb = document.getElementById('ed-banner-thumb');
+    if (thumb){
+      var b = document.getElementById('ed-banner').value;
+      thumb.hidden = !b;
+      if (b) thumb.src = b;
+    }
+    var filas = (data && data.rows) || {};
+    Object.keys(ED_JSON_FIELDS).forEach(function(name){
+      edState[name] = (filas[name] || []).map(function(o){ return Object.assign({}, o); });
+      edRender(name);
+    });
+    var prev = document.getElementById('ed-preview');
+    if (prev){ prev.hidden = true; prev.innerHTML = ''; }
     setEditionLang('es');
     openModal('modal-edition');
   }
+
+  var formEdicion = document.getElementById('form-edition');
+  if (formEdicion) formEdicion.addEventListener('submit', edSerialize);
   document.querySelectorAll('.ad-langtab').forEach(function(b){ b.addEventListener('click', function(){ setEditionLang(b.dataset.lang); }); });
 
   function openLeadEmail(btn){

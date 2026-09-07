@@ -87,6 +87,25 @@ function edParse(text, keys) {
 function edJoin(arr, keys) {
   return (arr || []).map(o => keys.map(k => o[k] || '').join(' | ')).join('\n');
 }
+
+// El formulario nuevo manda cada colección como JSON en un input oculto (filas
+// repetibles). Se sigue aceptando el formato viejo de tuberías por si queda un
+// formulario en caché o alguien pega el texto a mano.
+function edFromJson(raw, keys) {
+  let arr;
+  try { arr = JSON.parse(raw); } catch (_) { return null; }
+  if (!Array.isArray(arr)) return null;
+  return arr.map(item => {
+    const o = {};
+    keys.forEach(k => { o[k] = String((item && item[k]) == null ? '' : item[k]).trim(); });
+    return o;
+  }).filter(o => keys.some(k => o[k]));   // fuera las filas que quedaron vacías
+}
+function edCollection(body, name, keys) {
+  const desdeJson = body[name + '_json'] !== undefined ? edFromJson(body[name + '_json'], keys) : null;
+  return desdeJson === null ? edParse(body[name], keys) : desdeJson;
+}
+
 function buildEditionData(body) {
   const shared = {
     year: (body.year || '').trim(),
@@ -95,25 +114,34 @@ function buildEditionData(body) {
     city: (body.city || '').trim(),
     venue: (body.venue || '').trim(),
     banner: (body.banner || '').trim(),
-    sponsors: edParse(body.sponsors, ED_KEYS.sponsors),
-    videos: edParse(body.videos, ED_KEYS.videos),
-    images: edParse(body.images, ED_KEYS.images)
+    sponsors: edCollection(body, 'sponsors', ED_KEYS.sponsors),
+    videos: edCollection(body, 'videos', ED_KEYS.videos),
+    images: edCollection(body, 'images', ED_KEYS.images)
   };
   const es = Object.assign({}, shared, {
     title: (body.title_es || '').trim(),
     description: (body.description_es || '').trim(),
     attendance: { value: (body.att_value || '').trim(), label: (body.att_label_es || '').trim() },
-    stats: edParse(body.stats_es, ED_KEYS.stats),
-    mediaLinks: edParse(body.media_es, ED_KEYS.media)
+    stats: edCollection(body, 'stats_es', ED_KEYS.stats),
+    mediaLinks: edCollection(body, 'media_es', ED_KEYS.media)
   });
   const en = Object.assign({}, shared, {
     title: (body.title_en || body.title_es || '').trim(),
     description: (body.description_en || '').trim(),
     attendance: { value: (body.att_value || '').trim(), label: (body.att_label_en || '').trim() },
-    stats: edParse(body.stats_en, ED_KEYS.stats),
-    mediaLinks: edParse(body.media_en, ED_KEYS.media)
+    stats: edCollection(body, 'stats_en', ED_KEYS.stats),
+    mediaLinks: edCollection(body, 'media_en', ED_KEYS.media)
   });
   return { data_es: JSON.stringify(es), data_en: JSON.stringify(en) };
+}
+
+// Año de la edición: 4 dígitos y dentro de un rango con sentido. Un año mal
+// escrito ordena mal el timeline público y no se nota hasta que alguien lo ve.
+function edValidYear(v) {
+  const y = String(v == null ? '' : v).trim();
+  if (!/^\d{4}$/.test(y)) return null;
+  const n = parseInt(y, 10);
+  return (n >= 2000 && n <= 2100) ? y : null;
 }
 
 // Categorías (tiers) desde la base de datos
@@ -891,7 +919,14 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
           media_es: edJoin(es.mediaLinks, ED_KEYS.media), media_en: edJoin(en.mediaLinks, ED_KEYS.media),
           sponsors: edJoin(es.sponsors, ED_KEYS.sponsors),
           videos: edJoin(es.videos, ED_KEYS.videos),
-          images: edJoin(es.images, ED_KEYS.images)
+          images: edJoin(es.images, ED_KEYS.images),
+          // Mismos datos como arreglos: es lo que consumen las filas repetibles
+          // del formulario. El texto de arriba se queda por compatibilidad.
+          rows: {
+            stats_es: es.stats || [], stats_en: en.stats || [],
+            media_es: es.mediaLinks || [], media_en: en.mediaLinks || [],
+            sponsors: es.sponsors || [], videos: es.videos || [], images: es.images || []
+          }
         }
       };
     });
@@ -1543,8 +1578,8 @@ router.post('/admin/news/:id/notify', auth.requireAdmin, async (req, res, next) 
 // ════════════════════════════════════════════════
 router.post('/admin/edition', auth.requireAdmin, async (req, res, next) => {
   try {
-    const year = (req.body.year || '').trim();
-    if (!year) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El año es obligatorio') + '#ediciones');
+    const year = edValidYear(req.body.year);
+    if (!year) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El año debe tener 4 dígitos, entre 2000 y 2100') + '#ediciones');
     const existing = await knex('editions').where({ year }).first();
     if (existing) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Ya existe una edición con ese año') + '#ediciones');
     const status = ['past', 'upcoming', 'pause'].includes(req.body.status) ? req.body.status : 'past';
@@ -1559,7 +1594,12 @@ router.post('/admin/edition/:id/update', auth.requireAdmin, async (req, res, nex
   try {
     const row = await knex('editions').where({ id: req.params.id }).first();
     if (!row) return res.redirect('/panel/admin?type=error&msg=Edici%C3%B3n+no+encontrada#ediciones');
-    const year = (req.body.year || row.year).trim();
+    const year = edValidYear(req.body.year) || row.year;
+    if (req.body.year && !edValidYear(req.body.year)) {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El año debe tener 4 dígitos, entre 2000 y 2100') + '#ediciones');
+    }
+    const chocan = await knex('editions').where({ year }).whereNot({ id: row.id }).first();
+    if (chocan) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Ya existe otra edición con ese año') + '#ediciones');
     const status = ['past', 'upcoming', 'pause'].includes(req.body.status) ? req.body.status : 'past';
     const sort = parseInt(req.body.sort || year, 10) || 0;
     const { data_es, data_en } = buildEditionData(req.body);
