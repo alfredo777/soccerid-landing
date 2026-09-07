@@ -183,6 +183,8 @@
   .ad-langsec.is-active { display:block; }
   .ad-f label em { font-style:normal; color:var(--pn-muted); font-weight:600; }
   .ad-select-sm { border:1px solid var(--pn-border); border-radius:9px; padding:7px 8px; font-size:12px; font-weight:700; font-family:inherit; color:var(--pn-ink-2); background:#fff; cursor:pointer; }
+  .ad-actions__link { display:inline-flex; align-items:center; padding:7px 12px; border-radius:9px; background:var(--pn-purple); color:#fff; font-size:12px; font-weight:800; }
+  .ad-actions__link:hover { background:#5A2FC7; }
 
   /* Editor de filas repetibles (ediciones) */
   .ed-shared { display:inline-block; margin-left:7px; padding:1px 8px; border-radius:999px; background:#F1F5F9; color:#475569; font-size:10px; font-weight:800; letter-spacing:.3px; text-transform:uppercase; vertical-align:middle; }
@@ -676,6 +678,7 @@
         <div><b>{{this.packages}}</b><span>Paquetes</span></div>
       </div>
       <div class="ad-actions" style="margin-top:14px;">
+        <a class="ad-actions__link" href="/panel/admin/evento/{{this.id}}">Gestionar</a>
         <button type="button" class="primary" onclick="openPortfolio('{{this.id}}')">Editar</button>
         <button type="button" onclick="openPackages('{{this.id}}')">Paquetes ({{this.packages}})</button>
         <form method="POST" action="/panel/admin/portfolio/{{this.id}}/delete" data-confirm="¿Eliminar la edición {{this.title}}?"><button type="submit" class="danger">Eliminar</button></form>

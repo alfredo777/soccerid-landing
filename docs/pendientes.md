@@ -430,6 +430,50 @@ Admin (ediciones):
 - [ ] Selector de **edición activa** en el panel del inversionista + secciones que
   respetan la edición seleccionada.
 
-Resto del admin multi-evento (Fases 1, 2, 4, 6): sidebar "Sistema de Inversionistas",
-secciones (Resumen, Inversiones, Cronología, Finanzas, Documentos, Evidencias, En
-medios, Comunicaciones), roles por evento. (Fases 0, 3, 5 ya hechas.)
+### Resto del admin multievento (fases 1, 2, 4, 6) — HECHO lo de contenido
+
+Hay una **página por edición** en `/panel/admin/evento/:id` (botón "Gestionar" en cada
+tarjeta de la pestaña Eventos), igual que `/panel/admin/user/:id` es la página por cuenta.
+Las tablas `event_updates`, `event_documents`, `event_media` y `event_communications` ya
+existían desde la cadena multievento, pero **no tenían dónde editarse**: solo se leían del
+lado del inversionista. Eso es lo que se construyó.
+
+Secciones de esa página:
+- **Resumen**: capital registrado, presupuesto y % cubierto, documentos, evidencias,
+  cobertura externa, avances y paquetes, más la **repartición fijo / riesgo** del capital.
+  Todo **derivado**: se cuenta de lo que hay cargado, no se captura. Un número escrito a
+  mano queda viejo en cuanto alguien agrega algo.
+- **Cronología**: avances con fecha, fase y descripción.
+- **Data room**: documentos por carpeta (Clubes, Estadio, Proveedores, Contratos de
+  inversión, Finanzas, General), con **estatus** (en revisión → aprobado → firmado,
+  cambiable desde la lista) y **visibilidad por modalidad**. Lo último importa: un
+  contrato de participación a riesgo no tiene por qué verlo quien va a retorno fijo.
+- **Evidencias**: misma tabla, carpeta `Evidencias`, con su propio formulario.
+- **En medios**: cobertura de terceros, separada de "Noticias" (que son las propias).
+- **Comunicaciones**: mensajes por edición y modalidad, con una casilla para **avisar en
+  el momento**. El aviso sale por el despachador de notificaciones (no hay un segundo
+  camino de envío) y **solo le llega a quien tiene una inversión en esa edición** y de esa
+  modalidad. Verificado: un comunicado marcado "riesgo" le llegó al inversionista de
+  riesgo y no al de fijo.
+- **Inversiones**: quién tiene capital en la edición (lectura; se administra desde la
+  cuenta de cada inversionista).
+
+Detalles de implementación:
+- Toda operación va **acotada por `event_id`**: borrar o cambiar el estatus de algo que
+  pertenece a otra edición no hace nada y lo dice, en vez de responder "eliminado" sin
+  haber eliminado.
+- Los enlaces pasan por el mismo validador que las noticias: solo `http://` y `https://`
+  (probado con un `javascript:`, rechazado).
+
+Pendiente de esta sección:
+- [ ] **Roles por evento** (`event_admins` ya existe como tabla): admin por edición además
+  del superadmin. Es un cambio al modelo de permisos y no conviene meterlo junto con todo
+  lo demás sin haber desplegado nada todavía.
+- [ ] **Sidebar "Sistema de Inversionistas"** en lugar de las tabs de iconos: es rehacer
+  la navegación del admin completo, no una sección.
+- [ ] **Directorio global de inversionistas** con el agregado de todos sus eventos (hoy
+  "Usuarios" es por cuenta, sin la suma multievento).
+- [ ] Finanzas más allá del resumen (retornos proyectados por edición, comparativo entre
+  ediciones).
+- [ ] Subir archivos directo al data room y a evidencias (hoy se pega el enlace; el
+  uploader ya existe y se usa en Ediciones).

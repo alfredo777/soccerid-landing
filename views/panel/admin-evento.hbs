@@ -1,0 +1,352 @@
+<style>
+  .ev-top { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+  .ev-back { display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--pn-ink-2); }
+  .ev-back:hover { color:var(--pn-purple); }
+  .ev-back svg { width:16px; height:16px; stroke:currentColor; fill:none; }
+
+  .ev-flash { padding:13px 18px; border-radius:13px; font-size:13px; font-weight:700; margin-bottom:20px; }
+  .ev-flash.ok { background:#EAF7F0; color:#1E8E5A; }
+  .ev-flash.error { background:#FDECEC; color:#C0392B; }
+
+  .ev-idbar { display:flex; align-items:center; gap:14px; padding:16px 20px; border-radius:16px; background:var(--pn-purple-soft); border:1px solid #E4DAFA; margin-bottom:22px; flex-wrap:wrap; }
+  .ev-idbar__code { font-size:12px; font-weight:900; letter-spacing:1px; padding:9px 13px; border-radius:11px; color:#fff; }
+  .ev-idbar__b strong { display:block; font-size:15px; font-weight:800; }
+  .ev-idbar__b small { font-size:12px; color:var(--pn-ink-2); font-weight:600; }
+  .ev-idbar__tag { margin-left:auto; font-size:11px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:var(--pn-ink-2); background:#fff; padding:6px 12px; border-radius:20px; }
+
+  .ev-nav { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+  .ev-nav a { padding:8px 15px; border-radius:999px; border:1px solid var(--pn-border); background:#fff; font-size:12.5px; font-weight:700; color:var(--pn-ink-2); }
+  .ev-nav a:hover { background:var(--pn-purple-soft); border-color:#DCCFF7; color:var(--pn-purple); }
+
+  .ev-kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(148px,1fr)); gap:12px; margin-bottom:22px; }
+  .ev-kpi { background:#fff; border:1px solid var(--pn-border); border-radius:14px; padding:15px 17px; box-shadow:var(--pn-shadow); }
+  .ev-kpi b { display:block; font-size:20px; font-weight:800; line-height:1.15; }
+  .ev-kpi span { font-size:11.5px; color:var(--pn-muted); font-weight:600; }
+  .ev-kpi small { display:block; font-size:11px; color:var(--pn-muted); font-weight:600; margin-top:3px; }
+
+  .ev-split { height:9px; border-radius:20px; overflow:hidden; display:flex; background:#F1F0F5; margin:10px 0 6px; }
+  .ev-split i { display:block; height:100%; }
+  .ev-legend { font-size:11.5px; color:var(--pn-muted); font-weight:600; }
+  .ev-legend i { display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:5px; vertical-align:middle; }
+
+  .ev-sec { padding:22px; margin-bottom:18px; scroll-margin-top:20px; }
+  .ev-sec h3 { font-size:15px; font-weight:800; margin-bottom:4px; }
+  .ev-sec .ev-sub { font-size:12px; color:var(--pn-muted); font-weight:600; margin-bottom:16px; line-height:1.5; }
+  .ev-f { margin-bottom:13px; }
+  .ev-f label { display:block; font-size:12px; font-weight:700; color:var(--pn-ink-2); margin-bottom:6px; }
+  .ev-f input, .ev-f select, .ev-f textarea {
+    width:100%; padding:11px 13px; border:1px solid var(--pn-border); border-radius:11px;
+    font-family:inherit; font-size:14px; color:var(--pn-ink); background:#fff; box-sizing:border-box;
+  }
+  .ev-f textarea { resize:vertical; min-height:80px; line-height:1.5; }
+  .ev-f input:focus, .ev-f select:focus, .ev-f textarea:focus { outline:none; border-color:var(--pn-purple); }
+  .ev-hint { font-size:11.5px; color:var(--pn-muted); margin-top:5px; line-height:1.45; }
+  .ev-row2 { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+  .ev-row3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:13px; }
+  @media (max-width:640px){ .ev-row2, .ev-row3 { grid-template-columns:1fr; } }
+  .ev-check { display:flex; align-items:center; gap:9px; font-size:13px; font-weight:700; color:var(--pn-ink); cursor:pointer; margin:4px 0 12px; }
+  .ev-check input { width:auto; }
+  .ev-btn { padding:12px 18px; border:none; border-radius:12px; background:var(--pn-purple); color:#fff; font-size:13.5px; font-weight:800; font-family:inherit; cursor:pointer; }
+  .ev-btn:hover { background:#5A2FC7; }
+
+  .ev-item { display:flex; gap:13px; align-items:flex-start; padding:14px 0; border-bottom:1px solid var(--pn-border); }
+  .ev-item:last-child { border-bottom:none; }
+  .ev-item__b { flex:1; min-width:0; }
+  .ev-item__b strong { display:block; font-size:13.5px; font-weight:800; margin-bottom:3px; }
+  .ev-item__b p { font-size:12.5px; color:var(--pn-ink-2); line-height:1.55; margin:4px 0 0; }
+  .ev-item__b small { font-size:11.5px; color:var(--pn-muted); font-weight:600; }
+  .ev-item__b a { color:var(--pn-purple); font-weight:700; }
+  .ev-item__act { display:flex; gap:6px; align-items:center; flex-shrink:0; }
+  .ev-item__act button, .ev-item__act select {
+    border:1px solid var(--pn-border); border-radius:9px; padding:7px 10px; font-size:12px;
+    font-weight:700; font-family:inherit; color:var(--pn-ink-2); background:#fff; cursor:pointer;
+  }
+  .ev-item__act button.danger:hover { background:#FEF2F2; color:#B42318; border-color:#FCA5A5; }
+  .ev-pill { display:inline-block; padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:800; letter-spacing:.3px; text-transform:uppercase; margin-right:5px; }
+  .ev-pill--rev { background:#FEF3C7; color:#92400E; }
+  .ev-pill--apr { background:#DBEAFE; color:#1E40AF; }
+  .ev-pill--fir { background:#DEF7EC; color:#03543F; }
+  .ev-pill--mod { background:var(--pn-purple-soft); color:var(--pn-purple); }
+  .ev-empty { padding:26px 0; text-align:center; color:var(--pn-muted); font-size:13px; }
+  .ev-formwrap { border-top:1px solid var(--pn-border); margin-top:16px; padding-top:18px; }
+</style>
+
+<div class="ev-top">
+  <a class="ev-back" href="/panel/admin#eventos">
+    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    Volver a Ediciones
+  </a>
+</div>
+
+{{#if flash}}
+<div class="ev-flash {{#eq flashType 'error'}}error{{else}}ok{{/eq}}">{{flash}}</div>
+{{/if}}
+
+<div class="ev-idbar">
+  <span class="ev-idbar__code" style="background:{{ev.accent}}">{{#if ev.code}}{{ev.code}}{{else}}{{ev.year}}{{/if}}</span>
+  <div class="ev-idbar__b">
+    <strong>{{ev.title}}{{#if ev.match}} · {{ev.match}}{{/if}}</strong>
+    <small>{{#if ev.venue}}{{ev.venue}} · {{/if}}{{ev.city}}{{#if ev.dateLabel}} · {{ev.dateLabel}}{{/if}}</small>
+  </div>
+  <span class="ev-idbar__tag">{{ev.phaseLabel}} · {{ev.progress}}%</span>
+  {{#if ev.isDemo}}<span class="ev-idbar__tag" style="color:#B77A1E;">Datos demo</span>{{/if}}
+</div>
+
+<nav class="ev-nav">
+  <a href="#resumen">Resumen</a>
+  <a href="#cronologia">Cronología</a>
+  <a href="#dataroom">Data room</a>
+  <a href="#evidencias">Evidencias</a>
+  <a href="#medios">En medios</a>
+  <a href="#comunicaciones">Comunicaciones</a>
+  <a href="#inversiones">Inversiones</a>
+</nav>
+
+<!-- RESUMEN -->
+<section class="pn-card ev-sec" id="resumen">
+  <h3>Resumen</h3>
+  <p class="ev-sub">Todo esto se <strong>cuenta solo</strong> a partir de lo que hay cargado. No se captura a mano, porque un número escrito a mano queda viejo en cuanto alguien agrega algo.</p>
+  <div class="ev-kpis">
+    <div class="ev-kpi"><b>{{kpis.capital}}</b><span>Capital registrado</span><small>{{kpis.investors}} inversión(es)</small></div>
+    <div class="ev-kpi"><b>{{kpis.budget}}</b><span>Presupuesto</span><small>{{kpis.coverturePct}}% cubierto</small></div>
+    <div class="ev-kpi"><b>{{kpis.docs}}</b><span>Documentos</span><small>{{kpis.evidences}} evidencia(s)</small></div>
+    <div class="ev-kpi"><b>{{kpis.media}}</b><span>Cobertura externa</span><small>notas de terceros</small></div>
+    <div class="ev-kpi"><b>{{kpis.updates}}</b><span>Avances</span><small>en la cronología</small></div>
+    <div class="ev-kpi"><b>{{kpis.packages}}</b><span>Paquetes</span><small>de inversión</small></div>
+  </div>
+  {{#if kpis.investors}}
+  <div>
+    <div class="ev-split">
+      <i style="width:{{kpis.fijoPct}}%; background:#6C3CE0;"></i>
+      <i style="width:{{kpis.riesgoPct}}%; background:#D97706;"></i>
+    </div>
+    <p class="ev-legend">
+      <i style="background:#6C3CE0;"></i>Retorno fijo {{kpis.fijo}} ({{kpis.fijoPct}}%)
+      &nbsp;&nbsp;<i style="background:#D97706;"></i>Participación a riesgo {{kpis.riesgo}} ({{kpis.riesgoPct}}%)
+    </p>
+  </div>
+  {{/if}}
+</section>
+
+<!-- CRONOLOGÍA -->
+<section class="pn-card ev-sec" id="cronologia">
+  <h3>Cronología ({{updates.length}})</h3>
+  <p class="ev-sub">Avances de esta edición, con su fase. Es lo que el inversionista ve como historia del proyecto.</p>
+  {{#each updates}}
+  <div class="ev-item">
+    <div class="ev-item__b">
+      <strong>{{this.title}}</strong>
+      <small><span class="ev-pill ev-pill--mod">{{this.phaseLabel}}</span>{{#if this.date}}{{this.date}}{{else}}sin fecha{{/if}}{{#if this.isDemo}} · demo{{/if}}</small>
+      {{#if this.description}}<p>{{this.description}}</p>{{/if}}
+    </div>
+    <div class="ev-item__act">
+      <form method="POST" action="/panel/admin/evento/{{../ev.id}}/avance/{{this.id}}/delete" data-confirm="¿Eliminar este avance?">
+        <button type="submit" class="danger">Eliminar</button>
+      </form>
+    </div>
+  </div>
+  {{else}}
+  <div class="ev-empty">Todavía no hay avances cargados.</div>
+  {{/each}}
+
+  <div class="ev-formwrap">
+    <form method="POST" action="/panel/admin/evento/{{ev.id}}/avance">
+      <div class="ev-f"><label>Título del avance</label><input type="text" name="title" required placeholder="Contrato de sede firmado"></div>
+      <div class="ev-row2">
+        <div class="ev-f"><label>Fecha</label><input type="date" name="update_date"></div>
+        <div class="ev-f"><label>Fase</label>
+          <select name="phase">{{#each phases}}<option value="{{this.key}}">{{this.label}}</option>{{/each}}</select>
+        </div>
+      </div>
+      <div class="ev-f"><label>Descripción</label><textarea name="description" placeholder="Qué pasó y qué significa para el proyecto."></textarea></div>
+      <button type="submit" class="ev-btn">Agregar avance</button>
+    </form>
+  </div>
+</section>
+
+<!-- DATA ROOM -->
+<section class="pn-card ev-sec" id="dataroom">
+  <h3>Data room ({{docs.length}})</h3>
+  <p class="ev-sub">Documentos por carpeta, con estatus y a quién se le muestran. La <strong>visibilidad por modalidad</strong> importa: un contrato de participación a riesgo no tiene por qué verlo quien va a retorno fijo.</p>
+  {{#each docs}}
+  <div class="ev-item">
+    <div class="ev-item__b">
+      <strong>{{this.name}}</strong>
+      <small>
+        <span class="ev-pill {{#eq this.status 'revision'}}ev-pill--rev{{/eq}}{{#eq this.status 'aprobado'}}ev-pill--apr{{/eq}}{{#eq this.status 'firmado'}}ev-pill--fir{{/eq}}">{{this.statusLabel}}</span>
+        {{this.folder}} · {{this.visibilityLabel}}{{#if this.isDemo}} · demo{{/if}}
+      </small>
+      {{#if this.url}}<small><a href="{{this.url}}" target="_blank" rel="noopener noreferrer">Abrir documento</a></small>{{/if}}
+    </div>
+    <div class="ev-item__act">
+      <form method="POST" action="/panel/admin/evento/{{../ev.id}}/documento/{{this.id}}/estado">
+        <select name="status" onchange="this.form.submit()">
+          {{#each ../docStates}}<option value="{{this.key}}"{{#eq this.key ../this.status}} selected{{/eq}}>{{this.label}}</option>{{/each}}
+        </select>
+      </form>
+      <form method="POST" action="/panel/admin/evento/{{../ev.id}}/documento/{{this.id}}/delete" data-confirm="¿Eliminar este documento?">
+        <button type="submit" class="danger">Eliminar</button>
+      </form>
+    </div>
+  </div>
+  {{else}}
+  <div class="ev-empty">El data room de esta edición está vacío.</div>
+  {{/each}}
+
+  <div class="ev-formwrap">
+    <form method="POST" action="/panel/admin/evento/{{ev.id}}/documento">
+      <div class="ev-f"><label>Nombre</label><input type="text" name="name" required placeholder="Contrato de sede"></div>
+      <div class="ev-f"><label>Enlace</label><input type="url" name="url" placeholder="https://drive.google.com/...">
+        <div class="ev-hint">Solo http:// o https://. Si va vacío, el documento queda listado sin enlace.</div>
+      </div>
+      <div class="ev-row3">
+        <div class="ev-f"><label>Carpeta</label>
+          <select name="folder">{{#each folders}}<option value="{{this}}">{{this}}</option>{{/each}}</select>
+        </div>
+        <div class="ev-f"><label>Estatus</label>
+          <select name="status">{{#each docStates}}<option value="{{this.key}}">{{this.label}}</option>{{/each}}</select>
+        </div>
+        <div class="ev-f"><label>Quién lo ve</label>
+          <select name="visibility">{{#each visibilities}}<option value="{{this.key}}">{{this.label}}</option>{{/each}}</select>
+        </div>
+      </div>
+      <button type="submit" class="ev-btn">Agregar documento</button>
+    </form>
+  </div>
+</section>
+
+<!-- EVIDENCIAS -->
+<section class="pn-card ev-sec" id="evidencias">
+  <h3>Evidencias ({{evidences.length}})</h3>
+  <p class="ev-sub">Material operativo de la edición: fotos, videos y comprobantes. Vive en la misma tabla que el data room, en la carpeta <strong>Evidencias</strong>.</p>
+  {{#each evidences}}
+  <div class="ev-item">
+    <div class="ev-item__b">
+      <strong>{{this.name}}</strong>
+      <small>{{this.visibilityLabel}}{{#if this.isDemo}} · demo{{/if}}</small>
+      {{#if this.url}}<small><a href="{{this.url}}" target="_blank" rel="noopener noreferrer">Abrir</a></small>{{/if}}
+    </div>
+    <div class="ev-item__act">
+      <form method="POST" action="/panel/admin/evento/{{../ev.id}}/documento/{{this.id}}/delete" data-confirm="¿Eliminar esta evidencia?">
+        <button type="submit" class="danger">Eliminar</button>
+      </form>
+    </div>
+  </div>
+  {{else}}
+  <div class="ev-empty">Todavía no hay evidencias cargadas.</div>
+  {{/each}}
+
+  <div class="ev-formwrap">
+    <form method="POST" action="/panel/admin/evento/{{ev.id}}/documento">
+      <input type="hidden" name="folder" value="Evidencias">
+      <input type="hidden" name="status" value="aprobado">
+      <div class="ev-f"><label>Nombre</label><input type="text" name="name" required placeholder="Fotos del recorrido de sede"></div>
+      <div class="ev-f"><label>Enlace</label><input type="url" name="url" placeholder="https://..."></div>
+      <div class="ev-f"><label>Quién la ve</label>
+        <select name="visibility">{{#each visibilities}}<option value="{{this.key}}">{{this.label}}</option>{{/each}}</select>
+      </div>
+      <button type="submit" class="ev-btn">Agregar evidencia</button>
+    </form>
+  </div>
+</section>
+
+<!-- EN MEDIOS -->
+<section class="pn-card ev-sec" id="medios">
+  <h3>En medios ({{media.length}})</h3>
+  <p class="ev-sub">Cobertura de <strong>terceros</strong> sobre esta edición. Es distinto de "Noticias", que son las publicaciones propias del panel.</p>
+  {{#each media}}
+  <div class="ev-item">
+    <div class="ev-item__b">
+      <strong>{{this.title}}</strong>
+      <small>{{#if this.source}}{{this.source}}{{else}}Sin fuente{{/if}}{{#if this.date}} · {{this.date}}{{/if}}{{#if this.isDemo}} · demo{{/if}}</small>
+      {{#if this.url}}<small><a href="{{this.url}}" target="_blank" rel="noopener noreferrer">Ver la nota</a></small>{{/if}}
+    </div>
+    <div class="ev-item__act">
+      <form method="POST" action="/panel/admin/evento/{{../ev.id}}/medio/{{this.id}}/delete" data-confirm="¿Eliminar esta nota?">
+        <button type="submit" class="danger">Eliminar</button>
+      </form>
+    </div>
+  </div>
+  {{else}}
+  <div class="ev-empty">Todavía no hay cobertura registrada.</div>
+  {{/each}}
+
+  <div class="ev-formwrap">
+    <form method="POST" action="/panel/admin/evento/{{ev.id}}/medio">
+      <div class="ev-f"><label>Título de la nota</label><input type="text" name="title" required placeholder="La CUP llenó el estadio"></div>
+      <div class="ev-row2">
+        <div class="ev-f"><label>Fuente</label><input type="text" name="source" placeholder="ESPN"></div>
+        <div class="ev-f"><label>Fecha</label><input type="date" name="media_date"></div>
+      </div>
+      <div class="ev-f"><label>Enlace</label><input type="url" name="url" placeholder="https://espn.com/..."></div>
+      <button type="submit" class="ev-btn">Agregar nota</button>
+    </form>
+  </div>
+</section>
+
+<!-- COMUNICACIONES -->
+<section class="pn-card ev-sec" id="comunicaciones">
+  <h3>Comunicaciones ({{comms.length}})</h3>
+  <p class="ev-sub">Mensajes oficiales de esta edición, segmentados por modalidad. Si marcas la casilla, además se les notifica: les llega al panel y por correo a quien lo tenga activado.</p>
+  {{#each comms}}
+  <div class="ev-item">
+    <div class="ev-item__b">
+      <strong>{{this.title}}</strong>
+      <small><span class="ev-pill ev-pill--mod">{{this.audienceLabel}}</span>{{this.status}}{{#if this.date}} · {{this.date}}{{/if}}</small>
+      {{#if this.body}}<p>{{this.body}}</p>{{/if}}
+    </div>
+    <div class="ev-item__act">
+      <form method="POST" action="/panel/admin/evento/{{../ev.id}}/comunicacion/{{this.id}}/delete" data-confirm="¿Eliminar esta comunicación?">
+        <button type="submit" class="danger">Eliminar</button>
+      </form>
+    </div>
+  </div>
+  {{else}}
+  <div class="ev-empty">Todavía no hay comunicaciones de esta edición.</div>
+  {{/each}}
+
+  <div class="ev-formwrap">
+    <form method="POST" action="/panel/admin/evento/{{ev.id}}/comunicacion">
+      <div class="ev-f"><label>Título</label><input type="text" name="title" required placeholder="Cierre de la ronda de inversión"></div>
+      <div class="ev-f"><label>Mensaje</label><textarea name="body" placeholder="Escribe el comunicado..."></textarea></div>
+      <div class="ev-row3">
+        <div class="ev-f"><label>Para quién</label>
+          <select name="audience">{{#each visibilities}}<option value="{{this.key}}">{{this.label}}</option>{{/each}}</select>
+        </div>
+        <div class="ev-f"><label>Estatus</label>
+          <select name="status"><option value="activo">Activo</option><option value="concluido">Concluido</option></select>
+        </div>
+        <div class="ev-f"><label>Fecha</label><input type="date" name="comm_date"></div>
+      </div>
+      <label class="ev-check"><input type="checkbox" name="notificar" value="1" checked> Avisarles ahora (panel + email)</label>
+      <div class="ev-hint" style="margin:-6px 0 12px;">Solo les llega a los inversionistas que tienen una inversión en <strong>esta</strong> edición, y de la modalidad elegida. Se respeta si alguien apagó el correo en su perfil.</div>
+      <button type="submit" class="ev-btn">Guardar comunicación</button>
+    </form>
+  </div>
+</section>
+
+<!-- INVERSIONES -->
+<section class="pn-card ev-sec" id="inversiones">
+  <h3>Inversiones ({{investments.length}})</h3>
+  <p class="ev-sub">Quién tiene capital en esta edición. Se administran desde la cuenta de cada inversionista.</p>
+  {{#each investments}}
+  <div class="ev-item">
+    <div class="ev-item__b">
+      <strong>{{this.name}}</strong>
+      <small><span class="ev-pill ev-pill--mod">{{this.modalityLabel}}</span>{{this.capital}}{{#if this.returnPct}} · {{this.returnPct}}%{{/if}} · {{this.state}}</small>
+      {{#if this.email}}<small>{{this.email}}</small>{{/if}}
+    </div>
+  </div>
+  {{else}}
+  <div class="ev-empty">Nadie tiene inversión registrada en esta edición.</div>
+  {{/each}}
+</section>
+
+<script>
+  // Confirmación antes de borrar, igual que en el resto del admin
+  document.querySelectorAll('form[data-confirm]').forEach(function(f){
+    f.addEventListener('submit', function(e){
+      if (!confirm(f.dataset.confirm)) e.preventDefault();
+    });
+  });
+</script>

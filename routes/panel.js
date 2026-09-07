@@ -1004,7 +1004,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     }));
 
     // Ediciones del portafolio (multievento)
-    const PHASE_LBL = { planeacion: 'Planeación', negociacion: 'Negociación', produccion: 'Producción', evento: 'Evento', cierre: 'Cierre' };
+    const PHASE_LBL = PHASE_LABELS;
     const peRows = await knex('portfolio_events').orderBy([{ column: 'sort' }, { column: 'year' }]);
     const pkCounts = await knex('event_packages').select('event_id').count({ n: '*' }).groupBy('event_id');
     const invAgg = await knex('investments').select('event_id').count({ n: '*' }).sum({ cap: 'capital' }).groupBy('event_id');
@@ -1619,6 +1619,7 @@ router.post('/admin/edition/:id/delete', auth.requireAdmin, async (req, res, nex
 // EVENTOS DEL PORTAFOLIO (multievento = ediciones por año)
 // ════════════════════════════════════════════════
 const PORTFOLIO_PHASES = ['planeacion', 'negociacion', 'produccion', 'evento', 'cierre'];
+const PHASE_LABELS = { planeacion: 'Planeación', negociacion: 'Negociación', produccion: 'Producción', evento: 'Evento', cierre: 'Cierre' };
 function portfolioBody(b) {
   const num = (v) => parseInt(String(v || '').replace(/[^0-9]/g, ''), 10) || 0;
   return {
@@ -1718,6 +1719,245 @@ function packageBody(b) {
     is_active: b.is_active ? true : false
   };
 }
+// ════════════════════════════════════════════════
+// GESTIÓN DE UNA EDICIÓN (cronología, data room, medios, comunicaciones)
+// Una página por edición, igual que /admin/user/:id es una página por cuenta.
+// ════════════════════════════════════════════════
+const DR_FOLDERS = ['Clubes', 'Estadio', 'Proveedores', 'Contratos de inversión', 'Finanzas', 'General', 'Evidencias'];
+const DOC_STATES = { revision: 'En revisión', aprobado: 'Aprobado', firmado: 'Firmado' };
+const VISIBILITY = { all: 'Todos', fijo: 'Solo retorno fijo', riesgo: 'Solo participación a riesgo' };
+
+function evDate(v) {
+  const d = String(v == null ? '' : v).trim();
+  return /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : null;
+}
+
+router.get('/admin/evento/:id', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const ev = await knex('portfolio_events').where({ id: req.params.id }).first();
+    if (!ev) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Edición no encontrada') + '#eventos');
+
+    const [updates, docs, media, comms, invs, packages] = await Promise.all([
+      knex('event_updates').where({ event_id: ev.id }).orderBy([{ column: 'update_date', order: 'desc' }, { column: 'id', order: 'desc' }]),
+      knex('event_documents').where({ event_id: ev.id }).orderBy([{ column: 'folder' }, { column: 'sort' }, { column: 'id' }]),
+      knex('event_media').where({ event_id: ev.id }).orderBy([{ column: 'media_date', order: 'desc' }, { column: 'id', order: 'desc' }]),
+      knex('event_communications').where({ event_id: ev.id }).orderBy('id', 'desc'),
+      knex('investments').where({ event_id: ev.id }),
+      knex('event_packages').where({ event_id: ev.id })
+    ]);
+
+    const users = await knex('users').whereNot({ role: 'admin' });
+    const userById = {};
+    users.forEach(u => { userById[u.id] = u; });
+
+    // El data room y las evidencias son la misma tabla; los separa la carpeta.
+    const esEvidencia = (d) => d.folder === 'Evidencias';
+    const mapDoc = (d) => ({
+      id: d.id, name: d.name, url: d.url || '', folder: d.folder || 'General',
+      status: d.status || 'revision', statusLabel: DOC_STATES[d.status] || d.status,
+      visibility: d.visibility || 'all', visibilityLabel: VISIBILITY[d.visibility] || d.visibility,
+      isDemo: !!d.is_demo
+    });
+
+    // KPIs derivados: no se capturan a mano, se cuentan. Si se capturaran,
+    // quedarían desactualizados en cuanto alguien agregue algo.
+    const capital = invs.reduce((n, i) => n + Number(i.capital || 0), 0);
+    const budget = Number(ev.budget || 0);
+    const porModalidad = { fijo: 0, riesgo: 0 };
+    invs.forEach(i => { porModalidad[i.modality === 'riesgo' ? 'riesgo' : 'fijo'] += Number(i.capital || 0); });
+
+    res.render('panel/admin-evento', {
+      layout: 'panel',
+      title: `${ev.title} · Administración · SOCCER iD`,
+      pageHeading: ev.title,
+      pageSub: 'Cronología, data room, evidencias, medios y comunicaciones de esta edición',
+      active: 'admin',
+      panel: buildAdminPanel(req.panelUser),
+      flash: req.query.msg,
+      flashType: req.query.type,
+      ev: {
+        id: ev.id, title: ev.title, year: ev.year || '', code: ev.code || '',
+        match: ev.match || '', venue: ev.venue || '', city: ev.city || '',
+        dateLabel: ev.event_date || '', phase: ev.phase || 'planeacion',
+        phaseLabel: (PHASE_LABELS[ev.phase] || ev.phase), progress: ev.progress_pct || 0,
+        accent: ev.accent || '#6C3CE0', isDemo: !!ev.is_demo
+      },
+      kpis: {
+        capital: formatUSD(capital),
+        budget: formatUSD(budget),
+        coverturePct: budget > 0 ? Math.min(100, Math.round(capital / budget * 100)) : 0,
+        investors: invs.length,
+        packages: packages.length,
+        docs: docs.filter(d => !esEvidencia(d)).length,
+        evidences: docs.filter(esEvidencia).length,
+        media: media.length,
+        updates: updates.length,
+        fijo: formatUSD(porModalidad.fijo),
+        riesgo: formatUSD(porModalidad.riesgo),
+        fijoPct: capital > 0 ? Math.round(porModalidad.fijo / capital * 100) : 0,
+        riesgoPct: capital > 0 ? Math.round(porModalidad.riesgo / capital * 100) : 0
+      },
+      updates: updates.map(u => ({
+        id: u.id, date: u.update_date || '', title: u.title, description: u.description || '',
+        phase: u.phase || '', phaseLabel: PHASE_LABELS[u.phase] || u.phase || '—', isDemo: !!u.is_demo
+      })),
+      docs: docs.filter(d => !esEvidencia(d)).map(mapDoc),
+      evidences: docs.filter(esEvidencia).map(mapDoc),
+      media: media.map(m => ({
+        id: m.id, title: m.title, source: m.source || '', url: m.url || '',
+        date: m.media_date || '', isDemo: !!m.is_demo
+      })),
+      comms: comms.map(c => ({
+        id: c.id, title: c.title, body: c.body || '', audience: c.audience || 'all',
+        audienceLabel: VISIBILITY[c.audience] || c.audience,
+        status: c.status || 'activo', date: c.comm_date || ''
+      })),
+      investments: invs.map(i => ({
+        id: i.id, name: (userById[i.user_id] || {}).name || 'Cuenta eliminada',
+        email: (userById[i.user_id] || {}).email || '',
+        modality: i.modality, modalityLabel: i.modality === 'riesgo' ? 'Participación a riesgo' : 'Retorno fijo',
+        capital: formatUSD(i.capital), returnPct: i.return_pct || 0, state: i.state || 'activa'
+      })),
+      phases: PORTFOLIO_PHASES.map(k => ({ key: k, label: PHASE_LABELS[k] || k })),
+      folders: DR_FOLDERS.filter(f => f !== 'Evidencias'),
+      docStates: Object.keys(DOC_STATES).map(k => ({ key: k, label: DOC_STATES[k] })),
+      visibilities: Object.keys(VISIBILITY).map(k => ({ key: k, label: VISIBILITY[k] })),
+      s3: require('../lib/uploads').s3Enabled
+    });
+  } catch (e) { next(e); }
+});
+
+const evBack = (id, ok, msg, hash) =>
+  `/panel/admin/evento/${id}?type=${ok ? 'ok' : 'error'}&msg=${encodeURIComponent(msg)}${hash ? '#' + hash : ''}`;
+
+// ── Cronología (avances) ──
+router.post('/admin/evento/:id/avance', auth.requireAdmin, async (req, res) => {
+  const id = req.params.id;
+  try {
+    const title = (req.body.title || '').trim();
+    if (!title) return res.redirect(evBack(id, false, 'El avance necesita título', 'cronologia'));
+    await knex('event_updates').insert({
+      event_id: id, title,
+      description: (req.body.description || '').trim() || null,
+      update_date: evDate(req.body.update_date),
+      phase: PORTFOLIO_PHASES.includes(req.body.phase) ? req.body.phase : null,
+      is_demo: false
+    });
+    res.redirect(evBack(id, true, 'Avance agregado', 'cronologia'));
+  } catch (e) { res.redirect(evBack(id, false, e.message, 'cronologia')); }
+});
+router.post('/admin/evento/:id/avance/:aid/delete', auth.requireAdmin, async (req, res) => {
+  try {
+    const n = await knex('event_updates').where({ id: req.params.aid, event_id: req.params.id }).del();
+    res.redirect(evBack(req.params.id, !!n, n ? 'Avance eliminado' : 'Ese avance no es de esta edición', 'cronologia'));
+  } catch (e) { res.redirect(evBack(req.params.id, false, e.message, 'cronologia')); }
+});
+
+// ── Data room y evidencias (misma tabla, distinta carpeta) ──
+router.post('/admin/evento/:id/documento', auth.requireAdmin, async (req, res) => {
+  const id = req.params.id;
+  const hash = req.body.folder === 'Evidencias' ? 'evidencias' : 'dataroom';
+  try {
+    const name = (req.body.name || '').trim();
+    if (!name) return res.redirect(evBack(id, false, 'El documento necesita nombre', hash));
+    const url = sourceUrl(req.body.url);
+    if ((req.body.url || '').trim() && !url) {
+      return res.redirect(evBack(id, false, 'El enlace debe empezar con http:// o https://', hash));
+    }
+    await knex('event_documents').insert({
+      event_id: id, name, url,
+      folder: DR_FOLDERS.includes(req.body.folder) ? req.body.folder : 'General',
+      status: DOC_STATES[req.body.status] ? req.body.status : 'revision',
+      visibility: VISIBILITY[req.body.visibility] ? req.body.visibility : 'all',
+      is_demo: false
+    });
+    res.redirect(evBack(id, true, 'Documento agregado', hash));
+  } catch (e) { res.redirect(evBack(id, false, e.message, hash)); }
+});
+router.post('/admin/evento/:id/documento/:did/estado', auth.requireAdmin, async (req, res) => {
+  try {
+    const estado = DOC_STATES[req.body.status] ? req.body.status : 'revision';
+    const n = await knex('event_documents').where({ id: req.params.did, event_id: req.params.id }).update({ status: estado, updated_at: knex.fn.now() });
+    res.redirect(evBack(req.params.id, !!n, n ? `Documento marcado como ${DOC_STATES[estado].toLowerCase()}` : 'Ese documento no es de esta edición', 'dataroom'));
+  } catch (e) { res.redirect(evBack(req.params.id, false, e.message, 'dataroom')); }
+});
+router.post('/admin/evento/:id/documento/:did/delete', auth.requireAdmin, async (req, res) => {
+  try {
+    const n = await knex('event_documents').where({ id: req.params.did, event_id: req.params.id }).del();
+    res.redirect(evBack(req.params.id, !!n, n ? 'Documento eliminado' : 'Ese documento no es de esta edición', 'dataroom'));
+  } catch (e) { res.redirect(evBack(req.params.id, false, e.message, 'dataroom')); }
+});
+
+// ── En medios (cobertura de terceros; distinto de las noticias propias) ──
+router.post('/admin/evento/:id/medio', auth.requireAdmin, async (req, res) => {
+  const id = req.params.id;
+  try {
+    const title = (req.body.title || '').trim();
+    if (!title) return res.redirect(evBack(id, false, 'La nota necesita título', 'medios'));
+    const url = sourceUrl(req.body.url);
+    if ((req.body.url || '').trim() && !url) {
+      return res.redirect(evBack(id, false, 'El enlace debe empezar con http:// o https://', 'medios'));
+    }
+    await knex('event_media').insert({
+      event_id: id, title, url,
+      source: (req.body.source || '').trim() || null,
+      media_date: evDate(req.body.media_date),
+      is_demo: false
+    });
+    res.redirect(evBack(id, true, 'Nota agregada', 'medios'));
+  } catch (e) { res.redirect(evBack(id, false, e.message, 'medios')); }
+});
+router.post('/admin/evento/:id/medio/:mid/delete', auth.requireAdmin, async (req, res) => {
+  try {
+    const n = await knex('event_media').where({ id: req.params.mid, event_id: req.params.id }).del();
+    res.redirect(evBack(req.params.id, !!n, n ? 'Nota eliminada' : 'Esa nota no es de esta edición', 'medios'));
+  } catch (e) { res.redirect(evBack(req.params.id, false, e.message, 'medios')); }
+});
+
+// ── Comunicaciones por edición y modalidad ──
+// Se apoyan en el mismo despachador de notificaciones (issue 13): quedan en el
+// panel del inversionista y salen por correo si él lo tiene activado.
+router.post('/admin/evento/:id/comunicacion', auth.requireAdmin, async (req, res) => {
+  const id = req.params.id;
+  try {
+    const title = (req.body.title || '').trim();
+    if (!title) return res.redirect(evBack(id, false, 'La comunicación necesita título', 'comunicaciones'));
+    const body = (req.body.body || '').trim();
+    const audience = VISIBILITY[req.body.audience] ? req.body.audience : 'all';
+    await knex('event_communications').insert({
+      event_id: id, title, body: body || null, audience,
+      status: req.body.status === 'concluido' ? 'concluido' : 'activo',
+      comm_date: evDate(req.body.comm_date), is_demo: false
+    });
+
+    // A quién le toca: los inversionistas con inversión en esta edición y, si la
+    // comunicación es por modalidad, solo los de esa modalidad.
+    let avisados = 0, correos = 0;
+    if (req.body.notificar) {
+      let q = knex('investments').where({ event_id: id });
+      if (audience !== 'all') q = q.andWhere({ modality: audience });
+      const destinos = await q;
+      const ids = [...new Set(destinos.map(d => d.user_id))];
+      for (const uid of ids) {
+        const r = await notify({
+          type: 'comunicado', userId: uid, channels: ['in-app', 'email'],
+          eventId: parseInt(id, 10) || null, title, body
+        });
+        avisados += r.recipients;
+        correos += r.emailed;
+      }
+    }
+    const extra = req.body.notificar ? ` · avisados ${avisados} (email a ${correos})` : '';
+    res.redirect(evBack(id, true, 'Comunicación guardada' + extra, 'comunicaciones'));
+  } catch (e) { res.redirect(evBack(id, false, e.message, 'comunicaciones')); }
+});
+router.post('/admin/evento/:id/comunicacion/:cid/delete', auth.requireAdmin, async (req, res) => {
+  try {
+    const n = await knex('event_communications').where({ id: req.params.cid, event_id: req.params.id }).del();
+    res.redirect(evBack(req.params.id, !!n, n ? 'Comunicación eliminada' : 'Esa comunicación no es de esta edición', 'comunicaciones'));
+  } catch (e) { res.redirect(evBack(req.params.id, false, e.message, 'comunicaciones')); }
+});
+
 router.post('/admin/portfolio/:eventId/package', auth.requireAdmin, async (req, res, next) => {
   try {
     const data = packageBody(req.body);
