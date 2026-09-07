@@ -381,12 +381,17 @@ Validación (todo en el servidor, no solo en el navegador):
 - Los bloques de agenda solo se borran desde su propia edición.
 
 Pendiente de esta sección:
-- [ ] **Vinculación con Google Calendar** — **diferido a propósito**: el API está
-  habilitado, pero la pantalla de consentimiento de Google sigue en *Testing* y el login
-  de Google está oculto. No tiene sentido construir sobre eso hasta que se publique.
-  Cuando toque: sincronizar actividades (guardando `google_event_id` para no duplicar),
-  decidir entre calendario de la organización (service account) y calendario del usuario
-  (OAuth), botón "Agregar a mi Google Calendar" y feed iCal como alternativa sin OAuth.
+- [x] ~~**Vinculación con Google Calendar**~~ **HECHO — falta probarlo en vivo**:
+  `lib/googleCalendar.js` + tarjeta en Configuración. **Callback propio**
+  (`/panel/auth/google/calendar/callback`, ya registrado por el usuario en Google),
+  **scope propio** (`calendar.events`) e **interruptor propio** (`GOOGLE_CALENDAR=0`), para
+  poder conectarlo aunque el login de Google siga oculto. Guarda `google_event_id` por
+  actividad, así que re-sincronizar **actualiza en vez de duplicar**; borrar la actividad la
+  borra también en Google; solo sube las de la edición activa.
+  **El circuito completo (consentimiento → code real → evento creado) necesita navegador y
+  cuenta de Google: lo tiene que probar el usuario.** Detalle en `docs/google-auth.md` §7.
+- [ ] Botón **"Agregar a mi Google Calendar"** por inversionista y **feed iCal** como
+  alternativa sin OAuth. Hoy solo está el calendario de la organización.
 - [x] ~~Una sola línea de tiempo~~ **HECHO**: bloque "Todo en orden" en el calendario, con
   etapas y actividades juntas de la más antigua a la más próxima, marcando lo ya pasado y
   resaltando lo de hoy. Convivían, pero cada una en su vista, y para saber qué pasa antes
