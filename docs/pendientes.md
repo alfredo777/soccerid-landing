@@ -390,8 +390,19 @@ Pendiente de esta sección:
   borra también en Google; solo sube las de la edición activa.
   **El circuito completo (consentimiento → code real → evento creado) necesita navegador y
   cuenta de Google: lo tiene que probar el usuario.** Detalle en `docs/google-auth.md` §7.
-- [ ] Botón **"Agregar a mi Google Calendar"** por inversionista y **feed iCal** como
-  alternativa sin OAuth. Hoy solo está el calendario de la organización.
+- [x] ~~Botón **"Agregar a mi Google Calendar"** y **feed iCal**~~ **HECHO**, y **sin OAuth**:
+  - **Feed iCal** en `/panel/agenda/<token>.ics`. El inversionista se suscribe una vez y las
+    fechas le aparecen en Google, Apple u Outlook, actualizándose solas. **No pide permisos
+    ni toca su agenda**: es una dirección que su calendario consulta.
+  - La ruta va **sin sesión a propósito**: las apps de calendario no mandan cookies, así que
+    no hay cookie que validar. Lo que autentica es un **token HMAC por usuario**, que no se
+    puede adivinar ni fabricar sin el secreto del panel. Probado: token manipulado → 404,
+    token de un admin → 404 (el admin no tiene agenda de inversionista).
+  - Respeta la **edición activa**, igual que el resto del panel.
+  - Botones de "Agregar a Google Calendar" y "Apple / Outlook" (`webcal://`), más la URL
+    copiable, en la vista de calendario.
+  - Cada actividad del mes es además un enlace de **"agregar esta fecha"** a Google: abre el
+    formulario ya lleno, tampoco pide permisos.
 - [x] ~~Una sola línea de tiempo~~ **HECHO**: bloque "Todo en orden" en el calendario, con
   etapas y actividades juntas de la más antigua a la más próxima, marcando lo ya pasado y
   resaltando lo de hoy. Convivían, pero cada una en su vista, y para saber qué pasa antes

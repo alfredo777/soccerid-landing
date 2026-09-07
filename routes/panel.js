@@ -19,6 +19,7 @@ const panelSms = require('../lib/panelSms');
 const codeMap = require('../lib/codeMap');
 const ai = require('../lib/ai');
 const gcal = require('../lib/googleCalendar');
+const ical = require('../lib/ical');
 const turnstile = require('../lib/turnstile');
 const google = require('../lib/googleAuth');
 
@@ -314,7 +315,7 @@ async function buildPanelData(user, opts = {}) {
   const fyear = (opts.calYear >= 2000 && opts.calYear <= 2100) ? opts.calYear : _now.getFullYear();
   const evRows = await soloDeLaEdicion(knex('events').where({ month: fmonth, year: fyear })).orderBy('day');
   const events = evRows.map(e => ({
-    day: e.day, title: e.title,
+    day: e.day, title: e.title, addUrl: ical.enlaceGoogle(e),
     // Si el tipo es "Otro", lo que importa es lo que escribió el organizador
     type: e.type === 'Otro' ? (e.custom_type || 'Otro') : e.type,
     color: e.color, match: !!e.is_match,
@@ -348,6 +349,11 @@ async function buildPanelData(user, opts = {}) {
       meta: [e.time_label, e.type === 'Otro' ? (e.custom_type || 'Otro') : e.type, e.note].filter(Boolean).join(' · '),
       color: e.color || '#6C3CE0'
     }));
+
+  // Suscripción al calendario y enlace por actividad. Nada de esto pide permisos
+  // a Google: el feed es una URL y el "agregar" abre un formulario ya lleno.
+  const baseUrl = (process.env.BASE_URL || (process.env.NODE_ENV === 'production' ? 'https://soccerid.co' : `http://localhost:${process.env.PORT || 3000}`)).replace(/\/$/, '');
+  const agendaUrl = `${baseUrl}/panel/agenda/${ical.tokenPara(user.id)}.ics`;
 
   const hoyISO = new Date().toISOString().slice(0, 10);
   const timeline = lineaEtapas.concat(lineaActividades)
@@ -643,6 +649,13 @@ async function buildPanelData(user, opts = {}) {
     milestones,
     calendarCells: cells,
     timeline,
+    agenda: {
+      url: agendaUrl,
+      // webcal:// hace que el sistema operativo lo abra en la app de calendario
+      // en vez de descargar un archivo suelto
+      webcal: agendaUrl.replace(/^https?:/, 'webcal:'),
+      google: 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent(agendaUrl)
+    },
     calendar: {
       monthLabel: MONTHS_ES_CAP[fmonth - 1],
       year: String(fyear),
@@ -1627,6 +1640,50 @@ router.post('/admin/upload', auth.requireAdmin, upload.single('image'), async (r
     res.json({ url });
   } catch (e) {
     res.status(400).json({ error: e.message });
+  }
+});
+
+// ── Feed iCal del inversionista ──
+// SIN sesión a propósito: las apps de calendario no mandan cookies, así que no
+// hay cookie que validar. Lo que autentica es el token HMAC del propio usuario,
+// que no se puede adivinar ni fabricar sin el secreto del panel.
+router.get('/agenda/:token', async (req, res) => {
+  try {
+    const token = String(req.params.token || '').replace(/\.ics$/i, '');
+    const uid = ical.usuarioDe(token);
+    if (!uid) return res.status(404).type('text/plain').send('Calendario no encontrado');
+
+    const user = await knex('users').where({ id: uid }).first();
+    if (!user || user.role === 'admin' || user.status !== 'active') {
+      return res.status(404).type('text/plain').send('Calendario no encontrado');
+    }
+
+    // La edición activa manda, igual que en el panel
+    const cfg = await getDashboardConfig();
+    const eds = await knex('portfolio_events').orderBy('year', 'desc');
+    const activa = eds.find(e => String(e.id) === String(cfg.activeEditionId)) || eds[0];
+    const deLaEdicion = (q) => q.where(function () {
+      this.whereNull('event_id');
+      if (activa) this.orWhere('event_id', activa.id);
+    });
+
+    const [actividades, etapas] = await Promise.all([
+      deLaEdicion(knex('events')).orderBy([{ column: 'year' }, { column: 'month' }, { column: 'day' }]),
+      deLaEdicion(knex('milestones')).orderBy([{ column: 'sort' }, { column: 'id' }])
+    ]);
+
+    const base = (process.env.BASE_URL || (process.env.NODE_ENV === 'production' ? 'https://soccerid.co' : `http://localhost:${process.env.PORT || 3000}`)).replace(/\/$/, '');
+    const ics = ical.construir({
+      actividades, etapas, base,
+      nombre: activa ? `SOCCER iD · ${activa.title}` : 'SOCCER iD'
+    });
+
+    res.type('text/calendar; charset=utf-8');
+    res.setHeader('Content-Disposition', 'inline; filename="soccerid.ics"');
+    res.setHeader('Cache-Control', 'private, max-age=3600');
+    res.send(ics);
+  } catch (e) {
+    res.status(500).type('text/plain').send('No se pudo generar el calendario');
   }
 });
 
