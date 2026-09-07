@@ -378,6 +378,17 @@
     .st-flag { display:inline-block; padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.3px; }
     .st-flag--ok { background:#DEF7EC; color:#03543F; }
     .st-flag--warn { background:#FEF3C7; color:#92400E; }
+    .st-comp { overflow-x:auto; }
+    .st-comp table { width:100%; border-collapse:collapse; font-size:12.5px; min-width:640px; }
+    .st-comp th { text-align:left; font-size:10.5px; font-weight:800; letter-spacing:.4px; text-transform:uppercase; color:var(--pn-muted); padding:0 10px 9px 0; border-bottom:1px solid var(--pn-border); }
+    .st-comp td { padding:11px 10px 11px 0; border-bottom:1px solid var(--pn-border); font-weight:700; color:var(--pn-ink-2); white-space:nowrap; }
+    .st-comp tr:last-child td { border-bottom:none; }
+    .st-comp tr.is-activa td { background:var(--pn-purple-soft); }
+    .st-comp tr.is-activa td:first-child { border-radius:9px 0 0 9px; padding-left:9px; }
+    .st-comp tr.is-activa td:last-child { border-radius:0 9px 9px 0; }
+    .st-dot { display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:7px; vertical-align:middle; }
+    .st-minibar { display:inline-block; width:52px; height:6px; border-radius:20px; background:#F1F0F5; overflow:hidden; vertical-align:middle; margin-right:7px; }
+    .st-minibar i { display:block; height:100%; }
   </style>
 
   <p class="st-note">Todo lo de aquí se <strong>cuenta solo</strong> a partir de lo cargado en el panel; no hay cifras escritas a mano.
@@ -480,6 +491,41 @@
         <div class="st-row"><small>No hay categorías configuradas.</small></div>
         {{/each}}
       </div>
+    </div>
+  </div>
+
+  <!-- Comparativo entre ediciones -->
+  <div class="pn-card st-card" style="margin-bottom:22px;">
+    <h4>Comparativo entre ediciones</h4>
+    <div class="st-comp">
+      <table>
+        <thead>
+          <tr><th>Edición</th><th>Capital</th><th>Presupuesto</th><th>Cubierto</th><th>Inv.</th><th>Paq.</th><th>Docs</th><th>Avances</th></tr>
+        </thead>
+        <tbody>
+          {{#each stats.comparativo}}
+          <tr{{#if this.activa}} class="is-activa"{{/if}}>
+            <td>
+              <span class="st-dot" style="background:{{this.accent}}"></span>
+              <strong>{{this.year}}</strong> {{this.title}}
+              {{#if this.activa}}<span class="st-flag st-flag--ok">Activa</span>{{/if}}
+            </td>
+            <td>{{this.capital}}</td>
+            <td>{{this.presupuesto}}</td>
+            <td>
+              {{#if this.sinPresupuesto}}—{{else}}
+              <span class="st-minibar"><i style="width:{{this.cubiertoPct}}%; background:{{this.accent}}"></i></span>
+              {{this.cubiertoPct}}%
+              {{/if}}
+            </td>
+            <td>{{this.inversiones}}</td>
+            <td>{{this.paquetes}}</td>
+            <td>{{this.documentos}}</td>
+            <td>{{this.avances}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
     </div>
   </div>
 

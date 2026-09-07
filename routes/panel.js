@@ -1211,7 +1211,32 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     const pct = (a, b) => b > 0 ? Math.min(100, Math.round((a / b) * 100)) : 0;
     const LEAD_ST = { nuevo: 'Nuevos', contactado: 'Contactados', cliente: 'Clientes', descartado: 'Descartados' };
 
+    // Comparativo entre ediciones: la misma fila para todas, para ver de un vistazo
+    // cuál va mejor. Se cuenta de lo cargado, como todo lo demás.
+    const drTodas = await knex('event_documents').select('event_id');
+    const upTodas = await knex('event_updates').select('event_id');
+    const cuentaPor = (arr) => arr.reduce((m, r) => { m[r.event_id] = (m[r.event_id] || 0) + 1; return m; }, {});
+    const drPorEd = cuentaPor(drTodas), upPorEd = cuentaPor(upTodas), pkPorEd = cuentaPor(pkgRows);
+
+    const comparativo = peRows.map(e => {
+      const suyas = invRows.filter(i => String(i.event_id) === String(e.id));
+      const cap = sumaCapital(suyas);
+      const pres = Number(e.budget || 0);
+      return {
+        year: e.year, title: e.title, accent: e.accent || '#6C3CE0',
+        activa: String(e.id) === activaId,
+        capital: formatUSD(cap), presupuesto: pres > 0 ? formatUSD(pres) : '—',
+        cubiertoPct: pres > 0 ? Math.min(100, Math.round((cap / pres) * 100)) : 0,
+        sinPresupuesto: pres <= 0,
+        inversiones: suyas.length,
+        paquetes: pkPorEd[e.id] || 0,
+        documentos: drPorEd[e.id] || 0,
+        avances: upPorEd[e.id] || 0
+      };
+    });
+
     const stats = {
+      comparativo,
       edicion: edActiva ? { title: edActiva.title, year: edActiva.year } : null,
       capital: {
         edicion: formatUSD(capEdicion), total: formatUSD(capTotal),

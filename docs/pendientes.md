@@ -59,7 +59,9 @@ Arquitectura:
   - Prospectos por estado y conteo de contenido publicado.
 
 Pendiente de esta sección:
-- [ ] Comparativo entre ediciones (hoy se ve una a la vez, la activa).
+- [x] ~~Comparativo entre ediciones~~ **HECHO**: tabla con una fila por edición (capital,
+  presupuesto, % cubierto, inversiones, paquetes, documentos y avances), con la activa
+  resaltada. Las ediciones sin presupuesto muestran "—" en vez de un 0% engañoso.
 - [ ] Evolución en el tiempo (hoy son cifras de corte, sin serie histórica).
 
 ## Convención de UI (preferencia)
