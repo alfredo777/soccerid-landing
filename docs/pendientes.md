@@ -24,8 +24,19 @@ editables y solo pasa al formulario si el admin le da "Pasar al formulario".
 Pendiente de esta sección:
 - [ ] **Rotar la API key**: se envió por chat en texto plano. Está en
   `anthropic-key.local.md` (gitignored) y se sube con `node scripts/heroku-env.js --apply`.
-- [ ] **Extraer la imagen de una nota** a partir de su URL (og:image + imágenes del
-  artículo) y subirla con el uploader. Necesita fetch + parseo del HTML, aparte de la IA.
+- [x] ~~**Extraer la imagen de una nota** desde su URL~~ **HECHO**: botón "Traer de la nota"
+  junto al enlace original. Saca **imagen, titular y resumen** (og: / twitter: y, si no,
+  las `<img>` del artículo descartando iconos y píxeles de tracking). El admin elige cuál
+  imagen usar entre las encontradas.
+  - **La imagen se copia a nuestro almacenamiento**, no se enlaza a la del medio: un
+    hotlink se rompe en cuanto ellos la muevan y encima les gasta su ancho de banda.
+  - **No pisa lo que ya escribiste**: si el titular o el resumen ya tienen texto, los deja
+    y lo avisa.
+  - Pedir URLs desde el servidor es lo delicado aquí, así que se bloquean `localhost`, los
+    rangos privados y el link-local de metadatos de la nube **antes** de pedir nada, con
+    límite de tamaño y de tiempo. Probado con `169.254.169.254`, `127.0.0.1` y `192.168.x`.
+  - Probado contra una nota real de Medio Tiempo: trajo titular, fuente, resumen y 5
+    imágenes, y la importación dejó el archivo en el almacenamiento propio.
 - [ ] Botón de IA también en la página por edición (avances, comunicaciones, data room):
   hoy vive en la pantalla principal del admin.
 - [ ] Registrar qué se generó y quién lo aplicó, para poder auditarlo después.

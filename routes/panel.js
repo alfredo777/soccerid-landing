@@ -20,6 +20,7 @@ const codeMap = require('../lib/codeMap');
 const ai = require('../lib/ai');
 const gcal = require('../lib/googleCalendar');
 const ical = require('../lib/ical');
+const linkPreview = require('../lib/linkPreview');
 const turnstile = require('../lib/turnstile');
 const google = require('../lib/googleAuth');
 
@@ -1749,6 +1750,32 @@ router.post('/admin/calendar/sync', auth.requireAdmin, async (req, res) => {
       encodeURIComponent(`Calendario sincronizado (${partes.join(', ')})${aviso}`) + '#configuracion');
   } catch (e) {
     res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#configuracion');
+  }
+});
+
+// ── Leer una nota de prensa por su URL ──
+// Trae imagen, título y resumen para no copiarlos a mano. La comprobación de
+// la URL vive en la lib: pedir direcciones arbitrarias desde el servidor es
+// justo lo que hay que cuidar aquí.
+router.post('/admin/link-preview', auth.requireAdmin, async (req, res) => {
+  try {
+    const datos = await linkPreview.leer(req.body.url);
+    res.json(datos);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// Se baja la imagen y se guarda en nuestro almacenamiento. Enlazar directo a la
+// imagen del medio (hotlink) se rompe en cuanto ellos la muevan, y además les
+// estaríamos gastando su ancho de banda.
+router.post('/admin/link-preview/importar', auth.requireAdmin, async (req, res) => {
+  try {
+    const file = await linkPreview.bajarImagen(req.body.url);
+    const { url } = await uploadImage(file);
+    res.json({ url });
+  } catch (e) {
+    res.status(400).json({ error: e.message });
   }
 });
 
