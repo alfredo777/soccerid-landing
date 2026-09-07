@@ -11,6 +11,21 @@
   .pr-card li::before { content:'✓'; position:absolute; left:0; color:var(--pn-purple); font-weight:900; }
   .pr-empty { padding:60px 20px; text-align:center; color:var(--pn-muted); }
   .pr-empty svg { width:44px; height:44px; stroke:var(--pn-muted); margin-bottom:14px; }
+  .pr-extra { margin-top:18px; }
+  .pr-rows { display:flex; flex-direction:column; }
+  .pr-row { display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid var(--pn-border); }
+  .pr-row:last-child { border-bottom:none; }
+  .pr-row.is-pasado { opacity:.55; }
+  .pr-row__b { flex:1; min-width:0; }
+  .pr-row__b strong { display:block; font-size:14px; font-weight:800; }
+  .pr-row__b small { font-size:12px; color:var(--pn-muted); font-weight:600; }
+  .pr-row__n { text-align:right; flex-shrink:0; }
+  .pr-row__n span { display:block; font-size:14px; font-weight:800; color:var(--pn-ink); }
+  .pr-row__n small { font-size:11.5px; color:var(--pn-muted); font-weight:600; }
+  .pr-bar { position:relative; height:11px; border-radius:20px; background:#F1F0F5; overflow:visible; margin:14px 0 10px; }
+  .pr-bar__sold { display:block; height:100%; border-radius:20px; background:var(--pn-purple); }
+  .pr-bar__be { position:absolute; top:-4px; width:3px; height:19px; border-radius:2px; background:var(--pn-ink); }
+  .pr-legend { font-size:12.5px; color:var(--pn-muted); font-weight:600; }
   @media (max-width: 560px) { .pr-card { padding: 22px 20px; } }
 </style>
 <div class="pr-wrap">
@@ -23,10 +38,68 @@
   <div class="pn-card pr-card">
     {{{panel.presentation}}}
   </div>
+
   {{else}}
   <div class="pn-card pr-empty">
     <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/></svg>
     <p>Aún no hay una presentación para esta edición.</p>
   </div>
   {{/if}}
+
+  {{#if panel.capital.items.length}}
+  <div class="pn-card pr-card pr-extra">
+    <h3>Uso del capital</h3>
+    <p>En qu&eacute; se est&aacute; aplicando el presupuesto de la edici&oacute;n. Presupuestado
+      <strong>{{panel.capital.totalBudget}}</strong> · ejercido <strong>{{panel.capital.totalSpent}}</strong>
+      ({{panel.capital.spentPct}}%).</p>
+    <div class="pr-rows">
+      {{#each panel.capital.items}}
+      <div class="pr-row">
+        <div class="pr-row__b">
+          <strong>{{this.label}}</strong>
+          {{#if this.note}}<small>{{this.note}}</small>{{/if}}
+        </div>
+        <div class="pr-row__n">
+          <span>{{this.budgetLabel}}</span>
+          <small>ejercido {{this.spentLabel}}</small>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{#if panel.sales.capacity}}
+  <div class="pn-card pr-card pr-extra">
+    <h3>Punto de equilibrio</h3>
+    <p>Con un aforo de <strong>{{panel.sales.capacityLabel}}</strong>, el evento se equilibra en
+      <strong>{{panel.sales.breakEvenLabel}}</strong> boletos.
+      {{#if panel.sales.pastBreakEven}}Ya se super&oacute;.{{else}}Faltan <strong>{{panel.sales.toBreakEvenLabel}}</strong>.{{/if}}</p>
+    <div class="pr-bar">
+      <i class="pr-bar__sold" style="width:{{panel.sales.soldPct}}%"></i>
+      <span class="pr-bar__be" style="left:{{panel.sales.breakEvenPct}}%"></span>
+    </div>
+    <p class="pr-legend">Vendidos {{panel.sales.soldLabel}} · taquilla {{panel.sales.boxOffice}} de {{panel.sales.goalBoxOffice}} posible.
+      La marca vertical es el punto de equilibrio.</p>
+  </div>
+  {{/if}}
+
+  {{#if panel.timeline.length}}
+  <div class="pn-card pr-card pr-extra">
+    <h3>Calendario del proyecto</h3>
+    <p>Las etapas y actividades con fecha, en orden.</p>
+    <div class="pr-rows">
+      {{#each panel.timeline}}
+      <div class="pr-row {{#if this.pasado}}is-pasado{{/if}}">
+        <div class="pr-row__b">
+          <strong>{{this.title}}</strong>
+          <small>{{#eq this.kind 'etapa'}}Etapa{{else}}Actividad{{/eq}}{{#if this.meta}} · {{this.meta}}{{/if}}</small>
+        </div>
+        <div class="pr-row__n"><span>{{this.fechaLabel}}</span></div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
 </div>

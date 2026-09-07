@@ -71,7 +71,9 @@ Pendiente de esta sección:
 - **Preferir panel lateral (drawer) sobre lightbox/modal centrado.** Para ver/crear/editar,
   usar el drawer que sale de la derecha (ya existe el patrón). Reservar el lightbox
   solo para casos puntuales (p. ej. video en web si aplica).
-- [ ] Revisar el **video tour**: hoy es lightbox en web / drawer en móvil → evaluar
+- [x] ~~Revisar el **video tour**~~ **HECHO**: era lightbox en escritorio y drawer en
+  móvil. Ahora es **drawer en todos lados**, según la convención del panel: tener dos
+  comportamientos para lo mismo según el ancho de la pantalla confunde.
   pasar también a **drawer en web** para ser consistentes.
 
 
@@ -148,8 +150,10 @@ Sección "Presentación" en el panel del inversionista (`/panel/presentacion`,
 el resto de la edición. El inversionista ve la de su edición activa.
 
 Pendiente de esta sección:
-- [ ] Traer más bloques de la propuesta pública (uso del capital, punto de equilibrio,
-  timeline) en vez de solo el texto de la edición.
+- [x] ~~Traer más bloques de la propuesta pública~~ **HECHO**: la presentación suma **uso
+  del capital** (rubros con presupuestado vs ejercido), **punto de equilibrio** (con la
+  marca del break-even sobre la barra de venta) y el **calendario del proyecto**. Salen
+  aunque la edición todavía no tenga texto de presentación: no dependen de él.
 
 ## FAQ editable (inversionistas y patrocinadores) — HECHO
 Tabla `faqs` (audiencia, pregunta, respuesta, orden, activa), CRUD en drawer desde el

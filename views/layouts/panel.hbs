@@ -344,7 +344,9 @@
 
       .pn-nav { overscroll-behavior: contain; }
     }
-    /* Video tour: lightbox (web) / drawer lateral (móvil) */
+    /* Video tour: drawer lateral en todos lados.
+       Antes era lightbox en escritorio y drawer en móvil; la convención del panel
+       es drawer, y tener dos comportamientos para lo mismo confunde. */
     .pn-tour { position: fixed; inset: 0; z-index: 120; display: none; }
     .pn-tour.is-open { display: block; }
     .pn-tour__backdrop { position: absolute; inset: 0; background: rgba(14,14,20,.72); }
@@ -355,16 +357,11 @@
     .pn-tour__x svg { width: 18px; height: 18px; stroke: #fff; }
     .pn-tour__video { background: #000; }
     .pn-tour__video video { display: block; width: 100%; height: 100%; object-fit: contain; background: #000; }
-    @media (min-width: 861px) {
-      .pn-tour__panel { top: 50%; left: 50%; transform: translate(-50%,-50%) scale(.96); opacity: 0; transition: transform .25s, opacity .25s; width: min(960px, 92vw); border-radius: 18px; }
-      .pn-tour.is-open .pn-tour__panel { transform: translate(-50%,-50%) scale(1); opacity: 1; }
-      .pn-tour__video { aspect-ratio: 16 / 9; }
-    }
-    @media (max-width: 860px) {
-      .pn-tour__panel { top: 0; right: 0; height: 100%; width: min(88vw, 420px); transform: translateX(100%); transition: transform .28s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; }
-      .pn-tour.is-open .pn-tour__panel { transform: translateX(0); }
-      .pn-tour__video { flex: 1; }
-    }
+    .pn-tour__panel { top: 0; right: 0; height: 100%; width: min(92vw, 560px); transform: translateX(100%);
+      transition: transform .28s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: column; }
+    .pn-tour.is-open .pn-tour__panel { transform: translateX(0); }
+    .pn-tour__video { flex: 1; display: flex; align-items: center; }
+    @media (max-width: 860px) { .pn-tour__panel { width: min(88vw, 420px); } }
   </style>
 </head>
 <body>
