@@ -1,69 +1,134 @@
-# Checklist del deploy pendiente
+# Qué hacer cuando se despliegue
 
-Preparado el 6 sep 2026. Falta desplegar **2 commits** a Heroku:
+Nada de esto está en producción todavía. Al 7 sep 2026 hay **10 commits** en
+`origin/main` que `production` (Heroku) no tiene: desde `bb1bffc` hasta `0d480b6`.
+`origin/main` está al día; solo falta `production`.
 
 | Commit | Qué trae |
 |---|---|
-| `bae433b` | Multievento = ediciones (2023/24/25/27), paquetes generales y privados, presentación ES/EN, FAQ editable, fix del calendario |
 | `bb1bffc` | Buscador funcional, estado vacío en noticias, chips de categoría, cronograma sin duplicar |
+| `abcf068` | Esta checklist |
+| `65dab31` | Interruptor `GOOGLE_LOGIN` + `scripts/heroku-env.js` |
+| `0ea3d79` | Donut fuera del inversionista, URL de la nota original, preview por modalidad |
+| `ca37dae` | **Mi perfil** del inversionista (issue 15) |
+| `08c0aeb` | **Notificaciones**: tipos, directas 1 a 1, canales, Twilio desde el admin (issue 13) |
+| `7f99ee5` | Las llaves de Twilio son el interruptor del SMS |
+| `9fafed6` | **Mapa de códigos 2027** + dueño asignado (issue 16) + arreglo del escapado de JSON |
+| `8ae5809` | **Alta de ediciones** con filas repetibles, uploader y vista previa (issue 17) |
+| `0d480b6` | **Página de gestión por edición** (issue 21) |
 
-`origin/main` ya está al día; solo falta `production`.
+`bae433b` (multievento + FAQ + fix del calendario) fue el último desplegado.
 
-## Antes de desplegar
+## 1. Antes de subir
 
-Nada pendiente. El tema de Google ya se resolvió el 6 sep: **queda oculto a
-propósito** (credenciales quitadas de Heroku + `GOOGLE_LOGIN=0`). No hay que
-tocar nada antes de subir; ver sección 6 de `docs/google-auth.md`.
+Nada bloquea el deploy. Dos cosas que conviene tener presentes:
 
-## Desplegar
+- **Google sigue oculto a propósito.** Las credenciales están fuera de Heroku (v245) y
+  `GOOGLE_LOGIN=0` está puesta (v246). Tras el deploy el interruptor toma el relevo. No
+  hay que tocar nada; detalle en `docs/google-auth.md` §6.
+- **Twilio no necesita variables de entorno.** Las llaves se pegan desde el admin después
+  del deploy (ver paso 4). No hay que setear nada en Heroku.
+
+## 2. Desplegar
 
 ```
 git push production main
 heroku logs --tail --app soccerid-landing
 ```
 
-El arranque corre solo las migraciones y el seed. Ambos son **idempotentes**, ya
-verificado:
+El arranque corre migraciones y seed solos. Ambos son **idempotentes**:
 
-- `db/portfolioSchema.js` y `db/schema.js` crean tablas con guardas `hasTable` /
-  `createTableIfNotExists` (14 y 25 usos) → no truena si ya existen.
-- `db/portfolioSeed.js` corta antes de sembrar si ya hay datos
-  (`if (await knex('portfolio_events').first()) return`, igual para `faqs`).
-  Los inversionistas demo se actualizan por email, no se duplican.
+- `db/schema.js` y `db/portfolioSchema.js` crean tablas y columnas con guardas
+  `hasTable` / `hasColumn` / `createTableIfNotExists`.
+- `db/portfolioSeed.js` corta antes de sembrar si ya hay datos. Los inversionistas demo
+  se actualizan por email, no se duplican.
 
-## Verificar después (como inversionista, no como admin)
+### Columnas nuevas que va a crear este deploy
+
+Todas son `ALTER TABLE ... ADD COLUMN` con guarda, **ninguna borra ni renombra nada**:
+
+- `users`: `language`, `phone`, `phone_extra`, `email_extra`, `assistant_email`,
+  `assistant_phone`, `notify_email` (default `true`), `notify_sms` (default `false`).
+- `notifications`: `type` (default `comunicado`), `user_id`, `event_id`, `channels`
+  (default `in-app`), `sent_email`, `sent_sms`.
+- `access_codes`: `assignee_name`, `assignee_email`, `assignee_phone`, `tags`,
+  `assigned_at`.
+- `access_log`: `matched_owner`.
+
+Además corre **un UPDATE de una sola vez** sobre `notifications`: las filas anteriores a
+esta migración se marcan como `comunicado`. Es seguro repetirlo — una notificación
+`directa` sin destinatario no existe, así que la condición no vuelve a hacer match.
+
+## 3. Verificar después (entrando como inversionista, no como admin)
+
+Lo primero, porque es lo único que no se pudo probar en local con la infraestructura real:
+
+- [ ] **Subir una imagen desde Ediciones** (admin → Ediciones → Editar → botón "Subir" del
+  banner o de la galería). La URL debe quedar en
+  `soccerid-landing.s3.us-east-1.amazonaws.com` y **sobrevivir a un reinicio del dyno**.
+  Es el **primer uso real de S3**: en local guarda en disco, en Heroku el disco se borra.
+  Si la imagen desaparece al reiniciar, S3 no está tomando las credenciales.
+
+Después, lo demás:
 
 - [ ] `/panel` carga y el contador del sidebar marca los días correctos.
-- [ ] `/panel/noticias` muestra las noticias. Si sale el mensaje "Aún no hay
-  noticias publicadas", **es que la BD de producción no tiene noticias** —
-  distinto del bug anterior, donde la página quedaba en blanco sin explicación.
-- [ ] Los chips (Anuncio / Actualización / Prensa) filtran las tarjetas.
-- [ ] El buscador de la barra superior: escribir "inversion" debe devolver
-  resultados del FAQ primero.
-- [ ] "Cronograma" en el sidebar baja al bloque del cronograma, no repite la
-  vista del calendario.
+- [ ] `/panel/noticias` muestra las noticias y los chips filtran. Si sale "Aún no hay
+  noticias publicadas", **es que la BD de producción no tiene noticias**, no un bug.
+- [ ] El buscador de la barra superior: "inversion" devuelve resultados del FAQ primero.
+- [ ] "Cronograma" en el sidebar baja al bloque del cronograma, no repite el calendario.
 - [ ] El calendario abre en el mes actual y las flechas navegan.
 - [ ] `/panel/faq` carga el acordeón.
-- [ ] **El login NO muestra nada de Google.** Tras el deploy el interruptor
-  `GOOGLE_LOGIN=0` toma el relevo de las credenciales quitadas; confirmar que
-  sigue sin aparecer el botón.
+- [ ] **El login NO muestra nada de Google.**
 - [ ] Las 4 ediciones aparecen y cada una muestra su presentación.
-- [ ] **Subir una imagen desde el admin** (noticia o edición): con S3 ya
-  configurado, la URL debe quedar en `soccerid-landing.s3.us-east-1.amazonaws.com`
-  y sobrevivir a un reinicio del dyno. Es lo primero que se prueba, porque este
-  es el primer deploy con S3 activo.
+- [ ] **Mi perfil**: el chip de usuario arriba a la derecha abre el drawer, guarda
+  teléfono y preferencias, y el cambio de contraseña funciona. **El drawer no debe
+  aparecer para el admin.**
+- [ ] **Notificaciones**: mandar una de prueba a un segmento y otra directa a una persona.
+  La directa **solo** la ve esa persona.
+- [ ] **Ediciones**: abrir el drawer de una edición existente y confirmar que las filas
+  (estadísticas, imágenes, notas) salen cargadas y no vacías. Es lo que más se toca en
+  este deploy: si algo salió mal en la conversión, se ve ahí.
+- [ ] **Gestión por edición**: admin → Eventos → "Gestionar". Que el Resumen muestre
+  capital y presupuesto reales, y que se pueda agregar un avance.
+
+## 4. Configurar Twilio (después del deploy, desde el admin)
+
+El canal SMS queda listo pero apagado hasta que existan las llaves.
+
+1. Abrir una cuenta en Twilio y **comprar un número** (o crear un Messaging Service).
+2. En el panel: **Administración → Configuración → SMS (Twilio)**.
+3. Pegar **Account SID** (`AC…`), **Auth Token** y el **remitente** (`+52…` o `MG…`).
+4. Guardar. Con las tres llaves puestas el canal **se activa solo**; no hay otro
+   interruptor. La tarjeta debe pasar a "Activo".
+5. Usar el botón **Enviar SMS de prueba** con un número propio. Twilio lo cobra como
+   cualquier mensaje.
+
+El token se guarda en la base y ya no se vuelve a mostrar completo. Para apagar el SMS se
+borran las credenciales con el botón de la misma tarjeta.
+
+## 5. Pendiente del lado del usuario (no bloquea)
+
+- [ ] **Publicar la pantalla de consentimiento de Google** (sigue en *Testing*). Hasta
+  entonces el login de Google se queda oculto.
+- [ ] **Restringir `GOOGLE_API_KEY`** en Google Cloud Console (por API y por
+  referrer/IP). Hoy está sin restringir.
 
 ## Notas
 
-- `@aws-sdk/client-s3` es dependencia normal (no opcional), así que
-  `NPM_CONFIG_OMIT=optional` no la omite. La única opcional es `better-sqlite3`,
-  que solo se usa en local.
-- Las variables de Heroku se pueden reponer solas con
-  `node scripts/heroku-env.js --apply` (lee los `*.local.md` gitignored; nunca
-  imprime valores). Sube Google **oculto** salvo que se pase `--google-on`.
-- El callback de Google se deriva de `BASE_URL`, que no está seteada en Heroku;
-  en producción cae por defecto en `https://soccerid.co/panel/auth/google/callback`,
-  que coincide con el dominio del app.
+- `@aws-sdk/client-s3` es dependencia normal, no opcional, así que
+  `NPM_CONFIG_OMIT=optional` no la omite. La única opcional es `better-sqlite3`, que solo
+  se usa en local.
+- Las variables de Heroku se pueden reponer con `node scripts/heroku-env.js --apply` (lee
+  los `*.local.md` gitignored; nunca imprime valores). Sube Google **oculto** salvo que se
+  pase `--google-on`.
+- El callback de Google se deriva de `BASE_URL`, que no está seteada en Heroku; en
+  producción cae en `https://soccerid.co/panel/auth/google/callback`, que coincide con el
+  dominio del app.
+- Este deploy incluye el arreglo del escapado de JSON dentro de `<script>`
+  (`{{{json}}}` → `{{{jsonScript}}}`). Cerraba una vía de ejecución de scripts en la
+  sesión del admin a través de los nombres y correos que cualquiera escribe en la página
+  pública de la propuesta 2027. **Es la razón de más peso para no dejar el deploy
+  parado indefinidamente.**
 
 ## Si algo sale mal
 
@@ -72,6 +137,7 @@ heroku releases --app soccerid-landing
 heroku releases:rollback vNNN --app soccerid-landing
 ```
 
-El rollback revierte el código, **no** las tablas creadas por las migraciones.
-Como las tablas nuevas solo las lee el código nuevo, dejarlas ahí no rompe la
-versión anterior.
+El rollback revierte el código, **no** las columnas creadas por las migraciones. Como las
+columnas nuevas solo las lee el código nuevo, dejarlas ahí no rompe la versión anterior.
+La única con valor por defecto que la versión vieja podría leer es `notifications.type`, y
+la versión vieja ni la consulta.
