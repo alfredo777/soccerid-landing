@@ -1415,6 +1415,35 @@
       <button type="submit" class="ad-btn">Guardar trazabilidad</button>
     </form>
 
+    {{#if gcal.disponible}}
+    <div class="pn-card ad-form">
+      <h3>Google Calendar
+        {{#if gcal.conectado}}<span class="tw-pill tw-on">Conectado</span>{{else}}<span class="tw-pill tw-off">Sin conectar</span>{{/if}}
+      </h3>
+      <p class="ad-hint" style="margin:-4px 0 14px;">Empuja las actividades del calendario del panel al Google Calendar de la
+        organización. Va <strong>aparte del login de Google</strong>: se puede conectar aunque el login siga oculto.</p>
+
+      {{#if gcal.conectado}}
+      <p class="ad-hint" style="margin:0 0 12px;">
+        Cuenta: <strong>{{gcal.cuenta}}</strong>{{#if gcal.ultimaSync}} · última sincronización {{gcal.ultimaSync}}{{/if}}
+        {{#if gcal.ultimoError}}<br><span style="color:#B42318;">Último problema: {{gcal.ultimoError}}</span>{{/if}}
+      </p>
+      <p class="ad-hint" style="margin:0 0 12px;">Se suben las actividades de la <strong>edición activa</strong> y las que no dependen de ninguna.
+        Las que ya se subieron se actualizan, no se duplican.</p>
+      <form method="POST" action="/panel/admin/calendar/sync">
+        <button type="submit" class="ad-btn">Sincronizar ahora</button>
+      </form>
+      <form method="POST" action="/panel/admin/calendar/desconectar" data-confirm="¿Desconectar Google Calendar? Los eventos ya creados se quedan en Google, pero el panel deja de actualizarlos.">
+        <button type="submit" class="ad-btn ad-btn--ghost tw-danger">Desconectar</button>
+      </form>
+      {{else}}
+      <p class="ad-hint" style="margin:0 0 12px;">Al conectar, Google va a pedir permiso para <strong>ver y editar eventos</strong>
+        de la cuenta que elijas. No pide acceso al correo ni a nada más.</p>
+      <a class="ad-btn" style="display:block; text-align:center; text-decoration:none;" href="/panel/admin/auth/google/calendar">Conectar Google Calendar</a>
+      {{/if}}
+    </div>
+    {{/if}}
+
     <div class="pn-card ad-form">
       <h3>Tipos de actividad</h3>
       <p class="ad-hint" style="margin:-4px 0 14px;">Los del calendario. Los de fábrica no se pueden borrar porque

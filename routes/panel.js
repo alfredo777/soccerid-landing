@@ -18,6 +18,7 @@ const { notify, notifyAdmins, TYPES: NOTIF_TYPES } = require('../lib/panelNotify
 const panelSms = require('../lib/panelSms');
 const codeMap = require('../lib/codeMap');
 const ai = require('../lib/ai');
+const gcal = require('../lib/googleCalendar');
 const turnstile = require('../lib/turnstile');
 const google = require('../lib/googleAuth');
 
@@ -1499,6 +1500,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       accessLog: accessView,
       notifyEmails, twilio, notifyPeople, notifTypes, stats,
       aiOn: ai.disponible(), aiModelo: ai.MODELO,
+      gcal: await gcal.estado(),
       actTypes: Object.keys(await todosLosTipos()),
       actTypesExtra: await tiposExtra(),
       dashboardConfig: await getDashboardConfig(),
@@ -1625,6 +1627,71 @@ router.post('/admin/upload', auth.requireAdmin, upload.single('image'), async (r
     res.json({ url });
   } catch (e) {
     res.status(400).json({ error: e.message });
+  }
+});
+
+// ── Google Calendar de la organización ──
+// Va aparte del login de Google: tiene su propio callback y su propio
+// interruptor, para poder conectar el calendario aunque el login siga oculto.
+router.get('/admin/auth/google/calendar', auth.requireAdmin, (req, res) => {
+  if (!gcal.disponible()) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Faltan las credenciales de Google') + '#configuracion');
+  const state = gcal.makeState();
+  res.cookie('gcal_state', state, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', maxAge: 10 * 60 * 1000 });
+  res.redirect(gcal.authUrl(state));
+});
+
+router.get('/auth/google/calendar/callback', auth.requireAdmin, async (req, res) => {
+  const volver = (ok, msg) => res.redirect('/panel/admin?type=' + (ok ? 'ok' : 'error') + '&msg=' + encodeURIComponent(msg) + '#configuracion');
+  try {
+    if (!gcal.disponible()) return volver(false, 'Google Calendar está apagado');
+    // El state va en cookie httpOnly: sin esta comprobación, cualquiera podría
+    // provocar la conexión desde otro sitio (CSRF).
+    const esperado = req.cookies && req.cookies.gcal_state;
+    res.clearCookie('gcal_state');
+    if (!esperado || !req.query.state || req.query.state !== esperado) return volver(false, 'La sesión de autorización no coincide: vuelve a intentar');
+    if (req.query.error) return volver(false, `Google respondió: ${req.query.error}`);
+    if (!req.query.code) return volver(false, 'Google no devolvió el código de autorización');
+
+    const r = await gcal.conectar(req.query.code);
+    volver(true, `Google Calendar conectado${r.email ? ` como ${r.email}` : ''}`);
+  } catch (e) {
+    volver(false, e.message);
+  }
+});
+
+router.post('/admin/calendar/desconectar', auth.requireAdmin, async (req, res) => {
+  try {
+    await gcal.desconectar();
+    // Los ids de Google dejan de servir: si se reconecta otra cuenta, apuntarían
+    // a eventos de un calendario que ya no es el nuestro.
+    await knex('events').whereNotNull('google_event_id').update({ google_event_id: null });
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Google Calendar desconectado') + '#configuracion');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#configuracion');
+  }
+});
+
+router.post('/admin/calendar/sync', auth.requireAdmin, async (req, res) => {
+  try {
+    const est = await gcal.estado();
+    if (!est.conectado) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Conecta Google Calendar primero') + '#configuracion');
+
+    // Solo las actividades de la edición activa: subir el calendario de 2023 al
+    // Google de la organización no le sirve a nadie.
+    const cfg = await getDashboardConfig();
+    const eds = await knex('portfolio_events').orderBy('year', 'desc');
+    const activa = eds.find(e => String(e.id) === String(cfg.activeEditionId)) || eds[0];
+    let q = knex('events');
+    if (activa) q = q.where(function () { this.whereNull('event_id').orWhere('event_id', activa.id); });
+    const actividades = await q.orderBy([{ column: 'year' }, { column: 'month' }, { column: 'day' }]);
+
+    const r = await gcal.sincronizar(actividades);
+    const partes = [`${r.creados} creada(s)`, `${r.actualizados} actualizada(s)`];
+    const aviso = r.errores.length ? ` · ${r.errores.length} con problema: ${r.errores[0]}` : '';
+    res.redirect('/panel/admin?type=' + (r.errores.length ? 'error' : 'ok') + '&msg=' +
+      encodeURIComponent(`Calendario sincronizado (${partes.join(', ')})${aviso}`) + '#configuracion');
+  } catch (e) {
+    res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#configuracion');
   }
 });
 
@@ -1826,7 +1893,14 @@ router.post('/admin/event', auth.requireAdmin, async (req, res) => {
   }
 });
 router.post('/admin/event/:id/delete', auth.requireAdmin, async (req, res, next) => {
-  try { await knex('events').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=Actividad+eliminada#calendario'); } catch (e) { next(e); }
+  try {
+    const act = await knex('events').where({ id: req.params.id }).first();
+    await knex('events').where({ id: req.params.id }).del();
+    // Si estaba en Google, se quita también: dejarlo ahí sería un evento
+    // fantasma que nadie puede borrar desde el panel.
+    if (act && act.google_event_id) await gcal.borrarEvento(act.google_event_id).catch(() => {});
+    res.redirect('/panel/admin?type=ok&msg=Actividad+eliminada#calendario');
+  } catch (e) { next(e); }
 });
 
 // Hitos / cronograma

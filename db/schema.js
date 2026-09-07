@@ -188,6 +188,11 @@ async function ensureSchema() {
     }
   }
 
+  // Id del evento en Google Calendar, para actualizar en vez de duplicar.
+  if (await knex.schema.hasTable('events') && !(await knex.schema.hasColumn('events', 'google_event_id'))) {
+    await knex.schema.alterTable('events', (t) => t.string('google_event_id'));
+  }
+
   // Agenda del día del partido, por edición. Antes vivía en panel_config.json y
   // no había dónde editarla: en Heroku ese archivo ni siquiera sobrevive al deploy.
   if (!(await knex.schema.hasTable('match_agenda'))) {

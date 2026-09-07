@@ -166,3 +166,63 @@ node scripts/heroku-env.js --apply --google-on   # GOOGLE_LOGIN=1
 
 El interruptor acepta `0|off|false|no` para apagar; cualquier otra cosa (o no
 definirlo) deja mandando la regla de siempre: hay login si hay client id + secret.
+
+---
+
+## 7. Google Calendar de la organización (7 sep 2026)
+
+Va **aparte del login**: su propio callback, su propio interruptor y su propio
+scope. Así se puede conectar el calendario aunque el login siga oculto por lo de
+la pantalla de consentimiento en *Testing*.
+
+### Redirect URIs registrados por el usuario
+
+Los cuatro del login, más estos cuatro:
+
+```
+https://soccerid.co/panel/auth/google/calendar/callback
+https://www.soccerid.co/panel/auth/google/calendar/callback
+https://soccerid-landing-199fe9d7095c.herokuapp.com/panel/auth/google/calendar/callback
+http://localhost:3000/panel/auth/google/calendar/callback
+```
+
+Verificado contra Google: con un `code` falso, el token endpoint responde
+"Malformed auth code" y **no** `redirect_uri_mismatch`, así que la URI registrada
+coincide con la que manda el servidor.
+
+### Scope
+
+```
+https://www.googleapis.com/auth/calendar.events
+```
+
+Ver y editar eventos. No pide correo ni nada más. **Hay que agregarlo a la
+pantalla de consentimiento**, y eso reabre la verificación: mientras siga en
+*Testing*, solo funciona para los test users.
+
+### Cómo funciona
+
+- `lib/googleCalendar.js`. Comparte `GOOGLE_CLIENT_ID`/`SECRET` con el login,
+  que es lo único que conviene compartir.
+- Interruptor propio: **`GOOGLE_CALENDAR=0`** lo apaga sin tocar el login.
+- Los tokens se guardan en `app_settings` (clave `google_calendar`), no en env:
+  el refresh token llega después de que el admin autoriza, y en Heroku el proceso
+  no puede escribirse una env var a sí mismo.
+- `access_type=offline` + `prompt=consent`, porque si no Google deja de mandar el
+  refresh token en la segunda autorización y la conexión se cae a la hora.
+- El `state` va en cookie httpOnly y se compara en el callback (CSRF).
+- Cada actividad guarda su `google_event_id`, así que al sincronizar de nuevo se
+  **actualiza** en vez de duplicar. Si el evento se borró en Google, se limpia el
+  id y se recrea en la siguiente pasada.
+- Al borrar una actividad en el panel se borra también en Google.
+- Solo se suben las actividades de la **edición activa** (más las que no dependen
+  de ninguna): subir el calendario de 2023 no le sirve a nadie.
+
+### Lo que falta probar
+
+El circuito completo (consentimiento → code real → evento creado en Google)
+**necesita un navegador y una cuenta de Google**, así que lo tiene que hacer el
+usuario. Sí están probados: el arranque del flujo, el scope, la URI, el rechazo
+por `state` que no coincide, el "cancelar" del usuario, el code inválido contra
+el token endpoint real, y que un inversionista no pueda conectar nada.
+
