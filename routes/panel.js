@@ -1933,8 +1933,10 @@ router.post('/admin/portfolio', auth.requireAdmin, async (req, res) => {
     const { data_es, data_en } = buildEditionData(req.body);
     data.data_es = data_es;
     data.data_en = data_en;
-    const max = await knex('portfolio_events').max({ m: 'sort' }).first();
-    data.sort = (Number(max && max.m) || 0) + 1;
+    // El orden de las ediciones lo da el AÑO (una por año), no un contador
+    // aparte que se desalinea al crear una fuera de secuencia. Se sigue
+    // guardando `sort` para no romper instalaciones viejas que lo lean.
+    data.sort = parseInt(data.year, 10) || 0;
     await knex('portfolio_events').insert(data);
     res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Edición ${data.year} creada`) + '#eventos');
   } catch (e) {

@@ -478,7 +478,9 @@ Robustez del alta/edición:
 Pendiente de esta sección:
 - [ ] Retirar la tabla `editions` del esquema cuando haya pasado un tiempo en producción
   y se confirme que no hace falta.
-- [ ] Migrar también el `sort` viejo o quitarlo, ya que el orden lo da el año.
+- [x] ~~Migrar el `sort` viejo~~ **HECHO**: `sort` queda igual al año, y una edición nueva
+  nace con `sort = año`. Antes era un contador aparte (1,2,3,4 y un 2026 suelto) que dejaba
+  2026 hasta el final. Se conserva la columna para no romper nada que la lea.
 
 ### DECISIÓN DEL USUARIO (7 sep 2026): edición activa la elige el ADMIN
 

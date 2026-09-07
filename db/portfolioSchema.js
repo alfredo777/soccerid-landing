@@ -109,6 +109,17 @@ async function ensurePortfolioSchema() {
     }
   }
 
+  // El orden de las ediciones lo da el año. Las filas viejas traían un `sort`
+  // heredado (1,2,3,4 y un 2026 suelto) que dejaba el 2026 hasta el final.
+  if (await knex.schema.hasTable('portfolio_events')) {
+    const desalineadas = await knex('portfolio_events').whereNotNull('year');
+    for (const e of desalineadas) {
+      if (Number(e.sort) !== Number(e.year)) {
+        await knex('portfolio_events').where({ id: e.id }).update({ sort: e.year });
+      }
+    }
+  }
+
   // ── Paquetes de inversión por edición ──
   if (!(await knex.schema.hasTable('event_packages'))) {
     await knex.schema.createTable('event_packages', (t) => {
