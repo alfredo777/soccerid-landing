@@ -766,8 +766,8 @@
   <script>
     function openNewsView(btn){
       var d = btn.dataset;
-      // El drawer vive dentro de <section id="sec-noticias">, que se oculta con
-      // display:none al cambiar de sección. Se saca al <body> para que funcione
+      // El drawer vive dentro de la sección de Noticias, que se oculta con
+      // display:none al cambiar de sección. Se saca al body para que funcione
       // desde cualquier sección (Noticias y Notificaciones usan este drawer).
       var ovEl = document.getElementById('nvOv'), drEl = document.getElementById('nvDrawer');
       if (ovEl && ovEl.parentElement !== document.body) document.body.appendChild(ovEl);
@@ -1306,6 +1306,13 @@
     .mp-tl__when { color:var(--pn-muted); font-weight:700; min-width:150px; }
     .mp-tl__who { flex:1; min-width:180px; color:var(--pn-ink-2); }
     .mp-tl__from { display:block; font-size:11px; color:var(--pn-muted); font-weight:600; margin-top:2px; }
+    .mp-tl__act { display:flex; gap:8px; align-items:center; padding:0 17px 12px; flex-wrap:wrap; }
+    .mp-accept { padding:8px 14px; border:none; border-radius:10px; background:#0E9F6E; color:#fff; font-family:inherit; font-size:12.5px; font-weight:800; cursor:pointer; }
+    .mp-accept:hover { background:#0B8A5E; }
+    .mp-linkbtn { background:none; border:none; color:var(--pn-purple); font-family:inherit; font-size:12.5px; font-weight:800; cursor:pointer; padding:8px 6px; }
+    .mp-reassign { display:flex; gap:8px; flex-wrap:wrap; padding:0 17px 14px; }
+    .mp-reassign[hidden] { display:none; }
+    .mp-reassign input { flex:1; min-width:140px; border:1px solid var(--pn-border); border-radius:9px; padding:8px 11px; font-family:inherit; font-size:13px; }
     .mp-tl__tag { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.3px; color:var(--pn-muted); }
   </style>
 
@@ -1341,17 +1348,34 @@
       <button type="button" class="mp-tl__head" onclick="mpToggle(this)">
         <span class="mp-tl__headb">
           <strong>{{this.label}}</strong>{{#if this.inferred}} <span class="mp-tl__inf">inferido</span>{{/if}}
-          <small>código(s) {{this.codigos}} · {{this.total}} acceso(s){{#if this.ajenos}} · <b>{{this.ajenos}} de otra persona</b>{{/if}}</small>
+          <small>código(s) {{this.codigos}} · {{this.total}} persona(s){{#if this.ajenos}} · <b>{{this.ajenos}} de otra persona</b>{{/if}}</small>
         </span>
         <svg class="mp-tl__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
+      {{#if this.inferred}}
+      <div class="mp-tl__act">
+        <form method="POST" action="/panel/admin/code/accept-inferred" style="margin:0;">
+          <input type="hidden" name="codes" value="{{this.codigos}}">
+          <input type="hidden" name="name" value="{{this.ownerName}}">
+          <input type="hidden" name="email" value="{{this.ownerEmail}}">
+          <button type="submit" class="mp-accept">✓ Confirmar dueño</button>
+        </form>
+        <button type="button" class="mp-linkbtn" onclick="mpReassign(this)">Reasignar</button>
+      </div>
+      <form method="POST" action="/panel/admin/code/accept-inferred" class="mp-reassign" hidden>
+        <input type="hidden" name="codes" value="{{this.codigos}}">
+        <input type="text" name="name" placeholder="Nombre del dueño" value="{{this.ownerName}}">
+        <input type="email" name="email" placeholder="correo@ejemplo.com" value="{{this.ownerEmail}}">
+        <button type="submit" class="mp-accept">Guardar dueño</button>
+      </form>
+      {{/if}}
       <div class="mp-tl__rows" hidden>
       {{#each this.accesos}}
       <div class="mp-tl__row" data-find="{{this.name}} {{this.email}} {{this.ip}} {{this.device}}">
         <span class="mp-tl__dot" style="background:{{#if this.blocked}}#B91C1C{{else}}{{#if this.other}}#D97706{{else}}{{#if this.owner}}#0E9F6E{{else}}#C7C3D4{{/if}}{{/if}}{{/if}}"></span>
         <span class="mp-tl__when">{{this.when}}</span>
         <span class="mp-tl__who"><strong>{{this.name}}</strong>{{#if this.email}} · {{this.email}}{{/if}}
-          <span class="mp-tl__from">{{#if this.ip}}IP {{this.ip}}{{/if}}{{#if this.device}} · disp. {{this.device}}{{/if}}{{#if this.newDevice}} · <b style="color:#6C3CE0;">dispositivo nuevo</b>{{/if}}{{#if this.blocked}} · <b style="color:#B91C1C;">bloqueado</b>{{/if}}</span>
+          <span class="mp-tl__from">{{#if this.count}}<b>{{this.count}} acceso(s)</b> · {{/if}}{{#if this.ip}}IP {{this.ip}}{{/if}}{{#if this.device}} · disp. {{this.device}}{{/if}}{{#if this.newDevice}} · <b style="color:#6C3CE0;">dispositivo nuevo</b>{{/if}}{{#if this.blocked}} · <b style="color:#B91C1C;">bloqueado</b>{{/if}}</span>
         </span>
         <span class="mp-tl__tag">{{this.whoLabel}}</span>
       </div>
@@ -2787,6 +2811,13 @@
       var box = o.querySelector('.mp-tl__rows'), hb = o.querySelector('.mp-tl__head');
       if (box){ box.hidden = q ? !visible : true; if (hb) hb.classList.toggle('is-open', q ? visible : false); }
     });
+  }
+
+  // Mostrar/ocultar el mini-formulario de reasignar dueño en una ficha del mapa.
+  function mpReassign(btn){
+    var card = btn.closest('.mp-tl__owner');
+    var form = card && card.querySelector('.mp-reassign');
+    if (form){ form.hidden = !form.hidden; if (!form.hidden){ var i = form.querySelector('input[name="name"]'); if (i) i.focus(); } }
   }
 
   // Mapa de relaciones de códigos

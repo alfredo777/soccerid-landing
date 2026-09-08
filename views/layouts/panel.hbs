@@ -825,7 +825,7 @@
     (function(){
       var el = document.getElementById('pnSideCountdown');
       if (!el) return;
-      var target = '{{panel.eventDateISO}}' || '2027-03-27T19:00:00-05:00';
+      var target = '{{panel.eventDateISO}}' || '2027-03-27T19:00:00-06:00';
       var days = Math.floor((new Date(target).getTime() - Date.now()) / 86400000);
       el.textContent = (days > 0 ? days : 0) + ' días';
     })();

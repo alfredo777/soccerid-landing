@@ -1198,23 +1198,36 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     codeRowsMap.forEach(c => {
       const k = codeMap.normEmail(c.assignee_email) || codeMap.normPhone(c.assignee_phone) || codeMap.normName(c.assignee_name);
       if (!k) return;
-      (codigosPorDueno[k] = codigosPorDueno[k] || { label: c.assignee_name || c.assignee_email || c.assignee_phone, inferred: !!c._inferred, codigos: [] }).codigos.push(c.code);
+      (codigosPorDueno[k] = codigosPorDueno[k] || { label: c.assignee_name || c.assignee_email || c.assignee_phone, ownerEmail: c.assignee_email || '', ownerName: c.assignee_name || '', inferred: !!c._inferred, codigos: [] }).codigos.push(c.code);
     });
     const ownerTimeline = Object.keys(codigosPorDueno).map(k => {
       const d = codigosPorDueno[k];
-      const suyos = allAccess
-        .filter(a => d.codigos.indexOf(a.code) !== -1)
-        .sort((x, y) => new Date(y.created_at) - new Date(x.created_at))
-        .slice(0, 25)
-        .map(a => ({
-          code: a.code, name: a.name || 'Sin nombre', email: a.email || '',
-          when: fmtWhen(a.created_at),
-          ip: a.ip || '', device: (a.device_id || '').slice(0, 8), newDevice: !!a.new_device, blocked: !!a.blocked,
-          owner: isOwner(a), other: isOther(a),
-          whoLabel: isOwner(a) ? 'El dueño' : (isOther(a) ? 'Otra persona' : 'Sin confirmar')
-        }));
+      // Se agrupa por PERSONA (no por cada acceso): una fila por quien entró,
+      // con su conteo y su último acceso. Antes se repetía a la misma persona
+      // en decenas de filas.
+      const porPersona = {};
+      allAccess.filter(a => d.codigos.indexOf(a.code) !== -1).forEach(a => {
+        const pk = codeMap.normEmail(a.email) || codeMap.normName(a.name) || ('disp:' + (a.device_id || a.id));
+        let p = porPersona[pk];
+        if (!p) p = porPersona[pk] = { name: a.name || 'Sin nombre', email: a.email || '', ip: a.ip || '', device: (a.device_id || '').slice(0, 8), newDevice: !!a.new_device, count: 0, last: a.created_at, ownerHits: 0, otherHits: 0, blocked: false };
+        p.count++;
+        if (new Date(a.created_at) >= new Date(p.last)) { p.last = a.created_at; p.ip = a.ip || p.ip; p.newDevice = !!a.new_device; }
+        if (isOwner(a)) p.ownerHits++;
+        if (isOther(a)) p.otherHits++;
+        if (a.blocked) p.blocked = true;
+      });
+      const suyos = Object.keys(porPersona).map(pk => porPersona[pk])
+        .sort((x, y) => new Date(y.last) - new Date(x.last))
+        .slice(0, 40)
+        .map(p => {
+          const owner = p.ownerHits > 0 && p.otherHits === 0;
+          const other = p.otherHits > 0 && p.ownerHits === 0;
+          return { name: p.name, email: p.email, ip: p.ip, device: p.device, newDevice: p.newDevice, blocked: p.blocked,
+            count: p.count, when: fmtWhen(p.last), owner, other,
+            whoLabel: owner ? 'El dueño' : (other ? 'Otra persona' : 'Sin confirmar') };
+        });
       return {
-        label: d.label, inferred: !!d.inferred, codigos: d.codigos.join(', '),
+        label: d.label, ownerEmail: d.ownerEmail, ownerName: d.ownerName, inferred: !!d.inferred, codigos: d.codigos.join(', '),
         total: suyos.length,
         ajenos: suyos.filter(x => x.other).length,
         accesos: suyos
@@ -3084,6 +3097,27 @@ router.post('/admin/code/:id/status', auth.requireAdmin, async (req, res, next) 
     const status = req.body.status === 'used' ? 'used' : 'unused';
     await knex('access_codes').where({ id: req.params.id }).update({ status, updated_at: knex.fn.now() });
     res.redirect('/panel/admin?type=ok&msg=Estado+actualizado#codigos');
+  } catch (e) { next(e); }
+});
+
+// Confirmar el dueño inferido (o reasignar) desde el mapa, en un clic. Toma la
+// lista de códigos de ese repartidor y les fija el dueño; recalcula sus accesos.
+router.post('/admin/code/accept-inferred', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const codes = String(req.body.codes || '').split(',').map(s => s.trim()).filter(Boolean);
+    const name = (req.body.name || '').trim().slice(0, 120);
+    const email = codeMap.normEmail(req.body.email);
+    if (!codes.length) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Faltan códigos') + '#mapa');
+    if (!name && !email) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Falta nombre o correo del dueño') + '#mapa');
+    if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El correo no es válido: ' + email) + '#mapa');
+    await knex('access_codes').whereIn('code', codes).update({ assignee_name: name || null, assignee_email: email || null, assigned_at: knex.fn.now(), updated_at: knex.fn.now() });
+    const rows = await knex('access_codes').whereIn('code', codes);
+    let recalc = 0;
+    for (const c of rows) {
+      const logs = await knex('access_log').where({ code: c.code });
+      for (const a of logs) { await knex('access_log').where({ id: a.id }).update({ matched_owner: codeMap.matchOwner(c, { name: a.name, email: a.email }) }); recalc++; }
+    }
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Dueño confirmado en ${codes.length} código(s) · ${recalc} acceso(s) recalculado(s)`) + '#mapa');
   } catch (e) { next(e); }
 });
 
