@@ -46,6 +46,9 @@
   .dr-status.aprobado { background:#EAF7F0; color:#1E8E5A; }
   .dr-status.firmado { background:var(--pn-purple-soft); color:var(--pn-purple); }
   .dr-open { font-size:12px; font-weight:800; color:var(--pn-purple); flex-shrink:0; }
+  .dr-open--none { color:var(--pn-muted); font-weight:700; }
+  .dr-doc--link { text-decoration:none; color:inherit; cursor:pointer; transition:background .12s; }
+  .dr-doc--link:hover { background:var(--pn-purple-soft); }
 </style>
 
 <div class="dc-wrap">
@@ -79,12 +82,21 @@
       {{this.folder}}
     </div>
     {{#each this.docs}}
+    {{#if this.url}}
+    <a class="dr-doc dr-doc--link" href="{{this.url}}" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/></svg>
+      <div class="dr-doc__b"><strong>{{this.name}}</strong></div>
+      <span class="dr-status {{this.status}}">{{this.statusLabel}}</span>
+      <span class="dr-open">Abrir ↗</span>
+    </a>
+    {{else}}
     <div class="dr-doc">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><polyline points="14 3 14 8 19 8"/></svg>
       <div class="dr-doc__b"><strong>{{this.name}}</strong></div>
       <span class="dr-status {{this.status}}">{{this.statusLabel}}</span>
-      {{#if this.url}}<a class="dr-open" href="{{this.url}}" target="_blank" rel="noopener">Abrir</a>{{/if}}
+      <span class="dr-open dr-open--none">Sin archivo</span>
     </div>
+    {{/if}}
     {{/each}}
   </div>
   {{/each}}
