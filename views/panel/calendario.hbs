@@ -4,6 +4,10 @@
      orden". Antes se apilaban en la columna angosta de la derecha y dejaban
      hueco bajo el calendario. */
   .cl-below { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:18px; margin-top:22px; align-items:start; }
+  /* En la rejilla, el espacio lo da el gap: se quita el margin-bottom que traían
+     las tarjetas de cuando se apilaban en el rail (evita huecos disparejos). */
+  .cl-below > .pn-card { margin-bottom:0; }
+  #cronograma .cl-verbtn { display:block; margin:0 20px 18px; text-align:center; }
 
   .cl-cal { padding: 22px; }
   .cl-cal__top { display:flex; align-items:center; gap: 14px; margin-bottom: 20px; }
@@ -194,7 +198,7 @@
         </div>
         {{/each}}
       </div>
-      <a class="cl-sub__btn" href="/panel/cronograma" style="margin-top:12px; text-align:center;">Ver el cronograma completo →</a>
+      <a class="cl-sub__btn cl-verbtn" href="/panel/cronograma">Ver el cronograma completo →</a>
     </div>
     {{/if}}
 

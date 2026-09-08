@@ -250,6 +250,14 @@
     .pn-userchip__info small { font-size: 10.5px; font-weight: 800; letter-spacing: .5px; }
 
     .pn-content { padding: 8px 32px 44px; }
+    /* Botón flotante "volver arriba": aparece al bajar en cualquier sección */
+    .pn-totop { position: fixed; right: 22px; bottom: 22px; z-index: 90; width: 44px; height: 44px; border-radius: 50%;
+      background: var(--pn-purple); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 10px 26px rgba(108,60,224,.34); opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity .2s, transform .2s; }
+    .pn-totop.is-show { opacity: 1; transform: none; pointer-events: auto; }
+    .pn-totop:hover { background: #5A2FC7; }
+    .pn-totop svg { width: 22px; height: 22px; }
+    @media (max-width: 560px) { .pn-totop { right: 16px; bottom: 16px; } }
 
     /* Banner de vista previa (admin viendo como inversionista/patrocinador) */
     .pn-preview-banner { display:flex; align-items:center; gap:14px; margin: 0 0 18px; padding: 13px 18px; border-radius: 14px; background: var(--pn-ink); color:#fff; }
@@ -651,6 +659,9 @@
         {{/if}}
         {{{body}}}
       </main>
+      <button type="button" class="pn-totop" id="pnToTop" aria-label="Volver arriba" title="Volver arriba">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
 
       {{#if panel.profile}}{{#unless previewRole}}
       <!-- Mi perfil: autogestion del usuario. Categoria, monto y modalidad NO se
@@ -821,6 +832,14 @@
     var bg = document.getElementById('pnBurger');
     if (bg) bg.addEventListener('click', function(){ side.classList.add('is-open'); ov.classList.add('is-open'); });
     if (ov) ov.addEventListener('click', function(){ side.classList.remove('is-open'); ov.classList.remove('is-open'); });
+    // Botón "volver arriba": se muestra al bajar y sube suave al tocarlo.
+    (function(){
+      var b = document.getElementById('pnToTop'); if (!b) return;
+      function upd(){ (window.scrollY || window.pageYOffset || 0) > 320 ? b.classList.add('is-show') : b.classList.remove('is-show'); }
+      window.addEventListener('scroll', upd, { passive: true });
+      b.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      upd();
+    })();
     // Countdown (sidebar)
     (function(){
       var el = document.getElementById('pnSideCountdown');
