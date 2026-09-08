@@ -742,6 +742,9 @@
     .nv-src { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:800; color:var(--pn-purple); text-decoration:none; }
     .nv-src--top { margin:2px 0 16px; padding:9px 14px; border:1px solid #DCCFF7; border-radius:11px; background:var(--pn-purple-soft); }
     .nv-src--top:hover { background:#EDE6FB; }
+    /* Respetar el atributo hidden: la regla de display de arriba lo anulaba, así
+       que "Ver la nota original" y la imagen salían aunque no hubiera. */
+    .nv-src[hidden], .nv-img[hidden] { display:none; }
   </style>
   <div class="nv-ov" id="nvOv" onclick="closeNewsView()" hidden></div>
   <aside class="nv-drawer" id="nvDrawer" hidden aria-hidden="true" aria-label="Nota">
