@@ -1944,12 +1944,25 @@ router.post('/admin/ai', auth.requireAdmin, async (req, res) => {
       }
     } catch (_) {}
 
+    // Webcrawler opcional: si se pega una URL, se trae el texto de la nota para
+    // que la IA redacte a partir de ella (bloquea IPs internas vía urlSegura).
+    let fuente = '', fuenteInfo = null;
+    if (String(req.body.fuenteUrl || '').trim()) {
+      try {
+        const p = await linkPreview.leer(req.body.fuenteUrl);
+        fuente = [p.titulo, p.descripcion, p.texto].filter(Boolean).join('\n\n');
+        fuenteInfo = { titulo: p.titulo, imagen: p.imagen, fuente: p.fuente, url: p.url };
+      } catch (e) { return res.status(400).json({ error: 'No se pudo leer esa URL: ' + e.message }); }
+    }
+
     const r = await ai.generar({
       tarea: req.body.tarea,
       instruccion: req.body.instruccion,
       actual: req.body.actual,
-      contexto
+      contexto,
+      fuente
     });
+    if (fuenteInfo) r.fuenteInfo = fuenteInfo;
 
     // Queda registrado siempre, salga bien o mal: si algo raro se publicó,
     // se puede rastrear quién lo pidió. No se guarda el texto generado, solo

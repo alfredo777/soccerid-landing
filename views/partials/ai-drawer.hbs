@@ -46,6 +46,13 @@
         <div class="ai-hint">Si te falta un dato, d&iacute;selo: lo deja marcado entre corchetes en vez de inventarlo.</div>
       </div>
 
+      <div class="ai-f" id="ai-url-wrap" style="display:none;">
+        <label>&iquest;Partir de una nota publicada? <span style="font-weight:400; text-transform:none; color:var(--pn-muted);">(opcional)</span></label>
+        <input type="url" id="ai-fuente-url" placeholder="https://medio.com/nota-original"
+          style="width:100%; padding:11px 13px; border:1px solid var(--pn-border); border-radius:11px; font-family:inherit; font-size:14px; color:var(--pn-ink); background:#fff; box-sizing:border-box;">
+        <div class="ai-hint">Pega el enlace y la IA lee la nota y redacta a partir de su contenido (la resume y la reescribe con la voz de SOCCER iD, no la copia textual).</div>
+      </div>
+
       <label class="ai-check" id="ai-usar-wrap"><input type="checkbox" id="ai-usar" value="1"> Partir de lo que ya est&aacute; escrito en el formulario</label>
 
       <button type="button" class="ai-go" id="ai-generar" onclick="aiGenerar()">Generar propuesta</button>
@@ -92,6 +99,11 @@
     });
     document.getElementById('ai-usar').checked = hay;
     document.getElementById('ai-usar-wrap').style.display = hay ? '' : 'none';
+    // El campo de URL (webcrawler) solo aplica a tareas de CREACIÓN de contenido,
+    // no a mejorar/acortar/traducir (que trabajan sobre lo ya escrito).
+    var esCreacion = ['noticia', 'comunicado', 'presentacion', 'faq'].indexOf(aiCfg.tarea) !== -1;
+    document.getElementById('ai-url-wrap').style.display = esCreacion ? '' : 'none';
+    document.getElementById('ai-fuente-url').value = '';
     var d = document.getElementById('ai-drawer');
     d.classList.add('is-open');
     d.setAttribute('aria-hidden', 'false');
@@ -117,7 +129,8 @@
       body: JSON.stringify({
         tarea: aiCfg.tarea,
         instruccion: document.getElementById('ai-instruccion').value,
-        actual: document.getElementById('ai-usar').checked ? aiTextoActual() : ''
+        actual: document.getElementById('ai-usar').checked ? aiTextoActual() : '',
+        fuenteUrl: (document.getElementById('ai-fuente-url') || {}).value || ''
       })
     })
       .then(function(r){ return r.json().then(function(j){ return { ok: r.ok, j: j }; }); })
