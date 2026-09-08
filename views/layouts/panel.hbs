@@ -362,6 +362,15 @@
     .pn-tour.is-open .pn-tour__panel { transform: translateX(0); }
     .pn-tour__video { flex: 1; display: flex; align-items: center; }
     @media (max-width: 860px) { .pn-tour__panel { width: min(88vw, 420px); } }
+    /* En escritorio un video pide ancho: en vez de un drawer angosto de lado, se
+       muestra como modal CENTRADO en 16:9. */
+    @media (min-width: 861px) {
+      .pn-tour__panel { top: 50%; left: 50%; right: auto; height: auto; width: min(94vw, 960px);
+        border-radius: 18px; transform: translate(-50%, -50%) scale(.96); opacity: 0;
+        transition: transform .2s ease, opacity .2s ease; }
+      .pn-tour.is-open .pn-tour__panel { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+      .pn-tour__video { flex: none; aspect-ratio: 16 / 9; }
+    }
   </style>
 </head>
 <body>

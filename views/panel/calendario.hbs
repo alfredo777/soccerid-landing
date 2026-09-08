@@ -1,5 +1,9 @@
 <style>
   .cl-grid { display:grid; grid-template-columns: 1fr 340px; gap: 22px; align-items:start; }
+  /* Debajo del calendario, a lo ancho: cronograma, suscripción y "todo en
+     orden". Antes se apilaban en la columna angosta de la derecha y dejaban
+     hueco bajo el calendario. */
+  .cl-below { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:18px; margin-top:22px; align-items:start; }
 
   .cl-cal { padding: 22px; }
   .cl-cal__top { display:flex; align-items:center; gap: 14px; margin-bottom: 20px; }
@@ -167,6 +171,15 @@
       </div>
     </div>
 
+    <div class="cl-count">
+      <div class="cl-count__num" id="clCountdown">—</div>
+      <div class="cl-count__lbl">para el partido</div>
+      <div class="cl-count__date">{{panel.eventLabel}}</div>
+    </div>
+  </aside>
+</div>
+
+<div class="cl-below">
     {{#if panel.milestones.length}}
     <div class="pn-card" id="cronograma">
       <div class="pn-card__head"><h3>Cronograma del proyecto</h3></div>
@@ -221,13 +234,6 @@
       </div>
     </div>
     {{/if}}
-
-    <div class="cl-count">
-      <div class="cl-count__num" id="clCountdown">—</div>
-      <div class="cl-count__lbl">para el partido</div>
-      <div class="cl-count__date">{{panel.eventLabel}}</div>
-    </div>
-  </aside>
 </div>
 
 <div class="cl-ev-overlay" id="clEvOverlay" onclick="clCloseEvent()" hidden></div>

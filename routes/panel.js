@@ -452,8 +452,9 @@ async function buildPanelData(user, opts = {}) {
     status: r.status, statusLabel: RISK_STATUS[r.status] || 'En monitoreo'
   }));
 
-  // Fecha/hora del evento para el contador (desde la config editable)
-  const eventDateISO = `${cfg.eventDate || '2027-03-27'}T${cfg.eventTime || '19:00'}:00-05:00`;
+  // Fecha/hora del evento para el contador (desde la config editable).
+  // Hora de CDMX: México quitó el horario de verano, así que es UTC-6 todo el año.
+  const eventDateISO = `${cfg.eventDate || '2027-03-27'}T${cfg.eventTime || '19:00'}:00-06:00`;
 
   // ── Simulador "Escenario por asistencia" (solo participación a riesgo) ──
   // Ejercicio ilustrativo; NO sustituye a computeReturn (que da las cifras oficiales).
