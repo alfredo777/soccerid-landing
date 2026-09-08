@@ -1277,7 +1277,10 @@
     .mp-empty strong { display:block; color:var(--pn-ink); font-size:15px; margin-bottom:8px; }
     .mp-tl { margin-top:22px; }
     .mp-tl h4 { font-size:13px; font-weight:800; margin-bottom:4px; }
-    .mp-tl__owner { background:#fff; border:1px solid var(--pn-border); border-radius:14px; padding:15px 17px; margin-bottom:12px; box-shadow:var(--pn-shadow); }
+    /* Reparte las fichas de "quién entró y cuándo" en columnas en escritorio, en
+       vez de una sola pila hacia abajo. */
+    .mp-tl__grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:14px; align-items:start; }
+    .mp-tl__owner { background:#fff; border:1px solid var(--pn-border); border-radius:14px; padding:15px 17px; box-shadow:var(--pn-shadow); }
     .mp-tl__head { margin-bottom:10px; }
     .mp-tl__head strong { display:block; font-size:14px; font-weight:800; }
     .mp-tl__head small { font-size:11.5px; color:var(--pn-muted); font-weight:600; }
@@ -1313,6 +1316,7 @@
     <p class="ad-hint" style="margin:0 0 14px;">El mapa de arriba dice <em>quién entró con el código de quién</em>;
       esto dice <em>cuándo</em>, que es lo que sirve para llamar a alguien en el momento justo.
       Primero los repartidores con más entradas de otras personas.</p>
+    <div class="mp-tl__grid">
     {{#each ownerTimeline}}
     <div class="mp-tl__owner">
       <div class="mp-tl__head">
@@ -1332,6 +1336,7 @@
     <div class="mp-empty"><strong>Todavía no hay accesos que ordenar.</strong>
       En cuanto alguien entre con un código que tenga dueño, aquí queda la línea de tiempo.</div>
     {{/each}}
+    </div>
   </div>
   <div class="mp-legend">
     <span><i style="background:#6C3CE0;"></i>Dueño del código</span>
