@@ -44,8 +44,13 @@
   .ede-video { position:relative; padding-bottom:56.25%; height:0; border-radius:14px; overflow:hidden; }
   .ede-video iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
 
-  .ede-sponsors { display:flex; flex-wrap:wrap; gap:18px; align-items:center; }
-  .ede-sponsors img { height:44px; max-width:130px; object-fit:contain; }
+  /* Los logos de patrocinadores suelen ser blancos (hechos para fondo oscuro),
+     igual que en la web pública; sobre tarjeta blanca desaparecen. Se ponen
+     sobre fondo oscuro para que se vean. */
+  .ede-sponsors-card { background:linear-gradient(180deg,#0e0e28 0%,#0a0a1a 100%); border:none; }
+  .ede-sponsors-card .ede-sec__h { color:rgba(255,255,255,.55); }
+  .ede-sponsors { display:flex; flex-wrap:wrap; gap:28px; align-items:center; justify-content:center; padding:8px 0; }
+  .ede-sponsors img { height:46px; max-width:150px; object-fit:contain; }
 </style>
 
 <div class="ede-wrap">
@@ -157,7 +162,7 @@
   {{/if}}
 
   {{#if ed.sponsors.length}}
-  <div class="pn-card ede-sec" style="padding:22px 24px;">
+  <div class="pn-card ede-sec ede-sponsors-card" style="padding:22px 24px;">
     <p class="ede-sec__h">Patrocinadores</p>
     <div class="ede-sponsors">
       {{#each ed.sponsors}}<img src="{{this.src}}" alt="{{this.alt}}">{{/each}}

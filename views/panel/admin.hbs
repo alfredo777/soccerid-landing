@@ -982,6 +982,8 @@
             </small>
           </div>
           <div class="ad-actions">
+            <button type="button" class="primary" onclick="openNewsView(this)"
+              data-tag="{{this.typeLabel}}" data-tagcolor="{{this.typeColor}}" data-title="{{this.title}}" data-body="{{this.body}}" data-date="{{this.date}}{{#if this.toLabel}} · {{this.toLabel}}{{/if}}">Ver</button>
             <form method="POST" action="/panel/admin/notification/{{this.id}}/delete" data-confirm="¿Eliminar notificación?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
