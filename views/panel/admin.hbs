@@ -766,6 +766,12 @@
   <script>
     function openNewsView(btn){
       var d = btn.dataset;
+      // El drawer vive dentro de <section id="sec-noticias">, que se oculta con
+      // display:none al cambiar de sección. Se saca al <body> para que funcione
+      // desde cualquier sección (Noticias y Notificaciones usan este drawer).
+      var ovEl = document.getElementById('nvOv'), drEl = document.getElementById('nvDrawer');
+      if (ovEl && ovEl.parentElement !== document.body) document.body.appendChild(ovEl);
+      if (drEl && drEl.parentElement !== document.body) document.body.appendChild(drEl);
       var img = document.getElementById('nvImg');
       if (d.image){ img.src = d.image; img.hidden = false; } else { img.hidden = true; }
       var pill = document.getElementById('nvPill');
