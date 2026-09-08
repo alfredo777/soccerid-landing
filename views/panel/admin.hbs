@@ -54,6 +54,14 @@
   .ad-sec { display:none; }
   .ad-sec.is-active { display:block; }
 
+  /* Conmutador "Ver lista / + Nuevo": separa crear de ver en cada sección que
+     antes apilaba el formulario encima de la lista (se inyecta por JS). */
+  .ad-split { display:inline-flex; gap:6px; padding:5px; background:#F1F0F5; border-radius:13px; margin-bottom:18px; flex-wrap:wrap; max-width:100%; }
+  .ad-split button { border:none; background:none; font-family:inherit; font-size:13px; font-weight:800; color:var(--pn-ink-2); padding:9px 16px; border-radius:9px; cursor:pointer; white-space:nowrap; }
+  .ad-split button:hover { color:var(--pn-ink); }
+  .ad-split button.is-active { background:#fff; color:var(--pn-purple); box-shadow:0 2px 8px rgba(20,20,27,.08); }
+  .ad-grid.ad-grid--split { display:block; }
+
   /* Toast flotante (feedback no bloqueante que se auto-oculta) */
   .ad-toast { position:fixed; right:24px; bottom:24px; z-index:200; display:flex; align-items:center; gap:11px;
     padding:14px 18px; border-radius:13px; font-size:13.5px; font-weight:700; color:#fff; background:var(--pn-ink);
@@ -2951,6 +2959,61 @@
   window.addEventListener('hashchange', function(){ var h = location.hash.replace('#',''); if (document.getElementById('sec-'+h)) activate(h); });
   var initial = (location.hash ? location.hash.replace('#','') : 'usuarios');
   if (document.getElementById('sec-'+initial)) activate(initial);
+
+  // ── Separar "crear" de "ver" en cada sección ──
+  // Muchas secciones apilaban el formulario de alta ENCIMA de la lista, así que
+  // en el teléfono había que pasar todo el form para ver lo que ya existe. Aquí
+  // se inyecta un conmutador "Ver lista / + Nuevo" y se muestra uno a la vez,
+  // arrancando en la lista. Funciona con el layout de dos columnas (.ad-grid) y
+  // con el de tarjetas sueltas (Uso del capital).
+  (function(){
+    // Editores que RELLENAN el formulario inline de su sección: al pulsarlos se
+    // abre el form. Las demás acciones por fila (Correo de un prospecto, abrir
+    // un modal, ir a otra página) no deben cambiar de vista.
+    var RELLENAN = /open(News|Event|Mile|Capital)\s*\(/;
+    document.querySelectorAll('.ad-sec').forEach(function(sec){
+      // Solo secciones con UN formulario de alta + su lista. Las que tienen
+      // varios formularios (Códigos: generar + manual) se dejan como están.
+      if (sec.querySelectorAll('form.ad-form').length !== 1) return;
+      var form = sec.querySelector('form.ad-form');
+      if (!form) return;
+      var cards = Array.prototype.slice.call(sec.querySelectorAll('.pn-card'));
+      var lista = null;
+      for (var i = 0; i < cards.length; i++){
+        var c = cards[i];
+        if (c !== form && !form.contains(c) && !c.contains(form)){ lista = c; break; }
+      }
+      if (!lista) return;
+
+      var grid = form.closest('.ad-grid');
+      if (grid && sec.contains(grid)) grid.classList.add('ad-grid--split');
+
+      function h3(el){ var h = el.querySelector('h3'); if (!h) return ''; var n = h.childNodes[0]; return ((n && n.textContent) || h.textContent || '').trim(); }
+      var nav = document.createElement('div');
+      nav.className = 'ad-split';
+      var bL = document.createElement('button'); bL.type = 'button'; bL.textContent = h3(lista) || 'Ver lista';
+      var bN = document.createElement('button'); bN.type = 'button'; bN.textContent = '+ ' + (h3(form) || 'Nuevo');
+      nav.appendChild(bL); nav.appendChild(bN);
+
+      var ancla = (grid && sec.contains(grid)) ? grid
+        : ((form.compareDocumentPosition(lista) & Node.DOCUMENT_POSITION_FOLLOWING) ? form : lista);
+      ancla.parentNode.insertBefore(nav, ancla);
+
+      function mostrar(w){
+        form.style.display = w === 'new' ? '' : 'none';
+        lista.style.display = w === 'list' ? '' : 'none';
+        bL.classList.toggle('is-active', w === 'list');
+        bN.classList.toggle('is-active', w === 'new');
+      }
+      bL.addEventListener('click', function(){ mostrar('list'); });
+      bN.addEventListener('click', function(){ mostrar('new'); });
+      lista.addEventListener('click', function(e){
+        var b = e.target.closest('button[onclick]');
+        if (b && RELLENAN.test(b.getAttribute('onclick') || '')) mostrar('new');
+      });
+      mostrar('list');
+    });
+  })();
 
   // ── Buscador global con desplegable agrupado por tipo/perfil ──
   (function(){
