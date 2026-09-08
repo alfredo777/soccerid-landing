@@ -1702,8 +1702,22 @@ router.post('/admin/user/:id/resend', auth.requireAdmin, async (req, res, next) 
 // Eliminar usuario
 router.post('/admin/user/:id/delete', auth.requireAdmin, async (req, res, next) => {
   try {
-    await knex('users').where({ id: req.params.id }).whereNot({ role: 'admin' }).del();
-    await knex('user_documents').where({ user_id: req.params.id }).del();
+    const uid = req.params.id;
+    const u = await knex('users').where({ id: uid }).first();
+    if (!u) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Usuario no encontrado'));
+    if (u.role === 'admin') return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('No se puede eliminar una cuenta de administrador'));
+    // Con inversiones registradas NO se borra (igual que la edición): es dinero
+    // de gente real. Primero hay que sacarlas desde su cuenta.
+    const inv = await knex('investments').where({ user_id: uid }).count({ n: '*' }).first();
+    if (Number(inv.n) > 0) {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(`${u.name} tiene ${inv.n} inversión(es). Quítalas primero desde su cuenta.`));
+    }
+    // Sin inversiones: se limpia todo lo que cuelga del usuario para no dejar
+    // huérfanos (paquetes privados, notificaciones directas, documentos).
+    await knex('event_packages').where({ user_id: uid }).del();
+    await knex('notifications').where({ user_id: uid }).del();
+    await knex('user_documents').where({ user_id: uid }).del();
+    await knex('users').where({ id: uid }).del();
     res.redirect('/panel/admin?type=ok&msg=Usuario+eliminado');
   } catch (e) { next(e); }
 });
@@ -2488,10 +2502,10 @@ function portfolioBody(b) {
     presentation_en: (b.presentation_en || '').trim() || null,
     capacity: num(b.capacity),
     ticket_price: num(b.ticket_price),
-    deductions_pct: num(b.deductions_pct),
+    deductions_pct: Math.max(0, Math.min(100, num(b.deductions_pct))),
     rebate_per: num(b.rebate_per),
-    cap_pct: num(b.cap_pct),
-    investor_split: num(b.investor_split)
+    cap_pct: Math.max(0, Math.min(100, num(b.cap_pct))),
+    investor_split: Math.max(0, Math.min(100, num(b.investor_split)))
   };
 }
 // Una edición = un año = una fila. Aquí se guarda TODO: identidad, contenido
@@ -2573,12 +2587,19 @@ router.post('/admin/portfolio/:id/delete', auth.requireAdmin, async (req, res) =
     }
 
     // Lo demás sí cuelga de la edición y se va con ella: si no, quedan filas
-    // apuntando a un event_id que ya no existe.
-    await knex('event_packages').where({ event_id: id }).del();
-    await knex('event_updates').where({ event_id: id }).del();
-    await knex('event_documents').where({ event_id: id }).del();
-    await knex('event_media').where({ event_id: id }).del();
-    await knex('event_communications').where({ event_id: id }).del();
+    // apuntando a un event_id que ya no existe. Incluye cronograma
+    // (milestones), actividades de calendario (events), agenda del partido
+    // (match_agenda) y admins por edición (event_admins) — todas con event_id.
+    const eid = parseInt(id, 10);
+    await knex('event_packages').where({ event_id: eid }).del();
+    await knex('event_updates').where({ event_id: eid }).del();
+    await knex('event_documents').where({ event_id: eid }).del();
+    await knex('event_media').where({ event_id: eid }).del();
+    await knex('event_communications').where({ event_id: eid }).del();
+    await knex('milestones').where({ event_id: eid }).del();
+    await knex('events').where({ event_id: eid }).del();
+    await knex('match_agenda').where({ event_id: eid }).del();
+    if (await knex.schema.hasTable('event_admins')) await knex('event_admins').where({ event_id: eid }).del();
     await knex('portfolio_events').where({ id }).del();
 
     // Si era la edición activa, se vuelve automática en vez de dejar al panel
@@ -3246,7 +3267,15 @@ router.post('/admin/code/:id/enviar', auth.requireAdmin, async (req, res) => {
 });
 
 router.post('/admin/code/:id/delete', auth.requireAdmin, async (req, res, next) => {
-  try { await knex('access_codes').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=C%C3%B3digo+eliminado#codigos'); } catch (e) { next(e); }
+  try {
+    // Se van también sus accesos: si no, quedan huérfanos apuntando a un código
+    // que ya no existe y, si el generador vuelve a producir ese mismo string de
+    // 7 dígitos, se reatribuirían al código nuevo (conteos y dueño falsos).
+    const c = await knex('access_codes').where({ id: req.params.id }).first();
+    if (c) await knex('access_log').where({ code: c.code }).del();
+    await knex('access_codes').where({ id: req.params.id }).del();
+    res.redirect('/panel/admin?type=ok&msg=C%C3%B3digo+eliminado#codigos');
+  } catch (e) { next(e); }
 });
 
 // ── Twilio (SMS): las llaves se configuran aquí, no por variables de entorno ──
@@ -3336,7 +3365,9 @@ router.post('/admin/settings/dashboard', auth.requireAdmin, async (req, res, nex
       };
     }
     if (group === 'folder' || group === 'all') {
-      const sharedUrl = (b.sf_url || '').trim();
+      // Solo http(s): la URL se pinta en un href visible a TODOS los
+      // inversionistas, así que un `javascript:` sería XSS almacenado.
+      const sharedUrl = sourceUrl(b.sf_url);
       patch.sharedFolder = sharedUrl ? { name: (b.sf_name || '').trim() || 'Carpeta compartida', description: (b.sf_desc || '').trim(), url: sharedUrl } : null;
     }
     if (group === 'event' || group === 'all') {
@@ -3381,7 +3412,13 @@ router.post('/admin/lead/:id/status', auth.requireAdmin, async (req, res, next) 
 });
 
 router.post('/admin/lead/:id/delete', auth.requireAdmin, async (req, res, next) => {
-  try { await knex('leads').where({ id: req.params.id }).del(); res.redirect('/panel/admin?type=ok&msg=Prospecto+eliminado#leads'); } catch (e) { next(e); }
+  try {
+    // Se desliga el prospecto de sus accesos (lead_id colgaría a un prospecto
+    // inexistente, y verify lo resucitaría desde el último acceso del equipo).
+    await knex('access_log').where({ lead_id: req.params.id }).update({ lead_id: null });
+    await knex('leads').where({ id: req.params.id }).del();
+    res.redirect('/panel/admin?type=ok&msg=Prospecto+eliminado#leads');
+  } catch (e) { next(e); }
 });
 
 router.post('/admin/lead/:id/email', auth.requireAdmin, async (req, res, next) => {

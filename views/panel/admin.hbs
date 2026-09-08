@@ -1313,6 +1313,18 @@
     .mp-reassign { display:flex; gap:8px; flex-wrap:wrap; padding:0 17px 14px; }
     .mp-reassign[hidden] { display:none; }
     .mp-reassign input { flex:1; min-width:140px; border:1px solid var(--pn-border); border-radius:9px; padding:8px 11px; font-family:inherit; font-size:13px; }
+    .mp-tl__chev { transform:none !important; }
+    .mp-owner-ov { position:fixed; inset:0; background:rgba(20,20,27,.38); opacity:0; transition:opacity .2s; z-index:120; }
+    .mp-owner-ov.is-open { opacity:1; }
+    .mp-owner-drawer { position:fixed; top:0; right:0; height:100%; width:min(480px,94vw); background:#fff; z-index:121;
+      box-shadow:-16px 0 40px rgba(20,20,27,.18); transform:translateX(100%); transition:transform .22s ease; display:flex; flex-direction:column; }
+    .mp-owner-drawer.is-open { transform:none; }
+    .mp-owner-drawer__head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:22px 22px 14px; border-bottom:1px solid var(--pn-border); }
+    .mp-owner-drawer__title strong { display:block; font-size:18px; font-weight:900; color:var(--pn-ink); }
+    .mp-owner-drawer__title small { font-size:12px; color:var(--pn-muted); font-weight:600; }
+    .mp-owner-drawer__close { background:none; border:none; cursor:pointer; color:var(--pn-muted); padding:4px; line-height:0; flex-shrink:0; }
+    .mp-owner-drawer__close svg { width:22px; height:22px; }
+    .mp-owner-drawer__body { padding:6px 22px 22px; overflow-y:auto; }
     .mp-tl__tag { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.3px; color:var(--pn-muted); }
   </style>
 
@@ -1345,12 +1357,12 @@
     <div class="mp-tl__grid" id="mpTlGrid">
     {{#each ownerTimeline}}
     <div class="mp-tl__owner" data-find="{{this.label}} {{this.codigos}}">
-      <button type="button" class="mp-tl__head" onclick="mpToggle(this)">
+      <button type="button" class="mp-tl__head" onclick="mpOpenOwner(this)">
         <span class="mp-tl__headb">
           <strong>{{this.label}}</strong>{{#if this.inferred}} <span class="mp-tl__inf">inferido</span>{{/if}}
           <small>código(s) {{this.codigos}} · {{this.total}} persona(s){{#if this.ajenos}} · <b>{{this.ajenos}} de otra persona</b>{{/if}}</small>
         </span>
-        <svg class="mp-tl__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <svg class="mp-tl__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
       {{#if this.inferred}}
       <div class="mp-tl__act">
@@ -1393,6 +1405,17 @@
     <span><i style="background:#D97706;"></i>Entró con el código de alguien más</span>
     <span>Línea sólida = confirmado que no era el dueño · punteada = no se pudo confirmar</span>
   </div>
+
+  <div class="mp-owner-ov" id="mpOwnerOv" onclick="mpCloseOwner()" hidden></div>
+  <aside class="mp-owner-drawer" id="mpOwnerDrawer" hidden aria-hidden="true" aria-label="Detalle del repartidor">
+    <div class="mp-owner-drawer__head">
+      <div class="mp-owner-drawer__title" id="mpOwnerTitle"></div>
+      <button type="button" class="mp-owner-drawer__close" onclick="mpCloseOwner()" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="mp-owner-drawer__body" id="mpOwnerBody"></div>
+  </aside>
 </section>
 
 <!-- PROSPECTOS -->
@@ -2784,32 +2807,40 @@
   }
 
   var CODES_HISTORY = {{{jsonScript codesHistory}}};
-  // Colapsar/expandir la ficha de un repartidor y buscar en el mapa.
-  function mpToggle(btn){
-    var rows = btn.nextElementSibling;
-    if (!rows) return;
-    rows.hidden = !rows.hidden;
-    btn.classList.toggle('is-open', !rows.hidden);
+  // Abrir el detalle de un repartidor en un DRAWER lateral (antes se desplegaba
+  // hacia abajo). Se clona el contenido ya renderizado de la ficha.
+  function mpOpenOwner(btn){
+    var card = btn.closest('.mp-tl__owner');
+    if (!card) return;
+    var rows = card.querySelector('.mp-tl__rows');
+    var head = card.querySelector('.mp-tl__headb');
+    document.getElementById('mpOwnerTitle').innerHTML = head ? head.innerHTML : '';
+    document.getElementById('mpOwnerBody').innerHTML = (rows && rows.innerHTML.trim()) ? rows.innerHTML : '<p style="color:var(--pn-muted); font-size:13px;">Sin accesos registrados.</p>';
+    var ov = document.getElementById('mpOwnerOv'), d = document.getElementById('mpOwnerDrawer');
+    ov.hidden = false; d.hidden = false; d.setAttribute('aria-hidden', 'false');
+    requestAnimationFrame(function(){ d.classList.add('is-open'); ov.classList.add('is-open'); });
   }
+  function mpCloseOwner(){
+    var ov = document.getElementById('mpOwnerOv'), d = document.getElementById('mpOwnerDrawer');
+    if (!d) return;
+    d.classList.remove('is-open'); ov.classList.remove('is-open');
+    setTimeout(function(){ d.hidden = true; ov.hidden = true; d.setAttribute('aria-hidden', 'true'); }, 220);
+  }
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') mpCloseOwner(); });
+  // Buscar en el mapa: muestra/oculta fichas por nombre, correo, código, IP o
+  // dispositivo (busca también dentro de las personas de cada ficha).
   function mpFilter(q){
     q = (q || '').trim().toLowerCase();
     var grid = document.getElementById('mpTlGrid');
     if (!grid) return;
     grid.querySelectorAll('.mp-tl__owner').forEach(function(o){
-      var head = (o.getAttribute('data-find') || '').toLowerCase();
-      var headMatch = !q || head.indexOf(q) !== -1;
-      var filas = o.querySelectorAll('.mp-tl__row'), algunaFila = false;
-      filas.forEach(function(r){
-        var rf = (r.getAttribute('data-find') || '').toLowerCase();
-        var m = headMatch || (!q ? true : rf.indexOf(q) !== -1);
-        r.style.display = m ? '' : 'none';
-        if (q && m) algunaFila = true;
-      });
-      var visible = headMatch || algunaFila;
-      o.style.display = visible ? '' : 'none';
-      // Al buscar, se abren las fichas que coinciden; sin búsqueda, se colapsan.
-      var box = o.querySelector('.mp-tl__rows'), hb = o.querySelector('.mp-tl__head');
-      if (box){ box.hidden = q ? !visible : true; if (hb) hb.classList.toggle('is-open', q ? visible : false); }
+      var match = !q || (o.getAttribute('data-find') || '').toLowerCase().indexOf(q) !== -1;
+      if (!match && q) {
+        o.querySelectorAll('.mp-tl__row').forEach(function(r){
+          if ((r.getAttribute('data-find') || '').toLowerCase().indexOf(q) !== -1) match = true;
+        });
+      }
+      o.style.display = match ? '' : 'none';
     });
   }
 
