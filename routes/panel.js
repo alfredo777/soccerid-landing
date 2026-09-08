@@ -1248,7 +1248,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       isActiveEdition: String(e.id) === activaId,
       isAutoActive: !cfgDash.activeEditionId && String(e.id) === activaId
     }, {
-      id: e.id, year: e.year, title: e.title, match: e.match || '', subtitle: e.subtitle || '',
+      id: e.id, year: e.year, status: e.status || '', title: e.title, match: e.match || '', subtitle: e.subtitle || '',
       city: e.city || '', venue: e.venue || '', dateLabel: e.event_date || '',
       phase: e.phase, phaseLabel: PHASE_LBL[e.phase] || e.phase, progress: e.progress_pct || 0,
       budgetLabel: formatUSD(e.budget || 0), isDemo: !!e.is_demo, accent: e.accent || '#6C3CE0', code: e.code || '',

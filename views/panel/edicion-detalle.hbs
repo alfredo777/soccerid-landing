@@ -58,6 +58,10 @@
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     Todas las ediciones
   </a>
+  {{#eq ed.status 'past'}}<a class="ede-back" href="/es/socceridcup/{{ed.year}}" target="_blank" rel="noopener" style="margin-left:16px;">
+    Ver en la web pública
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+  </a>{{/eq}}
 
   {{#if isAdminView}}
   <div class="ede-adminnote">

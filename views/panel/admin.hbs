@@ -1130,6 +1130,7 @@
       <div class="ad-actions" style="margin-top:14px;">
         <a class="ad-actions__link" href="/panel/admin/evento/{{this.id}}">Gestionar</a>
         <a class="ad-actions__link" href="/panel/ediciones/{{this.id}}" target="_blank" rel="noopener">Ver ficha</a>
+        {{#eq this.status 'past'}}<a class="ad-actions__link" href="/es/socceridcup/{{this.year}}" target="_blank" rel="noopener">Ver en la web</a>{{/eq}}
         <button type="button" class="primary" onclick="openPortfolio('{{this.id}}')">Editar</button>
         <button type="button" onclick="openPackages('{{this.id}}')">Paquetes ({{this.packages}})</button>
         <form method="POST" action="/panel/admin/portfolio/{{this.id}}/delete" data-confirm="¿Eliminar la edición {{this.title}}?"><button type="submit" class="danger">Eliminar</button></form>
@@ -3082,6 +3083,51 @@
       });
       mostrar('list');
     });
+  })();
+
+  // ── Reordenar (subir/bajar) SIN recargar la página ──
+  // Antes cada flecha era un POST que recargaba todo y te sacaba de tu lugar.
+  // Ahora se manda por fetch y la fila se mueve en el sitio. Si falla, se cae al
+  // envío normal (recarga), para no perder la acción.
+  function evReflechas(list){
+    var items = list.querySelectorAll(':scope > .ad-item');
+    items.forEach(function(it, i){
+      var up = it.querySelector('form[action*="/move"] input[value="up"]');
+      var dn = it.querySelector('form[action*="/move"] input[value="down"]');
+      if (up){ var b = up.parentElement.querySelector('button'); if (b) b.disabled = (i === 0); }
+      if (dn){ var b2 = dn.parentElement.querySelector('button'); if (b2) b2.disabled = (i === items.length - 1); }
+    });
+  }
+  document.addEventListener('submit', function(e){
+    var f = e.target;
+    if (!(f instanceof HTMLFormElement)) return;
+    if (!/\/move(\?|$)/.test(f.getAttribute('action') || '')) return;
+    var item = f.closest('.ad-item'), list = item && item.parentElement;
+    if (!item || !list) return;
+    var dir = (f.querySelector('[name="dir"]') || {}).value;
+    e.preventDefault();
+    var btn = f.querySelector('button'); if (btn) btn.disabled = true;
+    fetch(f.action, { method: 'POST', body: new FormData(f), headers: { 'X-Requested-With': 'fetch' }, credentials: 'same-origin' })
+      .then(function(r){ if (!r.ok) throw new Error('mal'); return r; })
+      .then(function(){
+        if (dir === 'up' && item.previousElementSibling) list.insertBefore(item, item.previousElementSibling);
+        else if (dir === 'down' && item.nextElementSibling) list.insertBefore(item.nextElementSibling, item);
+        evReflechas(list);
+        item.classList.remove('ad-jump'); void item.offsetWidth; item.classList.add('ad-jump');
+      })
+      .catch(function(){ HTMLFormElement.prototype.submit.call(f); });
+  });
+
+  // Mantener la posición de scroll tras las acciones que sí recargan (alta,
+  // estatus, borrar): al volver a /panel/admin se restaura dónde estabas.
+  window.addEventListener('beforeunload', function(){
+    try { sessionStorage.setItem('adminScrollY', String(window.scrollY || window.pageYOffset || 0)); } catch (_){}
+  });
+  (function(){
+    try {
+      var y = sessionStorage.getItem('adminScrollY');
+      if (y !== null){ sessionStorage.removeItem('adminScrollY'); window.setTimeout(function(){ window.scrollTo(0, parseInt(y, 10) || 0); }, 40); }
+    } catch (_){}
   })();
 
   // ── Buscador global con desplegable agrupado por tipo/perfil ──

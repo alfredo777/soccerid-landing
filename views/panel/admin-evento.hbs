@@ -563,4 +563,13 @@
     window.addEventListener('hashchange', function(){ activar((location.hash || '#resumen').slice(1)); });
     activar((location.hash || '#resumen').slice(1));
   })();
+
+  // Esta página cuelga de "Ediciones": se marca ese enlace en el menú lateral
+  // para que la selección no quede vacía al entrar desde "Gestionar".
+  (function(){
+    var link = document.querySelector('.pn-nav a[data-tab="eventos"]');
+    if (!link) return;
+    document.querySelectorAll('.pn-nav a.is-active').forEach(function(a){ a.classList.remove('is-active'); });
+    link.classList.add('is-active');
+  })();
 </script>
