@@ -3099,17 +3099,55 @@ router.post('/admin/code/:id/assign', auth.requireAdmin, async (req, res, next) 
       const m = codeMap.matchOwner(updated, { name: a.name, email: a.email });
       await knex('access_log').where({ id: a.id }).update({ matched_owner: m });
     }
-    const msg = asignado
+    let extra = '';
+    // Si se pidió, se manda el código por email en el mismo paso de asignar.
+    if (asignado && req.body.enviar_email) {
+      if (!email) extra = '. No se envió email: falta el correo del dueño';
+      else {
+        const r = await enviarCodigoA(updated, { email: true, sms: false });
+        extra = r.partes.length ? '. ' + r.partes.join(' · ') : '. Falló el email: ' + r.fallos.join(' · ');
+        await notifyAdmins({
+          type: 'envio', channels: [],
+          title: `Código ${c.code} enviado a ${name || email}`,
+          body: [r.partes.join(' · '), r.fallos.join(' · ')].filter(Boolean).join(' | ')
+        }).catch(() => {});
+      }
+    }
+    const msg = (asignado
       ? `Código ${c.code} asignado a ${name || email || phoneRaw}` + (previos.length ? ` (${previos.length} acceso(s) recalculado(s))` : '')
-      : `Código ${c.code} sin dueño`;
+      : `Código ${c.code} sin dueño`) + extra;
     res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(msg) + '#codigos');
   } catch (e) {
     res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(e.message) + '#codigos');
   }
 });
 
-// Manda el código a la persona a la que se le asignó. Reutiliza el mailer y el
-// canal de SMS que ya existen; no hay un tercer camino de envío.
+// Envío del código por email/SMS. Reutiliza el mailer y el canal de SMS que ya
+// existen; no hay un tercer camino de envío. Lo usan tanto el botón "Enviar"
+// como el checkbox de "mandar por email al asignar".
+async function enviarCodigoA(c, { email, sms }) {
+  const nombre = c.assignee_name || 'Hola';
+  const enlace = `${process.env.BASE_URL || 'https://soccerid.co'}/es/socceridcup2027`;
+  const cuerpo = `Tu código de acceso a la propuesta SOCCER iD CUP 2027 es ${c.code}.\nEntra en ${enlace} y escríbelo cuando te lo pida.`;
+  const partes = [], fallos = [];
+  if (email) {
+    if (!c.assignee_email) fallos.push('no tiene correo');
+    else {
+      const r = await sendNotification({ to: c.assignee_email, name: nombre, title: 'Tu código de acceso a la propuesta 2027', body: cuerpo });
+      r && r.sent ? partes.push('email enviado') : fallos.push('el correo no salió (¿SMTP configurado?)');
+    }
+  }
+  if (sms) {
+    if (!c.assignee_phone) fallos.push('no tiene teléfono');
+    else {
+      const r = await panelSms.sendSms({ to: c.assignee_phone, body: cuerpo });
+      r && r.sent ? partes.push('SMS enviado') : fallos.push('SMS: ' + ((r && r.error) || 'no salió'));
+    }
+  }
+  return { partes, fallos };
+}
+
+// Manda el código a la persona a la que se le asignó.
 router.post('/admin/code/:id/enviar', auth.requireAdmin, async (req, res) => {
   try {
     const c = await knex('access_codes').where({ id: req.params.id }).first();
@@ -3122,25 +3160,7 @@ router.post('/admin/code/:id/enviar', auth.requireAdmin, async (req, res) => {
       return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Elige al menos un canal') + '#codigos');
     }
 
-    const nombre = c.assignee_name || 'Hola';
-    const enlace = `${process.env.BASE_URL || 'https://soccerid.co'}/es/socceridcup2027`;
-    const cuerpo = `Tu código de acceso a la propuesta SOCCER iD CUP 2027 es ${c.code}.\nEntra en ${enlace} y escríbelo cuando te lo pida.`;
-
-    const partes = [], fallos = [];
-    if (quiereEmail) {
-      if (!c.assignee_email) fallos.push('no tiene correo');
-      else {
-        const r = await sendNotification({ to: c.assignee_email, name: nombre, title: 'Tu código de acceso a la propuesta 2027', body: cuerpo });
-        r && r.sent ? partes.push('email enviado') : fallos.push('el correo no salió (¿SMTP configurado?)');
-      }
-    }
-    if (quiereSms) {
-      if (!c.assignee_phone) fallos.push('no tiene teléfono');
-      else {
-        const r = await panelSms.sendSms({ to: c.assignee_phone, body: cuerpo });
-        r && r.sent ? partes.push('SMS enviado') : fallos.push('SMS: ' + ((r && r.error) || 'no salió'));
-      }
-    }
+    const { partes, fallos } = await enviarCodigoA(c, { email: quiereEmail, sms: quiereSms });
 
     // Queda registrado para el organizador, sin volver a mandar correo: el aviso
     // ya salió arriba y duplicarlo solo estorba.
