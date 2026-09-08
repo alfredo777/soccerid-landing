@@ -739,7 +739,9 @@
     .nv-meta { font-size:12.5px; color:var(--pn-muted); font-weight:700; margin-bottom:16px; }
     .nv-excerpt { font-size:15px; font-weight:700; color:var(--pn-ink); line-height:1.55; margin:0 0 14px; }
     .nv-text { font-size:14px; color:var(--pn-ink-2); line-height:1.75; white-space:pre-wrap; }
-    .nv-src { display:inline-flex; align-items:center; gap:7px; margin-top:20px; font-size:13px; font-weight:800; color:var(--pn-purple); text-decoration:none; }
+    .nv-src { display:inline-flex; align-items:center; gap:7px; font-size:13px; font-weight:800; color:var(--pn-purple); text-decoration:none; }
+    .nv-src--top { margin:2px 0 16px; padding:9px 14px; border:1px solid #DCCFF7; border-radius:11px; background:var(--pn-purple-soft); }
+    .nv-src--top:hover { background:#EDE6FB; }
   </style>
   <div class="nv-ov" id="nvOv" onclick="closeNewsView()" hidden></div>
   <aside class="nv-drawer" id="nvDrawer" hidden aria-hidden="true" aria-label="Nota">
@@ -753,12 +755,12 @@
       </div>
       <h2 id="nvTitle"></h2>
       <div class="nv-meta" id="nvMeta"></div>
-      <p class="nv-excerpt" id="nvExcerpt"></p>
-      <div class="nv-text" id="nvText"></div>
-      <a class="nv-src" id="nvSrc" target="_blank" rel="noopener" hidden>
+      <a class="nv-src nv-src--top" id="nvSrc" target="_blank" rel="noopener" hidden>
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
         Ver la nota original
       </a>
+      <p class="nv-excerpt" id="nvExcerpt"></p>
+      <div class="nv-text" id="nvText"></div>
     </div>
   </aside>
   <script>
@@ -1291,8 +1293,8 @@
     <em>"el código de X lo usó Y"</em>: ahí es donde aparecen los reenvíos y los referidos.</p>
 
   <div class="mp-stats">
-    <div class="mp-stat"><b>{{codesAssigned}}</b><span>códigos con dueño</span></div>
-    <div class="mp-stat"><b>{{codesLeaked}}</b><span>códigos usados por otra persona</span></div>
+    <div class="mp-stat"><b>{{mapaConDueno}}</b><span>códigos con dueño</span></div>
+    <div class="mp-stat"><b>{{mapaAjenos}}</b><span>códigos usados por otra persona</span></div>
     <div class="mp-stat"><b>{{relations.visitors.length}}</b><span>personas alcanzadas por reenvío</span></div>
     <div class="mp-stat"><b>{{relations.owners.length}}</b><span>repartidores en el mapa</span></div>
   </div>
@@ -1314,7 +1316,7 @@
     {{#each ownerTimeline}}
     <div class="mp-tl__owner">
       <div class="mp-tl__head">
-        <strong>{{this.label}}</strong>
+        <strong>{{this.label}}</strong>{{#if this.inferred}} <span style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.3px; color:#B77A1E; background:#FFF4E5; padding:2px 8px; border-radius:20px;">inferido</span>{{/if}}
         <small>código(s) {{this.codigos}} · {{this.total}} acceso(s){{#if this.ajenos}} · <b>{{this.ajenos}} de otra persona</b>{{/if}}</small>
       </div>
       {{#each this.accesos}}
@@ -3055,10 +3057,6 @@
   // arrancando en la lista. Funciona con el layout de dos columnas (.ad-grid) y
   // con el de tarjetas sueltas (Uso del capital).
   (function(){
-    // Editores que RELLENAN el formulario inline de su sección: al pulsarlos se
-    // abre el form. Las demás acciones por fila (Correo de un prospecto, abrir
-    // un modal, ir a otra página) no deben cambiar de vista.
-    var RELLENAN = /open(News|Event|Mile|Capital)\s*\(/;
     document.querySelectorAll('.ad-sec').forEach(function(sec){
       // Solo secciones con UN formulario de alta + su lista. Las que tienen
       // varios formularios (Códigos: generar + manual) se dejan como están.
@@ -3095,10 +3093,8 @@
       }
       bL.addEventListener('click', function(){ mostrar('list'); });
       bN.addEventListener('click', function(){ mostrar('new'); });
-      lista.addEventListener('click', function(e){
-        var b = e.target.closest('button[onclick]');
-        if (b && RELLENAN.test(b.getAttribute('onclick') || '')) mostrar('new');
-      });
+      // Los "Editar" abren un modal, no el form inline: NO cambian de vista, así
+      // que al cerrar el modal la lista sigue ahí (antes saltaba a "Crear").
       mostrar('list');
     });
   })();
@@ -3251,32 +3247,19 @@
     box.addEventListener('focus', function(){ if (box.value.trim()){ INDEX = buildIndex(); render(box.value); } });
   })();
 
-  // ── Confirmación inline (reemplaza confirm() nativo): "¿Eliminar? Sí / No" ──
+  // ── Confirmación antes de acciones con data-confirm ──
+  // Usa el diálogo NATIVO: la versión inline se encimaba con los otros botones
+  // en móvil y sus botones no respondían.
   (function(){
     document.addEventListener('submit', function(e){
       var form = e.target;
       if (!form || !form.getAttribute || !form.getAttribute('data-confirm')) return;
       if (form.__ok) return;               // ya confirmado → deja pasar
       e.preventDefault();
-      if (form.__confirming) return;       // ya se está mostrando el confirm
-      form.__confirming = true;
-      var btn = form.querySelector('[type="submit"], button:not([type])');
-      var msg = form.getAttribute('data-confirm') || '¿Confirmar?';
-      var wrap = document.createElement('span');
-      wrap.className = 'ad-confirm';
-      var q = document.createElement('span'); q.className = 'ad-confirm__q'; q.textContent = msg;
-      var yes = document.createElement('button'); yes.type = 'button'; yes.className = 'yes'; yes.textContent = 'Sí, eliminar';
-      var no = document.createElement('button'); no.type = 'button'; no.className = 'no'; no.textContent = 'Cancelar';
-      if (/enviar|compartir/i.test(msg)) yes.textContent = 'Sí, continuar';
-      wrap.appendChild(q); wrap.appendChild(yes); wrap.appendChild(no);
-      if (btn) btn.style.display = 'none';
-      form.appendChild(wrap);
-      function cleanup(){ wrap.remove(); if (btn) btn.style.display = ''; form.__confirming = false; }
-      no.addEventListener('click', cleanup);
-      yes.addEventListener('click', function(){
-        form.__ok = true; cleanup();
-        if (form.requestSubmit) form.requestSubmit(btn); else form.submit();
-      });
+      if (window.confirm(form.getAttribute('data-confirm') || '¿Confirmar?')){
+        form.__ok = true;
+        if (form.requestSubmit) form.requestSubmit(); else form.submit();
+      }
     }, true);
   })();
 

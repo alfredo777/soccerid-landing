@@ -1169,17 +1169,34 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     const codesLeaked = codesView.filter(c => c.otherAccesses > 0).length;
     const codeTags = [...new Set(codesView.flatMap(c => c.tags))].sort();
 
+    // Dueño inferido: si un código NO tiene dueño asignado a mano, se toma como
+    // dueño a la PRIMERA persona que entró con él (los siguientes se cuentan como
+    // reenvíos). Así el mapa se arma solo con los accesos, sin tener que asignar
+    // a mano; al asignar un dueño de verdad, ese manda sobre el inferido.
+    const accAsc = {};
+    allAccess.slice().sort((x, y) => new Date(x.created_at || 0) - new Date(y.created_at || 0))
+      .forEach(a => { (accAsc[a.code] = accAsc[a.code] || []).push(a); });
+    const codeRowsMap = codeRows.map(c => {
+      if (c.assignee_name || c.assignee_email || c.assignee_phone) return c;
+      const first = (accAsc[c.code] || [])[0];
+      if (!first || !(first.name || first.email)) return c; // sin datos, no se puede inferir
+      return Object.assign({}, c, { assignee_name: first.name || '', assignee_email: first.email || '', _inferred: true });
+    });
+
     // Mapa de relaciones: quién repartió su código y quién acabó entrando con él
-    const relations = codeMap.buildRelations(codeRows, allAccess);
+    const relations = codeMap.buildRelations(codeRowsMap, allAccess);
+    const mapaConDueno = codeRowsMap.filter(c => c.assignee_name || c.assignee_email || c.assignee_phone).length;
+    const mapaAjenosSet = new Set(); relations.edges.forEach(e => (e.codes || []).forEach(cd => mapaAjenosSet.add(cd)));
+    const mapaAjenos = mapaAjenosSet.size;
 
     // Timeline por dueño: sus accesos en orden, juntando todos sus códigos.
     // El mapa dice QUIÉN entró con el código de quién; esto dice CUÁNDO, que es
     // lo que hace falta para llamar a alguien en el momento adecuado.
     const codigosPorDueno = {};
-    codeRows.forEach(c => {
+    codeRowsMap.forEach(c => {
       const k = codeMap.normEmail(c.assignee_email) || codeMap.normPhone(c.assignee_phone) || codeMap.normName(c.assignee_name);
       if (!k) return;
-      (codigosPorDueno[k] = codigosPorDueno[k] || { label: c.assignee_name || c.assignee_email || c.assignee_phone, codigos: [] }).codigos.push(c.code);
+      (codigosPorDueno[k] = codigosPorDueno[k] || { label: c.assignee_name || c.assignee_email || c.assignee_phone, inferred: !!c._inferred, codigos: [] }).codigos.push(c.code);
     });
     const ownerTimeline = Object.keys(codigosPorDueno).map(k => {
       const d = codigosPorDueno[k];
@@ -1194,7 +1211,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
           whoLabel: isOwner(a) ? 'El dueño' : (isOther(a) ? 'Otra persona' : 'Sin confirmar')
         }));
       return {
-        label: d.label, codigos: d.codigos.join(', '),
+        label: d.label, inferred: !!d.inferred, codigos: d.codigos.join(', '),
         total: suyos.length,
         ajenos: suyos.filter(x => x.other).length,
         accesos: suyos
@@ -1578,7 +1595,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       investorTiers: tiers.filter(t => t.role === 'investor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
       sponsorTiers: tiers.filter(t => t.role === 'sponsor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
       codes: codesView, codesUsed, codesUnused, codesHistory,
-      codesAssigned, codesLeaked, codeTags, relations, ownerTimeline,
+      codesAssigned, codesLeaked, codeTags, relations, ownerTimeline, mapaConDueno, mapaAjenos,
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
       notifyEmails, twilio, notifyPeople, notifTypes, stats,
