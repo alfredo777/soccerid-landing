@@ -15,8 +15,9 @@
   .ev-idbar__tag { margin-left:auto; font-size:11px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:var(--pn-ink-2); background:#fff; padding:6px 12px; border-radius:20px; }
 
   .ev-nav { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
-  .ev-nav a { padding:8px 15px; border-radius:999px; border:1px solid var(--pn-border); background:#fff; font-size:12.5px; font-weight:700; color:var(--pn-ink-2); }
+  .ev-nav a { padding:8px 15px; border-radius:999px; border:1px solid var(--pn-border); background:#fff; font-size:12.5px; font-weight:700; color:var(--pn-ink-2); cursor:pointer; }
   .ev-nav a:hover { background:var(--pn-purple-soft); border-color:#DCCFF7; color:var(--pn-purple); }
+  .ev-nav a.is-active { background:var(--pn-purple); border-color:var(--pn-purple); color:#fff; box-shadow:0 8px 18px rgba(108,60,224,.22); }
 
   .ev-kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(148px,1fr)); gap:12px; margin-bottom:22px; }
   .ev-kpi { background:#fff; border:1px solid var(--pn-border); border-radius:14px; padding:15px 17px; box-shadow:var(--pn-shadow); }
@@ -29,7 +30,8 @@
   .ev-legend { font-size:11.5px; color:var(--pn-muted); font-weight:600; }
   .ev-legend i { display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:5px; vertical-align:middle; }
 
-  .ev-sec { padding:22px; margin-bottom:18px; scroll-margin-top:20px; }
+  .ev-sec { padding:22px; margin-bottom:18px; scroll-margin-top:20px; display:none; }
+  .ev-sec.is-active { display:block; }
   .ev-sec h3 { font-size:15px; font-weight:800; margin-bottom:4px; }
   .ev-sec .ev-sub { font-size:12px; color:var(--pn-muted); font-weight:600; margin-bottom:16px; line-height:1.5; }
   .ev-f { margin-bottom:13px; }
@@ -97,19 +99,19 @@
   {{#if ev.isDemo}}<span class="ev-idbar__tag" style="color:#B77A1E;">Datos demo</span>{{/if}}
 </div>
 
-<nav class="ev-nav">
-  <a href="#resumen">Resumen</a>
-  <a href="#cronologia">Cronología</a>
-  <a href="#dataroom">Data room</a>
-  <a href="#evidencias">Evidencias</a>
-  <a href="#medios">En medios</a>
-  <a href="#comunicaciones">Comunicaciones</a>
-  <a href="#agenda">Agenda del partido</a>
-  <a href="#inversiones">Inversiones</a>
+<nav class="ev-nav" id="evNav">
+  <a href="#resumen" data-target="resumen">Resumen</a>
+  <a href="#cronologia" data-target="cronologia">Cronología</a>
+  <a href="#dataroom" data-target="dataroom">Data room</a>
+  <a href="#evidencias" data-target="evidencias">Evidencias</a>
+  <a href="#medios" data-target="medios">En medios</a>
+  <a href="#comunicaciones" data-target="comunicaciones">Comunicaciones</a>
+  <a href="#agenda" data-target="agenda">Agenda del partido</a>
+  <a href="#inversiones" data-target="inversiones">Inversiones</a>
 </nav>
 
 <!-- RESUMEN -->
-<section class="pn-card ev-sec" id="resumen">
+<section class="pn-card ev-sec is-active" id="resumen">
   <h3>Resumen</h3>
   <p class="ev-sub">Todo esto se <strong>cuenta solo</strong> a partir de lo que hay cargado. No se captura a mano, porque un número escrito a mano queda viejo en cuanto alguien agrega algo.</p>
   <div class="ev-kpis">
@@ -535,4 +537,30 @@
       if (!confirm(f.dataset.confirm)) e.preventDefault();
     });
   });
+
+  // Pestañas: se muestra una sección a la vez (antes era un solo scroll con
+  // todo junto). El hash sigue funcionando: al guardar un avance/documento el
+  // servidor redirige a #cronologia, #dataroom, etc. y aquí se abre esa pestaña.
+  (function(){
+    var nav = document.getElementById('evNav');
+    if (!nav) return;
+    var links = nav.querySelectorAll('a[data-target]');
+    function activar(id){
+      var existe = document.getElementById(id);
+      if (!existe) id = 'resumen';
+      document.querySelectorAll('.ev-sec').forEach(function(s){ s.classList.toggle('is-active', s.id === id); });
+      links.forEach(function(a){ a.classList.toggle('is-active', a.getAttribute('data-target') === id); });
+    }
+    links.forEach(function(a){
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        var id = a.getAttribute('data-target');
+        activar(id);
+        history.replaceState(null, '', '#' + id);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+    window.addEventListener('hashchange', function(){ activar((location.hash || '#resumen').slice(1)); });
+    activar((location.hash || '#resumen').slice(1));
+  })();
 </script>
