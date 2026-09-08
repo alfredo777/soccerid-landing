@@ -815,6 +815,13 @@ app.post('/api/project2027/verify', async (req, res) => {
 
     const codeRow = await knex('access_codes').where({ code }).first();
     if (!codeRow) return res.json({ ok: false });
+    // Código bloqueado por el organizador (control de filtraciones): se niega la
+    // entrada, pero queda registrado el intento para el mapa.
+    if (codeRow.revoked) {
+      const ip = req.headers['x-forwarded-for'] || req.ip;
+      await knex('access_log').insert({ code, name: (req.body.name || '').trim() || null, email: (req.body.email || '').trim().toLowerCase() || null, ip, user_agent: req.headers['user-agent'] || '', new_device: false, matched_owner: null, blocked: true }).catch(() => {});
+      return res.json({ ok: false, revoked: true });
+    }
     const isTest = codeRow.note === 'test';
 
     // Identificación de dispositivo por cookie

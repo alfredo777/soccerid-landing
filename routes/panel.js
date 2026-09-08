@@ -1161,7 +1161,8 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         assigneeName: c.assignee_name || '', assigneeEmail: c.assignee_email || '',
         assigneePhone: c.assignee_phone || '', tagsText: c.tags || '',
         tags: codeMap.parseTags(c.tags),
-        assigned: !!(c.assignee_name || c.assignee_email || c.assignee_phone)
+        assigned: !!(c.assignee_name || c.assignee_email || c.assignee_phone),
+        revoked: !!c.revoked
       };
     });
     const codesUsed = codesView.filter(c => c.status === 'used').length;
@@ -1208,6 +1209,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         .map(a => ({
           code: a.code, name: a.name || 'Sin nombre', email: a.email || '',
           when: fmtWhen(a.created_at),
+          ip: a.ip || '', device: (a.device_id || '').slice(0, 8), newDevice: !!a.new_device, blocked: !!a.blocked,
           owner: isOwner(a), other: isOther(a),
           whoLabel: isOwner(a) ? 'El dueño' : (isOther(a) ? 'Otra persona' : 'Sin confirmar')
         }));
@@ -3082,6 +3084,18 @@ router.post('/admin/code/:id/status', auth.requireAdmin, async (req, res, next) 
     const status = req.body.status === 'used' ? 'used' : 'unused';
     await knex('access_codes').where({ id: req.params.id }).update({ status, updated_at: knex.fn.now() });
     res.redirect('/panel/admin?type=ok&msg=Estado+actualizado#codigos');
+  } catch (e) { next(e); }
+});
+
+// Bloquear / reactivar un código: control de filtraciones. Un código bloqueado
+// deja de dar acceso a la propuesta 2027 (el intento queda registrado).
+router.post('/admin/code/:id/revoke', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const c = await knex('access_codes').where({ id: req.params.id }).first();
+    if (!c) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Código no encontrado') + '#codigos');
+    const rev = !c.revoked;
+    await knex('access_codes').where({ id: c.id }).update({ revoked: rev, updated_at: knex.fn.now() });
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Código ${c.code} ${rev ? 'BLOQUEADO — ya no da acceso' : 'reactivado'}`) + '#codigos');
   } catch (e) { next(e); }
 });
 

@@ -1214,6 +1214,7 @@
             <small>
               {{#if this.isTest}}Código de prueba · {{/if}}{{this.statusLabel}} · {{this.accesses}} accesos
               {{#if this.otherAccesses}}<span class="cd-flag">{{this.otherAccesses}} de otra persona</span>{{/if}}
+              {{#if this.revoked}}<span class="cd-flag" style="background:#FEE2E2; color:#B91C1C;">🔒 Bloqueado</span>{{/if}}
             </small>
             <small>
               {{#if this.assigned}}<span class="cd-owner">{{this.assigneeName}}{{#unless this.assigneeName}}{{this.assigneeEmail}}{{/unless}}</span>{{else}}<span class="cd-none">Sin dueño asignado</span>{{/if}}
@@ -1232,6 +1233,7 @@
                 <option value="used" {{#eq this.status 'used'}}selected{{/eq}}>Usado</option>
               </select>
             </form>
+            <form method="POST" action="/panel/admin/code/{{this.id}}/revoke" data-confirm="{{#if this.revoked}}¿Reactivar el código {{this.code}}? Volverá a dar acceso.{{else}}¿Bloquear el código {{this.code}}? Ya no dará acceso a la propuesta 2027.{{/if}}"><button type="submit"{{#unless this.revoked}} class="danger"{{/unless}}>{{#if this.revoked}}Reactivar{{else}}Bloquear{{/if}}</button></form>
             <form method="POST" action="/panel/admin/code/{{this.id}}/delete" data-confirm="¿Eliminar el código {{this.code}}?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
         </div>
@@ -1303,6 +1305,7 @@
     .mp-tl__dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
     .mp-tl__when { color:var(--pn-muted); font-weight:700; min-width:150px; }
     .mp-tl__who { flex:1; min-width:180px; color:var(--pn-ink-2); }
+    .mp-tl__from { display:block; font-size:11px; color:var(--pn-muted); font-weight:600; margin-top:2px; }
     .mp-tl__tag { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.3px; color:var(--pn-muted); }
   </style>
 
@@ -1344,10 +1347,12 @@
       </button>
       <div class="mp-tl__rows" hidden>
       {{#each this.accesos}}
-      <div class="mp-tl__row" data-find="{{this.name}} {{this.email}}">
-        <span class="mp-tl__dot" style="background:{{#if this.other}}#D97706{{else}}{{#if this.owner}}#0E9F6E{{else}}#C7C3D4{{/if}}{{/if}}"></span>
+      <div class="mp-tl__row" data-find="{{this.name}} {{this.email}} {{this.ip}} {{this.device}}">
+        <span class="mp-tl__dot" style="background:{{#if this.blocked}}#B91C1C{{else}}{{#if this.other}}#D97706{{else}}{{#if this.owner}}#0E9F6E{{else}}#C7C3D4{{/if}}{{/if}}{{/if}}"></span>
         <span class="mp-tl__when">{{this.when}}</span>
-        <span class="mp-tl__who"><strong>{{this.name}}</strong>{{#if this.email}} · {{this.email}}{{/if}}</span>
+        <span class="mp-tl__who"><strong>{{this.name}}</strong>{{#if this.email}} · {{this.email}}{{/if}}
+          <span class="mp-tl__from">{{#if this.ip}}IP {{this.ip}}{{/if}}{{#if this.device}} · disp. {{this.device}}{{/if}}{{#if this.newDevice}} · <b style="color:#6C3CE0;">dispositivo nuevo</b>{{/if}}{{#if this.blocked}} · <b style="color:#B91C1C;">bloqueado</b>{{/if}}</span>
+        </span>
         <span class="mp-tl__tag">{{this.whoLabel}}</span>
       </div>
       {{/each}}

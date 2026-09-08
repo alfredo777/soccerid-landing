@@ -232,7 +232,10 @@ async function ensureSchema() {
       ['assignee_email', (t) => t.string('assignee_email')],
       ['assignee_phone', (t) => t.string('assignee_phone')],
       ['tags', (t) => t.string('tags')],            // lista separada por comas
-      ['assigned_at', (t) => t.timestamp('assigned_at')]
+      ['assigned_at', (t) => t.timestamp('assigned_at')],
+      // Código bloqueado: se niega la entrada a la propuesta 2027 (control de
+      // filtraciones). Se puede reactivar.
+      ['revoked', (t) => t.boolean('revoked').defaultTo(false)]
     ];
     for (const [name, build] of codeCols) {
       if (!(await knex.schema.hasColumn('access_codes', name))) {
@@ -246,6 +249,12 @@ async function ensureSchema() {
   if (await knex.schema.hasTable('access_log') && !(await knex.schema.hasColumn('access_log', 'matched_owner'))) {
     await knex.schema.alterTable('access_log', (t) => {
       t.boolean('matched_owner');
+    });
+  }
+  // Intento con un código bloqueado (se registra aunque no se dé acceso).
+  if (await knex.schema.hasTable('access_log') && !(await knex.schema.hasColumn('access_log', 'blocked'))) {
+    await knex.schema.alterTable('access_log', (t) => {
+      t.boolean('blocked').defaultTo(false);
     });
   }
 
