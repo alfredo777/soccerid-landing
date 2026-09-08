@@ -2676,13 +2676,31 @@
   if (formEdicion) formEdicion.addEventListener('submit', edSerialize);
   document.querySelectorAll('.ad-langtab').forEach(function(b){ b.addEventListener('click', function(){ setEditionLang(b.dataset.lang); }); });
 
+  function emailValido(e){ return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(e || '').trim()); }
   function openLeadEmail(btn){
     var d = btn.dataset;
+    var email = d.email || '';
     document.getElementById('el-name').textContent = d.name;
-    document.getElementById('el-email').textContent = d.email;
-    document.getElementById('form-lead-email').action = '/panel/admin/lead/' + d.id + '/email';
+    var to = document.getElementById('el-email');
+    var esc = String(email).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    to.innerHTML = 'Para: <strong style="color:var(--pn-ink);">' + esc + '</strong>'
+      + (emailValido(email) ? '' : ' <span style="color:#b91c1c; font-weight:700;">— ⚠ este correo se ve mal escrito, verifícalo</span>');
+    var f = document.getElementById('form-lead-email');
+    f.action = '/panel/admin/lead/' + d.id + '/email';
+    f.setAttribute('data-email', email);
     openModal('modal-lead');
   }
+  // Confirmación mostrando la dirección, para atrapar typos antes de mandar.
+  document.addEventListener('DOMContentLoaded', function(){
+    var f = document.getElementById('form-lead-email');
+    if (f) f.addEventListener('submit', function(e){
+      var email = f.getAttribute('data-email') || '';
+      var msg = emailValido(email)
+        ? '¿Enviar el correo a ' + email + '?'
+        : 'El correo "' + email + '" no parece válido. ¿Enviarlo de todas formas?';
+      if (!confirm(msg)) e.preventDefault();
+    });
+  });
 
   var LEADS_HISTORY = {{{jsonScript leadsHistory}}};
   function openLeadHistory(btn){

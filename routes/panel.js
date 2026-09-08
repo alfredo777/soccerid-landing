@@ -1620,6 +1620,7 @@ router.post('/admin/invite', auth.requireAdmin, async (req, res, next) => {
     const amount = parseInt(req.body.amount || '0', 10) || 0;
     const investmentType = req.body.investment_type === 'riesgo' ? 'riesgo' : 'fijo';
     if (!name || !email) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Nombre y email son obligatorios'));
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El correo no es válido: ' + email));
 
     const existing = await knex('users').where({ email }).first();
     if (existing) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Ya existe un usuario con ese email'));
@@ -3321,6 +3322,9 @@ router.post('/admin/lead/:id/email', auth.requireAdmin, async (req, res, next) =
   try {
     const lead = await knex('leads').where({ id: req.params.id }).first();
     if (!lead) return res.redirect('/panel/admin?type=error&msg=Prospecto+no+encontrado#leads');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(lead.email || '').trim())) {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El correo del prospecto no es válido: ' + (lead.email || '(vacío)') + '. Corrígelo antes de enviar.') + '#leads');
+    }
     const r = await sendLeadEmail({ to: lead.email, name: lead.name, subject: (req.body.subject || '').trim(), body: (req.body.body || '').trim() });
     if (r.sent && lead.status === 'nuevo') await knex('leads').where({ id: lead.id }).update({ status: 'contactado', updated_at: knex.fn.now() });
     res.redirect('/panel/admin?type=' + (r.sent ? 'ok' : 'error') + '&msg=' + encodeURIComponent(r.sent ? `Correo enviado a ${lead.email}` : ('Error: ' + (r.error || 'no enviado'))) + '#leads');
@@ -3335,12 +3339,14 @@ router.post('/admin/leads/email', auth.requireAdmin, async (req, res, next) => {
     let q = knex('leads');
     if (['nuevo', 'contactado', 'cliente', 'descartado'].includes(audience)) q = q.where({ status: audience });
     const leads = await q;
-    let sent = 0;
+    let sent = 0, invalidos = 0;
     for (const l of leads) {
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(l.email || '').trim())) { invalidos++; continue; }
       const r = await sendLeadEmail({ to: l.email, name: l.name, subject, body });
       if (r.sent) sent++;
     }
-    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Correo enviado a ${sent} de ${leads.length} prospectos`) + '#leads');
+    const extra = invalidos ? ` (${invalidos} con correo inválido, no se enviaron)` : '';
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Correo enviado a ${sent} de ${leads.length} prospectos${extra}`) + '#leads');
   } catch (e) { next(e); }
 });
 
