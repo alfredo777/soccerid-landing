@@ -808,9 +808,24 @@ app.get('/:lang/socceridcup2027', async (req, res, next) => {
   }
 });
 
+// Rate-limit simple del acceso público (anti fuerza-bruta de códigos de 7
+// dígitos): máx 30 intentos por IP cada 10 minutos. En memoria; suficiente para
+// frenar enumeración sin infra extra.
+const _verifyHits = new Map();
+function verifyThrottled(ip) {
+  const now = Date.now(), win = 10 * 60 * 1000, max = 30;
+  const arr = (_verifyHits.get(ip) || []).filter(t => now - t < win);
+  arr.push(now);
+  _verifyHits.set(ip, arr);
+  if (_verifyHits.size > 5000) { for (const [k, v] of _verifyHits) { if (!v.length || now - v[v.length - 1] > win) _verifyHits.delete(k); } }
+  return arr.length > max;
+}
+
 app.post('/api/project2027/verify', async (req, res) => {
   try {
-    const code = (req.body.code || '').trim();
+    const ipReq = String(req.headers['x-forwarded-for'] || req.ip || '').split(',')[0].trim();
+    if (verifyThrottled(ipReq)) return res.status(429).json({ ok: false, throttled: true });
+    const code = (req.body.code || '').trim().slice(0, 40);
     if (!code) return res.json({ ok: false });
 
     const codeRow = await knex('access_codes').where({ code }).first();
@@ -819,7 +834,7 @@ app.post('/api/project2027/verify', async (req, res) => {
     // entrada, pero queda registrado el intento para el mapa.
     if (codeRow.revoked) {
       const ip = req.headers['x-forwarded-for'] || req.ip;
-      await knex('access_log').insert({ code, name: (req.body.name || '').trim() || null, email: (req.body.email || '').trim().toLowerCase() || null, ip, user_agent: req.headers['user-agent'] || '', new_device: false, matched_owner: null, blocked: true }).catch(() => {});
+      await knex('access_log').insert({ code, name: (req.body.name || '').trim().slice(0, 120) || null, email: (req.body.email || '').trim().toLowerCase().slice(0, 160) || null, ip, user_agent: (req.headers['user-agent'] || '').slice(0, 400), new_device: false, matched_owner: null, blocked: true }).catch(() => {});
       return res.json({ ok: false, revoked: true });
     }
     const isTest = codeRow.note === 'test';
@@ -828,8 +843,8 @@ app.post('/api/project2027/verify', async (req, res) => {
     let deviceId = req.cookies && req.cookies.p2027_device;
     const knownDevice = !!deviceId;
 
-    let name = (req.body.name || '').trim();
-    let email = (req.body.email || '').trim().toLowerCase();
+    let name = (req.body.name || '').trim().slice(0, 120);
+    let email = (req.body.email || '').trim().toLowerCase().slice(0, 160);
     const validEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email);
 
     // Dispositivo nuevo → se exige nombre y email antes de dar acceso
@@ -859,8 +874,8 @@ app.post('/api/project2027/verify', async (req, res) => {
       }
     }
 
-    const ip = req.headers['x-forwarded-for'] || req.ip;
-    const userAgent = req.headers['user-agent'] || '';
+    const ip = String(req.headers['x-forwarded-for'] || req.ip || '').slice(0, 100);
+    const userAgent = (req.headers['user-agent'] || '').slice(0, 400);
     // ¿Entró el dueño del código o alguien más? (null si no se puede saber)
     const matchedOwner = require('./lib/codeMap').matchOwner(codeRow, { name, email });
     await knex('access_log').insert({

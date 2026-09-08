@@ -3104,7 +3104,7 @@ router.post('/admin/package/:id/delete', auth.requireAdmin, async (req, res, nex
 // ════════════════════════════════════════════════
 router.post('/admin/code', auth.requireAdmin, async (req, res, next) => {
   try {
-    const code = (req.body.code || '').trim();
+    const code = (req.body.code || '').trim().slice(0, 40);
     if (!code) return res.redirect('/panel/admin?type=error&msg=C%C3%B3digo+vac%C3%ADo#codigos');
     const ex = await knex('access_codes').where({ code }).first();
     if (ex) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Ese código ya existe') + '#codigos');

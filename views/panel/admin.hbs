@@ -1328,6 +1328,16 @@
     .mp-owner-drawer__close { background:none; border:none; cursor:pointer; color:var(--pn-muted); padding:4px; line-height:0; flex-shrink:0; }
     .mp-owner-drawer__close svg { width:22px; height:22px; }
     .mp-owner-drawer__body { padding:6px 22px 22px; overflow-y:auto; }
+    /* Las filas se clonan desde la tarjeta (layout angosto). En el drawer ancho
+       se re-acomodan en grid: punto | fecha+etiqueta arriba, persona abajo. */
+    .mp-owner-drawer__body .mp-tl__row { display:grid; grid-template-columns:14px 1fr auto;
+      grid-template-areas:"dot when tag" "dot who who"; gap:3px 11px; align-items:start; padding:14px 0; border-top:1px solid var(--pn-border); }
+    .mp-owner-drawer__body .mp-tl__row:first-child { border-top:none; }
+    .mp-owner-drawer__body .mp-tl__dot { grid-area:dot; margin-top:5px; }
+    .mp-owner-drawer__body .mp-tl__when { grid-area:when; min-width:0; }
+    .mp-owner-drawer__body .mp-tl__who { grid-area:who; min-width:0; }
+    .mp-owner-drawer__body .mp-tl__tag { grid-area:tag; align-self:start; white-space:nowrap; }
+    .mp-owner-drawer__body .mp-tl__from { margin-top:3px; }
     .mp-tl__tag { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.3px; color:var(--pn-muted); }
   </style>
 
