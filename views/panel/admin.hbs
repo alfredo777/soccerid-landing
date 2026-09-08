@@ -1279,11 +1279,20 @@
     .mp-tl h4 { font-size:13px; font-weight:800; margin-bottom:4px; }
     /* Reparte las fichas de "quién entró y cuándo" en columnas en escritorio, en
        vez de una sola pila hacia abajo. */
+    .mp-search { width:100%; max-width:420px; margin:0 0 16px; padding:11px 15px; border:1px solid var(--pn-border);
+      border-radius:12px; font-family:inherit; font-size:14px; color:var(--pn-ink); background:#fff; }
+    .mp-search:focus { outline:none; border-color:var(--pn-purple); }
     .mp-tl__grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(330px,1fr)); gap:14px; align-items:start; }
-    .mp-tl__owner { background:#fff; border:1px solid var(--pn-border); border-radius:14px; padding:15px 17px; box-shadow:var(--pn-shadow); }
-    .mp-tl__head { margin-bottom:10px; }
-    .mp-tl__head strong { display:block; font-size:14px; font-weight:800; }
-    .mp-tl__head small { font-size:11.5px; color:var(--pn-muted); font-weight:600; }
+    .mp-tl__owner { background:#fff; border:1px solid var(--pn-border); border-radius:14px; box-shadow:var(--pn-shadow); overflow:hidden; }
+    .mp-tl__head { display:flex; align-items:center; justify-content:space-between; gap:10px; width:100%; text-align:left;
+      background:none; border:none; font-family:inherit; cursor:pointer; padding:15px 17px; }
+    .mp-tl__head:hover { background:var(--pn-purple-soft); }
+    .mp-tl__headb strong { display:block; font-size:14px; font-weight:800; color:var(--pn-ink); }
+    .mp-tl__headb small { font-size:11.5px; color:var(--pn-muted); font-weight:600; }
+    .mp-tl__inf { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.3px; color:#B77A1E; background:#FFF4E5; padding:2px 8px; border-radius:20px; }
+    .mp-tl__chev { width:18px; height:18px; color:var(--pn-muted); flex-shrink:0; transition:transform .18s; }
+    .mp-tl__head.is-open .mp-tl__chev { transform:rotate(180deg); }
+    .mp-tl__rows { padding:0 17px 12px; }
     .mp-tl__row { display:flex; align-items:center; gap:10px; padding:7px 0; border-top:1px solid var(--pn-border); font-size:12.5px; flex-wrap:wrap; }
     .mp-tl__dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
     .mp-tl__when { color:var(--pn-muted); font-weight:700; min-width:150px; }
@@ -1316,21 +1325,27 @@
     <p class="ad-hint" style="margin:0 0 14px;">El mapa de arriba dice <em>quién entró con el código de quién</em>;
       esto dice <em>cuándo</em>, que es lo que sirve para llamar a alguien en el momento justo.
       Primero los repartidores con más entradas de otras personas.</p>
-    <div class="mp-tl__grid">
+    <input type="text" class="mp-search" id="mpSearch" placeholder="Buscar persona, correo o código…" oninput="mpFilter(this.value)">
+    <div class="mp-tl__grid" id="mpTlGrid">
     {{#each ownerTimeline}}
-    <div class="mp-tl__owner">
-      <div class="mp-tl__head">
-        <strong>{{this.label}}</strong>{{#if this.inferred}} <span style="font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.3px; color:#B77A1E; background:#FFF4E5; padding:2px 8px; border-radius:20px;">inferido</span>{{/if}}
-        <small>código(s) {{this.codigos}} · {{this.total}} acceso(s){{#if this.ajenos}} · <b>{{this.ajenos}} de otra persona</b>{{/if}}</small>
-      </div>
+    <div class="mp-tl__owner" data-find="{{this.label}} {{this.codigos}}">
+      <button type="button" class="mp-tl__head" onclick="mpToggle(this)">
+        <span class="mp-tl__headb">
+          <strong>{{this.label}}</strong>{{#if this.inferred}} <span class="mp-tl__inf">inferido</span>{{/if}}
+          <small>código(s) {{this.codigos}} · {{this.total}} acceso(s){{#if this.ajenos}} · <b>{{this.ajenos}} de otra persona</b>{{/if}}</small>
+        </span>
+        <svg class="mp-tl__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mp-tl__rows" hidden>
       {{#each this.accesos}}
-      <div class="mp-tl__row">
+      <div class="mp-tl__row" data-find="{{this.name}} {{this.email}}">
         <span class="mp-tl__dot" style="background:{{#if this.other}}#D97706{{else}}{{#if this.owner}}#0E9F6E{{else}}#C7C3D4{{/if}}{{/if}}"></span>
         <span class="mp-tl__when">{{this.when}}</span>
         <span class="mp-tl__who"><strong>{{this.name}}</strong>{{#if this.email}} · {{this.email}}{{/if}}</span>
         <span class="mp-tl__tag">{{this.whoLabel}}</span>
       </div>
       {{/each}}
+      </div>
     </div>
     {{else}}
     <div class="mp-empty"><strong>Todavía no hay accesos que ordenar.</strong>
@@ -2734,6 +2749,35 @@
   }
 
   var CODES_HISTORY = {{{jsonScript codesHistory}}};
+  // Colapsar/expandir la ficha de un repartidor y buscar en el mapa.
+  function mpToggle(btn){
+    var rows = btn.nextElementSibling;
+    if (!rows) return;
+    rows.hidden = !rows.hidden;
+    btn.classList.toggle('is-open', !rows.hidden);
+  }
+  function mpFilter(q){
+    q = (q || '').trim().toLowerCase();
+    var grid = document.getElementById('mpTlGrid');
+    if (!grid) return;
+    grid.querySelectorAll('.mp-tl__owner').forEach(function(o){
+      var head = (o.getAttribute('data-find') || '').toLowerCase();
+      var headMatch = !q || head.indexOf(q) !== -1;
+      var filas = o.querySelectorAll('.mp-tl__row'), algunaFila = false;
+      filas.forEach(function(r){
+        var rf = (r.getAttribute('data-find') || '').toLowerCase();
+        var m = headMatch || (!q ? true : rf.indexOf(q) !== -1);
+        r.style.display = m ? '' : 'none';
+        if (q && m) algunaFila = true;
+      });
+      var visible = headMatch || algunaFila;
+      o.style.display = visible ? '' : 'none';
+      // Al buscar, se abren las fichas que coinciden; sin búsqueda, se colapsan.
+      var box = o.querySelector('.mp-tl__rows'), hb = o.querySelector('.mp-tl__head');
+      if (box){ box.hidden = q ? !visible : true; if (hb) hb.classList.toggle('is-open', q ? visible : false); }
+    });
+  }
+
   // Mapa de relaciones de códigos
   var RELATIONS = {{{jsonScript relations}}};
   (function(){
