@@ -2671,6 +2671,22 @@ function evDate(v) {
   return /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : null;
 }
 
+// Todas las rutas /admin/evento/:id/... cuelgan de una edición. Este middleware
+// verifica UNA sola vez que la edición exista; si no, redirige en vez de crear
+// registros huérfanos (avances, documentos, medios, inversiones, agenda,
+// comunicaciones) apuntando a un event_id inexistente.
+router.use('/admin/evento/:id', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const ev = await knex('portfolio_events').where({ id: req.params.id }).first();
+    if (!ev) {
+      const msg = encodeURIComponent('Esa edición no existe');
+      return res.redirect('/panel/admin?type=error&msg=' + msg + '#eventos');
+    }
+    req.evento = ev;
+    next();
+  } catch (e) { next(e); }
+});
+
 router.get('/admin/evento/:id', auth.requireAdmin, async (req, res, next) => {
   try {
     const ev = await knex('portfolio_events').where({ id: req.params.id }).first();
