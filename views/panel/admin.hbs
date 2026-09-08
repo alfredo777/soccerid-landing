@@ -709,7 +709,9 @@
             <small>{{this.date_label}}{{#if this.featured}} · Destacada{{/if}}</small>
           </div>
           <div class="ad-actions">
-            <button type="button" class="primary" onclick="openNews(this)"
+            <button type="button" class="primary" onclick="openNewsView(this)"
+              data-tag="{{this.tag}}" data-tagcolor="{{this.tag_color}}" data-title="{{this.title}}" data-excerpt="{{this.excerpt}}" data-body="{{this.body}}" data-image="{{this.image}}" data-date="{{this.date_label}}" data-featured="{{#if this.featured}}1{{/if}}" data-source="{{this.source_url}}">Ver</button>
+            <button type="button" onclick="openNews(this)"
               data-id="{{this.id}}" data-tag="{{this.tag}}" data-title="{{this.title}}" data-excerpt="{{this.excerpt}}" data-body="{{this.body}}" data-image="{{this.image}}" data-date="{{this.date_label}}" data-size="{{this.size}}" data-featured="{{#if this.featured}}1{{/if}}" data-source="{{this.source_url}}">Editar</button>
             <form method="POST" action="/panel/admin/news/{{this.id}}/notify" data-confirm="¿Compartir esta noticia como notificación (email) a todos los usuarios?"><button type="submit">Compartir</button></form>
             <form method="POST" action="/panel/admin/news/{{this.id}}/delete" data-confirm="¿Eliminar noticia?"><button type="submit" class="danger">Eliminar</button></form>
@@ -721,6 +723,71 @@
       </div>
     </div>
   </div>
+  <style>
+    .nv-ov { position:fixed; inset:0; background:rgba(20,20,27,.38); opacity:0; transition:opacity .2s; z-index:120; }
+    .nv-ov.is-open { opacity:1; }
+    .nv-drawer { position:fixed; top:0; right:0; height:100%; width:min(500px,94vw); background:#fff; z-index:121;
+      box-shadow:-16px 0 40px rgba(20,20,27,.18); transform:translateX(100%); transition:transform .22s ease; overflow-y:auto; }
+    .nv-drawer.is-open { transform:none; }
+    .nv-img { width:100%; height:210px; object-fit:cover; display:block; background:#F1F0F5; }
+    .nv-body { padding:24px; }
+    .nv-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+    .nv-pill { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; padding:5px 11px; border-radius:20px; }
+    .nv-close { background:none; border:none; cursor:pointer; color:var(--pn-muted); padding:4px; line-height:0; }
+    .nv-close svg { width:22px; height:22px; }
+    .nv-drawer h2 { font-size:22px; font-weight:900; letter-spacing:-.3px; margin:6px 0 6px; color:var(--pn-ink); }
+    .nv-meta { font-size:12.5px; color:var(--pn-muted); font-weight:700; margin-bottom:16px; }
+    .nv-excerpt { font-size:15px; font-weight:700; color:var(--pn-ink); line-height:1.55; margin:0 0 14px; }
+    .nv-text { font-size:14px; color:var(--pn-ink-2); line-height:1.75; white-space:pre-wrap; }
+    .nv-src { display:inline-flex; align-items:center; gap:7px; margin-top:20px; font-size:13px; font-weight:800; color:var(--pn-purple); text-decoration:none; }
+  </style>
+  <div class="nv-ov" id="nvOv" onclick="closeNewsView()" hidden></div>
+  <aside class="nv-drawer" id="nvDrawer" hidden aria-hidden="true" aria-label="Nota">
+    <img class="nv-img" id="nvImg" alt="" hidden>
+    <div class="nv-body">
+      <div class="nv-head">
+        <span class="nv-pill" id="nvPill"></span>
+        <button type="button" class="nv-close" onclick="closeNewsView()" aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </button>
+      </div>
+      <h2 id="nvTitle"></h2>
+      <div class="nv-meta" id="nvMeta"></div>
+      <p class="nv-excerpt" id="nvExcerpt"></p>
+      <div class="nv-text" id="nvText"></div>
+      <a class="nv-src" id="nvSrc" target="_blank" rel="noopener" hidden>
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+        Ver la nota original
+      </a>
+    </div>
+  </aside>
+  <script>
+    function openNewsView(btn){
+      var d = btn.dataset;
+      var img = document.getElementById('nvImg');
+      if (d.image){ img.src = d.image; img.hidden = false; } else { img.hidden = true; }
+      var pill = document.getElementById('nvPill');
+      pill.textContent = d.tag || 'Noticia';
+      pill.style.background = (d.tagcolor || '#6C3CE0') + '1A';
+      pill.style.color = d.tagcolor || '#6C3CE0';
+      document.getElementById('nvTitle').textContent = d.title || '';
+      document.getElementById('nvMeta').textContent = (d.date || '') + (d.featured === '1' ? '  ·  Destacada' : '');
+      var ex = document.getElementById('nvExcerpt');
+      ex.textContent = d.excerpt || ''; ex.style.display = d.excerpt ? 'block' : 'none';
+      document.getElementById('nvText').textContent = d.body || 'Esta noticia no tiene texto completo.';
+      var src = document.getElementById('nvSrc');
+      if (d.source){ src.href = d.source; src.hidden = false; } else { src.hidden = true; }
+      var ov = document.getElementById('nvOv'), dr = document.getElementById('nvDrawer');
+      ov.hidden = false; dr.hidden = false; dr.setAttribute('aria-hidden','false');
+      requestAnimationFrame(function(){ dr.classList.add('is-open'); ov.classList.add('is-open'); });
+    }
+    function closeNewsView(){
+      var ov = document.getElementById('nvOv'), dr = document.getElementById('nvDrawer');
+      dr.classList.remove('is-open'); ov.classList.remove('is-open');
+      setTimeout(function(){ dr.hidden = true; dr.setAttribute('aria-hidden','true'); ov.hidden = true; }, 220);
+    }
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeNewsView(); });
+  </script>
 </section>
 
 <!-- CALENDARIO -->
