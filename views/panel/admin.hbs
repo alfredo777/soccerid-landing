@@ -453,11 +453,33 @@
     .st-serie__bar i { display:block; width:100%; background:var(--pn-purple); border-radius:9px; }
     .st-serie__val { font-size:11px; font-weight:800; color:var(--pn-ink-2); white-space:nowrap; }
     .st-serie__lbl { font-size:10.5px; font-weight:700; color:var(--pn-muted); text-transform:uppercase; letter-spacing:.3px; }
+    .st-demo { display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; margin:0 0 18px; padding:12px 15px; border-radius:12px; border:1px solid var(--pn-border); background:#FBFAFD; font-size:12.5px; line-height:1.55; color:var(--pn-ink-2); }
+    .st-demo p { margin:0; flex:1; min-width:240px; }
+    .st-demo a { flex-shrink:0; display:inline-block; padding:7px 14px; border-radius:9px; font-size:12px; font-weight:800; text-decoration:none; border:1px solid var(--pn-border); background:#fff; color:var(--pn-ink-2); }
+    .st-demo a:hover { border-color:var(--pn-purple); color:var(--pn-purple); }
+    .st-demo--on { background:#FEF3C7; border-color:#FDE68A; color:#92400E; }
+    .st-demo--on a { background:#fff; border-color:#FDE68A; color:#92400E; }
   </style>
 
   <p class="st-note">Todo lo de aquí se <strong>cuenta solo</strong> a partir de lo cargado en el panel; no hay cifras escritas a mano.
     Lo que depende del año se mide sobre la <strong>edición activa</strong>{{#if stats.edicion}} (<strong>{{stats.edicion.title}}</strong>){{/if}};
     los códigos, prospectos y contenido son del negocio completo.</p>
+
+  {{#if stats.demo.cuentas}}
+  <div class="st-demo {{#if stats.demo.ver}}st-demo--on{{/if}}">
+    {{#if stats.demo.ver}}
+      <p><strong>Estás viendo los datos demo incluidos.</strong> Estas cifras suman
+        {{stats.demo.inversiones}} inversión(es) de {{stats.demo.cuentas}} cuenta(s) de demostración,
+        así que <strong>no son el capital real</strong>.</p>
+      <a href="/panel/admin#estadisticas">Ocultar datos demo</a>
+    {{else}}
+      <p>Fuera de estas cifras quedan <strong>{{stats.demo.inversiones}} inversión(es)</strong> de
+        <strong>{{stats.demo.cuentas}} cuenta(s) de demostración</strong>. Su dinero no existe, así que
+        no cuenta como capital real.</p>
+      <a href="/panel/admin?demo=1#estadisticas">Incluir datos demo</a>
+    {{/if}}
+  </div>
+  {{/if}}
 
   <!-- Capital -->
   <div class="st-grid">

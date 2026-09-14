@@ -92,6 +92,8 @@
       <div class="au-f"><label>Monto (USD)</label><input type="number" name="amount" id="auAmount" value="{{account.amountRaw}}" min="0" step="1000"></div>
       <div class="au-f" style="display:flex;align-items:flex-end;"><label class="au-check"><input type="checkbox" name="active" value="1" {{#if account.active}}checked{{/if}}> Cuenta activa</label></div>
     </div>
+    <label class="au-check"><input type="checkbox" name="is_demo" value="1" {{#if account.isDemo}}checked{{/if}}> Cuenta de <strong>demostración</strong></label>
+    <div class="au-hint">La cuenta sigue funcionando igual para quien entre con ella, pero su capital <strong>deja de contar</strong> en el panel estadístico: no suma al capital comprometido, ni al reparto fijo/riesgo, ni al retorno proyectado, ni al donut. Se puede volver a ver con el interruptor de Estadísticas.</div>
   </div>
 
   <!-- Inversión y retorno -->

@@ -1076,6 +1076,28 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
   try {
     const tiers = await getTiers();
     const users = await knex('users').whereNot({ role: 'admin' }).orderBy('id', 'desc');
+
+    // ── Datos DEMO fuera de las cifras reales ──
+    // Las cuentas de demostración sirven para enseñar el panel, pero su dinero no
+    // existe. Al mergear Houston en la edición 2027 sus dos inversiones quedaron
+    // dentro del año oficial, así que desde entonces inflaban el capital, el
+    // reparto fijo/riesgo, el retorno y el donut. Se excluyen por defecto y el
+    // admin las puede volver a ver con ?demo=1 (el enlace está en Estadísticas).
+    // Una inversión es demo si su CUENTA lo es: una sola bandera, un solo lugar.
+    const verDemo = String(req.query.demo || '') === '1';
+    const demoUserIds = new Set(users.filter(u => u.is_demo).map(u => u.id));
+    const esInvDemo = (i) => demoUserIds.has(i.user_id);
+    const invTodas = await knex('investments');
+    // `invReales` es lo que alimenta TODA cifra agregada. `invTodas` se queda para
+    // lo que es por cuenta: el directorio debe seguir mostrando lo que cada quien
+    // tiene cargado, aunque sea demo, o su ficha se vería vacía sin explicación.
+    const invReales = verDemo ? invTodas : invTodas.filter(i => !esInvDemo(i));
+    const demoInfo = {
+      ver: verDemo,
+      cuentas: demoUserIds.size,
+      inversiones: invTodas.filter(esInvDemo).length
+    };
+
     const news = await knex('news').orderBy([{ column: 'featured', order: 'desc' }, { column: 'sort', order: 'asc' }]);
     // Una edición por año, así que el año es el orden natural. `sort` quedaba
     // desalineado en cuanto se creaba una edición fuera de secuencia.
@@ -1267,9 +1289,15 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     const PHASE_LBL = PHASE_LABELS;
     // (peRows ya se consultó arriba: la usan el calendario y el cronograma)
     const pkCounts = await knex('event_packages').select('event_id').count({ n: '*' }).groupBy('event_id');
-    const invAgg = await knex('investments').select('event_id').count({ n: '*' }).sum({ cap: 'capital' }).groupBy('event_id');
     const pkMap = {}; pkCounts.forEach(r => { pkMap[r.event_id] = Number(r.n); });
-    const invMap = {}; invAgg.forEach(r => { invMap[r.event_id] = { n: Number(r.n), cap: Number(r.cap) || 0 }; });
+    // Se cuenta sobre `invReales` y no con un agregado de la base, para que la
+    // tarjeta de cada edición diga lo mismo que el panel estadístico. Dos cifras
+    // distintas del mismo capital en dos pestañas es peor que no tener ninguna.
+    const invMap = {};
+    invReales.forEach(i => {
+      const m = invMap[i.event_id] = invMap[i.event_id] || { n: 0, cap: 0 };
+      m.n += 1; m.cap += Number(i.capital || 0);
+    });
     // Cuál es la que ven los inversionistas hoy: la configurada o, si no hay, la de mayor año
     const cfgDash = await getDashboardConfig();
     const porAnio = [...peRows].sort((a, b) => (b.year || 0) - (a.year || 0) || b.id - a.id);
@@ -1346,7 +1374,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     // Lo que depende del año se mide sobre la EDICIÓN ACTIVA (la que ven los
     // inversionistas); lo que es del negocio completo va en total.
     const edActiva = peRows.find(e => String(e.id) === activaId) || null;
-    const invRows = await knex('investments');
+    const invRows = invReales;
     const invDeLaEdicion = edActiva ? invRows.filter(i => String(i.event_id) === String(edActiva.id)) : [];
 
     const sumaCapital = (arr) => arr.reduce((n, i) => n + Number(i.capital || 0), 0);
@@ -1371,7 +1399,8 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
 
     // Inversionistas REALES por categoría, contra el cupo PLANEADO de cada una.
     // La diferencia es justo lo que falta por vender.
-    const investorUsers = users.filter(u => u.role === 'investor');
+    const usersReales = verDemo ? users : users.filter(u => !u.is_demo);
+    const investorUsers = usersReales.filter(u => u.role === 'investor');
     const porCategoria = tiers.filter(t => t.role === 'investor').map(t => {
       const reales = investorUsers.filter(u => u.category === t.key).length;
       return { label: t.label, color: t.color, real: reales, cupo: t.count || 0 };
@@ -1472,6 +1501,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     };
 
     const stats = {
+      demo: demoInfo,
       serie,
       comparativo,
       edicion: edActiva ? { title: edActiva.title, year: edActiva.year } : null,
@@ -1495,7 +1525,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         activos: investorUsers.filter(u => u.status === 'active').length,
         invitados: investorUsers.filter(u => u.status === 'invited').length,
         inactivos: investorUsers.filter(u => u.status === 'disabled').length,
-        patrocinadores: users.filter(u => u.role === 'sponsor').length,
+        patrocinadores: usersReales.filter(u => u.role === 'sponsor').length,
         real: totalReal, cupo: totalCupo, cupoPct: pct(totalReal, totalCupo),
         porCategoria, donut: donutReal, circ: Math.round(CIRC * 100) / 100
       },
@@ -1529,7 +1559,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
 
     // Capital de cada persona sumando todas sus ediciones
     const invPorUsuario = {};
-    invRows.forEach(i => {
+    invTodas.forEach(i => {
       const ed = peRows.find(e => String(e.id) === String(i.event_id));
       const reg = invPorUsuario[i.user_id] = invPorUsuario[i.user_id] || { capital: 0, ediciones: [] };
       reg.capital += Number(i.capital || 0);
@@ -2353,6 +2383,9 @@ router.post('/admin/user/:id/update', auth.requireAdmin, async (req, res, next) 
       return_rate: (returnRate === null || isNaN(returnRate)) ? null : returnRate,
       activations,
       status,
+      // Cuenta de demostración: sigue funcionando igual para quien entra con ella,
+      // pero su capital deja de contar en las estadísticas del admin.
+      is_demo: b.is_demo ? true : false,
       updated_at: knex.fn.now()
     });
     // Si viene de la página por-cuenta, regresa a ella; si no, a la lista
@@ -3514,7 +3547,7 @@ router.get('/admin/user/:id', auth.requireAdmin, async (req, res, next) => {
         color: (tier && tier.color) || '#8A8F98',
         category: user.category || '', amountRaw: user.amount || 0,
         investmentType: user.investment_type === 'riesgo' ? 'riesgo' : 'fijo',
-        status: user.status, active: user.status === 'active',
+        status: user.status, active: user.status === 'active', isDemo: !!user.is_demo,
         memberId: user.member_id || '—',
         // overrides
         advName: advOverride ? advOverride.name : '', advRole: advOverride ? advOverride.role : '',

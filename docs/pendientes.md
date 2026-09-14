@@ -49,6 +49,38 @@ Pendiente de esta sección:
   sería guardar lo mismo dos veces. Los intentos fallidos también quedan, con su error.
 
 
+## Datos DEMO fuera de las estadísticas — HECHO
+Las cuentas de demostración (`demo.fijo@soccerid.co`, `demo.riesgo@soccerid.co`) sirven
+para enseñar el panel, pero su dinero no existe. Al mergear Houston en la edición 2027 sus
+**dos inversiones quedaron dentro del año oficial**, y desde entonces inflaban el capital
+comprometido, el reparto fijo/riesgo, el retorno proyectado, el donut y las cuentas por
+estado. Ya no cuentan.
+
+- **La bandera va en la CUENTA** (`users.is_demo`), no en cada inversión. Una inversión es
+  demo si su cuenta lo es. Marcarlo en dos lugares se desincroniza en cuanto alguien
+  actualiza uno y olvida el otro.
+- **Casilla "Cuenta de demostración"** en la ficha de cada cuenta
+  (`/panel/admin/user/:id`), con la explicación de qué deja de contar.
+- **Migración idempotente** en `db/schema.js`. El backfill que marca las dos cuentas demo
+  va **dentro** del alta de la columna a propósito: si el admin desmarca una después, el
+  arranque siguiente no se la vuelve a marcar sola.
+- **La cuenta demo sigue funcionando igual** para quien entra con ella: ve su inversión y
+  su retorno como siempre. Lo único que cambia es que deja de sumar en el panel del admin.
+  Verificado entrando con `demo.fijo@`: sigue viendo sus USD $100,000 / $125,000.
+- **No se oculta en silencio.** La sección Estadísticas dice cuántas inversiones y cuántas
+  cuentas quedaron fuera, con un enlace **"Incluir datos demo"** (`?demo=1`) que las vuelve
+  a sumar y avisa en amarillo que esas cifras no son el capital real.
+- **La tarjeta de cada edición cuenta lo mismo** que Estadísticas: dos cifras distintas del
+  mismo capital en dos pestañas es peor que no tener ninguna.
+- **El directorio por cuenta sí las muestra.** El capital sumado de cada persona sale de
+  todas sus inversiones, demo incluidas: es su ficha, no una cifra del negocio, y vaciarla
+  se vería como un error.
+
+Probado en local con las dos cuentas demo: sin el filtro la edición activa marcaba
+USD $350,000 y 3 cuentas activas; con el filtro queda en USD $0 y 1 cuenta activa, y con
+`?demo=1` vuelve a los USD $350,000. El round-trip de la casilla también quedó probado
+(marcar una cuenta real la saca de las cifras; desmarcarla la devuelve).
+
 ## Panel estadístico del ADMIN (no para inversionistas)
 - [x] ~~Mover "Distribución de inversionistas" (donut por categoría) fuera de la vista
   del inversionista~~ **HECHO**: se quitó de `views/panel/dashboard.hbs` (con su CSS).

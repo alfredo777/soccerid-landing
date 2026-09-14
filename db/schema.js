@@ -385,6 +385,22 @@ async function ensureSchema() {
       t.timestamps(true, true);
     });
   }
+
+  // Cuentas DEMO. Sirven para enseñar el panel, pero su dinero no es real y no
+  // tiene por qué contar en las estadísticas del admin: las dos inversiones de
+  // demostración quedaron dentro de la edición 2027 al mergear Houston y desde
+  // entonces inflan capital, reparto fijo/riesgo, retorno y donut.
+  // La bandera va en la CUENTA, no en cada inversión: una inversión es demo si
+  // su cuenta lo es. Marcarlo en dos lugares se desincroniza solo.
+  if (await knex.schema.hasTable('users') && !(await knex.schema.hasColumn('users', 'is_demo'))) {
+    await knex.schema.alterTable('users', (t) => t.boolean('is_demo').defaultTo(false));
+    // Backfill de las dos cuentas de demostración que ya existían. Va DENTRO del
+    // alta de la columna a propósito: si el admin desmarca una después, el
+    // arranque siguiente no se la vuelve a marcar sola.
+    await knex('users')
+      .whereIn('email', ['demo.fijo@soccerid.co', 'demo.riesgo@soccerid.co'])
+      .update({ is_demo: true });
+  }
 }
 
 async function seed() {
