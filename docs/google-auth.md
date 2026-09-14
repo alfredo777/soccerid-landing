@@ -124,7 +124,11 @@ invitado). Así "se contrasta contra el de la invitación".
 
 ---
 
-## 6. Estado actual: OCULTO a proposito (6 sep 2026)
+## 6. HISTÓRICO — estuvo oculto a propósito (6 sep 2026)
+
+> **Superado.** Desde el 14 sep 2026 el login está activo y la pantalla de
+> consentimiento quedó **publicada y verificada en producción** (ver §9).
+> Esta sección se conserva porque explica por qué se apagó en su momento.
 
 **Decision del usuario: no se debe ver nada de Google en el panel por ahora.**
 La razon es la pantalla de consentimiento: sigue en *Testing*, asi que quien no
@@ -168,6 +172,44 @@ El interruptor acepta `0|off|false|no` para apagar; cualquier otra cosa (o no
 definirlo) deja mandando la regla de siempre: hay login si hay client id + secret.
 
 ---
+
+## 9. ESTADO FINAL: publicado y verificado en producción (14 sep 2026)
+
+La pantalla de consentimiento está **en producción**. Al no quedar ningún scope
+sensible (ver §8), no hizo falta verificación de marca, ni video de demostración,
+ni lista de usuarios de prueba.
+
+Qué implica, en concreto:
+
+- **Cualquier persona invitada puede entrar con Google**, no solo los test users.
+- **Se acabó la pantalla de "esta app no está verificada"** que asustaba a medio mundo.
+- **Se acabó el tope de 100 usuarios de prueba** y el vencimiento de tokens a los 7 días
+  que aplica en modo *Testing*.
+
+Verificado el 14 sep 2026 contra producción, sin tocar la base:
+
+```
+GET https://soccerid.co/panel/auth/google
+→ 302 accounts.google.com/o/oauth2/v2/auth
+   ?client_id=701558931945-….apps.googleusercontent.com
+   &redirect_uri=https%3A%2F%2Fsoccerid.co%2Fpanel%2Fauth%2Fgoogle%2Fcallback
+   &response_type=code
+   &scope=openid+email+profile
+   &state=…&access_type=online&prompt=select_account
+```
+
+Siguiendo ese redirect, Google responde **200** con la pantalla normal de inicio de
+sesión (`flowName=GeneralOAuthLite`, `app_domain=https://soccerid.co`) y **sin ninguna
+advertencia de app no verificada**. Tampoco hay `invalid_client` ni
+`redirect_uri_mismatch`, así que el client id, el redirect URI y los tres scopes están
+bien registrados.
+
+`GOOGLE_LOGIN=1` y `GOOGLE_CALENDAR=0` en Heroku.
+
+**Lo que sigue sin probarse end-to-end** es el consentimiento real de un humano: entrar
+con una cuenta de Google **ya invitada** y ver que el callback la deja pasar, y con una
+**no invitada** y ver que la rechaza sin crear cuenta. Eso necesita navegador y una cuenta
+real. Correo de pruebas: `jardarubydv@gmail.com`.
 
 ## 8. DECISIÓN (14 sep 2026): se retiró el permiso sensible de Calendar
 
