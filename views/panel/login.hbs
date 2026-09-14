@@ -46,7 +46,7 @@
     <div class="lg-body">
       <h1>Iniciar sesión</h1>
       <p>Accede a tu panel privado de SOCCER iD CUP 2027.</p>
-      {{#if error}}<div class="lg-err">{{#eq error 'captcha'}}Verificación de seguridad fallida. Intenta de nuevo.{{else}}{{#eq error 'noinvite'}}Este correo no tiene invitación. Usa el correo con el que te invitamos.{{else}}{{#eq error 'google'}}No pudimos validar tu cuenta de Google. Intenta de nuevo.{{else}}Correo o contraseña incorrectos.{{/eq}}{{/eq}}{{/eq}}</div>{{/if}}
+      {{#if error}}<div class="lg-err">{{#eq error 'captcha'}}Verificación de seguridad fallida. Intenta de nuevo.{{else}}{{#eq error 'noinvite'}}Este correo no tiene invitación. Usa el correo con el que te invitamos.{{else}}{{#eq error 'baja'}}Esta cuenta está dada de baja. Escríbele al organizador si crees que es un error.{{else}}{{#eq error 'google'}}No pudimos validar tu cuenta de Google. Intenta de nuevo.{{else}}Correo o contraseña incorrectos.{{/eq}}{{/eq}}{{/eq}}{{/eq}}</div>{{/if}}
       {{#if ok}}<div class="lg-ok">Cuenta activada. Ya puedes iniciar sesión.</div>{{/if}}
       <form method="POST" action="/panel/login">
         <div class="lg-field">

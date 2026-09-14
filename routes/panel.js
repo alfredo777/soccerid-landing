@@ -734,7 +734,15 @@ router.get('/auth/google/callback', async (req, res) => {
     // Contraste con la invitación: el correo de Google debe existir en users (no admin)
     const user = await knex('users').whereRaw('LOWER(email) = ?', [profile.email]).first();
     if (!user || user.role === 'admin') return res.redirect('/panel/login?error=noinvite');
+    // Una cuenta dada de baja NO se reactiva por entrar con Google. El login por
+    // contraseña ya exigía `status === 'active'`; este camino no lo revisaba y
+    // además escribía 'active', así que quien el organizador hubiera desactivado
+    // volvía a entrar por el botón de Google y encima la cuenta aparecía activa
+    // otra vez en el admin: la baja se deshacía sola y sin dejar rastro.
+    if (user.status === 'disabled') return res.redirect('/panel/login?error=baja');
     await knex('users').where({ id: user.id }).update({
+      // 'invited' → 'active' es justo el flujo de la invitación: el organizador
+      // da de alta el correo y la cuenta se activa cuando su dueño entra.
       google_sub: profile.sub, status: 'active',
       invite_token: null, invite_expires: null, updated_at: knex.fn.now()
     });
