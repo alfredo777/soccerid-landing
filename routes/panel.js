@@ -1663,6 +1663,18 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         } catch (_) { return []; }
       })(),
       gcal: await gcal.estado(),
+      // Suscripción del propio organizador. Es lo que sustituye al OAuth de
+      // Calendar: mismo resultado (su calendario se actualiza solo) sin pedir
+      // un permiso sensible que obligaba a la verificación de marca de Google.
+      agendaAdmin: (() => {
+        const base = (process.env.BASE_URL || (process.env.NODE_ENV === 'production' ? 'https://soccerid.co' : `http://localhost:${process.env.PORT || 3000}`)).replace(/\/$/, '');
+        const url = `${base}/panel/agenda/${ical.tokenPara(req.panelUser.id)}.ics`;
+        return {
+          url,
+          webcal: url.replace(/^https?:/, 'webcal:'),
+          google: 'https://calendar.google.com/calendar/r?cid=' + encodeURIComponent(url)
+        };
+      })(),
       actTypes: Object.keys(await todosLosTipos()),
       actTypesExtra: await tiposExtra(),
       dashboardConfig: await getDashboardConfig(),
@@ -1817,8 +1829,13 @@ router.get('/agenda/:token', async (req, res) => {
     const uid = ical.usuarioDe(token);
     if (!uid) return res.status(404).type('text/plain').send('Calendario no encontrado');
 
+    // El admin también tiene feed: es su forma de llevarse el cronograma a su
+    // calendario sin conceder permisos de Google. Antes se le negaba porque el
+    // feed se pensó solo para inversionistas, pero el contenido no depende de
+    // quién pregunta —sale de la edición activa—, así que negárselo solo lo
+    // obligaba a capturar sus propias fechas dos veces.
     const user = await knex('users').where({ id: uid }).first();
-    if (!user || user.role === 'admin' || user.status !== 'active') {
+    if (!user || user.status !== 'active') {
       return res.status(404).type('text/plain').send('Calendario no encontrado');
     }
 

@@ -169,6 +169,64 @@ definirlo) deja mandando la regla de siempre: hay login si hay client id + secre
 
 ---
 
+## 8. DECISIÓN (14 sep 2026): se retiró el permiso sensible de Calendar
+
+**La pantalla de consentimiento quedó sin un solo scope sensible.** Lo que hay
+registrado hoy en la consola es únicamente:
+
+| Tipo | Scope |
+|---|---|
+| No sensible | `openid` |
+| No sensible | `.../auth/userinfo.email` |
+| No sensible | `.../auth/userinfo.profile` |
+
+Eso empata exactamente con lo que pide el código en `lib/googleAuth.js:59`
+(`openid email profile`), y **no requiere verificación de marca**: sin scopes
+sensibles no hay revisión, ni video de demostración, ni límite de usuarios de
+prueba, ni tokens que caducan a los 7 días. La pantalla se puede publicar.
+
+### Por qué se quitó `calendar.events`
+
+Era el único permiso sensible de todo el proyecto y obligaba a la verificación
+completa de Google. Lo que daba —que el cronograma del organizador apareciera en
+su calendario y se actualizara solo— **ya lo daba el feed iCal** (`lib/ical.js`),
+que no pide ningún permiso. Se estaba pagando una verificación de marca por una
+función duplicada.
+
+### Qué lo sustituye
+
+El feed iCal, que antes era solo para inversionistas, **ahora también sirve al
+organizador** (`routes/panel.js`, ruta `/panel/agenda/:token`). Se le quitó la
+exclusión `user.role === 'admin'`: el contenido del feed no depende de quién
+pregunta —sale de la edición activa—, así que negárselo solo obligaba al
+organizador a capturar sus fechas dos veces. La tarjeta **"Llévate la agenda a tu
+calendario"** en Configuración le da los botones de Google / Apple / Outlook y la
+URL copiable.
+
+La autenticación no cambió: sigue siendo el token HMAC por usuario. Verificado que
+un token manipulado, uno de otro id y una cadena cualquiera siguen devolviendo 404.
+
+**El costo real, para tenerlo claro:** una suscripción iCal la refresca el
+calendario cuando quiere (el feed pide 6 h con `REFRESH-INTERVAL`, pero Google no
+se obliga). El OAuth empujaba al instante. Para fechas a meses vista da igual;
+para un cambio urgente están las notificaciones por correo/SMS, que salen al momento.
+
+### El módulo de Calendar se quedó como plan B, apagado
+
+`lib/googleCalendar.js` no se borró, pero:
+
+- **Se invirtió el interruptor.** Antes `apagado()` solo era verdadero con
+  `GOOGLE_CALENDAR=0`, así que en cualquier entorno donde la variable no estuviera
+  puesta el calendario contaba como ENCENDIDO. Con el scope ya retirado eso era una
+  trampa: el organizador vería "Conectar Google Calendar" y Google le rechazaría el
+  permiso. Ahora está **apagado por defecto** y solo se enciende con
+  `GOOGLE_CALENDAR=1` (`on` / `true` / `yes` también).
+- **Encenderlo no basta con la bandera.** Habría que volver a registrar el scope en
+  la consola y pasar la verificación. Queda anotado en el propio archivo, junto a
+  la constante `SCOPE`.
+
+Todo lo de la sección 7 queda como referencia histórica de cómo estaba armado.
+
 ## 7. Google Calendar de la organización (7 sep 2026)
 
 Va **aparte del login**: su propio callback, su propio interruptor y su propio

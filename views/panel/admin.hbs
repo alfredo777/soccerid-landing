@@ -1646,6 +1646,24 @@
       <button type="submit" class="ad-btn">Guardar trazabilidad</button>
     </form>
 
+    <div class="pn-card ad-form">
+      <h3>Llévate la agenda a tu calendario</h3>
+      <p class="ad-hint" style="margin:-4px 0 14px;">Suscríbete una vez y el cronograma de la <strong>edición activa</strong>
+        aparece en tu calendario, actualizándose solo cuando cambies algo en el panel.
+        <strong>No pide permisos ni acceso a tu agenda</strong>: es solo una dirección que tu calendario consulta,
+        y por eso no necesita la verificación de Google.</p>
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+        <a class="ad-btn" style="text-decoration:none;" href="{{agendaAdmin.google}}" target="_blank" rel="noopener noreferrer">Agregar a Google Calendar</a>
+        <a class="ad-btn ad-btn--ghost" style="text-decoration:none;" href="{{agendaAdmin.webcal}}">Apple / Outlook</a>
+      </div>
+      <div class="ad-f">
+        <label>O pega esta dirección en tu app de calendario</label>
+        <input type="text" value="{{agendaAdmin.url}}" readonly onclick="this.select()">
+        <div class="ad-hint">Esta dirección es tuya: no la compartas. El calendario la vuelve a consultar cada tanto
+          (suele tardar unas horas en reflejar un cambio), así que para algo urgente usa una notificación, que sale al momento.</div>
+      </div>
+    </div>
+
     {{#if gcal.disponible}}
     <div class="pn-card ad-form">
       <h3>Google Calendar
