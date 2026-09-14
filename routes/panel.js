@@ -306,7 +306,12 @@ async function buildPanelData(user, opts = {}) {
     return {
       title: m.title, date: m.date_label, done: status === 'completado', inProgress: status === 'en_curso',
       highlight: !!m.highlight, owner: m.owner || '', status, statusLabel: MILE_STATUS[status] || 'Pendiente',
-      description: m.description || '', startDate: m.start_date || '', endDate: m.end_date || ''
+      description: m.description || '', startDate: m.start_date || '', endDate: m.end_date || '',
+      // Igual que las actividades: un enlace que abre el formulario de Google ya
+      // lleno. Sale vacío si la etapa no tiene fecha, y entonces no se muestra el
+      // botón: ofrecer "agregar al calendario" sin fecha que agendar es una promesa
+      // que no se puede cumplir.
+      addUrl: ical.enlaceGoogleEtapa(m)
     };
   });
 
@@ -339,14 +344,14 @@ async function buildPanelData(user, opts = {}) {
     .filter(m => m.start_date || m.end_date)
     .map(m => ({
       fecha: m.start_date || m.end_date,
-      kind: 'etapa', title: m.title,
+      kind: 'etapa', title: m.title, addUrl: ical.enlaceGoogleEtapa(m),
       meta: [m.date_label, MILE_STATUS[m.status || (m.done ? 'completado' : 'pendiente')] || '', m.owner].filter(Boolean).join(' · '),
       color: (m.status === 'completado' || m.done) ? '#1E8E5A' : (m.status === 'en_curso' ? '#6C3CE0' : '#8A8F98')
     }));
   const lineaActividades = (await soloDeLaEdicion(knex('events')).orderBy([{ column: 'year' }, { column: 'month' }, { column: 'day' }]))
     .map(e => ({
       fecha: `${e.year}-${dosDig(e.month)}-${dosDig(e.day)}`,
-      kind: 'actividad', title: e.title,
+      kind: 'actividad', title: e.title, addUrl: ical.enlaceGoogle(e),
       meta: [e.time_label, e.type === 'Otro' ? (e.custom_type || 'Otro') : e.type, e.note].filter(Boolean).join(' · '),
       color: e.color || '#6C3CE0'
     }));
@@ -1130,6 +1135,10 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         description: m.description || '', startDate: m.start_date || '', endDate: m.end_date || '',
         eventId: m.event_id || '',
         editionLabel: m.event_id && edicionPorId[m.event_id] ? edicionPorId[m.event_id].title : '',
+        // `date_label` es texto libre ("Abr - Jul 2027"): sirve para leerlo, no
+        // para agendarlo. Sin fecha real la etapa no entra a la línea de tiempo
+        // ni puede ofrecer "agregar al calendario", y eso no se notaba desde aquí.
+        sinFechas: !m.start_date && !m.end_date,
         isFirst: i === 0, isLast: i === mileRowsAdmin.length - 1
       });
     });

@@ -33,6 +33,12 @@
   .cr-drawer__row span { color:var(--pn-ink); font-weight:600; }
   .cr-drawer__desc { font-size:14px; color:var(--pn-ink-2); line-height:1.65; }
   .cr-drawer__sep { border:none; border-top:1px solid var(--pn-border); margin:2px 0; }
+  .cr-drawer__acciones { margin-top:auto; padding-top:16px; }
+  .cr-addbtn { display:inline-flex; align-items:center; justify-content:center; width:100%; padding:11px 16px;
+    border-radius:11px; border:1px solid var(--pn-border); background:#fff; color:var(--pn-ink);
+    font-size:13.5px; font-weight:800; text-decoration:none; }
+  .cr-addbtn:hover { border-color:var(--pn-purple); color:var(--pn-purple); }
+  .cr-addnota { font-size:11.5px; color:var(--pn-muted); font-weight:600; line-height:1.5; margin:9px 0 0; }
 </style>
 
 <p class="cr-intro">{{pageSub}}</p>
@@ -71,6 +77,10 @@
   <div class="cr-drawer__row" id="crOwnerRow"><b>Responsable</b><span id="crOwner"></span></div>
   <hr class="cr-drawer__sep">
   <div class="cr-drawer__desc" id="crDesc"></div>
+  <div class="cr-drawer__acciones">
+    <a class="cr-addbtn" id="crAdd" target="_blank" rel="noopener noreferrer">Agregar a mi calendario</a>
+    <p class="cr-addnota">Abre Google con la etapa ya cargada. <strong>No pide permisos</strong> ni toca tu agenda hasta que tú guardes.</p>
+  </div>
 </aside>
 
 <script>
@@ -90,6 +100,11 @@
     if (m.owner){ document.getElementById('crOwner').textContent = m.owner; or.style.display = 'flex'; } else { or.style.display = 'none'; }
     var desc = document.getElementById('crDesc');
     desc.textContent = m.description || 'Sin descripción adicional para esta etapa.';
+    // Sin fecha no hay nada que agendar, así que el bloque entero se esconde en
+    // vez de dejar un botón que no llevaría a ningún lado.
+    var add = document.getElementById('crAdd');
+    add.parentNode.style.display = m.addUrl ? 'block' : 'none';
+    if (m.addUrl) add.href = m.addUrl;
     var ov = document.getElementById('crOverlay'), d = document.getElementById('crDrawer');
     ov.hidden = false; d.hidden = false; d.setAttribute('aria-hidden', 'false');
     requestAnimationFrame(function(){ d.classList.add('is-open'); ov.classList.add('is-open'); });

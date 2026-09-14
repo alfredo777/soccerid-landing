@@ -459,6 +459,7 @@
     .st-demo a:hover { border-color:var(--pn-purple); color:var(--pn-purple); }
     .st-demo--on { background:#FEF3C7; border-color:#FDE68A; color:#92400E; }
     .st-demo--on a { background:#fff; border-color:#FDE68A; color:#92400E; }
+    .ad-warn { color:#92400E; font-weight:700; }
   </style>
 
   <p class="st-note">Todo lo de aquí se <strong>cuenta solo</strong> a partir de lo cargado en el panel; no hay cifras escritas a mano.
@@ -923,6 +924,7 @@
             <strong>{{this.title}}</strong>
             <small>{{this.date_label}} · {{this.statusLabel}}{{#if this.owner}} · {{this.owner}}{{/if}}{{#if this.editionLabel}} · {{this.editionLabel}}{{else}} · todas las ediciones{{/if}}{{#if this.highlight}} · Destacado{{/if}}</small>
             {{#if this.description}}<small>{{this.description}}</small>{{/if}}
+            {{#if this.sinFechas}}<small class="ad-warn">Sin fechas de inicio/fin: no aparece en la línea de tiempo del inversionista ni se puede agregar a un calendario. La etiqueta de arriba es solo texto.</small>{{/if}}
           </div>
           <div class="ad-move">
             <form method="POST" action="/panel/admin/milestone/{{this.id}}/move"><input type="hidden" name="dir" value="up"><button type="submit" {{#if @first}}disabled{{/if}} title="Subir"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></button></form>

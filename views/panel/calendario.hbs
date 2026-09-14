@@ -71,6 +71,10 @@
   /* Línea de tiempo única (etapas + actividades) */
   .cl-linea__nota { font-size:12px; color:var(--pn-muted); font-weight:600; margin:-6px 0 12px; padding:0 20px; line-height:1.5; }
   .cl-linea { position:relative; padding:0 20px 18px; }
+  .cl-linea__add { margin-left:auto; align-self:center; flex-shrink:0; white-space:nowrap;
+    font-size:11.5px; font-weight:800; text-decoration:none; color:var(--pn-purple);
+    border:1px solid var(--pn-border); border-radius:999px; padding:5px 11px; }
+  .cl-linea__add:hover { border-color:var(--pn-purple); background:var(--pn-purple-soft); }
   .cl-linea__it { display:flex; gap:11px; padding:9px 0; border-top:1px solid var(--pn-border); }
   .cl-linea__it:first-child { border-top:none; }
   .cl-linea__it.is-pasado { opacity:.55; }
@@ -233,6 +237,10 @@
             <strong>{{this.title}}</strong>
             <small>{{#eq this.kind 'etapa'}}Etapa{{else}}Actividad{{/eq}}{{#if this.meta}} · {{this.meta}}{{/if}}</small>
           </div>
+          {{#if this.addUrl}}
+          <a class="cl-linea__add" href="{{this.addUrl}}" target="_blank" rel="noopener noreferrer"
+             title="Agregar a mi calendario" aria-label="Agregar {{this.title}} a mi calendario">+ Agendar</a>
+          {{/if}}
         </div>
         {{/each}}
       </div>
