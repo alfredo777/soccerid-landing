@@ -1706,6 +1706,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         investmentType: u.investment_type === 'riesgo' ? 'riesgo' : 'fijo',
         investmentTypeLabel: u.investment_type === 'riesgo' ? 'Participación a riesgo' : 'Retorno fijo',
         color: (findTier(tiers, u.role, u.category) || {}).color || '#8A8F98',
+        isDemo: !!u.is_demo,
         // Monto en la ficha, pero ninguna inversión registrada: su capital no
         // entra en ninguna cifra del panel. Solo lo ve el admin, aquí.
         sinInversion: u.role === 'investor' && Number(u.amount || 0) > 0 && !conInversion.has(String(u.id)),

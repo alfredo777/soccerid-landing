@@ -158,6 +158,10 @@ Pendiente de esta sección:
     levantar de más se leía como "100% cubierto · falta $0", que es lo contrario. El
     número ya puede pasar de 100 (la barra sigue topada) y la tarjeta dice **"Cubierto, y
     hay USD $X por encima del presupuesto"**. Igual en el comparativo entre ediciones.
+  - **Las cuentas demo se distinguen en la lista**: la bandera decide si su capital cuenta,
+    pero no se veía en el directorio —había que abrir cada ficha— y el aviso de Estadísticas
+    decía "2 cuenta(s) de demostración" sin decir cuáles. Ahora llevan una etiqueta **Demo**
+    junto al nombre en el directorio y un chip en el encabezado de su ficha.
   - **Las cuentas demo nacen completas** (`db/portfolioSeed.js`): antes `ensureDemoInvestors`
     solo creaba el usuario, sin `is_demo` y sin inversión. Una cuenta demo recreada entraba
     como **capital real** en las cifras del admin y encima aparecía en el aviso de "sin
