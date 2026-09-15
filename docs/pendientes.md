@@ -129,9 +129,9 @@ Pendiente de esta sección:
     bloques —qué deja de contar (una por una), su inversión y por qué la fecha va vacía,
     los documentos que estrena, lo que NO cambia respecto a una cuenta real, y qué hace
     "Salir de demo"—, más una nota sobre cómo compartir la contraseña si el buzón no es
-    tuyo. **La lista de documentos sale de **, no del template: si
+    tuyo. **La lista de documentos sale de `lib/demoAccount.js`**, no del template: si
     cambia, el drawer no se queda contando una historia vieja. Usa el mismo drawer lateral
-    del resto del admin ( + ), según la convención de UI.
+    del resto del admin (`.ad-modal` + `openModal`), según la convención de UI.
   - Probado de punta a punta: invitación en demo → cuenta marcada, 3 documentos, inversión
     registrada y **capital sin moverse** ($1,000,000); "Salir de demo" → bandera fuera,
     documentos borrados y el capital subió a **$1,400,000**. Las dos cuentas demo de
