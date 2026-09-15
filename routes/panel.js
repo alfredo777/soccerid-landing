@@ -176,6 +176,24 @@ async function notificationsForUser(user) {
 }
 
 // ── Ensambla el objeto `panel` para un usuario (inversionista/patrocinador) ──
+/** "2026-10-01"→"2026-10-31" queda como "del 1 al 31 de octubre de 2026". */
+const MESES_LARGO = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+function rangoLegible(r) {
+  if (!r) return null;
+  const parte = (iso) => {
+    const [a, m, d] = iso.split('-').map(Number);
+    return { d, mes: MESES_LARGO[m - 1], a };
+  };
+  const x = parte(r.desde), y = parte(r.hasta);
+  let texto;
+  if (r.desde === r.hasta) texto = `el ${x.d} de ${x.mes} de ${x.a}`;
+  else if (x.mes === y.mes && x.a === y.a) texto = `del ${x.d} al ${y.d} de ${x.mes} de ${x.a}`;
+  else if (x.a === y.a) texto = `del ${x.d} de ${x.mes} al ${y.d} de ${y.mes} de ${x.a}`;
+  else texto = `del ${x.d} de ${x.mes} de ${x.a} al ${y.d} de ${y.mes} de ${y.a}`;
+  return { texto, aproximado: !!r.aproximado };
+}
+
 async function buildPanelData(user, opts = {}) {
   const config = loadConfig();
   const cfg = await getDashboardConfig();
@@ -308,10 +326,13 @@ async function buildPanelData(user, opts = {}) {
       highlight: !!m.highlight, owner: m.owner || '', status, statusLabel: MILE_STATUS[status] || 'Pendiente',
       description: m.description || '', startDate: m.start_date || '', endDate: m.end_date || '',
       // Igual que las actividades: un enlace que abre el formulario de Google ya
-      // lleno. Sale vacío si la etapa no tiene fecha, y entonces no se muestra el
-      // botón: ofrecer "agregar al calendario" sin fecha que agendar es una promesa
-      // que no se puede cumplir.
-      addUrl: ical.enlaceGoogleEtapa(m)
+      // lleno. Las fechas capturadas mandan; si no hay, se lee la etiqueta
+      // ("Oct 2026"), que es la fecha que el organizador ya escribió, solo que
+      // como texto. Si tampoco se entiende, no hay botón.
+      addUrl: ical.enlaceGoogleEtapa(m),
+      // El rango se muestra SIEMPRE junto al botón: agendar algo sin saber qué
+      // días se van a apartar es justo lo que uno no quiere de un calendario.
+      addRango: rangoLegible(ical.rangoDeEtapa(m))
     };
   });
 
@@ -341,9 +362,11 @@ async function buildPanelData(user, opts = {}) {
   // qué pasa antes de qué había que ir mirando las dos.
   const dosDig = (n) => String(n).padStart(2, '0');
   const lineaEtapas = mileRows
-    .filter(m => m.start_date || m.end_date)
-    .map(m => ({
-      fecha: m.start_date || m.end_date,
+    .map(m => ({ m, r: ical.rangoDeEtapa(m) }))
+    // Sin fecha capturada NI etiqueta legible no hay dónde ponerla en la línea.
+    .filter(x => !!x.r)
+    .map(({ m, r }) => ({
+      fecha: r.desde,
       kind: 'etapa', title: m.title, addUrl: ical.enlaceGoogleEtapa(m),
       meta: [m.date_label, MILE_STATUS[m.status || (m.done ? 'completado' : 'pendiente')] || '', m.owner].filter(Boolean).join(' · '),
       color: (m.status === 'completado' || m.done) ? '#1E8E5A' : (m.status === 'en_curso' ? '#6C3CE0' : '#8A8F98')
@@ -1135,9 +1158,9 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         description: m.description || '', startDate: m.start_date || '', endDate: m.end_date || '',
         eventId: m.event_id || '',
         editionLabel: m.event_id && edicionPorId[m.event_id] ? edicionPorId[m.event_id].title : '',
-        // `date_label` es texto libre ("Abr - Jul 2027"): sirve para leerlo, no
-        // para agendarlo. Sin fecha real la etapa no entra a la línea de tiempo
-        // ni puede ofrecer "agregar al calendario", y eso no se notaba desde aquí.
+        // Sin fechas capturadas se usa `date_label` ("Abr - Jul 2027"), que se
+        // lee bien pero solo da el mes completo. Se avisa aquí para que quien
+        // quiera el día exacto sepa que tiene que capturarlo.
         sinFechas: !m.start_date && !m.end_date,
         isFirst: i === 0, isLast: i === mileRowsAdmin.length - 1
       });
