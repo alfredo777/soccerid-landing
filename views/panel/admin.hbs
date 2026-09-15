@@ -375,10 +375,11 @@
       </div>
       <div class="ad-f ad-demobox">
         <label class="ad-check"><input type="checkbox" name="is_demo" value="1"> Invitar en modo demostración</label>
-        <div class="ad-demobox__h">La cuenta funciona igual para quien entre con ella, pero <strong>su capital no cuenta</strong>
-          en el panel estadístico y estrena <strong>documentos de ejemplo</strong>, para que no abra vacía.
-          Cuando deje de ser una demostración, el botón <strong>"Salir de demo"</strong> de su fila la vuelve real
-          y se lleva los documentos de ejemplo.</div>
+        <div class="ad-demobox__h">Su capital no cuenta en el panel estadístico y la cuenta estrena documentos de ejemplo.</div>
+        <button type="button" class="ad-demobox__btn" onclick="openModal('modal-demo')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+          Ver qué se le agrega a la cuenta
+        </button>
       </div>
       <button type="submit" class="ad-btn">Enviar invitación</button>
     </form>
@@ -492,6 +493,23 @@
   .ad-pwd__m { display:block; font-size:11.5px; color:#166534; font-weight:600; }
   .ad-demobox { border:1px solid #C7D2FE; background:#EEF2FF; border-radius:12px; padding:12px 14px; }
   .ad-demobox__h { font-size:11.5px; color:#3730A3; line-height:1.55; margin-top:7px; }
+  .ad-demobox__btn { display:inline-flex; align-items:center; gap:7px; margin-top:10px; padding:9px 14px; border:1px solid #C7D2FE; background:#fff; color:#3730A3; border-radius:10px; font-family:inherit; font-size:12.5px; font-weight:800; cursor:pointer; }
+  .ad-demobox__btn:hover { background:#E0E7FF; }
+  .ad-demobox__btn svg { width:15px; height:15px; flex-shrink:0; }
+  /* Drawer que explica el modo demostración */
+  .dm-lead { font-size:14px; color:var(--pn-ink-2); line-height:1.65; margin:0 0 22px; }
+  .dm-b { margin-bottom:22px; }
+  .dm-b__t { display:flex; align-items:center; gap:9px; font-size:14px; font-weight:800; color:var(--pn-ink); margin-bottom:9px; }
+  .dm-b__n { width:23px; height:23px; border-radius:7px; background:#EEF2FF; color:#3730A3; font-size:12px; font-weight:900; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .dm-b p { font-size:13px; color:var(--pn-ink-2); line-height:1.7; margin:0 0 9px; }
+  .dm-list { list-style:none; padding:0; margin:0 0 9px; }
+  .dm-list li { position:relative; padding:0 0 0 18px; margin-bottom:7px; font-size:13px; color:var(--pn-ink-2); line-height:1.6; }
+  .dm-list li::before { content:''; position:absolute; left:2px; top:8px; width:6px; height:6px; border-radius:50%; background:#A5B4FC; }
+  .dm-doc { display:flex; align-items:center; gap:10px; padding:11px 13px; border:1px solid var(--pn-border); border-radius:11px; background:#FBFAFD; margin-bottom:8px; }
+  .dm-doc strong { flex:1; font-size:13px; font-weight:700; color:var(--pn-ink); }
+  .dm-doc span { font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:#3730A3; background:#EEF2FF; padding:3px 9px; border-radius:20px; white-space:nowrap; }
+  .dm-note { padding:13px 15px; border-radius:12px; background:#F1FBF5; border:1px solid #BBE5C8; font-size:12.5px; color:#166534; line-height:1.65; }
+  .dm-warn { padding:13px 15px; border-radius:12px; background:#FFF7ED; border:1px solid #F5C6A5; font-size:12.5px; color:#7C2D12; line-height:1.65; }
   .ad-demo { display:inline-block; padding:1px 8px; border-radius:999px; background:#EEF2FF; color:#3730A3; border:1px solid #C7D2FE; font-size:10px; font-weight:800; letter-spacing:.4px; text-transform:uppercase; vertical-align:middle; margin-left:7px; }
     .ad-nogap { display:inline-block; margin-top:3px; margin-left:5px; padding:1px 9px; border-radius:999px; background:#FFF7ED; color:#9A3412; border:1px solid #F5C6A5; font-size:11px; font-weight:800; }
     .st-serie { display:flex; gap:12px; align-items:flex-end; overflow-x:auto; padding-bottom:4px; }
@@ -1875,6 +1893,79 @@
     .tw-danger:hover { background:#FEF2F2; }
   </style>
 </section>
+
+<!-- Qué se le agrega a una cuenta en modo demostración -->
+<div class="ad-modal" id="modal-demo">
+  <div class="ad-modal__card" style="max-width:640px;">
+    <div class="ad-modal__head">
+      <h3>Qué se le agrega a una cuenta demo</h3>
+      <button class="ad-modal__close" onclick="closeModal('modal-demo')" aria-label="Cerrar"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></button>
+    </div>
+    <div class="ad-modal__body">
+      <p class="dm-lead">La cuenta se crea y se invita igual que cualquier otra: entra con su correo y su
+        contraseña, y ve la misma edición activa que todos. Lo que cambia es que <strong>su dinero no es
+        real</strong>, así que no puede ensuciar tus cifras, y que <strong>no abre vacía</strong>.</p>
+
+      <div class="dm-b">
+        <div class="dm-b__t"><span class="dm-b__n">1</span>Queda marcada como demo</div>
+        <p>La verás con una etiqueta <strong>Demo</strong> en el directorio y en su ficha, y su capital
+          <strong>deja de contar</strong> en el panel estadístico:</p>
+        <ul class="dm-list">
+          <li>No suma al <strong>capital comprometido</strong> ni al de todas las ediciones.</li>
+          <li>No entra en el <strong>reparto por modalidad</strong> (fijo / riesgo).</li>
+          <li>No entra en el <strong>retorno proyectado</strong>.</li>
+          <li>No ocupa lugar en la <strong>dona de inversionistas contra cupo</strong>.</li>
+          <li>No aparece en la <strong>serie de capital acumulado</strong>.</li>
+        </ul>
+        <p>Estadísticas te dice cuántas quedaron fuera y las puedes volver a ver con el interruptor
+          <strong>&quot;Incluir datos demo&quot;</strong>, sin desmarcar nada.</p>
+      </div>
+
+      <div class="dm-b">
+        <div class="dm-b__t"><span class="dm-b__n">2</span>Su inversión, registrada</div>
+        <p>Con el <strong>monto</strong> y la <strong>modalidad</strong> que captures aquí arriba, en la
+          <strong>edición activa</strong>. Sin esa inversión su panel abriría sin capital, sin retorno y
+          sin simulador, que es media demostración.</p>
+        <p>La <strong>fecha de inversión queda vacía</strong>: no se inventa una. Se puede capturar
+          después desde Ediciones &rarr; Gestionar &rarr; Inversiones.</p>
+      </div>
+
+      <div class="dm-b">
+        <div class="dm-b__t"><span class="dm-b__n">3</span>Documentos de ejemplo</div>
+        <p>Su sección de <strong>Documentos</strong> abriría vacía, que en una cuenta hecha para enseñar
+          el panel es justo lo que no quieres que vean. Se le siembran estos:</p>
+        {{#each demoDocs}}
+        <div class="dm-doc"><strong>{{this.name}}</strong><span>{{this.category}}</span></div>
+        {{/each}}
+        <p>Van marcados como ejemplo y su enlace abre la <strong>presentación del panel</strong>, que
+          existe siempre: un documento con una URL inventada se ve bien hasta que alguien lo abre
+          enfrente de ti.</p>
+      </div>
+
+      <div class="dm-b">
+        <div class="dm-b__t"><span class="dm-b__n">4</span>Lo que NO cambia</div>
+        <p>Nada más es de mentira. Ve las <strong>mismas noticias</strong>, el mismo
+          <strong>calendario</strong> y <strong>cronograma</strong>, el <strong>data room</strong> de la
+          edición, los <strong>paquetes</strong>, el <strong>FAQ</strong> y su <strong>asesor</strong>,
+          igual que un inversionista real. Recibe notificaciones y puede cambiar su contraseña.</p>
+      </div>
+
+      <div class="dm-b">
+        <div class="dm-b__t"><span class="dm-b__n">5</span>Cuando deje de ser una demostración</div>
+        <p>El botón <strong>&quot;Salir de demo&quot;</strong> de su fila (y de su ficha) hace las dos
+          cosas de una: quita la marca &mdash;<strong>su capital empieza a contar</strong>&mdash; y borra
+          los documentos de ejemplo.</p>
+        <div class="dm-note"><strong>Solo borra lo que sembramos.</strong> Los documentos que tú hayas
+          subido a esa cuenta se quedan donde están.</div>
+      </div>
+
+      <div class="dm-warn"><strong>La contraseña.</strong> La invitación llega por correo como siempre.
+        Si vas a compartir la cuenta por mensaje y no tienes acceso a ese buzón, usa
+        <strong>&quot;Contraseña&quot;</strong> en su fila: genera una y te la muestra una sola vez para
+        copiarla.</div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ MODALES DE EDICIÓN ═══ -->
 <div class="ad-modal" id="modal-user">

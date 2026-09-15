@@ -1694,6 +1694,8 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       flashType: req.query.type,
       // Contraseña recién generada: se pinta una vez y se borra al leerla.
       nuevaPassword: tomarRevelacion(req.panelUser.id),
+      // Lo que estrena una cuenta en modo demostración, para el drawer que lo explica
+      demoDocs: demoAccount.DOCS_DEMO,
       s3: require('../lib/uploads').s3Enabled,
       users: users.map(u => Object.assign({
         // Directorio global: lo que esta persona tiene en TODAS las ediciones.
