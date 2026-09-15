@@ -386,6 +386,7 @@
             <strong>{{this.name}}</strong>
             <small>{{this.email}} · {{this.roleLabel}} {{this.tierLabel}} · {{this.amount}}{{#eq this.role 'investor'}} · {{this.investmentTypeLabel}}{{/eq}}</small>
             {{#if this.edicionesN}}<small class="ad-multi">{{this.capitalTotal}} en {{this.edicionesN}} edición(es): {{this.edicionesLabel}}</small>{{/if}}
+            {{#if this.sinInversion}}<small class="ad-nogap" title="Su monto no entra en el capital, el reparto por modalidad, el retorno ni la serie">Sin inversión registrada</small>{{/if}}
           </div>
           <span class="ad-status {{this.status}}">{{this.status}}</span>
           <div class="ad-actions">
@@ -418,7 +419,7 @@
     .st-two { display:grid; grid-template-columns:minmax(220px,300px) 1fr; gap:24px; align-items:center; }
     @media (max-width:720px){ .st-two { grid-template-columns:1fr; } }
     .st-donut { position:relative; width:100%; max-width:210px; margin:0 auto; }
-    .st-donut svg { width:100%; height:auto; transform:rotate(-90deg); }
+    .st-donut svg { width:100%; height:auto; }
     .st-donut__mid { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
     .st-donut__mid b { font-size:28px; font-weight:900; line-height:1; }
     .st-donut__mid span { font-size:11px; color:var(--pn-muted); font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
@@ -447,6 +448,17 @@
     .st-dot { display:inline-block; width:9px; height:9px; border-radius:3px; margin-right:7px; vertical-align:middle; }
     .st-minibar { display:inline-block; width:52px; height:6px; border-radius:20px; background:#F1F0F5; overflow:hidden; vertical-align:middle; margin-right:7px; }
     .st-minibar i { display:block; height:100%; }
+    .st-gap { border:1px solid #F5C6A5; background:#FFF7ED; border-radius:14px; padding:15px 17px; margin-bottom:18px; }
+    .st-gap__t { font-size:13.5px; font-weight:800; color:#7C2D12; margin-bottom:5px; }
+    .st-gap__p { font-size:12.5px; color:#7C2D12; line-height:1.6; margin-bottom:11px; }
+    .st-gap__list { display:flex; flex-direction:column; gap:7px; margin-bottom:12px; }
+    .st-gap__row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; background:#fff; border:1px solid #F5D9BE; border-radius:11px; padding:9px 12px; font-size:12.5px; }
+    .st-gap__row strong { font-weight:800; }
+    .st-gap__row small { color:var(--pn-muted); font-weight:600; }
+    .st-gap__amt { margin-left:auto; font-weight:800; color:#7C2D12; }
+    .st-gap__cta { display:inline-flex; align-items:center; padding:9px 14px; border-radius:10px; background:#7C2D12; color:#fff; font-size:12.5px; font-weight:800; }
+    .st-gap__cta:hover { background:#611F0B; color:#fff; }
+    .ad-nogap { display:inline-block; margin-top:3px; margin-left:5px; padding:1px 9px; border-radius:999px; background:#FFF7ED; color:#9A3412; border:1px solid #F5C6A5; font-size:11px; font-weight:800; }
     .st-serie { display:flex; gap:12px; align-items:flex-end; overflow-x:auto; padding-bottom:4px; }
     .st-serie__col { display:flex; flex-direction:column; align-items:center; gap:6px; min-width:64px; }
     .st-serie__bar { width:34px; height:110px; background:#F1F0F5; border-radius:9px; display:flex; align-items:flex-end; overflow:hidden; }
@@ -482,14 +494,42 @@
   </div>
   {{/if}}
 
+  {{#if stats.sinInversion.hay}}
+  <!-- Monto en la ficha que nunca se registró como inversión -->
+  <div class="st-gap">
+    <div class="st-gap__t">{{stats.sinInversion.capital}} fuera de estas cifras</div>
+    <p class="st-gap__p">
+      {{stats.sinInversion.n}} cuenta(s) tienen un monto capturado en su ficha pero
+      <strong>ninguna inversión registrada</strong>. Las cifras de aquí abajo —capital, reparto por
+      modalidad, retorno y la serie— se calculan desde las inversiones, así que ese dinero
+      <strong>no entra en ninguna</strong>. Quien entre con esa cuenta sí ve su monto en su panel:
+      hoy el inversionista y tú están viendo números distintos.
+    </p>
+    <div class="st-gap__list">
+      {{#each stats.sinInversion.cuentas}}
+      <div class="st-gap__row">
+        <strong>{{this.name}}</strong>
+        <small>{{this.email}} · {{this.modalidadLabel}}</small>
+        <span class="st-gap__amt">{{this.amount}}</span>
+      </div>
+      {{/each}}
+    </div>
+    {{#if stats.sinInversion.edicionUrl}}
+    <a class="st-gap__cta" href="{{stats.sinInversion.edicionUrl}}">Registrar las inversiones en {{stats.sinInversion.edicionTitle}}</a>
+    {{/if}}
+  </div>
+  {{/if}}
+
   <!-- Capital -->
   <div class="st-grid">
     <div class="pn-card st-card">
       <h4>Capital comprometido</h4>
       <div class="st-big">{{stats.capital.edicion}}</div>
       <div class="st-sub">{{stats.capital.inversiones}} inversión(es) en esta edición</div>
-      <div class="st-bar"><i style="width:{{stats.capital.cubiertoPct}}%; background:var(--pn-purple);"></i></div>
-      <div class="st-legend">{{stats.capital.cubiertoPct}}% del presupuesto ({{stats.capital.presupuesto}})</div>
+      <div class="st-bar"><i style="width:{{stats.capital.barraPct}}%; background:var(--pn-purple);"></i></div>
+      <div class="st-legend">{{stats.capital.cubiertoPct}}% del presupuesto ({{stats.capital.presupuesto}})
+        {{#if stats.fuera.n}}<br>{{stats.fuera.n}} inversión(es) cerrada(s) o en pausa, {{stats.fuera.capital}}, no cuentan aquí{{/if}}
+      </div>
     </div>
     <div class="pn-card st-card">
       <h4>Falta por levantar</h4>
@@ -497,8 +537,13 @@
       <div class="st-big" style="color:var(--pn-muted);">—</div>
       <div class="st-sub">esta edición no tiene presupuesto definido</div>
       {{else}}
+      {{#if stats.capital.sobrante}}
+      <div class="st-big" style="color:#0E9F6E;">Cubierto</div>
+      <div class="st-sub">y hay {{stats.capital.sobrante}} por encima del presupuesto</div>
+      {{else}}
       <div class="st-big">{{stats.capital.faltante}}</div>
       <div class="st-sub">para cubrir el presupuesto de la edición</div>
+      {{/if}}
       {{/if}}
     </div>
     <div class="pn-card st-card">
@@ -572,7 +617,7 @@
           <i style="background:{{this.color}}"></i>
           <strong>{{this.label}}</strong>
           <span>{{this.real}}</span>
-          <small>de {{this.cupo}}</small>
+          {{#if this.esSinCategoria}}<small>sin cupo asignado</small>{{else}}<small>de {{this.cupo}}</small>{{/if}}
         </div>
         {{else}}
         <div class="st-row"><small>No hay categorías configuradas.</small></div>
@@ -622,7 +667,7 @@
             <td>{{this.presupuesto}}</td>
             <td>
               {{#if this.sinPresupuesto}}—{{else}}
-              <span class="st-minibar"><i style="width:{{this.cubiertoPct}}%; background:{{this.accent}}"></i></span>
+              <span class="st-minibar"><i style="width:{{this.barraPct}}%; background:{{this.accent}}"></i></span>
               {{this.cubiertoPct}}%
               {{/if}}
             </td>

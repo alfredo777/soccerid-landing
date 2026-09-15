@@ -7,18 +7,59 @@ const knex = require('./knex');
 const auth = require('../lib/panelAuth');
 
 // Crea (si faltan) los dos perfiles de inversionista demo: fijo y riesgo.
+//
+// Una cuenta demo tiene que nacer COMPLETA: con su bandera `is_demo` y con su
+// inversión registrada. Antes solo se creaba el usuario, y eso dejaba dos
+// agujeros que solo se notaban desde el panel del admin:
+//   · sin `is_demo`, su dinero de mentira entraba en el capital real;
+//   · sin inversión, su monto vivía solo en la ficha y no aparecía en ninguna
+//     cifra (el inversionista veía su capital y el admin veía cero).
+// La bandera y la inversión se ponen SOLO al crear lo que falta: si el admin
+// desmarcó la cuenta o editó su inversión a mano, esto no se lo pisa en el
+// siguiente arranque.
 async function ensureDemoInvestors() {
   const pass = process.env.DEMO_PASSWORD || 'demo1234';
   const demos = [
-    { name: 'Demo Inversionista · Fijo',  email: 'demo.fijo@soccerid.co',   category: 'plata', amount: 100000, investment_type: 'fijo',   member_id: 'SIDC-DEMO-F' },
-    { name: 'Demo Inversionista · Riesgo', email: 'demo.riesgo@soccerid.co', category: 'oro',   amount: 250000, investment_type: 'riesgo', member_id: 'SIDC-DEMO-R' }
+    { name: 'Demo Inversionista · Fijo',  email: 'demo.fijo@soccerid.co',   category: 'plata', amount: 100000, investment_type: 'fijo',   member_id: 'SIDC-DEMO-F',
+      return_pct: 25, invest_date: '2026-08-20', notes: 'Retorno fijo conforme al contrato individual.' },
+    { name: 'Demo Inversionista · Riesgo', email: 'demo.riesgo@soccerid.co', category: 'oro',   amount: 250000, investment_type: 'riesgo', member_id: 'SIDC-DEMO-R',
+      return_pct: 50, invest_date: '2026-08-28', notes: 'Participación variable 50–50 sobre utilidad neta; retorno con tope de 50% sobre el capital.' }
   ];
   for (const d of demos) {
-    const ex = await knex('users').where({ email: d.email }).first();
-    if (!ex) {
-      await knex('users').insert(Object.assign({}, d, { role: 'investor', status: 'active', password_hash: auth.hashPassword(pass) }));
+    const { return_pct, invest_date, notes } = d;
+    const perfil = { name: d.name, email: d.email, category: d.category, amount: d.amount,
+      investment_type: d.investment_type, member_id: d.member_id };
+    let user = await knex('users').where({ email: d.email }).first();
+    if (!user) {
+      await knex('users').insert(Object.assign({}, perfil, {
+        role: 'investor', status: 'active', is_demo: true, password_hash: auth.hashPassword(pass)
+      }));
+      user = await knex('users').where({ email: d.email }).first();
       console.log('  ✓ Perfil demo creado:', d.email);
     }
+    if (!user) continue;
+
+    // Su inversión, en la edición que ven los inversionistas hoy: la que el
+    // admin dejó activa o, si no hay ninguna configurada, la de mayor año.
+    // Es la misma regla del panel; con otra, la cuenta demo abriría en una
+    // edición y su capital estaría colgado de otra.
+    const yaTiene = await knex('investments').where({ user_id: user.id }).first();
+    if (yaTiene) continue;
+    let activeId = '';
+    try {
+      const row = await knex('app_settings').where({ key: 'dashboard_config' }).first();
+      if (row && row.value) activeId = String((JSON.parse(row.value) || {}).activeEditionId || '');
+    } catch (_) {}
+    const eds = await knex('portfolio_events').orderBy([{ column: 'year', order: 'desc' }, { column: 'id', order: 'desc' }]);
+    const ed = eds.find(e => String(e.id) === activeId) || eds[0];
+    if (!ed) continue;
+    const max = await knex('investments').where({ event_id: ed.id }).max({ m: 'sort' }).first();
+    await knex('investments').insert({
+      user_id: user.id, event_id: ed.id, modality: d.investment_type, capital: d.amount,
+      return_pct, invest_date, delivery_date: '2027-08-31', state: 'activa', notes,
+      sort: (Number(max && max.m) || 0) + 1
+    });
+    console.log('  ✓ Inversión demo registrada:', d.email, '→', ed.title);
   }
 }
 

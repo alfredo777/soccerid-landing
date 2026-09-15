@@ -105,6 +105,68 @@ USD $350,000 y 3 cuentas activas; con el filtro queda en USD $0 y 1 cuenta activ
   - Prospectos por estado y conteo de contenido publicado.
 
 Pendiente de esta sección:
+- [x] ~~**Revisión de la proporción de inversionistas, la inversión y los gráficos**~~
+  **HECHO (15 sep 2026)**. La revisión salió de una captura donde el directorio sumaba
+  **USD $1,250,000** de inversionistas reales y Estadísticas decía **USD $0**. Todo lo de
+  aquí abajo **es solo del admin**: el panel del inversionista no cambia ni una línea.
+  - **La causa: el monto de la ficha nunca se vuelve una inversión.** El alta de una
+    cuenta guarda `users.amount`, pero **toda cifra agregada se calcula desde
+    `investments`**. Mientras no exista esa fila, ese capital no aparece en ninguna:
+    ni en el capital, ni en el reparto por modalidad, ni en el retorno, ni en la serie.
+    Y como el panel del inversionista **sí** cae a `users.amount` cuando no hay
+    inversión, la misma persona veía su capital mientras el admin veía cero.
+  - **El monto de la ficha ya se registra como inversión** (decisión del usuario, 15 sep
+    2026, después de ver que las cifras seguían en cero). Dar de alta o editar una cuenta
+    con monto **crea o actualiza su inversión en la edición activa**
+    (`sincronizarInversion` en `routes/panel.js`), y el aviso de la redirección lo dice
+    ("inversión registrada en Houston 2027"). La ficha es el control; la inversión de la
+    edición activa lo refleja.
+    - **La fecha NO se inventa**: queda vacía hasta que alguien la capture. Sin ella la
+      inversión cuenta en todo menos en la gráfica de capital acumulado, que ya avisa
+      cuántas quedaron fuera por no tener fecha. Inventar "hoy" habría ensuciado la serie.
+    - **No toca inversiones de otras ediciones** (son suyas y son otra cosa) **ni una
+      cerrada o en pausa**: ese dinero ya se liquidó o está detenido, y reescribirlo desde
+      la ficha lo revivía sin que nadie lo pidiera. Probado: con la inversión en `cerrada`,
+      guardar la ficha con otro monto y otra modalidad la dejó intacta.
+  - **Backfill de una sola vez** (`backfillInversionesDeFicha` en `db/portfolioSchema.js`):
+    las cuentas dadas de alta antes de esto tenían el monto solo en la ficha. Al arrancar
+    se registran como inversión en la edición activa, **solo las que no tienen ninguna**
+    (no pisa nada capturado a mano) y con bandera en `app_settings`
+    (`backfill_inversion_ficha`) para que corra una vez. Probado en local: Carlos Mendoza
+    pasó de "USD $0 · 0 inversiones" a **USD $1,000,000**, y correr la migración otra vez
+    no duplicó nada.
+  - **Aviso en Estadísticas** para lo que aun así quede suelto: bloque arriba de todo con
+    **cuánto capital está fuera de las cifras**, qué cuentas son (nombre, correo, modalidad,
+    monto) y un botón directo a registrar las inversiones en la edición activa. En el
+    directorio, esas cuentas llevan la etiqueta **"Sin inversión registrada"**. Con el
+    backfill ya no debería aparecer, pero sigue ahí por si una cuenta queda a medias.
+  - **Las inversiones cerradas o en pausa dejan de contar como capital comprometido.**
+    Una cerrada ya se liquidó y una en pausa no respalda nada; sumarlas mostraba dinero
+    que ya no está y un retorno que no se va a pagar. Lo que queda fuera se dice al pie
+    de la tarjeta, para que el número no desaparezca sin explicación.
+  - **La dona ya cuadra con la tarjeta "Cuentas"**: decía "1 de 46" al lado de "2
+    activos". Quien no tiene categoría asignada no entraba en ninguna barra; ahora tiene
+    su segmento **"Sin categoría"**. Y las cuentas **dadas de baja ya no ocupan cupo**:
+    liberaron su lugar, contarlas dejaba el cupo lleno de gente que ya no está.
+  - **La dona arrancaba torcida**: el ángulo ya traía su `-90` desde el servidor y el CSS
+    le sumaba otro `rotate(-90deg)`, así que empezaba a las 9 en punto. No se notaba
+    porque con una sola categoría el círculo sale completo.
+  - **El reparto por modalidad ya suma 100%**: los dos porcentajes se redondeaban por
+    separado (50.5 y 49.5 daban 51 y 50), la barra se pasaba y recortaba el segundo
+    segmento. Ahora se redondea uno y el otro es el complemento exacto.
+  - **La sobresuscripción ya se ve**: el % del presupuesto estaba topado en 100, así que
+    levantar de más se leía como "100% cubierto · falta $0", que es lo contrario. El
+    número ya puede pasar de 100 (la barra sigue topada) y la tarjeta dice **"Cubierto, y
+    hay USD $X por encima del presupuesto"**. Igual en el comparativo entre ediciones.
+  - **Las cuentas demo nacen completas** (`db/portfolioSeed.js`): antes `ensureDemoInvestors`
+    solo creaba el usuario, sin `is_demo` y sin inversión. Una cuenta demo recreada entraba
+    como **capital real** en las cifras del admin y encima aparecía en el aviso de "sin
+    inversión registrada". Ahora se crean con su bandera y con su inversión en la edición
+    activa (misma regla del panel: la configurada o la de mayor año). **Solo se pone lo que
+    falta**: si el admin desmarcó la cuenta o editó su inversión a mano, el siguiente
+    arranque no se lo pisa. Probado borrando la cuenta demo fija y volviendo a sembrar:
+    vuelve con `is_demo`, categoría, monto y su inversión (fijo, 100k, 25%, 20 ago 2026,
+    activa), y correr la siembra dos veces más no duplica nada.
 - [x] ~~Comparativo entre ediciones~~ **HECHO**: tabla con una fila por edición (capital,
   presupuesto, % cubierto, inversiones, paquetes, documentos y avances), con la activa
   resaltada. Las ediciones sin presupuesto muestran "—" en vez de un 0% engañoso.
@@ -446,6 +508,20 @@ Validación (todo en el servidor, no solo en el navegador):
 - Los bloques de agenda solo se borran desde su propia edición.
 
 Pendiente de esta sección:
+- [ ] **BUG: "Agregar a Google Calendar" responde _"Unable to add calendar. Check the URL."_**
+  (15 sep 2026, reportado desde producción con el feed de una cuenta real).
+  **El feed no es el problema**: `curl` a
+  `https://soccerid.co/panel/agenda/<token>.ics` devuelve **200**, `Content-Type:
+  text/calendar; charset=utf-8` y un `VCALENDAR` bien formado, sin redirecciones. La ruta
+  es pública y Google la puede leer.
+  Lo que falla es **cómo se arma el enlace**: `routes/panel.js` manda
+  `calendar.google.com/calendar/r?cid=` con la URL en **`https://`**. Google espera ahí el
+  esquema **`webcal://`**; con `https` abre el diálogo y lo rechaza con ese mismo mensaje.
+  El `webcal://` ya está calculado unas líneas antes (`agenda.webcal`), así que el arreglo
+  es usar ese en el `cid`. **Falta probarlo en vivo**: solo se puede confirmar abriendo el
+  enlace con una cuenta de Google.
+  El botón de **Apple / Outlook** (`webcal://`) y la **URL copiable** no están afectados;
+  suscribirse pegando la dirección a mano sí funciona.
 - [x] ~~**Vinculación con Google Calendar**~~ **HECHO — falta probarlo en vivo**:
   `lib/googleCalendar.js` + tarjeta en Configuración. **Callback propio**
   (`/panel/auth/google/calendar/callback`, ya registrado por el usuario en Google),

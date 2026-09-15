@@ -275,6 +275,58 @@ async function ensurePortfolioSchema() {
       t.timestamps(true, true);
     });
   }
+
+  // ── El monto de las fichas viejas, registrado como inversión ──
+  // Las cuentas dadas de alta antes de que el alta creara la inversión tienen su
+  // capital solo en `users.amount`, y TODA cifra del admin se calcula desde
+  // `investments`: el inversionista veía su monto y el admin veía cero.
+  // Corre UNA vez (bandera en `app_settings`) y solo sobre quien no tiene
+  // ninguna inversión: no pisa nada capturado a mano.
+  // La fecha queda vacía a propósito — no se inventa: sin ella la inversión
+  // cuenta en todo menos en la gráfica de capital acumulado, que ya avisa
+  // cuántas quedaron fuera por no tener fecha.
+  await backfillInversionesDeFicha();
+}
+
+const BACKFILL_KEY = 'backfill_inversion_ficha';
+
+async function backfillInversionesDeFicha() {
+  try {
+    if (!(await knex.schema.hasTable('app_settings'))) return;
+    if (!(await knex.schema.hasTable('investments'))) return;
+    const ya = await knex('app_settings').where({ key: BACKFILL_KEY }).first();
+    if (ya) return;
+
+    const eds = await knex('portfolio_events').orderBy([{ column: 'year', order: 'desc' }, { column: 'id', order: 'desc' }]);
+    let activeId = '';
+    try {
+      const row = await knex('app_settings').where({ key: 'dashboard_config' }).first();
+      if (row && row.value) activeId = String((JSON.parse(row.value) || {}).activeEditionId || '');
+    } catch (_) {}
+    const ed = eds.find(e => String(e.id) === activeId) || eds[0];
+    if (!ed) return; // sin ediciones no hay dónde registrarla; se reintenta al próximo arranque
+
+    const conInversion = new Set((await knex('investments').select('user_id')).map(i => String(i.user_id)));
+    const pendientes = (await knex('users').where({ role: 'investor' }))
+      .filter(u => Number(u.amount || 0) > 0 && !conInversion.has(String(u.id)));
+
+    let max = Number((await knex('investments').where({ event_id: ed.id }).max({ m: 'sort' }).first() || {}).m) || 0;
+    for (const u of pendientes) {
+      const rate = (u.return_rate === null || u.return_rate === undefined || u.return_rate === '' || isNaN(Number(u.return_rate)))
+        ? null : Number(u.return_rate);
+      await knex('investments').insert({
+        user_id: u.id, event_id: ed.id,
+        modality: u.investment_type === 'riesgo' ? 'riesgo' : 'fijo',
+        capital: Number(u.amount || 0), return_pct: rate,
+        state: 'activa', sort: ++max
+      });
+      console.log(`  ✓ Inversión registrada desde la ficha: ${u.email} → ${ed.title}`);
+    }
+    await knex('app_settings').insert({ key: BACKFILL_KEY, value: String(pendientes.length) });
+    if (pendientes.length) console.log(`  ✓ ${pendientes.length} monto(s) de ficha pasaron a ser inversión en ${ed.title}`);
+  } catch (e) {
+    console.error('  ✗ No se pudo registrar el monto de las fichas viejas:', e.message);
+  }
 }
 
 module.exports = { ensurePortfolioSchema };

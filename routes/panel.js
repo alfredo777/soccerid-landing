@@ -1414,7 +1414,13 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     // Lo que depende del año se mide sobre la EDICIÓN ACTIVA (la que ven los
     // inversionistas); lo que es del negocio completo va en total.
     const edActiva = peRows.find(e => String(e.id) === activaId) || null;
-    const invRows = invReales;
+    // Solo las inversiones ACTIVAS son capital comprometido. Una cerrada ya se
+    // liquidó y una en pausa no está respaldando nada: sumarlas mostraba dinero
+    // que ya no está y un retorno que no se va a pagar. Lo que queda fuera se
+    // cuenta aparte, para que el número no desaparezca sin decir a dónde se fue.
+    const esActiva = (i) => (i.state || 'activa') === 'activa';
+    const invRows = invReales.filter(esActiva);
+    const invFueraArr = invReales.filter(i => !esActiva(i));
     const invDeLaEdicion = edActiva ? invRows.filter(i => String(i.event_id) === String(edActiva.id)) : [];
 
     const sumaCapital = (arr) => arr.reduce((n, i) => n + Number(i.capital || 0), 0);
@@ -1441,9 +1447,20 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
     // La diferencia es justo lo que falta por vender.
     const usersReales = verDemo ? users : users.filter(u => !u.is_demo);
     const investorUsers = usersReales.filter(u => u.role === 'investor');
+    // El cupo lo ocupa quien sigue dentro: una cuenta dada de baja ya liberó su
+    // lugar, y contándola el cupo se veía lleno con gente que ya no está.
+    const investorsEnCupo = investorUsers.filter(u => u.status !== 'disabled');
+    const catKeys = tiers.filter(t => t.role === 'investor').map(t => t.key);
     const porCategoria = tiers.filter(t => t.role === 'investor').map(t => {
-      const reales = investorUsers.filter(u => u.category === t.key).length;
+      const reales = investorsEnCupo.filter(u => u.category === t.key).length;
       return { label: t.label, color: t.color, real: reales, cupo: t.count || 0 };
+    });
+    // Quien no tiene categoría asignada también es un inversionista real. Antes
+    // no entraba en ninguna barra, así que el centro de la dona contaba menos
+    // gente que la tarjeta "Cuentas" que está a dos dedos de distancia.
+    const sinCategoriaN = investorsEnCupo.filter(u => catKeys.indexOf(u.category) === -1).length;
+    if (sinCategoriaN) porCategoria.push({
+      label: 'Sin categoría', color: '#8A8F98', real: sinCategoriaN, cupo: 0, esSinCategoria: true
     });
     const totalReal = porCategoria.reduce((n, c) => n + c.real, 0);
     const totalCupo = porCategoria.reduce((n, c) => n + c.cupo, 0);
@@ -1476,6 +1493,15 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       (precioBoleto ? Math.ceil((presupuesto || Number(cfgRet.projectCost) || 0) / precioBoleto) : 0);
 
     const pct = (a, b) => b > 0 ? Math.min(100, Math.round((a / b) * 100)) : 0;
+    // El avance contra el presupuesto NO se topa en 100: si se levantó de más hay
+    // que verlo. Con el tope, "100% cubierto · falta $0" se leía como "justo",
+    // que es lo contrario de estar sobresuscrito. La barra sí topa (`pct`).
+    const pctReal = (a, b) => b > 0 ? Math.round((a / b) * 100) : 0;
+    // Los dos porcentajes de modalidad se redondeaban por separado: 50.5 y 49.5
+    // daban 51 y 50, la barra se pasaba de 100% y recortaba el segundo segmento.
+    // Se redondea uno y el otro es el complemento exacto.
+    const fijoPct = capEdicion > 0 ? Math.round((capFijo / capEdicion) * 100) : 0;
+    const riesgoPct = capEdicion > 0 ? 100 - fijoPct : 0;
     const LEAD_ST = { nuevo: 'Nuevos', contactado: 'Contactados', cliente: 'Clientes', descartado: 'Descartados' };
 
     // Comparativo entre ediciones: la misma fila para todas, para ver de un vistazo
@@ -1504,7 +1530,8 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         year: e.year, title: e.title, accent: e.accent || '#6C3CE0',
         activa: String(e.id) === activaId,
         capital: formatUSD(cap), presupuesto: pres > 0 ? formatUSD(pres) : '—',
-        cubiertoPct: pres > 0 ? Math.min(100, Math.round((cap / pres) * 100)) : 0,
+        cubiertoPct: pres > 0 ? Math.round((cap / pres) * 100) : 0,
+        barraPct: pres > 0 ? Math.min(100, Math.round((cap / pres) * 100)) : 0,
         sinPresupuesto: pres <= 0,
         inversiones: suyas.length,
         paquetes: pkPorEd[e.id] || 0,
@@ -1540,15 +1567,48 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       total: formatUSD(topSerie)
     };
 
+    // ── Monto capturado que nunca llegó a ser inversión ──
+    // El alta de una cuenta guarda `users.amount`, pero TODA cifra agregada se
+    // calcula desde `investments`. Mientras no exista esa fila el capital no
+    // aparece en ningún lado: el inversionista ve su monto en su panel y el
+    // admin ve cero, para la misma persona. Aquí no se adivina nada —no se
+    // inventa una inversión ni una fecha—, solo se señala el hueco y se lleva
+    // a capturarlo. Es del admin: el inversionista no ve ni sabe de esto.
+    const conInversion = new Set(invTodas.map(i => String(i.user_id)));
+    const sinInvArr = usersReales
+      .filter(u => u.role === 'investor' && Number(u.amount || 0) > 0 && !conInversion.has(String(u.id)))
+      .map(u => ({
+        id: u.id, name: u.name, email: u.email,
+        amount: formatUSD(u.amount), amountRaw: Number(u.amount || 0),
+        modalidadLabel: u.investment_type === 'riesgo' ? 'Participación a riesgo' : 'Retorno fijo'
+      }));
+    const sinInversion = {
+      hay: sinInvArr.length > 0,
+      n: sinInvArr.length,
+      capital: formatUSD(sinInvArr.reduce((n, u) => n + u.amountRaw, 0)),
+      cuentas: sinInvArr,
+      edicionTitle: edActiva ? edActiva.title : '',
+      edicionUrl: edActiva ? `/panel/admin/evento/${edActiva.id}#inversiones` : ''
+    };
+    // Inversiones que existen pero no cuentan como capital comprometido
+    const fuera = {
+      n: invFueraArr.length,
+      capital: formatUSD(sumaCapital(invFueraArr))
+    };
+
     const stats = {
       demo: demoInfo,
+      sinInversion,
+      fuera,
       serie,
       comparativo,
       edicion: edActiva ? { title: edActiva.title, year: edActiva.year } : null,
       capital: {
         edicion: formatUSD(capEdicion), total: formatUSD(capTotal),
         presupuesto: formatUSD(presupuesto),
-        cubiertoPct: pct(capEdicion, presupuesto),
+        cubiertoPct: pctReal(capEdicion, presupuesto),
+        barraPct: pct(capEdicion, presupuesto),
+        sobrante: capEdicion > presupuesto && presupuesto > 0 ? formatUSD(capEdicion - presupuesto) : null,
         // Sin presupuesto no se puede decir cuánto falta: un "$0 faltante" se lee
         // como "ya está cubierto", que es justo lo contrario.
         sinPresupuesto: presupuesto <= 0,
@@ -1559,7 +1619,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       modalidad: {
         fijo: formatUSD(capFijo), riesgo: formatUSD(capRiesgo),
         fijoN: fijoArr.length, riesgoN: riesgoArr.length,
-        fijoPct: pct(capFijo, capEdicion), riesgoPct: pct(capRiesgo, capEdicion)
+        fijoPct, riesgoPct
       },
       inversionistas: {
         activos: investorUsers.filter(u => u.status === 'active').length,
@@ -1646,6 +1706,9 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         investmentType: u.investment_type === 'riesgo' ? 'riesgo' : 'fijo',
         investmentTypeLabel: u.investment_type === 'riesgo' ? 'Participación a riesgo' : 'Retorno fijo',
         color: (findTier(tiers, u.role, u.category) || {}).color || '#8A8F98',
+        // Monto en la ficha, pero ninguna inversión registrada: su capital no
+        // entra en ninguna cifra del panel. Solo lo ve el admin, aquí.
+        sinInversion: u.role === 'investor' && Number(u.amount || 0) > 0 && !conInversion.has(String(u.id)),
         docs: docsByUser[u.id] || [], docCount: (docsByUser[u.id] || []).length
       })),
       docsByUser,
@@ -1753,6 +1816,9 @@ router.post('/admin/invite', auth.requireAdmin, async (req, res, next) => {
       status: 'invited', invite_token: token, invite_expires: expires
     });
 
+    const creado = await knex('users').where({ email }).first();
+    const inv = await sincronizarInversion(creado);
+
     const tier = findTier(await getTiers(), role, category);
     const baseUrl = process.env.BASE_URL || (process.env.NODE_ENV === 'production' ? 'https://soccerid.co' : `http://localhost:${process.env.PORT || 3000}`);
     await sendInvite({
@@ -1762,9 +1828,59 @@ router.post('/admin/invite', auth.requireAdmin, async (req, res, next) => {
       roleLabel: role === 'sponsor' ? 'Patrocinador' : 'Inversionista'
     });
 
-    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Invitación enviada a ${email}`));
+    const conInv = inv ? ` · su inversión quedó registrada en ${inv.edicion}` : '';
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Invitación enviada a ${email}${conInv}`));
   } catch (e) { next(e); }
 });
+
+// ── El monto de la ficha se registra como inversión ──
+// El monto vivía en `users.amount` y las cifras del admin se calculan desde
+// `investments`: mientras no existiera esa fila, el inversionista veía su
+// capital en su panel y el admin veía cero, para la misma persona. Ahora la
+// ficha es el control y la inversión de la edición activa la refleja.
+//
+// Lo que NO hace, a propósito:
+//   · no inventa la fecha de inversión (queda vacía hasta que se capture; sin
+//     ella la inversión cuenta en todo menos en la gráfica de capital acumulado,
+//     que avisa cuántas quedaron fuera);
+//   · no toca inversiones de OTRAS ediciones —son suyas y son otra cosa—;
+//   · no toca una inversión cerrada o en pausa: ese dinero ya se liquidó o está
+//     detenido, y reescribirlo desde la ficha lo revivía sin que nadie lo pidiera.
+async function sincronizarInversion(user) {
+  try {
+    if (!user || user.role !== 'investor') return null;
+    const capital = Number(user.amount || 0);
+    if (capital <= 0) return null;
+
+    // La edición activa, con la misma regla del resto del panel: la que el admin
+    // configuró o, si no hay ninguna, la de mayor año.
+    const cfg = await getDashboardConfig();
+    const eds = await knex('portfolio_events').orderBy([{ column: 'year', order: 'desc' }, { column: 'id', order: 'desc' }]);
+    const ed = eds.find(e => String(e.id) === String(cfg.activeEditionId)) || eds[0];
+    if (!ed) return null;
+
+    const modality = user.investment_type === 'riesgo' ? 'riesgo' : 'fijo';
+    const rate = (user.return_rate === null || user.return_rate === undefined || user.return_rate === '' || isNaN(Number(user.return_rate)))
+      ? null : Number(user.return_rate);
+
+    const ya = await knex('investments').where({ user_id: user.id, event_id: ed.id }).first();
+    if (ya) {
+      if ((ya.state || 'activa') !== 'activa') return null;
+      await knex('investments').where({ id: ya.id })
+        .update({ capital, modality, return_pct: rate, updated_at: knex.fn.now() });
+      return { edicion: ed.title, creada: false };
+    }
+    const max = await knex('investments').where({ event_id: ed.id }).max({ m: 'sort' }).first();
+    await knex('investments').insert({
+      user_id: user.id, event_id: ed.id, modality, capital, return_pct: rate,
+      state: 'activa', sort: (Number(max && max.m) || 0) + 1
+    });
+    return { edicion: ed.title, creada: true };
+  } catch (e) {
+    console.error('  ✗ No se pudo registrar la inversión de la ficha:', e.message);
+    return null;
+  }
+}
 
 // Reenviar invitación
 router.post('/admin/user/:id/resend', auth.requireAdmin, async (req, res, next) => {
@@ -2445,8 +2561,16 @@ router.post('/admin/user/:id/update', auth.requireAdmin, async (req, res, next) 
       is_demo: b.is_demo ? true : false,
       updated_at: knex.fn.now()
     });
+    // El monto que se acaba de guardar tiene que llegar a las cifras: si solo se
+    // quedara en la ficha, cambiarlo aquí no movería nada en Estadísticas.
+    const actualizado = await knex('users').where({ id: user.id }).first();
+    const inv = await sincronizarInversion(actualizado);
+    const conInv = inv ? (inv.creada ? ` · inversión registrada en ${inv.edicion}` : ` · inversión actualizada en ${inv.edicion}`) : '';
+
     // Si viene de la página por-cuenta, regresa a ella; si no, a la lista
-    const back = b.redirect === 'account' ? `/panel/admin/user/${user.id}?type=ok&msg=${encodeURIComponent('Cuenta actualizada')}` : '/panel/admin?type=ok&msg=Usuario+actualizado';
+    const back = b.redirect === 'account'
+      ? `/panel/admin/user/${user.id}?type=ok&msg=${encodeURIComponent('Cuenta actualizada' + conInv)}`
+      : '/panel/admin?type=ok&msg=' + encodeURIComponent('Usuario actualizado' + conInv);
     res.redirect(back);
   } catch (e) { next(e); }
 });
