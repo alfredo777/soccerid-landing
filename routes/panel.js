@@ -23,6 +23,7 @@ const ical = require('../lib/ical');
 const linkPreview = require('../lib/linkPreview');
 const turnstile = require('../lib/turnstile');
 const google = require('../lib/googleAuth');
+const demoAccount = require('../lib/demoAccount');
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
 
@@ -1800,6 +1801,9 @@ router.post('/admin/invite', auth.requireAdmin, async (req, res, next) => {
     const category = (req.body.category || '').trim();
     const amount = parseInt(req.body.amount || '0', 10) || 0;
     const investmentType = req.body.investment_type === 'riesgo' ? 'riesgo' : 'fijo';
+    // Modo demostración: la cuenta funciona igual para quien entre con ella, pero
+    // su dinero no cuenta en las cifras del admin y estrena documentos de ejemplo.
+    const esDemo = !!req.body.is_demo;
     if (!name || !email) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Nombre y email son obligatorios'));
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('El correo no es válido: ' + email));
 
@@ -1815,12 +1819,15 @@ router.post('/admin/invite', auth.requireAdmin, async (req, res, next) => {
     const expires = Date.now() + 7 * 24 * 60 * 60 * 1000;
     await knex('users').insert({
       name, email, role, category, amount, member_id: memberId,
-      investment_type: investmentType,
+      investment_type: investmentType, is_demo: esDemo,
       status: 'invited', invite_token: token, invite_expires: expires
     });
 
     const creado = await knex('users').where({ email }).first();
+    // En demo la inversión se registra igual (si no, su panel abre sin capital),
+    // pero al estar la cuenta marcada no suma en ninguna cifra del admin.
     const inv = await sincronizarInversion(creado);
+    const docsDemo = esDemo && creado ? await demoAccount.sembrarRecursosDemo(creado.id) : 0;
 
     const tier = findTier(await getTiers(), role, category);
     const baseUrl = process.env.BASE_URL || (process.env.NODE_ENV === 'production' ? 'https://soccerid.co' : `http://localhost:${process.env.PORT || 3000}`);
@@ -1832,7 +1839,8 @@ router.post('/admin/invite', auth.requireAdmin, async (req, res, next) => {
     });
 
     const conInv = inv ? ` · su inversión quedó registrada en ${inv.edicion}` : '';
-    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Invitación enviada a ${email}${conInv}`));
+    const conDemo = esDemo ? ` · en modo demostración, con ${docsDemo} documento(s) de ejemplo` : '';
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`Invitación enviada a ${email}${conInv}${conDemo}`));
   } catch (e) { next(e); }
 });
 
@@ -1934,6 +1942,29 @@ router.post('/admin/user/:id/password', auth.requireAdmin, async (req, res, next
     const back = req.body.redirect === 'account'
       ? `/panel/admin/user/${user.id}?type=ok&msg=` + encodeURIComponent('Contraseña regenerada')
       : '/panel/admin?type=ok&msg=' + encodeURIComponent('Contraseña regenerada') + '#usuarios';
+    res.redirect(back);
+  } catch (e) { next(e); }
+});
+
+// ── Salir del modo demostración ──
+// Quitar la palomita de "cuenta de demostración" desde la ficha solo cambia la
+// bandera y deja los documentos de ejemplo pegados a una cuenta que ya es real.
+// Esto hace las dos cosas de una: la cuenta empieza a contar en las cifras y lo
+// sembrado como ejemplo se va. Lo que el admin haya subido a esa cuenta se queda.
+router.post('/admin/user/:id/undemo', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const user = await knex('users').where({ id: req.params.id }).first();
+    if (!user) return res.redirect('/panel/admin?type=error&msg=Usuario+no+encontrado#usuarios');
+    if (!user.is_demo) {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent(`${user.name} no está en modo demostración`) + '#usuarios');
+    }
+    const borrados = await demoAccount.limpiarRecursosDemo(user.id);
+    await knex('users').where({ id: user.id }).update({ is_demo: false, updated_at: knex.fn.now() });
+    const detalle = borrados ? ` · se quitaron ${borrados} documento(s) de ejemplo` : '';
+    const msg = `${user.name} salió del modo demostración: su capital ya cuenta en las cifras${detalle}`;
+    const back = req.body.redirect === 'account'
+      ? `/panel/admin/user/${user.id}?type=ok&msg=` + encodeURIComponent(msg)
+      : '/panel/admin?type=ok&msg=' + encodeURIComponent(msg) + '#usuarios';
     res.redirect(back);
   } catch (e) { next(e); }
 });

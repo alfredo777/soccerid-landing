@@ -5,6 +5,7 @@
  */
 const knex = require('./knex');
 const auth = require('../lib/panelAuth');
+const { sembrarRecursosDemo } = require('../lib/demoAccount');
 
 // Crea (si faltan) los dos perfiles de inversionista demo: fijo y riesgo.
 //
@@ -38,6 +39,10 @@ async function ensureDemoInvestors() {
       console.log('  ✓ Perfil demo creado:', d.email);
     }
     if (!user) continue;
+
+    // Documentos de ejemplo: sin ellos la sección de Documentos abre vacía, que
+    // para una cuenta hecha para enseñar el panel es justo lo que no se quiere.
+    if (user.is_demo) await sembrarRecursosDemo(user.id);
 
     // Su inversión, en la edición que ven los inversionistas hoy: la que el
     // admin dejó activa o, si no hay ninguna configurada, la de mayor año.

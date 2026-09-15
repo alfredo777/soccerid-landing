@@ -327,6 +327,13 @@ async function ensureSchema() {
   if (await knex.schema.hasTable('user_documents') && !(await knex.schema.hasColumn('user_documents', 'doc_date'))) {
     await knex.schema.alterTable('user_documents', (t) => t.string('doc_date'));
   }
+  // Documento sembrado como ejemplo de una cuenta en modo demostración. La marca
+  // es lo que permite quitarlos al salir del modo demo sin tocar los de verdad:
+  // sin ella habría que adivinar cuál subió el admin, y esa adivinanza se
+  // equivoca justo con el documento que importaba.
+  if (await knex.schema.hasTable('user_documents') && !(await knex.schema.hasColumn('user_documents', 'is_demo'))) {
+    await knex.schema.alterTable('user_documents', (t) => t.boolean('is_demo').defaultTo(false));
+  }
 
   // Hitos: responsable y estado explícito (pendiente | en_curso | completado)
   if (await knex.schema.hasTable('milestones') && !(await knex.schema.hasColumn('milestones', 'owner'))) {

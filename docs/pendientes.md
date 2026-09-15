@@ -105,6 +105,29 @@ USD $350,000 y 3 cuentas activas; con el filtro queda en USD $0 y 1 cuenta activ
   - Prospectos por estado y conteo de contenido publicado.
 
 Pendiente de esta sección:
+- [x] ~~**Invitar en modo demostración + "Salir de demo"**~~ **HECHO (15 sep 2026)**,
+  pedido del usuario: algunas invitaciones se quieren mandar en modo demo.
+  - **Casilla "Invitar en modo demostración"** en el formulario de invitación. La cuenta
+    nace con `is_demo`, así que **su capital no cuenta** en el panel estadístico desde el
+    primer día, sin tener que acordarse de marcarla después.
+  - **Recursos demo por defecto** (`lib/demoAccount.js`): la cuenta estrena **3 documentos
+    de ejemplo** (Contrato · Legal, Estado de cuenta · Financiero, Comprobante · Evidencia).
+    Sin ellos la sección de Documentos abre vacía, que en una cuenta hecha para enseñar el
+    panel es justo lo que no se quiere. **Su inversión sí se registra** —si no, su panel
+    abre sin capital—, pero al estar marcada la cuenta no suma en ninguna cifra.
+    - El enlace de los documentos apunta a la presentación del panel, que existe siempre:
+      una URL inventada se ve bien hasta que alguien la abre en plena demostración.
+  - **Botón "Salir de demo"** (en la fila del directorio y en la ficha), solo visible en
+    cuentas demo. Hace las dos cosas de una: quita la bandera —su capital empieza a contar—
+    y **borra los documentos de ejemplo**. Quitar la palomita desde la ficha solo cambiaba
+    la bandera y dejaba los documentos falsos pegados a una cuenta ya real.
+    - **Solo borra lo sembrado como ejemplo** (columna `user_documents.is_demo`): lo que el
+      admin haya subido a esa cuenta se queda. Probado con un documento real conviviendo
+      con los tres de ejemplo: se fueron los tres y el real quedó.
+  - Probado de punta a punta: invitación en demo → cuenta marcada, 3 documentos, inversión
+    registrada y **capital sin moverse** ($1,000,000); "Salir de demo" → bandera fuera,
+    documentos borrados y el capital subió a **$1,400,000**. Las dos cuentas demo de
+    fábrica estrenan los mismos documentos desde `ensureDemoInvestors`.
 - [x] ~~**Regenerar contraseña y bloquear el acceso, desde la lista de cuentas**~~
   **HECHO (15 sep 2026)**, pedido del usuario. Faltaba una forma de volver a entrar a una
   cuenta sin depender del correo: las cuentas demo se comparten por mensaje y no tienen

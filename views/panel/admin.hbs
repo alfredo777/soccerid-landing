@@ -373,6 +373,13 @@
       <div class="ad-f"><label>Tipo de inversión</label>
         <select name="investment_type"><option value="fijo">Retorno fijo</option><option value="riesgo">Participación a riesgo</option></select>
       </div>
+      <div class="ad-f ad-demobox">
+        <label class="ad-check"><input type="checkbox" name="is_demo" value="1"> Invitar en modo demostración</label>
+        <div class="ad-demobox__h">La cuenta funciona igual para quien entre con ella, pero <strong>su capital no cuenta</strong>
+          en el panel estadístico y estrena <strong>documentos de ejemplo</strong>, para que no abra vacía.
+          Cuando deje de ser una demostración, el botón <strong>"Salir de demo"</strong> de su fila la vuelve real
+          y se lleva los documentos de ejemplo.</div>
+      </div>
       <button type="submit" class="ad-btn">Enviar invitación</button>
     </form>
 
@@ -406,6 +413,7 @@
           <span class="ad-status {{this.status}}">{{this.status}}</span>
           <div class="ad-actions">
             <button type="button" class="primary" onclick="location.href='/panel/admin/user/{{this.id}}'">Editar cuenta{{#if this.docCount}} · {{this.docCount}} doc{{/if}}</button>
+            {{#if this.isDemo}}<form method="POST" action="/panel/admin/user/{{this.id}}/undemo" data-confirm="¿Sacar a {{this.name}} del modo demostración? Su capital empezará a contar en las cifras y se borran sus documentos de ejemplo."><button type="submit">Salir de demo</button></form>{{/if}}
             <form method="POST" action="/panel/admin/user/{{this.id}}/password" data-confirm="¿Generar una contraseña nueva para {{this.name}}? La actual dejará de servir."><button type="submit">Contraseña</button></form>
             <form method="POST" action="/panel/admin/user/{{this.id}}/access" data-confirm="{{#if this.bloqueada}}¿Devolverle el acceso a {{this.name}}?{{else}}¿Bloquear el acceso de {{this.name}}? Si está dentro, se sale al siguiente clic.{{/if}}"><button type="submit">{{#if this.bloqueada}}Reactivar{{else}}Bloquear{{/if}}</button></form>
             <form method="POST" action="/panel/admin/user/{{this.id}}/resend"><button type="submit">Reenviar</button></form>
@@ -482,6 +490,8 @@
   .ad-pwd__box input { flex:1; min-width:180px; border:1px solid #BBE5C8; background:#fff; border-radius:10px; padding:11px 13px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:15px; font-weight:700; letter-spacing:.6px; color:var(--pn-ink); }
   .ad-pwd__box button { border:0; background:#14532D; color:#fff; border-radius:10px; padding:11px 18px; font-size:12.5px; font-weight:800; cursor:pointer; font-family:inherit; }
   .ad-pwd__m { display:block; font-size:11.5px; color:#166534; font-weight:600; }
+  .ad-demobox { border:1px solid #C7D2FE; background:#EEF2FF; border-radius:12px; padding:12px 14px; }
+  .ad-demobox__h { font-size:11.5px; color:#3730A3; line-height:1.55; margin-top:7px; }
   .ad-demo { display:inline-block; padding:1px 8px; border-radius:999px; background:#EEF2FF; color:#3730A3; border:1px solid #C7D2FE; font-size:10px; font-weight:800; letter-spacing:.4px; text-transform:uppercase; vertical-align:middle; margin-left:7px; }
     .ad-nogap { display:inline-block; margin-top:3px; margin-left:5px; padding:1px 9px; border-radius:999px; background:#FFF7ED; color:#9A3412; border:1px solid #F5C6A5; font-size:11px; font-weight:800; }
     .st-serie { display:flex; gap:12px; align-items:flex-end; overflow-x:auto; padding-bottom:4px; }

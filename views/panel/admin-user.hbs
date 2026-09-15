@@ -271,6 +271,12 @@
       <input type="hidden" name="redirect" value="account">
       <button type="submit">Regenerar contraseña</button>
     </form>
+    {{#if account.isDemo}}
+    <form method="POST" action="/panel/admin/user/{{account.id}}/undemo" data-confirm="¿Sacar a {{account.name}} del modo demostración? Su capital empezará a contar en las cifras y se borran sus documentos de ejemplo.">
+      <input type="hidden" name="redirect" value="account">
+      <button type="submit">Salir de modo demo</button>
+    </form>
+    {{/if}}
     <form method="POST" action="/panel/admin/user/{{account.id}}/access" data-confirm="{{#if account.active}}¿Bloquear el acceso de {{account.name}}? Si está dentro, se sale al siguiente clic.{{else}}¿Devolverle el acceso a {{account.name}}?{{/if}}">
       <input type="hidden" name="redirect" value="account">
       <button type="submit">{{#if account.active}}Bloquear el acceso{{else}}Reactivar el acceso{{/if}}</button>
