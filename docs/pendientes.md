@@ -130,10 +130,25 @@ Pendiente de esta sección:
   aviso de por qué se omite el simulador; riesgo: desempeño, participación efectiva
   y simulador).
 
-## Login con Google (en pausa)
-- [ ] Desplegar cuando el **admin esté listo con las invitaciones**.
-- [ ] Flujo de invitación: registrarse **con Google o con contraseña** (verificando el email); cuenta predefinida por la invitación.
-- [ ] Reactivar env vars en Heroku (`GOOGLE_CLIENT_ID/SECRET`, valores en `google-keys.local.md`) + publicar la pantalla de consentimiento.
+## Login con Google — HECHO (14 sep 2026)
+Activo en producción (`GOOGLE_LOGIN=1`) y con la **pantalla de consentimiento
+publicada**: al retirar el scope sensible de Calendar no hizo falta verificación
+de marca. Detalle en `docs/google-auth.md` §9.
+
+- [x] ~~Desplegar cuando el admin esté listo con las invitaciones~~ — desplegado.
+- [x] ~~Flujo de invitación: con Google o con contraseña~~ — las dos vías existen:
+  el correo de invitación trae el enlace de `/activar/:token` para poner contraseña,
+  y quien prefiera Google entra con el botón. En los dos casos la cuenta la
+  **predefine el organizador**: el callback contrasta el correo contra `users` y
+  nunca crea cuentas. El correo tiene que venir **verificado** por Google.
+- [x] ~~Reactivar env vars + publicar el consentimiento~~ — hecho.
+- [x] ~~Una cuenta dada de baja no debe poder reentrar~~ — corregido (v290): antes
+  el botón de Google la reactivaba sola.
+
+Pendiente de esta sección:
+- [ ] Nada bloqueante. Si algún día hace falta empujar el cronograma al Google
+  Calendar del organizador **al instante** (hoy el feed iCal tarda horas), habría
+  que volver a registrar `calendar.events.owned` y pasar la verificación.
 
 ## Códigos 2027: dueño asignado + mapa de relaciones — HECHO
 Cada código de la propuesta 2027 se puede **asignar a una persona**, y cuando alguien
