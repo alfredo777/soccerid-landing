@@ -378,6 +378,21 @@
 
     <div class="pn-card">
       <div class="pn-card__head"><h3>Usuarios ({{users.length}})</h3></div>
+      {{#if nuevaPassword}}
+      <div class="ad-pwd">
+        <div class="ad-pwd__t">Contraseña nueva de {{nuevaPassword.name}}</div>
+        <p class="ad-pwd__p">
+          <strong>Es la única vez que se muestra.</strong> No se guarda en ningún lado —de la
+          cuenta solo queda el resumen cifrado—, así que si sales de esta pantalla sin copiarla
+          hay que generar otra. La anterior ya no sirve.
+        </p>
+        <div class="ad-pwd__box">
+          <input type="text" value="{{nuevaPassword.password}}" readonly onclick="this.select()">
+          <button type="button" onclick="adCopiarPwd(this)">Copiar</button>
+        </div>
+        <small class="ad-pwd__m">{{nuevaPassword.email}}{{#if nuevaPassword.activada}} · la cuenta estaba invitada y quedó activa: ya puede entrar con esta contraseña{{/if}}</small>
+      </div>
+      {{/if}}
       <div class="ad-list">
         {{#each users}}
         <div class="ad-item">
@@ -391,6 +406,8 @@
           <span class="ad-status {{this.status}}">{{this.status}}</span>
           <div class="ad-actions">
             <button type="button" class="primary" onclick="location.href='/panel/admin/user/{{this.id}}'">Editar cuenta{{#if this.docCount}} · {{this.docCount}} doc{{/if}}</button>
+            <form method="POST" action="/panel/admin/user/{{this.id}}/password" data-confirm="¿Generar una contraseña nueva para {{this.name}}? La actual dejará de servir."><button type="submit">Contraseña</button></form>
+            <form method="POST" action="/panel/admin/user/{{this.id}}/access" data-confirm="{{#if this.bloqueada}}¿Devolverle el acceso a {{this.name}}?{{else}}¿Bloquear el acceso de {{this.name}}? Si está dentro, se sale al siguiente clic.{{/if}}"><button type="submit">{{#if this.bloqueada}}Reactivar{{else}}Bloquear{{/if}}</button></form>
             <form method="POST" action="/panel/admin/user/{{this.id}}/resend"><button type="submit">Reenviar</button></form>
             <form method="POST" action="/panel/admin/user/{{this.id}}/delete" data-confirm="¿Eliminar a {{this.name}}?"><button type="submit" class="danger">Eliminar</button></form>
           </div>
@@ -458,7 +475,14 @@
     .st-gap__amt { margin-left:auto; font-weight:800; color:#7C2D12; }
     .st-gap__cta { display:inline-flex; align-items:center; padding:9px 14px; border-radius:10px; background:#7C2D12; color:#fff; font-size:12.5px; font-weight:800; }
     .st-gap__cta:hover { background:#611F0B; color:#fff; }
-    .ad-demo { display:inline-block; padding:1px 8px; border-radius:999px; background:#EEF2FF; color:#3730A3; border:1px solid #C7D2FE; font-size:10px; font-weight:800; letter-spacing:.4px; text-transform:uppercase; vertical-align:middle; margin-left:7px; }
+    .ad-pwd { border:1px solid #BBE5C8; background:#F1FBF5; border-radius:14px; padding:15px 17px; margin-bottom:16px; }
+  .ad-pwd__t { font-size:13.5px; font-weight:800; color:#14532D; margin-bottom:5px; }
+  .ad-pwd__p { font-size:12.5px; color:#166534; line-height:1.6; margin-bottom:11px; }
+  .ad-pwd__box { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:8px; }
+  .ad-pwd__box input { flex:1; min-width:180px; border:1px solid #BBE5C8; background:#fff; border-radius:10px; padding:11px 13px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:15px; font-weight:700; letter-spacing:.6px; color:var(--pn-ink); }
+  .ad-pwd__box button { border:0; background:#14532D; color:#fff; border-radius:10px; padding:11px 18px; font-size:12.5px; font-weight:800; cursor:pointer; font-family:inherit; }
+  .ad-pwd__m { display:block; font-size:11.5px; color:#166534; font-weight:600; }
+  .ad-demo { display:inline-block; padding:1px 8px; border-radius:999px; background:#EEF2FF; color:#3730A3; border:1px solid #C7D2FE; font-size:10px; font-weight:800; letter-spacing:.4px; text-transform:uppercase; vertical-align:middle; margin-left:7px; }
     .ad-nogap { display:inline-block; margin-top:3px; margin-left:5px; padding:1px 9px; border-radius:999px; background:#FFF7ED; color:#9A3412; border:1px solid #F5C6A5; font-size:11px; font-weight:800; }
     .st-serie { display:flex; gap:12px; align-items:flex-end; overflow-x:auto; padding-bottom:4px; }
     .st-serie__col { display:flex; flex-direction:column; align-items:center; gap:6px; min-width:64px; }
@@ -3599,4 +3623,21 @@
       else { var head = sec.firstElementChild; btn.style.marginLeft = '0'; sec.insertBefore(box, head); sec.insertBefore(btn, box); }
     });
   })();
+</script>
+
+<script>
+  // Copiar la contraseña recién generada. La API del portapapeles no existe en
+  // http sin TLS, así que se deja el respaldo de `execCommand`.
+  function adCopiarPwd(btn){
+    var input = btn.previousElementSibling;
+    input.select();
+    var listo = function(){ btn.textContent = 'Copiada'; setTimeout(function(){ btn.textContent = 'Copiar'; }, 1600); };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(input.value).then(listo).catch(function(){
+        try { if (document.execCommand('copy')) listo(); } catch (_) {}
+      });
+    } else {
+      try { if (document.execCommand('copy')) listo(); } catch (_) {}
+    }
+  }
 </script>

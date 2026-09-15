@@ -6,6 +6,15 @@
   .au-preview { display:inline-flex; align-items:center; gap:8px; padding:10px 18px; border-radius:12px; background:var(--pn-ink); color:#fff; font-size:13px; font-weight:800; }
   .au-preview svg { width:16px; height:16px; stroke:#fff; fill:none; }
 
+  .au-pwd { border:1px solid #BBE5C8; background:#F1FBF5; border-radius:14px; padding:15px 17px; margin-bottom:18px; }
+  .au-pwd__t { font-size:13.5px; font-weight:800; color:#14532D; margin-bottom:5px; }
+  .au-pwd__p { font-size:12.5px; color:#166534; line-height:1.6; margin-bottom:11px; }
+  .au-pwd__box { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .au-pwd__box input { flex:1; min-width:180px; border:1px solid #BBE5C8; background:#fff; border-radius:10px; padding:11px 13px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:15px; font-weight:700; letter-spacing:.6px; color:var(--pn-ink); }
+  .au-pwd__box button { border:0; background:#14532D; color:#fff; border-radius:10px; padding:11px 18px; font-size:12.5px; font-weight:800; cursor:pointer; font-family:inherit; }
+  .au-acc { display:flex; gap:9px; flex-wrap:wrap; }
+  .au-acc button { border:1px solid var(--pn-border); background:#fff; border-radius:10px; padding:10px 15px; font-size:12.5px; font-weight:800; cursor:pointer; color:var(--pn-ink-2); font-family:inherit; }
+  .au-acc button:hover { background:#F6F5F9; }
   .au-flash { padding:13px 18px; border-radius:13px; font-size:13px; font-weight:700; margin-bottom:20px; }
   .au-flash.ok { background:#EAF7F0; color:#1E8E5A; }
   .au-flash.error { background:#FDECEC; color:#C0392B; }
@@ -63,6 +72,22 @@
 </div>
 
 {{#if flash}}<div class="au-flash {{flashType}}">{{flash}}</div>{{/if}}
+
+{{#if nuevaPassword}}
+<div class="au-pwd">
+  <div class="au-pwd__t">Contraseña nueva de {{nuevaPassword.name}}</div>
+  <p class="au-pwd__p">
+    <strong>Es la única vez que se muestra.</strong> No se guarda en ningún lado —de la cuenta
+    solo queda el resumen cifrado—, así que si sales de esta pantalla sin copiarla hay que
+    generar otra. La anterior ya no sirve.{{#if nuevaPassword.activada}} La cuenta estaba
+    invitada y quedó activa: ya puede entrar con esta contraseña.{{/if}}
+  </p>
+  <div class="au-pwd__box">
+    <input type="text" value="{{nuevaPassword.password}}" readonly onclick="this.select()">
+    <button type="button" onclick="auCopiarPwd(this)">Copiar</button>
+  </div>
+</div>
+{{/if}}
 
 <div class="au-idbar">
   <div class="au-idbar__av" id="auAvatar" style="background: {{account.color}}">{{account.name.[0]}}</div>
@@ -161,7 +186,7 @@
       <small>{{this.category}}{{#if this.docDate}} · {{this.docDate}}{{/if}}{{#if this.meta}} · {{this.meta}}{{/if}}</small>
     </div>
     <a href="{{this.url}}" target="_blank" rel="noopener" class="view">Ver</a>
-    <form method="POST" action="/panel/admin/document/{{this.id}}/delete" data-confirm="¿Eliminar documento?">
+    <form method="POST" action="/panel/admin/document/{{this.id}}/delete" data-confirm="¿Eliminar documento?" data-confirm-ok="Sí, eliminar">
       <input type="hidden" name="redirect" value="{{../account.id}}">
       <button type="submit">Eliminar</button>
     </form>
@@ -226,7 +251,8 @@
     var btn = form.querySelector('[type="submit"], button:not([type])');
     var wrap = document.createElement('span'); wrap.className = 'au-confirm';
     wrap.innerHTML = '<span>' + form.getAttribute('data-confirm') + '</span>';
-    var yes = document.createElement('button'); yes.type='button'; yes.className='yes'; yes.textContent='Sí, eliminar';
+    var yes = document.createElement('button'); yes.type='button'; yes.className='yes';
+    yes.textContent = form.getAttribute('data-confirm-ok') || 'Sí, continuar';
     var no = document.createElement('button'); no.type='button'; no.className='no'; no.textContent='Cancelar';
     wrap.appendChild(yes); wrap.appendChild(no);
     if (btn) btn.style.display='none'; form.appendChild(wrap);
@@ -234,4 +260,35 @@
     no.addEventListener('click', cleanup);
     yes.addEventListener('click', function(){ form.__ok=true; cleanup(); form.requestSubmit ? form.requestSubmit(btn) : form.submit(); });
   }, true);
+</script>
+
+<!-- Acceso a la cuenta -->
+<div class="pn-card au-sec" style="margin-top:18px;">
+  <h3>Acceso</h3>
+  <div class="au-sub">Cómo entra esta persona al panel.</div>
+  <div class="au-acc">
+    <form method="POST" action="/panel/admin/user/{{account.id}}/password" data-confirm="¿Generar una contraseña nueva para {{account.name}}? La actual dejará de servir.">
+      <input type="hidden" name="redirect" value="account">
+      <button type="submit">Regenerar contraseña</button>
+    </form>
+    <form method="POST" action="/panel/admin/user/{{account.id}}/access" data-confirm="{{#if account.active}}¿Bloquear el acceso de {{account.name}}? Si está dentro, se sale al siguiente clic.{{else}}¿Devolverle el acceso a {{account.name}}?{{/if}}">
+      <input type="hidden" name="redirect" value="account">
+      <button type="submit">{{#if account.active}}Bloquear el acceso{{else}}Reactivar el acceso{{/if}}</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function auCopiarPwd(btn){
+    var input = btn.previousElementSibling;
+    input.select();
+    var listo = function(){ btn.textContent = 'Copiada'; setTimeout(function(){ btn.textContent = 'Copiar'; }, 1600); };
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(input.value).then(listo).catch(function(){
+        try { if (document.execCommand('copy')) listo(); } catch (_) {}
+      });
+    } else {
+      try { if (document.execCommand('copy')) listo(); } catch (_) {}
+    }
+  }
 </script>

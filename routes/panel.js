@@ -1691,6 +1691,8 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       panel: buildAdminPanel(req.panelUser),
       flash: req.query.msg,
       flashType: req.query.type,
+      // Contraseña recién generada: se pinta una vez y se borra al leerla.
+      nuevaPassword: tomarRevelacion(req.panelUser.id),
       s3: require('../lib/uploads').s3Enabled,
       users: users.map(u => Object.assign({
         // Directorio global: lo que esta persona tiene en TODAS las ediciones.
@@ -1706,7 +1708,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         investmentType: u.investment_type === 'riesgo' ? 'riesgo' : 'fijo',
         investmentTypeLabel: u.investment_type === 'riesgo' ? 'Participación a riesgo' : 'Retorno fijo',
         color: (findTier(tiers, u.role, u.category) || {}).color || '#8A8F98',
-        isDemo: !!u.is_demo,
+        isDemo: !!u.is_demo, bloqueada: u.status === 'disabled',
         // Monto en la ficha, pero ninguna inversión registrada: su capital no
         // entra en ninguna cifra del panel. Solo lo ve el admin, aquí.
         sinInversion: u.role === 'investor' && Number(u.amount || 0) > 0 && !conInversion.has(String(u.id)),
@@ -1882,6 +1884,82 @@ async function sincronizarInversion(user) {
     return null;
   }
 }
+
+// ── Contraseña recién generada, para enseñarla UNA sola vez ──
+// Vive en memoria y nada más: no se guarda en la base y NO viaja en la URL, que
+// es donde termina quedándose en el historial del navegador y en los logs del
+// router. Es de un solo uso: al pintarla se borra. Si el dyno se reinicia entre
+// el POST y el redirect se pierde, que es justo lo que tiene que pasar.
+const revelaciones = new Map(); // adminId -> { userId, name, email, password, exp }
+const REVELA_MS = 5 * 60 * 1000;
+function guardarRevelacion(adminId, data) {
+  revelaciones.set(String(adminId), Object.assign({ exp: Date.now() + REVELA_MS }, data));
+}
+function tomarRevelacion(adminId) {
+  const k = String(adminId);
+  const r = revelaciones.get(k);
+  revelaciones.delete(k);
+  if (!r || r.exp < Date.now()) return null;
+  return r;
+}
+
+// ── Regenerar la contraseña de una cuenta ──
+// Hacía falta una forma de volver a entrar a una cuenta sin depender del correo:
+// las cuentas demo se comparten por mensaje y no tienen buzón que consultar, y
+// "Reenviar" sirve para invitar, no para recuperar (deja la cuenta en invitada
+// hasta que alguien abra el enlace). La nueva contraseña se enseña UNA vez.
+router.post('/admin/user/:id/password', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const user = await knex('users').where({ id: req.params.id }).first();
+    if (!user) return res.redirect('/panel/admin?type=error&msg=Usuario+no+encontrado#usuarios');
+    if (user.role === 'admin') {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('La contraseña de un administrador se cambia desde su propio perfil') + '#usuarios');
+    }
+    const password = auth.generatePassword();
+    const cambios = { password_hash: auth.hashPassword(password), updated_at: knex.fn.now() };
+    // Una cuenta invitada no puede entrar aunque tenga contraseña (el login exige
+    // `active`), así que darle una y dejarla invitada era darle una llave que no
+    // abre. Se activa aquí y el aviso lo dice.
+    const activada = user.status === 'invited';
+    if (activada) cambios.status = 'active';
+    // El enlace de invitación que siguiera vivo deja de servir: si no, quedan dos
+    // caminos abiertos a la misma cuenta y solo uno se acaba de rotar.
+    cambios.invite_token = null;
+    cambios.invite_expires = null;
+    await knex('users').where({ id: user.id }).update(cambios);
+
+    guardarRevelacion(req.panelUser.id, {
+      userId: user.id, name: user.name, email: user.email, password, activada
+    });
+    const back = req.body.redirect === 'account'
+      ? `/panel/admin/user/${user.id}?type=ok&msg=` + encodeURIComponent('Contraseña regenerada')
+      : '/panel/admin?type=ok&msg=' + encodeURIComponent('Contraseña regenerada') + '#usuarios';
+    res.redirect(back);
+  } catch (e) { next(e); }
+});
+
+// ── Bloquear / reactivar el acceso ──
+// Bloquear corta de verdad: la sesión se valida contra el estado en cada
+// petición, así que quien esté dentro con esa cuenta sale en el siguiente clic.
+router.post('/admin/user/:id/access', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const user = await knex('users').where({ id: req.params.id }).first();
+    if (!user) return res.redirect('/panel/admin?type=error&msg=Usuario+no+encontrado#usuarios');
+    if (user.role === 'admin') {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('No se puede bloquear una cuenta de administrador') + '#usuarios');
+    }
+    const bloquear = user.status !== 'disabled';
+    // Al reactivar no se inventa un estado: sin contraseña la cuenta vuelve a
+    // "invitada", que es lo que era; marcarla activa la dejaría sin forma de entrar.
+    const status = bloquear ? 'disabled' : (user.password_hash ? 'active' : 'invited');
+    await knex('users').where({ id: user.id }).update({ status, updated_at: knex.fn.now() });
+    const msg = bloquear ? `Se bloqueó el acceso de ${user.name}` : `${user.name} puede entrar otra vez`;
+    const back = req.body.redirect === 'account'
+      ? `/panel/admin/user/${user.id}?type=ok&msg=` + encodeURIComponent(msg)
+      : '/panel/admin?type=ok&msg=' + encodeURIComponent(msg) + '#usuarios';
+    res.redirect(back);
+  } catch (e) { next(e); }
+});
 
 // Reenviar invitación
 router.post('/admin/user/:id/resend', auth.requireAdmin, async (req, res, next) => {
@@ -3723,6 +3801,7 @@ router.get('/admin/user/:id', auth.requireAdmin, async (req, res, next) => {
       panel: buildAdminPanel(req.panelUser),
       flash: req.query.msg,
       flashType: req.query.type,
+      nuevaPassword: tomarRevelacion(req.panelUser.id),
       account: {
         id: user.id, name: user.name, email: user.email, role: user.role,
         isSponsor: user.role === 'sponsor',

@@ -105,6 +105,32 @@ USD $350,000 y 3 cuentas activas; con el filtro queda en USD $0 y 1 cuenta activ
   - Prospectos por estado y conteo de contenido publicado.
 
 Pendiente de esta sección:
+- [x] ~~**Regenerar contraseña y bloquear el acceso, desde la lista de cuentas**~~
+  **HECHO (15 sep 2026)**, pedido del usuario. Faltaba una forma de volver a entrar a una
+  cuenta sin depender del correo: las cuentas demo se comparten por mensaje y no tienen
+  buzón que consultar, y **"Reenviar" sirve para invitar, no para recuperar** (deja la
+  cuenta en *invitada* hasta que alguien abra el enlace).
+  - **"Contraseña"** en cada fila del directorio (y "Regenerar contraseña" en la ficha):
+    genera una contraseña **aleatoria de verdad** (`crypto.randomInt`, no `Math.random`;
+    `generatePassword` en `lib/panelAuth.js`), sin los caracteres que se confunden al
+    dictarla o copiarla (0/O, 1/l/I) y en grupos de cuatro — `ynDE-kPS3-6jEd`—, que es
+    como se acaba compartiendo.
+  - **Se muestra UNA sola vez**, en un bloque con botón de copiar. Vive en memoria del
+    proceso, **no se guarda en la base y no viaja en la URL** (ahí quedaría en el historial
+    del navegador y en los logs del router); al pintarla se borra. De la cuenta solo queda
+    el hash. Probado: al recargar la página ya no aparece.
+  - **Una cuenta invitada queda activa** al regenerarle la contraseña: el login exige
+    `active`, así que darle una llave y dejarla invitada era darle una llave que no abre.
+    El aviso lo dice. **El enlace de invitación que siguiera vivo se anula**, para no dejar
+    dos caminos abiertos a la misma cuenta cuando solo se rotó uno.
+  - **"Bloquear" / "Reactivar"** en cada fila. Corta de verdad: la sesión se valida contra
+    el estado en cada petición, así que **quien esté dentro sale en el siguiente clic**
+    (probado con una sesión ya abierta: terminó en el login). Al reactivar no se inventa un
+    estado — sin contraseña la cuenta vuelve a *invitada*, que es lo que era.
+  - No aplica a cuentas de administrador (ni se listan ahí, y las rutas lo rechazan igual).
+  - De paso: el confirmador de la ficha decía **"Sí, eliminar"** en todo, incluso en cosas
+    que no borran nada. Ahora la etiqueta sale de `data-confirm-ok` y por defecto dice
+    "Sí, continuar".
 - [x] ~~**Revisión de la proporción de inversionistas, la inversión y los gráficos**~~
   **HECHO (15 sep 2026)**. La revisión salió de una captura donde el directorio sumaba
   **USD $1,250,000** de inversionistas reales y Estadísticas decía **USD $0**. Todo lo de
