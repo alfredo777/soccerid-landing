@@ -826,6 +826,9 @@ function renderPropuesta(variante) {
         gateKey: variante.gateKey,
         variantId: variante.id,
         robots: variante.noindex ? 'noindex,nofollow' : null,
+        // Solo con la cookie de acceso se manda el contenido de la propuesta.
+        // Sin ella la página es únicamente el candado.
+        autorizado: propuestas.tieneAcceso(req, variante),
         year: new Date().getFullYear(),
         version: APP_VERSION
       });
@@ -837,6 +840,37 @@ function renderPropuesta(variante) {
 }
 
 app.get('/:lang/socceridcup2027', renderPropuesta(propuestas.porId('2027')));
+
+// Contenido de la propuesta, ya sin el candado. Es lo que pide la página justo
+// después de validar el código, para mostrarla sin recargar. Vuelve a
+// comprobar la cookie de acceso: no basta con conocer la dirección.
+app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
+  const variante = propuestas.porId(req.params.id);
+  if (!variante) return next();
+  if (!(await propuestas.visible(variante))) return next();
+  if (!propuestas.tieneAcceso(req, variante)) return res.status(403).send('');
+
+  const lang = SUPPORTED_LANGS.includes(req.query.lang) ? req.query.lang : DEFAULT_LANG;
+  try {
+    const data = propuestas.leerContenido(variante, lang, DEFAULT_LANG);
+    if (!data) return next();
+    res.set('Cache-Control', 'no-store');
+    res.render('partials/propuesta-contenido', {
+      layout: false,
+      lang: lang,
+      isEs: lang === 'es',
+      isEn: lang === 'en',
+      data: data,
+      mediaLinks: await cupEditions.mediaLinks(lang),
+      slug: variante.slug,
+      baseUrl: BASE_URL,
+      year: new Date().getFullYear()
+    });
+  } catch (e) {
+    console.error('Error sirviendo el contenido de ' + variante.id + ':', e);
+    next();
+  }
+});
 
 // Propuestas alternas preparadas por adelantado. La ruta queda registrada aquí
 // —antes del catch-all /:lang/:page— pero responde 404 mientras su interruptor
@@ -870,6 +904,10 @@ app.post('/api/project2027/verify', async (req, res) => {
     if (verifyThrottled(ipReq)) return res.status(429).json({ ok: false, throttled: true });
     const code = (req.body.code || '').trim().slice(0, 40);
     if (!code) return res.json({ ok: false });
+
+    // Desde qué propuesta se está entrando. Nunca se confía en lo que manda el
+    // cliente: si no coincide con el registro, cae en la propuesta en vivo.
+    const variante = propuestas.desdeCliente(req.body.variant);
 
     const codeRow = await knex('access_codes').where({ code }).first();
     if (!codeRow) return res.json({ ok: false });
@@ -949,6 +987,13 @@ app.post('/api/project2027/verify', async (req, res) => {
         body: `${name || 'Sin nombre'} · ${email || 'sin correo'}${knownDevice ? '' : ' · dispositivo nuevo'}${quien}`,
         channels: []
       }).catch(() => {});
+    }
+
+    // Cookie de acceso firmada: a partir de aquí el servidor sí manda el
+    // contenido de la propuesta. Antes de esto el candado era solo de
+    // presentación y la propuesta viajaba igual en el HTML.
+    if (await propuestas.visible(variante)) {
+      propuestas.darAcceso(res, variante, isProduction);
     }
 
     return res.json({ ok: true });

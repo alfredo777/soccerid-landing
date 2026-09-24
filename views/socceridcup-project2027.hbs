@@ -35,832 +35,9 @@
 </div>
 
 {{!-- Content (hidden until code entered) --}}
-<div class="pp-page" id="ppContent" style="display:none">
-
-  {{!-- Language toggle --}}
-  <div class="pp-lang-bar">
-    <a href="/es/{{slug}}" class="{{#if isEs}}active{{/if}}">ES</a>
-    <a href="/en/{{slug}}" class="{{#if isEn}}active{{/if}}">EN</a>
-  </div>
-
-  {{!-- ═══ MENÚ LATERAL ═══ --}}
-  <nav class="pp-nav" id="ppNav" aria-label="{{#if isEs}}Navegación de secciones{{else}}Section navigation{{/if}}">
-    <a href="#ppProyecto" class="pp-nav__item" data-tip="{{data.nav.project}}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>
-      <span class="pp-nav__label">{{data.nav.project}}</span>
-    </a>
-    <a href="#ppExperiencia" class="pp-nav__item" data-tip="{{data.nav.experience}}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="7.9 12.3 10.8 15.2 16.2 9.3"/></svg>
-      <span class="pp-nav__label">{{data.nav.experience}}</span>
-    </a>
-    <a href="#ppModalidades" class="pp-nav__item" data-tip="{{data.nav.investment}}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 20.5h17"/><rect x="4.5" y="12.5" width="4" height="5.5" rx="1.2"/><rect x="10" y="8.5" width="4" height="9.5" rx="1.2"/><rect x="15.5" y="4.5" width="4" height="13.5" rx="1.2"/></svg>
-      <span class="pp-nav__label">{{data.nav.investment}}</span>
-    </a>
-    {{#if data.calculator}}
-    <span class="pp-nav__sep" aria-hidden="true"></span>
-    <button type="button" class="pp-nav__item pp-nav__item--calc" id="ppNavCalc" data-tip="{{data.nav.calculator}}">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.5" width="16" height="19" rx="2.5"/><path d="M8 7h8"/><path d="M8.5 12h0M12 12h0M15.5 12h0M8.5 16.5h0M12 16.5h0M15.5 16.5h0"/></svg>
-      <span class="pp-nav__label">{{data.nav.calculator}}</span>
-    </button>
-    {{/if}}
-  </nav>
-
-  {{!-- ═══ HERO ═══ --}}
-  <section class="pp-hero">
-    <div class="pp-hero__overlay"></div>
-    <div class="pp-hero__body">
-      <span class="pp-badge pp-badge--gold">{{data.hero.badge}}</span>
-      <h1 class="pp-hero__teams">
-        <span>{{data.hero.team1}}</span>
-        <em>{{data.hero.vs}}</em>
-        <span>{{data.hero.team2}}</span>
-      </h1>
-      <div class="pp-hero__divider"></div>
-      <div class="pp-hero__info">
-        <span>{{data.hero.venue}}</span>
-        <span class="pp-hero__sep">|</span>
-        <span>{{data.hero.city}}</span>
-      </div>
-      <p class="pp-hero__date">{{data.hero.date}}</p>
-      <a href="/{{lang}}/socceridcup" target="_blank" class="pp-hero__cup-btn">{{data.hero.cupBtn}}</a>
-    </div>
-  </section>
-
-  {{!-- ═══ BRIEF / RESUMEN ═══ --}}
-  {{#if data.brief}}
-  <section class="pp-section pp-brief-section" id="ppResumen">
-    <h2 class="pp-section__title">{{data.brief.title}}</h2>
-    <div class="pp-brief">
-      {{#each data.brief.items}}
-      <div class="pp-brief__card">
-        <span class="pp-brief__icon pp-bico--{{icon}}"></span>
-        <span class="pp-brief__label">{{label}}</span>
-        <span class="pp-brief__rule"></span>
-        <strong class="pp-brief__value">{{value}}</strong>
-        <span class="pp-brief__note">{{note}}</span>
-      </div>
-      {{/each}}
-    </div>
-  </section>
-  {{/if}}
-
-  {{!-- ═══ HIGHLIGHTS ═══ --}}
-  <section class="pp-section pp-section--alt" id="ppProyecto">
-    <h2 class="pp-section__title">{{data.highlights.title}}</h2>
-    <div class="pp-highlights">
-      {{#each data.highlights.columns}}
-      <div class="pp-hl-col">
-        <div class="pp-hl-col__icon pp-hl-col__icon--{{icon}}"></div>
-        <h3 class="pp-hl-col__label">{{label}}</h3>
-        {{#if items}}
-          {{#each items}}
-          <div class="pp-hl-team">
-            <strong>{{bold}}</strong>
-            {{#each lines}}<span>{{this}}</span>{{/each}}
-          </div>
-          {{#unless @last}}<hr class="pp-hl-divider">{{/unless}}
-          {{/each}}
-        {{/if}}
-        {{#if mainTitle}}<h4 class="pp-hl-col__main">{{mainTitle}}</h4>{{/if}}
-        {{#if sub}}<span class="pp-hl-col__sub">{{sub}}</span>{{/if}}
-        {{#if lines}}
-          {{#each lines}}<p class="pp-hl-col__line">{{this}}</p>{{/each}}
-        {{/if}}
-        {{#if description}}<p class="pp-hl-col__desc">{{description}}</p>{{/if}}
-        {{#if stats}}
-          {{#each stats}}
-          <div class="pp-hl-stat">
-            <span class="pp-hl-stat__val">{{value}}</span>
-            <span class="pp-hl-stat__lbl">{{label}}</span>
-            {{#if note}}<span class="pp-hl-stat__note">{{note}}</span>{{/if}}
-          </div>
-          {{/each}}
-        {{/if}}
-      </div>
-      {{/each}}
-    </div>
-    {{#if data.highlights.note}}
-    <div class="pp-callout pp-callout--cta">
-      <span class="pp-callout__icon"></span>
-      <p>{{{data.highlights.note}}}</p>
-      {{#if data.highlights.whyMatch}}
-      <button type="button" class="pp-why-btn" id="ppWhyBtn" aria-expanded="false" aria-controls="ppWhyPanel">
-        <span>{{data.highlights.whyMatch.cta}}</span>
-        <svg class="pp-why-btn__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      {{/if}}
-    </div>
-    {{/if}}
-
-    {{#if data.highlights.whyMatch}}
-    {{#with data.highlights.whyMatch}}
-
-    <div class="pp-why-panel" id="ppWhyPanel" hidden>
-      <h3 class="pp-why-panel__title">{{title}}</h3>
-      <p class="pp-why-panel__intro">{{intro}}</p>
-
-      <div class="pp-proofs">
-        {{#each cards}}
-        <div class="pp-proof{{#if image}} has-img{{/if}}">
-          {{#if image}}
-          <div class="pp-proof__img" style="background-image:url('{{image}}')" role="img" aria-label="{{team}}"></div>
-          {{/if}}
-          {{#if venueTag}}
-          <span class="pp-proof__tag">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
-            {{venueTag}}
-          </span>
-          {{/if}}
-          <div class="pp-proof__head">
-            <div>
-              <h4>{{team}}</h4>
-              <span>{{venue}}</span>
-            </div>
-            <span class="pp-proof__badge">
-              <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
-              {{badge}}
-            </span>
-          </div>
-
-          <div class="pp-proof__meter">
-            <div class="pp-proof__ring" style="--pct:{{pct}}"><span>{{pct}}%</span></div>
-            <div class="pp-proof__figure">
-              <strong>{{value}}</strong>
-              <span class="pp-proof__lbl">{{label}}</span>
-              <span class="pp-proof__sub">{{sub}}</span>
-            </div>
-          </div>
-
-          {{#if market}}
-          <div class="pp-proof__market">
-            <span>{{#if marketLabel}}{{marketLabel}}{{else}}{{../marketLabel}}{{/if}}</span>
-            <p>{{market}}</p>
-          </div>
-          {{/if}}
-
-          <div class="pp-proof__links">
-            {{#each links}}
-            <a href="{{url}}" target="_blank" rel="noopener">
-              <em>{{source}}</em>
-              <span>{{text}}</span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-            </a>
-            {{/each}}
-            <p class="pp-proof__quote">“{{quote}}” <em>· {{date}}</em></p>
-          </div>
-        </div>
-        {{/each}}
-      </div>
-
-      <div class="pp-callout pp-why-panel__foot">
-        <span class="pp-callout__icon"></span>
-        <p>{{footer}}</p>
-      </div>
-    </div>
-    {{/with}}
-    {{/if}}
-  </section>
-
-  {{!-- ═══ SCOPE ═══ --}}
-  <section class="pp-section">
-    <h2 class="pp-section__title">{{data.scope.title}}</h2>
-    <p class="pp-funds-sub">{{data.scope.subtitle}}</p>
-    <div class="pp-scope">
-      <div class="pp-scope__left">
-        <h3 class="pp-scope__heading">{{data.scope.indicatorsTitle}}</h3>
-        <div class="pp-indicators">
-          {{#each data.scope.indicators}}
-          <div class="pp-ind-row">
-            <span class="pp-ind-row__label">{{label}}</span>
-            <span class="pp-ind-row__value">{{value}}</span>
-          </div>
-          {{/each}}
-        </div>
-      </div>
-      <div class="pp-scope__right">
-        <h3 class="pp-scope__heading">{{data.scope.revenueTitle}}</h3>
-        <ul class="pp-revenue">
-          {{#each data.scope.revenue}}
-          <li>{{this}}</li>
-          {{/each}}
-        </ul>
-      </div>
-    </div>
-    <p class="pp-scope__foot">{{data.scope.footnote}}</p>
-  </section>
-
-  {{!-- ═══ ¿POR QUÉ INVERTIR? ═══ --}}
-  {{#if data.why.reasons.length}}
-  <section class="pp-section pp-section--alt">
-    <h2 class="pp-section__title">{{data.why.title}}</h2>
-    <ul class="pp-reasons pp-reasons--grid">
-      {{#each data.why.reasons}}
-      <li><svg viewBox="0 0 20 20" fill="#22c55e"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg> {{this}}</li>
-      {{/each}}
-    </ul>
-  </section>
-  {{/if}}
-
-  {{!-- ═══ FUNDS ═══ --}}
-  <section class="pp-section">
-    <h2 class="pp-section__title">{{data.funds.title}}</h2>
-    <p class="pp-funds-sub">{{data.funds.subtitle}}</p>
-    <div class="pp-funds">
-      <div class="pp-funds__table-wrap">
-        <h3 class="pp-scope__heading">{{data.funds.tableTitle}}</h3>
-        <table class="pp-funds-table">
-          <thead>
-            <tr>
-              <th>{{#if isEs}}CONCEPTO{{else}}ITEM{{/if}}</th>
-              <th>USD</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each data.funds.items}}
-            <tr>
-              <td>{{concept}} {{#if detail}}<em>{{detail}}</em>{{/if}}</td>
-              <td>{{amount}}</td>
-            </tr>
-            {{/each}}
-          </tbody>
-          <tfoot>
-            <tr>
-              <td>{{data.funds.totalLabel}}</td>
-              <td>{{data.funds.totalAmount}}</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      <div class="pp-funds__chart-wrap">
-        <div class="pp-donut">
-          <div class="pp-donut__hole">
-            <span>USD</span>
-            <strong>$1.0M</strong>
-          </div>
-        </div>
-        <div class="pp-donut-legend">
-          {{#each data.funds.items}}
-          <div class="pp-donut-legend__item">
-            <span class="pp-donut-legend__dot" style="background:var(--chart-{{@index}})"></span>
-            <span>{{concept}}</span>
-          </div>
-          {{/each}}
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {{!-- ═══ 4 · EXPERIENCIA Y CAPACIDAD DE EJECUCIÓN ═══ --}}
-  <section class="pp-section pp-section--alt" id="ppExperiencia">
-    <h2 class="pp-section__title" style="margin-bottom:6px;">{{data.track.title}}</h2>
-    <p class="pp-modes-sub">{{data.track.capTitle}}</p>
-    <ul class="pp-caps pp-caps--grid">
-      {{#each data.track.capabilities}}
-      <li><svg viewBox="0 0 20 20" fill="#22c55e"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg> {{this}}</li>
-      {{/each}}
-    </ul>
-  </section>
-
-  {{!-- ═══ 5 · EVENTOS REALIZADOS ═══ --}}
-  <section class="pp-section">
-    <h2 class="pp-section__title" style="margin-bottom:6px;">{{data.track.editionsTitle}}</h2>
-    <p class="pp-modes-sub">{{data.track.editionsSub}}</p>
-    <div class="pp-track__editions">
-      {{#each data.track.editions}}
-      <a href="/{{../lang}}/socceridcup/{{this.year}}" target="_blank" class="pp-edition-link">
-        <div class="pp-edition-card">
-          <div class="pp-edition-card__img">
-            <img src="{{image}}" alt="{{match}}" loading="lazy">
-            <span class="pp-edition-card__year">{{this.year}}</span>
-          </div>
-          <h4 class="pp-edition-card__match">{{match}}</h4>
-          <p class="pp-edition-card__city">{{city}}</p>
-        </div>
-      </a>
-      {{/each}}
-    </div>
-  </section>
-
-  {{!-- ═══ 6 · PRESENCIA EN MEDIOS ═══ --}}
-  {{#if mediaLinks.length}}
-  <section class="pp-section pp-section--alt">
-    <h2 class="pp-section__title">{{#if isEs}}PRESENCIA EN MEDIOS{{else}}MEDIA PRESENCE{{/if}}</h2>
-    <div class="pp-media-list" id="ppMediaList">
-      {{#each mediaLinks}}
-      <a class="pp-media-item{{#unless featured}} is-extra{{/unless}}" href="{{url}}" target="_blank" rel="noopener">
-        {{#if image}}
-        <div class="pp-media-thumb">
-          <img src="{{image}}" alt="" loading="lazy">
-        </div>
-        {{/if}}
-        <div class="pp-media-text">
-          <span class="pp-media-title">{{title}}</span>
-          <span class="pp-media-source">{{source}}</span>
-        </div>
-        <svg class="pp-media-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
-      </a>
-      {{/each}}
-    </div>
-    {{#gt mediaLinks.length 3}}
-    <button type="button" class="pp-media-toggle" id="ppMediaToggle"
-            data-mas="{{data.media.more}}" data-menos="{{data.media.less}}" aria-expanded="false">
-      <span>{{data.media.more}}</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-    </button>
-    {{/gt}}
-  </section>
-  {{/if}}
-
-  {{!-- ═══ 7 · COBERTURA EN TELEVISIÓN ═══ --}}
-  {{#if data.track.videos.length}}
-  <section class="pp-section">
-    <h2 class="pp-section__title" style="margin-bottom:6px;">{{data.track.videosTitle}}</h2>
-    <p class="pp-modes-sub">{{data.track.videosSub}}</p>
-    <div class="pp-videos">
-      {{#each data.track.videos}}
-      <div class="pp-video">
-        <div class="pp-video__wrap">
-          <iframe src="https://www.youtube.com/embed/{{this.id}}" title="{{this.title}}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        </div>
-        <p class="pp-video__caption">{{this.title}}</p>
-      </div>
-      {{/each}}
-    </div>
-  </section>
-  {{/if}}
-
-  {{!-- ═══ 8 · RESPALDO Y DIFUSIÓN DE LOS CLUBES ═══ --}}
-  <section class="pp-section pp-section--alt">
-    <div class="bts">
-      <div class="bts-head">
-        <div>
-          <h2 class="pp-section__title" style="margin-bottom:6px;">{{#if isEs}}RESPALDO Y DIFUSIÓN DE LOS CLUBES{{else}}CLUB SUPPORT &amp; PROMOTION{{/if}}</h2>
-          <p class="bts-sub">{{#if isEs}}Los clubes en redes sociales · desliza para ver más{{else}}The clubs on social media · swipe to see more{{/if}}</p>
-        </div>
-        <div class="bts-nav">
-          <button class="bts-arrow bts-prev" type="button" aria-label="{{#if isEs}}Anterior{{else}}Previous{{/if}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
-          <button class="bts-arrow bts-next" type="button" aria-label="{{#if isEs}}Siguiente{{else}}Next{{/if}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
-        </div>
-      </div>
-      <div class="bts-track">
-        {{!-- 2023 · Pumas vs Comunicaciones --}}
-        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C3rNzPHMSoT/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C45zMSiLAal/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#e8e8e8"></span>Comunicaciones · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C3ql6KWx0eR/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#e8e8e8"></span>Comunicaciones · 2023</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C44uMApuSf7/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-        {{!-- 2024 · América vs Atlético Nacional --}}
-        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ffe600"></span>América · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C_MIUMKy4KW/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ffe600"></span>América · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C-ibrhTxVFY/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#009639"></span>Atlético Nacional · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C_nUjsJROIO/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#009639"></span>Atlético Nacional · 2024</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/C_eW4TIqzlG/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-        {{!-- 2025 · Pumas, luego Tigres --}}
-        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DHMbo_-uwxz/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#c8a24a"></span>Pumas · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DHgc8InsfGf/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ff8a00"></span>Tigres · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DXYZnyvjSx4/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-        <div class="bts-card"><div class="bts-card__tag"><span class="bts-dot" style="background:#ff8a00"></span>Tigres · 2025</div><div class="bts-embed"><iframe src="https://www.instagram.com/p/DXYZdVQDU3q/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen></iframe></div></div>
-      </div>
-      <div class="bts-dots" aria-hidden="true"></div>
-    </div>
-  </section>
-
-  {{!-- ═══ RESPALDO COMERCIAL ═══ --}}
-  {{#if data.sponsors.logos.length}}
-  <section class="pp-section">
-    <h2 class="pp-section__title" style="margin-bottom:6px;">{{data.sponsors.title}}</h2>
-    <p class="pp-modes-sub">{{data.sponsors.subtitle}}</p>
-    <div class="pp-sponsors">
-      {{#each data.sponsors.logos}}
-      <div class="pp-sponsor">
-        <img src="{{src}}" alt="{{alt}}" loading="lazy">
-        {{#if years}}<span>{{years}}</span>{{/if}}
-      </div>
-      {{/each}}
-    </div>
-  </section>
-  {{/if}}
-
-  {{!-- ═══ DETRÁS DE LA OPERACIÓN (videos de Facebook) ═══ --}}
-  <section class="pp-section pp-section--alt">
-    <div class="bts">
-      <div class="bts-head">
-        <div>
-          <h2 class="pp-section__title" style="margin-bottom:6px;">{{#if isEs}}DETRÁS DE LA OPERACIÓN{{else}}BEHIND THE OPERATION{{/if}}</h2>
-          <p class="bts-sub">{{#if isEs}}Como vivimos la organización{{else}}How we make it happen{{/if}}</p>
-        </div>
-        <div class="bts-nav">
-          <button class="bts-arrow bts-prev" type="button" aria-label="{{#if isEs}}Anterior{{else}}Previous{{/if}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
-          <button class="bts-arrow bts-next" type="button" aria-label="{{#if isEs}}Siguiente{{else}}Next{{/if}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
-        </div>
-      </div>
-      <div class="bts-track">
-        <a class="bts-card bts-video" href="https://www.facebook.com/soccerid7/videos/907822141540511/" target="_blank" rel="noopener"><div class="bts-card__tag"><span class="bts-dot" style="background:#ffe600"></span>Orlando · 2024</div><div class="bts-embed bts-poster" style="background-image:url('/assets/images/gallery/cup2024/bts.jpg')"><span class="bts-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="bts-watch">{{#if isEs}}Ver en Facebook{{else}}Watch on Facebook{{/if}}</span></div></a>
-        <a class="bts-card bts-video" href="https://www.facebook.com/reel/1372392885003887" target="_blank" rel="noopener"><div class="bts-card__tag"><span class="bts-dot" style="background:#ff8a00"></span>Austin · 2025</div><div class="bts-embed bts-poster" style="background-image:url('/assets/images/gallery/cup2025/bts.jpg')"><span class="bts-play"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="bts-watch">{{#if isEs}}Ver en Facebook{{else}}Watch on Facebook{{/if}}</span></div></a>
-      </div>
-      <div class="bts-dots" aria-hidden="true"></div>
-    </div>
-  </section>
-
-  <style>
-    .bts-head { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:22px; flex-wrap:wrap; }
-    .bts-sub { color:rgba(255,255,255,0.5); font-size:14px; margin:0; }
-    .bts-nav { display:flex; gap:10px; }
-    .bts-arrow { width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.05); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .2s, border-color .2s, opacity .2s; }
-    .bts-arrow:hover { background:rgba(108,60,224,0.5); border-color:rgba(108,60,224,0.5); }
-    .bts-arrow:disabled { opacity:.3; cursor:default; }
-    .bts-dots { display:none; }
-    .bts-dot-i { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.25); border:0; padding:0; cursor:pointer; transition:width .25s ease, background .25s ease; }
-    .bts-dot-i.is-active { width:22px; border-radius:20px; background:#9b59f0; }
-    .bts-track { display:flex; gap:16px; overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scroll-behavior:smooth; padding:4px 2px 10px; cursor:grab; }
-    .bts-track::-webkit-scrollbar { height:0; }
-    .bts-track.is-dragging { cursor:grabbing; scroll-snap-type:none; scroll-behavior:auto; }
-    .bts-track.is-dragging iframe { pointer-events:none; }
-    .bts-card { flex:0 0 auto; width:340px; max-width:86vw; scroll-snap-align:center; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:16px; overflow:hidden; }
-    .bts-card__tag { display:flex; align-items:center; gap:8px; padding:14px 16px; font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,0.85); }
-    .bts-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; box-shadow:0 0 0 3px rgba(255,255,255,0.06); }
-    .bts-embed { position:relative; width:100%; height:540px; background:#000; overflow:hidden; }
-    .bts-embed iframe { width:100%; height:100%; border:0; display:block; pointer-events:none; }
-    /* Escudo: permite el swipe del carrusel sobre el embed y abre la publicación al tocar */
-    .bts-shield { position:absolute; inset:0; z-index:2; display:block; background:transparent; }
-    .bts-track.is-dragging .bts-shield { pointer-events:none; }
-    /* Tarjeta de video (póster + play que abre Facebook) */
-    .bts-video { text-decoration:none; color:inherit; }
-    .bts-poster { background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; }
-    .bts-poster::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,10,26,0.15), rgba(10,10,26,0.6)); }
-    .bts-play { position:relative; z-index:1; width:66px; height:66px; border-radius:50%; background:rgba(108,60,224,0.92); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(0,0,0,0.5); transition:transform .2s; }
-    .bts-video:hover .bts-play { transform:scale(1.08); }
-    .bts-play svg { width:26px; height:26px; margin-left:3px; color:#fff; }
-    .bts-watch { position:absolute; z-index:1; bottom:16px; left:0; right:0; text-align:center; color:#fff; font-size:12px; font-weight:800; letter-spacing:1px; text-transform:uppercase; }
-    @media (max-width:700px) {
-      .bts-embed { height:62vh; min-height:400px; max-height:560px; }
-      .bts-nav { display:none; }
-      .bts-card { width:82vw; max-width:82vw; }
-      .bts-dots { display:flex; justify-content:center; align-items:center; gap:7px; margin-top:16px; flex-wrap:wrap; }
-    }
-  </style>
-  <script>
-    (function(){
-      var SHIELD_LABEL = '{{#if isEs}}Ver publicación{{else}}View post{{/if}}';
-      document.querySelectorAll('.bts').forEach(function(root){
-        var track = root.querySelector('.bts-track');
-        if (!track) return;
-        var prev = root.querySelector('.bts-prev'), next = root.querySelector('.bts-next');
-        var dotsWrap = root.querySelector('.bts-dots');
-        function step(){ var c = track.querySelector('.bts-card'); var w = c ? c.getBoundingClientRect().width : 0; return (w || 340) + 16; }
-        // Flechas siempre activas: scrollBy se limita solo en los extremos
-        if (prev) prev.addEventListener('click', function(){ track.scrollBy({ left: -step(), behavior:'smooth' }); });
-        if (next) next.addEventListener('click', function(){ track.scrollBy({ left: step(), behavior:'smooth' }); });
-
-        // Escudo transparente sobre cada embed: el swipe del carrusel funciona sobre el
-        // embed (los iframes no capturan el gesto) y un tap abre la publicación original.
-        track.querySelectorAll('.bts-embed').forEach(function(embed){
-          if (embed.querySelector('.bts-shield')) return;
-          var iframe = embed.querySelector('iframe'); if (!iframe) return;
-          var src = iframe.getAttribute('src') || '';
-          var link = '#', m = src.match(/instagram\.com\/p\/([^\/]+)\/embed/);
-          if (m) { link = 'https://www.instagram.com/p/' + m[1] + '/'; }
-          else { var fb = src.match(/[?&]href=([^&]+)/); if (fb) link = decodeURIComponent(fb[1]); }
-          var a = document.createElement('a');
-          a.className = 'bts-shield'; a.href = link; a.target = '_blank'; a.rel = 'noopener';
-          a.setAttribute('aria-label', SHIELD_LABEL);
-          embed.appendChild(a);
-        });
-
-        // Puntos indicadores (visibles en mobile): posición actual + navegación al tocar
-        var cards = track.querySelectorAll('.bts-card');
-        if (dotsWrap && cards.length) {
-          cards.forEach(function(_, i){
-            var b = document.createElement('button');
-            b.type = 'button'; b.className = 'bts-dot-i'; b.setAttribute('aria-label', 'Ir a ' + (i + 1));
-            b.addEventListener('click', function(){ cards[i].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' }); });
-            dotsWrap.appendChild(b);
-          });
-          var dots = dotsWrap.querySelectorAll('.bts-dot-i');
-          var syncDots = function(){
-            var tr = track.getBoundingClientRect(), center = tr.left + tr.width / 2, best = 0, bestDist = Infinity;
-            cards.forEach(function(c, i){ var r = c.getBoundingClientRect(), cc = r.left + r.width / 2, d = Math.abs(cc - center); if (d < bestDist) { bestDist = d; best = i; } });
-            dots.forEach(function(d, i){ d.classList.toggle('is-active', i === best); });
-          };
-          track.addEventListener('scroll', syncDots, { passive: true });
-          window.addEventListener('resize', syncDots);
-          syncDots();
-        }
-
-        var moved = false;
-        // Táctil: distingue swipe de tap (el scroll horizontal es nativo con scroll-snap)
-        var tsx = 0, tsy = 0;
-        track.addEventListener('touchstart', function(e){ var t = e.touches[0]; tsx = t.clientX; tsy = t.clientY; moved = false; }, { passive: true });
-        track.addEventListener('touchmove', function(e){ var t = e.touches[0]; if (Math.abs(t.clientX - tsx) > 8 || Math.abs(t.clientY - tsy) > 8) moved = true; }, { passive: true });
-        // Arrastre con mouse en desktop
-        var down = false, startX = 0, startLeft = 0;
-        track.addEventListener('pointerdown', function(e){ if (e.pointerType === 'mouse') { down = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft; track.classList.add('is-dragging'); } });
-        window.addEventListener('pointermove', function(e){ if (down) { var dx = e.clientX - startX; if (Math.abs(dx) > 3) moved = true; track.scrollLeft = startLeft - dx; } });
-        window.addEventListener('pointerup', function(){ if (down) { down = false; track.classList.remove('is-dragging'); } });
-        // Si hubo swipe/arrastre, no abrir el enlace (escudo o tarjeta de video)
-        track.addEventListener('click', function(e){ var a = e.target.closest('.bts-shield, .bts-video'); if (a && moved) { e.preventDefault(); e.stopPropagation(); } }, true);
-      });
-    })();
-  </script>
-
-  {{!-- ═══ STRUCTURE · MODALIDADES DE INVERSIÓN ═══ --}}
-  <section class="pp-section" id="ppModalidades">
-    <h2 class="pp-section__title">{{data.structure.title}}</h2>
-    <div class="pp-proposal">
-      <div class="pp-proposal__left">
-        <h3 class="pp-scope__heading">{{data.structure.termsTitle}}</h3>
-        <div class="pp-terms">
-          {{#each data.structure.terms}}
-          <div class="pp-term-row">
-            <span class="pp-term-row__label">{{label}}</span>
-            <span class="pp-term-row__value">{{value}}</span>
-          </div>
-          {{/each}}
-        </div>
-      </div>
-      <div class="pp-proposal__right">
-        <h3 class="pp-scope__heading">{{data.structure.itemsTitle}}</h3>
-        <ul class="pp-structure">
-          {{#each data.structure.items}}
-          <li class="pp-structure__item">
-            <svg class="pp-structure__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            <div>
-              <span>{{{this.text}}}</span>
-              {{#if this.sub}}
-              <ul class="pp-structure__sub">
-                {{#each this.sub}}
-                <li>{{{this.text}}}</li>
-                {{/each}}
-              </ul>
-              {{/if}}
-            </div>
-          </li>
-          {{/each}}
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  {{!-- ═══ PROPOSAL · EJEMPLOS DE PARTICIPACIÓN ═══ --}}
-  <section class="pp-section pp-section--alt">
-    <h2 class="pp-section__title" style="margin-bottom:6px;">{{data.proposal.title}}</h2>
-    {{#if data.proposal.subtitle}}<p class="pp-modes-sub">{{data.proposal.subtitle}}</p>{{/if}}
-
-    <div class="pp-modes">
-      {{!-- Modalidad A · Retorno fijo (simple y claro) --}}
-      <div class="pp-mode">
-        <div class="pp-mode__head">
-          <span class="pp-mode__icon pp-ico--{{data.proposal.fixed.icon}}"></span>
-          <div class="pp-mode__heading">
-            <h3>{{data.proposal.fixed.name}}</h3>
-            <p>{{data.proposal.fixed.tagline}}</p>
-          </div>
-        </div>
-        <div class="pp-mode__body">
-          <div class="pp-fixed-top">
-            <div>
-              <span class="pp-mode__lbl">{{data.proposal.fixed.investLabel}}</span>
-              <strong class="pp-mode__val">{{data.proposal.fixed.investValue}}</strong>
-            </div>
-            <svg class="pp-fixed-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-            <div>
-              <span class="pp-mode__lbl">{{data.proposal.fixed.returnLabel}}</span>
-              <strong class="pp-mode__val">{{data.proposal.fixed.returnValue}}</strong>
-            </div>
-          </div>
-          <div class="pp-fixed-res">
-            {{#each data.proposal.fixed.results}}
-            <div>
-              <span class="pp-mode__lbl">{{label}}</span>
-              <strong class="pp-mode__val{{#if accent}} is-accent{{/if}}">{{value}}</strong>
-            </div>
-            {{/each}}
-          </div>
-          <p class="pp-mode__note">{{data.proposal.fixed.note}}</p>
-        </div>
-      </div>
-
-      {{!-- Modalidad B · Participación a riesgo --}}
-      <div class="pp-mode">
-        <div class="pp-mode__head">
-          <span class="pp-mode__icon pp-ico--{{data.proposal.risk.icon}}"></span>
-          <div class="pp-mode__heading">
-            <h3>{{data.proposal.risk.name}}</h3>
-            <p>{{data.proposal.risk.tagline}}</p>
-          </div>
-        </div>
-        <div class="pp-mode__body">
-          {{!-- Estructura 50 / 50 · explicada dentro de la Participación a riesgo --}}
-          <div class="pp-riskrules pp-riskrules--nested">
-            <div class="pp-split">
-              <span class="pp-chip">{{data.proposal.risk.splitTitle}}</span>
-              <div class="pp-split__grid">
-                {{#each data.proposal.risk.split}}
-                <div class="pp-split__side">
-                  <strong>{{pct}}</strong>
-                  <span>{{name}}</span>
-                  <p>{{role}}</p>
-                </div>
-                {{/each}}
-              </div>
-              <p class="pp-split__note">{{data.proposal.risk.splitNote}}</p>
-            </div>
-          </div>
-
-          <div class="pp-risk">
-          <div class="pp-risk__col">
-            <span class="pp-chip">{{data.proposal.risk.scenarioTitle}}</span>
-            {{#each data.proposal.risk.scenario}}
-            <div class="pp-sc-row">
-              <span class="pp-sc-ico pp-ico--{{icon}}"></span>
-              <span class="pp-sc-txt">
-                {{#if lead}}<b class="pp-sc-lead">{{value}}</b> {{label}}{{else}}{{label}} <b>{{value}}</b>{{/if}}
-                {{#if note}}<em>{{note}}</em>{{/if}}
-              </span>
-            </div>
-            {{/each}}
-          </div>
-          <div class="pp-risk__col">
-            <span class="pp-chip">{{data.proposal.risk.exampleTitle}}</span>
-            {{#each data.proposal.risk.rows}}
-            <div class="pp-risk-row">
-              <span class="pp-mode__lbl">{{label}}</span>
-              <strong class="pp-mode__val is-accent">{{value}}</strong>
-              {{#if note}}<span class="pp-risk-row__note">{{note}}</span>{{/if}}
-            </div>
-            {{/each}}
-            <div class="pp-yield">
-              <span class="pp-mode__lbl">{{data.proposal.risk.yieldLabel}}</span>
-              <strong>{{data.proposal.risk.yieldValue}}</strong>
-            </div>
-          </div>
-          </div>
-
-          {{#if data.proposal.risk.breakEven}}
-          <div class="pp-breakeven">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M5 7l-3 6a3.2 3.2 0 0 0 6 0z"/><path d="M19 7l3 6a3.2 3.2 0 0 1-6 0z"/><path d="M8 21h8"/></svg>
-            <div>
-              <span>{{data.proposal.risk.breakEvenTitle}}</span>
-              <p>{{data.proposal.risk.breakEven}}</p>
-            </div>
-          </div>
-          {{/if}}
-        </div>
-
-      </div>
-    </div>
-
-    {{#if data.proposal.compare}}
-    <div class="pp-cmp-wrap">
-      <table class="pp-cmp">
-        <thead>
-          <tr>
-            {{#each data.proposal.compare.head}}<th>{{this}}</th>{{/each}}
-          </tr>
-        </thead>
-        <tbody>
-          {{#each data.proposal.compare.rows}}
-          <tr>
-            <td>{{concept}}</td>
-            <td{{#if accent}} class="is-accent"{{/if}}>{{fixed}}</td>
-            <td{{#if accent}} class="is-accent"{{/if}}>{{risk}}</td>
-          </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-    {{/if}}
-
-    {{#if data.proposal.disclaimer}}
-    <div class="pp-callout pp-callout--info">
-      <span class="pp-callout__icon"></span>
-      <p>{{data.proposal.disclaimer}}</p>
-    </div>
-    {{/if}}
-
-    {{#if data.calculator}}
-    <div class="pp-calc-cta">
-      <button type="button" class="pp-jump pp-calc-open" id="ppCalcOpen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.5" width="16" height="19" rx="2.5"/><path d="M8 7h8"/><path d="M8.5 12h0M12 12h0M15.5 12h0M8.5 16.5h0M12 16.5h0M15.5 16.5h0"/></svg>
-        <span>{{data.calculator.cta}}</span>
-      </button>
-      <p class="pp-calc-cta__note">{{data.calculator.ctaNote}}</p>
-    </div>
-    {{/if}}
-
-    <div class="pp-ticket-bar">
-      <span>{{data.proposal.ticketLabel}}</span>
-      <strong>{{data.proposal.ticketValue}}</strong>
-    </div>
-  </section>
-
-  {{!-- ═══ TIMELINE ═══ --}}
-  <section class="pp-section">
-    <h2 class="pp-section__title">{{data.timeline.title}}</h2>
-    <div class="pp-timeline">
-      <div class="pp-timeline__header">
-        <span class="pp-timeline__col-per">{{data.timeline.periodLabel}}</span>
-      </div>
-      {{#each data.timeline.items}}
-      <div class="pp-timeline__row{{#if this.highlight}} pp-timeline__row--highlight{{/if}}{{#if this.active}} pp-timeline__row--active{{/if}}">
-        <span class="pp-timeline__activity">{{{this.activity}}}{{#if this.active}} <span class="pp-timeline__badge">{{#if ../isEs}}Etapa activa{{else}}Active stage{{/if}}</span>{{/if}}</span>
-        <span class="pp-timeline__period">{{this.period}}</span>
-      </div>
-      {{/each}}
-    </div>
-  </section>
-
-  {{!-- ═══ CLOSING ═══ --}}
-  <section class="pp-closing">
-    <div class="pp-closing__overlay"></div>
-    <div class="pp-closing__body">
-      <h2>{{data.closing.title}}</h2>
-      <p>{{data.closing.cta}}</p>
-      <a href="https://wa.me/17867844303?text={{data.closing.btnMsg}}" target="_blank" class="pp-closing__btn">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-        {{data.closing.btnText}}
-      </a>
-      <span class="pp-closing__conf">{{data.closing.confidential}}</span>
-    </div>
-  </section>
-
-  {{!-- Footer --}}
-  <footer class="pp-footer">
-    <a href="/{{lang}}/socceridcup"><img src="/assets/images/soccerid.png" alt="SOCCER iD" height="28"></a>
-    <span>&copy; {{year}} SOCCER iD</span>
-  </footer>
-
-  {{!-- ═══ CALCULADORA DE UTILIDADES ═══ --}}
-  {{#if data.calculator}}
-  <script type="application/json" id="ppCalcCfg">{{{jsonScript data.calculator}}}</script>
-  <div class="pp-calc" id="ppCalc" hidden>
-    <div class="pp-calc__backdrop" data-calc-close></div>
-    <div class="pp-calc__card" role="dialog" aria-modal="true" aria-labelledby="ppCalcTitle">
-      <div class="pp-calc__head">
-        <div class="pp-calc__headtext">
-          <h3 class="pp-calc__title" id="ppCalcTitle">{{data.calculator.title}}</h3>
-          <p class="pp-calc__sub">{{data.calculator.subtitle}}</p>
-        </div>
-        <button type="button" class="pp-calc__x" data-calc-close aria-label="{{data.calculator.closeLabel}}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-        </button>
-      </div>
-
-      <div class="pp-calc__body">
-      <div class="pp-calc__field">
-        <span class="pp-calc__lbl">{{data.calculator.steps.type}}</span>
-        <div class="pp-switch" id="ppCalcType">
-          <button type="button" class="pp-switch__side is-active" data-val="fixed">{{data.calculator.types.fixed}}</button>
-          <button type="button" class="pp-switch__track" role="switch" aria-checked="false" aria-label="{{data.calculator.steps.type}}">
-            <span class="pp-switch__knob"></span>
-          </button>
-          <button type="button" class="pp-switch__side" data-val="risk">{{data.calculator.types.risk}}</button>
-        </div>
-      </div>
-
-      <div class="pp-calc__field">
-        <span class="pp-calc__lbl">{{data.calculator.steps.currency}}</span>
-        <div class="pp-switch" id="ppCalcCurrency">
-          <button type="button" class="pp-switch__side is-active" data-val="{{data.calculator.currencies.0.id}}">{{data.calculator.currencies.0.tab}}</button>
-          <button type="button" class="pp-switch__track" role="switch" aria-checked="false" aria-label="{{data.calculator.steps.currency}}">
-            <span class="pp-switch__knob"></span>
-          </button>
-          <button type="button" class="pp-switch__side" data-val="{{data.calculator.currencies.1.id}}">{{data.calculator.currencies.1.tab}}</button>
-        </div>
-      </div>
-
-      <div class="pp-calc__field">
-        <span class="pp-calc__lbl">{{data.calculator.steps.amount}}</span>
-        <div class="pp-calc__amount">
-          <span class="pp-calc__cur" id="ppCalcSymbol"></span>
-          <input type="text" inputmode="numeric" autocomplete="off" id="ppCalcAmount">
-        </div>
-        <input type="range" class="pp-calc__range" id="ppCalcAmountRange">
-        <span class="pp-calc__hint" id="ppCalcHint"></span>
-        <span class="pp-calc__err" id="ppCalcErr"></span>
-      </div>
-
-      <div class="pp-calc__field" id="ppCalcAttField">
-        <span class="pp-calc__lbl">{{data.calculator.steps.attendance}}</span>
-        <input type="range" class="pp-calc__range" id="ppCalcAtt" min="0" step="100">
-        <div class="pp-calc__attinfo">
-          <strong id="ppCalcAttVal"></strong>
-          <span id="ppCalcOcc"></span>
-        </div>
-        <div class="pp-calc__break" id="ppCalcBreak"></div>
-      </div>
-
-      <div class="pp-calc__result" id="ppCalcResult"></div>
-      <p class="pp-calc__disc">{{data.calculator.disclaimer}}</p>
-      </div>
-    </div>
-  </div>
-  {{/if}}
-
-  <button class="pp-btt" id="ppBtt" aria-label="Back to top">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
-  </button>
-
-</div>
+{{!-- El contenido solo se manda cuando el servidor ya validó el código.
+     Sin acceso esta caja va vacía: el candado deja de ser decorativo. --}}
+<div class="pp-page" id="ppContent" style="display:none">{{#if autorizado}}{{> propuesta-contenido}}{{/if}}</div>
 
 <style>
   :root {
@@ -2106,11 +1283,18 @@
 
 <script>
 (function() {
-  var stored = sessionStorage.getItem('{{gateKey}}');
-  if (stored === 'granted') {
-    document.getElementById('ppLock').style.display = 'none';
-    document.getElementById('ppContent').style.display = 'block';
+  var lock = document.getElementById('ppLock');
+  var contenido = document.getElementById('ppContent');
+
+  // Si el servidor ya mandó la propuesta es porque la cookie de acceso era
+  // válida: se muestra directo, sin volver a pedir el código. El estado del
+  // acceso lo lleva esa cookie firmada, no el navegador.
+  if (contenido.firstElementChild) {
+    lock.style.display = 'none';
+    contenido.style.display = 'block';
+    initContenido();
   }
+
   var digits = document.querySelectorAll('.pp-lock__digit');
   var digitsWrap = document.getElementById('ppDigits');
   var btn = document.getElementById('ppSubmit');
@@ -2170,10 +1354,30 @@
   var formWrap = document.querySelector('.pp-lock__form');
   var lastCode = '';
 
+  // Devuelve una promesa: quien la llama mantiene el botón en "..." hasta que
+  // la propuesta esté en pantalla, para que se sienta un solo paso.
   function reveal() {
-    sessionStorage.setItem('{{gateKey}}', 'granted');
-    document.getElementById('ppLock').style.display = 'none';
-    document.getElementById('ppContent').style.display = 'block';
+    if (contenido.firstElementChild) {
+      lock.style.display = 'none';
+      contenido.style.display = 'block';
+      initContenido();
+      return Promise.resolve();
+    }
+    // La propuesta todavía no está en la página: se pide al servidor —que
+    // vuelve a comprobar la cookie de acceso— y se inyecta sin recargar.
+    return fetch('/api/propuesta/{{variantId}}/contenido?lang={{lang}}', { credentials: 'same-origin' })
+      .then(function(r) { if (!r.ok) throw new Error('sin acceso'); return r.text(); })
+      .then(function(html) {
+        contenido.innerHTML = html;
+        lock.style.display = 'none';
+        contenido.style.display = 'block';
+        initContenido();
+      })
+      .catch(function() {
+        // Si algo falla, recargar sí funciona: la cookie ya está puesta y el
+        // servidor manda la propuesta directamente.
+        window.location.reload();
+      });
   }
 
   function post(payload) {
@@ -2194,9 +1398,11 @@
     btn.textContent = '...';
     post({ code: val })
     .then(function(data) {
+      // Con acceso concedido el botón se queda en "..." hasta que la propuesta
+      // esté en pantalla: así el desbloqueo se lee como un solo paso.
+      if (data.ok) { return reveal(); }
       btn.disabled = false;
       btn.textContent = '{{data.lock.button}}';
-      if (data.ok) { reveal(); return; }
       if (data.needLead) {
         lastCode = val;
         err.classList.remove('visible');
@@ -2228,15 +1434,24 @@
     leadBtn.textContent = '...';
     post({ code: lastCode, name: nm, email: em })
     .then(function(data) {
+      if (data.ok) { return reveal(); }
       leadBtn.disabled = false;
       leadBtn.textContent = original;
-      if (data.ok) { reveal(); return; }
       leadErr.classList.add('visible');
     })
     .catch(function() { leadBtn.disabled = false; leadBtn.textContent = original; });
   }
   leadBtn.addEventListener('click', submitLead);
   leadEmail.addEventListener('keydown', function(e) { if (e.key === 'Enter') submitLead(); });
+
+  // ─── Arranque de todo lo que vive DENTRO de la propuesta ───
+  // Antes esto corría al cargar la página porque el contenido siempre estaba
+  // ahí. Ahora el contenido puede llegar después (inyectado al desbloquear),
+  // así que se agrupa aquí y se llama cuando ya está en el DOM. Es idempotente.
+  var contenidoIniciado = false;
+  function initContenido() {
+    if (contenidoIniciado || !contenido.firstElementChild) return;
+    contenidoIniciado = true;
 
   // ─── Calculadora de utilidades ───
   (function() {
@@ -2617,13 +1832,85 @@
     });
   })();
 
-  var btt = document.getElementById('ppBtt');
-  window.addEventListener('scroll', function() {
-    if (window.scrollY > 600) btt.classList.add('visible');
-    else btt.classList.remove('visible');
-  });
-  btt.addEventListener('click', function() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+  // ─── Carrusel de "detrás de cámaras" ───
+  // Vivía dentro del markup del contenido, pero al inyectarse con innerHTML
+  // un <script> no se ejecuta. Vive aquí para que arranque igual venga el
+  // contenido del servidor o inyectado tras desbloquear.
+    (function(){
+      var SHIELD_LABEL = '{{#if isEs}}Ver publicación{{else}}View post{{/if}}';
+      document.querySelectorAll('.bts').forEach(function(root){
+        var track = root.querySelector('.bts-track');
+        if (!track) return;
+        var prev = root.querySelector('.bts-prev'), next = root.querySelector('.bts-next');
+        var dotsWrap = root.querySelector('.bts-dots');
+        function step(){ var c = track.querySelector('.bts-card'); var w = c ? c.getBoundingClientRect().width : 0; return (w || 340) + 16; }
+        // Flechas siempre activas: scrollBy se limita solo en los extremos
+        if (prev) prev.addEventListener('click', function(){ track.scrollBy({ left: -step(), behavior:'smooth' }); });
+        if (next) next.addEventListener('click', function(){ track.scrollBy({ left: step(), behavior:'smooth' }); });
+
+        // Escudo transparente sobre cada embed: el swipe del carrusel funciona sobre el
+        // embed (los iframes no capturan el gesto) y un tap abre la publicación original.
+        track.querySelectorAll('.bts-embed').forEach(function(embed){
+          if (embed.querySelector('.bts-shield')) return;
+          var iframe = embed.querySelector('iframe'); if (!iframe) return;
+          var src = iframe.getAttribute('src') || '';
+          var link = '#', m = src.match(/instagram\.com\/p\/([^\/]+)\/embed/);
+          if (m) { link = 'https://www.instagram.com/p/' + m[1] + '/'; }
+          else { var fb = src.match(/[?&]href=([^&]+)/); if (fb) link = decodeURIComponent(fb[1]); }
+          var a = document.createElement('a');
+          a.className = 'bts-shield'; a.href = link; a.target = '_blank'; a.rel = 'noopener';
+          a.setAttribute('aria-label', SHIELD_LABEL);
+          embed.appendChild(a);
+        });
+
+        // Puntos indicadores (visibles en mobile): posición actual + navegación al tocar
+        var cards = track.querySelectorAll('.bts-card');
+        if (dotsWrap && cards.length) {
+          cards.forEach(function(_, i){
+            var b = document.createElement('button');
+            b.type = 'button'; b.className = 'bts-dot-i'; b.setAttribute('aria-label', 'Ir a ' + (i + 1));
+            b.addEventListener('click', function(){ cards[i].scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' }); });
+            dotsWrap.appendChild(b);
+          });
+          var dots = dotsWrap.querySelectorAll('.bts-dot-i');
+          var syncDots = function(){
+            var tr = track.getBoundingClientRect(), center = tr.left + tr.width / 2, best = 0, bestDist = Infinity;
+            cards.forEach(function(c, i){ var r = c.getBoundingClientRect(), cc = r.left + r.width / 2, d = Math.abs(cc - center); if (d < bestDist) { bestDist = d; best = i; } });
+            dots.forEach(function(d, i){ d.classList.toggle('is-active', i === best); });
+          };
+          track.addEventListener('scroll', syncDots, { passive: true });
+          window.addEventListener('resize', syncDots);
+          syncDots();
+        }
+
+        var moved = false;
+        // Táctil: distingue swipe de tap (el scroll horizontal es nativo con scroll-snap)
+        var tsx = 0, tsy = 0;
+        track.addEventListener('touchstart', function(e){ var t = e.touches[0]; tsx = t.clientX; tsy = t.clientY; moved = false; }, { passive: true });
+        track.addEventListener('touchmove', function(e){ var t = e.touches[0]; if (Math.abs(t.clientX - tsx) > 8 || Math.abs(t.clientY - tsy) > 8) moved = true; }, { passive: true });
+        // Arrastre con mouse en desktop
+        var down = false, startX = 0, startLeft = 0;
+        track.addEventListener('pointerdown', function(e){ if (e.pointerType === 'mouse') { down = true; moved = false; startX = e.clientX; startLeft = track.scrollLeft; track.classList.add('is-dragging'); } });
+        window.addEventListener('pointermove', function(e){ if (down) { var dx = e.clientX - startX; if (Math.abs(dx) > 3) moved = true; track.scrollLeft = startLeft - dx; } });
+        window.addEventListener('pointerup', function(){ if (down) { down = false; track.classList.remove('is-dragging'); } });
+        // Si hubo swipe/arrastre, no abrir el enlace (escudo o tarjeta de video)
+        track.addEventListener('click', function(e){ var a = e.target.closest('.bts-shield, .bts-video'); if (a && moved) { e.preventDefault(); e.stopPropagation(); } }, true);
+      });
+    })();
+
+  // ─── Botón de volver arriba ───
+  (function() {
+    var btt = document.getElementById('ppBtt');
+    if (!btt) return;
+    window.addEventListener('scroll', function() {
+      if (window.scrollY > 600) btt.classList.add('visible');
+      else btt.classList.remove('visible');
+    });
+    btt.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  })();
+
+  } // fin de initContenido
 })();
 </script>
