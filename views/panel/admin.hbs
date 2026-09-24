@@ -1312,7 +1312,39 @@
     .ad-sendcode h4 { font-size:13px; font-weight:800; margin-bottom:4px; }
     .cd-tag { display:inline-block; margin-left:5px; padding:1px 8px; border-radius:999px; background:#F1F5F9; color:#475569; font-size:10.5px; font-weight:700; }
   </style>
-  <p class="ad-note">Códigos de acceso a la <strong>propuesta 2027</strong> (<a href="/es/socceridcup2027" target="_blank" rel="noopener" style="color:var(--pn-purple);font-weight:700;">ver página</a>). Al entrar desde un dispositivo nuevo se pide nombre y correo (quedan en <strong>Prospectos</strong>) y se registra en <strong>Accesos</strong>.</p>
+  <p class="ad-note">Códigos de acceso a la <strong>propuesta 2027</strong> (<a href="/es/socceridcup2027" target="_blank" rel="noopener" style="color:var(--pn-purple);font-weight:700;">ver página</a>). Al entrar desde un dispositivo nuevo se pide nombre y correo (quedan en <strong>Prospectos</strong>) y se registra en <strong>Accesos</strong>. Los mismos códigos abren las propuestas alternas.</p>
+
+  {{#if propuestasAlternas.length}}
+  <div class="pn-card" style="margin-bottom:18px;">
+    <div class="pn-card__head"><h3>Propuestas alternas</h3><span class="ad-hint">Preparadas por si cambia el partido</span></div>
+    <p class="ad-note" style="margin:0 0 12px;">Apagada, su dirección responde 404 aunque se tenga exacta. Encendida, se puede abrir pero <strong>sigue detrás del candado de código y sin indexarse</strong> en buscadores.</p>
+    {{#each propuestasAlternas}}
+    <div class="ad-item">
+      <div class="ad-item__av" style="background: {{#if this.visible}}#1E8E5A{{else}}#8A8F98{{/if}}; font-size:13px;">{{#if this.visible}}●{{else}}○{{/if}}</div>
+      <div class="ad-item__b">
+        <strong>{{this.label}}</strong>
+        <small>
+          {{#if this.visible}}<span class="cd-owner" style="background:#DCFCE7;color:#166534;">ENCENDIDA</span>{{else}}<span class="cd-flag">APAGADA · responde 404</span>{{/if}}
+          <span class="cd-tag">sin indexar</span>
+        </small>
+        <small><span style="letter-spacing:.3px;">{{this.url}}</span></small>
+      </div>
+      <div class="ad-actions">
+        {{#if this.visible}}
+        <a href="{{this.url}}" target="_blank" rel="noopener"><button type="button">Ver página</button></a>
+        {{/if}}
+        <form method="POST" action="/panel/admin/settings/propuesta"
+          data-confirm="{{#if this.visible}}¿Apagar «{{this.label}}»? Su dirección volverá a responder 404.{{else}}¿Encender «{{this.label}}»? Se podrá abrir con código, pero seguirá sin indexarse.{{/if}}">
+          <input type="hidden" name="variante" value="{{this.id}}">
+          <input type="hidden" name="visible" value="{{#if this.visible}}0{{else}}1{{/if}}">
+          <button type="submit"{{#if this.visible}} class="danger"{{/if}}>{{#if this.visible}}Apagar{{else}}Encender{{/if}}</button>
+        </form>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+
   <div class="ad-grid">
     <div>
       <form class="pn-card ad-form" method="POST" action="/panel/admin/codes/generate" style="margin-bottom:18px;">

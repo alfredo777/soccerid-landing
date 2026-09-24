@@ -23,6 +23,7 @@ const ical = require('../lib/ical');
 const linkPreview = require('../lib/linkPreview');
 const turnstile = require('../lib/turnstile');
 const google = require('../lib/googleAuth');
+const propuestas = require('../lib/propuestas');
 const demoAccount = require('../lib/demoAccount');
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
@@ -1754,6 +1755,14 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
       notifyEmails, twilio, notifyPeople, notifTypes, stats,
+      // Propuestas alternas preparadas por adelantado, con su estado actual
+      propuestasAlternas: await Promise.all(
+        propuestas.listar().filter(v => v.oculta).map(async (v) => ({
+          id: v.id, label: v.label, slug: v.slug,
+          visible: await propuestas.visible(v),
+          url: '/es/' + v.slug
+        }))
+      ),
       aiOn: ai.disponible(), aiModelo: ai.MODELO,
       aiLog: await (async () => {
         try {
@@ -3683,6 +3692,25 @@ router.post('/admin/settings/notify', auth.requireAdmin, async (req, res, next) 
     if (ex) await knex('app_settings').where({ key: 'notify_emails' }).update({ value });
     else await knex('app_settings').insert({ key: 'notify_emails', value });
     res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent('Correos de notificación actualizados') + '#codigos');
+  } catch (e) { next(e); }
+});
+
+// Interruptor de las propuestas alternas (las que se preparan por adelantado
+// por si cambia el partido). Apagada = la URL responde 404 aunque se tenga
+// exacta. Encendida = se puede abrir, pero sigue detrás del candado de código
+// y con noindex, así que no se indexa ni se ve sin código.
+router.post('/admin/settings/propuesta', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const variante = propuestas.porId(req.body.variante);
+    if (!variante || !variante.settingKey) {
+      return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Esa propuesta no existe') + '#codigos');
+    }
+    const encender = String(req.body.visible) === '1';
+    await propuestas.setVisible(variante, encender);
+    const msg = encender
+      ? `Propuesta "${variante.label}" ENCENDIDA · /es/${variante.slug} (sigue con candado y sin indexar)`
+      : `Propuesta "${variante.label}" APAGADA · su URL vuelve a responder 404`;
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(msg) + '#codigos');
   } catch (e) { next(e); }
 });
 

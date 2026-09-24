@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{title}}</title>
   <meta name="description" content="{{description}}">
+  {{#if robots}}
+  {{!-- Páginas que no deben indexarse (p. ej. una propuesta todavía sin publicar) --}}
+  <meta name="robots" content="{{robots}}">
+  {{/if}}
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
