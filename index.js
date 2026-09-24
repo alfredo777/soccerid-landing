@@ -18,6 +18,7 @@ const crypto = require('crypto');
 const knex = require('./db/knex');
 const cupEditions = require('./db/editions');
 const project2027 = require('./lib/project2027');
+const propuestas = require('./lib/propuestas');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -780,47 +781,74 @@ app.get('/socceridcup', (req, res) => {
 });
 
 // ============================================================
-// PÁGINA SOCCER iD CUP PROJECT 2027 (socceridcup2027)
+// PÁGINAS DE PROPUESTA DE INVERSIÓN (con candado de código)
 // ============================================================
-app.get('/:lang/socceridcup2027', async (req, res, next) => {
-  const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
+// Todas las propuestas —la que está en vivo y las alternas preparadas por
+// adelantado— comparten esta vista y este handler. Lo único que cambia entre
+// una y otra es el archivo de contenido y el slug, que vienen de
+// `lib/propuestas.js`. Ver también el endpoint POST /api/project2027/verify.
+function renderPropuesta(variante) {
+  return async (req, res, next) => {
+    const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
 
-  const dataPath = path.join(__dirname, 'contents', 'cup_project_2027.json');
-  if (!fs.existsSync(dataPath)) return next();
+    // Las propuestas ocultas responden 404 mientras su interruptor esté apagado
+    if (!(await propuestas.visible(variante))) return next();
 
-  try {
-    const allData = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-    const data = allData[lang] || allData[DEFAULT_LANG];
+    try {
+      const data = propuestas.leerContenido(variante, lang, DEFAULT_LANG);
+      if (!data) return next();
 
-    // Notas de medios agregadas de las ediciones pasadas (desde la base de datos)
-    const mediaLinks = await cupEditions.mediaLinks(lang);
+      // Notas de medios agregadas de las ediciones pasadas (desde la base de datos)
+      const mediaLinks = await cupEditions.mediaLinks(lang);
 
-    const isEs = lang === 'es';
-    const ogTitle = isEs ? 'SOCCER iD CUP — Confidencial Inversión' : 'SOCCER iD CUP — Confidential Investment';
-    const ogDesc = isEs ? 'Acceso restringido. Se requiere código de autorización.' : 'Restricted access. Authorization code required.';
+      const isEs = lang === 'es';
+      const ogTitle = isEs ? 'SOCCER iD CUP — Confidencial Inversión' : 'SOCCER iD CUP — Confidential Investment';
+      const ogDesc = isEs ? 'Acceso restringido. Se requiere código de autorización.' : 'Restricted access. Authorization code required.';
 
-    res.render('socceridcup-project2027', {
-      layout: 'promo',
-      title: ogTitle,
-      description: ogDesc,
-      ogTitle: ogTitle,
-      ogDescription: ogDesc,
-      ogImage: '/assets/images/iconsoccerid.png',
-      ogLocale: isEs ? 'es_ES' : 'en_US',
-      lang: lang,
-      baseUrl: BASE_URL,
-      currentPath: '/socceridcup2027',
-      isEs: isEs,
-      isEn: lang === 'en',
-      data: data,
-      mediaLinks: mediaLinks,
-      year: new Date().getFullYear(),
-      version: APP_VERSION
-    });
-  } catch (e) {
-    console.error('Error cargando project 2027:', e);
-    next();
-  }
+      res.render('socceridcup-project2027', {
+        layout: 'promo',
+        title: ogTitle,
+        description: ogDesc,
+        ogTitle: ogTitle,
+        ogDescription: ogDesc,
+        ogImage: '/assets/images/iconsoccerid.png',
+        ogLocale: isEs ? 'es_ES' : 'en_US',
+        lang: lang,
+        baseUrl: BASE_URL,
+        currentPath: '/' + variante.slug,
+        isEs: isEs,
+        isEn: lang === 'en',
+        data: data,
+        mediaLinks: mediaLinks,
+        // Identidad de la propuesta: la vista la usa para sus enlaces de idioma,
+        // la llave de sesión del candado y el campo `variant` del formulario.
+        slug: variante.slug,
+        gateKey: variante.gateKey,
+        variantId: variante.id,
+        robots: variante.noindex ? 'noindex,nofollow' : null,
+        year: new Date().getFullYear(),
+        version: APP_VERSION
+      });
+    } catch (e) {
+      console.error('Error cargando la propuesta ' + variante.id + ':', e);
+      next();
+    }
+  };
+}
+
+app.get('/:lang/socceridcup2027', renderPropuesta(propuestas.porId('2027')));
+
+// Propuestas alternas preparadas por adelantado. La ruta queda registrada aquí
+// —antes del catch-all /:lang/:page— pero responde 404 mientras su interruptor
+// esté apagado, aun teniendo la URL exacta. Se enciende desde /panel/admin.
+propuestas.listar().filter(v => v.oculta).forEach((variante) => {
+  app.get('/:lang/' + variante.slug, renderPropuesta(variante));
+  // El redirect sin idioma también comprueba el interruptor: si redirigiera
+  // siempre, el 302 confirmaría que el slug existe.
+  app.get('/' + variante.slug, async (req, res, next) => {
+    if (!(await propuestas.visible(variante))) return next();
+    res.redirect(302, `/${detectLanguage(req)}/${variante.slug}`);
+  });
 });
 
 // Rate-limit simple del acceso público (anti fuerza-bruta de códigos de 7

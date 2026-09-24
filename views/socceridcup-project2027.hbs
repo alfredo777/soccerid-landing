@@ -28,8 +28,8 @@
     </div>
 
     <div class="pp-lock__lang">
-      <a href="/es/socceridcup2027" class="{{#if isEs}}active{{/if}}">ES</a>
-      <a href="/en/socceridcup2027" class="{{#if isEn}}active{{/if}}">EN</a>
+      <a href="/es/{{slug}}" class="{{#if isEs}}active{{/if}}">ES</a>
+      <a href="/en/{{slug}}" class="{{#if isEn}}active{{/if}}">EN</a>
     </div>
   </div>
 </div>
@@ -39,8 +39,8 @@
 
   {{!-- Language toggle --}}
   <div class="pp-lang-bar">
-    <a href="/es/socceridcup2027" class="{{#if isEs}}active{{/if}}">ES</a>
-    <a href="/en/socceridcup2027" class="{{#if isEn}}active{{/if}}">EN</a>
+    <a href="/es/{{slug}}" class="{{#if isEs}}active{{/if}}">ES</a>
+    <a href="/en/{{slug}}" class="{{#if isEn}}active{{/if}}">EN</a>
   </div>
 
   {{!-- ═══ MENÚ LATERAL ═══ --}}
@@ -2106,7 +2106,7 @@
 
 <script>
 (function() {
-  var stored = sessionStorage.getItem('pp2027');
+  var stored = sessionStorage.getItem('{{gateKey}}');
   if (stored === 'granted') {
     document.getElementById('ppLock').style.display = 'none';
     document.getElementById('ppContent').style.display = 'block';
@@ -2171,12 +2171,15 @@
   var lastCode = '';
 
   function reveal() {
-    sessionStorage.setItem('pp2027', 'granted');
+    sessionStorage.setItem('{{gateKey}}', 'granted');
     document.getElementById('ppLock').style.display = 'none';
     document.getElementById('ppContent').style.display = 'block';
   }
 
   function post(payload) {
+    // El endpoint es compartido por todas las propuestas; `variant` le dice
+    // desde cuál se está entrando (queda en el log y en el aviso al admin).
+    payload.variant = '{{variantId}}';
     return fetch('/api/project2027/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
