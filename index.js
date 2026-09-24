@@ -384,16 +384,31 @@ app.use('/blog', blogRoutes);
 // ============================================================
 // API ENDPOINTS
 // ============================================================
-app.get('/contents/:filename', (req, res) => {
+// Los archivos de `contents/` no son públicos: ahí viven las propuestas de
+// inversión completas (que están detrás del candado de código) y el archivo
+// semilla de códigos de acceso. Servirlos abiertos dejaba descargar la
+// propuesta entera sin código. Solo el admin puede leerlos; a cualquier otro
+// se le responde 404 para no confirmar siquiera qué archivos existen.
+// El admin tiene además su propio visor en /admin/contents/preview/:name.
+async function soloAdmin(req, res, next) {
+  try {
+    const user = await require('./lib/panelAuth').getUserFromRequest(req);
+    if (user && user.role === 'admin') return next();
+  } catch (_) {}
   res.set('Cache-Control', 'no-store');
-  
+  return res.status(404).json({ error: 'No encontrado' });
+}
+
+app.get('/contents/:filename', soloAdmin, (req, res) => {
+  res.set('Cache-Control', 'no-store');
+
   let filename = req.params.filename;
   if (filename.endsWith('.json')) {
     filename = filename.slice(0, -5);
   }
-  
+
   const jsonPath = path.join(__dirname, 'contents', filename + '.json');
-  
+
   if (fs.existsSync(jsonPath)) {
     try {
       const data = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
@@ -410,7 +425,7 @@ app.get('/contents/:filename', (req, res) => {
   }
 });
 
-app.get('/api/contents', (req, res) => {
+app.get('/api/contents', soloAdmin, (req, res) => {
   res.set('Cache-Control', 'no-store');
   const dir = path.join(__dirname, 'contents');
   const files = fs.readdirSync(dir)
