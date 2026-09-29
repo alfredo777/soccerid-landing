@@ -775,7 +775,7 @@ body {
     cursor: pointer;
     transform: translateZ(0);
     will-change: transform;
-    background: linear-gradient(135deg, #1e1e30 0%, #2a2a40 100%);
+    background: linear-gradient(135deg, #1E232F 0%, #2A3140 100%);
     border: 1px solid var(--border-light);
     min-height: 180px;
 }
@@ -1097,7 +1097,7 @@ body {
     padding: 12px;
     box-shadow: 
         0 50px 100px rgba(0, 0, 0, 0.5), 
-        0 0 0 3px #2a2a40, 
+        0 0 0 3px #2A3140, 
         inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
