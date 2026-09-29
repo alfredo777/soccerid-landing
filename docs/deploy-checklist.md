@@ -1,5 +1,11 @@
 # Qué hacer cuando se despliegue
 
+> Si el cambio toca nombres compartidos entre el servidor y el navegador
+> —archivos de `contents/`, claves de `__GKRAKEN_CONFIG__`, endpoints que llama
+> el front o variables de entorno—, pasa antes por
+> [docs/variables-del-proyecto.md](variables-del-proyecto.md) y corre su
+> verificación de la sección 6. Ahí está lo que rompe en silencio.
+
 Nada de esto está en producción todavía. Al 7 sep 2026 hay **39 commits** en
 `origin/main` que `production` (Heroku) no tiene: desde `bb1bffc` hasta `6763eef`.
 `origin/main` está al día; solo falta `production`.

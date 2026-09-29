@@ -399,6 +399,10 @@ app.use('/blog', blogRoutes);
 // Cualquier otro archivo exige sesión de admin y responde 404 —no 403— para no
 // confirmar siquiera qué archivos existen. El admin tiene además su propio
 // visor en /admin/contents/preview/:name.
+//
+// OJO: esta lista es la otra mitad de `GKraken.dataFiles` en
+// assets/js/main.js. Si agregas uno, agrégalo en los dos lados o el front se
+// queda sin ese archivo en silencio. Ver docs/variables-del-proyecto.md.
 const CONTENIDOS_PUBLICOS = new Set([
   'bento_items_first',
   'bento_items_second',

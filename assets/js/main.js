@@ -22,6 +22,10 @@ const GKraken = {
     ...(window.__GKRAKEN_CONFIG__ || {})
   },
   
+  // Los archivos que la landing necesita para pintarse. loadAllData() los pide
+  // a GET /contents/:filename, que solo los sirve sin autenticación si están
+  // en CONTENIDOS_PUBLICOS (index.js). Si agregas uno, agrégalo en los dos
+  // lados. Ver docs/variables-del-proyecto.md.
   dataFiles: {
     'bentoItemsFirst': 'bento_items_first',
     'bentoItemsSecond': 'bento_items_second',
