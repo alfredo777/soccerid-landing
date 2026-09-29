@@ -1898,7 +1898,9 @@ body {
        botón dejaba de ser lo que saltaba. Ahora el verde aparece solo donde
        hay una acción. */
     background: var(--bg-card);
-    border: 1px solid rgba(37, 211, 102, 0.22);
+    /* Borde gris claro, un punto por encima del de las demás tarjetas, para
+       que la sección conserve peso propio sin traer un color ajeno al gris. */
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 24px;
     padding: 48px 40px;
 }
