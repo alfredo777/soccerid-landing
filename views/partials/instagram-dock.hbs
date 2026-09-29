@@ -13,9 +13,13 @@
   .sid-dock__btn:hover { transform:translateY(-3px) scale(1.05); }
   .sid-dock__btn--ig {
     background:linear-gradient(45deg,#F58529 0%,#FEDA77 22%,#DD2A7B 52%,#8134AF 76%,#515BD4 100%);
+    /* Las paradas son las de Instagram, sin tocar un color. El realce de
+       saturación es solo para que el círculo, que es pequeño, no se vea
+       lavado al lado del verde de WhatsApp. */
+    filter:saturate(1.18);
   }
   .sid-dock__btn--ig:hover { box-shadow:0 14px 34px rgba(221,42,123,0.55); }
-  .sid-dock__btn--wa { background:linear-gradient(135deg,var(--color-whatsapp,#25D366),var(--color-whatsapp-dark,#128C7E)); }
+  .sid-dock__btn--wa { background:linear-gradient(135deg,var(--color-whatsapp,#25D366),#1EBE5B); }
   .sid-dock__btn--wa:hover { box-shadow:0 14px 34px rgba(37,211,102,0.45); }
 
   /* Overlay: velo translúcido, no lightbox negra */
