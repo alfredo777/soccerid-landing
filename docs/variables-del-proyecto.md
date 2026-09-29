@@ -84,6 +84,62 @@ Para revisar el resultado: `node scripts/capturas.js http://localhost:3000`
 saca 11 capturas de landing y panel (escritorio y móvil, entrando con las
 cuentas demo) en `capturas/`, que está gitignored.
 
+## 1c. Contraste: la regla que evita los choques gráficos
+
+El 29 sep 2026 aparecieron en producción varios textos ilegibles a la vez:
+"EDICIONES" y los años del timeline, el `@usuario` de los testimonios, el
+`soccerid.co` del pie. **No eran incidencias sueltas: eran el mismo error.**
+
+> **La regla, en una línea: el azul de marca es un color de SUPERFICIE, nunca
+> de texto sobre fondo oscuro.**
+>
+> `#1B17EF` sobre el fondo de la landing da **1.45** de contraste. El mínimo de
+> WCAG AA es 4.5 (3.0 para texto grande: ≥24px, o ≥18.7px en negrita). Sobre el
+> fondo claro del panel sí se lee (8.69) y ahí se usa tal cual — por eso la
+> regla habla de *fondo oscuro*, no del color a secas.
+
+### La escala de texto sobre oscuro
+
+Cuatro valores en el `:root` de `assets/css/main.css`, calculados contra el
+**peor** de los fondos oscuros del sitio (`#0A0A1A` … `#313148`), así que
+cumplen en todos. **No inventes grises ni azules nuevos para texto.**
+
+| Token | Valor | Contraste | Para qué |
+|---|---|---|---|
+| `--texto-alto` | `#FFFFFF` | 12.6 | titulares y texto principal |
+| `--texto-medio` | `#C0C1CE` | 7.1 | cuerpo secundario |
+| `--texto-bajo` | `#999BB2` | 4.6 | metadatos, el mínimo |
+| `--brand-blue-on-dark` | `#9896F8` | 4.8 | acentos en azul de marca |
+
+**Blanco translúcido: nunca por debajo de `0.55` de alfa.** Por debajo de eso no
+llega al mínimo sobre estos fondos — `rgba(255,255,255,0.3)` da 2.6. Fue la
+causa de la mitad de los fallos.
+
+**Color de marca ajeno (WhatsApp, Instagram):** no se repinta, pero sí se elige
+la variante legible. El verde claro de WhatsApp con texto blanco da 1.98; se usa
+su verde oscuro oficial y el botón va a 1.2rem en negrita, que cuenta como texto
+grande. El degradado de Instagram se deja intacto.
+
+### La herramienta
+
+```bash
+node scripts/contraste.js http://localhost:3000     # o https://soccerid.co
+node scripts/contraste.js http://localhost:3000 --imagenes
+```
+
+Abre Chrome headless, recorre **cada nodo de texto visible** de las páginas
+principales, calcula el fondo efectivo (apilando capas translúcidas y midiendo
+los degradados parada a parada) y reporta lo que no llega al mínimo. Sale con
+código 1 si hay fallos, así que se puede enganchar antes de desplegar.
+
+También **abre los ocho paneles bento** uno a uno: viven ocultos hasta que se
+tocan, y ahí es justo donde aparecieron dos de los choques.
+
+Lo que **no** puede medir: texto sobre fotografía, porque no hay un color de
+fondo. Esos se listan aparte con `--imagenes` y hay que mirarlos a ojo; si uno
+queda dudoso, la solución es un velo oscuro detrás del texto, no aclarar la
+tipografía.
+
 ## 2. Contrato servidor → navegador
 
 `views/layouts/main.hbs:97` inyecta `window.__GKRAKEN_CONFIG__`, y

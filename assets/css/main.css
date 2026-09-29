@@ -100,12 +100,27 @@
     --brand-lime: #78F750;
     --brand-lime-rgb: 120, 247, 80;
 
-    /* El azul de marca es excelente como fondo, pero como TEXTO sobre los
-       fondos oscuros de la landing da 2.19 de contraste: por debajo del
-       mínimo de 3.0 de WCAG incluso para texto grande. Esta variante tiene el
-       mismo matiz, solo más clara, y da 5.37 sobre --bg-dark-1. Úsala para
-       texto, no para superficies. */
-    --brand-blue-on-dark: #7C79F6;
+    /* ----------------------------------------------------------------
+       ESCALA DE TEXTO SOBRE FONDO OSCURO.
+
+       La regla, en una línea: el azul de marca es un color de SUPERFICIE,
+       nunca de texto sobre oscuro. #1B17EF sobre el fondo de la landing da
+       1.45 de contraste; el mínimo de WCAG AA es 4.5 (3.0 para texto grande).
+       Sobre el fondo claro del panel sí se lee (8.69), y ahí se usa tal cual.
+
+       Estos cuatro valores están calculados contra el PEOR de los fondos
+       oscuros del sitio (#0A0A1A … #313148), así que cumplen en todos.
+       No inventes grises ni azules nuevos para texto: usa uno de estos.
+
+       Blanco translúcido: nunca por debajo de 0.55 de alfa. Por debajo de eso
+       no llega al mínimo sobre estos fondos.
+
+       Lo vigila `node scripts/contraste.js`.
+       ---------------------------------------------------------------- */
+    --texto-alto: #FFFFFF;          /* 12.6 — titulares y texto principal */
+    --texto-medio: #C0C1CE;         /*  7.1 — cuerpo secundario */
+    --texto-bajo: #999BB2;          /*  4.6 — metadatos, el mínimo */
+    --brand-blue-on-dark: #9896F8;  /*  4.8 — acento en azul de marca */
 
     /* Colores principales (alias semánticos de la marca) */
     --color-primary: var(--brand-blue);
@@ -1205,11 +1220,15 @@ body {
     align-items: center;
     gap: 12px;
     padding: 18px 36px;
-    background: linear-gradient(135deg, var(--color-whatsapp), var(--color-whatsapp-dark));
+    /* El verde claro de WhatsApp con texto blanco da 1.98 de contraste. Se
+       usa el verde OSCURO oficial de la marca, que sí se lee (4.14) y sigue
+       siendo reconocible. Con 1.2rem en negrita cuenta como texto grande,
+       cuyo mínimo es 3.0. */
+    background: linear-gradient(135deg, var(--color-whatsapp-dark), #0E7A6B);
     border: none;
     border-radius: var(--radius-full);
     color: white;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 700;
     cursor: pointer;
     transition: all var(--transition-normal);
@@ -1390,7 +1409,7 @@ body {
 }
 
 .mm-badge--video {
-    background: linear-gradient(135deg, #e53e3e, #c53030);
+    background: linear-gradient(135deg, #D92C2E, #c53030);
     color: #fff;
     box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
 }
@@ -1464,7 +1483,7 @@ body {
 }
 
 .mm-card--video .mm-source::before {
-    background: linear-gradient(135deg, #e53e3e, #ff6b6b);
+    background: linear-gradient(135deg, #D92C2E, #ff6b6b);
 }
 
 .mm-card--magazine .mm-source::before {
@@ -1790,7 +1809,7 @@ body {
 .event-vs {
     font-size: 24px;
     font-weight: 900;
-    color: #5956F3;
+    color: #9896F8;
     padding: 0 12px;
     letter-spacing: 2px;
     text-shadow: 0 0 20px rgba(89,86,243,0.4);
@@ -1893,7 +1912,11 @@ body {
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--color-whatsapp), var(--color-whatsapp-dark));
+    /* El verde claro de WhatsApp con texto blanco da 1.98 de contraste. Se
+       usa el verde OSCURO oficial de la marca, que sí se lee (4.14) y sigue
+       siendo reconocible. Con 1.2rem en negrita cuenta como texto grande,
+       cuyo mínimo es 3.0. */
+    background: linear-gradient(135deg, var(--color-whatsapp-dark), #0E7A6B);
     margin: 0 auto 20px;
     display: flex;
     align-items: center;
@@ -1927,11 +1950,15 @@ body {
     align-items: center;
     gap: 12px;
     padding: 16px 36px;
-    background: linear-gradient(135deg, var(--color-whatsapp), var(--color-whatsapp-dark));
+    /* El verde claro de WhatsApp con texto blanco da 1.98 de contraste. Se
+       usa el verde OSCURO oficial de la marca, que sí se lee (4.14) y sigue
+       siendo reconocible. Con 1.2rem en negrita cuenta como texto grande,
+       cuyo mínimo es 3.0. */
+    background: linear-gradient(135deg, var(--color-whatsapp-dark), #0E7A6B);
     border: none;
     border-radius: var(--radius-full);
     color: white;
-    font-size: 1.05rem;
+    font-size: 1.2rem;
     font-weight: 700;
     cursor: pointer;
     transition: all var(--transition-normal);
@@ -2088,7 +2115,7 @@ body {
 }
 
 .footer-website {
-    color: var(--color-primary);
+    color: var(--brand-blue-on-dark);
     text-decoration: none;
     font-weight: 600;
     transition: color var(--transition-normal);
@@ -2313,7 +2340,7 @@ body {
 }
 
 .testimonial-handle {
-    color: var(--color-primary);
+    color: var(--brand-blue-on-dark);
     font-size: 0.9rem;
     font-weight: 500;
     opacity: 0.9;
