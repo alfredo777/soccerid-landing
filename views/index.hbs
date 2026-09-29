@@ -4,20 +4,10 @@
     <div class="preloader" id="preloader">
         <div class="preloader-logo-container">
             <div class="preloader-spinner"></div>
+            {{!-- Aquí había un marcador genérico (círculo y cruz) de cuando no
+                  teníamos la marca en archivo. Ahora va el isotipo real. --}}
             <div class="preloader-logo">
-                <svg viewbox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="45" stroke="url(#logoGradient)" stroke-width="4" fill="none"></circle>
-                    <path d="M50 15 L50 85 M15 50 L85 50" stroke="url(#logoGradient)" stroke-width="3" stroke-linecap="round"></path>
-                    <circle cx="50" cy="50" r="20" stroke="url(#logoGradient)" stroke-width="3" fill="none"></circle>
-                    <circle cx="50" cy="50" r="8" fill="url(#logoGradient)"></circle>
-                    <defs>
-                        <lineargradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:var(--brand-blue)"></stop>
-                            <stop offset="50%" style="stop-color:var(--brand-blue-deep)"></stop>
-                            <stop offset="100%" style="stop-color:var(--brand-lime)"></stop>
-                        </lineargradient>
-                    </defs>
-                </svg>
+                <img src="{{img '/assets/images/logo-iso-blanco.png'}}" alt="SOCCER iD">
             </div>
         </div>
         <div class="preloader-text"> <img src="{{img '/assets/images/logo-horizontal-blanco.png'}}" width="300px"></div>
