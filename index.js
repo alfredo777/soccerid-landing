@@ -385,12 +385,33 @@ app.use('/blog', blogRoutes);
 // ============================================================
 // API ENDPOINTS
 // ============================================================
-// Los archivos de `contents/` no son públicos: ahí viven las propuestas de
-// inversión completas (que están detrás del candado de código) y el archivo
-// semilla de códigos de acceso. Servirlos abiertos dejaba descargar la
-// propuesta entera sin código. Solo el admin puede leerlos; a cualquier otro
-// se le responde 404 para no confirmar siquiera qué archivos existen.
-// El admin tiene además su propio visor en /admin/contents/preview/:name.
+// Los archivos de `contents/` no son públicos por defecto: ahí viven las
+// propuestas de inversión completas (que están detrás del candado de código) y
+// el archivo semilla de códigos de acceso. Servirlos abiertos dejaba descargar
+// la propuesta entera sin código.
+//
+// La excepción es esta lista: son los archivos que la landing pública necesita
+// para pintarse —los mismos que pide loadAllData() en assets/js/main.js—. Sin
+// ellos el sitio se queda sin traducciones y se ven las claves crudas
+// (hero.tagline, contact.title). Nada aquí es privado: es el contenido que ya
+// se muestra en pantalla.
+//
+// Cualquier otro archivo exige sesión de admin y responde 404 —no 403— para no
+// confirmar siquiera qué archivos existen. El admin tiene además su propio
+// visor en /admin/contents/preview/:name.
+const CONTENIDOS_PUBLICOS = new Set([
+  'bento_items_first',
+  'bento_items_second',
+  'upcoming_events',
+  'panel_templates',
+  'panel_classes',
+  'ui_translations'
+]);
+
+function normalizarNombreContenido(filename) {
+  return filename.endsWith('.json') ? filename.slice(0, -5) : filename;
+}
+
 async function soloAdmin(req, res, next) {
   try {
     const user = await require('./lib/panelAuth').getUserFromRequest(req);
@@ -400,13 +421,18 @@ async function soloAdmin(req, res, next) {
   return res.status(404).json({ error: 'No encontrado' });
 }
 
-app.get('/contents/:filename', soloAdmin, (req, res) => {
+// Deja pasar los archivos de la lista blanca; para el resto, exige admin.
+function contenidoPublicoOAdmin(req, res, next) {
+  if (CONTENIDOS_PUBLICOS.has(normalizarNombreContenido(req.params.filename))) {
+    return next();
+  }
+  return soloAdmin(req, res, next);
+}
+
+app.get('/contents/:filename', contenidoPublicoOAdmin, (req, res) => {
   res.set('Cache-Control', 'no-store');
 
-  let filename = req.params.filename;
-  if (filename.endsWith('.json')) {
-    filename = filename.slice(0, -5);
-  }
+  const filename = normalizarNombreContenido(req.params.filename);
 
   const jsonPath = path.join(__dirname, 'contents', filename + '.json');
 
