@@ -109,22 +109,46 @@ cumplen en todos. **No inventes grises ni azules nuevos para texto.**
 | `--texto-alto` | `#FFFFFF` | 12.6 | titulares y texto principal |
 | `--texto-medio` | `#C0C1CE` | 7.1 | cuerpo secundario |
 | `--texto-bajo` | `#999BB2` | 4.6 | metadatos, el mínimo |
-| `--brand-blue-on-dark` | `#9896F8` | 4.8 | acentos en azul de marca |
+| `--brand-blue-on-dark` | `#B4B3FA` | 9.8 | acentos en azul de marca |
 
-**Blanco translúcido: nunca por debajo de `0.55` de alfa.** Por debajo de eso no
-llega al mínimo sobre estos fondos — `rgba(255,255,255,0.3)` da 2.6. Fue la
-causa de la mitad de los fallos.
+**Blanco translúcido: nunca por debajo de `0.75` de alfa para texto chico.**
+`rgba(255,255,255,0.3)` da 2.6 y `0.6` se queda en 4.8 sobre los azules
+saturados. Fue la causa de la mayoría de los fallos, las dos veces.
 
 **Color de marca ajeno (WhatsApp, Instagram):** no se repinta, pero sí se elige
 la variante legible. El verde claro de WhatsApp con texto blanco da 1.98; se usa
 su verde oscuro oficial y el botón va a 1.2rem en negrita, que cuenta como texto
 grande. El degradado de Instagram se deja intacto.
 
+### El estándar de la casa: más contraste cuanto más chico el texto
+
+WCAG AA (4.5 / 3.0) es el **suelo legal, no un objetivo de diseño**. El 29 sep
+apareció un texto que pasaba el 4.5 y aun así se leía mal: la descripción de
+las tarjetas del panel de medios, 12.8px en blanco al 60% sobre un azul
+saturado. Medía 4.8 y era incómodo.
+
+Perseguir 7.0 en *todo* tampoco sirve: deja la interfaz lavada en grises
+pálidos y mata la jerarquía. El criterio que sí funciona es escalar la
+exigencia con el tamaño, porque es donde está la molestia real:
+
+| Tamaño | Mínimo |
+|---|---|
+| menos de 16px | **7.0** |
+| 16px o más | **4.5** |
+
+Con `--aa` se mide contra el mínimo legal en vez del estándar de la casa.
+
+Los tokens históricos `--text-secondary`, `--text-muted` y `--text-subtle`
+estaban en 0.8 / 0.6 / 0.5 de alfa y alimentaban decenas de reglas por debajo
+del mínimo. Subirlos a **0.88 / 0.78 / 0.72** arregló la mayoría de golpe: es
+más barato y más seguro que perseguir regla por regla.
+
 ### La herramienta
 
 ```bash
 node scripts/contraste.js http://localhost:3000     # o https://soccerid.co
 node scripts/contraste.js http://localhost:3000 --imagenes
+node scripts/contraste.js http://localhost:3000 --aa
 ```
 
 Abre Chrome headless, recorre **cada nodo de texto visible** de las páginas
@@ -134,6 +158,12 @@ código 1 si hay fallos, así que se puede enganchar antes de desplegar.
 
 También **abre los ocho paneles bento** uno a uno: viven ocultos hasta que se
 tocan, y ahí es justo donde aparecieron dos de los choques.
+
+**Espera a que el DOM se calme, no un tiempo fijo.** La primera versión esperaba
+900ms tras abrir cada panel; el de medios pinta sus tarjetas de forma asíncrona,
+así que se auditaba un panel vacío y el informe decía "sin fallos" mintiendo. Si
+alguna vez este script dice que todo está bien y tú ves un problema, **el script
+está mal**: hay que arreglarlo antes de arreglar el color.
 
 Lo que **no** puede medir: texto sobre fotografía, porque no hay un color de
 fondo. Esos se listan aparte con `--imagenes` y hay que mirarlos a ojo; si uno

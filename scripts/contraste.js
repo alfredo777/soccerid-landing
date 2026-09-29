@@ -29,6 +29,11 @@ const BASE = (process.argv[2] || 'http://localhost:3000').replace(/\/$/, '');
 // El texto sobre fotografía no tiene contraste calculable. Con --imagenes se
 // lista para revisarlo a ojo (o para ponerle un velo detrás).
 const LISTAR_IMAGENES = process.argv.includes('--imagenes');
+// WCAG AA (4.5 / 3.0) es el suelo LEGAL, no un objetivo de diseño. Texto gris
+// pequeño sobre azul saturado pasa el 4.5 y aun así se lee mal: pasó en el
+// panel de medios. El estándar de la casa es 7.0 para texto normal y 4.5 para
+// texto grande (equivale a AAA). Con --aa se mide contra el mínimo legal.
+const SOLO_AA = process.argv.includes('--aa');
 
 const PAGINAS = [
   '/es', '/en',
@@ -42,9 +47,29 @@ const PANELES = ['quienes', 'soccer', 'vip', 'seguros', 'copa', 'fan', 'media', 
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+/**
+ * Espera a que el DOM deje de cambiar, en vez de a un tiempo fijo.
+ * Los paneles que traen datos (el de medios pinta sus tarjetas con una
+ * petición) tardan más que cualquier constante que uno elija a ojo.
+ */
+async function esperarDomQuieto(ev, { maximo = 9000, quieto = 700 } = {}) {
+  const t0 = Date.now();
+  let anterior = -1, estableDesde = Date.now();
+  while (Date.now() - t0 < maximo) {
+    const tam = await ev('document.body.innerHTML.length');
+    if (tam === anterior) {
+      if (Date.now() - estableDesde >= quieto) return;
+    } else {
+      anterior = tam; estableDesde = Date.now();
+    }
+    await sleep(250);
+  }
+}
+
 // Se ejecuta dentro de la página. Recorre cada nodo de texto visible, busca el
 // primer ancestro con fondo opaco y calcula el contraste.
-const SONDA = `(() => {
+const SONDA = () => `(() => {
+  const SOLO_AA = ${SOLO_AA};
   const lum = (r, g, b) => {
     const f = c => { c /= 255; return c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4); };
     return 0.2126*f(r) + 0.7152*f(g) + 0.0722*f(b);
@@ -133,7 +158,12 @@ const SONDA = `(() => {
     const px = parseFloat(cs.fontSize);
     const negrita = parseInt(cs.fontWeight, 10) >= 700;
     const grande = px >= 24 || (px >= 18.66 && negrita);
-    const minimo = grande ? 3.0 : 4.5;
+    // Estándar de la casa: cuanto más pequeño el texto, más contraste se le
+    // exige. Perseguir 7.0 en TODO deja la interfaz lavada en grises pálidos;
+    // el problema real está en el texto chico, que es donde se perdía la
+    // descripción de las tarjetas (12.8px). Por debajo de 16px pedimos 7.0;
+    // de ahí para arriba basta con 4.5.
+    const minimo = SOLO_AA ? (grande ? 3.0 : 4.5) : (px < 16 ? 7.0 : 4.5);
 
     if (f.imagen) {
       const k = 'img|' + hex(col) + '|' + ruta(el);
@@ -214,10 +244,12 @@ const SONDA = `(() => {
 
   for (const ruta of PAGINAS) {
     await send('Page.navigate', { url: BASE + ruta });
-    await sleep(4200);
-    await ev('window.scrollTo(0, document.body.scrollHeight/3)'); await sleep(1200);
+    await sleep(2500);
+    await esperarDomQuieto(ev);
+    await ev('window.scrollTo(0, document.body.scrollHeight/3)');
+    await esperarDomQuieto(ev);
     let r;
-    try { r = JSON.parse(await ev(SONDA)); }
+    try { r = JSON.parse(await ev(SONDA())); }
     catch (e) { console.log(`  ${ruta}  — no se pudo sondear: ${e.message}`); continue; }
 
     totalFallos += r.fallos.length; totalImagen += r.sinFondo.length;
@@ -235,9 +267,12 @@ const SONDA = `(() => {
     if (ruta === '/es' && await ev('typeof openPanel === "function"')) {
       for (const panel of PANELES) {
         await ev(`openPanel(${JSON.stringify(panel)})`);
-        await sleep(900);
+        // Esperar a que el DOM se calme, no un tiempo fijo. El panel de medios
+        // pinta sus tarjetas de forma asíncrona: con 900ms fijos se auditaba un
+        // panel vacío y salía "sin fallos" mintiendo.
+        await esperarDomQuieto(ev);
         let rp;
-        try { rp = JSON.parse(await ev(SONDA)); } catch (_) { continue; }
+        try { rp = JSON.parse(await ev(SONDA())); } catch (_) { continue; }
         await ev('typeof closePanel === "function" && closePanel()');
         await sleep(400);
         if (!rp.fallos.length) continue;

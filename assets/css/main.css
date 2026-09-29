@@ -120,7 +120,7 @@
     --texto-alto: #FFFFFF;          /* 12.6 — titulares y texto principal */
     --texto-medio: #C0C1CE;         /*  7.1 — cuerpo secundario */
     --texto-bajo: #999BB2;          /*  4.6 — metadatos, el mínimo */
-    --brand-blue-on-dark: #9896F8;  /*  4.8 — acento en azul de marca */
+    --brand-blue-on-dark: #B4B3FA;  /*  9.8 — acento en azul de marca */
 
     /* Colores principales (alias semánticos de la marca) */
     --color-primary: var(--brand-blue);
@@ -137,9 +137,9 @@
     
     /* Texto */
     --text-primary: #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.8);
-    --text-muted: rgba(255, 255, 255, 0.6);
-    --text-subtle: rgba(255, 255, 255, 0.5);
+    --text-secondary: rgba(255, 255, 255, 0.88);
+    --text-muted: rgba(255, 255, 255, 0.78);
+    --text-subtle: rgba(255, 255, 255, 0.72);
     
     /* Bordes */
     --border-light: rgba(255, 255, 255, 0.1);
@@ -241,7 +241,7 @@ body {
     right: 8px;
     bottom: 8px;
     border: 3px solid transparent;
-    border-top-color: rgba(255, 255, 255, 0.55);
+    border-top-color: rgba(255, 255, 255, 0.75);
     border-left-color: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     animation: preloaderSpin 1.8s linear infinite reverse;
@@ -456,7 +456,7 @@ body {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.75);
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
@@ -624,7 +624,7 @@ body {
   .dot-nav__item {
     width: 34px;
     height: 34px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.75);
   }
 
   .dot-nav__icon {
@@ -1224,7 +1224,7 @@ body {
        usa el verde OSCURO oficial de la marca, que sí se lee (4.14) y sigue
        siendo reconocible. Con 1.2rem en negrita cuenta como texto grande,
        cuyo mínimo es 3.0. */
-    background: linear-gradient(135deg, var(--color-whatsapp-dark), #0E7A6B);
+    background: linear-gradient(135deg, #0E7A6B, #0B6659);
     border: none;
     border-radius: var(--radius-full);
     color: white;
@@ -1409,13 +1409,13 @@ body {
 }
 
 .mm-badge--video {
-    background: linear-gradient(135deg, #D92C2E, #c53030);
+    background: linear-gradient(135deg, #9E1214, #9E1214);
     color: #fff;
     box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
 }
 
 .mm-badge--magazine {
-    background: linear-gradient(135deg, #1B17EF, #5956F3);
+    background: linear-gradient(135deg, #1B17EF, #3A37E3);
     color: #fff;
     box-shadow: 0 4px 12px rgba(27, 23, 239, 0.4);
 }
@@ -1483,11 +1483,11 @@ body {
 }
 
 .mm-card--video .mm-source::before {
-    background: linear-gradient(135deg, #D92C2E, #ff6b6b);
+    background: linear-gradient(135deg, #9E1214, #ff6b6b);
 }
 
 .mm-card--magazine .mm-source::before {
-    background: linear-gradient(135deg, #1B17EF, #5956F3);
+    background: linear-gradient(135deg, #1B17EF, #3A37E3);
 }
 
 .mm-card h4 {
@@ -1762,7 +1762,7 @@ body {
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 10px;
     padding: 8px 12px;
-    color: rgba(255,255,255,0.65);
+    color: rgba(255,255,255,0.75);
     font-size: 12px;
     font-weight: 600;
 }
@@ -1824,7 +1824,7 @@ body {
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 10px;
     padding: 8px 12px;
-    color: rgba(255,255,255,0.65);
+    color: rgba(255,255,255,0.75);
     font-size: 12px;
 }
 .event-venue svg { opacity: 0.5; }
@@ -1832,7 +1832,7 @@ body {
 .event-cta {
     width: 100%;
     padding: 15px 18px;
-    background: linear-gradient(135deg, #1B17EF, #5956F3);
+    background: linear-gradient(135deg, #1B17EF, #3A37E3);
     border: none;
     border-radius: 14px;
     color: #fff;
@@ -1916,7 +1916,7 @@ body {
        usa el verde OSCURO oficial de la marca, que sí se lee (4.14) y sigue
        siendo reconocible. Con 1.2rem en negrita cuenta como texto grande,
        cuyo mínimo es 3.0. */
-    background: linear-gradient(135deg, var(--color-whatsapp-dark), #0E7A6B);
+    background: linear-gradient(135deg, #0E7A6B, #0B6659);
     margin: 0 auto 20px;
     display: flex;
     align-items: center;
@@ -1954,7 +1954,7 @@ body {
        usa el verde OSCURO oficial de la marca, que sí se lee (4.14) y sigue
        siendo reconocible. Con 1.2rem en negrita cuenta como texto grande,
        cuyo mínimo es 3.0. */
-    background: linear-gradient(135deg, var(--color-whatsapp-dark), #0E7A6B);
+    background: linear-gradient(135deg, #0E7A6B, #0B6659);
     border: none;
     border-radius: var(--radius-full);
     color: white;
@@ -3378,7 +3378,7 @@ body {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.75);
 }
 
 /* ----- Animaciones de transición de página ----- */
@@ -3888,8 +3888,8 @@ body {
     --bg-dark-3: #16213e;
     --bg-card: rgba(255, 255, 255, 0.05);
     --text-primary: #ffffff;
-    --text-secondary: rgba(255, 255, 255, 0.8);
-    --text-muted: rgba(255, 255, 255, 0.5);
+    --text-secondary: rgba(255, 255, 255, 0.88);
+    --text-muted: rgba(255, 255, 255, 0.78);
     --border-light: rgba(255, 255, 255, 0.08);
     --spacing-xs: 8px;
     --spacing-sm: 12px;

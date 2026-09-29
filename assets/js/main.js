@@ -1304,6 +1304,9 @@ function generatePanelContent(panelId) {
   if (['quienes', 'soccer', 'vip', 'fan'].includes(panelId)) {
     content += generateGalleryContent(panel);
   } else if (panelId === 'seguros') {
+    // El CTA va ANTES del iPhone dentro de .iphone-video-container: al final
+    // de la columna quedaba debajo del widget flotante de próximo partido y
+    // no se alcanzaba con el scroll en móvil.
     content += generateSegurosContent(panel);
   } else if (panelId === 'media') {
     content += generateMediaContent(panel);
@@ -1340,6 +1343,12 @@ function generateSegurosContent(panel) {
         <p>${panel.description}</p>
       </div>
       <div class="iphone-video-container">
+        <a href="https://segurosid.com" target="_blank" class="cta-conoce-mas">
+          ${learnMore}
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
         <div class="iphone-frame">
           <div class="iphone-notch"></div>
           <div class="iphone-screen">
@@ -1350,12 +1359,6 @@ function generateSegurosContent(panel) {
           </div>
           <div class="iphone-home-indicator"></div>
         </div>
-        <a href="https://segurosid.com" target="_blank" class="cta-conoce-mas">
-          ${learnMore}
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
-          </svg>
-        </a>
       </div>
     </div>
   `;
