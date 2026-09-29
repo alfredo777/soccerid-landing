@@ -210,8 +210,10 @@ body {
     width: 120px;
     height: 120px;
     border: 3px solid transparent;
-    border-top-color: var(--color-primary);
-    border-right-color: var(--color-secondary);
+    /* Los dos anillos van en blanco, en dos intensidades. El logo del centro
+       ya es blanco: las líneas lo acompañan en vez de competir con él. */
+    border-top-color: #FFFFFF;
+    border-right-color: rgba(255, 255, 255, 0.35);
     border-radius: 50%;
     animation: preloaderSpin 1.2s linear infinite;
 }
@@ -224,8 +226,8 @@ body {
     right: 8px;
     bottom: 8px;
     border: 3px solid transparent;
-    border-top-color: var(--color-accent);
-    border-left-color: var(--color-primary);
+    border-top-color: rgba(255, 255, 255, 0.55);
+    border-left-color: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     animation: preloaderSpin 1.8s linear infinite reverse;
 }
@@ -254,7 +256,7 @@ body {
     margin-top: 30px;
     font-size: 1.8rem;
     font-weight: 900;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -332,7 +334,7 @@ body {
 .hero-logo-text {
     font-size: clamp(2.5rem, 6vw, 4.5rem);
     font-weight: 900;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -687,7 +689,7 @@ body {
 .section-header h2 {
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 800;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -931,7 +933,7 @@ body {
     font-size: clamp(1.4rem, 2.5vw, 1.8rem);
     font-weight: 800;
     margin-bottom: 16px;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1049,7 +1051,7 @@ body {
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 800;
     margin-bottom: 16px;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1183,7 +1185,7 @@ body {
     font-size: clamp(1.8rem, 3.5vw, 2.5rem);
     font-weight: 800;
     margin-bottom: 24px;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1839,6 +1841,9 @@ body {
 .view-all-events {
     display: flex;
     justify-content: center;
+    /* La barra de progreso del carrusel (.mc-progress) termina sin margen
+       inferior, así que el botón quedaba pegado a la línea. */
+    margin-top: 28px;
 }
 
 .view-all-btn {
@@ -1976,7 +1981,7 @@ body {
 .footer-logo {
     font-size: 2rem;
     font-weight: 900;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -3922,7 +3927,7 @@ body {
     font-size: 34px;
     font-weight: 800;
     letter-spacing: 2px;
-    background: linear-gradient(to right, var(--brand-blue-on-dark), var(--brand-lime));
+    background: linear-gradient(to right, var(--brand-blue-on-dark), #FFFFFF);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
