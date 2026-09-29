@@ -99,18 +99,26 @@ def main():
     guardar(ancho_fijo(cargar('horiz_azul'), 1200), 'logo-horizontal-azul.png')
     guardar(ancho_fijo(cargar('horiz_blanco'), 1200), 'logo-horizontal-blanco.png')
 
-    # Favicons: azul, que la pestaña del navegador suele ser clara.
-    for lado in (16, 32):
-        guardar(cuadrado(iso_azul, lado, margen=0.02), f'favicon-{lado}x{lado}.png')
+    # Favicons: el isotipo AZUL con su contorno negro se convierte en una
+    # mancha ilegible a 16px, porque el detalle no sobrevive a ese tamaño. Se
+    # usa la misma fórmula que el icono de iOS —marca blanca sobre el azul de
+    # marca, opaco— que a 16px sigue leyéndose como un balón con la "iD".
+    # El margen baja con el tamaño: a 16px cada píxel cuenta y el aro del balón
+    # ya se come varios, así que va casi a sangre. A 32px sí cabe aire.
+    for lado, margen in ((16, 0.02), (32, 0.08)):
+        guardar(cuadrado(iso_blanco, lado, margen=margen, fondo=AZUL_MARCA),
+                f'favicon-{lado}x{lado}.png')
 
     # iOS ignora la transparencia y rellena de negro: fondo azul de marca y
     # el isotipo en blanco encima.
     guardar(cuadrado(iso_blanco, 180, margen=0.14, fondo=AZUL_MARCA), 'apple-touch-icon.png')
 
-    # Imagen para compartir en redes (Open Graph pide 1200x630).
+    # Imagen para compartir (Open Graph pide 1200x630). Lleva el LOCKUP, no
+    # solo el isotipo: en una miniatura de WhatsApp o Twitter, un balón suelto
+    # no dice de quién es el enlace. Con el nombre sí.
     og = Image.new('RGBA', (1200, 630), AZUL_MARCA)
-    marca = recortar(iso_blanco)
-    marca.thumbnail((380, 380), Image.LANCZOS)
+    marca = recortar(cargar('horiz_blanco'))
+    marca.thumbnail((860, 420), Image.LANCZOS)
     og.paste(marca, ((1200 - marca.width) // 2, (630 - marca.height) // 2), marca)
     guardar(og.convert('RGB').convert('RGBA'), 'og-image.png')
 
