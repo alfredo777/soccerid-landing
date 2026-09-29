@@ -84,6 +84,28 @@ Para revisar el resultado: `node scripts/capturas.js http://localhost:3000`
 saca 11 capturas de landing y panel (escritorio y móvil, entrando con las
 cuentas demo) en `capturas/`, que está gitignored.
 
+## 1b-bis. El fondo del sitio
+
+Un solo degradado para todas las páginas oscuras:
+
+```css
+linear-gradient(135deg, #0F0F1A 0%, #1A1A2E 50%, #16213E 100%)
+```
+
+En `assets/css/main.css` son `--bg-dark-1/2/3`; la familia de páginas de la
+copa (`socceridcup`, la ficha de edición, la galería y el layout `promo.hbs`)
+lo repite a mano porque no carga esa hoja.
+
+Hasta el 29 sep 2026 esa familia usaba una paleta propia —`#0A0A1A` de base y
+`#0E0E28` para las secciones alternas, y el degradado terminaba donde
+empezaba—, así que era más negra y más plana que la landing y **se notaba el
+salto al navegar entre ellas**. Ahora usan los mismos tres tonos.
+
+**Si cambias el fondo, cambia los dos sitios** y vuelve a pasar
+`scripts/contraste.js`: aclarar el fondo baja el contraste del texto claro. Al
+unificarlo, las etiquetas en `#9896F8` cayeron de 6.83 a 6.54 y hubo que
+subirlas al acento claro `#B4B3FA`, que es el mismo del año en los hero.
+
 ## 1c. Contraste: la regla que evita los choques gráficos
 
 El 29 sep 2026 aparecieron en producción varios textos ilegibles a la vez:
