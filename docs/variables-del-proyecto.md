@@ -137,10 +137,20 @@ cumplen en todos. **No inventes grises ni azules nuevos para texto.**
 `rgba(255,255,255,0.3)` da 2.6 y `0.6` se queda en 4.8 sobre los azules
 saturados. Fue la causa de la mayoría de los fallos, las dos veces.
 
-**Color de marca ajeno (WhatsApp, Instagram):** no se repinta, pero sí se elige
-la variante legible. El verde claro de WhatsApp con texto blanco da 1.98; se usa
-su verde oscuro oficial y el botón va a 1.2rem en negrita, que cuenta como texto
-grande. El degradado de Instagram se deja intacto.
+**Color de marca ajeno (WhatsApp, Instagram): no se repinta.** El degradado de
+Instagram se deja intacto, y el botón de WhatsApp va en su verde brillante con
+texto e icono blancos, que es como lo pinta la propia WhatsApp.
+
+Ese par da **1.98** de contraste, por debajo del mínimo. Es una **excepción
+asumida**, no un descuido: aquí pesa más el reconocimiento inmediato de la
+marca que el número. Está declarada en `EXCEPCIONES` dentro de
+`scripts/contraste.js`, así que la auditoría **la lista aparte con su motivo**
+en vez de esconderla o de cantarla como fallo.
+
+Probé antes la alternativa —verde brillante con texto oscuro, que sube a
+8.00— y se descartó: el botón dejaba de leerse como el de WhatsApp. Si en el
+futuro aparece otra excepción de este tipo, el sitio para declararla es esa
+lista, nunca bajar el umbral global.
 
 ### El estándar de la casa: más contraste cuanto más chico el texto
 

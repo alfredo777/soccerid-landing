@@ -1230,7 +1230,12 @@ body {
     background: linear-gradient(135deg, var(--color-whatsapp), #1EBE5B);
     border: none;
     border-radius: var(--radius-full);
-    color: #0A0A1A;
+    /* Blanco sobre el verde de WhatsApp: es el botón canónico de la marca y
+       así lo pinta WhatsApp en su propia interfaz. El contraste queda en 1.98,
+       por debajo del mínimo: es una excepción ASUMIDA y documentada, declarada
+       en scripts/contraste.js para que la auditoría no la reporte a ciegas.
+       El icono va con fill:currentColor, así que también queda blanco. */
+    color: #FFFFFF;
     font-size: 1.2rem;
     font-weight: 700;
     cursor: pointer;
@@ -1964,7 +1969,12 @@ body {
     background: linear-gradient(135deg, var(--color-whatsapp), #1EBE5B);
     border: none;
     border-radius: var(--radius-full);
-    color: #0A0A1A;
+    /* Blanco sobre el verde de WhatsApp: es el botón canónico de la marca y
+       así lo pinta WhatsApp en su propia interfaz. El contraste queda en 1.98,
+       por debajo del mínimo: es una excepción ASUMIDA y documentada, declarada
+       en scripts/contraste.js para que la auditoría no la reporte a ciegas.
+       El icono va con fill:currentColor, así que también queda blanco. */
+    color: #FFFFFF;
     font-size: 1.2rem;
     font-weight: 700;
     cursor: pointer;

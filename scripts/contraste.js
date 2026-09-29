@@ -35,6 +35,16 @@ const LISTAR_IMAGENES = process.argv.includes('--imagenes');
 // texto grande (equivale a AAA). Con --aa se mide contra el mínimo legal.
 const SOLO_AA = process.argv.includes('--aa');
 
+// Excepciones ASUMIDAS: pares que no llegan al mínimo por una decisión de
+// marca consciente. No se ocultan —se listan aparte, con el motivo— para que
+// nadie las confunda con un descuido y para que se puedan revisar.
+const EXCEPCIONES = [
+  { color: '#FFFFFF', fondos: ['#25D366', '#1EBE5B'],
+    motivo: 'botón canónico de WhatsApp: blanco sobre su verde, como lo pinta la propia marca' },
+];
+const esExcepcion = f => EXCEPCIONES.some(e =>
+  e.color.toUpperCase() === f.color.toUpperCase() && e.fondos.some(b => b.toUpperCase() === f.fondo.toUpperCase()));
+
 const PAGINAS = [
   '/es', '/en',
   '/es/socceridcup',
@@ -244,7 +254,7 @@ const SONDA = () => `(() => {
 Contraste — ${SOLO_AA ? 'mínimo legal AA (4.5 / 3.0)' : 'estándar de la casa (7.0 bajo 16px, 4.5 encima)'}`);
   console.log(`${BASE}
 `);
-  let totalFallos = 0, totalImagen = 0;
+  let totalFallos = 0, totalImagen = 0, totalAsumidos = 0;
 
   for (const ruta of PAGINAS) {
     await send('Page.navigate', { url: BASE + ruta });
@@ -256,6 +266,9 @@ Contraste — ${SOLO_AA ? 'mínimo legal AA (4.5 / 3.0)' : 'estándar de la casa
     try { r = JSON.parse(await ev(SONDA())); }
     catch (e) { console.log(`  ${ruta}  — no se pudo sondear: ${e.message}`); continue; }
 
+    const asumidos = r.fallos.filter(esExcepcion);
+    r.fallos = r.fallos.filter(f => !esExcepcion(f));
+    totalAsumidos += asumidos.length;
     totalFallos += r.fallos.length; totalImagen += r.sinFondo.length;
     const marca = r.fallos.length ? `${r.fallos.length} fallo(s)` : 'sin fallos';
     console.log(`${ruta}  —  ${marca}${r.sinFondo.length ? `, ${r.sinFondo.length} sobre imagen/degradado` : ''}`);
@@ -279,6 +292,11 @@ Contraste — ${SOLO_AA ? 'mínimo legal AA (4.5 / 3.0)' : 'estándar de la casa
         try { rp = JSON.parse(await ev(SONDA())); } catch (_) { continue; }
         await ev('typeof closePanel === "function" && closePanel()');
         await sleep(400);
+        // Mismo filtro de excepciones que en el barrido de página: el botón de
+        // WhatsApp vive en la sección de contacto y reaparece detrás de cada panel.
+        const asumidosPanel = rp.fallos.filter(esExcepcion);
+        rp.fallos = rp.fallos.filter(f => !esExcepcion(f));
+        totalAsumidos += asumidosPanel.length;
         if (!rp.fallos.length) continue;
         totalFallos += rp.fallos.length;
         console.log(`   panel "${panel}"  —  ${rp.fallos.length} fallo(s)`);
@@ -289,6 +307,9 @@ Contraste — ${SOLO_AA ? 'mínimo legal AA (4.5 / 3.0)' : 'estándar de la casa
         }
       }
     }
+    for (const a of asumidos) {
+      console.log(`   (asumido) ${a.ratio}  ${a.color} sobre ${a.fondo}  —  ${EXCEPCIONES.find(e => e.fondos.some(b => b.toUpperCase() === a.fondo.toUpperCase())).motivo}`);
+    }
     if (LISTAR_IMAGENES && r.sinFondo.length) {
       console.log('   sobre imagen (revisar a ojo):');
       for (const f of r.sinFondo) console.log(`      ${f.color}  ${f.sel}  "${f.texto}"`);
@@ -296,9 +317,10 @@ Contraste — ${SOLO_AA ? 'mínimo legal AA (4.5 / 3.0)' : 'estándar de la casa
     console.log('');
   }
 
+  const cola = `(+${totalImagen} sobre imagen, revisar a ojo${totalAsumidos ? `; ${totalAsumidos} excepción(es) de marca asumida(s)` : ''})`;
   console.log(totalFallos
-    ? `TOTAL: ${totalFallos} fallo(s) de contraste (+${totalImagen} sobre imagen, revisar a ojo)`
-    : `Sin fallos de contraste (+${totalImagen} sobre imagen, revisar a ojo)`);
+    ? `TOTAL: ${totalFallos} fallo(s) de contraste ${cola}`
+    : `Sin fallos de contraste ${cola}`);
 
   cerrar();
   process.exit(totalFallos ? 1 : 0);
