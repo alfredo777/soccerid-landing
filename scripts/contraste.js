@@ -38,6 +38,7 @@ const SOLO_AA = process.argv.includes('--aa');
 const PAGINAS = [
   '/es', '/en',
   '/es/socceridcup',
+  '/es/socceridcup/2024',          // ficha de edición: faltaba y tenía fallos
   '/es/galeria/soccer-id-cup-2027',
   '/panel/login',
 ];

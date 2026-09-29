@@ -321,7 +321,8 @@
   .gp-hero__logo { margin-bottom: 20px; opacity: 0.9; }
   .gp-hero__title { display: flex; align-items: baseline; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; justify-content: center; }
   .gp-hero__title-main { font-size: 42px; font-weight: 900; letter-spacing: 2px; line-height: 1; text-shadow: 0 4px 40px rgba(0,0,0,0.6); }
-  .gp-hero__title-year { font-size: 42px; font-weight: 900; letter-spacing: 2px; line-height: 1; background: linear-gradient(135deg, #3A37E3, #1B17EF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-shadow: none; }
+    /* El año iba en degradado azul saturado con background-clip:text, encima de una fotografía: el extremo oscuro se perdía contra la imagen y el azul vibraba junto al blanco del título. Va en el acento claro, plano y con la misma sombra que el resto del título. */
+  .gp-hero__title-year { font-size: 42px; font-weight: 900; letter-spacing: 2px; line-height: 1; color: #B4B3FA; text-shadow: 0 4px 40px rgba(0,0,0,0.6); }
   .gp-hero__sub { font-size: 17px; color: rgba(255,255,255,0.7); font-weight: 600; margin-bottom: 20px; }
 
   .gp-hero__pills { display: flex; gap: 10px; margin-bottom: 28px; }
