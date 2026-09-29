@@ -89,7 +89,7 @@ cuentas demo) en `capturas/`, que está gitignored.
 Un solo degradado para todas las páginas oscuras:
 
 ```css
-linear-gradient(135deg, #141822 0%, #1B2130 50%, #222B3B 100%)
+linear-gradient(135deg, #16181B 0%, #1F2226 50%, #2A2E33 100%)
 ```
 
 En `assets/css/main.css` son `--bg-dark-1/2/3`; la familia de páginas de la
@@ -102,7 +102,12 @@ empezaba—, así que era más negra y más plana que la landing y se notaba el
 salto al navegar entre ellas. Se unificaron.
 
 Ese mismo día el fondo pasó del azul casi negro (`#0F0F1A · #1A1A2E · #16213E`)
-al **acero azulado** de ahora, porque la página se veía plana y sin cuerpo.
+al acero azulado y de ahí al **gris frío** de ahora, porque la página se veía
+plana y sin cuerpo.
+
+**El gris neutro hace que el azul de marca mande.** Con fondo azul, el botón
+azul competía contra un fondo de su misma familia; sobre gris es el único color
+de la página. Si la identidad es el azul, el fondo no debería serlo.
 **Ojo: la mitad del problema no era el color, eran las tarjetas.** Estaban a
 `rgba(255,255,255,0.04)` y no se despegaban del fondo; subirlas a `0.075` hizo
 tanto o más que cambiar el tono. Si algo vuelve a verse plano, mira las

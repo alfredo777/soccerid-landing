@@ -130,9 +130,9 @@
     --color-whatsapp-dark: #128C7E;
     
     /* Fondos */
-    --bg-dark-1: #141822;
-    --bg-dark-2: #1B2130;
-    --bg-dark-3: #222B3B;
+    --bg-dark-1: #16181B;
+    --bg-dark-2: #1F2226;
+    --bg-dark-3: #2A2E33;
     /* A 0.05 las tarjetas no se despegaban del fondo y la página se veía
        plana. La sensación de "fondo pobre" era tanto esto como el color. */
     --bg-card: rgba(255, 255, 255, 0.075);
@@ -766,7 +766,7 @@ body {
     cursor: pointer;
     transform: translateZ(0);
     will-change: transform;
-    background: linear-gradient(135deg, #1E232F 0%, #2A3140 100%);
+    background: linear-gradient(135deg, #21242A 0%, #2E3238 100%);
     border: 1px solid var(--border-light);
     min-height: 180px;
 }
@@ -1077,12 +1077,12 @@ body {
     position: relative;
     width: 300px;
     height: 620px;
-    background: linear-gradient(135deg, #1B2130 0%, #0a0a15 100%);
+    background: linear-gradient(135deg, #1F2226 0%, #0a0a15 100%);
     border-radius: 50px;
     padding: 12px;
     box-shadow: 
         0 50px 100px rgba(0, 0, 0, 0.5), 
-        0 0 0 3px #2A3140, 
+        0 0 0 3px #2E3238, 
         inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
@@ -1106,7 +1106,7 @@ body {
     transform: translateX(-50%);
     width: 8px;
     height: 8px;
-    background: #1B2130;
+    background: #1F2226;
     border-radius: 50%;
 }
 
@@ -3900,9 +3900,9 @@ body {
     --color-primary: var(--brand-blue);
     --color-secondary: var(--brand-blue-deep);
     --color-accent: var(--brand-lime);
-    --bg-dark-1: #141822;
-    --bg-dark-2: #1B2130;
-    --bg-dark-3: #222B3B;
+    --bg-dark-1: #16181B;
+    --bg-dark-2: #1F2226;
+    --bg-dark-3: #2A2E33;
     --bg-card: rgba(255, 255, 255, 0.05);
     --text-primary: #ffffff;
     --text-secondary: rgba(255, 255, 255, 0.88);
