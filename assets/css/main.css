@@ -2256,18 +2256,36 @@ body {
 
 .testimonials-container {
     position: relative;
-    overflow: hidden;
+    /* El scroller es .testimonials-track, no este contenedor: los botones de
+       navegación son hermanos suyos y con overflow aquí se irían con el
+       desplazamiento. */
     padding: 0 20px;
 }
+
+/* El visor es quien scrollea; la fila de dentro solo maqueta. Es el mismo
+   reparto que .mc-track-wrapper > .mc-track, que ya se arrastra bien con el
+   dedo en este sitio. Cuando el contenedor flex hacía las dos cosas a la vez,
+   el ratón lo desplazaba pero el toque no. */
+.testimonials-viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+}
+.testimonials-viewport::-webkit-scrollbar { display: none; }
 
 .testimonials-track {
     display: flex;
     gap: var(--spacing-lg);
-    transition: transform var(--transition-slow);
     padding: 10px 0;
+    width: max-content;
 }
 
 .testimonial-card {
+    scroll-snap-align: center;
     flex: 0 0 420px;
     background: var(--bg-card);
     border: 1px solid var(--border-light);

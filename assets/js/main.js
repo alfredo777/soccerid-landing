@@ -1485,7 +1485,8 @@ function generateOpinionesContent(panel) {
   
   html += `
     <div class="testimonials-container">
-      <div class="testimonials-track" id="testimonialsTrack">
+      <div class="testimonials-viewport" id="testimonialsViewport">
+      <div class="testimonials-track">
         ${testimonials.map(t => `
           <div class="testimonial-card">
             <div class="testimonial-header">
@@ -1504,6 +1505,7 @@ function generateOpinionesContent(panel) {
             <p class="testimonial-text">"${t.text}"</p>
           </div>
         `).join('')}
+      </div>
       </div>
       <div class="slider-controls">
         <button class="slider-btn" onclick="slideTestimonials(-1)">
@@ -1598,18 +1600,17 @@ function closePanel() {
 }
 
 function slideTestimonials(direction) {
-  const track = document.getElementById('testimonialsTrack');
+  const track = document.getElementById('testimonialsViewport');
   if (!track) return;
-  
-  const cards = track.querySelectorAll('.testimonial-card');
-  if (cards.length === 0) return;
-  
-  const cardWidth = cards[0].offsetWidth + 24;
-  const maxSlide = Math.max(0, cards.length - Math.floor(track.parentElement.offsetWidth / cardWidth));
-  
-  currentSlide = Math.max(0, Math.min(currentSlide + direction, maxSlide));
-  
-  track.style.transform = `translateX(-${currentSlide * cardWidth}px)`;
+
+  const card = track.querySelector('.testimonial-card');
+  if (!card) return;
+
+  // El track ahora se desplaza con scroll nativo (se arrastra con el dedo),
+  // así que los botones mueven el scroll en vez de aplicar un transform. Si
+  // se siguiera moviendo por transform, arrastrar y pulsar se pelearían.
+  const paso = card.offsetWidth + 24;
+  track.scrollBy({ left: direction * paso, behavior: 'smooth' });
 }
 
 // ==========================================================================
