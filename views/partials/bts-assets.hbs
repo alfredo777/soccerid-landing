@@ -26,7 +26,7 @@
   /* Tarjeta de video (póster + play que abre Facebook) */
   .bts-video { text-decoration:none; color:inherit; }
   .bts-poster { background-size:cover; background-position:center; display:flex; align-items:center; justify-content:center; }
-  .bts-poster::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,10,26,0.15), rgba(10,10,26,0.6)); }
+  .bts-poster::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(22,24,27,0.15), rgba(22,24,27,0.6)); }
   .bts-play { position:relative; z-index:1; width:66px; height:66px; border-radius:50%; background:rgba(27,23,239,0.92); display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(0,0,0,0.5); transition:transform .2s; }
   .bts-video:hover .bts-play { transform:scale(1.08); }
   .bts-play svg { width:26px; height:26px; margin-left:3px; color:#fff; }
@@ -34,7 +34,7 @@
   /* Video individual grande (formato horizontal, alineado como las demás secciones) */
   .bts-solovideo { display:block; width:100%; max-width:100%; margin-top:22px; border-radius:16px; overflow:hidden; border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.03); text-decoration:none; color:inherit; }
   .bts-solo-poster { position:relative; width:100%; aspect-ratio:16/9; background-color:#000; background-size:cover; background-position:center; background-repeat:no-repeat; display:flex; align-items:center; justify-content:center; }
-  .bts-solo-poster::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,10,26,0.15), rgba(10,10,26,0.55)); }
+  .bts-solo-poster::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(22,24,27,0.15), rgba(22,24,27,0.55)); }
   .bts-solovideo:hover .bts-play { transform:scale(1.08); }
   @media (max-width:700px) {
     .bts-section { padding: 36px 18px; }

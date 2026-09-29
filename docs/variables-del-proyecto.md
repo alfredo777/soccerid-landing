@@ -113,8 +113,15 @@ de la página. Si la identidad es el azul, el fondo no debería serlo.
 tanto o más que cambiar el tono. Si algo vuelve a verse plano, mira las
 superficies antes que el fondo.
 
-**Si cambias el fondo, cambia los dos sitios** y vuelve a pasar
-`scripts/contraste.js`: aclarar el fondo baja el contraste del texto claro. Al
+**Los velos sobre fotografía son el tercer sitio.** Hay 28 capas de
+`rgba(...)` —el degradado que oscurece el hero, los scrims de las galerías,
+sombras— escritas con el color del fondo **de su momento**. No son variables,
+así que no siguen al token: tras dos cambios de fondo seguían tiñendo las fotos
+del azul viejo. Búscalas por su forma decimal, no por hex:
+`rgba(15, 15, 26, …)` era `#0F0F1A`. Hoy todas van en `rgba(22, 24, 27, …)`.
+
+**Si cambias el fondo, cambia los tres sitios** —tokens, familia cup y velos—
+y vuelve a pasar `scripts/contraste.js`: aclarar el fondo baja el contraste del texto claro. Al
 unificarlo, las etiquetas en `#9896F8` cayeron de 6.83 a 6.54 y hubo que
 subirlas al acento claro `#B4B3FA`, que es el mismo del año en los hero.
 
