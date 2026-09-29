@@ -1340,7 +1340,7 @@ body {
 }
 
 .mm-card--magazine:hover {
-    border-color: rgba(89, 86, 243, 0.4);
+    border-color: rgba(27, 23, 239, 0.4);
     box-shadow: 0 20px 48px rgba(27, 23, 239, 0.15), 0 0 0 1px rgba(27, 23, 239, 0.2);
 }
 
@@ -1805,7 +1805,7 @@ body {
     color: #B1C5FB;
     padding: 0 12px;
     letter-spacing: 2px;
-    text-shadow: 0 0 20px rgba(89,86,243,0.4);
+    text-shadow: 0 0 20px rgba(27,23,239,0.4);
 }
 
 .event-venue {
