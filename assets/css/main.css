@@ -1224,10 +1224,13 @@ body {
        usa el verde OSCURO oficial de la marca, que sí se lee (4.14) y sigue
        siendo reconocible. Con 1.2rem en negrita cuenta como texto grande,
        cuyo mínimo es 3.0. */
-    background: linear-gradient(135deg, #0E7A6B, #0B6659);
+    /* Texto OSCURO sobre el verde brillante: el blanco encima da 1.98 de
+       contraste y el oscuro da 8.00. Se conserva el verde de marca, que es
+       lo que lo hace reconocible, en vez de apagarlo. */
+    background: linear-gradient(135deg, var(--color-whatsapp), #1EBE5B);
     border: none;
     border-radius: var(--radius-full);
-    color: white;
+    color: #0A0A1A;
     font-size: 1.2rem;
     font-weight: 700;
     cursor: pointer;
@@ -1243,7 +1246,8 @@ body {
 .whatsapp-contact-btn svg {
     width: 24px;
     height: 24px;
-    fill: white;
+    /* Acompaña al texto: sobre el verde brillante el icono va oscuro. */
+    fill: currentColor;
 }
 
 /* Banner de la Copa */
@@ -1916,7 +1920,7 @@ body {
        usa el verde OSCURO oficial de la marca, que sí se lee (4.14) y sigue
        siendo reconocible. Con 1.2rem en negrita cuenta como texto grande,
        cuyo mínimo es 3.0. */
-    background: linear-gradient(135deg, #0E7A6B, #0B6659);
+    background: linear-gradient(135deg, var(--color-whatsapp), #1EBE5B);
     margin: 0 auto 20px;
     display: flex;
     align-items: center;
@@ -1954,10 +1958,13 @@ body {
        usa el verde OSCURO oficial de la marca, que sí se lee (4.14) y sigue
        siendo reconocible. Con 1.2rem en negrita cuenta como texto grande,
        cuyo mínimo es 3.0. */
-    background: linear-gradient(135deg, #0E7A6B, #0B6659);
+    /* Texto OSCURO sobre el verde brillante: el blanco encima da 1.98 de
+       contraste y el oscuro da 8.00. Se conserva el verde de marca, que es
+       lo que lo hace reconocible, en vez de apagarlo. */
+    background: linear-gradient(135deg, var(--color-whatsapp), #1EBE5B);
     border: none;
     border-radius: var(--radius-full);
-    color: white;
+    color: #0A0A1A;
     font-size: 1.2rem;
     font-weight: 700;
     cursor: pointer;
@@ -1974,7 +1981,8 @@ body {
 .whatsapp-btn svg {
     width: 24px;
     height: 24px;
-    fill: white;
+    /* Acompaña al texto: sobre el verde brillante el icono va oscuro. */
+    fill: currentColor;
 }
 
 /* ==========================================================================
