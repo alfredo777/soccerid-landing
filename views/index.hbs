@@ -56,7 +56,14 @@
 
     <section class="hero-section" id="hero">
         <div class="hero-video-container">
-           <img src="{{img '/assets/images/opi.png'}}" alt="Estadio de fútbol" class="hero-image" style="display: block;">
+           {{!-- WebP para quien lo soporte (216 KB) y JPEG de respaldo (301 KB).
+                 El PNG original pesaba 2.5 MB: PNG es el formato correcto para
+                 logos y el equivocado para fotografía. El máster se conserva en
+                 opi2.png; se regenera con scripts/optimizar-imagen.py --}}
+           <picture>
+             <source srcset="{{img '/assets/images/opi2-web.webp'}}" type="image/webp">
+             <img src="{{img '/assets/images/opi2-web.jpg'}}" alt="Estadio de fútbol" class="hero-image" style="display: block;">
+           </picture>
 
         </div>
         <div class="hero-content">

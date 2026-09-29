@@ -81,6 +81,40 @@ def guardar(im, nombre):
     print(f'  OK {nombre:26} {im.width}x{im.height}  {os.path.getsize(ruta)/1024:6.1f} KB')
 
 
+FOTO_OG = 'opi2-web.jpg'   # la misma del hero
+
+
+def og_compartir():
+    """La imagen que se ve al compartir el enlace (Open Graph pide 1200x630).
+
+    Va la foto del hero con el lockup encima, no un fondo plano: en el feed de
+    WhatsApp o Twitter una fotografía para el scroll y un color liso no. El
+    velo oscuro existe para que la marca se lea sobre cualquier zona de la
+    foto; sin él, el blanco se pierde contra el cielo claro.
+    """
+    lienzo = Image.new('RGB', (1200, 630), (27, 23, 239))
+    foto = os.path.join(DESTINO, FOTO_OG)
+
+    if os.path.exists(foto):
+        fondo = Image.open(foto).convert('RGB')
+        # Recorte central manteniendo proporción: la foto es 3:2 y el OG 1.9:1.
+        escala = max(1200 / fondo.width, 630 / fondo.height)
+        fondo = fondo.resize((round(fondo.width * escala), round(fondo.height * escala)), Image.LANCZOS)
+        lienzo = fondo.crop((
+            (fondo.width - 1200) // 2, (fondo.height - 630) // 2,
+            (fondo.width - 1200) // 2 + 1200, (fondo.height - 630) // 2 + 630))
+        velo = Image.new('RGBA', (1200, 630), (10, 12, 16, 128))
+        lienzo = Image.alpha_composite(lienzo.convert('RGBA'), velo).convert('RGB')
+    else:
+        print(f'  ! no encuentro {FOTO_OG}: el OG queda sobre el azul de marca')
+
+    marca = recortar(cargar('horiz_blanco'))
+    marca.thumbnail((820, 400), Image.LANCZOS)
+    lienzo = lienzo.convert('RGBA')
+    lienzo.paste(marca, ((1200 - marca.width) // 2, (630 - marca.height) // 2), marca)
+    return lienzo
+
+
 def main():
     print(f'\nGenerando recursos de logo en assets/images/\n')
 
@@ -113,14 +147,12 @@ def main():
     # el isotipo en blanco encima.
     guardar(cuadrado(iso_blanco, 180, margen=0.14, fondo=AZUL_MARCA), 'apple-touch-icon.png')
 
-    # Imagen para compartir (Open Graph pide 1200x630). Lleva el LOCKUP, no
-    # solo el isotipo: en una miniatura de WhatsApp o Twitter, un balón suelto
-    # no dice de quién es el enlace. Con el nombre sí.
-    og = Image.new('RGBA', (1200, 630), AZUL_MARCA)
-    marca = recortar(cargar('horiz_blanco'))
-    marca.thumbnail((860, 420), Image.LANCZOS)
-    og.paste(marca, ((1200 - marca.width) // 2, (630 - marca.height) // 2), marca)
-    guardar(og.convert('RGB').convert('RGBA'), 'og-image.png')
+    # En JPEG: ahora es una fotografía, y en PNG pesaba 1 MB —algunas
+    # plataformas rechazan los OG que pasan de ahí—. En JPEG baja a ~200 KB.
+    og = og_compartir().convert('RGB')
+    ruta_og = os.path.join(DESTINO, 'og-image.jpg')
+    og.save(ruta_og, 'JPEG', quality=85, optimize=True, progressive=True)
+    print(f'  OK {"og-image.jpg":26} {og.width}x{og.height}  {os.path.getsize(ruta_og)/1024:6.1f} KB')
 
     print()
 
