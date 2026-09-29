@@ -113,6 +113,18 @@ superficies antes que el fondo.
 unificarlo, las etiquetas en `#9896F8` cayeron de 6.83 a 6.54 y hubo que
 subirlas al acento claro `#B4B3FA`, que es el mismo del año en los hero.
 
+### Nada de texto con degradado
+
+El sitio llegó a tener **13 textos con `background-clip: text`** —titulares,
+el wordmark, los números grandes de la copa—. Se quitaron todos el 29 sep 2026:
+se veían sucios, sobre todo los de degradado azul saturado, y encima **no se
+pueden medir**: `scripts/contraste.js` los salta porque no tienen un color
+sólido que comparar.
+
+Ahora: **titulares y cifras en blanco**, y el azul claro (`--brand-blue-on-dark`)
+reservado para las etiquetas pequeñas y el año de los hero. Un toque de color,
+no un efecto.
+
 ## 1c. Contraste: la regla que evita los choques gráficos
 
 El 29 sep 2026 aparecieron en producción varios textos ilegibles a la vez:

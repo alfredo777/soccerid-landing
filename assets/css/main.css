@@ -273,12 +273,9 @@ body {
     margin-top: 30px;
     font-size: 1.8rem;
     font-weight: 900;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
     letter-spacing: -1px;
     animation: preloaderPulse 1.5s ease-in-out infinite;
+    color: #FFFFFF;
 }
 
 @keyframes preloaderPulse {
@@ -351,12 +348,9 @@ body {
 .hero-logo-text {
     font-size: clamp(2.5rem, 6vw, 4.5rem);
     font-weight: 900;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
     letter-spacing: -2px;
     margin-bottom: 10px;
+    color: #FFFFFF;
 }
 
 .hero-tagline {
@@ -706,11 +700,8 @@ body {
 .section-header h2 {
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 800;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
     margin-bottom: 10px;
+    color: #FFFFFF;
 }
 
 .section-header p {
@@ -950,11 +941,8 @@ body {
     font-size: clamp(1.4rem, 2.5vw, 1.8rem);
     font-weight: 800;
     margin-bottom: 16px;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
     line-height: 1.2;
+    color: #FFFFFF;
 }
 
 .masonry-text-card p {
@@ -1068,10 +1056,7 @@ body {
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 800;
     margin-bottom: 16px;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #FFFFFF;
 }
 
 .seguros-header p {
@@ -1202,11 +1187,8 @@ body {
     font-size: clamp(1.8rem, 3.5vw, 2.5rem);
     font-weight: 800;
     margin-bottom: 24px;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
     line-height: 1.2;
+    color: #FFFFFF;
 }
 
 .copa-text-section p {
@@ -2028,11 +2010,8 @@ body {
 .footer-logo {
     font-size: 2rem;
     font-weight: 900;
-    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, #FFFFFF 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
     margin-bottom: 16px;
+    color: #FFFFFF;
 }
 
 .footer-tagline {
@@ -3992,9 +3971,7 @@ body {
     font-size: 34px;
     font-weight: 800;
     letter-spacing: 2px;
-    background: linear-gradient(to right, var(--brand-blue-on-dark), #FFFFFF);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #FFFFFF;
 }
 
 .widget-tabs {
