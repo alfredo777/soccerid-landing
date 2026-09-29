@@ -89,7 +89,7 @@ cuentas demo) en `capturas/`, que está gitignored.
 Un solo degradado para todas las páginas oscuras:
 
 ```css
-linear-gradient(135deg, #0F0F1A 0%, #1A1A2E 50%, #16213E 100%)
+linear-gradient(135deg, #141822 0%, #1B2130 50%, #222B3B 100%)
 ```
 
 En `assets/css/main.css` son `--bg-dark-1/2/3`; la familia de páginas de la
@@ -98,8 +98,15 @@ lo repite a mano porque no carga esa hoja.
 
 Hasta el 29 sep 2026 esa familia usaba una paleta propia —`#0A0A1A` de base y
 `#0E0E28` para las secciones alternas, y el degradado terminaba donde
-empezaba—, así que era más negra y más plana que la landing y **se notaba el
-salto al navegar entre ellas**. Ahora usan los mismos tres tonos.
+empezaba—, así que era más negra y más plana que la landing y se notaba el
+salto al navegar entre ellas. Se unificaron.
+
+Ese mismo día el fondo pasó del azul casi negro (`#0F0F1A · #1A1A2E · #16213E`)
+al **acero azulado** de ahora, porque la página se veía plana y sin cuerpo.
+**Ojo: la mitad del problema no era el color, eran las tarjetas.** Estaban a
+`rgba(255,255,255,0.04)` y no se despegaban del fondo; subirlas a `0.075` hizo
+tanto o más que cambiar el tono. Si algo vuelve a verse plano, mira las
+superficies antes que el fondo.
 
 **Si cambias el fondo, cambia los dos sitios** y vuelve a pasar
 `scripts/contraste.js`: aclarar el fondo baja el contraste del texto claro. Al
@@ -131,7 +138,7 @@ cumplen en todos. **No inventes grises ni azules nuevos para texto.**
 | `--texto-alto` | `#FFFFFF` | 12.6 | titulares y texto principal |
 | `--texto-medio` | `#C0C1CE` | 7.1 | cuerpo secundario |
 | `--texto-bajo` | `#999BB2` | 4.6 | metadatos, el mínimo |
-| `--brand-blue-on-dark` | `#B4B3FA` | 9.8 | acentos en azul de marca |
+| `--brand-blue-on-dark` | `#B1C5FB` | 8.3 | acentos en azul (matiz 224°, no morado) |
 
 **Blanco translúcido: nunca por debajo de `0.75` de alfa para texto chico.**
 `rgba(255,255,255,0.3)` da 2.6 y `0.6` se queda en 4.8 sobre los azules

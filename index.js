@@ -660,7 +660,7 @@ app.get('/:lang/articulo/:id', (req, res, next) => {
     const isEs = lang === 'es';
     const ogTitle = `${articulo.title} | SOCCER iD`;
     const ogDesc = articulo.excerpt;
-    const ogImage = articulo.image || '/assets/images/share.jpg';
+    const ogImage = articulo.image || '/assets/images/og-image.png';
 
     let typeBadge = '';
     if (articulo.type === 'video') typeBadge = isEs ? 'Video' : 'Video';
@@ -727,7 +727,7 @@ app.get('/:lang/galeria/:id', (req, res, next) => {
     galeria.imageCount = galeria.images ? galeria.images.length : 0;
     const ogTitle = `${galeria.title} | SOCCER iD`;
     const ogDesc = galeria.description;
-    const ogImage = galeria.banner || '/assets/images/og/share.jpg';
+    const ogImage = galeria.banner || '/assets/images/og-image.png';
 
     res.render('galeria', {
       layout: 'promo',
@@ -780,7 +780,7 @@ app.get('/:lang/socceridcup', async (req, res, next) => {
     galeria.imageCount = galeria.images ? galeria.images.length : 0;
     const ogTitle = `${galeria.title} | SOCCER iD`;
     const ogDesc = galeria.description;
-    const ogImage = galeria.banner || '/assets/images/og/share.jpg';
+    const ogImage = galeria.banner || '/assets/images/og-image.png';
 
     res.render('socceridcup', {
       layout: 'promo',
@@ -1054,7 +1054,7 @@ app.get('/:lang/socceridcup/:year', async (req, res, next) => {
     edition.imageCount = edition.images ? edition.images.length : 0;
     const ogTitle = `${edition.title} | SOCCER iD`;
     const ogDesc = edition.description;
-    const ogImage = edition.banner || '/assets/images/og/share.jpg';
+    const ogImage = edition.banner || '/assets/images/og-image.png';
 
     const prevEdition = nav.prev;
     const nextEdition = nav.next;
