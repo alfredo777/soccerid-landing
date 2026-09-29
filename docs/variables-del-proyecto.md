@@ -45,6 +45,45 @@ las propuestas de inversión, que están detrás del candado de código.
 **Si agregas un archivo que el front deba leer, agrégalo a las dos listas.** Si
 no es para el front, no lo agregues a ninguna.
 
+## 1b. Colores de marca
+
+El azul y el verde neón del logo (sep 2026). Se escriben en **tres sitios**,
+porque son tres superficies que no comparten hoja de estilos:
+
+| Dónde | Tokens | Para qué |
+|---|---|---|
+| `assets/css/main.css` `:root` | `--brand-blue`, `--brand-blue-deep`, `--brand-lime` (+ `-rgb`) | landing y blog |
+| `views/layouts/panel.hbs` `:root` | `--pn-brand`, `--pn-brand-dark`, `--pn-brand-soft`, `--pn-lime` | panel e inversionistas |
+| `assets/css/embedvideo.css` | `--embed-video-accent` (lee `--brand-blue` con respaldo) | reproductor de video |
+
+Valores: azul `#1B17EF`, azul profundo `#0D0AA8`, verde neón `#78F750`.
+**Si cambias uno, cambia los tres.** Las versiones `-rgb` existen para los
+`rgba()` con transparencia: `rgba(var(--brand-blue-rgb), 0.3)`. No dupliques un
+color a mano.
+
+**El verde neón es para highlights, no para superficies.** Hoy vive en dos
+sitios elegidos: los días que faltan en la tarjeta negra del panel y la barra
+de avance del proyecto — donde el azul sobre fondo oscuro casi no se veía.
+
+**Tres trampas, por si toca repintar otra vez:**
+
+1. **El color también es un dato.** `news.tag_color`, `events.color`,
+   `tiers.color`/`bg`, `match_agenda.color` y `portfolio_events.accent` están
+   guardados en filas. Cambiar el default de la columna solo afecta a las
+   nuevas. Para las viejas está `recolorMarca()` en `db/schema.js`, idempotente
+   y solo sobre valores que coincidan exactamente con el color anterior, para
+   no pisar lo que el admin haya elegido a mano.
+2. **No todo hex morado es nuestro.** El degradado de Instagram
+   (`#F58529 → #515BD4`) se excluye a propósito.
+3. **`var()` no sirve en todas partes.** Los literales que viven en
+   `<input type="color" value="…">`, en atributos de presentación SVG
+   (`fill="…"`) o dentro de cadenas de JavaScript tienen que seguir siendo hex.
+   Ahí se cambia el valor, no se mete una variable.
+
+Para revisar el resultado: `node scripts/capturas.js http://localhost:3000`
+saca 11 capturas de landing y panel (escritorio y móvil, entrando con las
+cuentas demo) en `capturas/`, que está gitignored.
+
 ## 2. Contrato servidor → navegador
 
 `views/layouts/main.hbs:97` inyecta `window.__GKRAKEN_CONFIG__`, y
