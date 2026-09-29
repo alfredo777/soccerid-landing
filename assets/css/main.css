@@ -100,6 +100,13 @@
     --brand-lime: #78F750;
     --brand-lime-rgb: 120, 247, 80;
 
+    /* El azul de marca es excelente como fondo, pero como TEXTO sobre los
+       fondos oscuros de la landing da 2.19 de contraste: por debajo del
+       mínimo de 3.0 de WCAG incluso para texto grande. Esta variante tiene el
+       mismo matiz, solo más clara, y da 5.37 sobre --bg-dark-1. Úsala para
+       texto, no para superficies. */
+    --brand-blue-on-dark: #7C79F6;
+
     /* Colores principales (alias semánticos de la marca) */
     --color-primary: var(--brand-blue);
     --color-secondary: var(--brand-blue-deep);
@@ -246,7 +253,7 @@ body {
     margin-top: 30px;
     font-size: 1.8rem;
     font-weight: 900;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 50%, var(--color-accent) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -324,7 +331,7 @@ body {
 .hero-logo-text {
     font-size: clamp(2.5rem, 6vw, 4.5rem);
     font-weight: 900;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 50%, var(--color-accent) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -679,7 +686,7 @@ body {
 .section-header h2 {
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 800;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -923,7 +930,7 @@ body {
     font-size: clamp(1.4rem, 2.5vw, 1.8rem);
     font-weight: 800;
     margin-bottom: 16px;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1041,7 +1048,7 @@ body {
     font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 800;
     margin-bottom: 16px;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1175,7 +1182,7 @@ body {
     font-size: clamp(1.8rem, 3.5vw, 2.5rem);
     font-weight: 800;
     margin-bottom: 24px;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1968,7 +1975,7 @@ body {
 .footer-logo {
     font-size: 2rem;
     font-weight: 900;
-    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    background: linear-gradient(135deg, var(--brand-blue-on-dark) 0%, var(--brand-lime) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -3914,7 +3921,7 @@ body {
     font-size: 34px;
     font-weight: 800;
     letter-spacing: 2px;
-    background: linear-gradient(to right, var(--color-primary), var(--color-accent));
+    background: linear-gradient(to right, var(--brand-blue-on-dark), var(--brand-lime));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }

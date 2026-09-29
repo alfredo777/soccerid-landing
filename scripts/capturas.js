@@ -123,8 +123,20 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await captura('02-landing-paneles', { scroll: 1400 });
   await captura('03-landing-eventos', { scroll: 3000 });
   await captura('04-landing-contacto-pie', { scroll: 99999 });
+  // Recorrido por toda la página: con tres posiciones se perdían secciones
+  // enteras. (Una captura de página completa expira: la landing es muy alta.)
+  const alto = await ev('document.body.scrollHeight');
+  for (let i = 1; i <= 6; i++) {
+    await captura(`04b-landing-recorrido-${i}`, { scroll: Math.round(alto * i / 7) });
+  }
   await captura('05-landing-hero-movil', { url: BASE + '/es', metrics: MOVIL, espera: 4200 });
   await captura('06-landing-movil-scroll', { metrics: MOVIL, scroll: 1500 });
+
+  // Estas páginas llevan el isotipo BLANCO: si alguna tuviera fondo claro, el
+  // logo desaparecería. Se capturan para verlo.
+  console.log('Páginas con logo blanco');
+  await captura('06b-socceridcup', { url: BASE + '/es/socceridcup', espera: 3400 });
+  await captura('06c-galeria', { url: BASE + '/es/galeria/soccer-id-cup-2027', espera: 3400 });
 
   console.log('Panel');
   await captura('07-panel-login', { url: BASE + '/panel/login', espera: 2400 });

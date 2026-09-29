@@ -18,3 +18,6 @@ backups/
 
 # Capturas locales de revisión visual (scripts/capturas.js)
 capturas/
+
+# Paquete original de marca: pesado y solo fuente para scripts/generar-logos.py
+assets/images/logovariantes/
