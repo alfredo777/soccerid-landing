@@ -15,3 +15,6 @@ video-demo/
 
 # Respaldos locales de datos (no versionar)
 backups/
+
+# Capturas locales de revisión visual (scripts/capturas.js)
+capturas/

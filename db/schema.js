@@ -27,7 +27,7 @@ async function ensureSchema() {
     await knex.schema.createTable('news', (t) => {
       t.increments('id').primary();
       t.string('tag').defaultTo('Anuncio');
-      t.string('tag_color').defaultTo('#6C3CE0');
+      t.string('tag_color').defaultTo('#1B17EF');
       t.string('title').notNullable();
       t.text('excerpt');
       t.string('image');
@@ -47,7 +47,7 @@ async function ensureSchema() {
       t.integer('year').notNullable();
       t.string('title').notNullable();
       t.string('type').defaultTo('Evento');
-      t.string('color').defaultTo('#6C3CE0');
+      t.string('color').defaultTo('#1B17EF');
       t.boolean('is_match').defaultTo(false);
       t.timestamps(true, true);
     });
@@ -93,8 +93,8 @@ async function ensureSchema() {
       t.string('key').notNullable();
       t.string('role').notNullable();      // investor | sponsor
       t.string('label').notNullable();
-      t.string('color').defaultTo('#6C3CE0');
-      t.string('bg').defaultTo('#EFE9FC');
+      t.string('color').defaultTo('#1B17EF');
+      t.string('bg').defaultTo('#E9E8FD');
       t.bigInteger('amount').defaultTo(0);
       t.integer('count').defaultTo(0);
       t.text('benefits');                  // JSON array
@@ -202,7 +202,7 @@ async function ensureSchema() {
       t.string('time_label');
       t.string('title').notNullable();
       t.string('sub');
-      t.string('color').defaultTo('#6C3CE0');
+      t.string('color').defaultTo('#1B17EF');
       t.integer('sort').defaultTo(0);
       t.timestamps(true, true);
     });
@@ -467,12 +467,12 @@ async function seed() {
   // Noticias iniciales
   if (!(await knex('news').first())) {
     await knex('news').insert([
-      { tag: 'Anuncio', tag_color: '#6C3CE0', title: 'Confirmado: Tigres vs Cruz Azul en Houston', excerpt: 'El clásico regio-cementero se jugará en el Shell Energy Stadium el 27 de marzo de 2027. Un duelo entre dos de los clubes más grandes de México en el principal mercado hispano de Estados Unidos.', image: '/assets/images/gallery/cup2025/6.jpg', date_label: '12 Jul 2026', size: 'tall', featured: true, sort: 1 },
-      { tag: 'Anuncio', tag_color: '#6C3CE0', title: 'Shell Energy Stadium confirmado como sede oficial', excerpt: 'Estadio MLS listo para futbol con capacidad de 22,800 asistentes.', image: '/assets/images/gallery/cup2024/1.jpg', date_label: '28 Jun 2026', size: 'short', sort: 2 },
+      { tag: 'Anuncio', tag_color: '#1B17EF', title: 'Confirmado: Tigres vs Cruz Azul en Houston', excerpt: 'El clásico regio-cementero se jugará en el Shell Energy Stadium el 27 de marzo de 2027. Un duelo entre dos de los clubes más grandes de México en el principal mercado hispano de Estados Unidos.', image: '/assets/images/gallery/cup2025/6.jpg', date_label: '12 Jul 2026', size: 'tall', featured: true, sort: 1 },
+      { tag: 'Anuncio', tag_color: '#1B17EF', title: 'Shell Energy Stadium confirmado como sede oficial', excerpt: 'Estadio MLS listo para futbol con capacidad de 22,800 asistentes.', image: '/assets/images/gallery/cup2024/1.jpg', date_label: '28 Jun 2026', size: 'short', sort: 2 },
       { tag: 'Actualización', tag_color: '#14141B', title: 'Abrimos preventa exclusiva para inversionistas', excerpt: 'Los inversionistas Diamante y Platino tienen acceso prioritario a la asignación de boletos antes de la venta general.', image: '/assets/images/gallery/cup2023/1.jpg', date_label: '15 Ago 2026', size: 'tall', sort: 3 },
       { tag: 'Prensa', tag_color: '#6B7280', title: 'Cobertura confirmada con ESPN y TUDN', excerpt: 'El partido será transmitido a nivel internacional en las principales cadenas deportivas.', image: '/assets/images/gallery/cup2025/6.jpg', date_label: '02 Sep 2026', size: 'short', sort: 4 },
       { tag: 'Actualización', tag_color: '#14141B', title: 'Nuevo patrocinador categoría Black confirmado', excerpt: 'Sumamos una marca líder como patrocinador principal del torneo, reforzando el respaldo comercial del evento.', image: '/assets/images/gallery/cup2024/1.jpg', date_label: '20 Sep 2026', size: 'tall', sort: 5 },
-      { tag: 'Anuncio', tag_color: '#6C3CE0', title: 'Presentación de jerseys conmemorativos', excerpt: 'Diseño especial edición SOCCER iD CUP 2027 para ambos equipos.', image: '/assets/images/gallery/cup2023/1.jpg', date_label: '05 Oct 2026', size: 'short', sort: 6 }
+      { tag: 'Anuncio', tag_color: '#1B17EF', title: 'Presentación de jerseys conmemorativos', excerpt: 'Diseño especial edición SOCCER iD CUP 2027 para ambos equipos.', image: '/assets/images/gallery/cup2023/1.jpg', date_label: '05 Oct 2026', size: 'short', sort: 6 }
     ]);
     console.log('  ✓ Noticias iniciales sembradas');
   }
@@ -481,11 +481,11 @@ async function seed() {
   if (!(await knex('events').first())) {
     await knex('events').insert([
       { day: 5, month: 3, year: 2027, title: 'Cierre de patrocinios', type: 'Patrocinio', color: '#14141B' },
-      { day: 12, month: 3, year: 2027, title: 'Update inversionistas', type: 'Actualización', color: '#A78BE6' },
+      { day: 12, month: 3, year: 2027, title: 'Update inversionistas', type: 'Actualización', color: '#8987EA' },
       { day: 15, month: 3, year: 2027, title: 'Rueda de prensa', type: 'Prensa', color: '#8A8F98' },
-      { day: 20, month: 3, year: 2027, title: 'Media Day', type: 'Evento', color: '#6C3CE0' },
-      { day: 23, month: 3, year: 2027, title: 'Llegada de equipos', type: 'Evento', color: '#6C3CE0' },
-      { day: 27, month: 3, year: 2027, title: 'PARTIDO', type: 'Partido', color: '#6C3CE0', is_match: true }
+      { day: 20, month: 3, year: 2027, title: 'Media Day', type: 'Evento', color: '#1B17EF' },
+      { day: 23, month: 3, year: 2027, title: 'Llegada de equipos', type: 'Evento', color: '#1B17EF' },
+      { day: 27, month: 3, year: 2027, title: 'PARTIDO', type: 'Partido', color: '#1B17EF', is_match: true }
     ]);
     console.log('  ✓ Eventos iniciales sembrados');
   }
@@ -579,7 +579,7 @@ async function seed() {
         time_label: a.time || null,
         title: a.title,
         sub: a.sub || null,
-        color: a.color || '#6C3CE0',
+        color: a.color || '#1B17EF',
         sort: i + 1
       })));
       console.log(`  ✓ Agenda del partido sembrada (${agenda.length} bloques)`);
@@ -645,6 +645,66 @@ async function sanitizeDashboardConfig() {
   } catch (_) {}
 }
 
+// Los colores de marca no solo viven en el CSS: también están guardados como
+// dato en filas que ya existen (el color de una etiqueta de noticia, el de una
+// categoría, el acento de un evento). Cambiar el default de la columna solo
+// afecta a las filas nuevas, así que las viejas seguirían moradas.
+//
+// Esto repinta únicamente las que conservan EXACTAMENTE un morado de la marca
+// anterior. Si el admin eligió un color a mano, no se toca. Es idempotente:
+// después de la primera pasada ya no hay filas que coincidan.
+const MORADOS_VIEJOS = {
+  '#6C3CE0': '#1B17EF',   // primario
+  '#7C3AED': '#1B17EF',
+  '#5A2FC7': '#0D0AA8',   // variante oscura
+  '#4E2BA6': '#0D0AA8',
+  '#EFE9FC': '#E9E8FD',   // fondos suaves
+  '#F1ECFC': '#E9E8FE',
+  '#A78BE6': '#8987EA'
+};
+
+async function recolorMarca() {
+  const objetivos = [
+    ['news', 'tag_color'],
+    ['events', 'color'],
+    ['tiers', 'color'],
+    ['tiers', 'bg'],
+    ['match_agenda', 'color'],
+    ['portfolio_events', 'accent']
+  ];
+
+  let total = 0;
+  for (const [tabla, columna] of objetivos) {
+    try {
+      if (!(await knex.schema.hasTable(tabla))) continue;
+      if (!(await knex.schema.hasColumn(tabla, columna))) continue;
+      for (const [viejo, nuevo] of Object.entries(MORADOS_VIEJOS)) {
+        const n = await knex(tabla)
+          .whereIn(columna, [viejo, viejo.toLowerCase()])
+          .update({ [columna]: nuevo });
+        total += n;
+      }
+    } catch (_) {}
+  }
+
+  // La configuración del dashboard guarda colores dentro de un JSON.
+  try {
+    const row = await knex('app_settings').where({ key: 'dashboard_config' }).first();
+    if (row && row.value) {
+      let v = row.value;
+      for (const [viejo, nuevo] of Object.entries(MORADOS_VIEJOS)) {
+        v = v.split(viejo).join(nuevo).split(viejo.toLowerCase()).join(nuevo);
+      }
+      if (v !== row.value) {
+        await knex('app_settings').where({ key: 'dashboard_config' }).update({ value: v });
+        total++;
+      }
+    }
+  } catch (_) {}
+
+  if (total) console.log(`  ✓ Marca: ${total} valor(es) repintados del morado viejo al azul`);
+}
+
 async function init() {
   await ensureSchema();
   await seed();
@@ -654,6 +714,7 @@ async function init() {
   await ensurePortfolioSchema();
   await seedPortfolio();
   await sanitizeDashboardConfig();
+  await recolorMarca();
   console.log('✓ Base de datos del panel lista');
 }
 

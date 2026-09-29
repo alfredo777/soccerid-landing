@@ -201,7 +201,7 @@ async function buildPanelData(user, opts = {}) {
   const cfg = await getDashboardConfig();
   const tiers = await getTiers();
   const isSponsor = user.role === 'sponsor';
-  const tier = findTier(tiers, user.role, user.category) || { label: user.category || '—', color: '#6C3CE0', bg: '#EFE9FC', benefits: [] };
+  const tier = findTier(tiers, user.role, user.category) || { label: user.category || '—', color: '#1B17EF', bg: '#E9E8FD', benefits: [] };
 
   // La edición que ve el inversionista la decide el ADMIN (config `activeEditionId`),
   // no cada usuario: no hay selector de edición en el panel. Si no está configurada,
@@ -277,14 +277,14 @@ async function buildPanelData(user, opts = {}) {
   };
 
   const stats = isSponsor ? [
-    { label: 'Monto patrocinado', value: amountLabel, icon: 'wallet', accent: '#6C3CE0' },
+    { label: 'Monto patrocinado', value: amountLabel, icon: 'wallet', accent: '#1B17EF' },
     { label: 'Categoría', value: tier.label, sub: 'Patrocinador', icon: 'diamond', accent: '#14141B' },
     { label: 'Activaciones', value: activationsText, sub: 'Según categoría', icon: 'trend', accent: '#14141B' },
     { label: 'Faltan para el partido', value: '—', sub: evShort, icon: 'clock', accent: '#14141B', countdown: true }
   ] : [
-    { label: 'Monto invertido', value: amountLabel, icon: 'wallet', accent: '#6C3CE0' },
+    { label: 'Monto invertido', value: amountLabel, icon: 'wallet', accent: '#1B17EF' },
     { label: 'Retorno proyectado', value: ret.projectedReturn, sub: ret.returnPct, icon: 'trend', accent: '#14141B' },
-    { label: 'Tu categoría', value: tier.label, sub: ret.typeLabel, icon: 'diamond', accent: '#6C3CE0' },
+    { label: 'Tu categoría', value: tier.label, sub: ret.typeLabel, icon: 'diamond', accent: '#1B17EF' },
     { label: 'Faltan para el partido', value: '—', sub: evShort, icon: 'clock', accent: '#14141B', countdown: true }
   ];
 
@@ -371,14 +371,14 @@ async function buildPanelData(user, opts = {}) {
       fecha: r.desde,
       kind: 'etapa', title: m.title, addUrl: ical.enlaceGoogleEtapa(m),
       meta: [m.date_label, MILE_STATUS[m.status || (m.done ? 'completado' : 'pendiente')] || '', m.owner].filter(Boolean).join(' · '),
-      color: (m.status === 'completado' || m.done) ? '#1E8E5A' : (m.status === 'en_curso' ? '#6C3CE0' : '#8A8F98')
+      color: (m.status === 'completado' || m.done) ? '#1E8E5A' : (m.status === 'en_curso' ? '#1B17EF' : '#8A8F98')
     }));
   const lineaActividades = (await soloDeLaEdicion(knex('events')).orderBy([{ column: 'year' }, { column: 'month' }, { column: 'day' }]))
     .map(e => ({
       fecha: `${e.year}-${dosDig(e.month)}-${dosDig(e.day)}`,
       kind: 'actividad', title: e.title, addUrl: ical.enlaceGoogle(e),
       meta: [e.time_label, e.type === 'Otro' ? (e.custom_type || 'Otro') : e.type, e.note].filter(Boolean).join(' · '),
-      color: e.color || '#6C3CE0'
+      color: e.color || '#1B17EF'
     }));
 
   // Suscripción al calendario y enlace por actividad. Nada de esto pide permisos
@@ -405,7 +405,7 @@ async function buildPanelData(user, opts = {}) {
   try {
     const agRows = await soloDeLaEdicion(knex('match_agenda')).orderBy([{ column: 'sort' }, { column: 'id' }]);
     matchAgenda = agRows.map(a => ({
-      time: a.time_label || '', title: a.title, sub: a.sub || '', color: a.color || '#6C3CE0'
+      time: a.time_label || '', title: a.title, sub: a.sub || '', color: a.color || '#1B17EF'
     }));
   } catch (_) {}
   if (!matchAgenda.length) matchAgenda = config.matchAgenda || [];
@@ -572,7 +572,7 @@ async function buildPanelData(user, opts = {}) {
   const activeEdition = invEvent ? {
     id: invEvent.id, year: invEvent.year || '', title: invEvent.title, match: invEvent.match || '',
     venue: invEvent.venue || '', city: invEvent.city || '', dateLabel: invEvent.event_date || '',
-    accent: invEvent.accent || '#6C3CE0', investsHere
+    accent: invEvent.accent || '#1B17EF', investsHere
   } : null;
 
   // FAQ visible para este usuario (general + su rol)
@@ -1050,7 +1050,7 @@ function parseEdicionDetalle(e, lang) {
     city: e.city || d.city || '',
     dateLabel: e.event_date || d.date || '',
     subtitle: e.subtitle || '',
-    accent: e.accent || '#6C3CE0',
+    accent: e.accent || '#1B17EF',
     status: e.status || 'past',
     phaseLabel: PHASE_LABELS[e.phase] || '',
     description: d.description || e.description || '',
@@ -1354,7 +1354,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       id: e.id, year: e.year, status: e.status || '', title: e.title, match: e.match || '', subtitle: e.subtitle || '',
       city: e.city || '', venue: e.venue || '', dateLabel: e.event_date || '',
       phase: e.phase, phaseLabel: PHASE_LBL[e.phase] || e.phase, progress: e.progress_pct || 0,
-      budgetLabel: formatUSD(e.budget || 0), isDemo: !!e.is_demo, accent: e.accent || '#6C3CE0', code: e.code || '',
+      budgetLabel: formatUSD(e.budget || 0), isDemo: !!e.is_demo, accent: e.accent || '#1B17EF', code: e.code || '',
       packages: pkMap[e.id] || 0, investments: (invMap[e.id] || {}).n || 0, capitalLabel: formatUSD((invMap[e.id] || {}).cap || 0)
     }));
     // Datos completos para prellenar el formulario (drawer) de edición.
@@ -1367,7 +1367,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         match: e.match || '', description: e.description || '', venue: e.venue || '', city: e.city || '', country: e.country || '',
         event_date: e.event_date || '', date_phase: e.date_phase || '', budget: e.budget || 0, projected_income: e.projected_income || 0,
         phase: e.phase || 'planeacion', status: e.status || 'past',
-        progress_pct: e.progress_pct || 0, is_demo: !!e.is_demo, accent: e.accent || '#6C3CE0',
+        progress_pct: e.progress_pct || 0, is_demo: !!e.is_demo, accent: e.accent || '#1B17EF',
         presentation_es: e.presentation_es || '', presentation_en: e.presentation_en || '',
         capacity: e.capacity || 0, ticket_price: e.ticket_price || 0, deductions_pct: e.deductions_pct || 0,
         rebate_per: e.rebate_per || 0, cap_pct: e.cap_pct || 0, investor_split: e.investor_split || 0,
@@ -1529,7 +1529,7 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       return {
         retorno: ret > 0 ? formatUSD(ret) : '—',
         ingresoProyectado: Number(e.projected_income || 0) > 0 ? formatUSD(e.projected_income) : '—',
-        year: e.year, title: e.title, accent: e.accent || '#6C3CE0',
+        year: e.year, title: e.title, accent: e.accent || '#1B17EF',
         activa: String(e.id) === activaId,
         capital: formatUSD(cap), presupuesto: pres > 0 ? formatUSD(pres) : '—',
         cubiertoPct: pres > 0 ? Math.round((cap / pres) * 100) : 0,
@@ -2338,12 +2338,12 @@ function sourceUrl(v) {
 router.post('/admin/news', auth.requireAdmin, upload.single('imageFile'), async (req, res, next) => {
   try {
     const tag = req.body.tag || 'Anuncio';
-    const tagColors = { 'Anuncio': '#6C3CE0', 'Actualización': '#14141B', 'Prensa': '#6B7280' };
+    const tagColors = { 'Anuncio': '#1B17EF', 'Actualización': '#14141B', 'Prensa': '#6B7280' };
     let image = (req.body.image || '').trim();
     if (req.file) { const up = await uploadImage(req.file); image = up.url; }
     if (!image) image = '/assets/images/gallery/cup2025/6.jpg';
     await knex('news').insert({
-      tag, tag_color: tagColors[tag] || '#6C3CE0',
+      tag, tag_color: tagColors[tag] || '#1B17EF',
       title: (req.body.title || '').trim(),
       excerpt: (req.body.excerpt || '').trim(),
       body: (req.body.body || '').trim() || null,
@@ -2365,9 +2365,9 @@ router.post('/admin/news/:id/delete', auth.requireAdmin, async (req, res, next) 
 // Tipos de actividad del calendario. "Otro" abre un campo de texto para escribir
 // el tipo a mano: el organizador hace cosas que no cabían en la lista corta.
 const ACT_TYPES = {
-  'Evento': '#6C3CE0',
-  'Partido': '#6C3CE0',
-  'Actualización': '#A78BE6',
+  'Evento': '#1B17EF',
+  'Partido': '#1B17EF',
+  'Actualización': '#8987EA',
   'Patrocinio': '#14141B',
   'Prensa': '#8A8F98',
   'Logística': '#0891B2',
@@ -2699,12 +2699,12 @@ router.post('/admin/user/:id/update', auth.requireAdmin, async (req, res, next) 
 router.post('/admin/news/:id/update', auth.requireAdmin, upload.single('imageFile'), async (req, res, next) => {
   try {
     const tag = req.body.tag || 'Anuncio';
-    const tagColors = { 'Anuncio': '#6C3CE0', 'Actualización': '#14141B', 'Prensa': '#6B7280' };
+    const tagColors = { 'Anuncio': '#1B17EF', 'Actualización': '#14141B', 'Prensa': '#6B7280' };
     const current = await knex('news').where({ id: req.params.id }).first();
     let image = (req.body.image || (current && current.image) || '/assets/images/gallery/cup2025/6.jpg').trim();
     if (req.file) { const up = await uploadImage(req.file); image = up.url; }
     await knex('news').where({ id: req.params.id }).update({
-      tag, tag_color: tagColors[tag] || '#6C3CE0',
+      tag, tag_color: tagColors[tag] || '#1B17EF',
       title: (req.body.title || '').trim(),
       excerpt: (req.body.excerpt || '').trim(),
       body: (req.body.body || '').trim() || null,
@@ -2747,7 +2747,7 @@ router.post('/admin/tier/:id/update', auth.requireAdmin, async (req, res, next) 
     const benefits = (req.body.benefits || '').split('\n').map(s => s.trim()).filter(Boolean);
     await knex('tiers').where({ id: req.params.id }).update({
       label: (req.body.label || '').trim(),
-      color: (req.body.color || '#6C3CE0').trim(),
+      color: (req.body.color || '#1B17EF').trim(),
       amount: parseInt(req.body.amount || '0', 10) || 0,
       count: parseInt(req.body.count || '0', 10) || 0,
       benefits: JSON.stringify(benefits),
@@ -2845,7 +2845,7 @@ function portfolioBody(b) {
     status: ['past', 'upcoming', 'pause'].includes(b.status) ? b.status : 'past',
     progress_pct: Math.max(0, Math.min(100, num(b.progress_pct))),
     is_demo: b.is_demo ? true : false,
-    accent: (b.accent || '#6C3CE0').trim(),
+    accent: (b.accent || '#1B17EF').trim(),
     presentation_es: (b.presentation_es || '').trim() || null,
     presentation_en: (b.presentation_en || '').trim() || null,
     capacity: num(b.capacity),
@@ -3084,7 +3084,7 @@ router.get('/admin/evento/:id', auth.requireAdmin, async (req, res, next) => {
         match: ev.match || '', venue: ev.venue || '', city: ev.city || '',
         dateLabel: ev.event_date || '', phase: ev.phase || 'planeacion',
         phaseLabel: (PHASE_LABELS[ev.phase] || ev.phase), progress: ev.progress_pct || 0,
-        accent: ev.accent || '#6C3CE0', isDemo: !!ev.is_demo
+        accent: ev.accent || '#1B17EF', isDemo: !!ev.is_demo
       },
       kpis: {
         capital: formatUSD(capital),
@@ -3117,7 +3117,7 @@ router.get('/admin/evento/:id', auth.requireAdmin, async (req, res, next) => {
         status: c.status || 'activo', date: c.comm_date || ''
       })),
       agenda: agenda.map(a => ({
-        id: a.id, time: a.time_label || '', title: a.title, sub: a.sub || '', color: a.color || '#6C3CE0'
+        id: a.id, time: a.time_label || '', title: a.title, sub: a.sub || '', color: a.color || '#1B17EF'
       })),
       investments: invs.map(i => ({
         id: i.id, name: (userById[i.user_id] || {}).name || 'Cuenta eliminada',
@@ -3366,7 +3366,7 @@ router.post('/admin/evento/:id/agenda', auth.requireAdmin, async (req, res) => {
       event_id: id, title,
       time_label: hora || null,
       sub: (req.body.sub || '').trim() || null,
-      color: /^#[0-9a-f]{6}$/i.test(req.body.color || '') ? req.body.color : '#6C3CE0',
+      color: /^#[0-9a-f]{6}$/i.test(req.body.color || '') ? req.body.color : '#1B17EF',
       sort: (Number(max && max.m) || 0) + 1
     });
     res.redirect(evBack(id, true, 'Bloque agregado a la agenda', 'agenda'));

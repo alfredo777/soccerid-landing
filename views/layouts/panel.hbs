@@ -10,17 +10,31 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --pn-bg: #F5F4F8;
+      --pn-bg: #F4F4F8;
       --pn-card: #FFFFFF;
-      --pn-border: #ECEAF2;
+      --pn-border: #EAEAF2;
       --pn-ink: #14141B;
       --pn-ink-2: #6A6675;
       --pn-muted: #A6A2B3;
-      --pn-purple: #6C3CE0;
-      --pn-purple-dark: #4E2BA6;
-      --pn-purple-soft: #F1ECFC;
+      /* Marca: el azul del logo y el verde neón. Mismos valores que
+         --brand-blue / --brand-lime en assets/css/main.css. El panel no
+         carga esa hoja, por eso se repiten aquí; si cambias uno, cambia
+         los dos. Ver docs/variables-del-proyecto.md. */
+      --pn-brand: #1B17EF;
+      --pn-brand-dark: #0D0AA8;
+      --pn-brand-soft: #E9E8FE;
+      --pn-lime: #78F750;
+      --pn-lime-soft: #EAFDE3;
+
+      /* Alias heredados: el panel llamaba "purple" a la marca en ~200 sitios
+         repartidos por 15 archivos. Se mantienen para no reescribirlos todos
+         de golpe; en código nuevo usa --pn-brand. */
+      --pn-purple: var(--pn-brand);
+      --pn-purple-dark: var(--pn-brand-dark);
+      --pn-purple-soft: var(--pn-brand-soft);
+
       --pn-radius: 18px;
-      --pn-shadow: 0 1px 2px rgba(20,20,27,0.03), 0 8px 24px rgba(76,43,166,0.05);
+      --pn-shadow: 0 1px 2px rgba(20,20,27,0.03), 0 8px 24px rgba(27,23,239,0.06);
       --pn-sidebar-w: 268px;
       --pn-sidebar-collapsed: 78px;
     }
@@ -90,9 +104,9 @@
     }
     .pn-link svg.pn-ico { width: 20px; height: 20px; flex-shrink: 0; stroke: currentColor; }
     .pn-link:hover { background: var(--pn-purple-soft); color: var(--pn-purple); }
-    .pn-link.is-active { background: var(--pn-purple); color: #fff; box-shadow: 0 8px 18px rgba(108,60,224,.28); }
+    .pn-link.is-active { background: var(--pn-purple); color: #fff; box-shadow: 0 8px 18px rgba(27,23,239,.28); }
     .pn-link.is-active svg.pn-ico { stroke: #fff; }
-    .pn-link__badge { margin-left: auto; font-size: 11px; font-weight: 800; background:#F1F0F5; color: var(--pn-ink-2); padding: 2px 9px; border-radius: 20px; }
+    .pn-link__badge { margin-left: auto; font-size: 11px; font-weight: 800; background:#F0F0F5; color: var(--pn-ink-2); padding: 2px 9px; border-radius: 20px; }
     .pn-link.is-active .pn-link__badge { background: rgba(255,255,255,.22); color:#fff; }
 
     /* Sidebar event mini-card */
@@ -101,7 +115,9 @@
       background: var(--pn-ink); color: #fff; overflow: hidden;
     }
     .pn-side__event small { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,.55); }
-    .pn-side__event strong { display:block; font-size: 22px; font-weight: 900; margin: 4px 0 2px; }
+    /* Verde neón sobre la tarjeta negra: los días que faltan son el número que
+       el inversionista viene a mirar. */
+    .pn-side__event strong { display:block; font-size: 22px; font-weight: 900; margin: 4px 0 2px; color: var(--pn-lime); }
     .pn-side__event span { font-size: 12px; color: rgba(255,255,255,.7); font-weight: 600; }
 
     .pn-side__foot { border-top: 1px solid var(--pn-border); padding: 12px; }
@@ -120,7 +136,7 @@
       background: none; border: none; cursor: pointer; font-family: inherit;
       font-size: 13px; font-weight: 600; color: var(--pn-ink-2); white-space: nowrap;
     }
-    .pn-logout:hover { background: #F6F5F9; color: var(--pn-ink); }
+    .pn-logout:hover { background: #F5F5F9; color: var(--pn-ink); }
     .pn-logout svg { width: 19px; height: 19px; stroke: currentColor; flex-shrink: 0; }
 
     /* ── Collapsed state (desktop rail) ── */
@@ -170,7 +186,7 @@
     .pn-drawer__head { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px;
       border-bottom: 1px solid var(--pn-border); position: sticky; top: 0; background: #fff; z-index: 1; }
     .pn-drawer__head h3 { font-size: 17px; font-weight: 800; }
-    .pn-drawer__x { background: #F6F5F9; border: none; cursor: pointer; width: 32px; height: 32px; border-radius: 9px;
+    .pn-drawer__x { background: #F5F5F9; border: none; cursor: pointer; width: 32px; height: 32px; border-radius: 9px;
       display: flex; align-items: center; justify-content: center; }
     .pn-drawer__x svg { width: 18px; height: 18px; stroke: var(--pn-ink-2); }
     .pn-drawer__body { padding: 20px 24px 30px; }
@@ -183,7 +199,7 @@
       width: 100%; padding: 11px 13px; border: 1px solid var(--pn-border); border-radius: 11px;
       font-family: inherit; font-size: 13.5px; color: var(--pn-ink); background: #fff;
     }
-    .pn-f input:disabled { background: #F6F5F9; color: var(--pn-muted); }
+    .pn-f input:disabled { background: #F5F5F9; color: var(--pn-muted); }
     .pn-f__hint { font-size: 11.5px; color: var(--pn-muted); margin-top: 5px; line-height: 1.45; }
     .pn-check { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; font-size: 13px; }
     .pn-check input { width: 17px; height: 17px; margin-top: 1px; flex-shrink: 0; }
@@ -191,7 +207,7 @@
       width: 100%; padding: 13px; border: none; border-radius: 12px; background: var(--pn-purple); color: #fff;
       font-family: inherit; font-size: 13.5px; font-weight: 800; cursor: pointer; margin-top: 8px;
     }
-    .pn-drawer__save:hover { background: #5A2FC7; }
+    .pn-drawer__save:hover { background: #0D0AA8; }
     .pn-drawer__hr { border: none; border-top: 1px solid var(--pn-border); margin: 28px 0 0; }
     .pn-preview-actions { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
     .pn-preview-mod { display:flex; border:1px solid rgba(255,255,255,.45); border-radius:11px; overflow:hidden; }
@@ -253,9 +269,9 @@
     /* Botón flotante "volver arriba": aparece al bajar en cualquier sección */
     .pn-totop { position: fixed; right: 22px; bottom: 22px; z-index: 90; width: 44px; height: 44px; border-radius: 50%;
       background: var(--pn-purple); color: #fff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 10px 26px rgba(108,60,224,.34); opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity .2s, transform .2s; }
+      box-shadow: 0 10px 26px rgba(27,23,239,.34); opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity .2s, transform .2s; }
     .pn-totop.is-show { opacity: 1; transform: none; pointer-events: auto; }
-    .pn-totop:hover { background: #5A2FC7; }
+    .pn-totop:hover { background: #0D0AA8; }
     .pn-totop svg { width: 22px; height: 22px; }
     @media (max-width: 560px) { .pn-totop { right: 16px; bottom: 16px; } }
 
@@ -264,7 +280,7 @@
     .pn-preview-banner strong { display:block; font-size:14px; font-weight:800; }
     .pn-preview-banner span { font-size:12px; color: rgba(255,255,255,.65); }
     .pn-preview-exit { margin-left:auto; background: var(--pn-purple); color:#fff; font-size:12.5px; font-weight:800; padding:9px 16px; border-radius:11px; white-space:nowrap; }
-    .pn-preview-exit:hover { background:#5A2FC7; }
+    .pn-preview-exit:hover { background:#0D0AA8; }
 
     /* ── Shared card / helpers ── */
     .pn-card { background: var(--pn-card); border: 1px solid var(--pn-border); border-radius: var(--pn-radius); box-shadow: var(--pn-shadow); }
@@ -294,7 +310,9 @@
     .pn-stage__prog { width:180px; flex-shrink:0; }
     .pn-stage__prog small { font-size:11px; font-weight:700; color:rgba(255,255,255,.6); display:block; margin-bottom:6px; }
     .pn-stage__bar { height:8px; border-radius:20px; background:rgba(255,255,255,.16); overflow:hidden; }
-    .pn-stage__bar i { display:block; height:100%; border-radius:20px; background:var(--pn-purple); }
+    /* Verde neón: el azul de marca sobre este banner oscuro casi no se ve, y
+       el avance es el dato que debe saltar. Highlight, no decoración. */
+    .pn-stage__bar i { display:block; height:100%; border-radius:20px; background:var(--pn-lime); }
     .pn-stage__updated { font-size:11px; color:rgba(255,255,255,.5); font-weight:600; flex-basis:100%; }
     @media (max-width:640px){ .pn-stage__prog { width:100%; } }
 

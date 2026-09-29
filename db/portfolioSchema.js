@@ -30,7 +30,7 @@ async function ensurePortfolioSchema() {
       t.string('phase').defaultTo('planeacion');      // planeacion|negociacion|produccion|evento|cierre
       t.integer('progress_pct').defaultTo(0);
       t.boolean('is_demo').defaultTo(false);
-      t.string('accent').defaultTo('#6C3CE0');
+      t.string('accent').defaultTo('#1B17EF');
       // Parámetros del simulador (por evento)
       t.integer('capacity').defaultTo(21800);
       t.integer('ticket_price').defaultTo(100);

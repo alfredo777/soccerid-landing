@@ -96,13 +96,13 @@ async function seedPortfolio() {
   const editions = [
     { code: 'SJ', year: 2023, title: 'San José 2023', subtitle: 'SOCCER iD CUP', match: 'Pumas vs Comunicaciones',
       city: 'San José', country: 'Estados Unidos', event_date: '2023-01-01', date_phase: 'Concluido',
-      phase: 'cierre', progress_pct: 100, is_demo: false, accent: '#6C3CE0', sort: 1 },
+      phase: 'cierre', progress_pct: 100, is_demo: false, accent: '#1B17EF', sort: 1 },
     { code: 'ORL', year: 2024, title: 'Orlando 2024', subtitle: 'SOCCER iD CUP', match: 'América vs Atlético Nacional',
       city: 'Orlando', country: 'Estados Unidos', venue: 'Camping World Stadium', event_date: '2024-09-07', date_phase: 'Concluido',
-      phase: 'cierre', progress_pct: 100, is_demo: false, accent: '#6C3CE0', sort: 2 },
+      phase: 'cierre', progress_pct: 100, is_demo: false, accent: '#1B17EF', sort: 2 },
     { code: 'AUS', year: 2025, title: 'Austin 2025', subtitle: 'SOCCER iD CUP', match: 'Pumas vs Tigres',
       city: 'Austin', country: 'Estados Unidos', venue: 'Q2 Stadium', event_date: '2025-01-01', date_phase: 'Concluido',
-      phase: 'cierre', progress_pct: 100, is_demo: false, accent: '#6C3CE0', sort: 3 }
+      phase: 'cierre', progress_pct: 100, is_demo: false, accent: '#1B17EF', sort: 3 }
   ];
   await knex('portfolio_events').insert(editions);
 
