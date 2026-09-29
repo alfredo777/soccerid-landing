@@ -239,7 +239,10 @@ const SONDA = () => `(() => {
   await send('Page.enable'); await send('Runtime.enable');
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 950, deviceScaleFactor: 1, mobile: false });
 
-  console.log(`\nContraste AA — ${BASE}\n`);
+  console.log(`
+Contraste — ${SOLO_AA ? 'mínimo legal AA (4.5 / 3.0)' : 'estándar de la casa (7.0 bajo 16px, 4.5 encima)'}`);
+  console.log(`${BASE}
+`);
   let totalFallos = 0, totalImagen = 0;
 
   for (const ruta of PAGINAS) {
