@@ -354,6 +354,12 @@ body {
 }
 
 .hero-tagline {
+    /* El lema lleva un <br> y debe caer SIEMPRE en dos líneas. La segunda,
+       "QUE NOS ATREVIMOS A REINVENTARLO", necesita 365px a 19.2px; en un
+       teléfono de 390px solo hay 350 disponibles, así que se partía en tres.
+       Por debajo de 480px el tamaño pasa a escalar con el ancho (4.3vw) para
+       que entre en cualquier pantalla sin quedarse diminuto en las grandes.
+       Medido con scripts: 360, 390, 414 y 430px. */
     font-size: clamp(1.2rem, 3vw, 2rem);
     font-weight: 700;
     color: var(--text-primary);
@@ -2487,6 +2493,10 @@ body {
 }
 
 @media (max-width: 480px) {
+    .hero-tagline {
+        font-size: clamp(0.95rem, 4.3vw, 1.2rem);
+    }
+
     .testimonials-container {
         padding: 0 12px;
     }
