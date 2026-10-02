@@ -155,9 +155,16 @@
     background: url('{{heroImage}}') center/cover no-repeat;
     display: flex; align-items: flex-end; justify-content: center; padding: 60px 48px;
   }
+  /* El velo se oscurece a media altura, no solo abajo: ahi cae la etiqueta
+     "OPORTUNIDAD DE INVERSION" y, sobre el cesped iluminado de la foto, el
+     texto chico se perdia. El cielo de arriba se deja casi limpio. */
   .pp-hero__overlay {
     position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.85) 100%);
+    background: linear-gradient(180deg,
+      rgba(0,0,0,0.25) 0%,
+      rgba(0,0,0,0.45) 32%,
+      rgba(0,0,0,0.72) 55%,
+      rgba(0,0,0,0.93) 100%);
   }
   .pp-hero__body { position: relative; z-index: 2; text-align: center; display: flex; flex-direction: column; align-items: center; }
   .pp-hero__teams {
