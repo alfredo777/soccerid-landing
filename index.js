@@ -855,6 +855,8 @@ function renderPropuesta(variante) {
         slug: variante.slug,
         gateKey: variante.gateKey,
         variantId: variante.id,
+        // Foto del hero y del cierre: la del partido de esta propuesta.
+        heroImage: variante.hero,
         robots: variante.noindex ? 'noindex,nofollow' : null,
         // Solo con la cookie de acceso se manda el contenido de la propuesta.
         // Sin ella la página es únicamente el candado.
