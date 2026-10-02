@@ -14,9 +14,9 @@
       "team1": "CRUZ AZUL",
       "vs": "vs",
       "team2": "PUMAS",
-      "venue": "SEDE_PENDIENTE",
-      "city": "CIUDAD_PENDIENTE",
-      "date": "FECHA_PENDIENTE",
+      "venue": "Shell Energy Stadium",
+      "city": "Houston, Texas",
+      "date": "Sábado, 27 de marzo 2027",
       "cupBtn": "¿QUÉ ES SOCCER iD CUP?"
     },
     "nav": {
@@ -75,7 +75,7 @@
         "intro": "Antecedentes recientes demuestran la capacidad de convocatoria de ambos clubes en Estados Unidos.",
         "sourcesLabel": "Fuentes",
         "marketLabel": "AFINIDAD DE MERCADO",
-        "footer": "Pumas tiene el récord de asistencia de la Liga de Campeones de Concacaf: 68,741 personas en la final de 2022 en Estados Unidos. La cifra de boletos comercializables (BOLETOS_PENDIENTE) se define al confirmar la sede.",
+        "footer": "Pumas tiene el récord de asistencia de un Club Mexicano en territorio estadounidense en la Leagues Cup",
         "cards": [
           {
             "team": "CRUZ AZUL EN LOS ÁNGELES",
@@ -155,26 +155,27 @@
         {
           "label": "MERCADO",
           "icon": "people",
-          "mainTitle": "CIUDAD_PENDIENTE",
+          "mainTitle": "Houston, Texas",
           "lines": [
-            "DATO_PENDIENTE — mercado por definir al confirmar la sede",
-            "Alta concentración de aficionados de Cruz Azul y Pumas",
+            "Principal Mercado Hispano dentro de los Estados Unidos",
+            "Gran afición en el público mexicano de todo Estados Unidos",
             "Mercado probado para futbol internacional"
           ]
         },
         {
           "label": "VENUE",
           "icon": "stadium",
-          "mainTitle": "SEDE_PENDIENTE",
-          "sub": "(por confirmar)",
+          "mainTitle": "Shell Energy Stadium",
+          "sub": "(MLS) Listo para Futbol",
           "stats": [
             {
-              "value": "CAPACIDAD_PENDIENTE",
+              "value": "22,800",
               "label": "CAPACIDAD TOTAL"
             },
             {
-              "value": "BOLETOS_PENDIENTE",
-              "label": "BOLETOS COMERCIALIZABLES"
+              "value": "21,800",
+              "label": "BOLETOS COMERCIALIZABLES",
+              "note": "(1,000 cortesías)"
             }
           ]
         },
@@ -197,15 +198,15 @@
         },
         {
           "label": "Boletos comercializables",
-          "value": "CIFRA_PENDIENTE"
+          "value": "21,800"
         },
         {
           "label": "Potencial bruto taquilla",
-          "value": "CIFRA_PENDIENTE"
+          "value": "USD $2.18 M"
         },
         {
           "label": "Cobertura sobre capital",
-          "value": "CIFRA_PENDIENTE"
+          "value": "2.18x"
         }
       ],
       "revenueTitle": "FUENTES DE INGRESOS",
@@ -316,7 +317,15 @@
     },
     "media": {
       "more": "Ver más notas",
-      "less": "Ver menos"
+      "less": "Ver menos",
+      "extra": [
+        {
+          "title": "Afición de Pumas sorprende a fans de Seattle camino al estadio",
+          "source": "TUDN",
+          "url": "https://www.tudn.com/futbol/liga-campeones-concacaf/aficion-de-pumas-sorprende-a-fans-de-seattle-camino-al-estadio",
+          "image": "/assets/images/news/pumas-seattle-tudn.jpg"
+        }
+      ]
     },
     "sponsors": {
       "title": "RESPALDO COMERCIAL",
@@ -399,7 +408,7 @@
         "scenario": [
           {
             "icon": "people",
-            "value": "CIFRA_PENDIENTE",
+            "value": "21,800",
             "label": "boletos vendidos",
             "lead": true
           },
@@ -417,7 +426,7 @@
           {
             "icon": "dollar",
             "label": "Taquilla proyectada:",
-            "value": "CIFRA_PENDIENTE"
+            "value": "USD $2.18M"
           },
           {
             "icon": "coins",
@@ -427,12 +436,12 @@
           {
             "icon": "chart",
             "label": "Utilidad ilustrativa:",
-            "value": "CIFRA_PENDIENTE"
+            "value": "USD $1.18M"
           },
           {
             "icon": "growth",
             "label": "50% para inversionistas (pool):",
-            "value": "CIFRA_PENDIENTE"
+            "value": "USD $590,000"
           }
         ],
         "breakEvenTitle": "BREAK-EVEN ILUSTRATIVO",
@@ -567,11 +576,11 @@
         },
         {
           "activity": "<strong>Liquidación de proveedores y clubes</strong>",
-          "period": "FECHA_PENDIENTE (ajustar al mes previo al partido)"
+          "period": "Febrero – Marzo 2027"
         },
         {
           "activity": "<strong>Partido Internacional</strong>",
-          "period": "FECHA_PENDIENTE",
+          "period": "27 de marzo de 2027",
           "highlight": true
         },
         {
@@ -673,15 +682,7 @@
       "btnMsg": "Hola!%20Estoy%20interesado%20en%20invertir%20en%20SOCCER%20iD%20CUP%202027",
       "confidential": "CONFIDENCIAL"
     },
-    "_pendientes": [
-      "hero.venue / hero.city / hero.date",
-      "highlights.whyMatch.footer (cifra de boletos comercializables)",
-      "highlights.columns MERCADO (ciudad y argumentos) y VENUE (nombre, capacidad, boletos)",
-      "scope.indicators (boletos, potencial bruto de taquilla, cobertura sobre capital)",
-      "proposal.risk.scenario (boletos, taquilla, utilidad ilustrativa, pool)",
-      "timeline.items (fecha del partido y mes de liquidación)",
-      "calculator.capacity y currencies[].projectCost/ticketPrice: siguen con los numeros de Houston porque la calculadora necesita numeros; REVISAR al definir la sede"
-    ]
+    "_pendientes": []
   },
   "en": {
     "pageTitle": "SOCCER iD CUP 2027 — Investment Opportunity",
@@ -698,9 +699,9 @@
       "team1": "CRUZ AZUL",
       "vs": "vs",
       "team2": "PUMAS",
-      "venue": "SEDE_PENDIENTE",
-      "city": "CIUDAD_PENDIENTE",
-      "date": "FECHA_PENDIENTE",
+      "venue": "Shell Energy Stadium",
+      "city": "Houston, Texas",
+      "date": "Saturday, March 27, 2027",
       "cupBtn": "WHAT IS SOCCER iD CUP?"
     },
     "nav": {
@@ -759,7 +760,7 @@
         "intro": "Recent precedents demonstrate both clubs' drawing power in the United States.",
         "sourcesLabel": "Sources",
         "marketLabel": "MARKET AFFINITY",
-        "footer": "Pumas holds the Concacaf Champions League attendance record: 68,741 people at the 2022 final in the United States. The marketable ticket figure (BOLETOS_PENDIENTE) will be set once the venue is confirmed.",
+        "footer": "Pumas holds the attendance record for a Mexican club on U.S. soil in the Leagues Cup",
         "cards": [
           {
             "team": "CRUZ AZUL IN LOS ANGELES",
@@ -839,26 +840,27 @@
         {
           "label": "MARKET",
           "icon": "people",
-          "mainTitle": "CIUDAD_PENDIENTE",
+          "mainTitle": "Houston, Texas",
           "lines": [
-            "DATO_PENDIENTE — market to be defined once the venue is confirmed",
-            "High concentration of Cruz Azul and Pumas fans",
+            "Leading Hispanic Market in the United States",
+            "A large following among Mexican fans across the United States",
             "Proven market for international football"
           ]
         },
         {
           "label": "VENUE",
           "icon": "stadium",
-          "mainTitle": "SEDE_PENDIENTE",
-          "sub": "(to be confirmed)",
+          "mainTitle": "Shell Energy Stadium",
+          "sub": "(MLS) Football-Ready",
           "stats": [
             {
-              "value": "CAPACIDAD_PENDIENTE",
+              "value": "22,800",
               "label": "TOTAL CAPACITY"
             },
             {
-              "value": "BOLETOS_PENDIENTE",
-              "label": "MARKETABLE TICKETS"
+              "value": "21,800",
+              "label": "MARKETABLE TICKETS",
+              "note": "(1,000 complimentary)"
             }
           ]
         },
@@ -881,15 +883,15 @@
         },
         {
           "label": "Marketable tickets",
-          "value": "CIFRA_PENDIENTE"
+          "value": "21,800"
         },
         {
           "label": "Gross box office potential",
-          "value": "CIFRA_PENDIENTE"
+          "value": "USD $2.18 M"
         },
         {
           "label": "Capital coverage ratio",
-          "value": "CIFRA_PENDIENTE"
+          "value": "2.18x"
         }
       ],
       "revenueTitle": "REVENUE SOURCES",
@@ -1000,7 +1002,15 @@
     },
     "media": {
       "more": "See more coverage",
-      "less": "See less"
+      "less": "See less",
+      "extra": [
+        {
+          "title": "Pumas fans surprise Seattle supporters on their way to the stadium",
+          "source": "TUDN",
+          "url": "https://www.tudn.com/futbol/liga-campeones-concacaf/aficion-de-pumas-sorprende-a-fans-de-seattle-camino-al-estadio",
+          "image": "/assets/images/news/pumas-seattle-tudn.jpg"
+        }
+      ]
     },
     "sponsors": {
       "title": "COMMERCIAL BACKING",
@@ -1083,7 +1093,7 @@
         "scenario": [
           {
             "icon": "people",
-            "value": "CIFRA_PENDIENTE",
+            "value": "21,800",
             "label": "tickets sold",
             "lead": true
           },
@@ -1101,7 +1111,7 @@
           {
             "icon": "dollar",
             "label": "Projected box office:",
-            "value": "CIFRA_PENDIENTE"
+            "value": "USD $2.18M"
           },
           {
             "icon": "coins",
@@ -1111,12 +1121,12 @@
           {
             "icon": "chart",
             "label": "Illustrative profit:",
-            "value": "CIFRA_PENDIENTE"
+            "value": "USD $1.18M"
           },
           {
             "icon": "growth",
             "label": "50% to investors (pool):",
-            "value": "CIFRA_PENDIENTE"
+            "value": "USD $590,000"
           }
         ],
         "breakEvenTitle": "ILLUSTRATIVE BREAK-EVEN",
@@ -1251,11 +1261,11 @@
         },
         {
           "activity": "<strong>Vendor and club settlements</strong>",
-          "period": "FECHA_PENDIENTE (ajustar al mes previo al partido)"
+          "period": "February – March 2027"
         },
         {
           "activity": "<strong>International Match</strong>",
-          "period": "FECHA_PENDIENTE",
+          "period": "March 27, 2027",
           "highlight": true
         },
         {
@@ -1357,14 +1367,6 @@
       "btnMsg": "Hi!%20I'm%20interested%20in%20investing%20in%20SOCCER%20iD%20CUP%202027",
       "confidential": "CONFIDENTIAL"
     },
-    "_pendientes": [
-      "hero.venue / hero.city / hero.date",
-      "highlights.whyMatch.footer (cifra de boletos comercializables)",
-      "highlights.columns MERCADO (ciudad y argumentos) y VENUE (nombre, capacidad, boletos)",
-      "scope.indicators (boletos, potencial bruto de taquilla, cobertura sobre capital)",
-      "proposal.risk.scenario (boletos, taquilla, utilidad ilustrativa, pool)",
-      "timeline.items (fecha del partido y mes de liquidación)",
-      "calculator.capacity y currencies[].projectCost/ticketPrice: siguen con los numeros de Houston porque la calculadora necesita numeros; REVISAR al definir la sede"
-    ]
+    "_pendientes": []
   }
 }

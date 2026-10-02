@@ -11,7 +11,7 @@
     },
     "hero": {
       "badge": "OPORTUNIDAD DE INVERSIÓN",
-      "team1": "TIGRES",
+      "team1": "PUMAS",
       "vs": "vs",
       "team2": "CRUZ AZUL",
       "venue": "Shell Energy Stadium",
@@ -45,26 +45,26 @@
         "intro": "Antecedentes recientes demuestran la capacidad de convocatoria de ambos clubes en Estados Unidos.",
         "sourcesLabel": "Fuentes",
         "marketLabel": "AFINIDAD DE MERCADO",
-        "footer": "Tigres llenó 21,792 lugares en el mismo estadio del SOCCER iD CUP 2027, que ofrece 21,800 boletos comercializables.",
+        "footer": "Pumas tiene el récord de asistencia de un Club Mexicano en territorio estadounidense en la Leagues Cup",
         "cards": [
           {
-            "team": "TIGRES EN HOUSTON",
-            "image": "/assets/images/antecedentes/tigres-houston.jpg",
-            "venue": "Shell Energy Stadium",
-            "venueTag": "EL MISMO ESTADIO DEL SOCCER iD CUP 2027",
+            "team": "PUMAS EN SEATTLE",
+            "image": "/assets/images/antecedentes/pumas-seattle.jpg",
+            "venue": "Lumen Field · Seattle",
+            "venueTag": "HA PARTICIPADO EN SOCCER iD CUP 2023 Y 2025",
             "pct": 100,
-            "outlet": "Houston Dynamo FC",
-            "handle": "@HoustonDynamo",
-            "quote": "Houston Dynamo FC announce sellout for Tuesday's Leagues Cup match versus Tigres UANL",
-            "date": "Agosto de 2025",
-            "badge": "SOLD OUT",
-            "value": "21,792",
+            "outlet": "TUDN",
+            "quote": "Los seguidores de Pumas caminaron en orden entre cantos, porras, banderas, bombos y mucho color",
+            "date": "Mayo de 2022",
+            "badge": "RÉCORD CONCACAF",
+            "value": "68,741",
             "label": "AFICIONADOS",
-            "sub": "2025",
-            "marketLabel": "CAPACIDAD DE CONVOCATORIA EN HOUSTON",
-            "market": "Afición consolidada en Texas, con antecedente de SOLD OUT.",
+            "sub": "2022",
+            "marketLabel": "CAPACIDAD DE CONVOCATORIA",
+            "market": "Gran afición en el público mexicano de todo Estados Unidos.",
             "links": [
-              { "text": "Reporte oficial del partido", "source": "Houston Dynamo FC", "url": "https://www.houstondynamofc.com/news/houston-dynamo-fc-fall-to-tigres-uanl-4-1-in-opening-leagues-cup-match" }
+              { "text": "La afición de Pumas sorprende a los fans de Seattle camino al estadio", "source": "TUDN", "url": "https://www.tudn.com/futbol/liga-campeones-concacaf/aficion-de-pumas-sorprende-a-fans-de-seattle-camino-al-estadio" },
+              { "text": "68,741 asistentes: la entrada más alta en la historia del torneo", "source": "Concacaf", "url": "https://www.concacaf.com/champions-cup/news/seattle-sounders-breakthrough-the-top-sccl-story-of-2022/" }
             ]
           },
           {
@@ -93,14 +93,14 @@
           "icon": "trophy",
           "items": [
             { "bold": "Cruz Azul", "lines": ["Campeón actual Liga MX", "Actual Campeón de Campeones", "Uno de los \"Cuatro Grandes\""] },
-            { "bold": "Tigres", "lines": ["Multicampeón Liga MX", "Finalista CONCACAF", "Juega de \"local\" en Texas"] }
+            { "bold": "Pumas", "lines": ["Uno de los \"Cuatro Grandes\"", "Campeón de Liga MX", "Ya jugó el SOCCER iD CUP en 2023 y 2025"] }
           ]
         },
         {
           "label": "MERCADO",
           "icon": "people",
           "mainTitle": "Houston, Texas",
-          "lines": ["Principal Mercado Hispano dentro de los Estados Unidos", "Alta concentración de aficionados de Tigres", "Mercado probado para futbol internacional"]
+          "lines": ["Principal Mercado Hispano dentro de los Estados Unidos", "Gran afición en el público mexicano de todo Estados Unidos", "Mercado probado para futbol internacional"]
         },
         {
           "label": "VENUE",
@@ -379,7 +379,7 @@
     },
     "hero": {
       "badge": "INVESTMENT OPPORTUNITY",
-      "team1": "TIGRES",
+      "team1": "PUMAS",
       "vs": "vs",
       "team2": "CRUZ AZUL",
       "venue": "Shell Energy Stadium",
@@ -413,26 +413,26 @@
         "intro": "Recent precedents demonstrate both clubs' drawing power in the United States.",
         "sourcesLabel": "Sources",
         "marketLabel": "MARKET AFFINITY",
-        "footer": "Tigres filled 21,792 seats at the very stadium of SOCCER iD CUP 2027, which offers 21,800 marketable tickets.",
+        "footer": "Pumas holds the attendance record for a Mexican club on U.S. soil in the Leagues Cup",
         "cards": [
           {
-            "team": "TIGRES IN HOUSTON",
-            "image": "/assets/images/antecedentes/tigres-houston.jpg",
-            "venue": "Shell Energy Stadium",
-            "venueTag": "THE SAME VENUE AS SOCCER iD CUP 2027",
+            "team": "PUMAS IN SEATTLE",
+            "image": "/assets/images/antecedentes/pumas-seattle.jpg",
+            "venue": "Lumen Field · Seattle",
+            "venueTag": "HAS PLAYED IN SOCCER iD CUP 2023 AND 2025",
             "pct": 100,
-            "outlet": "Houston Dynamo FC",
-            "handle": "@HoustonDynamo",
-            "quote": "Houston Dynamo FC announce sellout for Tuesday's Leagues Cup match versus Tigres UANL",
-            "date": "August 2025",
-            "badge": "SOLD OUT",
-            "value": "21,792",
+            "outlet": "TUDN",
+            "quote": "Pumas supporters marched in formation with chants, flags, drums and plenty of color.",
+            "date": "May 2022",
+            "badge": "CONCACAF RECORD",
+            "value": "68,741",
             "label": "FANS",
-            "sub": "2025",
-            "marketLabel": "DRAWING POWER IN HOUSTON",
-            "market": "An established following in Texas, with a SOLD OUT precedent.",
+            "sub": "2022",
+            "marketLabel": "DRAWING POWER",
+            "market": "A large following among Mexican fans across the United States.",
             "links": [
-              { "text": "Official match report", "source": "Houston Dynamo FC", "url": "https://www.houstondynamofc.com/news/houston-dynamo-fc-fall-to-tigres-uanl-4-1-in-opening-leagues-cup-match" }
+              { "text": "Pumas fans surprise Seattle supporters on their way to the stadium", "source": "TUDN", "url": "https://www.tudn.com/futbol/liga-campeones-concacaf/aficion-de-pumas-sorprende-a-fans-de-seattle-camino-al-estadio" },
+              { "text": "68,741 in attendance: the largest crowd in the tournament's history", "source": "Concacaf", "url": "https://www.concacaf.com/champions-cup/news/seattle-sounders-breakthrough-the-top-sccl-story-of-2022/" }
             ]
           },
           {
@@ -461,14 +461,14 @@
           "icon": "trophy",
           "items": [
             { "bold": "Cruz Azul", "lines": ["Current Liga MX Champion", "Current Champion of Champions", "One of the \"Big Four\""] },
-            { "bold": "Tigres", "lines": ["Multi-time Liga MX Champion", "CONCACAF Finalist", "Plays as \"home\" team in Texas"] }
+            { "bold": "Pumas", "lines": ["One of the \"Big Four\"", "Liga MX Champion", "Already played SOCCER iD CUP in 2023 and 2025"] }
           ]
         },
         {
           "label": "MARKET",
           "icon": "people",
           "mainTitle": "Houston, Texas",
-          "lines": ["Leading Hispanic Market in the United States", "High concentration of Tigres fans", "Proven market for international football"]
+          "lines": ["Leading Hispanic Market in the United States", "A large following among Mexican fans across the United States", "Proven market for international football"]
         },
         {
           "label": "VENUE",
