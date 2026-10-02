@@ -133,23 +133,12 @@
         {
           "label": "PRODUCTO",
           "icon": "trophy",
-          "items": [
-            {
-              "bold": "Cruz Azul",
-              "lines": [
-                "Campeón actual Liga MX",
-                "Actual Campeón de Campeones",
-                "Uno de los \"Cuatro Grandes\""
-              ]
-            },
-            {
-              "bold": "Pumas",
-              "lines": [
-                "Uno de los \"Cuatro Grandes\"",
-                "Campeón de Liga MX",
-                "Ya jugó el SOCCER iD CUP en 2023 y 2025"
-              ]
-            }
+          "lines": [
+            "Última Final de Liga MX",
+            "Campeón vs. Subcampeón del futbol mexicano",
+            "Derbi Capitalino",
+            "2 de los \"Cuatro Grandes\" de México",
+            "Pumas — participante de SOCCER iD Cup 2023 y 2025"
           ]
         },
         {
@@ -818,23 +807,12 @@
         {
           "label": "PRODUCT",
           "icon": "trophy",
-          "items": [
-            {
-              "bold": "Cruz Azul",
-              "lines": [
-                "Current Liga MX Champion",
-                "Current Champion of Champions",
-                "One of the \"Big Four\""
-              ]
-            },
-            {
-              "bold": "Pumas",
-              "lines": [
-                "One of the \"Big Four\"",
-                "Liga MX Champion",
-                "Played SOCCER iD CUP in 2023 and 2025"
-              ]
-            }
+          "lines": [
+            "Latest Liga MX Final",
+            "Champion vs. Runner-up of Mexican football",
+            "Mexico City derby",
+            "2 of Mexico’s \"Big Four\"",
+            "Pumas — played SOCCER iD Cup 2023 and 2025"
           ]
         },
         {
