@@ -75,7 +75,7 @@
         "intro": "Antecedentes recientes demuestran la capacidad de convocatoria de ambos clubes en Estados Unidos.",
         "sourcesLabel": "Fuentes",
         "marketLabel": "AFINIDAD DE MERCADO",
-        "footer": "Ambos clubes tienen antecedentes de estadio lleno en Estados Unidos. La cifra de boletos comercializables (BOLETOS_PENDIENTE) se define al confirmar la sede.",
+        "footer": "Pumas tiene el récord de asistencia de la Liga de Campeones de Concacaf: 68,741 personas en la final de 2022 en Estados Unidos. La cifra de boletos comercializables (BOLETOS_PENDIENTE) se define al confirmar la sede.",
         "cards": [
           {
             "team": "CRUZ AZUL EN LOS ÁNGELES",
@@ -100,19 +100,32 @@
             ]
           },
           {
-            "team": "PUMAS EN CIUDAD_PENDIENTE",
-            "venue": "SEDE_PENDIENTE",
-            "pct": 0,
-            "outlet": "DATO_PENDIENTE",
-            "quote": "DATO_PENDIENTE — falta la cita, la fuente y la cifra de asistencia del antecedente de Pumas en Estados Unidos.",
-            "date": "FECHA_PENDIENTE",
-            "badge": "PENDIENTE",
-            "value": "CIFRA_PENDIENTE",
+            "team": "PUMAS EN SEATTLE",
+            "image": "/assets/images/antecedentes/pumas-seattle.jpg",
+            "venue": "Lumen Field · Seattle",
+            "venueTag": "HA PARTICIPADO EN SOCCER iD CUP 2023 Y 2025",
+            "pct": 100,
+            "outlet": "TUDN",
+            "quote": "Los seguidores de Pumas caminaron en orden entre cantos, porras, banderas, bombos y mucho color",
+            "date": "Mayo de 2022",
+            "badge": "RÉCORD CONCACAF",
+            "value": "68,741",
             "label": "AFICIONADOS",
-            "sub": "",
+            "sub": "2022",
             "marketLabel": "CAPACIDAD DE CONVOCATORIA",
-            "market": "DATO_PENDIENTE — falta describir la capacidad de convocatoria de Pumas en el mercado elegido.",
-            "links": []
+            "market": "Gran afición en el público mexicano de todo Estados Unidos.",
+            "links": [
+              {
+                "text": "La afición de Pumas sorprende a los fans de Seattle camino al estadio",
+                "source": "TUDN",
+                "url": "https://www.tudn.com/futbol/liga-campeones-concacaf/aficion-de-pumas-sorprende-a-fans-de-seattle-camino-al-estadio"
+              },
+              {
+                "text": "68,741 asistentes: la entrada más alta en la historia del torneo",
+                "source": "Concacaf",
+                "url": "https://www.concacaf.com/champions-cup/news/seattle-sounders-breakthrough-the-top-sccl-story-of-2022/"
+              }
+            ]
           }
         ]
       },
@@ -662,14 +675,12 @@
     },
     "_pendientes": [
       "hero.venue / hero.city / hero.date",
-      "highlights.whyMatch.cards[1] (antecedente de Pumas: outlet, quote, value, date, links, image)",
       "highlights.whyMatch.footer (cifra de boletos comercializables)",
       "highlights.columns MERCADO (ciudad y argumentos) y VENUE (nombre, capacidad, boletos)",
       "scope.indicators (boletos, potencial bruto de taquilla, cobertura sobre capital)",
       "proposal.risk.scenario (boletos, taquilla, utilidad ilustrativa, pool)",
       "timeline.items (fecha del partido y mes de liquidación)",
-      "calculator.capacity y currencies[].projectCost/ticketPrice: siguen con los numeros de Houston porque la calculadora necesita numeros; REVISAR al definir la sede",
-      "assets: /assets/images/antecedentes/pumas-<ciudad>.jpg"
+      "calculator.capacity y currencies[].projectCost/ticketPrice: siguen con los numeros de Houston porque la calculadora necesita numeros; REVISAR al definir la sede"
     ]
   },
   "en": {
@@ -748,7 +759,7 @@
         "intro": "Recent precedents demonstrate both clubs' drawing power in the United States.",
         "sourcesLabel": "Sources",
         "marketLabel": "MARKET AFFINITY",
-        "footer": "Both clubs have sold-out precedents in the United States. The marketable ticket figure (BOLETOS_PENDIENTE) will be set once the venue is confirmed.",
+        "footer": "Pumas holds the Concacaf Champions League attendance record: 68,741 people at the 2022 final in the United States. The marketable ticket figure (BOLETOS_PENDIENTE) will be set once the venue is confirmed.",
         "cards": [
           {
             "team": "CRUZ AZUL IN LOS ANGELES",
@@ -773,19 +784,32 @@
             ]
           },
           {
-            "team": "PUMAS IN CIUDAD_PENDIENTE",
-            "venue": "SEDE_PENDIENTE",
-            "pct": 0,
-            "outlet": "DATO_PENDIENTE",
-            "quote": "DATO_PENDIENTE — quote, source and attendance figure for the Pumas precedent in the United States are still missing.",
-            "date": "FECHA_PENDIENTE",
-            "badge": "PENDING",
-            "value": "CIFRA_PENDIENTE",
+            "team": "PUMAS IN SEATTLE",
+            "image": "/assets/images/antecedentes/pumas-seattle.jpg",
+            "venue": "Lumen Field · Seattle",
+            "venueTag": "HAS PLAYED IN SOCCER iD CUP 2023 AND 2025",
+            "pct": 100,
+            "outlet": "TUDN",
+            "quote": "Pumas supporters marched in formation with chants, flags, drums and plenty of color.",
+            "date": "May 2022",
+            "badge": "CONCACAF RECORD",
+            "value": "68,741",
             "label": "FANS",
-            "sub": "",
+            "sub": "2022",
             "marketLabel": "DRAWING POWER",
-            "market": "DATO_PENDIENTE — the description of Pumas’ drawing power in the chosen market is still missing.",
-            "links": []
+            "market": "A large following among Mexican fans across the United States.",
+            "links": [
+              {
+                "text": "Pumas fans surprise Seattle supporters on their way to the stadium",
+                "source": "TUDN",
+                "url": "https://www.tudn.com/futbol/liga-campeones-concacaf/aficion-de-pumas-sorprende-a-fans-de-seattle-camino-al-estadio"
+              },
+              {
+                "text": "68,741 in attendance: the largest crowd in the tournament's history",
+                "source": "Concacaf",
+                "url": "https://www.concacaf.com/champions-cup/news/seattle-sounders-breakthrough-the-top-sccl-story-of-2022/"
+              }
+            ]
           }
         ]
       },
@@ -1335,14 +1359,12 @@
     },
     "_pendientes": [
       "hero.venue / hero.city / hero.date",
-      "highlights.whyMatch.cards[1] (antecedente de Pumas: outlet, quote, value, date, links, image)",
       "highlights.whyMatch.footer (cifra de boletos comercializables)",
       "highlights.columns MERCADO (ciudad y argumentos) y VENUE (nombre, capacidad, boletos)",
       "scope.indicators (boletos, potencial bruto de taquilla, cobertura sobre capital)",
       "proposal.risk.scenario (boletos, taquilla, utilidad ilustrativa, pool)",
       "timeline.items (fecha del partido y mes de liquidación)",
-      "calculator.capacity y currencies[].projectCost/ticketPrice: siguen con los numeros de Houston porque la calculadora necesita numeros; REVISAR al definir la sede",
-      "assets: /assets/images/antecedentes/pumas-<ciudad>.jpg"
+      "calculator.capacity y currencies[].projectCost/ticketPrice: siguen con los numeros de Houston porque la calculadora necesita numeros; REVISAR al definir la sede"
     ]
   }
 }
