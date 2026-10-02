@@ -828,8 +828,15 @@ function renderPropuesta(variante) {
       const data = propuestas.leerContenido(variante, lang, DEFAULT_LANG);
       if (!data) return next();
 
-      // Notas de medios agregadas de las ediciones pasadas (desde la base de datos)
-      const mediaLinks = await cupEditions.mediaLinks(lang);
+      // Notas de medios agregadas de las ediciones pasadas (desde la base de
+      // datos), y delante las que aporte la propia propuesta en `media.extra`:
+      // notas que no son de una edicion nuestra pero sostienen su argumento
+      // (por ejemplo la aficion de un club en Estados Unidos). Van primero y
+      // marcadas como destacadas para que se vean sin desplegar la lista.
+      const deLaEdicion = await cupEditions.mediaLinks(lang);
+      const propias = ((data.media && data.media.extra) || [])
+        .map(m => Object.assign({}, m, { featured: true }));
+      const mediaLinks = propias.concat(deLaEdicion);
 
       const isEs = lang === 'es';
       const ogTitle = isEs ? 'SOCCER iD CUP — Confidencial Inversión' : 'SOCCER iD CUP — Confidential Investment';
