@@ -306,15 +306,7 @@
     },
     "media": {
       "more": "Ver más notas",
-      "less": "Ver menos",
-      "extra": [
-        {
-          "title": "Afición de Pumas sorprende a fans de Seattle camino al estadio",
-          "source": "TUDN",
-          "url": "https://www.tudn.com/futbol/liga-campeones-concacaf/aficion-de-pumas-sorprende-a-fans-de-seattle-camino-al-estadio",
-          "image": "/assets/images/news/pumas-seattle-tudn.jpg"
-        }
-      ]
+      "less": "Ver menos"
     },
     "sponsors": {
       "title": "RESPALDO COMERCIAL",
@@ -980,15 +972,7 @@
     },
     "media": {
       "more": "See more coverage",
-      "less": "See less",
-      "extra": [
-        {
-          "title": "Pumas fans surprise Seattle supporters on their way to the stadium",
-          "source": "TUDN",
-          "url": "https://www.tudn.com/futbol/liga-campeones-concacaf/aficion-de-pumas-sorprende-a-fans-de-seattle-camino-al-estadio",
-          "image": "/assets/images/news/pumas-seattle-tudn.jpg"
-        }
-      ]
+      "less": "See less"
     },
     "sponsors": {
       "title": "COMMERCIAL BACKING",
