@@ -80,9 +80,9 @@ async function ensureFaqs() {
     F('investor', '¿Hay contrato?', 'Sí, se firma un contrato individual. Los fondos se usan exclusivamente para la operación del evento y tienes acceso a la documentación y al seguimiento desde tu panel.', 5),
     F('investor', '¿Cómo doy seguimiento a mi inversión?', 'Desde tu panel: avances, documentos, comunicaciones y el simulador (solo modalidad a riesgo).', 6),
     F('sponsor', '¿Qué incluye un patrocinio?', 'Presencia de marca y activaciones según tu categoría, con exposición en estadio y transmisión.', 1),
-    F('sponsor', '¿Qué alcance tiene el evento?', 'Houston es la plaza hispana líder en EE. UU.; con antecedentes de llenos (Tigres 21,792 en Houston 2025; Cruz Azul 25,405 en LA 2024).', 2),
+    F('sponsor', '¿Qué alcance tiene el evento?', 'Houston es la plaza hispana líder en EE. UU.; con antecedentes de llenos (Cruz Azul 25,405 en Los Ángeles 2024; Pumas 68,741 en Seattle 2022).', 2),
     F('sponsor', '¿Cómo veo mis activaciones y beneficios?', 'En tu panel, en la sección de beneficios de tu categoría.', 3),
-    F('all', '¿Qué es la SOCCER iD CUP 2027?', 'Un amistoso internacional en ventana FIFA: Tigres vs Cruz Azul, el 27 de marzo de 2027 en el Shell Energy Stadium de Houston, Texas.', 1)
+    F('all', '¿Qué es la SOCCER iD CUP 2027?', 'Un amistoso internacional en ventana FIFA: Cruz Azul vs Pumas, el 27 de marzo de 2027 en el Shell Energy Stadium de Houston, Texas.', 1)
   ]);
   console.log('  ✓ FAQ inicial sembrado');
 }
@@ -108,13 +108,13 @@ async function seedPortfolio() {
 
   const [houId] = await knex('portfolio_events').insert({
     code: 'HOU', year: 2027, title: 'Houston 2027', subtitle: 'SOCCER iD CUP',
-    match: 'Tigres vs Cruz Azul',
-    description: 'Amistoso internacional en ventana FIFA: Tigres vs Cruz Azul en el Shell Energy Stadium (Houston). Objetivo de capital USD 1.0M.',
+    match: 'Cruz Azul vs Pumas',
+    description: 'Amistoso internacional en ventana FIFA: Cruz Azul vs Pumas en el Shell Energy Stadium (Houston). Objetivo de capital USD 1.0M.',
     venue: 'Shell Energy Stadium', city: 'Houston', country: 'Estados Unidos',
     event_date: '2027-03-27', date_phase: 'Planeación',
     presentation_es: [
       '## La oportunidad',
-      'SOCCER iD CUP 2027 presenta un amistoso internacional en ventana FIFA: Tigres vs Cruz Azul en el Shell Energy Stadium de Houston, Texas, el 27 de marzo de 2027. Houston es la plaza hispana líder en EE. UU., con demanda comprobada.',
+      'SOCCER iD CUP 2027 presenta un amistoso internacional en ventana FIFA: Cruz Azul vs Pumas en el Shell Energy Stadium de Houston, Texas, el 27 de marzo de 2027. Houston es la plaza hispana líder en EE. UU., con demanda comprobada.',
       '## La inversión',
       'Objetivo de capital: USD 1,000,000. Inversión mínima: USD 30,000. Dos modalidades: retorno fijo (hasta 25% contractual) o participación a riesgo (socio del evento, reparto 50/50 sobre la utilidad).',
       '## Por qué funciona',

@@ -46,7 +46,7 @@ async function ensurePortfolioSchema() {
   // Edición por año + presentación (la presentación pertenece a la edición)
   for (const [col, builder] of [
     ['year', (t) => t.integer('year')],
-    ['match', (t) => t.string('match')],                 // "Tigres vs Cruz Azul"
+    ['match', (t) => t.string('match')],                 // "Cruz Azul vs Pumas"
     ['presentation_es', (t) => t.text('presentation_es')],
     ['presentation_en', (t) => t.text('presentation_en')]
   ]) {

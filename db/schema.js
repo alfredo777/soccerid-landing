@@ -467,7 +467,7 @@ async function seed() {
   // Noticias iniciales
   if (!(await knex('news').first())) {
     await knex('news').insert([
-      { tag: 'Anuncio', tag_color: '#1B17EF', title: 'Confirmado: Tigres vs Cruz Azul en Houston', excerpt: 'El clásico regio-cementero se jugará en el Shell Energy Stadium el 27 de marzo de 2027. Un duelo entre dos de los clubes más grandes de México en el principal mercado hispano de Estados Unidos.', image: '/assets/images/gallery/cup2025/6.jpg', date_label: '12 Jul 2026', size: 'tall', featured: true, sort: 1 },
+      { tag: 'Anuncio', tag_color: '#1B17EF', title: 'Confirmado: Cruz Azul vs Pumas en Houston', excerpt: 'Cruz Azul y Pumas se verán en el Shell Energy Stadium el 27 de marzo de 2027. Un duelo entre dos de los clubes más grandes de México en el principal mercado hispano de Estados Unidos.', image: '/assets/images/gallery/cup2025/6.jpg', date_label: '12 Jul 2026', size: 'tall', featured: true, sort: 1 },
       { tag: 'Anuncio', tag_color: '#1B17EF', title: 'Shell Energy Stadium confirmado como sede oficial', excerpt: 'Estadio MLS listo para futbol con capacidad de 22,800 asistentes.', image: '/assets/images/gallery/cup2024/1.jpg', date_label: '28 Jun 2026', size: 'short', sort: 2 },
       { tag: 'Actualización', tag_color: '#14141B', title: 'Abrimos preventa exclusiva para inversionistas', excerpt: 'Los inversionistas Diamante y Platino tienen acceso prioritario a la asignación de boletos antes de la venta general.', image: '/assets/images/gallery/cup2023/1.jpg', date_label: '15 Ago 2026', size: 'tall', sort: 3 },
       { tag: 'Prensa', tag_color: '#6B7280', title: 'Cobertura confirmada con ESPN y TUDN', excerpt: 'El partido será transmitido a nivel internacional en las principales cadenas deportivas.', image: '/assets/images/gallery/cup2025/6.jpg', date_label: '02 Sep 2026', size: 'short', sort: 4 },
@@ -600,7 +600,7 @@ async function seed() {
   if (await knex.schema.hasTable('capital_items') && !(await knex('capital_items').first())) {
     await knex('capital_items').insert([
       { label: 'Renta y operación de estadio', budget: 350000, spent: 120000, note: 'Shell Energy Stadium', source: 'Contrato de sede', sort: 1 },
-      { label: 'Participación de equipos', budget: 300000, spent: 150000, note: 'Garantías Tigres y Cruz Azul', source: 'Contratos deportivos', sort: 2 },
+      { label: 'Participación de equipos', budget: 300000, spent: 150000, note: 'Garantías Cruz Azul y Pumas', source: 'Contratos deportivos', sort: 2 },
       { label: 'Producción y transmisión', budget: 180000, spent: 40000, note: 'ESPN / TUDN', source: 'Proveedores audiovisuales', sort: 3 },
       { label: 'Marketing y comercialización', budget: 120000, spent: 55000, note: 'Preventa y patrocinios', source: 'Área comercial', sort: 4 },
       { label: 'Operación y contingencias', budget: 50000, spent: 12000, note: 'Logística y reserva', source: 'Dirección de operaciones', sort: 5 }
