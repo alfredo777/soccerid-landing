@@ -1312,19 +1312,19 @@
     .ad-sendcode h4 { font-size:13px; font-weight:800; margin-bottom:4px; }
     .cd-tag { display:inline-block; margin-left:5px; padding:1px 8px; border-radius:999px; background:#F1F5F9; color:#475569; font-size:10.5px; font-weight:700; }
   </style>
-  <p class="ad-note">Códigos de acceso a la <strong>propuesta 2027</strong> (<a href="/es/socceridcup2027" target="_blank" rel="noopener" style="color:var(--pn-purple);font-weight:700;">ver página</a>). Al entrar desde un dispositivo nuevo se pide nombre y correo (quedan en <strong>Prospectos</strong>) y se registra en <strong>Accesos</strong>. Los mismos códigos abren las propuestas alternas.</p>
+  <p class="ad-note">Códigos de acceso a la <strong>propuesta 2027</strong>, hoy <strong>{{propuestaViva.label}}</strong> (<a href="{{propuestaViva.url}}" target="_blank" rel="noopener" style="color:var(--pn-purple);font-weight:700;">ver página</a>). Al entrar desde un dispositivo nuevo se pide nombre y correo (quedan en <strong>Prospectos</strong>) y se registra en <strong>Accesos</strong>. Los mismos códigos abren las propuestas guardadas.</p>
 
   {{#if propuestasAlternas.length}}
   <div class="pn-card" style="margin-bottom:18px;">
-    <div class="pn-card__head"><h3>Propuestas alternas</h3><span class="ad-hint">Preparadas por si cambia el partido</span></div>
-    <p class="ad-note" style="margin:0 0 12px;">Apagada, su dirección responde 404 aunque se tenga exacta. Encendida, se puede abrir pero <strong>sigue detrás del candado de código y sin indexarse</strong> en buscadores.</p>
+    <div class="pn-card__head"><h3>Propuestas guardadas</h3><span class="ad-hint">La anterior, por si hay que volver a ella</span></div>
+    <p class="ad-note" style="margin:0 0 12px;">Apagada, su dirección lleva a la propuesta en vivo, así que los enlaces que ya se mandaron no se rompen. Encendida, se abre en su propia dirección pero <strong>sigue detrás del candado de código y sin indexarse</strong> en buscadores.</p>
     {{#each propuestasAlternas}}
     <div class="ad-item">
       <div class="ad-item__av" style="background: {{#if this.visible}}#1E8E5A{{else}}#8A8F98{{/if}}; font-size:13px;">{{#if this.visible}}●{{else}}○{{/if}}</div>
       <div class="ad-item__b">
         <strong>{{this.label}}</strong>
         <small>
-          {{#if this.visible}}<span class="cd-owner" style="background:#DCFCE7;color:#166534;">ENCENDIDA</span>{{else}}<span class="cd-flag">APAGADA · responde 404</span>{{/if}}
+          {{#if this.visible}}<span class="cd-owner" style="background:#DCFCE7;color:#166534;">ENCENDIDA</span>{{else}}<span class="cd-flag">APAGADA · su dirección va a la propuesta en vivo</span>{{/if}}
           <span class="cd-tag">sin indexar</span>
         </small>
         <small><span style="letter-spacing:.3px;">{{this.url}}</span></small>
@@ -1334,7 +1334,7 @@
         <a href="{{this.url}}" target="_blank" rel="noopener"><button type="button">Ver página</button></a>
         {{/if}}
         <form method="POST" action="/panel/admin/settings/propuesta"
-          data-confirm="{{#if this.visible}}¿Apagar «{{this.label}}»? Su dirección volverá a responder 404.{{else}}¿Encender «{{this.label}}»? Se podrá abrir con código, pero seguirá sin indexarse.{{/if}}">
+          data-confirm="{{#if this.visible}}¿Apagar «{{this.label}}»? Su dirección pasará a llevar a la propuesta en vivo.{{else}}¿Encender «{{this.label}}»? Se podrá abrir con código en su propia dirección, pero seguirá sin indexarse.{{/if}}">
           <input type="hidden" name="variante" value="{{this.id}}">
           <input type="hidden" name="visible" value="{{#if this.visible}}0{{else}}1{{/if}}">
           <button type="submit"{{#if this.visible}} class="danger"{{/if}}>{{#if this.visible}}Apagar{{else}}Encender{{/if}}</button>
@@ -2215,7 +2215,7 @@
         <div class="ad-f"><label>Título</label><input type="text" name="title" id="pf-title" required placeholder="Houston 2027"></div>
         <div class="ad-row2">
           <div class="ad-f"><label>Subtítulo</label><input type="text" name="subtitle" id="pf-subtitle" placeholder="SOCCER iD CUP"></div>
-          <div class="ad-f"><label>Equipos</label><input type="text" name="match" id="pf-match" placeholder="Tigres vs Cruz Azul"></div>
+          <div class="ad-f"><label>Equipos</label><input type="text" name="match" id="pf-match" placeholder="Cruz Azul vs Pumas"></div>
         </div>
         <div class="ad-f"><label>Descripción</label><textarea name="description" id="pf-description" rows="2"></textarea></div>
         <div class="ad-row2">

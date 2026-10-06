@@ -88,7 +88,7 @@ async function detail(year, lang) {
   };
 }
 
-// Notas de medios agregadas de las ediciones pasadas (para /socceridcup2027)
+// Notas de medios agregadas de las ediciones pasadas (para la propuesta de inversión)
 /**
  * Etiqueta la primera nota de cada edicion como destacada, para que la
  * propuesta 2027 muestre una por año y colapse el resto.

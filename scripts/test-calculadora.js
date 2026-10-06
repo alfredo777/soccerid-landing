@@ -1,5 +1,5 @@
 /**
- * Prueba de la calculadora de utilidades de /es/socceridcup2027
+ * Prueba de la calculadora de utilidades de la propuesta en vivo
  *
  * Abre el modal en Chrome headless y verifica los numeros contra los
  * valores esperados. Sale con codigo 1 si alguno no cuadra.
@@ -18,7 +18,8 @@ const fs = require('fs');
 const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const PORT = 9241;
 const BASE = process.argv[2] || 'http://localhost:3000';
-const URL = BASE.replace(/\/$/, '') + '/es/socceridcup2027';
+// La propuesta en vivo, leída del registro (lib/propuestas.js).
+const URL = BASE.replace(/\/$/, '') + '/es/' + require('../lib/propuestas').porDefecto().slug;
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const profile = path.join(os.tmpdir(), 'cdp-calc-' + process.pid);
@@ -78,6 +79,21 @@ function check(nombre, real, esperado) {
 
   await send('Page.enable');
   await send('Runtime.enable');
+  await send('Network.enable');
+
+  // La propuesta vive detrás del candado de código: sin la cookie de acceso el
+  // servidor no manda la calculadora y no hay nada que probar. Se firma con el
+  // mismo secreto que usa el servidor, igual que en capturas-propuesta.js, en
+  // vez de teclear un código: así la prueba no deja un prospecto ni dispara
+  // correos.
+  const variante = require('../lib/propuestas').porDefecto();
+  const secreto = process.env.PANEL_JWT_SECRET || process.env.SESSION_SECRET || 'panel-dev-secret-change-me';
+  await send('Network.setCookie', {
+    name: 'pp_acc_' + variante.id,
+    value: require('jsonwebtoken').sign({ v: variante.id }, secreto, { expiresIn: '1h' }),
+    // `URL` ya es la constante de arriba (la dirección de la página), de ahí el require.
+    domain: new (require('url').URL)(BASE).hostname, path: '/'
+  });
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
 
   // La propuesta esta detras del candado: se desbloquea marcando la sesion.

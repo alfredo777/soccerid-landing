@@ -874,8 +874,6 @@ function renderPropuesta(variante) {
   };
 }
 
-app.get('/:lang/socceridcup2027', renderPropuesta(propuestas.porId('2027')));
-
 // Contenido de la propuesta, ya sin el candado. Es lo que pide la página justo
 // después de validar el código, para mostrarla sin recargar. Vuelve a
 // comprobar la cookie de acceso: no basta con conocer la dirección.
@@ -907,10 +905,12 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
   }
 });
 
-// Propuestas alternas preparadas por adelantado. La ruta queda registrada aquí
-// —antes del catch-all /:lang/:page— pero responde 404 mientras su interruptor
-// esté apagado, aun teniendo la URL exacta. Se enciende desde /panel/admin.
-propuestas.listar().filter(v => v.oculta).forEach((variante) => {
+// Rutas de TODAS las propuestas: la que está en vivo y las que quedan
+// guardadas por si se vuelve al partido anterior. El enrutador no decide quién
+// se sirve —eso lo dice el interruptor de `lib/propuestas.js`—, así que
+// cambiar de propuesta en vivo no toca este bloque. Queda registrado aquí,
+// antes del catch-all /:lang/:page.
+propuestas.listar().forEach((variante) => {
   app.get('/:lang/' + variante.slug, renderPropuesta(variante));
   // El redirect sin idioma también comprueba el interruptor: si redirigiera
   // siempre, el 302 confirmaría que el slug existe.
@@ -918,6 +918,22 @@ propuestas.listar().filter(v => v.oculta).forEach((variante) => {
     if (!(await propuestas.visible(variante))) return next();
     res.redirect(302, `/${detectLanguage(req)}/${variante.slug}`);
   });
+});
+
+// Una propuesta guardada presta su dirección mientras está apagada: los
+// enlaces que ya se mandaron llevan a la propuesta en vivo en vez de morir en
+// un 404. Si se vuelve a encender, su dirección vuelve a ser suya: estos
+// handlers se registran después y solo corren cuando el de arriba, al estar
+// apagada, responde `next()`.
+propuestas.listar().filter(v => v.oculta).forEach((variante) => {
+  const aLaPropuestaViva = async (req, res, next) => {
+    const viva = propuestas.porDefecto();
+    if (viva.id === variante.id || !(await propuestas.visible(viva))) return next();
+    const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : detectLanguage(req);
+    res.redirect(302, `/${lang}/${viva.slug}`);
+  };
+  app.get('/:lang/' + variante.slug, aLaPropuestaViva);
+  app.get('/' + variante.slug, aLaPropuestaViva);
 });
 
 // Rate-limit simple del acceso público (anti fuerza-bruta de códigos de 7
@@ -1036,11 +1052,6 @@ app.post('/api/project2027/verify', async (req, res) => {
     console.error('Error verificando código 2027:', e.message);
     return res.json({ ok: false });
   }
-});
-
-app.get('/socceridcup2027', (req, res) => {
-  const lang = detectLanguage(req);
-  res.redirect(302, `/${lang}/socceridcup2027`);
 });
 
 // ============================================================

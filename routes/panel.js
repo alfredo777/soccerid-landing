@@ -1755,7 +1755,12 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
       notifyEmails, twilio, notifyPeople, notifTypes, stats,
-      // Propuestas alternas preparadas por adelantado, con su estado actual
+      // La propuesta en vivo (la que abren los códigos) y las que quedan
+      // guardadas por si se vuelve a ellas, con su estado actual.
+      propuestaViva: (() => {
+        const v = propuestas.porDefecto();
+        return { id: v.id, label: v.label, slug: v.slug, url: '/es/' + v.slug };
+      })(),
       propuestasAlternas: await Promise.all(
         propuestas.listar().filter(v => v.oculta).map(async (v) => ({
           id: v.id, label: v.label, slug: v.slug,
@@ -3579,7 +3584,9 @@ router.post('/admin/code/:id/assign', auth.requireAdmin, async (req, res, next) 
 // como el checkbox de "mandar por email al asignar".
 async function enviarCodigoA(c, { email, sms }) {
   const nombre = c.assignee_name || 'Hola';
-  const enlace = `${process.env.BASE_URL || 'https://soccerid.co'}/es/socceridcup2027`;
+  // Siempre la propuesta en vivo: el slug sale del registro, no escrito a mano,
+  // para que al cambiar de partido el correo no siga mandando a la anterior.
+  const enlace = `${process.env.BASE_URL || 'https://soccerid.co'}/es/${propuestas.porDefecto().slug}`;
   const cuerpo = `Tu código de acceso a la propuesta SOCCER iD CUP 2027 es ${c.code}.\nEntra en ${enlace} y escríbelo cuando te lo pida.`;
   const partes = [], fallos = [];
   if (email) {
@@ -3695,10 +3702,10 @@ router.post('/admin/settings/notify', auth.requireAdmin, async (req, res, next) 
   } catch (e) { next(e); }
 });
 
-// Interruptor de las propuestas alternas (las que se preparan por adelantado
-// por si cambia el partido). Apagada = la URL responde 404 aunque se tenga
-// exacta. Encendida = se puede abrir, pero sigue detrás del candado de código
-// y con noindex, así que no se indexa ni se ve sin código.
+// Interruptor de las propuestas guardadas (la anterior, por si se vuelve a
+// ella). Apagada = su dirección lleva a la propuesta en vivo. Encendida = se
+// abre en su propia dirección, pero sigue detrás del candado de código y con
+// noindex, así que no se indexa ni se ve sin código.
 router.post('/admin/settings/propuesta', auth.requireAdmin, async (req, res, next) => {
   try {
     const variante = propuestas.porId(req.body.variante);
@@ -3709,7 +3716,7 @@ router.post('/admin/settings/propuesta', auth.requireAdmin, async (req, res, nex
     await propuestas.setVisible(variante, encender);
     const msg = encender
       ? `Propuesta "${variante.label}" ENCENDIDA · /es/${variante.slug} (sigue con candado y sin indexar)`
-      : `Propuesta "${variante.label}" APAGADA · su URL vuelve a responder 404`;
+      : `Propuesta "${variante.label}" APAGADA · su dirección lleva a la propuesta en vivo`;
     res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(msg) + '#codigos');
   } catch (e) { next(e); }
 });

@@ -17,8 +17,13 @@ const jwt = require('jsonwebtoken');
 const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const PORT = 9411;
 const BASE = (process.argv[2] || 'http://localhost:3000').replace(/\/$/, '');
-const VARIANTE = process.argv[3] || '2027';
-const RUTA = VARIANTE === '2027' ? '/es/socceridcup2027' : '/es/socceridcup2027-plus';
+// La variante por defecto es la que está en vivo, y su dirección sale del
+// registro: así el script no se queda apuntando a la propuesta de ayer.
+const propuestas = require('../lib/propuestas');
+const VARIANTE = process.argv[3] || propuestas.DEFAULT_ID;
+const variante = propuestas.porId(VARIANTE);
+if (!variante) { console.error('No conozco la propuesta "' + VARIANTE + '"'); process.exit(1); }
+const RUTA = '/es/' + variante.slug;
 const OUT = path.join(__dirname, '..', 'capturas', 'propuesta');
 
 const ESCRITORIO = { width: 1440, height: 950, deviceScaleFactor: 1, mobile: false };
