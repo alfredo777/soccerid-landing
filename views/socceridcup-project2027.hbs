@@ -37,7 +37,7 @@
 {{!-- Content (hidden until code entered) --}}
 {{!-- El contenido solo se manda cuando el servidor ya validó el código.
      Sin acceso esta caja va vacía: el candado deja de ser decorativo. --}}
-<div class="pp-page" id="ppContent" style="display:none">{{#if autorizado}}{{> propuesta-contenido}}{{/if}}</div>
+<div class="pp-page" id="ppContent" style="display:none">{{#if autorizado}}{{#if enNegociacion}}{{> propuesta-negociacion}}{{else}}{{> propuesta-contenido}}{{/if}}{{/if}}</div>
 
 <style>
   :root {

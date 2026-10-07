@@ -1,0 +1,41 @@
+{{!-- Partido del tour que todavía se está negociando.
+
+     Ocupa el mismo lugar que `propuesta-contenido`: la página existe, tiene su
+     dirección y su candado, pero detrás no hay propuesta que enseñar. Cuando
+     el partido quede cerrado, esta pantalla se cambia por el contenido de
+     verdad sin tocar la dirección ni los códigos ya repartidos.
+
+     Vive detrás del candado como el resto: que un partido esté en negociación
+     no es algo que se cuente en abierto. --}}
+
+  <div class="pp-lang-bar">
+    <a href="/es/{{slug}}" class="{{#if isEs}}active{{/if}}">ES</a>
+    <a href="/en/{{slug}}" class="{{#if isEn}}active{{/if}}">EN</a>
+  </div>
+
+  <section class="pp-neg">
+    <div class="pp-neg__box">
+      <span class="pp-neg__badge">{{data.negociacion.badge}}</span>
+      <h1 class="pp-neg__title">{{data.negociacion.title}}</h1>
+      <p class="pp-neg__body">{{data.negociacion.body}}</p>
+      <p class="pp-neg__note">{{data.negociacion.note}}</p>
+    </div>
+  </section>
+
+  <style>
+    .pp-neg { min-height: 78vh; display: flex; align-items: center; justify-content: center; padding: 64px 24px; }
+    .pp-neg__box { max-width: 620px; text-align: center; }
+    .pp-neg__badge {
+      display: inline-block; padding: 6px 18px; border-radius: 20px; margin-bottom: 22px;
+      font-size: 12px; font-weight: 800; letter-spacing: 2px;
+      background: rgba(var(--pp-accent-rgb), 0.18); color: var(--pp-accent);
+    }
+    .pp-neg__title { font-size: 40px; font-weight: 900; line-height: 1.1; margin-bottom: 20px; }
+    .pp-neg__body { font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.78); margin-bottom: 14px; }
+    .pp-neg__note { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.5); }
+    @media (max-width: 640px) {
+      .pp-neg { padding: 48px 20px; }
+      .pp-neg__title { font-size: 28px; }
+      .pp-neg__body { font-size: 16px; }
+    }
+  </style>

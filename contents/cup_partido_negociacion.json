@@ -1,0 +1,37 @@
+{
+  "_nota": "Contenido compartido por los partidos del tour que todavia se estan negociando. No es una propuesta: es el estado de una pagina que ya existe y que, cuando el partido quede cerrado, pasa a servir su propio archivo de contenido. Por eso solo trae el candado y el aviso.",
+  "es": {
+    "pageTitle": "SOCCER iD TOUR '27 — Partido en negociación",
+    "lock": {
+      "badge": "CONFIDENCIAL",
+      "title": "ACCESO RESTRINGIDO",
+      "subtitle": "Ingresa tu código personalizado",
+      "placeholder": "Código de acceso",
+      "button": "Acceder",
+      "error": "Código incorrecto. Intenta de nuevo."
+    },
+    "negociacion": {
+      "badge": "EN NEGOCIACIÓN",
+      "title": "ESTE PARTIDO TODAVÍA NO ESTÁ CERRADO",
+      "body": "Forma parte del SOCCER iD TOUR '27 y está en negociación con los clubes.",
+      "note": "Cuando quede cerrado, su propuesta de inversión se publica en esta misma dirección: la liga que ya tienes seguirá sirviendo."
+    }
+  },
+  "en": {
+    "pageTitle": "SOCCER iD TOUR '27 — Match under negotiation",
+    "lock": {
+      "badge": "CONFIDENTIAL",
+      "title": "RESTRICTED ACCESS",
+      "subtitle": "Enter your personalized code",
+      "placeholder": "Access code",
+      "button": "Access",
+      "error": "Incorrect code. Please try again."
+    },
+    "negociacion": {
+      "badge": "UNDER NEGOTIATION",
+      "title": "THIS MATCH IS NOT CLOSED YET",
+      "body": "It is part of the SOCCER iD TOUR '27 and is under negotiation with the clubs.",
+      "note": "Once it is closed, its investment proposal will be published at this same address: the link you already have will keep working."
+    }
+  }
+}

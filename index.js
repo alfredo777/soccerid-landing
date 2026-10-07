@@ -875,6 +875,9 @@ function renderPropuesta(variante) {
         // Solo con la cookie de acceso se manda el contenido de la propuesta.
         // Sin ella la página es únicamente el candado.
         autorizado: propuestas.tieneAcceso(req, variante),
+        // Un partido que todavía se negocia enseña el aviso en lugar de la
+        // propuesta: la página existe, el contenido todavía no.
+        enNegociacion: propuestas.enNegociacion(variante),
         year: new Date().getFullYear(),
         version: APP_VERSION
       });
@@ -899,7 +902,7 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
     const data = propuestas.leerContenido(variante, lang, DEFAULT_LANG);
     if (!data) return next();
     res.set('Cache-Control', 'no-store');
-    res.render('partials/propuesta-contenido', {
+    res.render(propuestas.enNegociacion(variante) ? 'partials/propuesta-negociacion' : 'partials/propuesta-contenido', {
       layout: false,
       lang: lang,
       isEs: lang === 'es',
