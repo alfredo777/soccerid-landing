@@ -43,6 +43,9 @@
       "sub": "Cada evento tiene su propio perfil deportivo y operativo dentro de un proyecto financiero conjunto.",
       "ctaAbierto": "VER PERFIL DEL PARTIDO",
       "ctaPendiente": "PERFIL PRÓXIMAMENTE",
+      "proximosTitle": "Dos partidos más, por anunciar.",
+      "proximosKicker": "LO QUE VIENE",
+      "proximosPie": "Clubes y sede en negociación. Cada uno tendrá su perfil en esta misma dirección.",
       "cards": [
         { "n": "01", "variante": "2027b", "cuando": "27 MARZO",
           "titulo": "Cruz Azul vs. Pumas", "sede": "Shell Energy Stadium", "lugar": "Houston, Texas" },
@@ -206,6 +209,12 @@
       "capacidades": "Relación con clubes · Comercialización · Producción · Broadcast · Operación internacional",
       "cta": "CONOCE LA HISTORIA DE LA COPA",
       "ctaUrl": "/es/socceridcup"
+    },
+
+    "medios": {
+      "kicker": "10 / RESPALDO EN MEDIOS",
+      "title": "La experiencia también se puede ver.",
+      "sub": "Cobertura de las ediciones anteriores, en medios propios de cada plaza."
     },
 
     "condiciones": {

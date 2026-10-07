@@ -902,6 +902,7 @@ function renderPropuesta(variante) {
         // propuesta: la página existe, el contenido todavía no.
         enNegociacion: propuestas.enNegociacion(variante),
         esTour: variante.tipo === 'tour',
+        logo: variante.logo || null,
         ventana: variante.ventana || null,
         partidosNav: navPartidos(data, lang),
         urlPartido1: `/${lang}/${propuestas.porDefecto().slug}`,
@@ -933,6 +934,7 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
       layout: false,
       ventana: variante.ventana || null,
       heroImage: variante.hero,
+      logo: variante.logo || null,
       partidosNav: navPartidos(data, lang),
       urlPartido1: `/${lang}/${propuestas.porDefecto().slug}`,
       lang: lang,
