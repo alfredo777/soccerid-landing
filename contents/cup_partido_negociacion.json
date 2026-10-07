@@ -1,7 +1,7 @@
 {
-  "_nota": "Contenido compartido por los partidos del tour que todavia se estan negociando. No es una propuesta: es el estado de una pagina que ya existe y que, cuando el partido quede cerrado, pasa a servir su propio archivo de contenido. Por eso solo trae el candado y el aviso.",
+  "_nota": "Contenido compartido por los partidos del proyecto 2027 que todavia no estan cerrados. No es una propuesta: es el estado de una pagina que ya existe y que, cuando el partido se formalice, pasa a servir su propio archivo de contenido. Por eso solo trae el candado y el aviso. Los textos salen de la lamina 3 de la presentacion (PERFIL PROXIMAMENTE / Clubes, sede y fecha por definir). La ventana de cada partido la pone lib/propuestas.js, que es donde vive el registro.",
   "es": {
-    "pageTitle": "SOCCER iD TOUR '27 — Partido en negociación",
+    "pageTitle": "SOCCER iD CUP 2027 — Perfil próximamente",
     "lock": {
       "badge": "CONFIDENCIAL",
       "title": "ACCESO RESTRINGIDO",
@@ -11,14 +11,18 @@
       "error": "Código incorrecto. Intenta de nuevo."
     },
     "negociacion": {
-      "badge": "EN NEGOCIACIÓN",
-      "title": "ESTE PARTIDO TODAVÍA NO ESTÁ CERRADO",
-      "body": "Forma parte del SOCCER iD TOUR '27 y está en negociación con los clubes.",
-      "note": "Cuando quede cerrado, su propuesta de inversión se publica en esta misma dirección: la liga que ya tienes seguirá sirviendo."
+      "badge": "PERFIL PRÓXIMAMENTE",
+      "kicker": "SOCCER iD CUP 2027",
+      "title": "Clubes, sede y fecha por definir.",
+      "body": "Este encuentro forma parte del proyecto anual de tres partidos y todavía se está negociando.",
+      "note": "Cuando quede formalizado, su perfil se publica en esta misma dirección: la liga que ya tienes seguirá sirviendo.",
+      "ventanaLabel": "VENTANA PREVISTA",
+      "paisLabel": "PAÍS",
+      "pais": "Estados Unidos"
     }
   },
   "en": {
-    "pageTitle": "SOCCER iD TOUR '27 — Match under negotiation",
+    "pageTitle": "SOCCER iD CUP 2027 — Profile coming soon",
     "lock": {
       "badge": "CONFIDENTIAL",
       "title": "RESTRICTED ACCESS",
@@ -28,10 +32,14 @@
       "error": "Incorrect code. Please try again."
     },
     "negociacion": {
-      "badge": "UNDER NEGOTIATION",
-      "title": "THIS MATCH IS NOT CLOSED YET",
-      "body": "It is part of the SOCCER iD TOUR '27 and is under negotiation with the clubs.",
-      "note": "Once it is closed, its investment proposal will be published at this same address: the link you already have will keep working."
+      "badge": "PROFILE COMING SOON",
+      "kicker": "SOCCER iD CUP 2027",
+      "title": "Clubs, venue and date to be confirmed.",
+      "body": "This match is part of the three-match annual project and is still under negotiation.",
+      "note": "Once it is formalized, its profile will be published at this same address: the link you already have will keep working.",
+      "ventanaLabel": "EXPECTED WINDOW",
+      "paisLabel": "COUNTRY",
+      "pais": "United States"
     }
   }
 }

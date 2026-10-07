@@ -1,0 +1,442 @@
+{{!-- Perfil anual del proyecto 2027: el nivel de en medio de la navegación que
+     define la lámina 19 de la presentación.
+
+         SOCCER iD CUP        historia de la copa      → /es/socceridcup (pública)
+         PROYECTO 2027        esta página              → detrás del candado
+         PERFIL DEL PARTIDO   Cruz Azul vs. Pumas…     → /socceridcup2027/partido-N
+
+     Ocupa el mismo lugar que `propuesta-contenido`, así que hereda el candado,
+     la barra de idioma y las variables de color de la vista.
+
+     Las cifras que la presentación deja abiertas vienen con `pendiente` y se
+     pintan como POR DEFINIR: ninguna se inventó. Cerrar una es escribir su
+     valor en `contents/cup_tour_2027.json` y quitarle la marca. --}}
+
+  <div class="pp-lang-bar">
+    <a href="/es/{{slug}}" class="{{#if isEs}}active{{/if}}">ES</a>
+    <a href="/en/{{slug}}" class="{{#if isEn}}active{{/if}}">EN</a>
+  </div>
+
+  {{!-- HERO --}}
+  <section class="pa-hero">
+    <div class="pa-hero__veil"></div>
+    <div class="pa-hero__body">
+      <span class="pa-badge">{{data.hero.badge}}</span>
+      <h1 class="pa-hero__title">{{data.hero.title}}</h1>
+      <p class="pa-hero__lead">{{data.hero.lead}}</p>
+      <p class="pa-hero__meta">{{data.hero.meta}}</p>
+      <a href="#pa-resumen" class="pa-btn">{{data.hero.cta}}</a>
+    </div>
+  </section>
+
+  {{!-- 01 RESUMEN --}}
+  <section class="pa-sec" id="pa-resumen">
+    <p class="pa-kicker">{{data.resumen.kicker}}</p>
+    <h2 class="pa-title">{{data.resumen.title}}</h2>
+    <p class="pa-sub">{{data.resumen.sub}}</p>
+
+    <div class="pa-cifras">
+      {{#each data.resumen.cifras}}
+      <div class="pa-cifra">
+        <span class="pa-cifra__l">{{this.label}}</span>
+        <strong class="pa-cifra__v">{{this.value}}</strong>
+        <span class="pa-cifra__n">{{this.note}}</span>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="pa-pie">
+      {{#each data.resumen.pie}}
+      <span class="pa-pie__i">{{this.label}}:
+        {{#if this.pendiente}}<em class="pa-pend">{{../data.pendienteLabel}}</em>{{else}}<strong>{{this.value}}</strong>{{/if}}
+      </span>
+      {{/each}}
+    </div>
+    <p class="pa-aviso">{{data.resumen.disclaimer}}</p>
+  </section>
+
+  {{!-- 02 LOS PARTIDOS --}}
+  <section class="pa-sec pa-sec--alt">
+    <p class="pa-kicker">{{data.partidos.kicker}}</p>
+    <h2 class="pa-title">{{data.partidos.title}}</h2>
+    <p class="pa-sub">{{data.partidos.sub}}</p>
+
+    <div class="pa-partidos">
+      {{#each partidosNav}}
+      <article class="pa-partido{{#unless this.abierto}} pa-partido--pend{{/unless}}">
+        <span class="pa-partido__n">{{this.n}}</span>
+        <p class="pa-partido__cuando">{{this.cuando}}</p>
+        <h3 class="pa-partido__t">{{this.titulo}}</h3>
+        <p class="pa-partido__sede">{{this.sede}}</p>
+        <p class="pa-partido__lugar">{{this.lugar}}</p>
+        {{#if this.abierto}}
+        <a href="{{this.url}}" class="pa-partido__cta">{{../data.partidos.ctaAbierto}}</a>
+        {{else}}
+        <a href="{{this.url}}" class="pa-partido__cta pa-partido__cta--pend">{{../data.partidos.ctaPendiente}}</a>
+        {{/if}}
+      </article>
+      {{/each}}
+    </div>
+  </section>
+
+  {{!-- 03 PARTIDO 1 --}}
+  <section class="pa-sec">
+    <p class="pa-kicker">{{data.partido1.kicker}}</p>
+    <h2 class="pa-title">{{data.partido1.title}}</h2>
+    <p class="pa-sub">{{data.partido1.sub}}</p>
+
+    <div class="pa-datos">
+      {{#each data.partido1.datos}}
+      <div class="pa-dato">
+        <span class="pa-dato__l">{{this.label}}</span>
+        <strong class="pa-dato__v">{{this.value}}</strong>
+      </div>
+      {{/each}}
+    </div>
+    {{#if urlPartido1}}<a href="{{urlPartido1}}" class="pa-btn">{{data.partido1.cta}}</a>{{/if}}
+    <p class="pa-aviso">{{data.partido1.pie}}</p>
+  </section>
+
+  {{!-- 04 OPORTUNIDAD --}}
+  <section class="pa-sec pa-sec--alt">
+    <p class="pa-kicker">{{data.oportunidad.kicker}}</p>
+    <h2 class="pa-title">{{data.oportunidad.title}}</h2>
+    <div class="pa-grid4">
+      {{#each data.oportunidad.items}}
+      <div class="pa-card">
+        <span class="pa-card__n">{{this.n}}</span>
+        <h3 class="pa-card__t">{{this.title}}</h3>
+        <p class="pa-card__b">{{this.body}}</p>
+      </div>
+      {{/each}}
+    </div>
+  </section>
+
+  {{!-- 05 CAPITAL Y DESTINO --}}
+  <section class="pa-sec">
+    <p class="pa-kicker">{{data.capital.kicker}}</p>
+    <h2 class="pa-title">{{data.capital.title}}</h2>
+    <p class="pa-sub">{{data.capital.sub}}</p>
+
+    <div class="pa-cifras">
+      {{#each data.capital.items}}
+      <div class="pa-cifra">
+        <span class="pa-cifra__l">{{this.label}}</span>
+        {{#if this.pendiente}}
+        <strong class="pa-cifra__v"><em class="pa-pend">{{../data.pendienteLabel}}</em></strong>
+        {{else}}
+        <strong class="pa-cifra__v">{{this.value}}</strong>
+        {{/if}}
+        <span class="pa-cifra__n">{{this.note}}</span>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="pa-total">
+      <span class="pa-total__l">{{data.capital.totalLabel}}</span>
+      {{#if data.capital.totalPendiente}}
+      <strong class="pa-total__v"><em class="pa-pend">{{data.pendienteLabel}}</em></strong>
+      {{else}}
+      <strong class="pa-total__v">{{data.capital.totalValue}}</strong>
+      {{/if}}
+    </div>
+    <p class="pa-aviso">{{data.capital.disclaimer}}</p>
+  </section>
+
+  {{!-- 05 DETALLE DE COSTOS --}}
+  <section class="pa-sec pa-sec--alt">
+    <p class="pa-kicker">{{data.costos.kicker}}</p>
+    <h2 class="pa-title">{{data.costos.title}}</h2>
+    <p class="pa-sub">{{data.costos.sub}}</p>
+
+    <ul class="pa-lineas">
+      {{#each data.costos.lineas}}
+      <li class="pa-linea"><span>{{this.concepto}}</span><strong>{{this.monto}}</strong></li>
+      {{/each}}
+    </ul>
+    <div class="pa-total">
+      <span class="pa-total__l">{{data.costos.totalLabel}}</span>
+      <strong class="pa-total__v">{{data.costos.totalValue}}</strong>
+      <span class="pa-cifra__n">{{data.costos.totalNote}}</span>
+    </div>
+  </section>
+
+  {{!-- 06 POTENCIAL ECONÓMICO --}}
+  <section class="pa-sec">
+    <p class="pa-kicker">{{data.potencial.kicker}}</p>
+    <h2 class="pa-title">{{data.potencial.title}}</h2>
+    <p class="pa-sub">{{data.potencial.sub}}</p>
+
+    <div class="pa-cols">
+      {{#each data.potencial.columnas}}
+      <div class="pa-col">
+        <h3 class="pa-col__t">{{this.titulo}}</h3>
+        {{#each this.filas}}
+        <div class="pa-col__f">
+          <span>{{this.label}}</span>
+          {{#if this.pendiente}}<em class="pa-pend">{{../../data.pendienteLabel}}</em>{{else}}<strong>{{this.value}}</strong>{{/if}}
+        </div>
+        {{/each}}
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="pa-nota">
+      <h3 class="pa-nota__t">{{data.potencial.cierreTitle}}</h3>
+      <p class="pa-nota__b">{{data.potencial.cierreBody}}</p>
+    </div>
+  </section>
+
+  {{!-- 06 REFERENCIA DISPONIBLE --}}
+  <section class="pa-sec pa-sec--alt">
+    <p class="pa-kicker">{{data.referencia.kicker}}</p>
+    <h2 class="pa-title">{{data.referencia.title}}</h2>
+    <p class="pa-sub">{{data.referencia.sub}}</p>
+
+    <div class="pa-cifras pa-cifras--big">
+      {{#each data.referencia.cifras}}
+      <div class="pa-cifra">
+        <strong class="pa-cifra__v pa-cifra__v--big">{{this.value}}</strong>
+        <span class="pa-cifra__l">{{this.label}}</span>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="pa-nota pa-nota--warn">
+      <h3 class="pa-nota__t">{{data.referencia.avisoTitle}}</h3>
+      <p class="pa-nota__b">{{data.referencia.avisoBody}}</p>
+    </div>
+  </section>
+
+  {{!-- 07 FLUJO DE RECURSOS --}}
+  <section class="pa-sec">
+    <p class="pa-kicker">{{data.flujo.kicker}}</p>
+    <h2 class="pa-title">{{data.flujo.title}}</h2>
+    <p class="pa-sub">{{data.flujo.sub}}</p>
+    <div class="pa-grid4">
+      {{#each data.flujo.pasos}}
+      <div class="pa-card">
+        <span class="pa-card__n">{{this.n}}</span>
+        <h3 class="pa-card__t">{{this.title}}</h3>
+        <p class="pa-card__b">{{this.body}}</p>
+      </div>
+      {{/each}}
+    </div>
+    <p class="pa-aviso">{{data.flujo.pie}}</p>
+  </section>
+
+  {{!-- 08 PARTICIPACIÓN --}}
+  <section class="pa-sec pa-sec--alt">
+    <p class="pa-kicker">{{data.participacion.kicker}}</p>
+    <h2 class="pa-title">{{data.participacion.title}}</h2>
+    <div class="pa-reparto">
+      {{#each data.participacion.partes}}
+      <div class="pa-parte">
+        <strong class="pa-parte__pct">{{this.pct}}</strong>
+        <span class="pa-parte__q">{{this.quien}}</span>
+        <p class="pa-parte__b">{{this.body}}</p>
+      </div>
+      {{/each}}
+    </div>
+    <p class="pa-aviso">{{data.participacion.pie}}</p>
+  </section>
+
+  {{!-- 08 EJEMPLO --}}
+  <section class="pa-sec">
+    <p class="pa-kicker">{{data.ejemplo.kicker}}</p>
+    <h2 class="pa-title">{{data.ejemplo.title}}</h2>
+    <p class="pa-sub">{{data.ejemplo.sub}}</p>
+    <div class="pa-cifras">
+      {{#each data.ejemplo.pasos}}
+      <div class="pa-cifra">
+        <strong class="pa-cifra__v pa-cifra__v--big">{{this.value}}</strong>
+        <span class="pa-cifra__l">{{this.label}}</span>
+      </div>
+      {{/each}}
+    </div>
+    <p class="pa-aviso">{{data.ejemplo.pie}}</p>
+  </section>
+
+  {{!-- 09 CALENDARIO --}}
+  <section class="pa-sec pa-sec--alt">
+    <p class="pa-kicker">{{data.calendario.kicker}}</p>
+    <h2 class="pa-title">{{data.calendario.title}}</h2>
+    <ol class="pa-hitos">
+      {{#each data.calendario.hitos}}
+      <li class="pa-hito">
+        <span class="pa-hito__e">{{this.etapa}}</span>
+        <strong class="pa-hito__c">{{this.cuando}}</strong>
+        <span class="pa-hito__q">{{this.que}}</span>
+      </li>
+      {{/each}}
+    </ol>
+    <p class="pa-aviso">{{data.calendario.pie}}</p>
+  </section>
+
+  {{!-- 10 EXPERIENCIA --}}
+  <section class="pa-sec">
+    <p class="pa-kicker">{{data.experiencia.kicker}}</p>
+    <h2 class="pa-title">{{data.experiencia.title}}</h2>
+    <p class="pa-sub">{{data.experiencia.sub}}</p>
+    <div class="pa-cols">
+      {{#each data.experiencia.ediciones}}
+      <div class="pa-col pa-col--ed">
+        <strong class="pa-col__anio">{{this.anio}}</strong>
+        <h3 class="pa-col__t">{{this.match}}</h3>
+        <p class="pa-col__sede">{{this.sede}}</p>
+      </div>
+      {{/each}}
+    </div>
+    <p class="pa-caps">{{data.experiencia.capacidades}}</p>
+    <a href="{{data.experiencia.ctaUrl}}" class="pa-btn pa-btn--ghost">{{data.experiencia.cta}}</a>
+  </section>
+
+  {{!-- 11 CONDICIONES --}}
+  <section class="pa-sec pa-sec--alt">
+    <p class="pa-kicker">{{data.condiciones.kicker}}</p>
+    <h2 class="pa-title">{{data.condiciones.title}}</h2>
+    <p class="pa-sub">{{data.condiciones.sub}}</p>
+    <div class="pa-grid4">
+      {{#each data.condiciones.items}}
+      <div class="pa-card">
+        <h3 class="pa-card__t">{{this.title}}</h3>
+        <p class="pa-card__b">{{this.body}}</p>
+      </div>
+      {{/each}}
+    </div>
+    <div class="pa-nota pa-nota--warn"><p class="pa-nota__b">{{data.condiciones.aviso}}</p></div>
+  </section>
+
+  {{!-- 12 CONTACTO --}}
+  <section class="pa-cierre">
+    <div class="pa-hero__veil"></div>
+    <div class="pa-hero__body">
+      <p class="pa-kicker">{{data.contacto.kicker}}</p>
+      <h2 class="pa-hero__title pa-hero__title--sm">{{data.contacto.title}}</h2>
+      <p class="pa-hero__lead">{{data.contacto.body}}</p>
+      <a href="{{data.contacto.ctaUrl}}" class="pa-btn">{{data.contacto.cta}}</a>
+    </div>
+  </section>
+
+  <style>
+    /* Perfil anual. Hereda --pp-accent y la tipografía de la vista; lo que
+       define aquí es solo la retícula de esta página. */
+    .pa-hero, .pa-cierre {
+      position: relative; display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 96px 32px;
+      background: url('{{heroImage}}') center/cover no-repeat;
+    }
+    .pa-hero { min-height: 82vh; }
+    .pa-cierre { min-height: 58vh; }
+    .pa-hero__veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,10,14,0.55) 0%, rgba(10,10,14,0.88) 70%, rgba(10,10,14,0.96) 100%); }
+    .pa-hero__body { position: relative; z-index: 2; max-width: 820px; }
+    .pa-hero__title { font-size: 64px; font-weight: 900; line-height: 1.02; margin: 18px 0 20px; }
+    .pa-hero__title--sm { font-size: 44px; }
+    .pa-hero__lead { font-size: 21px; line-height: 1.5; color: rgba(255,255,255,0.85); margin-bottom: 14px; }
+    .pa-hero__meta { font-size: 14px; letter-spacing: 1.4px; color: rgba(255,255,255,0.55); margin-bottom: 30px; }
+
+    .pa-badge {
+      display: inline-block; padding: 6px 18px; border-radius: 20px;
+      font-size: 11.5px; font-weight: 800; letter-spacing: 2px;
+      background: rgba(var(--pp-accent-rgb), 0.2); color: var(--pp-accent);
+    }
+    .pa-btn {
+      display: inline-block; padding: 14px 30px; border-radius: 12px; margin-top: 10px;
+      font-size: 13px; font-weight: 800; letter-spacing: 1.2px; text-decoration: none;
+      background: var(--pp-accent); color: #0A0A0E;
+    }
+    .pa-btn--ghost { background: transparent; color: var(--pp-accent); border: 1px solid var(--pp-accent); }
+
+    .pa-sec { max-width: 1120px; margin: 0 auto; padding: 86px 32px; }
+    .pa-sec--alt { background: rgba(255,255,255,0.025); max-width: none; }
+    .pa-sec--alt > * { max-width: 1120px; margin-left: auto; margin-right: auto; }
+    .pa-kicker { font-size: 11.5px; font-weight: 800; letter-spacing: 2.4px; color: var(--pp-accent); margin-bottom: 14px; }
+    .pa-title { font-size: 38px; font-weight: 900; line-height: 1.14; margin-bottom: 14px; }
+    .pa-sub { font-size: 17px; line-height: 1.6; color: rgba(255,255,255,0.7); max-width: 760px; margin-bottom: 36px; }
+    .pa-aviso { font-size: 13.5px; line-height: 1.6; color: rgba(255,255,255,0.45); margin-top: 26px; }
+
+    .pa-pend {
+      display: inline-block; padding: 2px 10px; border-radius: 999px; font-style: normal;
+      font-size: 11px; font-weight: 800; letter-spacing: 1.2px;
+      background: rgba(217,119,6,0.18); color: #F0B429;
+    }
+
+    .pa-cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
+    .pa-cifra { padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.035); }
+    .pa-cifra__l { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.6px; color: rgba(255,255,255,0.45); }
+    .pa-cifra__v { display: block; font-size: 32px; font-weight: 900; margin: 10px 0 8px; }
+    .pa-cifra__v--big { font-size: 42px; color: var(--pp-accent); }
+    .pa-cifra__n { display: block; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.55); }
+    .pa-cifras--big .pa-cifra { text-align: center; }
+
+    .pa-pie { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 22px; font-size: 14.5px; color: rgba(255,255,255,0.7); }
+
+    .pa-partidos { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 18px; }
+    .pa-partido { padding: 28px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); }
+    .pa-partido--pend { opacity: 0.78; }
+    .pa-partido__n { font-size: 12px; font-weight: 800; letter-spacing: 2px; color: var(--pp-accent); }
+    .pa-partido__cuando { font-size: 11.5px; font-weight: 800; letter-spacing: 1.8px; color: rgba(255,255,255,0.5); margin: 14px 0 10px; }
+    .pa-partido__t { font-size: 25px; font-weight: 900; line-height: 1.15; margin-bottom: 10px; }
+    .pa-partido__sede { font-size: 15px; color: rgba(255,255,255,0.78); }
+    .pa-partido__lugar { font-size: 13.5px; color: rgba(255,255,255,0.5); margin-bottom: 20px; }
+    .pa-partido__cta { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: 1.2px; text-decoration: none; color: var(--pp-accent); }
+    .pa-partido__cta--pend { color: rgba(255,255,255,0.45); }
+
+    .pa-datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-bottom: 30px; }
+    .pa-dato { padding: 18px 22px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.035); }
+    .pa-dato__l { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.6px; color: rgba(255,255,255,0.45); margin-bottom: 8px; }
+    .pa-dato__v { font-size: 18px; font-weight: 800; }
+
+    .pa-grid4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .pa-card { padding: 26px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.035); }
+    .pa-card__n { font-size: 12px; font-weight: 800; letter-spacing: 2px; color: var(--pp-accent); }
+    .pa-card__t { font-size: 18px; font-weight: 800; margin: 12px 0 10px; }
+    .pa-card__b { font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,0.68); }
+
+    .pa-lineas { list-style: none; padding: 0; margin: 0 auto 26px; }
+    .pa-linea { display: flex; justify-content: space-between; gap: 20px; padding: 15px 2px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 16px; }
+    .pa-linea strong { font-variant-numeric: tabular-nums; }
+
+    .pa-total { padding: 24px 26px; border-radius: 16px; border: 1px solid rgba(var(--pp-accent-rgb), 0.35); background: rgba(var(--pp-accent-rgb), 0.08); }
+    .pa-total__l { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.8px; color: rgba(255,255,255,0.6); }
+    .pa-total__v { display: block; font-size: 36px; font-weight: 900; margin-top: 8px; color: var(--pp-accent); }
+
+    .pa-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .pa-col { padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.035); }
+    .pa-col__t { font-size: 15px; font-weight: 800; letter-spacing: 1.2px; margin-bottom: 14px; }
+    .pa-col__f { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,0.07); font-size: 14.5px; color: rgba(255,255,255,0.7); }
+    .pa-col--ed { text-align: center; }
+    .pa-col__anio { display: block; font-size: 30px; font-weight: 900; color: var(--pp-accent); margin-bottom: 8px; }
+    .pa-col__sede { font-size: 14px; color: rgba(255,255,255,0.55); }
+
+    .pa-nota { margin-top: 26px; padding: 24px 26px; border-radius: 16px; border-left: 3px solid var(--pp-accent); background: rgba(255,255,255,0.04); }
+    .pa-nota--warn { border-left-color: #F0B429; }
+    .pa-nota__t { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+    .pa-nota__b { font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,0.65); }
+
+    .pa-reparto { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+    .pa-parte { padding: 30px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); }
+    .pa-parte__pct { display: block; font-size: 54px; font-weight: 900; line-height: 1; color: var(--pp-accent); }
+    .pa-parte__q { display: block; font-size: 11.5px; font-weight: 800; letter-spacing: 2px; color: rgba(255,255,255,0.5); margin: 12px 0 14px; }
+    .pa-parte__b { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.7); }
+
+    .pa-hitos { list-style: none; padding: 0; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .pa-hito { padding: 22px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.035); }
+    .pa-hito__e { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.6px; color: var(--pp-accent); margin-bottom: 10px; }
+    .pa-hito__c { display: block; font-size: 17px; font-weight: 800; margin-bottom: 7px; }
+    .pa-hito__q { display: block; font-size: 13.5px; line-height: 1.5; color: rgba(255,255,255,0.55); }
+
+    .pa-caps { font-size: 13.5px; letter-spacing: 0.6px; color: rgba(255,255,255,0.5); margin: 26px auto 22px; }
+
+    @media (max-width: 760px) {
+      .pa-hero, .pa-cierre { padding: 72px 20px; }
+      .pa-hero__title { font-size: 38px; }
+      .pa-hero__title--sm { font-size: 28px; }
+      .pa-hero__lead { font-size: 17px; }
+      .pa-sec { padding: 60px 20px; }
+      .pa-title { font-size: 27px; }
+      .pa-sub { font-size: 15.5px; }
+      .pa-parte__pct { font-size: 42px; }
+      .pa-cifra__v--big { font-size: 34px; }
+    }
+  </style>

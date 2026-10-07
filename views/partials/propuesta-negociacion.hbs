@@ -1,11 +1,15 @@
-{{!-- Partido del tour que todavía se está negociando.
+{{!-- Partido del proyecto 2027 que todavía no está cerrado.
 
      Ocupa el mismo lugar que `propuesta-contenido`: la página existe, tiene su
-     dirección y su candado, pero detrás no hay propuesta que enseñar. Cuando
-     el partido quede cerrado, esta pantalla se cambia por el contenido de
-     verdad sin tocar la dirección ni los códigos ya repartidos.
+     dirección y su candado, pero detrás no hay perfil que enseñar. Cuando el
+     partido se formalice, esta pantalla se cambia por el contenido de verdad
+     sin tocar la dirección ni los códigos ya repartidos.
 
-     Vive detrás del candado como el resto: que un partido esté en negociación
+     Los textos y la etiqueta "PERFIL PRÓXIMAMENTE" salen de la lámina 3 de la
+     presentación; la ventana ("Julio / agosto") viene del registro, porque es
+     lo único que cambia entre el partido 2 y el 3.
+
+     Vive detrás del candado como el resto: que un partido siga en negociación
      no es algo que se cuente en abierto. --}}
 
   <div class="pp-lang-bar">
@@ -15,27 +19,66 @@
 
   <section class="pp-neg">
     <div class="pp-neg__box">
+      <p class="pp-neg__kicker">{{data.negociacion.kicker}}</p>
       <span class="pp-neg__badge">{{data.negociacion.badge}}</span>
       <h1 class="pp-neg__title">{{data.negociacion.title}}</h1>
       <p class="pp-neg__body">{{data.negociacion.body}}</p>
+
+      <div class="pp-neg__datos">
+        {{#if ventana}}
+        <div class="pp-neg__dato">
+          <span class="pp-neg__dato-l">{{data.negociacion.ventanaLabel}}</span>
+          <strong class="pp-neg__dato-v">{{ventana}}</strong>
+        </div>
+        {{/if}}
+        <div class="pp-neg__dato">
+          <span class="pp-neg__dato-l">{{data.negociacion.paisLabel}}</span>
+          <strong class="pp-neg__dato-v">{{data.negociacion.pais}}</strong>
+        </div>
+      </div>
+
       <p class="pp-neg__note">{{data.negociacion.note}}</p>
     </div>
   </section>
 
   <style>
     .pp-neg { min-height: 78vh; display: flex; align-items: center; justify-content: center; padding: 64px 24px; }
-    .pp-neg__box { max-width: 620px; text-align: center; }
+    .pp-neg__box { max-width: 640px; text-align: center; }
+    .pp-neg__kicker {
+      font-size: 12px; font-weight: 800; letter-spacing: 3px;
+      color: rgba(255,255,255,0.45); margin-bottom: 18px;
+    }
     .pp-neg__badge {
       display: inline-block; padding: 6px 18px; border-radius: 20px; margin-bottom: 22px;
       font-size: 12px; font-weight: 800; letter-spacing: 2px;
       background: rgba(var(--pp-accent-rgb), 0.18); color: var(--pp-accent);
     }
-    .pp-neg__title { font-size: 40px; font-weight: 900; line-height: 1.1; margin-bottom: 20px; }
-    .pp-neg__body { font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.78); margin-bottom: 14px; }
-    .pp-neg__note { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.5); }
+    .pp-neg__title { font-size: 40px; font-weight: 900; line-height: 1.12; margin-bottom: 18px; }
+    .pp-neg__body { font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.78); }
+
+    .pp-neg__datos {
+      display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;
+      margin: 32px 0 28px;
+    }
+    .pp-neg__dato {
+      min-width: 190px; padding: 16px 22px; border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04);
+    }
+    .pp-neg__dato-l {
+      display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.6px;
+      color: rgba(255,255,255,0.45); margin-bottom: 7px;
+    }
+    .pp-neg__dato-v { font-size: 17px; font-weight: 800; }
+
+    .pp-neg__note {
+      font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,0.5);
+      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 22px;
+    }
+
     @media (max-width: 640px) {
       .pp-neg { padding: 48px 20px; }
       .pp-neg__title { font-size: 28px; }
       .pp-neg__body { font-size: 16px; }
+      .pp-neg__dato { min-width: 0; width: 100%; }
     }
   </style>

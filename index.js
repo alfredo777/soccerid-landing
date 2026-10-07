@@ -817,6 +817,29 @@ app.get('/socceridcup', (req, res) => {
 // adelantado— comparten esta vista y este handler. Lo único que cambia entre
 // una y otra es el archivo de contenido y el slug, que vienen de
 // `lib/propuestas.js`. Ver también el endpoint POST /api/project2027/verify.
+// Las tarjetas de "LOS PARTIDOS" del perfil anual: el texto sale del archivo
+// de contenido y la dirección del registro, que es quien sabe dónde vive cada
+// partido y si todavía se está negociando. Así no hay URLs escritas a mano en
+// el contenido.
+function navPartidos(data, lang) {
+  const cards = ((data && data.partidos) || {}).cards || [];
+  return cards.map((c) => {
+    const v = propuestas.porId(c.variante);
+    if (!v) return null;
+    return Object.assign({}, c, {
+      url: `/${lang}/${v.slug}`,
+      abierto: !propuestas.enNegociacion(v)
+    });
+  }).filter(Boolean);
+}
+
+/** Qué partial va detrás del candado: el perfil anual, un aviso o la propuesta. */
+function partialDe(variante) {
+  if (variante.tipo === 'tour') return 'partials/proyecto-anual';
+  if (propuestas.enNegociacion(variante)) return 'partials/propuesta-negociacion';
+  return 'partials/propuesta-contenido';
+}
+
 function renderPropuesta(variante) {
   return async (req, res, next) => {
     const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
@@ -878,6 +901,10 @@ function renderPropuesta(variante) {
         // Un partido que todavía se negocia enseña el aviso en lugar de la
         // propuesta: la página existe, el contenido todavía no.
         enNegociacion: propuestas.enNegociacion(variante),
+        esTour: variante.tipo === 'tour',
+        ventana: variante.ventana || null,
+        partidosNav: navPartidos(data, lang),
+        urlPartido1: `/${lang}/${propuestas.porDefecto().slug}`,
         year: new Date().getFullYear(),
         version: APP_VERSION
       });
@@ -902,8 +929,12 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
     const data = propuestas.leerContenido(variante, lang, DEFAULT_LANG);
     if (!data) return next();
     res.set('Cache-Control', 'no-store');
-    res.render(propuestas.enNegociacion(variante) ? 'partials/propuesta-negociacion' : 'partials/propuesta-contenido', {
+    res.render(partialDe(variante), {
       layout: false,
+      ventana: variante.ventana || null,
+      heroImage: variante.hero,
+      partidosNav: navPartidos(data, lang),
+      urlPartido1: `/${lang}/${propuestas.porDefecto().slug}`,
       lang: lang,
       isEs: lang === 'es',
       isEn: lang === 'en',
