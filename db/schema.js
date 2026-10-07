@@ -235,7 +235,14 @@ async function ensureSchema() {
       ['assigned_at', (t) => t.timestamp('assigned_at')],
       // Código bloqueado: se niega la entrada a la propuesta 2027 (control de
       // filtraciones). Se puede reactivar.
-      ['revoked', (t) => t.boolean('revoked').defaultTo(false)]
+      ['revoked', (t) => t.boolean('revoked').defaultTo(false)],
+      // Hasta dónde llega el código: 'tour' abre la página del tour y todos
+      // los partidos; 'partido' abre UN solo partido, el de la columna
+      // `variante`. Vacío = sin nivel asignado: el código no abre nada y el
+      // admin lo marca como pendiente. Se deja vacío a propósito en los
+      // códigos que ya existían: el organizador decide uno por uno.
+      ['nivel', (t) => t.string('nivel')],
+      ['variante', (t) => t.string('variante')]
     ];
     for (const [name, build] of codeCols) {
       if (!(await knex.schema.hasColumn('access_codes', name))) {

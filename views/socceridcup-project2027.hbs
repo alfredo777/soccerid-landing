@@ -1379,6 +1379,10 @@
   var leadErr = document.getElementById('ppLeadError');
   var formWrap = document.querySelector('.pp-lock__form');
   var lastCode = '';
+  // El candado tiene un solo renglón de error y ahora hay dos motivos: el
+  // código no existe, o existe pero todavía no está habilitado.
+  var errPorDefecto = err.textContent;
+  var errSinNivel = {{#if isEs}}'Ese código todavía no está habilitado. Escríbele al organizador.'{{else}}'That code is not enabled yet. Please contact the organizer.'{{/if}};
 
   // Devuelve una promesa: quien la llama mantiene el botón en "..." hasta que
   // la propuesta esté en pantalla, para que se sienta un solo paso.
@@ -1410,6 +1414,8 @@
     // El endpoint es compartido por todas las propuestas; `variant` le dice
     // desde cuál se está entrando (queda en el log y en el aviso al admin).
     payload.variant = '{{variantId}}';
+    // El idioma viaja para que, si el código manda a otra página, se conserve.
+    payload.lang = '{{lang}}';
     return fetch('/api/project2027/verify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1426,9 +1432,13 @@
     .then(function(data) {
       // Con acceso concedido el botón se queda en "..." hasta que la propuesta
       // esté en pantalla: así el desbloqueo se lee como un solo paso.
+      // El código abre otra página (por ejemplo, uno de partido tecleado en
+      // el tour): se va para allá en vez de revelar esta.
+      if (data.ok && data.ir) { window.location.href = data.ir; return; }
       if (data.ok) { return reveal(); }
       btn.disabled = false;
       btn.textContent = '{{data.lock.button}}';
+      err.textContent = data.sinNivel ? errSinNivel : errPorDefecto;
       if (data.needLead) {
         lastCode = val;
         err.classList.remove('visible');
@@ -1460,9 +1470,11 @@
     leadBtn.textContent = '...';
     post({ code: lastCode, name: nm, email: em })
     .then(function(data) {
+      if (data.ok && data.ir) { window.location.href = data.ir; return; }
       if (data.ok) { return reveal(); }
       leadBtn.disabled = false;
       leadBtn.textContent = original;
+      if (data.sinNivel) leadErr.textContent = errSinNivel;
       leadErr.classList.add('visible');
     })
     .catch(function() { leadBtn.disabled = false; leadBtn.textContent = original; });

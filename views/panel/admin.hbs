@@ -1314,6 +1314,14 @@
   </style>
   <p class="ad-note">Códigos de acceso a la <strong>propuesta 2027</strong>, hoy <strong>{{propuestaViva.label}}</strong> (<a href="{{propuestaViva.url}}" target="_blank" rel="noopener" style="color:var(--pn-purple);font-weight:700;">ver página</a>). Al entrar desde un dispositivo nuevo se pide nombre y correo (quedan en <strong>Prospectos</strong>) y se registra en <strong>Accesos</strong>. Los mismos códigos abren las propuestas guardadas.</p>
 
+  {{#if codesSinNivel}}
+  <p class="ad-note" style="background:#FEF3C7; border-left:3px solid #D97706; padding:10px 14px; border-radius:8px;">
+    <strong>Sin nivel: {{codesSinNivel}}.</strong>
+    Mientras no tengan nivel no abren nada: quien los escriba verá «ese código todavía no está habilitado».
+    Ponles nivel abajo, en el desplegable de cada uno.
+  </p>
+  {{/if}}
+
   {{#if propuestasAlternas.length}}
   <div class="pn-card" style="margin-bottom:18px;">
     <div class="pn-card__head"><h3>Propuestas guardadas</h3><span class="ad-hint">La anterior, por si hay que volver a ella</span></div>
@@ -1350,6 +1358,11 @@
       <form class="pn-card ad-form" method="POST" action="/panel/admin/codes/generate" style="margin-bottom:18px;">
         <h3>Generar códigos</h3>
         <div class="ad-f"><label>Cantidad</label><input type="number" name="count" value="10" min="1" max="100"></div>
+        <div class="ad-f"><label>Hasta dónde llegan</label>
+          <select name="alcance">
+            {{#each nivelesCodigo}}<option value="{{this.valor}}">{{this.labelLargo}}</option>{{/each}}
+          </select>
+        </div>
         <button type="submit" class="ad-btn">Generar (por usar)</button>
       </form>
       <form class="pn-card ad-form" method="POST" action="/panel/admin/code">
@@ -1372,6 +1385,7 @@
               {{#if this.isTest}}Código de prueba · {{/if}}{{this.statusLabel}} · {{this.accesses}} accesos
               {{#if this.otherAccesses}}<span class="cd-flag">{{this.otherAccesses}} de otra persona</span>{{/if}}
               {{#if this.revoked}}<span class="cd-flag" style="background:#FEE2E2; color:#B91C1C;">🔒 Bloqueado</span>{{/if}}
+              {{#if this.sinNivel}}<span class="cd-flag">{{this.nivelLabel}}</span>{{else}}<span class="cd-owner" style="background:#DCFCE7; color:#166534;">{{this.nivelLabel}}</span>{{/if}}
             </small>
             <small>
               {{#if this.assigned}}<span class="cd-owner">{{this.assigneeName}}{{#unless this.assigneeName}}{{this.assigneeEmail}}{{/unless}}</span>{{else}}<span class="cd-none">Sin dueño asignado</span>{{/if}}
@@ -1384,6 +1398,13 @@
               data-name="{{this.assigneeName}}" data-email="{{this.assigneeEmail}}"
               data-phone="{{this.assigneePhone}}" data-tags="{{this.tagsText}}">{{#if this.assigned}}Dueño{{else}}Asignar{{/if}}</button>
             <button type="button" onclick="openCodeHistory(this)" data-code="{{this.code}}">Accesos{{#if this.accesses}} ({{this.accesses}}){{/if}}</button>
+            <form method="POST" action="/panel/admin/code/{{this.id}}/nivel">
+              <select name="alcance" class="ad-select-sm" onchange="this.form.submit()" title="Hasta dónde llega este código">
+                {{#each ../nivelesCodigo}}
+                <option value="{{this.valor}}" {{#eq this.valor ../alcanceValor}}selected{{/eq}}>{{this.label}}</option>
+                {{/each}}
+              </select>
+            </form>
             <form method="POST" action="/panel/admin/code/{{this.id}}/status">
               <select name="status" class="ad-select-sm" onchange="this.form.submit()">
                 <option value="unused" {{#eq this.status 'unused'}}selected{{/eq}}>Por usar</option>

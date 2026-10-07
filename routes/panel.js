@@ -1226,12 +1226,19 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
         assigneePhone: c.assignee_phone || '', tagsText: c.tags || '',
         tags: codeMap.parseTags(c.tags),
         assigned: !!(c.assignee_name || c.assignee_email || c.assignee_phone),
-        revoked: !!c.revoked
+        revoked: !!c.revoked,
+        // Hasta dónde llega el código. `alcanceValor` es lo que selecciona el
+        // desplegable; `nivelLabel` lo que se lee de un vistazo en la lista.
+        alcanceValor: nivelAValor(c),
+        nivelLabel: nivelLegible(c),
+        sinNivel: !propuestas.alcanceDe(c)
       };
     });
     const codesUsed = codesView.filter(c => c.status === 'used').length;
     const codesUnused = codesView.filter(c => c.status === 'unused' && !c.isTest).length;
     const codesAssigned = codesView.filter(c => c.assigned).length;
+    // Códigos que todavía no abren nada: el organizador les pone nivel uno por uno.
+    const codesSinNivel = codesView.filter(c => c.sinNivel).length;
     const codesLeaked = codesView.filter(c => c.otherAccesses > 0).length;
     const codeTags = [...new Set(codesView.flatMap(c => c.tags))].sort();
 
@@ -1750,7 +1757,9 @@ router.get('/admin', auth.requireAdmin, async (req, res, next) => {
       })),
       investorTiers: tiers.filter(t => t.role === 'investor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
       sponsorTiers: tiers.filter(t => t.role === 'sponsor').map(t => ({ key: t.key, label: t.label, amount: t.amount })),
-      codes: codesView, codesUsed, codesUnused, codesHistory,
+      codes: codesView, codesUsed, codesUnused, codesHistory, codesSinNivel,
+      // Opciones del desplegable de nivel, iguales en la lista y al generar.
+      nivelesCodigo: nivelesParaFormulario(),
       codesAssigned, codesLeaked, codeTags, relations, ownerTimeline, mapaConDueno, mapaAjenos,
       leads: leadsView, leadsCount: leadsView.length, leadsHistory,
       accessLog: accessView,
@@ -3461,7 +3470,10 @@ router.post('/admin/code', auth.requireAdmin, async (req, res, next) => {
     if (!code) return res.redirect('/panel/admin?type=error&msg=C%C3%B3digo+vac%C3%ADo#codigos');
     const ex = await knex('access_codes').where({ code }).first();
     if (ex) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Ese código ya existe') + '#codigos');
-    await knex('access_codes').insert({ code, status: req.body.status === 'used' ? 'used' : 'unused' });
+    await knex('access_codes').insert(Object.assign(
+      { code, status: req.body.status === 'used' ? 'used' : 'unused' },
+      nivelDelForm(req.body)
+    ));
     res.redirect('/panel/admin?type=ok&msg=C%C3%B3digo+agregado#codigos');
   } catch (e) { next(e); }
 });
@@ -3469,16 +3481,36 @@ router.post('/admin/code', auth.requireAdmin, async (req, res, next) => {
 router.post('/admin/codes/generate', auth.requireAdmin, async (req, res, next) => {
   try {
     const n = Math.min(Math.max(parseInt(req.body.count || '10', 10) || 10, 1), 100);
+    // Todos los del lote nacen con el mismo nivel: se generan para un reparto.
+    const nivel = nivelDelForm(req.body);
     const existing = new Set((await knex('access_codes').select('code')).map(r => r.code));
     const rows = []; let made = 0, guard = 0;
     while (made < n && guard < n * 60) {
       guard++;
       const c = String(Math.floor(1000000 + Math.random() * 9000000));
       if (existing.has(c)) continue;
-      existing.add(c); rows.push({ code: c, status: 'unused' }); made++;
+      existing.add(c); rows.push(Object.assign({ code: c, status: 'unused' }, nivel)); made++;
     }
     if (rows.length) await knex('access_codes').insert(rows);
-    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(`${rows.length} códigos generados`) + '#codigos');
+    const comoQue = nivel.nivel === 'tour'
+      ? ' con nivel de tour'
+      : (nivel.nivel === 'partido'
+        ? ' para ' + nombreCorto(propuestas.porId(nivel.variante))
+        : ' SIN NIVEL (no abren nada todavía)');
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(rows.length + ' códigos generados' + comoQue) + '#codigos');
+  } catch (e) { next(e); }
+});
+
+// Nivel de un código: hasta dónde llega. Es lo que decide qué abre y, más
+// adelante, el mínimo de inversión que ve quien entra con él.
+router.post('/admin/code/:id/nivel', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const c = await knex('access_codes').where({ id: req.params.id }).first();
+    if (!c) return res.redirect('/panel/admin?type=error&msg=' + encodeURIComponent('Ese código no existe') + '#codigos');
+    const nivel = nivelDelForm(req.body);
+    await knex('access_codes').where({ id: c.id }).update(Object.assign({ updated_at: knex.fn.now() }, nivel));
+    const msg = 'Código ' + c.code + ': ' + nivelLegible(Object.assign({}, c, nivel));
+    res.redirect('/panel/admin?type=ok&msg=' + encodeURIComponent(msg) + '#codigos');
   } catch (e) { next(e); }
 });
 
@@ -3579,14 +3611,72 @@ router.post('/admin/code/:id/assign', auth.requireAdmin, async (req, res, next) 
   }
 });
 
+// --- Nivel de los códigos de acceso ----------------------------------------
+// Un código abre el tour entero o un solo partido. El formulario manda un solo
+// campo, `alcance`, con 'tour' o 'partido:<id>'; cualquier otra cosa se guarda
+// como sin nivel, que no abre nada. Más vale un código de menos que uno que
+// abra de más.
+function nivelDelForm(body) {
+  const raw = String((body && body.alcance) || '').trim();
+  if (raw === 'tour') return { nivel: 'tour', variante: null };
+  if (raw.indexOf('partido:') === 0) {
+    const v = propuestas.porId(raw.slice('partido:'.length));
+    if (v && v.tipo === 'partido') return { nivel: 'partido', variante: v.id };
+  }
+  return { nivel: null, variante: null };
+}
+
+function nivelAValor(c) {
+  if (!c || !c.nivel) return '';
+  if (c.nivel === 'tour') return 'tour';
+  return c.variante ? 'partido:' + c.variante : '';
+}
+
+/** El último tramo del slug: 'partido-1', 'anterior'. Es como se nombran aquí. */
+function nombreCorto(v) {
+  const partes = String((v && v.slug) || '').split('/');
+  return partes[partes.length - 1];
+}
+
+function nivelLegible(c) {
+  const alcance = propuestas.alcanceDe(c);
+  if (!alcance) return 'SIN NIVEL';
+  if (alcance.nivel === 'tour') return 'TOUR, ve todo';
+  const v = propuestas.porId(c.variante);
+  return v ? 'SOLO ' + nombreCorto(v) : 'SIN NIVEL';
+}
+
+// Dos etiquetas por opción: la corta va en el desplegable de cada código, que
+// comparte renglón con otros cuatro controles y se desarma si el texto crece;
+// la larga, en el formulario de generar, donde sí hay lugar para explicarse.
+function nivelesParaFormulario() {
+  const base = [
+    { valor: '', label: 'Sin nivel', labelLargo: 'Sin nivel, todavía no abre nada' },
+    { valor: 'tour', label: 'Tour (todo)', labelLargo: 'Tour 27: el tour y todos los partidos' }
+  ];
+  return base.concat(propuestas.partidos().map(function (v) {
+    return {
+      valor: 'partido:' + v.id,
+      label: 'Solo ' + nombreCorto(v),
+      labelLargo: 'Solo ' + nombreCorto(v) + ' (' + v.label + ')'
+    };
+  }));
+}
+
 // Envío del código por email/SMS. Reutiliza el mailer y el canal de SMS que ya
 // existen; no hay un tercer camino de envío. Lo usan tanto el botón "Enviar"
 // como el checkbox de "mandar por email al asignar".
 async function enviarCodigoA(c, { email, sms }) {
   const nombre = c.assignee_name || 'Hola';
-  // Siempre la propuesta en vivo: el slug sale del registro, no escrito a mano,
-  // para que al cambiar de partido el correo no siga mandando a la anterior.
-  const enlace = `${process.env.BASE_URL || 'https://soccerid.co'}/es/${propuestas.porDefecto().slug}`;
+  // El enlace es el de la página que ESE código abre, no la propuesta en vivo:
+  // mandarle a alguien un código de partido con la liga del tour lo deja
+  // rebotando. Un código sin nivel no se manda: no abriría nada.
+  const alcance = propuestas.alcanceDe(c);
+  const pagina = alcance ? await propuestas.destino(alcance) : null;
+  if (!pagina) {
+    return { partes: [], fallos: ['el código no tiene nivel asignado (ponle uno antes de mandarlo)'] };
+  }
+  const enlace = `${process.env.BASE_URL || 'https://soccerid.co'}/es/${pagina.slug}`;
   const cuerpo = `Tu código de acceso a la propuesta SOCCER iD CUP 2027 es ${c.code}.\nEntra en ${enlace} y escríbelo cuando te lo pida.`;
   const partes = [], fallos = [];
   if (email) {

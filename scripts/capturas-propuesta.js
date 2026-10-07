@@ -70,9 +70,11 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
   await send('Runtime.enable');
 
   const secreto = process.env.PANEL_JWT_SECRET || process.env.SESSION_SECRET || 'panel-dev-secret-change-me';
-  const token = jwt.sign({ v: VARIANTE }, secreto, { expiresIn: '1h' });
+  // Una sola cookie para todo el acceso, con el nivel dentro: se firma con
+  // nivel de tour para que la captura pueda abrir cualquier página.
+  const token = jwt.sign({ n: 'tour', v: propuestas.listar().map(v => v.id) }, secreto, { expiresIn: '1h' });
   const host = new URL(BASE).hostname;
-  await send('Network.setCookie', { name: 'pp_acc_' + VARIANTE, value: token, domain: host, path: '/' });
+  await send('Network.setCookie', { name: 'pp_acc', value: token, domain: host, path: '/' });
 
   async function captura(nombre, { url, metrics = MOVIL, espera = 3000, scroll = null, antes = null }) {
     await send('Emulation.setDeviceMetricsOverride', metrics);

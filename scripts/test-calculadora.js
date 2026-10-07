@@ -89,8 +89,8 @@ function check(nombre, real, esperado) {
   const variante = require('../lib/propuestas').porDefecto();
   const secreto = process.env.PANEL_JWT_SECRET || process.env.SESSION_SECRET || 'panel-dev-secret-change-me';
   await send('Network.setCookie', {
-    name: 'pp_acc_' + variante.id,
-    value: require('jsonwebtoken').sign({ v: variante.id }, secreto, { expiresIn: '1h' }),
+    name: 'pp_acc',
+    value: require('jsonwebtoken').sign({ n: 'partido', v: [variante.id] }, secreto, { expiresIn: '1h' }),
     // `URL` ya es la constante de arriba (la dirección de la página), de ahí el require.
     domain: new (require('url').URL)(BASE).hostname, path: '/'
   });

@@ -824,6 +824,17 @@ function renderPropuesta(variante) {
     // Las propuestas ocultas responden 404 mientras su interruptor esté apagado
     if (!(await propuestas.visible(variante))) return next();
 
+    // Regla de acceso: desde un partido no se ve el tour. Quien ya entró con
+    // un código de partido y abre la página del tour vuelve a la suya, en vez
+    // de quedarse mirando un candado que su código no abre.
+    if (variante.tipo === 'tour') {
+      const acceso = propuestas.accesoDe(req);
+      if (acceso && acceso.nivel !== 'tour') {
+        const suyo = await propuestas.destino(acceso);
+        if (suyo) return res.redirect(302, `/${lang}/${suyo.slug}`);
+      }
+    }
+
     try {
       const data = propuestas.leerContenido(variante, lang, DEFAULT_LANG);
       if (!data) return next();
@@ -971,6 +982,13 @@ app.post('/api/project2027/verify', async (req, res) => {
     }
     const isTest = codeRow.note === 'test';
 
+    // Hasta dónde llega este código: el tour entero o un solo partido. Los
+    // códigos sin nivel —los repartidos antes de que existieran los niveles—
+    // no abren nada hasta que el organizador se lo ponga en el admin. Se
+    // responde antes de registrar nada: no hay entrada que apuntar.
+    const alcance = propuestas.alcanceDe(codeRow);
+    if (!alcance) return res.json({ ok: false, sinNivel: true });
+
     // Identificación de dispositivo por cookie
     let deviceId = req.cookies && req.cookies.p2027_device;
     const knownDevice = !!deviceId;
@@ -1042,9 +1060,18 @@ app.post('/api/project2027/verify', async (req, res) => {
 
     // Cookie de acceso firmada: a partir de aquí el servidor sí manda el
     // contenido de la propuesta. Antes de esto el candado era solo de
-    // presentación y la propuesta viajaba igual en el HTML.
-    if (await propuestas.visible(variante)) {
-      propuestas.darAcceso(res, variante, isProduction);
+    // presentación y la propuesta viajaba igual en el HTML. La cookie carga el
+    // nivel: de él depende qué páginas se abren.
+    propuestas.darAcceso(res, alcance, isProduction);
+
+    // Si el código no abre la página desde la que se escribió —un código de
+    // partido tecleado en el tour—, se le dice al navegador a dónde sí puede
+    // ir, en vez de dejarlo atorado.
+    const lang = SUPPORTED_LANGS.includes(req.body.lang) ? req.body.lang : detectLanguage(req);
+    if (alcance.variantes.indexOf(variante.id) === -1 || !(await propuestas.visible(variante))) {
+      const suyo = await propuestas.destino(alcance);
+      if (!suyo) return res.json({ ok: false });
+      return res.json({ ok: true, ir: `/${lang}/${suyo.slug}` });
     }
 
     return res.json({ ok: true });
