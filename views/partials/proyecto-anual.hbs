@@ -19,6 +19,32 @@
      pintan como POR DEFINIR: ninguna se inventó. Cerrar una es escribir su
      valor en `contents/cup_tour_2027.json` y quitarle la marca. --}}
 
+  {{!-- Iconografía. Un solo sprite al principio y cada dato dice cuál le toca
+       con su campo `icon`; así no hay SVG repetido por la vista. Trazo, no
+       relleno, para que hereden el color. --}}
+  <svg class="pa-sprite" aria-hidden="true" focusable="false"><defs>
+    <g id="i-balon"><circle cx="12" cy="12" r="9"/><path d="M12 7.5l3.5 2.5-1.3 4.1H9.8L8.5 10z"/><path d="M12 3v4.5M3.6 9.6l4.9.4M20.4 9.6l-4.9.4M7.2 20.2l2.6-5.6M16.8 20.2l-2.6-5.6"/></g>
+    <g id="i-reparto"><circle cx="12" cy="12" r="9"/><path d="M12 12V3a9 9 0 017.8 4.5z"/><path d="M12 12l7.8-4.5"/></g>
+    <g id="i-calendario-ok"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17M9 15l2.2 2.2L15.5 13"/></g>
+    <g id="i-calendario"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></g>
+    <g id="i-estadio"><path d="M3 8.5c0-1.9 4-3.4 9-3.4s9 1.5 9 3.4-4 3.4-9 3.4-9-1.5-9-3.4z"/><path d="M3 8.5v6.8c0 1.9 4 3.4 9 3.4s9-1.5 9-3.4V8.5"/><ellipse cx="12" cy="12.5" rx="3.6" ry="1.4"/></g>
+    <g id="i-lugar"><path d="M12 21s7-5.6 7-11a7 7 0 10-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></g>
+    <g id="i-dinero"><rect x="3" y="6" width="18" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.8"/><path d="M6.5 9.5v5M17.5 9.5v5"/></g>
+    <g id="i-boleto"><path d="M3.5 8.5A2 2 0 015.5 6.5h13a2 2 0 012 2v1.2a2.3 2.3 0 000 4.6v1.2a2 2 0 01-2 2h-13a2 2 0 01-2-2v-1.2a2.3 2.3 0 000-4.6z"/><path d="M14 6.5v11"/></g>
+    <g id="i-etiqueta"><path d="M11.2 3.5H20v8.8l-8.4 8.4a1.8 1.8 0 01-2.6 0l-6.2-6.2a1.8 1.8 0 010-2.6z"/><circle cx="16.2" cy="7.8" r="1.4"/></g>
+    <g id="i-caja"><path d="M3.5 7.5l8.5-4 8.5 4v9l-8.5 4-8.5-4z"/><path d="M3.5 7.5l8.5 4 8.5-4M12 11.5v9"/></g>
+    <g id="i-apreton"><path d="M8 12.5l3 3 2-2 3 3"/><path d="M3 9.5l3.5-3h4L13 8.5l3-2h5v8l-3 1.5"/><path d="M3 9.5v7l3 1.5"/></g>
+    <g id="i-engrane"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M4.5 7.6l2.3 1.3M17.2 15.1l2.3 1.3M4.5 16.4l2.3-1.3M17.2 8.9l2.3-1.3"/></g>
+    <g id="i-capas"><path d="M12 3l9 4.8-9 4.8-9-4.8z"/><path d="M3 12.4l9 4.8 9-4.8M3 16.8l9 4.8 9-4.8"/></g>
+    <g id="i-grafica"><path d="M3.5 20.5h17"/><path d="M6.5 17V11M11 17V5.5M15.5 17v-8M20 17v-4"/></g>
+    <g id="i-cartera"><path d="M3.5 8.5A2 2 0 015.5 6.5H18a2 2 0 012 2v9a2 2 0 01-2 2H5.5a2 2 0 01-2-2z"/><path d="M3.5 9.5h13a1.8 1.8 0 011.8 1.8v2.4a1.8 1.8 0 01-1.8 1.8h-13"/><circle cx="15.5" cy="12.5" r="1"/></g>
+    <g id="i-banco"><path d="M3.5 9.5L12 4l8.5 5.5"/><path d="M5.5 9.5v8M10 9.5v8M14 9.5v8M18.5 9.5v8M3 20.5h18"/></g>
+    <g id="i-check"><circle cx="12" cy="12" r="9"/><path d="M8 12.2l2.6 2.6L16.2 9"/></g>
+    <g id="i-escudo"><path d="M12 3l7.5 3v5.5c0 4.6-3.1 8-7.5 9.5-4.4-1.5-7.5-4.9-7.5-9.5V6z"/><path d="M9 12.2l2.2 2.2 4-4.2"/></g>
+    <g id="i-candado"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2.2"/><path d="M8 10.5V8a4 4 0 118 0v2.5"/><circle cx="12" cy="15" r="1.3"/></g>
+    <g id="i-ojo"><path d="M2.5 12S6 6 12 6s9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6z"/><circle cx="12" cy="12" r="2.8"/></g>
+  </defs></svg>
+
   <div class="pp-lang-bar">
     <a href="/es/{{slug}}" class="{{#if isEs}}active{{/if}}">ES</a>
     <a href="/en/{{slug}}" class="{{#if isEn}}active{{/if}}">EN</a>
@@ -41,6 +67,7 @@
           <div class="pa-tiles">
             {{#each data.resumen.cifras}}
             <div class="pa-tile">
+              {{#if this.icon}}<svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>{{/if}}
               <span class="pa-tile__l">{{this.label}}</span>
               <strong class="pa-tile__v">{{this.value}}</strong>
               <span class="pa-tile__n">{{this.note}}</span>
@@ -135,6 +162,7 @@
           <div class="pa-ref">
             {{#each data.referencia.cifras}}
             <div class="pa-ref__i">
+              {{#if this.icon}}<svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>{{/if}}
               <strong class="pa-ref__v">{{this.value}}</strong>
               <span class="pa-ref__l">{{this.label}}</span>
             </div>
@@ -172,6 +200,7 @@
     <div class="pa-cifras">
       {{#each data.partido1.datos}}
       <div class="pa-cifra">
+        {{#if this.icon}}<svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>{{/if}}
         <span class="pa-cifra__l">{{this.label}}</span>
         <strong class="pa-cifra__v pa-cifra__v--md">{{this.value}}</strong>
       </div>
@@ -187,7 +216,7 @@
     <div class="pa-grid4">
       {{#each data.oportunidad.items}}
       <div class="pa-card">
-        <span class="pa-card__n">{{this.n}}</span>
+        <span class="pa-card__h">{{#if this.icon}}<svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>{{/if}}<span class="pa-card__n">{{this.n}}</span></span>
         <h3 class="pa-card__t">{{this.title}}</h3>
         <p class="pa-card__b">{{this.body}}</p>
       </div>
@@ -271,7 +300,7 @@
     <div class="pa-grid4">
       {{#each data.flujo.pasos}}
       <div class="pa-card">
-        <span class="pa-card__n">{{this.n}}</span>
+        <span class="pa-card__h">{{#if this.icon}}<svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>{{/if}}<span class="pa-card__n">{{this.n}}</span></span>
         <h3 class="pa-card__t">{{this.title}}</h3>
         <p class="pa-card__b">{{this.body}}</p>
       </div>
@@ -337,6 +366,7 @@
     <div class="pa-grid4">
       {{#each data.condiciones.items}}
       <div class="pa-card">
+        {{#if this.icon}}<svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>{{/if}}
         <h3 class="pa-card__t">{{this.title}}</h3>
         <p class="pa-card__b">{{this.body}}</p>
       </div>
@@ -489,6 +519,23 @@
     .pa-dato__v { font-size: 16px; font-weight: 800; }
 
     /* Derecha */
+    /* Iconografía: el azul del logo subido de luz, que sobre la tarjeta da
+       5.31 de contraste (un gráfico pide 3.0). Trazo, nunca relleno. */
+    .pa-sprite { display: none; }
+    .pa-ico {
+      display: block; width: 30px; height: 30px; margin-bottom: 10px;
+      padding: 5px; border-radius: 9px; flex-shrink: 0;
+      color: var(--tour-azul, #6B93EC);
+      background: rgba(107,147,236,0.14);
+      stroke: currentColor; stroke-width: 1.6; fill: none;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .pa-ico use { pointer-events: none; }
+    .pa-ref__i .pa-ico { margin-left: auto; margin-right: auto; }
+    .pa-card__h { display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
+    .pa-card__h .pa-ico { margin-bottom: 0; }
+    .pa-card__h + .pa-card__t { margin-top: 0; }
+
     /* Los tres partidos de la temporada, del mismo tamaño. El cerrado enseña
        sede y ciudad; los dos que se negocian enseñan una incógnita y el borde
        punteado, para que se lean como un hueco por llenar y no como una ficha
