@@ -564,8 +564,16 @@
 
     /* ───────────── DETALLE ───────────── */
     .pa-sec { max-width: 1120px; margin: 0 auto; padding: 78px 32px; }
-    .pa-sec--alt { background: rgba(255,255,255,0.025); max-width: none; }
-    .pa-sec--alt > * { max-width: 1120px; margin-left: auto; margin-right: auto; }
+    /* La sección de fondo alterno ocupa todo el ancho, así que su contenido se
+       centra con el PADDING, no con `margin: auto` en los hijos: con auto, los
+       hijos más estrechos que la columna —los subtítulos, de 760— se centraban
+       ellos mismos y quedaban descolgados de su título. */
+    .pa-sec--alt {
+      background: rgba(255,255,255,0.025); max-width: none;
+      padding-left: max(32px, calc((100% - 1056px) / 2));
+      padding-right: max(32px, calc((100% - 1056px) / 2));
+    }
+    .pa-sec--alt > * { max-width: 1056px; margin-left: 0; margin-right: 0; }
     .pa-kicker { font-size: 11.5px; font-weight: 800; letter-spacing: 2.4px; color: var(--pp-accent); margin-bottom: 14px; }
     .pa-title { font-size: 38px; font-weight: 900; line-height: 1.14; margin-bottom: 14px; }
     .pa-sub { font-size: 17px; line-height: 1.6; color: rgba(255,255,255,0.7); max-width: 760px; margin-bottom: 36px; }
@@ -637,6 +645,12 @@
       text-align: center; min-height: 54vh; padding: 86px 32px;
       background: url('{{heroImage}}') center/cover no-repeat;
     }
+    /* El cierre lleva el texto al centro, no abajo, así que reaprovechar el
+       velo del hero —claro arriba— dejaba el párrafo sobre el césped
+       iluminado. Aquí el velo es parejo y más cerrado. */
+    .pa-cierre .pa-foto__veil {
+      background: linear-gradient(180deg, rgba(18,20,24,0.74) 0%, rgba(26,28,33,0.84) 100%);
+    }
     .pa-cierre__body { position: relative; z-index: 2; max-width: 780px; }
     .pa-cierre__t { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.08; margin-bottom: 16px; }
     .pa-cierre__b { font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.8); margin-bottom: 26px; }
@@ -652,6 +666,7 @@
       .pa-panel__rejilla { grid-template-columns: minmax(0, 1fr); }
       .pa-foto { min-height: 380px; }
       .pa-sec { padding: 56px 20px; }
+      .pa-sec--alt { padding-left: 20px; padding-right: 20px; }
       .pa-title { font-size: 27px; }
       .pa-sub { font-size: 15.5px; }
       .pa-parte__pct { font-size: 42px; }
