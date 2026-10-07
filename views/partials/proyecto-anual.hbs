@@ -374,14 +374,26 @@
       max-width: 1560px; margin: 0 auto;
       display: grid; gap: 16px;
       grid-template-columns: minmax(280px, 330px) minmax(0, 1fr) minmax(290px, 360px);
-      align-items: start;
+      align-items: stretch;
     }
-    /* Las tres arrancan a la misma altura (el aire de la barra de idioma lo
-       pone el panel) y se apilan con el mismo hueco. El sobrante queda abajo,
-       no repartido entre las tarjetas: repartirlo abría huecos enormes. */
+    /* Las tres columnas miden lo mismo y la ÚLTIMA tarjeta de cada una se
+       estira hasta el fondo. Así el panel cierra parejo por arriba y por
+       abajo sin repartir el sobrante entre las tarjetas, que abría huecos
+       enormes, ni dejarlo suelto debajo, que las dejaba desparejas.
+       El aire de la barra de idioma lo pone el panel, no una columna. */
     .pa-col-l, .pa-col-c, .pa-col-r {
-      display: grid; gap: 16px; min-width: 0; align-content: start;
+      display: flex; flex-direction: column; gap: 16px; min-width: 0;
     }
+    /* En cada columna hay UN elemento que absorbe el sobrante, elegido porque
+       crece sin dejar hueco: en el centro, la foto —una imagen más alta se lee
+       igual de bien—; a los lados, la última tarjeta, cuya lista reparte sus
+       renglones. Las tarjetas de partido NO se estiran: alargarlas dejaba tres
+       cajas medio vacías. */
+    .pa-col-c > :first-child { flex: 1 1 auto; }
+    .pa-col-l > :last-child,
+    .pa-col-r > :last-child { flex: 1 1 auto; display: flex; flex-direction: column; }
+    .pa-col-l > :last-child .pa-pasos { flex: 1 1 auto; justify-content: space-between; }
+    .pa-col-r > :last-child .pa-tl { flex: 1 1 auto; justify-content: space-between; }
 
     .pa-box {
       padding: 22px; border-radius: 20px;
