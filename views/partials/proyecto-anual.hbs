@@ -63,6 +63,22 @@
           <a href="#pa-capital" class="pa-link">{{data.capital.kicker}} →</a>
         </section>
 
+        {{!-- El ejemplo de participación cierra la columna: es corto, es de lo
+             que más se busca de un vistazo y deja la izquierda a la altura de
+             las otras dos. --}}
+        <section class="pa-box">
+          <span class="pa-eyebrow">{{data.ejemplo.kicker}}</span>
+          <h3 class="pa-box__t pa-box__t--sm">{{data.ejemplo.title}}</h3>
+          <ol class="pa-pasos">
+            {{#each data.ejemplo.pasos}}
+            <li class="pa-paso">
+              <strong class="pa-paso__v">{{this.value}}</strong>
+              <span class="pa-paso__l">{{this.label}}</span>
+            </li>
+            {{/each}}
+          </ol>
+          <p class="pa-box__pie">{{data.ejemplo.pie}}</p>
+        </section>
       </aside>
 
       {{!-- Centro: la foto del primer partido con el nombre del proyecto --}}
@@ -279,21 +295,6 @@
     <p class="pa-aviso">{{data.participacion.pie}}</p>
   </section>
 
-  <section class="pa-sec pa-sec--alt">
-    <p class="pa-kicker">{{data.ejemplo.kicker}}</p>
-    <h2 class="pa-title">{{data.ejemplo.title}}</h2>
-    <p class="pa-sub">{{data.ejemplo.sub}}</p>
-    <div class="pa-cifras">
-      {{#each data.ejemplo.pasos}}
-      <div class="pa-cifra">
-        <strong class="pa-cifra__v pa-cifra__v--big">{{this.value}}</strong>
-        <span class="pa-cifra__l">{{this.label}}</span>
-      </div>
-      {{/each}}
-    </div>
-    <p class="pa-aviso">{{data.ejemplo.pie}}</p>
-  </section>
-
   <section class="pa-sec">
     <p class="pa-kicker">{{data.experiencia.kicker}}</p>
     <h2 class="pa-title">{{data.experiencia.title}}</h2>
@@ -359,14 +360,14 @@
     /* La foto del estadio va de fondo de todo el panel y los paneles flotan
        encima translúcidos: así la foto se lee como una sola pieza con el
        contenido, en vez de una portada seguida de tarjetas. */
-    .pa-panel { position: relative; padding: 26px 26px 34px; }
+    .pa-panel { position: relative; padding: 60px 26px 34px; }
     .pa-panel__fondo {
       position: absolute; inset: 0;
       background: url('{{heroImage}}') center/cover no-repeat;
     }
     .pa-panel__fondo::after {
       content: ''; position: absolute; inset: 0;
-      background: linear-gradient(180deg, rgba(6,14,38,0.84) 0%, rgba(8,17,44,0.92) 55%, rgba(10,20,48,0.975) 100%);
+      background: linear-gradient(180deg, rgba(51,54,61,0.80) 0%, rgba(51,54,61,0.93) 55%, rgba(51,54,61,0.985) 100%);
     }
     .pa-panel__rejilla {
       position: relative; z-index: 2;
@@ -375,16 +376,17 @@
       grid-template-columns: minmax(280px, 330px) minmax(0, 1fr) minmax(290px, 360px);
       align-items: start;
     }
-    .pa-col-l, .pa-col-c, .pa-col-r { display: grid; gap: 16px; min-width: 0; }
-    /* La barra de idioma flota fija arriba a la derecha: la columna derecha
-       arranca más abajo para que no le caiga encima al primer panel. */
-    .pa-col-r { padding-top: 34px; }
-    @media (max-width: 1180px) { .pa-col-r { padding-top: 0; } }
+    /* Las tres arrancan a la misma altura (el aire de la barra de idioma lo
+       pone el panel) y se apilan con el mismo hueco. El sobrante queda abajo,
+       no repartido entre las tarjetas: repartirlo abría huecos enormes. */
+    .pa-col-l, .pa-col-c, .pa-col-r {
+      display: grid; gap: 16px; min-width: 0; align-content: start;
+    }
 
     .pa-box {
       padding: 22px; border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(12,24,58,0.6);
+      background: rgba(var(--tour-card-rgb, 56,60,68), 0.84);
       -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
     }
     .pa-box__h { margin-bottom: 18px; }
@@ -400,7 +402,7 @@
     .pa-tiles { display: grid; gap: 10px; }
     .pa-tile {
       padding: 14px 16px; border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
     }
     .pa-tile__l { display: block; font-size: 9.5px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255,255,255,0.45); }
     .pa-tile__v { display: block; font-size: 27px; font-weight: 900; line-height: 1.1; margin: 5px 0 4px; color: var(--pp-accent); }
@@ -428,7 +430,7 @@
     }
     .pa-foto__veil {
       position: absolute; inset: 0;
-      background: linear-gradient(180deg, rgba(0,12,38,0.3) 0%, rgba(2,14,40,0.6) 52%, rgba(6,16,44,0.93) 100%);
+      background: linear-gradient(180deg, rgba(20,21,25,0.3) 0%, rgba(28,30,35,0.62) 52%, rgba(44,47,53,0.94) 100%);
     }
     .pa-foto__body { position: relative; z-index: 2; max-width: 620px; }
     .pa-foto__t {
@@ -448,21 +450,28 @@
       filter: drop-shadow(0 0 26px rgba(255,255,255,0.3)) drop-shadow(0 10px 26px rgba(0,0,0,0.5));
     }
 
-    /* El rojo del logo, de filete: solo en las cifras grandes, donde 5.45 de
-       contraste basta. Los rótulos chicos van en blanco. */
+    /* Las cifras grandes en blanco: es lo que más pesa de la página y el
+       único color del logo que funciona sobre este gris. El rojo se descartó
+       (3.4 de contraste) y los rótulos chicos bajan a un gris de la familia
+       del jersey, que sí pasa el 7.0. */
     .pa-tile__v, .pa-ref__v, .pa-parte__pct, .pa-col__anio,
-    .pa-cifra__v--big, .pa-total__v, .pa-pt__q { color: var(--tour-rojo, var(--pp-accent)); }
-    .pa-total {
-      border-color: rgba(var(--tour-rojo-rgb, 255,255,255), 0.4);
-      background: rgba(var(--tour-rojo-rgb, 255,255,255), 0.1);
-    }
+    .pa-cifra__v--big, .pa-total__v { color: #FFFFFF; }
+    .pa-pt__q { color: rgba(255,255,255,0.3); }
+
+    .pa-tile__l, .pa-dato__l, .pa-cifra__l, .pa-ref__l, .pa-tl__e,
+    .pa-pt__n, .pa-pt__cuando, .pa-medio__f, .pa-card__n,
+    .pa-parte__q, .pa-total__l { color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
+    .pa-box__s, .pa-box__pie, .pa-tile__n, .pa-cifra__n, .pa-tl__q,
+    .pa-pt__sede, .pa-pt__lugar, .pa-col__sede, .pa-caps,
+    .pa-aviso, .pa-nota__b, .pa-card__b, .pa-sub, .pa-parte__b,
+    .pa-col__f, .pa-cierre__b { color: #D2D5DC; }
     .pa-foto__lead { font-size: 18px; line-height: 1.45; color: rgba(255,255,255,0.88); }
     .pa-foto__meta { font-size: 12.5px; letter-spacing: 1.3px; color: rgba(255,255,255,0.6); margin-top: 9px; }
 
     .pa-datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
     .pa-dato {
       padding: 14px 16px; border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
     }
     .pa-dato__l { display: block; font-size: 9.5px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255,255,255,0.45); margin-bottom: 7px; }
     .pa-dato__v { font-size: 16px; font-weight: 800; }
@@ -476,7 +485,7 @@
     .pa-pt {
       display: block; padding: 20px 18px; border-radius: 16px;
       text-decoration: none; color: inherit;
-      border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.055);
       transition: border-color .2s, background .2s;
     }
     .pa-pt:hover { border-color: rgba(var(--pp-accent-rgb), 0.55); background: rgba(var(--pp-accent-rgb), 0.08); }
@@ -496,7 +505,7 @@
     .pa-medios { list-style: none; padding: 0; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
     .pa-medio a {
       display: block; padding: 18px 20px; border-radius: 14px; text-decoration: none; color: inherit;
-      border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.09); background: var(--tour-card, rgba(255,255,255,0.035));
       transition: border-color .2s;
     }
     .pa-medio a:hover { border-color: rgba(var(--pp-accent-rgb), 0.5); }
@@ -509,10 +518,19 @@
        porque de estos partidos todavía no hay nada que contar. El borde va
        punteado para que se lean como un hueco por llenar, no como una ficha. */
 
+    .pa-pasos { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 8px; }
+    .pa-paso {
+      display: flex; align-items: baseline; gap: 12px;
+      padding: 12px 14px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
+    }
+    .pa-paso__v { font-size: 22px; font-weight: 900; color: #FFFFFF; flex-shrink: 0; min-width: 52px; }
+    .pa-paso__l { font-size: 10.5px; font-weight: 800; letter-spacing: 1.2px; line-height: 1.35; color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
+
     .pa-ref { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 16px; }
     .pa-ref__i {
       padding: 16px; border-radius: 14px; text-align: center;
-      border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
     }
     .pa-ref__v { display: block; font-size: 28px; font-weight: 900; color: var(--pp-accent); line-height: 1.1; }
     .pa-ref__l { display: block; font-size: 9.5px; font-weight: 800; letter-spacing: 1.4px; color: rgba(255,255,255,0.45); margin-top: 7px; }
@@ -549,7 +567,7 @@
     .pa-btn {
       display: inline-block; padding: 13px 26px; border-radius: 12px;
       font-size: 12.5px; font-weight: 800; letter-spacing: 1.1px; text-decoration: none;
-      background: var(--pp-accent); color: var(--tour-navy, #0A0A0E); white-space: nowrap;
+      background: var(--pp-accent); color: var(--tour-tinta, #0A0A0E); white-space: nowrap;
     }
     .pa-btn--ghost { background: transparent; color: var(--pp-accent); border: 1px solid var(--pp-accent); }
 
@@ -560,7 +578,7 @@
     }
 
     .pa-cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
-    .pa-cifra { padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.035); }
+    .pa-cifra { padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.09); background: var(--tour-card, rgba(255,255,255,0.035)); }
     .pa-cifra__l { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.6px; color: rgba(255,255,255,0.45); }
     .pa-cifra__v { display: block; font-size: 32px; font-weight: 900; margin: 10px 0 8px; }
     .pa-cifra__v--big { font-size: 42px; color: var(--pp-accent); }
@@ -568,7 +586,7 @@
     .pa-cifras--big .pa-cifra { text-align: center; }
 
     .pa-grid4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-    .pa-card { padding: 26px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.035); }
+    .pa-card { padding: 26px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.09); background: var(--tour-card, rgba(255,255,255,0.035)); }
     .pa-card__n { font-size: 12px; font-weight: 800; letter-spacing: 2px; color: var(--pp-accent); }
     .pa-card__t { font-size: 18px; font-weight: 800; margin: 12px 0 10px; }
     .pa-card__b { font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,0.68); }
@@ -582,20 +600,20 @@
     .pa-total__v { display: block; font-size: 36px; font-weight: 900; margin-top: 8px; color: var(--pp-accent); }
 
     .pa-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-    .pa-col { padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.035); }
+    .pa-col { padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.09); background: var(--tour-card, rgba(255,255,255,0.035)); }
     .pa-col__t { font-size: 15px; font-weight: 800; letter-spacing: 1.2px; margin-bottom: 14px; }
     .pa-col__f { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,0.07); font-size: 14.5px; color: rgba(255,255,255,0.7); }
     .pa-col--ed { text-align: center; }
     .pa-col__anio { display: block; font-size: 30px; font-weight: 900; color: var(--pp-accent); margin-bottom: 8px; }
     .pa-col__sede { font-size: 14px; color: rgba(255,255,255,0.55); }
 
-    .pa-nota { margin-top: 26px; padding: 24px 26px; border-radius: 16px; border-left: 3px solid var(--pp-accent); background: rgba(255,255,255,0.04); }
+    .pa-nota { margin-top: 26px; padding: 24px 26px; border-radius: 16px; border-left: 3px solid var(--pp-accent); background: var(--tour-card, rgba(255,255,255,0.04)); }
     .pa-nota--warn { border-left-color: #F0B429; }
     .pa-nota__t { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
     .pa-nota__b { font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,0.65); }
 
     .pa-reparto { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
-    .pa-parte { padding: 30px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); }
+    .pa-parte { padding: 30px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); background: var(--tour-card, rgba(255,255,255,0.04)); }
     .pa-parte__pct { display: block; font-size: 54px; font-weight: 900; line-height: 1; color: var(--pp-accent); }
     .pa-parte__q { display: block; font-size: 11.5px; font-weight: 800; letter-spacing: 2px; color: rgba(255,255,255,0.5); margin: 12px 0 14px; }
     .pa-parte__b { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.7); }

@@ -69,28 +69,32 @@
   }
 
   {{#if esTour}}
-  /* El proyecto anual viste los colores del logo iD TOUR '27: azul marino,
-     blanco, negro y el rojo de filete. Esto NO toca las páginas de partido,
-     que conservan el verde: el bloque solo se emite aquí.
+  /* El proyecto anual va en gris intermedio, con el blanco y el negro del
+     logo iD TOUR '27. Esto NO toca las páginas de partido, que conservan el
+     verde y el carbón: el bloque solo se emite aquí.
 
-     El rojo del logo (#C30728) da 2.93 sobre este azul y no pasa ni para
-     texto grande, así que el acento de los rótulos chicos es el blanco
-     (18.17) y el rojo, aclarado a #F2556E (5.45), se reserva para las cifras
-     grandes. Es como funciona el logo: azul y blanco, con el rojo de filete.
-     La regla está en docs/variables-del-proyecto.md y la vigila
-     scripts/contraste.js. */
+     Contraste sobre el gris #33363D (la casa pide 7.0 bajo 16px y 4.5
+     encima, ver docs/variables-del-proyecto.md y scripts/contraste.js):
+     blanco 12.10, gris de rótulo #C9CCD4 7.53. El rojo del logo no aparece:
+     sobre este fondo da 3.4 y no pasa ni para texto grande. */
   :root {
     --pp-accent: #FFFFFF;
-    --pp-accent-deep: #C8D4F0;
-    --pp-accent-ink: #001C4E;
+    --pp-accent-deep: #D5D8DE;
+    --pp-accent-ink: #1C1E23;
     --pp-accent-soft: #FFFFFF;
     --pp-accent-rgb: 255, 255, 255;
-    --pp-dark: #0A1430;
-    --pp-dark2: #101C42;
-    --tour-navy: #001C4E;
-    --tour-rojo: #F2556E;
-    --tour-rojo-rgb: 242, 85, 110;
+    --pp-dark: #33363D;
+    --pp-dark2: #3B3F47;
+    --tour-tinta: #1C1E23;
+    --tour-rotulo: #C9CCD4;
+    /* La tarjeta, más oscura que el fondo y tirando a azul, para que no se
+       confunda con él. Sobre ella el blanco da 15.9 y el gris de rótulo 9.9. */
+    --tour-card: #1E222C;
+    --tour-card-rgb: 30, 34, 44;
   }
+  /* El layout `promo` pinta el cuerpo en carbón (#16181B) escrito a mano, así
+     que el token no basta: aquí se le pasa por encima. Solo en el tour. */
+  body { background: var(--pp-dark); }
   {{/if}}
 
   .gallery-page.promo-page { max-width: 100%; }

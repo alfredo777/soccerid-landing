@@ -1,8 +1,8 @@
 {
   "_nota": "Perfil anual del proyecto 2027: el nivel de en medio de la lamina 19 de la presentacion (SOCCER iD CUP -> PROYECTO 2027 -> perfil de cada partido). El contenido es el de las laminas 1 a 18. Las cifras que la presentacion deja abiertas ([TOTAL], [MINIMO], [A2], [A3], [C2]...) NO se inventaron: van con pendiente:true y se pintan como POR DEFINIR. Cerrarlas es escribir el valor y quitar la marca. Solo hay bloque es: /en cae en espanol hasta que se traduzca.",
   "es": {
-    "pageTitle": "SOCCER iD CUP 2027 — Proyecto de tres partidos",
-    "marca": "SOCCER iD CUP 2027",
+    "pageTitle": "SOCCER iD TOUR '27 — Proyecto de tres partidos",
+    "marca": "SOCCER iD TOUR '27",
     "confidencial": "CONFIDENCIAL",
     "lock": {
       "badge": "CONFIDENCIAL",
@@ -59,7 +59,7 @@
     "partido1": {
       "kicker": "03 / PARTIDO 1",
       "title": "Cruz Azul vs. Pumas.",
-      "sub": "Primer encuentro del proyecto SOCCER iD CUP 2027.",
+      "sub": "Primer encuentro del proyecto SOCCER iD TOUR '27.",
       "datos": [
         { "label": "FECHA", "value": "27 marzo 2027" },
         { "label": "SEDE", "value": "Shell Energy Stadium" },
@@ -223,7 +223,7 @@
       "sub": "La participación se formaliza mediante contrato.",
       "items": [
         { "title": "Modalidad a riesgo", "body": "Participación en el resultado conjunto de los tres partidos." },
-        { "title": "Uso de recursos", "body": "Capital destinado al proyecto SOCCER iD CUP 2027." },
+        { "title": "Uso de recursos", "body": "Capital destinado al proyecto SOCCER iD TOUR '27." },
         { "title": "Seguimiento", "body": "Información sobre recursos, eventos y cierre financiero conforme a lo pactado." },
         { "title": "Distribución", "body": "70% inversionistas / 30% SOCCER iD sobre utilidades distribuibles." }
       ],
@@ -232,7 +232,7 @@
 
     "contacto": {
       "kicker": "12 / CONTACTO",
-      "title": "Sé parte de SOCCER iD CUP 2027.",
+      "title": "Sé parte de SOCCER iD TOUR '27.",
       "body": "Conoce la estructura de participación y los detalles de la temporada. Nuestro equipo te acompaña a revisar el proyecto y resolver tus preguntas.",
       "cta": "QUIERO PARTICIPAR EN EL PROYECTO 2027",
       "ctaUrl": "mailto:socceridco@soccerid.co?subject=SOCCER%20iD%20CUP%202027"

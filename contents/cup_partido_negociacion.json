@@ -1,7 +1,7 @@
 {
   "_nota": "Contenido compartido por los partidos del proyecto 2027 que todavia no estan cerrados. No es una propuesta: es el estado de una pagina que ya existe y que, cuando el partido se formalice, pasa a servir su propio archivo de contenido. Por eso solo trae el candado y el aviso. Los textos salen de la lamina 3 de la presentacion (PERFIL PROXIMAMENTE / Clubes, sede y fecha por definir). La ventana de cada partido la pone lib/propuestas.js, que es donde vive el registro.",
   "es": {
-    "pageTitle": "SOCCER iD CUP 2027 — Perfil próximamente",
+    "pageTitle": "SOCCER iD TOUR '27 — Perfil próximamente",
     "lock": {
       "badge": "CONFIDENCIAL",
       "title": "ACCESO RESTRINGIDO",
@@ -12,7 +12,7 @@
     },
     "negociacion": {
       "badge": "PERFIL PRÓXIMAMENTE",
-      "kicker": "SOCCER iD CUP 2027",
+      "kicker": "SOCCER iD TOUR '27",
       "title": "Clubes, sede y fecha por definir.",
       "body": "Este encuentro forma parte del proyecto anual de tres partidos y todavía se está negociando.",
       "note": "Cuando quede formalizado, su perfil se publica en esta misma dirección: la liga que ya tienes seguirá sirviendo.",
@@ -22,7 +22,7 @@
     }
   },
   "en": {
-    "pageTitle": "SOCCER iD CUP 2027 — Profile coming soon",
+    "pageTitle": "SOCCER iD TOUR '27 — Profile coming soon",
     "lock": {
       "badge": "CONFIDENTIAL",
       "title": "RESTRICTED ACCESS",
@@ -33,7 +33,7 @@
     },
     "negociacion": {
       "badge": "PROFILE COMING SOON",
-      "kicker": "SOCCER iD CUP 2027",
+      "kicker": "SOCCER iD TOUR '27",
       "title": "Clubs, venue and date to be confirmed.",
       "body": "This match is part of the three-match annual project and is still under negotiation.",
       "note": "Once it is formalized, its profile will be published at this same address: the link you already have will keep working.",
