@@ -1,5 +1,5 @@
 {
-  "_nota": "Perfil anual del proyecto 2027: el nivel de en medio de la lamina 19 de la presentacion (SOCCER iD CUP -> PROYECTO 2027 -> perfil de cada partido). El contenido es el de las laminas 1 a 18. Las cifras que la presentacion deja abiertas ([TOTAL], [MINIMO], [A2], [A3], [C2]...) NO se inventaron: van con pendiente:true y se pintan como POR DEFINIR. Cerrarlas es escribir el valor y quitar la marca. Solo hay bloque es: /en cae en espanol hasta que se traduzca.",
+  "_nota": "Perfil anual del proyecto 2027: el nivel de en medio de la lamina 19 de la presentacion (SOCCER iD CUP -> PROYECTO 2027 -> perfil de cada partido). El contenido es el de las laminas 1 a 18. Las cifras que la presentacion deja abiertas ([TOTAL], [MINIMO], [A2], [A3], [C2]...) NO se inventaron: van con pendiente:true y se pintan como POR DEFINIR. Cerrarlas es escribir el valor y quitar la marca. Solo hay bloque es. Mientras siga asi, /en redirige a /es y el conmutador ES/EN no se pinta (ver idiomasDe en lib/propuestas.js): antes se anunciaba un ingles que no existe. Anadir el bloque en lo reactiva solo, sin tocar codigo.",
   "es": {
     "pageTitle": "SOCCER iD TOUR '27 — Proyecto de tres partidos",
     "marca": "SOCCER iD TOUR '27",
