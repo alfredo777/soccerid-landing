@@ -62,131 +62,144 @@
   <div class="pa-panel">
     <div class="pa-panel__fondo" aria-hidden="true"></div>
 
-    <div class="pa-panel__rejilla">
+    <div class="pa-panel__col">
 
-      {{!-- Izquierda: la temporada en cifras y lo que toca a cada quien --}}
-      <aside class="pa-col-l">
-        <section class="pa-box">
-          <p class="pa-rot"><span>{{data.resumen.kicker}}</span></p>
-          <h2 class="pa-box__t">{{data.resumen.title}}</h2>
+      {{!-- La marca sobre la foto --}}
+      <section class="pa-foto">
+        <div class="pa-foto__veil" aria-hidden="true"></div>
+        <div class="pa-foto__body">
+          <span class="pa-badge">{{data.hero.badge}}</span>
+          {{#if logo}}
+          <img class="pa-logo" src="{{logo}}" alt="{{data.hero.title}}" width="190" height="209">
+          <h1 class="pa-foto__t pa-foto__t--oculto">{{data.hero.title}}</h1>
+          {{else}}
+          <h1 class="pa-foto__t">{{data.hero.title}}</h1>
+          {{/if}}
+          <p class="pa-foto__lead">{{data.hero.lead}}</p>
+          <p class="pa-foto__meta">{{data.hero.meta}}</p>
+        </div>
+      </section>
+
+      {{!-- La temporada en cifras --}}
+      <section class="pa-box">
+        <div class="pa-box__h">
+          <div>
+            <p class="pa-rot"><span>{{data.resumen.kicker}}</span></p>
+            <h2 class="pa-box__t">{{data.resumen.title}}</h2>
+          </div>
           <p class="pa-box__s">{{data.resumen.sub}}</p>
-
-          <div class="pa-tiles">
-            {{#each data.resumen.cifras}}
-            <div class="pa-tile">
-              {{#if this.icon}}<svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>{{/if}}
-              <span class="pa-tile__l">{{this.label}}</span>
-              <strong class="pa-tile__v">{{this.value}}</strong>
-              <span class="pa-tile__n">{{this.note}}</span>
-            </div>
-            {{/each}}
+        </div>
+        <div class="pa-tiles">
+          {{#each data.resumen.cifras}}
+          <div class="pa-tile">
+            {{#if this.icon}}<svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>{{/if}}
+            <span class="pa-tile__l">{{this.label}}</span>
+            <strong class="pa-tile__v">{{this.value}}</strong>
+            <span class="pa-tile__n">{{this.note}}</span>
           </div>
-          <p class="pa-box__pie">{{data.resumen.disclaimer}}</p>
-        </section>
+          {{/each}}
+        </div>
+        <p class="pa-box__pie">{{data.resumen.disclaimer}}</p>
+      </section>
 
-        <section class="pa-box">
-          <p class="pa-rot"><span>{{data.ejemplo.kicker}}</span></p>
-          <h3 class="pa-box__t pa-box__t--sm">{{data.ejemplo.title}}</h3>
-          <ol class="pa-pasos">
-            {{#each data.ejemplo.pasos}}
-            <li class="pa-paso">
-              <strong class="pa-paso__v">{{this.value}}</strong>
-              <span class="pa-paso__l">{{this.label}}</span>
-            </li>
-            {{/each}}
-          </ol>
-          <p class="pa-box__pie">{{data.ejemplo.pie}}</p>
-        </section>
-      </aside>
-
-      {{!-- Centro: la marca sobre la foto y los tres partidos de la temporada --}}
-      <main class="pa-col-c">
-        <section class="pa-foto">
-          <div class="pa-foto__veil" aria-hidden="true"></div>
-          <div class="pa-foto__body">
-            <span class="pa-badge">{{data.hero.badge}}</span>
-            {{#if logo}}
-            <img class="pa-logo" src="{{logo}}" alt="{{data.hero.title}}" width="190" height="209">
-            <h1 class="pa-foto__t pa-foto__t--oculto">{{data.hero.title}}</h1>
-            {{else}}
-            <h1 class="pa-foto__t">{{data.hero.title}}</h1>
-            {{/if}}
-            <p class="pa-foto__lead">{{data.hero.lead}}</p>
-            <p class="pa-foto__meta">{{data.hero.meta}}</p>
+      {{!-- Los tres partidos: la vista es de una ronda de tres, no del primero.
+           El cerrado enseña su sede y lleva a su perfil; de los otros dos
+           todavía no hay nada que contar. --}}
+      <section class="pa-box">
+        <div class="pa-box__h">
+          <div>
+            <p class="pa-rot"><span>{{data.partidos.kicker}}</span></p>
+            <h2 class="pa-box__t">{{data.partidos.title}}</h2>
           </div>
-        </section>
-
-        {{!-- Los tres del mismo tamaño: la vista es de una ronda de tres, no
-             del primero. El cerrado enseña su sede y lleva a su perfil; de los
-             otros dos todavía no hay nada que contar. --}}
-        <section class="pa-box">
-          <p class="pa-rot"><span>{{data.partidos.kicker}}</span></p>
-          <h2 class="pa-box__t">{{data.partidos.title}}</h2>
           <p class="pa-box__s">{{data.partidos.sub}}</p>
+        </div>
+        <div class="pa-temporada">
+          {{#each partidosNav}}
+          <a href="{{this.url}}" class="pa-pt{{#unless this.abierto}} pa-pt--inc{{/unless}}">
+            <span class="pa-pt__n">{{this.n}}</span>
+            {{#unless this.abierto}}<span class="pa-pt__q" aria-hidden="true">?</span>{{/unless}}
+            <span class="pa-pt__cuando">{{this.cuando}}</span>
+            <strong class="pa-pt__t">{{this.titulo}}</strong>
+            <span class="pa-pt__sede">{{this.sede}}</span>
+            <span class="pa-pt__lugar">{{this.lugar}}</span>
+            <span class="pa-pt__cta">{{#if this.abierto}}{{../data.partidos.ctaAbierto}} →{{else}}{{../data.partidos.ctaPendiente}}{{/if}}</span>
+          </a>
+          {{/each}}
+        </div>
+        <p class="pa-box__pie">{{data.partidos.proximosPie}}</p>
+      </section>
 
-          <div class="pa-temporada">
-            {{#each partidosNav}}
-            <a href="{{this.url}}" class="pa-pt{{#unless this.abierto}} pa-pt--inc{{/unless}}">
-              <span class="pa-pt__n">{{this.n}}</span>
-              {{#unless this.abierto}}<span class="pa-pt__q" aria-hidden="true">?</span>{{/unless}}
-              <span class="pa-pt__cuando">{{this.cuando}}</span>
-              <strong class="pa-pt__t">{{this.titulo}}</strong>
-              <span class="pa-pt__sede">{{this.sede}}</span>
-              <span class="pa-pt__lugar">{{this.lugar}}</span>
-              <span class="pa-pt__cta">{{#if this.abierto}}{{../data.partidos.ctaAbierto}} →{{else}}{{../data.partidos.ctaPendiente}}{{/if}}</span>
-            </a>
-            {{/each}}
+      {{!-- El capital que se pide --}}
+      <section class="pa-box">
+        <div class="pa-box__h">
+          <div>
+            <p class="pa-rot"><span>{{data.capital.kicker}}</span></p>
+            <h2 class="pa-box__t">{{data.capital.title}}</h2>
           </div>
-          <p class="pa-box__pie">{{data.partidos.proximosPie}}</p>
-        </section>
-      </main>
-
-      {{!-- Derecha: el capital que se pide y la referencia de taquilla --}}
-      <aside class="pa-col-r">
-        <section class="pa-box">
-          <p class="pa-rot"><span>{{data.capital.kicker}}</span></p>
-          <h3 class="pa-box__t pa-box__t--sm">{{data.capital.title}}</h3>
           <p class="pa-box__s">{{data.capital.sub}}</p>
+        </div>
+        <ul class="pa-kv">
+          {{#each data.capital.items}}
+          <li class="pa-kv__i">
+            <span>{{this.label}}</span>
+            {{#if this.pendiente}}<em class="pa-pend">{{../data.pendienteLabel}}</em>{{else}}<strong>{{this.value}}</strong>{{/if}}
+            <span class="pa-kv__n">{{this.note}}</span>
+          </li>
+          {{/each}}
+        </ul>
+        <div class="pa-total">
+          <span class="pa-total__l">{{data.capital.totalLabel}}</span>
+          {{#if data.capital.totalPendiente}}
+          <strong class="pa-total__v"><em class="pa-pend">{{data.pendienteLabel}}</em></strong>
+          {{else}}
+          <strong class="pa-total__v">{{data.capital.totalValue}}</strong>
+          {{/if}}
+        </div>
+        <p class="pa-box__pie">{{data.capital.disclaimer}}</p>
+      </section>
 
-          <ul class="pa-kv">
-            {{#each data.capital.items}}
-            <li class="pa-kv__i">
-              <span>{{this.label}}</span>
-              {{#if this.pendiente}}<em class="pa-pend">{{../data.pendienteLabel}}</em>{{else}}<strong>{{this.value}}</strong>{{/if}}
-            </li>
-            {{/each}}
-          </ul>
-
-          <div class="pa-total">
-            <span class="pa-total__l">{{data.capital.totalLabel}}</span>
-            {{#if data.capital.totalPendiente}}
-            <strong class="pa-total__v"><em class="pa-pend">{{data.pendienteLabel}}</em></strong>
-            {{else}}
-            <strong class="pa-total__v">{{data.capital.totalValue}}</strong>
-            {{/if}}
+      {{!-- Lo que le toca a quien entra --}}
+      <section class="pa-box">
+        <div class="pa-box__h">
+          <div>
+            <p class="pa-rot"><span>{{data.ejemplo.kicker}}</span></p>
+            <h2 class="pa-box__t">{{data.ejemplo.title}}</h2>
           </div>
-          <p class="pa-box__pie">{{data.capital.disclaimer}}</p>
-        </section>
+          <p class="pa-box__s">{{data.ejemplo.pie}}</p>
+        </div>
+        <ol class="pa-pasos">
+          {{#each data.ejemplo.pasos}}
+          <li class="pa-paso">
+            <strong class="pa-paso__v">{{this.value}}</strong>
+            <span class="pa-paso__l">{{this.label}}</span>
+          </li>
+          {{/each}}
+        </ol>
+      </section>
 
-        <section class="pa-box">
-          <p class="pa-rot"><span>{{data.referencia.kicker}}</span></p>
-          <h3 class="pa-box__t pa-box__t--sm">{{data.referencia.title}}</h3>
+      {{!-- La referencia de taquilla del primer partido --}}
+      <section class="pa-box">
+        <div class="pa-box__h">
+          <div>
+            <p class="pa-rot"><span>{{data.referencia.kicker}}</span></p>
+            <h2 class="pa-box__t">{{data.referencia.title}}</h2>
+          </div>
           <p class="pa-box__s">{{data.referencia.sub}}</p>
-          <div class="pa-ref">
-            {{#each data.referencia.cifras}}
-            <div class="pa-ref__i">
-              {{#if this.icon}}<svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>{{/if}}
-              <strong class="pa-ref__v">{{this.value}}</strong>
-              <span class="pa-ref__l">{{this.label}}</span>
-            </div>
-            {{/each}}
+        </div>
+        <div class="pa-ref">
+          {{#each data.referencia.cifras}}
+          <div class="pa-ref__i">
+            {{#if this.icon}}<svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>{{/if}}
+            <strong class="pa-ref__v">{{this.value}}</strong>
+            <span class="pa-ref__l">{{this.label}}</span>
           </div>
-          <div class="pa-nota pa-nota--warn pa-nota--compacta">
-            <h3 class="pa-nota__t">{{data.referencia.avisoTitle}}</h3>
-            <p class="pa-nota__b">{{data.referencia.avisoBody}}</p>
-          </div>
-        </section>
-      </aside>
+          {{/each}}
+        </div>
+        <div class="pa-nota pa-nota--warn pa-nota--compacta">
+          <h3 class="pa-nota__t">{{data.referencia.avisoTitle}}</h3>
+          <p class="pa-nota__b">{{data.referencia.avisoBody}}</p>
+        </div>
+      </section>
     </div>
   </div>
 
@@ -435,25 +448,20 @@
       content: ''; position: absolute; inset: 0;
       background: linear-gradient(180deg, rgba(51,54,61,0.80) 0%, rgba(51,54,61,0.93) 55%, rgba(51,54,61,0.985) 100%);
     }
-    .pa-panel__rejilla {
+    /* Una sola columna: cada bloque ocupa todo el ancho y reparte su
+       contenido en hileras. Se lee de arriba abajo, sin saltar de columna,
+       que era lo que costaba. */
+    .pa-panel__col {
       position: relative; z-index: 2;
-      max-width: 1560px; margin: 0 auto;
-      display: grid; gap: 16px;
-      grid-template-columns: minmax(280px, 330px) minmax(0, 1fr) minmax(290px, 360px);
-      align-items: stretch;
+      max-width: 1240px; margin: 0 auto;
+      display: flex; flex-direction: column; gap: 16px;
     }
-    /* Las tres columnas miden lo mismo. En cada una, UN elemento absorbe el
-       sobrante, elegido porque crece sin dejar hueco: en el centro la foto
-       —una imagen más alta se lee igual de bien—; a los lados la última
-       tarjeta, cuya lista reparte sus renglones. */
-    .pa-col-l, .pa-col-c, .pa-col-r {
-      display: flex; flex-direction: column; gap: 16px; min-width: 0;
+    /* El encabezado de cada bloque usa el ancho: el título a la izquierda y la
+       bajada a su derecha, en vez de una debajo de la otra. */
+    .pa-box__h {
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      gap: 10px 40px; align-items: end; margin-bottom: 20px;
     }
-    .pa-col-c > :first-child { flex: 1 1 auto; }
-    .pa-col-l > :last-child,
-    .pa-col-r > :last-child { flex: 1 1 auto; display: flex; flex-direction: column; }
-    .pa-col-l > :last-child .pa-pasos { flex: 1 1 auto; justify-content: space-between; }
-    .pa-col-r > :last-child .pa-ref { flex: 1 1 auto; align-content: space-between; }
 
     .pa-box {
       padding: 22px; border-radius: 20px;
@@ -466,7 +474,7 @@
     .pa-box__s { font-size: 13.5px; line-height: 1.55; color: #D2D5DC; margin: 8px 0 18px; }
     .pa-box__pie { font-size: 12.5px; line-height: 1.5; color: #D2D5DC; opacity: .75; margin-top: 14px; }
 
-    .pa-tiles { display: grid; gap: 10px; }
+    .pa-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .pa-tile {
       padding: 14px 16px; border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
@@ -475,27 +483,33 @@
     .pa-tile__v { display: block; font-size: 27px; font-weight: 900; line-height: 1.1; margin: 5px 0 4px; color: #FFFFFF; }
     .pa-tile__n { display: block; font-size: 12px; line-height: 1.45; color: #D2D5DC; }
 
-    .pa-kv { list-style: none; padding: 0; margin: 0 0 14px; display: grid; gap: 9px; }
+    .pa-kv { list-style: none; padding: 0; margin: 0 0 14px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .pa-kv__i {
-      display: flex; justify-content: space-between; align-items: center; gap: 12px;
-      padding: 11px 13px; border-radius: 12px;
+      display: flex; flex-direction: column; gap: 7px;
+      padding: 16px 18px; border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
-      font-size: 13px; color: #D2D5DC;
+      font-size: 10px; font-weight: 800; letter-spacing: 1.5px;
+      color: var(--tour-rotulo, rgba(255,255,255,0.45));
     }
-    .pa-kv__i strong { font-size: 15px; color: #FFFFFF; }
+    .pa-kv__i strong { font-size: 22px; font-weight: 900; letter-spacing: 0; color: #FFFFFF; }
+    .pa-kv__i .pa-pend { align-self: flex-start; }
+    .pa-kv__n {
+      font-size: 12px; font-weight: 400; letter-spacing: 0;
+      color: #D2D5DC; opacity: .8;
+    }
 
-    .pa-pasos { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 8px; }
+    .pa-pasos { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .pa-paso {
-      display: flex; align-items: baseline; gap: 12px;
-      padding: 12px 14px; border-radius: 12px;
+      display: flex; align-items: baseline; gap: 14px;
+      padding: 18px 20px; border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
     }
-    .pa-paso__v { font-size: 22px; font-weight: 900; color: #FFFFFF; flex-shrink: 0; min-width: 52px; }
+    .pa-paso__v { font-size: 30px; font-weight: 900; color: #FFFFFF; flex-shrink: 0; min-width: 62px; }
     .pa-paso__l { font-size: 10.5px; font-weight: 800; letter-spacing: 1.2px; line-height: 1.35; color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
 
     /* Centro */
     .pa-foto {
-      position: relative; min-height: 520px; border-radius: 22px; overflow: hidden;
+      position: relative; min-height: 440px; border-radius: 22px; overflow: hidden;
       display: flex; align-items: flex-end; justify-content: center; text-align: center;
       padding: 52px 28px 40px;
       background: url('{{heroImage}}') center/cover no-repeat;
@@ -549,14 +563,13 @@
     }
     .pa-pt--inc .pa-pt__cta { color: rgba(255,255,255,0.5); }
 
-    .pa-ref { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 4px; }
+    .pa-ref { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .pa-ref__i {
       padding: 16px; border-radius: 14px; text-align: center;
       border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
     }
     .pa-ref__v { display: block; font-size: 28px; font-weight: 900; color: #FFFFFF; line-height: 1.1; }
     .pa-ref__l { display: block; font-size: 9.5px; font-weight: 800; letter-spacing: 1.4px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); margin-top: 7px; }
-    .pa-ref__i .pa-ico { margin-left: auto; margin-right: auto; }
 
     /* ───────────── LA TEMPORADA EN UN EJE ─────────────
        El calendario como línea con su eje y sus fechas debajo: se entiende de
@@ -745,8 +758,7 @@
 
     /* Tablet: el panel pasa a dos columnas y el centro se queda arriba. */
     @media (max-width: 1180px) {
-      .pa-panel__rejilla { grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); }
-      .pa-col-c { grid-column: 1 / -1; order: -1; }
+      .pa-box__h { grid-template-columns: minmax(0, 1fr); gap: 8px; align-items: start; }
       .pa-eje { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 0; }
       .pa-destino { grid-template-columns: minmax(0, 1fr); gap: 24px; justify-items: center; }
       .pa-donut { max-width: 230px; }
@@ -755,7 +767,7 @@
 
     @media (max-width: 860px) {
       .pa-panel { padding: 16px 16px 24px; }
-      .pa-panel__rejilla { grid-template-columns: minmax(0, 1fr); }
+      .pa-tiles, .pa-kv, .pa-pasos, .pa-ref { grid-template-columns: minmax(0, 1fr); }
       .pa-ruta { padding: 0 16px; margin-top: 8px; }
       .pa-ruta__caja { padding: 20px; }
       .pa-eje { grid-template-columns: minmax(0, 1fr); gap: 18px; }
