@@ -639,7 +639,10 @@
       filter: drop-shadow(0 0 26px rgba(255,255,255,0.3)) drop-shadow(0 10px 26px rgba(0,0,0,0.5));
     }
     .pa-foto__lead { font-size: 18px; line-height: 1.45; color: rgba(255,255,255,0.9); }
-    .pa-foto__meta { font-size: 12.5px; letter-spacing: 1.3px; color: rgba(255,255,255,0.68); margin-top: 9px; }
+    /* 0.68 de alfa daba 6.10 sobre el velo del hero, por debajo del 7.0 que
+       pide la casa para texto bajo 16px. La regla escrita es clara: blanco
+       translucido nunca por debajo de 0.75 para texto chico. */
+    .pa-foto__meta { font-size: 12.5px; letter-spacing: 1.3px; color: rgba(255,255,255,0.86); margin-top: 9px; }
 
     /* Los tres partidos, del mismo tamaño. El cerrado enseña sede y ciudad;
        los dos que se negocian, una incógnita y el borde punteado, para que se
@@ -866,10 +869,18 @@
     .pa-aviso { font-size: 13.5px; line-height: 1.6; color: #D2D5DC; opacity: .72; margin-top: 26px; }
     .pa-cta { margin-top: 20px; }
 
+    /* El rotulo va sobre la fotografia, donde no hay un fondo que se pueda
+       calcular: el suyo propio es el unico que lo protege. En el tour el
+       acento es BLANCO, asi que el velo de acento al 22% aclaraba el fondo en
+       vez de oscurecerlo y el texto blanco se perdia contra el cielo del
+       estadio (3.67 medido; la casa pide 7.0 bajo 16px). Con una pastilla
+       oscura casi opaca el contraste ya no depende de la foto: 8.2 contra el
+       pixel mas claro posible, y mas de 18 contra uno oscuro. */
     .pa-badge {
       display: inline-block; padding: 6px 18px; border-radius: 20px;
       font-size: 11.5px; font-weight: 800; letter-spacing: 2px;
-      background: rgba(var(--pp-accent-rgb), 0.22); color: var(--pp-accent);
+      background: rgba(10, 11, 14, 0.72); color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.28);
     }
     .pa-btn {
       display: inline-block; padding: 13px 26px; border-radius: 12px;
