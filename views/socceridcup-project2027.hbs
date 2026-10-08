@@ -69,6 +69,19 @@
   }
 
   {{#if esTour}}
+  /* Raleway, la tipografía del sitio. El layout `promo` no carga main.css, así
+     que estas páginas venían en la fuente del sistema mientras el resto del
+     sitio iba en Raleway. Se declara aquí, con los mismos archivos locales que
+     usa assets/css/main.css. Por ahora solo en el tour: cambiarle la
+     tipografía a /partido-N sería cambiarle el diseño, y ese se conserva. */
+  @font-face { font-family: 'Raleway'; src: url('/assets/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaooCP.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+  @font-face { font-family: 'Raleway'; src: url('/assets/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvoooCP.ttf') format('truetype'); font-weight: 500; font-display: swap; }
+  @font-face { font-family: 'Raleway'; src: url('/assets/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVsEpYCP.ttf') format('truetype'); font-weight: 600; font-display: swap; }
+  @font-face { font-family: 'Raleway'; src: url('/assets/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVs9pYCP.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+  @font-face { font-family: 'Raleway'; src: url('/assets/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtapYCP.ttf') format('truetype'); font-weight: 800; font-display: swap; }
+  @font-face { font-family: 'Raleway'; src: url('/assets/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtzpYCP.ttf') format('truetype'); font-weight: 900; font-display: swap; }
+  body { font-family: 'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+
   /* El proyecto anual va en gris intermedio, con el blanco y el negro del
      logo iD TOUR '27. Esto NO toca las páginas de partido, que conservan el
      verde y el carbón: el bloque solo se emite aquí.
