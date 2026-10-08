@@ -480,7 +480,7 @@
     <p class="pa-rot"><span>{{data.medios.kicker}}</span></p>
     <h2 class="pa-title">{{data.medios.title}}</h2>
     <p class="pa-sub">{{data.medios.sub}}</p>
-    <ul class="pa-medios">
+    <ul class="pa-medios" style="--cols: {{columnas mediaLinks.length}}">
       {{#each mediaLinks}}
       <li class="pa-medio">
         <a href="{{this.url}}" target="_blank" rel="noopener">
@@ -520,6 +520,14 @@
       <a href="{{data.contacto.ctaUrl}}"{{{salida data.contacto.ctaUrl}}} class="pa-btn">{{data.contacto.cta}}</a>
     </div>
   </section>
+
+  {{!-- Volver arriba. El estilo (.pp-btt) y el comportamiento viven en la
+        vista, compartidos con la propuesta de partido: aquí solo falta el
+        botón, que es lo que el tour no tenía. En el tour el acento es blanco,
+        así que sale como un círculo blanco con la flecha negra. --}}
+  <button class="pp-btt" id="ppBtt" type="button" aria-label="{{#if isEs}}Volver al inicio de la página{{else}}Back to top{{/if}}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
 
   <style>
     /* ───────────── RÓTULO DE BLOQUE ─────────────
@@ -993,7 +1001,9 @@
 
     .pa-caps { font-size: 13.5px; letter-spacing: 0.6px; color: #D2D5DC; opacity: .75; margin: 26px auto 22px; }
 
-    .pa-medios { list-style: none; padding: 0; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+    /* Las columnas las decide el helper `columnas` segun cuantas notas haya,
+       para que la ultima fila no se quede con una sola tarjeta. */
+    .pa-medios { list-style: none; padding: 0; margin: 0 auto; display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: 12px; }
     .pa-medio a {
       display: block; padding: 18px 20px; border-radius: 14px; text-decoration: none; color: inherit;
       border: 1px solid rgba(255,255,255,0.09); background: var(--tour-card, rgba(255,255,255,0.035));
@@ -1020,6 +1030,9 @@
 
     /* Tablet: el panel pasa a dos columnas y el centro se queda arriba. */
     @media (max-width: 1180px) {
+      /* Ya no cabe lo que decida el helper: dos columnas, y la huerfana la
+         evita el propio numero de notas o se acepta a este ancho. */
+      .pa-medios { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .pa-box__h { grid-template-columns: minmax(0, 1fr); gap: 8px; align-items: start; }
       .pa-eje { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 0; }
       .pa-proceso { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1030,6 +1043,7 @@
     }
 
     @media (max-width: 860px) {
+      .pa-medios { grid-template-columns: minmax(0, 1fr); }
       .pa-panel { padding: 16px 16px 24px; }
       .pa-tiles, .pa-kv, .pa-pasos { grid-template-columns: minmax(0, 1fr); }
       .pa-ref { grid-template-columns: minmax(0, 1fr); }

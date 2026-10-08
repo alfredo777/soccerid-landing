@@ -192,6 +192,27 @@ const hbs = require('express-handlebars').create({
      * Las páginas de la propia propuesta (sus partidos) tampoco: son el mismo
      * recorrido. Se usa con triple llave: {{{salida url}}}
      */
+    /**
+     * Cuántas columnas para `n` tarjetas, sin dejar una sola huérfana en la
+     * última fila. Nueve notas de prensa en cuatro columnas salen 4+4+1, y esa
+     * tarjeta suelta se lee como un error de maquetación; en tres columnas son
+     * 3+3+3. El número de notas sale de la base de datos y cambia, así que la
+     * rejilla se calcula en vez de fijarse.
+     *
+     * Se prefieren más columnas, y se baja solo para evitar la huérfana. Si
+     * ningún reparto la evita (13, 25...) se queda con cuatro: es raro y
+     * cualquier alternativa queda peor.
+     */
+    columnas: function (n) {
+      const total = parseInt(n, 10) || 0;
+      if (total <= 0) return 1;
+      for (const c of [4, 3, 2]) {
+        if (total <= c) return total;
+        if (total % c !== 1) return c;
+      }
+      return 4;
+    },
+
     salida: function (url, options) {
       const u = String(url == null ? '' : url).trim();
       if (!u || u.charAt(0) === '#') return '';

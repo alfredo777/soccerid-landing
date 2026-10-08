@@ -2016,15 +2016,33 @@
     })();
 
   // ─── Botón de volver arriba ───
+  // Ahora lo llevan las dos vistas, la propuesta de partido y el perfil del
+  // tour, que es largo y se recorre entero.
   (function() {
     var btt = document.getElementById('ppBtt');
     if (!btt) return;
+    // initContenido puede correr más de una vez (contenido ya servido, o
+    // inyectado tras el candado): sin esto se apilarían los escuchas.
+    if (btt.dataset.listo) return;
+    btt.dataset.listo = '1';
+
+    // El scroll dispara muchísimo; se deja que pinte el navegador.
+    var pendiente = false;
+    function repintar() {
+      pendiente = false;
+      btt.classList.toggle('visible', window.scrollY > 600);
+    }
     window.addEventListener('scroll', function() {
-      if (window.scrollY > 600) btt.classList.add('visible');
-      else btt.classList.remove('visible');
-    });
+      if (pendiente) return;
+      pendiente = true;
+      window.requestAnimationFrame(repintar);
+    }, { passive: true });
+    repintar();
+
     btt.addEventListener('click', function() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Quien pidió menos movimiento no quiere ver la página entera desfilar.
+      var quieto = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: quieto ? 'auto' : 'smooth' });
     });
   })();
 
