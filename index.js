@@ -178,6 +178,35 @@ const hbs = require('express-handlebars').create({
     json: o => JSON.stringify(o, null, 2),
     join: (a, s) => Array.isArray(a) ? a.join(s || ', ') : '',
     default: (v, d) => v || d,
+
+    /**
+     * Atributos para un enlace que SACA de la propuesta.
+     *
+     * Quien está leyendo una propuesta de inversión no debería perderla por
+     * asomarse a la historia de la copa: eso se abre en otra pestaña. Se
+     * resuelve aquí y no a mano en la plantilla porque los destinos de las
+     * CTAs viven en el JSON de contenido y pueden cambiar sin tocar la vista.
+     *
+     * No sacan de ningún lado, y por eso no llevan nada: las anclas (#), y
+     * mailto:/tel:, que no navegan —con target dejarían una pestaña en blanco.
+     * Las páginas de la propia propuesta (sus partidos) tampoco: son el mismo
+     * recorrido. Se usa con triple llave: {{{salida url}}}
+     */
+    salida: function (url, options) {
+      const u = String(url == null ? '' : url).trim();
+      if (!u || u.charAt(0) === '#') return '';
+      if (/^(mailto:|tel:)/i.test(u)) return '';
+      const attrs = ' target="_blank" rel="noopener"';
+      if (/^https?:\/\//i.test(u)) return attrs;
+      const raiz = (options && options.data && options.data.root) || {};
+      // La raíz de la familia: el tour es 'socceridcup2027' y sus partidos
+      // 'socceridcup2027/partido-1'. Comparando contra el primer tramo, el
+      // tour y sus partidos se reconocen entre sí en los dos sentidos.
+      const base = String(raiz.slug || '').split('/')[0];
+      if (!base) return attrs;
+      const sinIdioma = u.replace(/^\/[a-z]{2}\//, '');
+      return (sinIdioma === base || sinIdioma.indexOf(base + '/') === 0) ? '' : attrs;
+    },
     
     // Helpers para cache busting
     version: () => APP_VERSION,
@@ -1044,11 +1073,19 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
   if (!(await propuestas.visible(variante))) return next();
   if (!propuestas.tieneAcceso(req, variante)) return res.status(403).send('');
 
-  const lang = SUPPORTED_LANGS.includes(req.query.lang) ? req.query.lang : DEFAULT_LANG;
+  const pedido = SUPPORTED_LANGS.includes(req.query.lang) ? req.query.lang : DEFAULT_LANG;
+  // El contenido se INYECTA en la página, no se navega: aquí no sirve el
+  // redirect de la ruta normal. Si la propuesta no existe en el idioma que se
+  // pide se manda el que hay, y se dice cuál en la cabecera para que el
+  // navegador corrija la dirección en vez de seguir anunciando un idioma que
+  // no se está viendo.
+  const idiomas = propuestas.idiomasDe(variante, SUPPORTED_LANGS);
+  const lang = idiomas.includes(pedido) ? pedido : idiomas[0];
   try {
     const data = propuestas.leerContenido(variante, lang, DEFAULT_LANG);
     if (!data) return next();
     res.set('Cache-Control', 'no-store');
+    res.set('X-Idioma-Servido', lang);
     res.render(partialDe(variante), {
       layout: false,
       ventana: variante.ventana || null,
@@ -1061,6 +1098,9 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
       lang: lang,
       isEs: lang === 'es',
       isEn: lang === 'en',
+      // Faltaba: sin esto el conmutador de dentro desaparecía también en las
+      // propuestas que SÍ están en los dos idiomas.
+      hayEn: idiomas.includes('en'),
       data: data,
       mediaLinks: await cupEditions.mediaLinks(lang),
       slug: variante.slug,

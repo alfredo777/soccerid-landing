@@ -117,7 +117,7 @@
         </div>
         <div class="pa-temporada">
           {{#each partidosNav}}
-          <a href="{{this.url}}" class="pa-pt{{#unless this.abierto}} pa-pt--inc{{/unless}}">
+          <a href="{{this.url}}"{{{salida this.url}}} class="pa-pt{{#unless this.abierto}} pa-pt--inc{{/unless}}">
             <span class="pa-pt__n">{{this.n}}</span>
             {{#unless this.abierto}}<span class="pa-pt__q" aria-hidden="true">?</span>{{/unless}}
             <span class="pa-pt__cuando">{{this.cuando}}</span>
@@ -339,7 +339,7 @@
       {{/each}}
     </div>
     <p class="pa-aviso">{{data.partido1.pie}}</p>
-    {{#if urlPartido1}}<p class="pa-cta"><a href="{{urlPartido1}}" class="pa-btn">{{data.partido1.cta}}</a></p>{{/if}}
+    {{#if urlPartido1}}<p class="pa-cta"><a href="{{urlPartido1}}"{{{salida urlPartido1}}} class="pa-btn">{{data.partido1.cta}}</a></p>{{/if}}
   </section>
 
   {{!-- ═══════════ A DÓNDE VA EL CAPITAL ═══════════ --}}
@@ -471,7 +471,7 @@
       {{/each}}
     </div>
     <p class="pa-caps">{{data.experiencia.capacidades}}</p>
-    <a href="{{data.experiencia.ctaUrl}}" class="pa-btn pa-btn--ghost">{{data.experiencia.cta}}</a>
+    <a href="{{data.experiencia.ctaUrl}}"{{{salida data.experiencia.ctaUrl}}} class="pa-btn pa-btn--ghost">{{data.experiencia.cta}}</a>
   </section>
 
   {{!-- ═══════════ RESPALDO EN MEDIOS ═══════════ --}}
@@ -517,7 +517,7 @@
       <p class="pa-rot pa-rot--centro"><span>{{data.contacto.kicker}}</span></p>
       <h2 class="pa-cierre__t">{{data.contacto.title}}</h2>
       <p class="pa-cierre__b">{{data.contacto.body}}</p>
-      <a href="{{data.contacto.ctaUrl}}" class="pa-btn">{{data.contacto.cta}}</a>
+      <a href="{{data.contacto.ctaUrl}}"{{{salida data.contacto.ctaUrl}}} class="pa-btn">{{data.contacto.cta}}</a>
     </div>
   </section>
 
