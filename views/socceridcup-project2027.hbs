@@ -1600,7 +1600,9 @@
 
     var cfg = JSON.parse(cfgEl.textContent);
     var L = cfg.labels;
-    var state = { type: 'fixed', cur: cfg.currencies[0], amount: 0, att: 0 };
+    // Con nivel de tour no se elige tipo: toda la participación es a riesgo,
+    // y el selector ni siquiera se pinta.
+    var state = { type: cfg.soloRiesgo ? 'risk' : 'fixed', cur: cfg.currencies[0], amount: 0, att: 0 };
 
     var elSymbol = document.getElementById('ppCalcSymbol');
     var elAmount = document.getElementById('ppCalcAmount');
@@ -1738,6 +1740,7 @@
     // etiquetas o la pastilla para alternar.
     function segment(id, onPick) {
       var wrap = document.getElementById(id);
+      if (!wrap) return;
       var lados = [].slice.call(wrap.querySelectorAll('.pp-switch__side'));
       var track = wrap.querySelector('.pp-switch__track');
 
@@ -1756,7 +1759,7 @@
       });
     }
 
-    segment('ppCalcType', setType);
+    if (!cfg.soloRiesgo) segment('ppCalcType', setType);
     segment('ppCalcCurrency', function(id) {
       var cur = cfg.currencies.filter(function(c) { return c.id === id; })[0];
       if (cur) setCurrency(cur, true);
@@ -1790,7 +1793,10 @@
 
     elAtt.max = cfg.capacity;
     setCurrency(cfg.currencies[0], false);
-    setType('fixed');
+    // El tipo de arranque lo decide `state`, no una constante: con nivel de
+    // tour no hay retorno fijo que ofrecer y arrancar en 'fixed' pintaba el
+    // cálculo equivocado aunque el selector ya no estuviera.
+    setType(state.type);
     setAtt(cfg.defaultAttendance || Math.ceil(cfg.currencies[0].projectCost / cfg.currencies[0].ticketPrice));
 
     function open() {

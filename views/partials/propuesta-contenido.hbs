@@ -525,7 +525,10 @@
     {{#if data.proposal.subtitle}}<p class="pp-modes-sub">{{data.proposal.subtitle}}</p>{{/if}}
 
     <div class="pp-modes">
-      {{!-- Modalidad A · Retorno fijo (simple y claro) --}}
+      {{!-- Modalidad A · Retorno fijo (simple y claro).
+            Con un código de nivel tour no existe: toda la participación es a
+            riesgo, y el servidor quita el bloque antes de llegar aquí. --}}
+      {{#if data.proposal.fixed}}
       <div class="pp-mode">
         <div class="pp-mode__head">
           <span class="pp-mode__icon pp-ico--{{data.proposal.fixed.icon}}"></span>
@@ -557,6 +560,8 @@
           <p class="pp-mode__note">{{data.proposal.fixed.note}}</p>
         </div>
       </div>
+
+      {{/if}}
 
       {{!-- Modalidad B · Participación a riesgo --}}
       <div class="pp-mode">
@@ -725,6 +730,10 @@
       </div>
 
       <div class="pp-calc__body">
+      {{!-- Con un código de nivel tour no hay tipo que elegir: todo es a
+            riesgo. El paso desaparece y los siguientes se renumeran solos,
+            porque sus rótulos también vienen del parche. --}}
+      {{#unless data.calculator.soloRiesgo}}
       <div class="pp-calc__field">
         <span class="pp-calc__lbl">{{data.calculator.steps.type}}</span>
         <div class="pp-switch" id="ppCalcType">
@@ -735,6 +744,7 @@
           <button type="button" class="pp-switch__side" data-val="risk">{{data.calculator.types.risk}}</button>
         </div>
       </div>
+      {{/unless}}
 
       <div class="pp-calc__field">
         <span class="pp-calc__lbl">{{data.calculator.steps.currency}}</span>

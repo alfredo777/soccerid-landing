@@ -663,7 +663,34 @@
       "btnMsg": "Hola!%20Estoy%20interesado%20en%20invertir%20en%20SOCCER%20iD%20CUP%202027",
       "confidential": "CONFIDENCIAL"
     },
-    "_pendientes": []
+    "_pendientes": [],
+    "nivelTour": {
+      "_nota": "Lo que cambia cuando la propuesta se abre con un codigo de NIVEL TOUR: toda la participacion es a riesgo y el minimo sube a USD $100,000. Las rutas apuntan al bloque `es` de este mismo archivo. Lo aplica vistaDeNivel() en index.js.",
+      "quitar": [
+        "proposal.fixed",
+        "proposal.compare",
+        "calculator.types.fixed",
+        "calculator.steps.type"
+      ],
+      "cambios": {
+        "brief.items.1.value": "A RIESGO",
+        "brief.items.1.note": "Participación en el resultado del evento",
+        "brief.items.2.value": "VARIABLE",
+        "brief.items.2.note": "Según las utilidades del evento",
+        "brief.items.5.value": "USD $100,000",
+        "brief.items.5.note": "$1,800,000 MXN · ticket mínimo",
+        "proposal.subtitle": "Participación a riesgo: eres socio del evento y tu retorno depende de su resultado.",
+        "proposal.ticketValue": "$1,800,000 MXN / $100,000 USD",
+        "structure.terms.1.value": "Participación a riesgo",
+        "structure.terms.2.value": "Variable según las utilidades del evento",
+        "calculator.soloRiesgo": true,
+        "calculator.currencies.0.min": 100000,
+        "calculator.currencies.1.min": 1800000,
+        "calculator.steps.currency": "1 · Moneda",
+        "calculator.steps.amount": "2 · Monto de inversión",
+        "calculator.steps.attendance": "3 · Asistencia al estadio"
+      }
+    }
   },
   "en": {
     "pageTitle": "SOCCER iD CUP 2027 — Investment Opportunity",
@@ -1329,6 +1356,33 @@
       "btnMsg": "Hi!%20I'm%20interested%20in%20investing%20in%20SOCCER%20iD%20CUP%202027",
       "confidential": "CONFIDENTIAL"
     },
-    "_pendientes": []
+    "_pendientes": [],
+    "nivelTour": {
+      "_nota": "What changes when the proposal is opened with a TOUR-LEVEL code: all participation is at risk and the minimum rises to USD $100,000. Paths point into the `en` block of this same file. Applied by vistaDeNivel() in index.js.",
+      "quitar": [
+        "proposal.fixed",
+        "proposal.compare",
+        "calculator.types.fixed",
+        "calculator.steps.type"
+      ],
+      "cambios": {
+        "brief.items.1.value": "AT-RISK",
+        "brief.items.1.note": "Participation in the event's result",
+        "brief.items.2.value": "VARIABLE",
+        "brief.items.2.note": "Based on the event's profits",
+        "brief.items.5.value": "USD $100,000",
+        "brief.items.5.note": "$1,800,000 MXN · minimum ticket",
+        "proposal.subtitle": "At-risk participation: you are a partner in the event and your return depends on its result.",
+        "proposal.ticketValue": "$1,800,000 MXN / $100,000 USD",
+        "structure.terms.1.value": "At-risk participation",
+        "structure.terms.2.value": "Variable, based on the event's profits",
+        "calculator.soloRiesgo": true,
+        "calculator.currencies.0.min": 100000,
+        "calculator.currencies.1.min": 1800000,
+        "calculator.steps.currency": "1 · Currency",
+        "calculator.steps.amount": "2 · Investment amount",
+        "calculator.steps.attendance": "3 · Stadium attendance"
+      }
+    }
   }
 }

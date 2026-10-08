@@ -976,6 +976,53 @@ function graficosTour(data) {
 }
 
 /**
+ * La propuesta de un partido, ajustada al NIVEL del código con que se entró.
+ *
+ * La regla: con un código de TOUR toda la participación es a riesgo y el
+ * mínimo del partido sube a USD $100,000. Con un código de ese solo partido no
+ * cambia nada: las dos modalidades y el mínimo de USD $30,000 de siempre.
+ *
+ * Lo que cambia no se escribe aquí, se lee del bloque `nivelTour` del archivo
+ * de contenido: son cifras y mensajes de negocio y se ajustan sin desplegar.
+ * Este código solo sabe aplicar un parche por rutas.
+ *
+ * El bloque `nivelTour` se quita SIEMPRE antes de devolver los datos, también
+ * cuando no se aplica: lo que no se ofrece tampoco tiene por qué viajar.
+ */
+function vistaDeNivel(data, acceso) {
+  if (!data || !data.nivelTour) return data;
+  const esTour = !!acceso && acceso.nivel === 'tour';
+  const d = JSON.parse(JSON.stringify(data));
+  const parche = d.nivelTour;
+  delete d.nivelTour;
+  if (!esTour) return d;
+
+  const tramos = ruta => String(ruta).split('.');
+  const padre = (obj, ruta) => {
+    const t = tramos(ruta);
+    const ultimo = t.pop();
+    const p = t.reduce((o, k) => (o == null ? undefined : o[k]), obj);
+    return [p, ultimo];
+  };
+
+  for (const ruta of parche.quitar || []) {
+    const [p, k] = padre(d, ruta);
+    if (p && typeof p === 'object') delete p[k];
+  }
+  for (const ruta of Object.keys(parche.cambios || {})) {
+    const [p, k] = padre(d, ruta);
+    // Si la ruta no existe se avisa en vez de crear un campo fantasma que
+    // nadie pinta: sería un cambio de negocio perdido en silencio.
+    if (!p || typeof p !== 'object') {
+      console.error('nivelTour: ruta inexistente, no se aplicó -> ' + ruta);
+      continue;
+    }
+    p[k] = parche.cambios[ruta];
+  }
+  return d;
+}
+
+/**
  * La dirección de vuelta al tour desde un partido, o `null`.
  *
  * Solo para quien entró con un código de NIVEL TOUR: con un código de partido
@@ -1035,8 +1082,10 @@ function renderPropuesta(variante) {
 
     try {
       const langContenido = idiomas.includes(lang) ? lang : idiomas[0];
-      const data = propuestas.leerContenido(variante, langContenido, DEFAULT_LANG);
-      if (!data) return next();
+      const crudo = propuestas.leerContenido(variante, langContenido, DEFAULT_LANG);
+      if (!crudo) return next();
+      // Qué se ofrece depende del nivel del código con que se entró.
+      const data = vistaDeNivel(crudo, propuestas.accesoDe(req));
       // Los textos de la puerta, en el idioma pedido pase lo que pase.
       const lock = propuestas.textosCandado(variante, lang, DEFAULT_LANG);
 
@@ -1120,8 +1169,9 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
   const idiomas = propuestas.idiomasDe(variante, SUPPORTED_LANGS);
   const lang = idiomas.includes(pedido) ? pedido : idiomas[0];
   try {
-    const data = propuestas.leerContenido(variante, lang, DEFAULT_LANG);
-    if (!data) return next();
+    const crudo = propuestas.leerContenido(variante, lang, DEFAULT_LANG);
+    if (!crudo) return next();
+    const data = vistaDeNivel(crudo, propuestas.accesoDe(req));
     res.set('Cache-Control', 'no-store');
     res.set('X-Idioma-Servido', lang);
     res.render(partialDe(variante), {
