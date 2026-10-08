@@ -8,6 +8,15 @@
      endpoint GET /api/propuesta/:id/contenido, que lo inyecta sin recargar
      para que el desbloqueo se sienta igual que antes. --}}
 
+  {{!-- Vuelta al tour. Solo aparece con un código de nivel tour: con uno de
+        partido el tour no se abre y la liga llevaría a un candado cerrado. --}}
+  {{#if urlTour}}
+  <a class="pp-volver" href="{{urlTour}}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+    <span>{{#if isEs}}Volver al TOUR '27{{else}}Back to TOUR '27{{/if}}</span>
+  </a>
+  {{/if}}
+
   {{!-- Language toggle --}}
   {{#if hayEn}}
   <div class="pp-lang-bar">

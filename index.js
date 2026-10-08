@@ -975,6 +975,22 @@ function graficosTour(data) {
   return g;
 }
 
+/**
+ * La dirección de vuelta al tour desde un partido, o `null`.
+ *
+ * Solo para quien entró con un código de NIVEL TOUR: con un código de partido
+ * el tour no se abre, así que ofrecer la liga sería mandarlo a un candado que
+ * su código no levanta. Desde el propio tour tampoco se ofrece, claro.
+ */
+async function vueltaAlTour(req, variante, lang) {
+  if (!variante || variante.tipo === 'tour') return null;
+  const acceso = propuestas.accesoDe(req);
+  if (!acceso || acceso.nivel !== 'tour') return null;
+  const tour = propuestas.porTipo('tour');
+  if (!tour || !(await propuestas.visible(tour))) return null;
+  return `/${lang}/${tour.slug}`;
+}
+
 /** Qué partial va detrás del candado: el perfil anual, un aviso o la propuesta. */
 function partialDe(variante) {
   if (variante.tipo === 'tour') return 'partials/proyecto-anual';
@@ -1064,6 +1080,7 @@ function renderPropuesta(variante) {
         // propuesta: la página existe, el contenido todavía no.
         enNegociacion: propuestas.enNegociacion(variante),
         esTour: variante.tipo === 'tour',
+        urlTour: await vueltaAlTour(req, variante, langContenido),
         // El candado se lee en los dos idiomas siempre. Dentro, en cambio,
         // solo se ofrece el idioma que existe: un conmutador que lleva a la
         // misma página en el mismo idioma es peor que no tenerlo.
@@ -1122,6 +1139,7 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
       // Faltaba: sin esto el conmutador de dentro desaparecía también en las
       // propuestas que SÍ están en los dos idiomas.
       hayEn: idiomas.includes('en'),
+      urlTour: await vueltaAlTour(req, variante, lang),
       data: data,
       mediaLinks: await cupEditions.mediaLinks(lang),
       slug: variante.slug,
