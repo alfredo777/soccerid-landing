@@ -162,7 +162,9 @@
   .pp-lock__error.visible { display: block; }
   .pp-lock__lang { margin-top: 24px; display: flex; justify-content: center; gap: 12px; }
   .pp-lock__lang a, .pp-lang-bar a {
-    color: rgba(255,255,255,0.4); text-decoration: none; font-size: 13px;
+    /* 0.4 de alfa daba 3.8: el idioma que NO esta activo no se leia. La regla
+       de la casa es no bajar de 0.75 en blanco translucido para texto chico. */
+    color: rgba(255,255,255,0.78); text-decoration: none; font-size: 13px;
     font-weight: 700; letter-spacing: 1px; padding: 4px 10px; border-radius: 6px;
     transition: color 0.2s, background 0.2s;
   }
