@@ -1,5 +1,5 @@
 {
-  "_nota": "Perfil anual del proyecto 2027: el nivel de en medio de la lamina 19 de la presentacion (SOCCER iD CUP -> PROYECTO 2027 -> perfil de cada partido). El contenido es el de las laminas 1 a 18. Las cifras que la presentacion deja abiertas ([TOTAL], [MINIMO], [A2], [A3], [C2]...) NO se inventaron: van con pendiente:true y se pintan como POR DEFINIR. Cerrarlas es escribir el valor y quitar la marca. Solo hay bloque es. Mientras siga asi, /en redirige a /es y el conmutador ES/EN no se pinta (ver idiomasDe en lib/propuestas.js): antes se anunciaba un ingles que no existe. Anadir el bloque en lo reactiva solo, sin tocar codigo.",
+  "_nota": "Perfil anual del proyecto 2027: el nivel de en medio de la lamina 19 de la presentacion (SOCCER iD CUP -> PROYECTO 2027 -> perfil de cada partido). El contenido es el de las laminas 1 a 18. Las cifras que la presentacion deja abiertas ([TOTAL], [MINIMO], [A2], [A3], [C2]...) NO se inventaron: van con pendiente:true y se pintan como POR DEFINIR. Cerrarlas es escribir el valor y quitar la marca. Hay bloque es y bloque en. El ingles se construyo traduciendo el espanol cadena por cadena, clonando la estructura: las cifras, los montos y los meses del calendario son los MISMOS objetos numericos, no se re-escribieron. BORRADOR pendiente de revision: los terminos financieros y legales (utilidades distribuibles, taquilla bruta, modalidad a riesgo) son decisiones de traduccion, no del negocio. Al cerrar una cifra pendiente hay que cerrarla en LOS DOS bloques.",
   "es": {
     "pageTitle": "SOCCER iD TOUR '27 — Proyecto de tres partidos",
     "marca": "SOCCER iD TOUR '27",
@@ -529,5 +529,535 @@
       "ctaUrl": "mailto:socceridco@soccerid.co?subject=SOCCER%20iD%20CUP%202027"
     },
     "pendienteLabel": "POR DEFINIR"
+  },
+  "en": {
+    "pageTitle": "SOCCER iD TOUR '27 — A three-match project",
+    "marca": "SOCCER iD TOUR '27",
+    "confidencial": "CONFIDENTIAL",
+    "lock": {
+      "badge": "CONFIDENTIAL",
+      "title": "RESTRICTED ACCESS",
+      "subtitle": "Enter your personalized code",
+      "placeholder": "Access code",
+      "button": "Access",
+      "error": "Incorrect code. Please try again."
+    },
+    "hero": {
+      "badge": "ANNUAL PROJECT",
+      "title": "SOCCER iD TOUR '27",
+      "lead": "Three matches. One season. One investment project.",
+      "meta": "United States · March to October",
+      "cta": "EXPLORE THE INVESTMENT"
+    },
+    "resumen": {
+      "kicker": "THE SEASON",
+      "title": "An investment in the full season.",
+      "sub": "Three international fixtures in the United States, under a single annual operating and commercial strategy.",
+      "cifras": [
+        {
+          "label": "MATCHES",
+          "value": "03",
+          "note": "March · July/August · September/October",
+          "icon": "balon"
+        },
+        {
+          "label": "PROFITS",
+          "value": "70 / 30",
+          "note": "70% investors · 30% SOCCER iD",
+          "icon": "reparto"
+        },
+        {
+          "label": "ESTIMATED CLOSE",
+          "value": "DEC 2027",
+          "note": "Subject to collection and settlement",
+          "icon": "calendario-ok"
+        }
+      ],
+      "pie": [
+        {
+          "label": "Target initial capital",
+          "value": "",
+          "pendiente": true
+        },
+        {
+          "label": "Minimum investment",
+          "value": "",
+          "pendiente": true
+        }
+      ],
+      "disclaimer": "Participation is strictly at risk. Returns vary with the project's combined result."
+    },
+    "partidos": {
+      "kicker": "THE MATCHES",
+      "title": "The 2027 season.",
+      "sub": "Each event has its own sporting and operational profile within a single combined financial project.",
+      "ctaAbierto": "VIEW MATCH PROFILE",
+      "ctaPendiente": "PROFILE COMING SOON",
+      "proximosTitle": "Two more matches, to be announced.",
+      "proximosKicker": "WHAT'S NEXT",
+      "proximosPie": "Clubs and venue under negotiation. Each will have its profile at this same address.",
+      "cards": [
+        {
+          "n": "01",
+          "variante": "2027b",
+          "cuando": "27 MARCH",
+          "titulo": "Cruz Azul vs. Pumas",
+          "sede": "Shell Energy Stadium",
+          "lugar": "Houston, Texas"
+        },
+        {
+          "n": "02",
+          "variante": "partido2",
+          "cuando": "JULY / AUGUST",
+          "titulo": "Second fixture",
+          "sede": "United States",
+          "lugar": "Clubs, venue and date TBD"
+        },
+        {
+          "n": "03",
+          "variante": "partido3",
+          "cuando": "SEPTEMBER / OCTOBER",
+          "titulo": "Third fixture",
+          "sede": "United States",
+          "lugar": "Clubs, venue and date TBD"
+        }
+      ]
+    },
+    "partido1": {
+      "kicker": "03 / THE FIRST MATCH",
+      "title": "Cruz Azul vs. Pumas.",
+      "sub": "First fixture of the SOCCER iD TOUR '27 project.",
+      "datos": [
+        {
+          "label": "DATE",
+          "value": "27 March 2027",
+          "icon": "calendario"
+        },
+        {
+          "label": "VENUE",
+          "value": "Shell Energy Stadium",
+          "icon": "estadio"
+        },
+        {
+          "label": "CITY",
+          "value": "Houston, Texas",
+          "icon": "lugar"
+        },
+        {
+          "label": "MATCH BUDGET",
+          "value": "USD 1,000,000",
+          "icon": "dinero"
+        }
+      ],
+      "cta": "OPEN FULL PROFILE",
+      "pie": "Product, venue, budget and potential of the first event."
+    },
+    "oportunidad": {
+      "kicker": "01 / WHY A FULL SEASON",
+      "title": "Take part in a full season.",
+      "items": [
+        {
+          "n": "01",
+          "title": "Commercial continuity",
+          "body": "Three events to build relationships with sponsors and partners throughout the year.",
+          "icon": "apreton"
+        },
+        {
+          "n": "02",
+          "title": "Operational experience",
+          "body": "SOCCER iD coordinates clubs, stadiums, suppliers and media from a single plan.",
+          "icon": "engrane"
+        },
+        {
+          "n": "03",
+          "title": "Multiple revenue streams",
+          "body": "Ticketing, sponsorships, TV, advertising and premium experiences, subject to each event's contracts.",
+          "icon": "capas"
+        },
+        {
+          "n": "04",
+          "title": "Combined result",
+          "body": "The positive and negative results of each match are combined at the season's close.",
+          "icon": "grafica"
+        }
+      ]
+    },
+    "capital": {
+      "kicker": "THE CAPITAL",
+      "title": "Capital to launch the season.",
+      "sub": "Full budget for the first match + advances for the next two.",
+      "items": [
+        {
+          "label": "MATCH 1",
+          "value": "USD 1,000,000",
+          "note": "Full budget",
+          "monto": 1000000
+        },
+        {
+          "label": "MATCH 2",
+          "value": "",
+          "note": "Advances TBD",
+          "pendiente": true
+        },
+        {
+          "label": "MATCH 3",
+          "value": "",
+          "note": "Advances TBD",
+          "pendiente": true
+        }
+      ],
+      "totalLabel": "TARGET INITIAL CAPITAL",
+      "totalValue": "",
+      "totalPendiente": true,
+      "disclaimer": "Advances are deducted from each event's total cost; they are not counted twice.",
+      "barraLabel": "HOW THE INITIAL CAPITAL IS MADE UP"
+    },
+    "costos": {
+      "kicker": "04 / WHERE THE CAPITAL GOES",
+      "title": "Budget for the first match.",
+      "sub": "Cruz Azul vs. Pumas · Figures from the individual profile.",
+      "moneda": "USD",
+      "lineas": [
+        {
+          "concepto": "Club fees",
+          "monto": "400,000"
+        },
+        {
+          "concepto": "Stadium and operations",
+          "monto": "200,000"
+        },
+        {
+          "concepto": "Travel and lodging",
+          "monto": "250,000"
+        },
+        {
+          "concepto": "Marketing",
+          "monto": "100,000"
+        },
+        {
+          "concepto": "TV production",
+          "monto": "15,000"
+        },
+        {
+          "concepto": "Permits and insurance",
+          "monto": "35,000"
+        }
+      ],
+      "totalLabel": "TOTAL / USD",
+      "totalValue": "1.0 M",
+      "totalNote": "Full funding of match 1"
+    },
+    "potencial": {
+      "kicker": "05 / WHERE THE RETURN COMES FROM",
+      "title": "The potential is built match by match.",
+      "sub": "Full revenue and costs of the three events, integrated into a single annual projection.",
+      "columnas": [
+        {
+          "titulo": "MATCH 1",
+          "filas": [
+            {
+              "label": "Cost",
+              "value": "USD 1,000,000"
+            },
+            {
+              "label": "Gate revenue",
+              "value": "",
+              "pendiente": true
+            },
+            {
+              "label": "Other revenue",
+              "value": "",
+              "pendiente": true
+            }
+          ],
+          "numeros": {
+            "costo": 1000000
+          }
+        },
+        {
+          "titulo": "MATCH 2",
+          "filas": [
+            {
+              "label": "Cost",
+              "value": "",
+              "pendiente": true
+            },
+            {
+              "label": "Gate revenue",
+              "value": "",
+              "pendiente": true
+            },
+            {
+              "label": "Other revenue",
+              "value": "",
+              "pendiente": true
+            }
+          ]
+        },
+        {
+          "titulo": "MATCH 3",
+          "filas": [
+            {
+              "label": "Cost",
+              "value": "",
+              "pendiente": true
+            },
+            {
+              "label": "Gate revenue",
+              "value": "",
+              "pendiente": true
+            },
+            {
+              "label": "Other revenue",
+              "value": "",
+              "pendiente": true
+            }
+          ]
+        }
+      ],
+      "cierreTitle": "Annual result",
+      "cierreBody": "Consolidated revenue less full costs, shared expenses and applicable charges, with no double counting.",
+      "graficaLabel": "COST VS. GROSS GATE AT FULL CAPACITY",
+      "graficaNota": "The gate at full capacity is the March reference, not a sales projection. Matches 2 and 3 will be charted once they have figures.",
+      "barraCosto": "Cost",
+      "barraTaquilla": "Gross gate at full capacity"
+    },
+    "referencia": {
+      "kicker": "MARCH REFERENCE",
+      "title": "March: capacity and projected gate.",
+      "sub": "A reference for the first match; not an extrapolation of the season.",
+      "cifras": [
+        {
+          "value": "21,800",
+          "label": "SELLABLE TICKETS",
+          "icon": "boleto"
+        },
+        {
+          "value": "USD 100",
+          "label": "PROJECTED AVERAGE TICKET",
+          "icon": "etiqueta"
+        },
+        {
+          "value": "USD 2.18 M",
+          "label": "GROSS GATE AT FULL CAPACITY",
+          "icon": "caja"
+        }
+      ],
+      "avisoTitle": "Gross gate revenue is not the same as distributable profit.",
+      "avisoBody": "The result must account for costs, commissions, taxes and any other applicable charges. Projections are not guaranteed revenue.",
+      "numeros": {
+        "boletos": 21800,
+        "ticket": 100,
+        "taquilla": 2180000
+      },
+      "ecuacionLabel": "GROSS GATE AT FULL CAPACITY",
+      "equilibrioLabel": "COVERAGE OF MATCH 1 COST",
+      "equilibrioNota": "Tickets that cover the cost of match 1 through gross gate revenue, at the projected average ticket price. This is a reference calculation: it does not deduct commissions, taxes or other charges.",
+      "equilibrioBoletos": "TICKETS",
+      "equilibrioAforo": "OF CAPACITY"
+    },
+    "flujo": {
+      "kicker": "06 / HOW THE CAPITAL WORKS",
+      "title": "The capital works throughout the season.",
+      "sub": "No partial distributions per match are contemplated.",
+      "pasos": [
+        {
+          "n": "01",
+          "title": "Initial contribution",
+          "body": "Execute the first match and cover the advances for the next two.",
+          "icon": "cartera"
+        },
+        {
+          "n": "02",
+          "title": "Operations",
+          "body": "Coordinate the events and develop their contracting and commercialization.",
+          "icon": "engrane"
+        },
+        {
+          "n": "03",
+          "title": "Available funds",
+          "body": "Apply collected revenue to the season's obligations and needs.",
+          "icon": "banco"
+        },
+        {
+          "n": "04",
+          "title": "Year-end close",
+          "body": "Consolidate results, settle obligations and determine the distribution.",
+          "icon": "check"
+        }
+      ],
+      "pie": "Target close: December 2027, subject to actual collection and settlement timelines."
+    },
+    "participacion": {
+      "kicker": "02 / YOUR PARTICIPATION",
+      "title": "70% for investors. 30% for SOCCER iD.",
+      "partes": [
+        {
+          "pct": "70%",
+          "quien": "INVESTORS",
+          "body": "Contribute the execution capital and share proportionally in the project's distributable profits."
+        },
+        {
+          "pct": "30%",
+          "quien": "SOCCER iD",
+          "body": "Contributes the project, the commercial structuring and the coordination of operations."
+        }
+      ],
+      "pie": "The split applies to the distributable profits of the full season."
+    },
+    "ejemplo": {
+      "kicker": "YOUR SHARE",
+      "title": "Your share, in proportion to your contribution.",
+      "sub": "Participation example; not a rate of return.",
+      "pasos": [
+        {
+          "value": "10%",
+          "label": "OF TOTAL INVESTOR CAPITAL"
+        },
+        {
+          "value": "70%",
+          "label": "OF THE PROFITS FOR INVESTORS"
+        },
+        {
+          "value": "7%",
+          "label": "OF THE PROJECT'S DISTRIBUTABLE PROFITS"
+        }
+      ],
+      "pie": "If you contribute 10% of the capital, you are entitled to 7% of the season's distributable profits."
+    },
+    "calendario": {
+      "kicker": "THE SEASON, STEP BY STEP",
+      "title": "A season from start to finish.",
+      "hitos": [
+        {
+          "etapa": "PREPARATION",
+          "cuando": "2026 / early 2027",
+          "que": "Capital, contracts and advances.",
+          "mes": [
+            0,
+            1
+          ]
+        },
+        {
+          "etapa": "MATCH 1",
+          "cuando": "March 2027",
+          "que": "Cruz Azul vs. Pumas.",
+          "mes": [
+            3,
+            3
+          ]
+        },
+        {
+          "etapa": "MATCH 2",
+          "cuando": "July / August",
+          "que": "Clubs and venue TBD.",
+          "mes": [
+            7,
+            8
+          ]
+        },
+        {
+          "etapa": "MATCH 3",
+          "cuando": "September / October",
+          "que": "Clubs and venue TBD.",
+          "mes": [
+            9,
+            10
+          ]
+        },
+        {
+          "etapa": "TARGET CLOSE",
+          "cuando": "December 2027",
+          "que": "Consolidation and distribution.",
+          "mes": [
+            12,
+            12
+          ]
+        }
+      ],
+      "pie": "Distribution depends on collection and the settlement of obligations. The calendar will be updated as the events are formalized.",
+      "reglaLabel": "2027, MONTH BY MONTH",
+      "mesesCortos": [
+        "2026",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ]
+    },
+    "experiencia": {
+      "kicker": "07 / TRACK RECORD",
+      "title": "Three editions as a track record.",
+      "sub": "Clubs, fans, venues and brands connected through football.",
+      "ediciones": [
+        {
+          "anio": "2023",
+          "match": "Pumas vs. Comunicaciones",
+          "sede": "San José, California"
+        },
+        {
+          "anio": "2024",
+          "match": "América vs. Atlético Nacional",
+          "sede": "Orlando, Florida"
+        },
+        {
+          "anio": "2025",
+          "match": "Pumas vs. Tigres",
+          "sede": "Austin, Texas"
+        }
+      ],
+      "capacidades": "Club relations · Commercialization · Production · Broadcast · International operations",
+      "cta": "DISCOVER THE CUP'S HISTORY",
+      "ctaUrl": "/en/socceridcup"
+    },
+    "medios": {
+      "kicker": "08 / MEDIA COVERAGE",
+      "title": "The track record can also be seen.",
+      "sub": "Coverage of previous editions, in each market's own media."
+    },
+    "condiciones": {
+      "kicker": "09 / TERMS",
+      "title": "Reporting and follow-up throughout the project.",
+      "sub": "Participation is formalized through a contract.",
+      "items": [
+        {
+          "title": "At-risk participation",
+          "body": "Participation in the combined result of the three matches.",
+          "icon": "escudo"
+        },
+        {
+          "title": "Use of funds",
+          "body": "Capital allocated to the SOCCER iD TOUR '27 project.",
+          "icon": "candado"
+        },
+        {
+          "title": "Reporting",
+          "body": "Reporting on funds, events and the financial close as agreed.",
+          "icon": "ojo"
+        },
+        {
+          "title": "Distribution",
+          "body": "70% investors / 30% SOCCER iD on distributable profits.",
+          "icon": "reparto"
+        }
+      ],
+      "aviso": "No fixed return or guaranteed full recovery is offered. The investment may result in partial or total loss. The contract will set out the rules for distribution, losses and calendar changes."
+    },
+    "contacto": {
+      "kicker": "CONTACT",
+      "title": "Be part of SOCCER iD TOUR '27.",
+      "body": "Learn about the participation structure and the details of the season. Our team will walk you through the project and answer your questions.",
+      "cta": "I WANT TO JOIN THE 2027 PROJECT",
+      "ctaUrl": "mailto:socceridco@soccerid.co?subject=SOCCER%20iD%20CUP%202027"
+    },
+    "pendienteLabel": "TBD"
   }
 }
