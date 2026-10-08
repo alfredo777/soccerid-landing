@@ -72,7 +72,7 @@
         <div class="pa-foto__body">
           <span class="pa-badge">{{data.hero.badge}}</span>
           {{#if logo}}
-          <img class="pa-logo" src="{{logo}}" alt="{{data.hero.title}}" width="190" height="209">
+          <img class="pa-logo" src="{{logo}}" alt="{{data.hero.title}}" width="190" height="206">
           <h1 class="pa-foto__t pa-foto__t--oculto">{{data.hero.title}}</h1>
           {{else}}
           <h1 class="pa-foto__t">{{data.hero.title}}</h1>
@@ -514,6 +514,11 @@
   <section class="pa-cierre">
     <div class="pa-foto__veil" aria-hidden="true"></div>
     <div class="pa-cierre__body">
+      {{!-- El logo en blanco cierra la pagina. Es el mismo arte del hero en su
+            version monocroma: sobre la foto al final, donde el velo ya esta
+            casi opaco, se lee sin competir con el titular. --}}
+      <img class="pa-cierre__logo" src="/assets/images/logos/id-tour27-blanco.png"
+           alt="{{data.marca}}" width="150" height="158" loading="lazy">
       <p class="pa-rot pa-rot--centro"><span>{{data.contacto.kicker}}</span></p>
       <h2 class="pa-cierre__t">{{data.contacto.title}}</h2>
       <p class="pa-cierre__b">{{data.contacto.body}}</p>
@@ -648,6 +653,14 @@
       /* El aro y el letrero son negros y sobre el gris se apagarían. */
       filter: drop-shadow(0 0 26px rgba(255,255,255,0.3)) drop-shadow(0 10px 26px rgba(0,0,0,0.5));
     }
+    .pa-cierre__logo {
+      display: block; width: clamp(104px, 11vw, 150px); height: auto;
+      margin: 0 auto 20px;
+      /* El aro del logo es blanco y la foto del cierre tiene zonas claras: la
+         sombra lo despega sin ensuciar el blanco. */
+      filter: drop-shadow(0 6px 20px rgba(0,0,0,0.55));
+    }
+
     .pa-foto__lead { font-size: 18px; line-height: 1.45; color: rgba(255,255,255,0.9); }
     /* 0.68 de alfa daba 6.10 sobre el velo del hero, por debajo del 7.0 que
        pide la casa para texto bajo 16px. La regla escrita es clara: blanco
