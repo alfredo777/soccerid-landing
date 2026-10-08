@@ -273,7 +273,8 @@
         </div>
         <div class="pa-regla__pista">
           {{#each graficos.regla}}
-          <span class="pa-regla__h pa-anima" style="left: {{this.left}}%; width: {{this.width}}%" title="{{this.etapa}} · {{this.cuando}}"><span>{{this.etapa}}</span></span>
+          {{!-- Cada hito cede 3 px por lado para que dos seguidos no se toquen. --}}
+          <span class="pa-regla__h pa-anima" style="left: {{this.left}}%; width: calc({{this.width}}% - 6px)" title="{{this.etapa}} · {{this.cuando}}"><span>{{this.etapa}}</span></span>
           {{/each}}
         </div>
       </div>
@@ -778,7 +779,7 @@
       position: absolute; top: 7px; bottom: 7px; border-radius: 8px;
       background: var(--tour-azul, #6B93EC); color: var(--tour-tinta, #1C1E23);
       display: flex; align-items: center; padding: 0 7px; overflow: hidden;
-      transform-origin: left center;
+      transform-origin: left center; margin-left: 3px;
     }
     .pa-regla__h span { font-size: 8.5px; font-weight: 800; letter-spacing: .6px; white-space: nowrap; }
     .pa-regla__h:first-child { background: rgba(255,255,255,0.18); color: #FFFFFF; }
