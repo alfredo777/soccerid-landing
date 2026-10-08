@@ -27,10 +27,12 @@
       <p class="pp-lock__error" id="ppLeadError">{{#if isEs}}Escribe tu nombre y un correo válido.{{else}}Enter your name and a valid email.{{/if}}</p>
     </div>
 
+    {{#if hayEn}}
     <div class="pp-lock__lang">
       <a href="/es/{{slug}}" class="{{#if isEs}}active{{/if}}">ES</a>
       <a href="/en/{{slug}}" class="{{#if isEn}}active{{/if}}">EN</a>
     </div>
+    {{/if}}
   </div>
 </div>
 

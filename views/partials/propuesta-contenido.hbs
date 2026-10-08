@@ -9,10 +9,12 @@
      para que el desbloqueo se sienta igual que antes. --}}
 
   {{!-- Language toggle --}}
+  {{#if hayEn}}
   <div class="pp-lang-bar">
     <a href="/es/{{slug}}" class="{{#if isEs}}active{{/if}}">ES</a>
     <a href="/en/{{slug}}" class="{{#if isEn}}active{{/if}}">EN</a>
   </div>
+  {{/if}}
 
   {{!-- ═══ MENÚ LATERAL ═══ --}}
   <nav class="pp-nav" id="ppNav" aria-label="{{#if isEs}}Navegación de secciones{{else}}Section navigation{{/if}}">

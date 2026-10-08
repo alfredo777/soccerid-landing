@@ -950,6 +950,14 @@ function renderPropuesta(variante) {
       }
     }
 
+    // Idioma: `leerContenido` cae al idioma por defecto cuando falta el que se
+    // pide, y lo hace en silencio. Eso dejaba /en/socceridcup2027 marcando
+    // "EN" como activo mientras servía el español entero. Si la propuesta no
+    // tiene ese idioma se corrige la dirección, que es lo honesto: la URL dice
+    // lo que se está sirviendo.
+    const idiomas = propuestas.idiomasDe(variante, SUPPORTED_LANGS);
+    if (!idiomas.includes(lang)) return res.redirect(302, `/${idiomas[0]}/${variante.slug}`);
+
     try {
       const data = propuestas.leerContenido(variante, lang, DEFAULT_LANG);
       if (!data) return next();
@@ -994,6 +1002,9 @@ function renderPropuesta(variante) {
         // propuesta: la página existe, el contenido todavía no.
         enNegociacion: propuestas.enNegociacion(variante),
         esTour: variante.tipo === 'tour',
+        // Solo se ofrece el idioma que existe: un conmutador que lleva a la
+        // misma página en el mismo idioma es peor que no tenerlo.
+        hayEn: idiomas.includes('en'),
         logo: variante.logo || null,
         ventana: variante.ventana || null,
         partidosNav: navPartidos(data, lang),
