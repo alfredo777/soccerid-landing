@@ -580,7 +580,7 @@
           "pendiente": true
         },
         {
-          "label": "Minimum investment",
+          "label": "Investment from",
           "value": "",
           "pendiente": true
         }
@@ -595,7 +595,7 @@
       "ctaPendiente": "PROFILE COMING SOON",
       "proximosTitle": "Two more matches, to be announced.",
       "proximosKicker": "WHAT'S NEXT",
-      "proximosPie": "Clubs and venue under negotiation. Each will have its profile at this same address.",
+      "proximosPie": "Clubs and venue under negotiation. Each will have its profile at this same link.",
       "cards": [
         {
           "n": "01",
@@ -665,7 +665,7 @@
         {
           "n": "02",
           "title": "Operational experience",
-          "body": "SOCCER iD coordinates clubs, stadiums, suppliers and media from a single plan.",
+          "body": "SOCCER iD coordinates clubs, stadiums, suppliers and media under one shared plan.",
           "icon": "engrane"
         },
         {
@@ -710,7 +710,7 @@
       "totalValue": "",
       "totalPendiente": true,
       "disclaimer": "Advances are deducted from each event's total cost; they are not counted twice.",
-      "barraLabel": "HOW THE INITIAL CAPITAL IS MADE UP"
+      "barraLabel": "WHAT MAKES UP THE INITIAL CAPITAL"
     },
     "costos": {
       "kicker": "04 / WHERE THE CAPITAL GOES",
@@ -900,7 +900,7 @@
         {
           "pct": "30%",
           "quien": "SOCCER iD",
-          "body": "Contributes the project, the commercial structuring and the coordination of operations."
+          "body": "Contributes the project, commercial structuring and operational coordination."
         }
       ],
       "pie": "The split applies to the distributable profits of the full season."
@@ -975,7 +975,7 @@
           ]
         }
       ],
-      "pie": "Distribution depends on collection and the settlement of obligations. The calendar will be updated as the events are formalized.",
+      "pie": "Distribution depends on the collection and settlement of obligations. The calendar will be updated as the events are formalized.",
       "reglaLabel": "2027, MONTH BY MONTH",
       "mesesCortos": [
         "2026",
@@ -1039,7 +1039,7 @@
           "icon": "candado"
         },
         {
-          "title": "Reporting",
+          "title": "Follow-up",
           "body": "Reporting on funds, events and the financial close as agreed.",
           "icon": "ojo"
         },
