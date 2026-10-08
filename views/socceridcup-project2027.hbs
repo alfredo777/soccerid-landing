@@ -1443,7 +1443,19 @@
     // La propuesta todavía no está en la página: se pide al servidor —que
     // vuelve a comprobar la cookie de acceso— y se inyecta sin recargar.
     return fetch('/api/propuesta/{{variantId}}/contenido?lang={{lang}}', { credentials: 'same-origin' })
-      .then(function(r) { if (!r.ok) throw new Error('sin acceso'); return r.text(); })
+      .then(function(r) {
+        if (!r.ok) throw new Error('sin acceso');
+        // La propuesta puede no existir en el idioma de la dirección. El
+        // servidor dice en qué idioma la mandó: si no es el que pedía la URL,
+        // se corrige la barra. Como el contenido se inyecta y no se navega,
+        // sin esto la dirección se quedaba diciendo /en con la propuesta en
+        // español delante.
+        var servido = r.headers.get('X-Idioma-Servido');
+        if (servido && servido !== '{{lang}}' && window.history && history.replaceState) {
+          history.replaceState(null, '', '/' + servido + '/{{slug}}');
+        }
+        return r.text();
+      })
       .then(function(html) {
         contenido.innerHTML = html;
         lock.style.display = 'none';
