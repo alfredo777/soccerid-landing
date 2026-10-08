@@ -2,9 +2,9 @@
 <div class="pp-lock" id="ppLock">
   <div class="pp-lock__card">
     <img src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" class="pp-lock__logo">
-    <span class="pp-lock__badge">{{data.lock.badge}}</span>
-    <h1 class="pp-lock__title">{{data.lock.title}}</h1>
-    <p class="pp-lock__sub">{{data.lock.subtitle}}</p>
+    <span class="pp-lock__badge">{{lock.badge}}</span>
+    <h1 class="pp-lock__title">{{lock.title}}</h1>
+    <p class="pp-lock__sub">{{lock.subtitle}}</p>
     <div class="pp-lock__form">
       <div class="pp-lock__digits" id="ppDigits">
         <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" class="pp-lock__digit" autocomplete="off" data-idx="0">
@@ -15,9 +15,9 @@
         <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" class="pp-lock__digit" autocomplete="off" data-idx="5">
         <input type="tel" maxlength="1" inputmode="numeric" pattern="[0-9]" class="pp-lock__digit" autocomplete="off" data-idx="6">
       </div>
-      <button id="ppSubmit" class="pp-lock__btn">{{data.lock.button}}</button>
+      <button id="ppSubmit" class="pp-lock__btn">{{lock.button}}</button>
     </div>
-    <p class="pp-lock__error" id="ppError">{{data.lock.error}}</p>
+    <p class="pp-lock__error" id="ppError">{{lock.error}}</p>
 
     <div id="ppLead" style="display:none; margin-top:6px;">
       <p class="pp-lock__sub" style="margin-bottom:14px;">{{#if isEs}}Antes de continuar, déjanos tus datos.{{else}}Before continuing, please leave your details.{{/if}}</p>
@@ -27,12 +27,13 @@
       <p class="pp-lock__error" id="ppLeadError">{{#if isEs}}Escribe tu nombre y un correo válido.{{else}}Enter your name and a valid email.{{/if}}</p>
     </div>
 
-    {{#if hayEn}}
+    {{!-- El candado se lee en los dos idiomas aunque la propuesta de dentro
+          solo exista en uno: quien llega por un enlace todavía no ha tecleado
+          nada y esto es lo único que puede leer. --}}
     <div class="pp-lock__lang">
       <a href="/es/{{slug}}" class="{{#if isEs}}active{{/if}}">ES</a>
       <a href="/en/{{slug}}" class="{{#if isEn}}active{{/if}}">EN</a>
     </div>
-    {{/if}}
   </div>
 </div>
 
@@ -1483,7 +1484,7 @@
       if (data.ok && data.ir) { window.location.href = data.ir; return; }
       if (data.ok) { return reveal(); }
       btn.disabled = false;
-      btn.textContent = '{{data.lock.button}}';
+      btn.textContent = '{{lock.button}}';
       err.textContent = data.sinNivel ? errSinNivel : errPorDefecto;
       if (data.needLead) {
         lastCode = val;
@@ -1501,7 +1502,7 @@
     })
     .catch(function() {
       btn.disabled = false;
-      btn.textContent = '{{data.lock.button}}';
+      btn.textContent = '{{lock.button}}';
     });
   }
   btn.addEventListener('click', tryAccess);

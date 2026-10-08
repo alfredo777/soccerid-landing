@@ -950,17 +950,29 @@ function renderPropuesta(variante) {
       }
     }
 
-    // Idioma: `leerContenido` cae al idioma por defecto cuando falta el que se
-    // pide, y lo hace en silencio. Eso dejaba /en/socceridcup2027 marcando
-    // "EN" como activo mientras servía el español entero. Si la propuesta no
-    // tiene ese idioma se corrige la dirección, que es lo honesto: la URL dice
-    // lo que se está sirviendo.
+    // Idioma. `leerContenido` cae al idioma por defecto cuando falta el que se
+    // pide, y lo hace en silencio: eso dejaba /en/socceridcup2027 marcando
+    // "EN" como activo mientras servía el español entero.
+    //
+    // La puerta y lo que hay detrás se tratan distinto, porque no son lo
+    // mismo. El CANDADO se sirve siempre en el idioma que se pide, aunque la
+    // propuesta de dentro no esté traducida: es lo primero que ve alguien que
+    // llega por un enlace, antes de teclear nada, y dejarlo sin su idioma es
+    // cerrarle la puerta en la cara. El CONTENIDO, en cambio, solo existe en
+    // los idiomas que existen: una vez dentro se corrige la dirección, para
+    // que la URL diga lo que de verdad se está sirviendo.
     const idiomas = propuestas.idiomasDe(variante, SUPPORTED_LANGS);
-    if (!idiomas.includes(lang)) return res.redirect(302, `/${idiomas[0]}/${variante.slug}`);
+    const autorizado = propuestas.tieneAcceso(req, variante);
+    if (autorizado && !idiomas.includes(lang)) {
+      return res.redirect(302, `/${idiomas[0]}/${variante.slug}`);
+    }
 
     try {
-      const data = propuestas.leerContenido(variante, lang, DEFAULT_LANG);
+      const langContenido = idiomas.includes(lang) ? lang : idiomas[0];
+      const data = propuestas.leerContenido(variante, langContenido, DEFAULT_LANG);
       if (!data) return next();
+      // Los textos de la puerta, en el idioma pedido pase lo que pase.
+      const lock = propuestas.textosCandado(variante, lang, DEFAULT_LANG);
 
       // Notas de medios agregadas de las ediciones pasadas (desde la base de
       // datos). Aqui va SOLO la cobertura de nuestros eventos: una nota de
@@ -997,13 +1009,15 @@ function renderPropuesta(variante) {
         robots: variante.noindex ? 'noindex,nofollow' : null,
         // Solo con la cookie de acceso se manda el contenido de la propuesta.
         // Sin ella la página es únicamente el candado.
-        autorizado: propuestas.tieneAcceso(req, variante),
+        autorizado: autorizado,
         // Un partido que todavía se negocia enseña el aviso en lugar de la
         // propuesta: la página existe, el contenido todavía no.
         enNegociacion: propuestas.enNegociacion(variante),
         esTour: variante.tipo === 'tour',
-        // Solo se ofrece el idioma que existe: un conmutador que lleva a la
+        // El candado se lee en los dos idiomas siempre. Dentro, en cambio,
+        // solo se ofrece el idioma que existe: un conmutador que lleva a la
         // misma página en el mismo idioma es peor que no tenerlo.
+        lock: lock,
         hayEn: idiomas.includes('en'),
         logo: variante.logo || null,
         ventana: variante.ventana || null,

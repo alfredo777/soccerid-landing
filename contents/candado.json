@@ -1,0 +1,19 @@
+{
+  "_nota": "Textos de la PUERTA, no de la propuesta. Una propuesta puede existir solo en espanol y aun asi tiene que dejarse leer por alguien que llega en ingles: el candado es lo primero que ve, antes de teclear nada. Cada propuesta puede traer su propio bloque `lock` en su archivo de contenido; cuando le falta el idioma que se pide, se usan estos. Ver textosCandado en lib/propuestas.js.",
+  "es": {
+    "badge": "CONFIDENCIAL",
+    "title": "ACCESO RESTRINGIDO",
+    "subtitle": "Ingresa tu código personalizado",
+    "placeholder": "Código de acceso",
+    "button": "Acceder",
+    "error": "Código incorrecto. Intenta de nuevo."
+  },
+  "en": {
+    "badge": "CONFIDENTIAL",
+    "title": "RESTRICTED ACCESS",
+    "subtitle": "Enter your personalized code",
+    "placeholder": "Access code",
+    "button": "Access",
+    "error": "Incorrect code. Please try again."
+  }
+}
