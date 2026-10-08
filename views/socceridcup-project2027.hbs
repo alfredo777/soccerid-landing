@@ -1533,6 +1533,26 @@
     if (contenidoIniciado || !contenido.firstElementChild) return;
     contenidoIniciado = true;
 
+  {{#if esTour}}
+  // ─── Las gráficas del perfil anual crecen al entrar en pantalla ───
+  // Se arman aquí (y no en CSS) para que sin JavaScript todo se vea quieto y
+  // completo. Con reduced-motion no se arma nada.
+  (function() {
+    var piezas = contenido.querySelectorAll('.pa-anima');
+    if (!piezas.length || !('IntersectionObserver' in window)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    piezas.forEach(function(p) { p.classList.add('pa-anima--armada'); });
+    var vigia = new IntersectionObserver(function(entradas) {
+      entradas.forEach(function(e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('pa-anima--on');
+        vigia.unobserve(e.target);
+      });
+    }, { threshold: 0.15 });
+    piezas.forEach(function(p) { vigia.observe(p); });
+  })();
+  {{/if}}
+
   // ─── Calculadora de utilidades ───
   (function() {
     var cfgEl = document.getElementById('ppCalcCfg');

@@ -160,7 +160,8 @@
         {
           "label": "PARTIDO 1",
           "value": "USD 1,000,000",
-          "note": "Presupuesto completo"
+          "note": "Presupuesto completo",
+          "monto": 1000000
         },
         {
           "label": "PARTIDO 2",
@@ -178,7 +179,8 @@
       "totalLabel": "CAPITAL INICIAL OBJETIVO",
       "totalValue": "",
       "totalPendiente": true,
-      "disclaimer": "Los anticipos se descuentan del costo total de cada evento; no se contabilizan dos veces."
+      "disclaimer": "Los anticipos se descuentan del costo total de cada evento; no se contabilizan dos veces.",
+      "barraLabel": "CÓMO SE COMPONE EL CAPITAL INICIAL"
     },
     "costos": {
       "kicker": "04 / A DÓNDE VA EL CAPITAL",
@@ -237,7 +239,10 @@
               "value": "",
               "pendiente": true
             }
-          ]
+          ],
+          "numeros": {
+            "costo": 1000000
+          }
         },
         {
           "titulo": "PARTIDO 2",
@@ -281,7 +286,11 @@
         }
       ],
       "cierreTitle": "Resultado anual",
-      "cierreBody": "Ingresos consolidados menos costos completos, gastos comunes y cargos aplicables, sin duplicidades."
+      "cierreBody": "Ingresos consolidados menos costos completos, gastos comunes y cargos aplicables, sin duplicidades.",
+      "graficaLabel": "COSTO VS. TAQUILLA BRUTA A LLENO TOTAL",
+      "graficaNota": "La taquilla a lleno total es la referencia de marzo, no una proyección de venta. Los partidos 2 y 3 se dibujan cuando tengan cifras.",
+      "barraCosto": "Costo",
+      "barraTaquilla": "Taquilla bruta a lleno"
     },
     "referencia": {
       "kicker": "REFERENCIA DE MARZO",
@@ -305,7 +314,17 @@
         }
       ],
       "avisoTitle": "La taquilla bruta no equivale a utilidad distribuible.",
-      "avisoBody": "El resultado debe considerar costos, comisiones, impuestos y demás cargos aplicables. Las proyecciones no son ingresos garantizados."
+      "avisoBody": "El resultado debe considerar costos, comisiones, impuestos y demás cargos aplicables. Las proyecciones no son ingresos garantizados.",
+      "numeros": {
+        "boletos": 21800,
+        "ticket": 100,
+        "taquilla": 2180000
+      },
+      "ecuacionLabel": "TAQUILLA BRUTA A LLENO TOTAL",
+      "equilibrioLabel": "COBERTURA DEL COSTO DEL PARTIDO 1",
+      "equilibrioNota": "Boletos que cubren el costo del partido 1 con taquilla bruta, al ticket promedio proyectado. Es un cálculo de referencia: no descuenta comisiones, impuestos ni otros cargos.",
+      "equilibrioBoletos": "BOLETOS",
+      "equilibrioAforo": "DEL AFORO"
     },
     "flujo": {
       "kicker": "06 / CÓMO TRABAJA EL CAPITAL",
@@ -383,30 +402,66 @@
         {
           "etapa": "PREPARACIÓN",
           "cuando": "2026 / inicio 2027",
-          "que": "Capital, contratos y anticipos."
+          "que": "Capital, contratos y anticipos.",
+          "mes": [
+            0,
+            1
+          ]
         },
         {
           "etapa": "PARTIDO 1",
           "cuando": "Marzo 2027",
-          "que": "Cruz Azul vs. Pumas."
+          "que": "Cruz Azul vs. Pumas.",
+          "mes": [
+            3,
+            3
+          ]
         },
         {
           "etapa": "PARTIDO 2",
           "cuando": "Julio / agosto",
-          "que": "Clubes y sede por definir."
+          "que": "Clubes y sede por definir.",
+          "mes": [
+            7,
+            8
+          ]
         },
         {
           "etapa": "PARTIDO 3",
           "cuando": "Septiembre / octubre",
-          "que": "Clubes y sede por definir."
+          "que": "Clubes y sede por definir.",
+          "mes": [
+            9,
+            10
+          ]
         },
         {
           "etapa": "CIERRE OBJETIVO",
           "cuando": "Diciembre 2027",
-          "que": "Consolidación y distribución."
+          "que": "Consolidación y distribución.",
+          "mes": [
+            12,
+            12
+          ]
         }
       ],
-      "pie": "La distribución depende de la cobranza y liquidación de obligaciones. El calendario se actualizará conforme se formalicen los eventos."
+      "pie": "La distribución depende de la cobranza y liquidación de obligaciones. El calendario se actualizará conforme se formalicen los eventos.",
+      "reglaLabel": "2027, MES A MES",
+      "mesesCortos": [
+        "2026",
+        "Ene",
+        "Feb",
+        "Mar",
+        "Abr",
+        "May",
+        "Jun",
+        "Jul",
+        "Ago",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dic"
+      ]
     },
     "experiencia": {
       "kicker": "07 / EXPERIENCIA",

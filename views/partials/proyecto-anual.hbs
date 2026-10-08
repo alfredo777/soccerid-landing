@@ -147,6 +147,21 @@
           </li>
           {{/each}}
         </ul>
+        {{!-- La composición del capital como barra apilada: el tramo del partido 1
+             sólido, y los dos que faltan punteados, para que se vea que el objetivo
+             es la suma de tres y que dos están por cerrar. Los tres tramos miden lo
+             mismo a propósito: sin cifras no hay escala que respetar. --}}
+        <div class="pa-apilada" aria-hidden="true">
+          <span class="pa-apilada__l">{{data.capital.barraLabel}}</span>
+          <div class="pa-apilada__barra">
+            {{#each data.capital.items}}
+            <span class="pa-apilada__t{{#if this.pendiente}} pa-apilada__t--pend{{/if}}">
+              <span class="pa-apilada__n">{{this.label}}</span>
+              {{#if this.pendiente}}<span class="pa-apilada__v pa-apilada__v--pend">?</span>{{else}}<span class="pa-apilada__v">{{this.value}}</span>{{/if}}
+            </span>
+            {{/each}}
+          </div>
+        </div>
         <div class="pa-total">
           <span class="pa-total__l">{{data.capital.totalLabel}}</span>
           {{#if data.capital.totalPendiente}}
@@ -167,11 +182,16 @@
           </div>
           <p class="pa-box__s">{{data.ejemplo.pie}}</p>
         </div>
+        {{!-- Cada paso es una barra con su porción llena: así el 10 % se ve
+             chico, el 70 % grande y el 7 % resultado de los dos. --}}
         <ol class="pa-pasos">
-          {{#each data.ejemplo.pasos}}
+          {{#each graficos.ejemplo}}
           <li class="pa-paso">
-            <strong class="pa-paso__v">{{this.value}}</strong>
-            <span class="pa-paso__l">{{this.label}}</span>
+            <span class="pa-paso__cab">
+              <strong class="pa-paso__v">{{this.value}}</strong>
+              <span class="pa-paso__l">{{this.label}}</span>
+            </span>
+            <span class="pa-barra" aria-hidden="true"><span class="pa-barra__f pa-anima" style="--w: {{this.pct}}%"></span></span>
           </li>
           {{/each}}
         </ol>
@@ -186,6 +206,10 @@
           </div>
           <p class="pa-box__s">{{data.referencia.sub}}</p>
         </div>
+        {{!-- La referencia como ecuación —boletos × ticket = taquilla— y, al
+             lado, cuántos boletos cubren el costo del partido 1: 1.0 M entre
+             100 son 10,000, el 46 % del aforo. Es el dato que un inversionista
+             quiere ver y sale de las mismas cifras. --}}
         <div class="pa-ref">
           {{#each data.referencia.cifras}}
           <div class="pa-ref__i">
@@ -193,8 +217,28 @@
             <strong class="pa-ref__v">{{this.value}}</strong>
             <span class="pa-ref__l">{{this.label}}</span>
           </div>
+          {{#unless @last}}<span class="pa-ref__op" aria-hidden="true">{{#if @first}}×{{else}}={{/if}}</span>{{/unless}}
           {{/each}}
         </div>
+
+        {{#if graficos.equilibrio}}
+        <div class="pa-medidor">
+          <div class="pa-medidor__cab">
+            <span class="pa-medidor__l">{{data.referencia.equilibrioLabel}}</span>
+            <span class="pa-medidor__cifras">
+              <strong>{{graficos.equilibrio.boletos}}</strong> {{data.referencia.equilibrioBoletos}}
+              <em>·</em>
+              <strong>{{graficos.equilibrio.pct}}%</strong> {{data.referencia.equilibrioAforo}}
+            </span>
+          </div>
+          <span class="pa-barra pa-barra--alta" aria-hidden="true">
+            <span class="pa-barra__f pa-anima" style="--w: {{graficos.equilibrio.pct}}%"></span>
+            <span class="pa-barra__marca" style="left: {{graficos.equilibrio.pct}}%"></span>
+          </span>
+          <div class="pa-medidor__pie"><span>0</span><span>{{graficos.taquilla.boletos}} {{data.referencia.equilibrioBoletos}}</span></div>
+          <p class="pa-box__pie">{{data.referencia.equilibrioNota}}</p>
+        </div>
+        {{/if}}
         <div class="pa-nota pa-nota--warn pa-nota--compacta">
           <h3 class="pa-nota__t">{{data.referencia.avisoTitle}}</h3>
           <p class="pa-nota__b">{{data.referencia.avisoBody}}</p>
@@ -219,6 +263,20 @@
         </li>
         {{/each}}
       </ol>
+      {{!-- La regla del año: cada hito ocupa los meses en los que cae, así se
+           ve de un vistazo que marzo, el verano y el otoño tienen partido y
+           diciembre, cierre. --}}
+      <div class="pa-regla">
+        <span class="pa-regla__l">{{data.calendario.reglaLabel}}</span>
+        <div class="pa-regla__meses" aria-hidden="true">
+          {{#each data.calendario.mesesCortos}}<span class="pa-regla__m{{#if @first}} pa-regla__m--anio{{/if}}">{{this}}</span>{{/each}}
+        </div>
+        <div class="pa-regla__pista">
+          {{#each graficos.regla}}
+          <span class="pa-regla__h pa-anima" style="left: {{this.left}}%; width: {{this.width}}%" title="{{this.etapa}} · {{this.cuando}}"><span>{{this.etapa}}</span></span>
+          {{/each}}
+        </div>
+      </div>
       <p class="pa-aviso">{{data.calendario.pie}}</p>
     </div>
   </section>
@@ -242,6 +300,15 @@
   <section class="pa-sec pa-sec--alt">
     <p class="pa-rot"><span>{{data.participacion.kicker}}</span></p>
     <h2 class="pa-title">{{data.participacion.title}}</h2>
+
+    {{!-- El reparto como una sola barra partida: la proporción se ve antes de
+         leerla. --}}
+    <div class="pa-partida" aria-hidden="true">
+      {{#each graficos.reparto}}
+      <span class="pa-partida__t pa-anima" style="--w: {{this.pct}}%"><strong>{{this.pct}}%</strong><span>{{this.quien}}</span></span>
+      {{/each}}
+    </div>
+
     <div class="pa-reparto">
       {{#each data.participacion.partes}}
       <div class="pa-parte">
@@ -281,7 +348,7 @@
     <div class="pa-destino">
       {{#if donut}}
       <figure class="pa-donut">
-        <svg viewBox="0 0 160 160" role="img" aria-label="{{data.costos.title}}">
+        <svg class="pa-anima" viewBox="0 0 160 160" role="img" aria-label="{{data.costos.title}}">
           <g transform="rotate(-90 80 80)">
             <circle class="pa-donut__bg" cx="80" cy="80" r="60"></circle>
             {{#each donut.segmentos}}
@@ -316,6 +383,38 @@
     <p class="pa-rot"><span>{{data.potencial.kicker}}</span></p>
     <h2 class="pa-title">{{data.potencial.title}}</h2>
     <p class="pa-sub">{{data.potencial.sub}}</p>
+
+    {{#if graficos.potencial}}
+    {{!-- Costo contra taquilla a lleno del partido 1, en la misma escala: es
+         lo único con cifra, y es lo que sostiene el "potencial". Los otros dos
+         partidos van punteados hasta que tengan números. --}}
+    <div class="pa-grafica">
+      <div class="pa-grafica__cab">
+        <span class="pa-grafica__l">{{data.potencial.graficaLabel}}</span>
+        <strong class="pa-grafica__veces">{{graficos.potencial.veces}}</strong>
+      </div>
+      <div class="pa-grafica__filas">
+        {{#each graficos.potencial.barras}}
+        <div class="pa-grafica__fila">
+          <span class="pa-grafica__n">{{this.label}}</span>
+          <span class="pa-barra pa-barra--alta"><span class="pa-barra__f pa-anima{{#if @last}} pa-barra__f--acento{{/if}}" style="--w: {{this.pct}}%"></span></span>
+          <strong class="pa-grafica__v">{{this.valor}}</strong>
+        </div>
+        {{/each}}
+        {{#each data.potencial.columnas}}
+        {{#unless @first}}
+        <div class="pa-grafica__fila pa-grafica__fila--pend">
+          <span class="pa-grafica__n">{{this.titulo}}</span>
+          <span class="pa-barra pa-barra--alta pa-barra--pend"></span>
+          <em class="pa-pend">{{../data.pendienteLabel}}</em>
+        </div>
+        {{/unless}}
+        {{/each}}
+      </div>
+      <p class="pa-box__pie">{{data.potencial.graficaNota}}</p>
+    </div>
+    {{/if}}
+
     <div class="pa-cols">
       {{#each data.potencial.columnas}}
       <div class="pa-col">
@@ -340,15 +439,17 @@
     <p class="pa-rot"><span>{{data.flujo.kicker}}</span></p>
     <h2 class="pa-title">{{data.flujo.title}}</h2>
     <p class="pa-sub">{{data.flujo.sub}}</p>
-    <div class="pa-grid4">
+    {{!-- Es una secuencia: se dibuja como una, con una flecha entre paso y paso. --}}
+    <ol class="pa-proceso">
       {{#each data.flujo.pasos}}
-      <div class="pa-card">
+      <li class="pa-proceso__p">
         <span class="pa-card__h">{{#if this.icon}}<svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>{{/if}}<span class="pa-card__n">{{this.n}}</span></span>
         <h3 class="pa-card__t">{{this.title}}</h3>
         <p class="pa-card__b">{{this.body}}</p>
-      </div>
+        {{#unless @last}}<span class="pa-proceso__flecha" aria-hidden="true"></span>{{/unless}}
+      </li>
       {{/each}}
-    </div>
+    </ol>
     <p class="pa-aviso">{{data.flujo.pie}}</p>
   </section>
 
@@ -574,7 +675,8 @@
     /* ───────────── LA TEMPORADA EN UN EJE ─────────────
        El calendario como línea con su eje y sus fechas debajo: se entiende de
        un golpe de vista, que es para lo que sirve. */
-    .pa-ruta { padding: 0 26px; margin: -14px auto 0; max-width: 1560px; }
+    /* Mismo ancho que el panel y que las secciones: un solo borde en toda la página. */
+    .pa-ruta { padding: 0 26px; margin: -14px auto 0; max-width: 1292px; }
     .pa-ruta__caja {
       padding: 26px 28px 24px; border-radius: 20px;
       border: 1px solid rgba(255,255,255,0.12);
@@ -604,18 +706,159 @@
     .pa-eje__i:last-child .pa-eje__punto { background: linear-gradient(90deg, rgba(255,255,255,0.18), rgba(255,255,255,0)); }
     .pa-eje__c { display: block; font-size: 14.5px; font-weight: 800; margin-top: 14px; }
 
+    /* ───────────── GRÁFICAS ─────────────
+       Barras con la porción llena como variable CSS (--w), para que el servidor
+       mande el número y el estilo lo dibuje. */
+    .pa-barra {
+      position: relative; display: block; height: 10px; border-radius: 999px;
+      background: rgba(255,255,255,0.08); overflow: hidden;
+    }
+    .pa-barra--alta { height: 16px; }
+    .pa-barra__f {
+      display: block; height: 100%; width: var(--w, 0%); border-radius: inherit;
+      background: var(--tour-azul, #6B93EC);
+      transform-origin: left center;
+    }
+    .pa-barra__f--acento { background: var(--pp-accent); }
+    .pa-barra--pend { background: transparent; border: 1px dashed rgba(255,255,255,0.22); overflow: visible; }
+    .pa-barra__marca {
+      position: absolute; top: -4px; bottom: -4px; width: 2px;
+      background: #FFFFFF; transform: translateX(-1px);
+    }
+
+    /* Tu proporción: cada paso con su barra. */
+    .pa-paso { display: block; }
+    .pa-paso__cab { display: flex; align-items: baseline; gap: 14px; margin-bottom: 12px; }
+
+    /* Capital: barra apilada. */
+    .pa-apilada { margin: 4px 0 14px; }
+    .pa-apilada__l { display: block; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); margin-bottom: 10px; }
+    .pa-apilada__barra { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; }
+    .pa-apilada__t {
+      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      min-height: 44px; padding: 8px 14px; border-radius: 10px;
+      background: var(--tour-azul, #6B93EC); color: var(--tour-tinta, #1C1E23);
+    }
+    .pa-apilada__t:first-child { border-radius: 999px 10px 10px 999px; }
+    .pa-apilada__t:last-child { border-radius: 10px 999px 999px 10px; }
+    .pa-apilada__t--pend {
+      background: transparent; border: 1px dashed rgba(255,255,255,0.25);
+      color: var(--tour-rotulo, rgba(255,255,255,0.45));
+    }
+    .pa-apilada__n { font-size: 10px; font-weight: 800; letter-spacing: 1.3px; }
+    .pa-apilada__v { font-size: 14px; font-weight: 900; }
+    .pa-apilada__v--pend { font-size: 20px; opacity: .6; }
+
+    /* Referencia: la ecuación y el medidor. */
+    .pa-ref { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr); align-items: stretch; }
+    .pa-ref__op {
+      align-self: center; font-size: 30px; font-weight: 300; line-height: 1;
+      color: var(--tour-rotulo, rgba(255,255,255,0.45));
+    }
+    .pa-medidor { margin-top: 18px; padding: 18px 20px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.04); }
+    .pa-medidor__cab { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+    .pa-medidor__l { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
+    .pa-medidor__cifras { font-size: 11px; font-weight: 800; letter-spacing: 1.2px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
+    .pa-medidor__cifras strong { font-size: 20px; font-weight: 900; letter-spacing: 0; color: #FFFFFF; margin-right: 4px; }
+    .pa-medidor__cifras em { font-style: normal; margin: 0 10px; opacity: .5; }
+    .pa-medidor__pie { display: flex; justify-content: space-between; margin-top: 8px; font-size: 10.5px; font-weight: 800; letter-spacing: 1.2px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
+    .pa-medidor .pa-box__pie { margin-top: 12px; }
+
+    /* Calendario: la regla del año. */
+    .pa-regla { margin-top: 26px; }
+    .pa-regla__l { display: block; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); margin-bottom: 10px; }
+    .pa-regla__meses { display: grid; grid-template-columns: repeat(13, minmax(0, 1fr)); font-size: 10.5px; font-weight: 800; letter-spacing: .8px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); text-align: center; margin-bottom: 6px; }
+    .pa-regla__m--anio { color: rgba(255,255,255,0.3); }
+    .pa-regla__pista {
+      position: relative; height: 46px; border-radius: 10px;
+      background: repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0, rgba(255,255,255,0.05) calc(100% / 13 - 1px), rgba(255,255,255,0.12) calc(100% / 13 - 1px), rgba(255,255,255,0.12) calc(100% / 13));
+      overflow: hidden;
+    }
+    .pa-regla__h {
+      position: absolute; top: 7px; bottom: 7px; border-radius: 8px;
+      background: var(--tour-azul, #6B93EC); color: var(--tour-tinta, #1C1E23);
+      display: flex; align-items: center; padding: 0 7px; overflow: hidden;
+      transform-origin: left center;
+    }
+    .pa-regla__h span { font-size: 8.5px; font-weight: 800; letter-spacing: .6px; white-space: nowrap; }
+    .pa-regla__h:first-child { background: rgba(255,255,255,0.18); color: #FFFFFF; }
+    .pa-regla__h:last-child { background: var(--pp-accent); }
+
+    /* Participación: la barra partida. */
+    .pa-partida { display: flex; gap: 4px; margin: 0 0 22px; }
+    .pa-partida__t {
+      flex: 0 0 calc(var(--w, 50%) - 2px); min-width: 0;
+      display: flex; align-items: baseline; gap: 10px;
+      padding: 16px 18px; border-radius: 12px;
+      background: var(--tour-azul, #6B93EC); color: var(--tour-tinta, #1C1E23);
+      transform-origin: left center;
+    }
+    .pa-partida__t:first-child { border-radius: 999px 12px 12px 999px; }
+    .pa-partida__t:last-child { border-radius: 12px 999px 999px 12px; background: rgba(255,255,255,0.16); color: #FFFFFF; }
+    .pa-partida__t strong { font-size: 26px; font-weight: 900; line-height: 1; }
+    .pa-partida__t span { font-size: 10px; font-weight: 800; letter-spacing: 1.4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Potencial: barras en la misma escala. */
+    .pa-grafica { margin-bottom: 28px; padding: 24px 26px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.09); background: var(--tour-card, rgba(255,255,255,0.035)); }
+    .pa-grafica__cab { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+    .pa-grafica__l { font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
+    .pa-grafica__veces { font-size: 30px; font-weight: 900; color: var(--pp-accent); line-height: 1; }
+    .pa-grafica__filas { display: grid; gap: 12px; }
+    .pa-grafica__fila { display: grid; grid-template-columns: 190px minmax(0, 1fr) 150px; align-items: center; gap: 16px; }
+    .pa-grafica__n { font-size: 13.5px; color: #D2D5DC; }
+    .pa-grafica__v { font-size: 15px; font-weight: 800; text-align: right; font-variant-numeric: tabular-nums; }
+    .pa-grafica__fila--pend .pa-grafica__n { opacity: .6; }
+    .pa-grafica__fila--pend .pa-pend { justify-self: end; }
+    .pa-grafica .pa-box__pie { margin-top: 16px; }
+
+    /* Flujo: franja de proceso. */
+    .pa-proceso { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .pa-proceso__p {
+      position: relative; padding: 26px; border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.09); background: var(--tour-card, rgba(255,255,255,0.035));
+    }
+    .pa-proceso__flecha {
+      position: absolute; right: -14px; top: 50%; z-index: 2;
+      width: 24px; height: 24px; border-radius: 50%; transform: translateY(-50%);
+      background: var(--tour-azul, #6B93EC);
+    }
+    .pa-proceso__flecha::after {
+      content: ''; position: absolute; left: 8px; top: 7px;
+      width: 7px; height: 7px; border-top: 2px solid var(--tour-tinta, #1C1E23); border-right: 2px solid var(--tour-tinta, #1C1E23);
+      transform: rotate(45deg);
+    }
+
+    /* ───────────── MOVIMIENTO ─────────────
+       Las barras crecen al entrar en pantalla. Lo dispara un observador en la
+       vista (initContenido): sin JavaScript no se arma nada y todo se ve
+       quieto, que es mejor que invisible. Se probó con animaciones por scroll
+       (animation-timeline: view()) y las barras dentro de una caja con
+       overflow hidden se quedaban sin animar y las de fuera, invisibles hasta
+       entrar. Con reduced-motion no se mueve nada. */
+    @keyframes pa-crece { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes pa-aparece { from { opacity: 0; transform: scale(.85) rotate(-20deg); } to { opacity: 1; transform: none; } }
+    .pa-anima--armada { transform: scaleX(0); }
+    .pa-anima--on { animation: pa-crece .9s cubic-bezier(.2,.7,.2,1) both; }
+    .pa-donut svg { transform-origin: center; }
+    .pa-donut svg.pa-anima--armada { opacity: 0; transform: none; }
+    .pa-donut svg.pa-anima--on { animation: pa-aparece 1s ease-out both; }
+    @media (prefers-reduced-motion: reduce) {
+      .pa-anima--armada { transform: none; opacity: 1; }
+      .pa-anima--on { animation: none; }
+    }
+
     /* ───────────── DETALLE ───────────── */
-    .pa-sec { max-width: 1120px; margin: 0 auto; padding: 78px 32px; }
+    .pa-sec { max-width: 1292px; margin: 0 auto; padding: 78px 26px; }
     /* La sección de fondo alterno ocupa todo el ancho, así que su contenido se
        centra con el PADDING, no con `margin: auto` en los hijos: con auto, los
        hijos más estrechos que la columna se centraban ellos mismos y quedaban
        descolgados de su título. */
     .pa-sec--alt {
       background: rgba(255,255,255,0.025); max-width: none;
-      padding-left: max(32px, calc((100% - 1056px) / 2));
-      padding-right: max(32px, calc((100% - 1056px) / 2));
+      padding-left: max(26px, calc((100% - 1240px) / 2));
+      padding-right: max(26px, calc((100% - 1240px) / 2));
     }
-    .pa-sec--alt > * { max-width: 1056px; margin-left: 0; margin-right: 0; }
+    .pa-sec--alt > * { max-width: 1240px; margin-left: 0; margin-right: 0; }
     .pa-title { font-size: 38px; font-weight: 900; line-height: 1.14; margin-bottom: 14px; }
     .pa-title--sm { font-size: 27px; margin-bottom: 0; }
     .pa-sub { font-size: 17px; line-height: 1.6; color: #D2D5DC; max-width: 760px; margin-bottom: 36px; }
@@ -762,6 +1005,8 @@
     @media (max-width: 1180px) {
       .pa-box__h { grid-template-columns: minmax(0, 1fr); gap: 8px; align-items: start; }
       .pa-eje { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 0; }
+      .pa-proceso { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .pa-grafica__fila { grid-template-columns: 140px minmax(0, 1fr) 130px; }
       .pa-destino { grid-template-columns: minmax(0, 1fr); gap: 24px; justify-items: center; }
       .pa-donut { max-width: 230px; }
       .pa-leyenda { width: 100%; }
@@ -769,7 +1014,19 @@
 
     @media (max-width: 860px) {
       .pa-panel { padding: 16px 16px 24px; }
-      .pa-tiles, .pa-kv, .pa-pasos, .pa-ref { grid-template-columns: minmax(0, 1fr); }
+      .pa-tiles, .pa-kv, .pa-pasos { grid-template-columns: minmax(0, 1fr); }
+      .pa-ref { grid-template-columns: minmax(0, 1fr); }
+      .pa-ref__op { text-align: center; }
+      .pa-apilada__barra { grid-template-columns: minmax(0, 1fr); }
+      .pa-apilada__t, .pa-apilada__t:first-child, .pa-apilada__t:last-child { border-radius: 10px; }
+      .pa-partida { flex-direction: column; }
+      .pa-partida__t, .pa-partida__t:first-child, .pa-partida__t:last-child { flex-basis: auto; border-radius: 12px; }
+      .pa-grafica__fila { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+      .pa-grafica__v { text-align: left; }
+      .pa-proceso { grid-template-columns: minmax(0, 1fr); }
+      .pa-proceso__flecha { right: auto; left: 50%; top: auto; bottom: -14px; transform: translateX(-50%) rotate(90deg); }
+      .pa-regla__meses { font-size: 8px; letter-spacing: 0; }
+      .pa-regla__h span { display: none; }
       .pa-ruta { padding: 0 16px; margin-top: 8px; }
       .pa-ruta__caja { padding: 20px; }
       .pa-eje { grid-template-columns: minmax(0, 1fr); gap: 18px; }

@@ -869,6 +869,62 @@ function donutCostos(data) {
   return { segmentos, total };
 }
 
+/**
+ * Las gráficas del perfil anual. Se calculan aquí, a partir de los números del
+ * contenido, para que una cifra que cambie mueva su gráfica sola. Nada se
+ * inventa: la única cifra derivada es la cobertura del costo (costo ÷ ticket =
+ * boletos), que ya se publicaba en el perfil del partido 1.
+ */
+function graficosTour(data) {
+  const num = v => Number(String(v == null ? '' : v).replace(/[^0-9.]/g, '')) || 0;
+  const usd = n => 'USD ' + Math.round(n).toLocaleString('en-US');
+  const g = {};
+
+  // 70 / 30: la barra partida.
+  g.reparto = (((data.participacion || {}).partes) || []).map(p => ({ pct: num(p.pct), quien: p.quien }));
+
+  // 10 % → 70 % → 7 %: tres barras encadenadas.
+  g.ejemplo = (((data.ejemplo || {}).pasos) || []).map(p => ({ pct: num(p.value), value: p.value, label: p.label }));
+
+  // Referencia de marzo: la ecuación y la cobertura del costo.
+  const r = ((data.referencia || {}).numeros) || {};
+  const col1 = (((data.potencial || {}).columnas) || [])[0] || {};
+  const costo1 = num(col1.numeros && col1.numeros.costo);
+  if (r.boletos && r.ticket) {
+    g.taquilla = { boletos: r.boletos.toLocaleString('en-US'), ticket: usd(r.ticket), total: usd(r.boletos * r.ticket) };
+    if (costo1) {
+      const boletosEq = Math.ceil(costo1 / r.ticket);
+      g.equilibrio = {
+        boletos: boletosEq.toLocaleString('en-US'),
+        pct: Math.round(boletosEq / r.boletos * 1000) / 10,
+        pctEntero: Math.round(boletosEq / r.boletos * 100)
+      };
+    }
+  }
+
+  // Potencial: costo vs. taquilla a lleno del partido 1, en la misma escala.
+  if (costo1 && r.taquilla) {
+    const tope = Math.max(costo1, r.taquilla);
+    g.potencial = {
+      barras: [
+        { label: (data.potencial || {}).barraCosto || 'Costo', valor: usd(costo1), pct: Math.round(costo1 / tope * 100) },
+        { label: (data.potencial || {}).barraTaquilla || 'Taquilla', valor: usd(r.taquilla), pct: Math.round(r.taquilla / tope * 100) }
+      ],
+      veces: (r.taquilla / costo1).toFixed(2) + 'x'
+    };
+  }
+
+  // Calendario: dónde cae cada hito en la regla del año (13 casillas: 2026 + 12 meses).
+  const hitos = ((data.calendario || {}).hitos) || [];
+  g.regla = hitos.map(h => {
+    const m = Array.isArray(h.mes) ? h.mes : [0, 0];
+    const ini = Math.max(0, Math.min(12, m[0])), fin = Math.max(ini, Math.min(12, m[1]));
+    return { etapa: h.etapa, cuando: h.cuando, left: (ini / 13 * 100).toFixed(2), width: ((fin - ini + 1) / 13 * 100).toFixed(2) };
+  });
+
+  return g;
+}
+
 /** Qué partial va detrás del candado: el perfil anual, un aviso o la propuesta. */
 function partialDe(variante) {
   if (variante.tipo === 'tour') return 'partials/proyecto-anual';
@@ -942,6 +998,7 @@ function renderPropuesta(variante) {
         ventana: variante.ventana || null,
         partidosNav: navPartidos(data, lang),
         donut: donutCostos(data),
+        graficos: graficosTour(data),
         urlPartido1: `/${lang}/${propuestas.porDefecto().slug}`,
         year: new Date().getFullYear(),
         version: APP_VERSION
@@ -974,6 +1031,7 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
       logo: variante.logo || null,
       partidosNav: navPartidos(data, lang),
       donut: donutCostos(data),
+      graficos: graficosTour(data),
       urlPartido1: `/${lang}/${propuestas.porDefecto().slug}`,
       lang: lang,
       isEs: lang === 'es',
