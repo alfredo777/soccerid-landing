@@ -72,7 +72,7 @@
         <div class="pa-foto__body">
           <span class="pa-badge">{{data.hero.badge}}</span>
           {{#if logo}}
-          <img class="pa-logo" src="{{logo}}" alt="{{data.hero.title}}" width="190" height="206">
+          <img class="pa-logo" src="{{logo}}" alt="{{data.hero.title}}" width="190" height="200">
           <h1 class="pa-foto__t pa-foto__t--oculto">{{data.hero.title}}</h1>
           {{else}}
           <h1 class="pa-foto__t">{{data.hero.title}}</h1>
@@ -650,8 +650,10 @@
     .pa-logo {
       display: block; width: clamp(120px, 13vw, 190px); height: auto;
       margin: 16px auto 18px;
-      /* El aro y el letrero son negros y sobre el gris se apagarían. */
-      filter: drop-shadow(0 0 26px rgba(255,255,255,0.3)) drop-shadow(0 10px 26px rgba(0,0,0,0.5));
+      /* El logo va en blanco: lo que tiene que despegarlo de la foto es una
+         sombra oscura. El resplandor blanco de antes era para el aro NEGRO de
+         la versión a color; sobre el monocromo solo lo lavaría. */
+      filter: drop-shadow(0 8px 26px rgba(0,0,0,0.6));
     }
     .pa-cierre__logo {
       display: block; width: clamp(104px, 11vw, 150px); height: auto;
