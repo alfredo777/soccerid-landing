@@ -833,6 +833,42 @@ function navPartidos(data, lang) {
   }).filter(Boolean);
 }
 
+/**
+ * La dona del destino del capital. Se calcula aquí y no en el contenido para
+ * que siga a las cifras: cambiar un importe del desglose recalcula el gráfico
+ * y la leyenda, sin tocar porcentajes a mano.
+ *
+ * Los colores salen de la familia del logo (el azul aclarado y sus tonos) más
+ * dos grises; todos pasan de 3.0 de contraste sobre la tarjeta, que es lo que
+ * pide un gráfico.
+ */
+// Azul y gris alternados: tres azules seguidos no se distinguían entre sí en
+// la dona. Así cada segmento contrasta con el de al lado.
+const DONUT_COLORES = ['#6B93EC', '#C9CCD4', '#8AADF4', '#8A93A6', '#A8C2F8', '#6E7689'];
+function donutCostos(data) {
+  const lineas = ((data && data.costos) || {}).lineas || [];
+  const valores = lineas.map(l => Number(String(l.monto).replace(/[^0-9.]/g, '')) || 0);
+  const total = valores.reduce((a, b) => a + b, 0);
+  if (!total) return null;
+  const R = 60, C = 2 * Math.PI * R;
+  let acumulado = 0;
+  const segmentos = lineas.map((l, i) => {
+    const frac = valores[i] / total;
+    const largo = frac * C;
+    const seg = {
+      concepto: l.concepto,
+      monto: l.monto,
+      color: DONUT_COLORES[i % DONUT_COLORES.length],
+      pct: (frac * 100).toFixed(frac * 100 >= 10 ? 0 : 1),
+      dash: largo.toFixed(2) + ' ' + (C - largo).toFixed(2),
+      offset: (-acumulado).toFixed(2)
+    };
+    acumulado += largo;
+    return seg;
+  });
+  return { segmentos, total };
+}
+
 /** Qué partial va detrás del candado: el perfil anual, un aviso o la propuesta. */
 function partialDe(variante) {
   if (variante.tipo === 'tour') return 'partials/proyecto-anual';
@@ -905,6 +941,7 @@ function renderPropuesta(variante) {
         logo: variante.logo || null,
         ventana: variante.ventana || null,
         partidosNav: navPartidos(data, lang),
+        donut: donutCostos(data),
         urlPartido1: `/${lang}/${propuestas.porDefecto().slug}`,
         year: new Date().getFullYear(),
         version: APP_VERSION
@@ -936,6 +973,7 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
       heroImage: variante.hero,
       logo: variante.logo || null,
       partidosNav: navPartidos(data, lang),
+      donut: donutCostos(data),
       urlPartido1: `/${lang}/${propuestas.porDefecto().slug}`,
       lang: lang,
       isEs: lang === 'es',

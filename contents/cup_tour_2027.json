@@ -20,7 +20,7 @@
       "cta": "CONOCER LA INVERSIÓN"
     },
     "resumen": {
-      "kicker": "01 / RESUMEN",
+      "kicker": "LA TEMPORADA",
       "title": "Una inversión en la temporada completa.",
       "sub": "Tres encuentros internacionales en Estados Unidos, bajo una estrategia anual de operación y comercialización.",
       "cifras": [
@@ -58,7 +58,7 @@
       "disclaimer": "Participación exclusivamente a riesgo. Rendimiento variable según el resultado conjunto del proyecto."
     },
     "partidos": {
-      "kicker": "02 / LOS PARTIDOS",
+      "kicker": "LOS PARTIDOS",
       "title": "La temporada 2027.",
       "sub": "Cada evento tiene su propio perfil deportivo y operativo dentro de un proyecto financiero conjunto.",
       "ctaAbierto": "VER PERFIL DEL PARTIDO",
@@ -94,7 +94,7 @@
       ]
     },
     "partido1": {
-      "kicker": "03 / PARTIDO 1",
+      "kicker": "03 / EL PRIMER PARTIDO",
       "title": "Cruz Azul vs. Pumas.",
       "sub": "Primer encuentro del proyecto SOCCER iD TOUR '27.",
       "datos": [
@@ -123,7 +123,7 @@
       "pie": "Producto, sede, presupuesto y potencial del primer evento."
     },
     "oportunidad": {
-      "kicker": "04 / OPORTUNIDAD",
+      "kicker": "01 / POR QUÉ UNA TEMPORADA",
       "title": "Participa en una temporada completa.",
       "items": [
         {
@@ -153,7 +153,7 @@
       ]
     },
     "capital": {
-      "kicker": "05 / CAPITAL Y DESTINO",
+      "kicker": "EL CAPITAL",
       "title": "Capital para iniciar la temporada.",
       "sub": "Presupuesto completo del primer partido + anticipos de los siguientes dos.",
       "items": [
@@ -181,7 +181,7 @@
       "disclaimer": "Los anticipos se descuentan del costo total de cada evento; no se contabilizan dos veces."
     },
     "costos": {
-      "kicker": "05 / DETALLE DE COSTOS",
+      "kicker": "04 / A DÓNDE VA EL CAPITAL",
       "title": "Presupuesto del primer partido.",
       "sub": "Cruz Azul vs. Pumas · Cifras del perfil individual.",
       "moneda": "USD",
@@ -216,7 +216,7 @@
       "totalNote": "Financiación completa del partido 1"
     },
     "potencial": {
-      "kicker": "06 / POTENCIAL ECONÓMICO",
+      "kicker": "05 / DE DÓNDE SALE EL RETORNO",
       "title": "El potencial se construye partido a partido.",
       "sub": "Ingresos y costos completos de los tres eventos, integrados en una sola proyección anual.",
       "columnas": [
@@ -284,7 +284,7 @@
       "cierreBody": "Ingresos consolidados menos costos completos, gastos comunes y cargos aplicables, sin duplicidades."
     },
     "referencia": {
-      "kicker": "06 / REFERENCIA DISPONIBLE",
+      "kicker": "REFERENCIA DE MARZO",
       "title": "Marzo: capacidad y taquilla proyectada.",
       "sub": "Una referencia del primer partido; no una extrapolación de la temporada.",
       "cifras": [
@@ -308,7 +308,7 @@
       "avisoBody": "El resultado debe considerar costos, comisiones, impuestos y demás cargos aplicables. Las proyecciones no son ingresos garantizados."
     },
     "flujo": {
-      "kicker": "07 / FLUJO DE RECURSOS",
+      "kicker": "06 / CÓMO TRABAJA EL CAPITAL",
       "title": "El capital trabaja durante la temporada.",
       "sub": "No se prevén distribuciones parciales por partido.",
       "pasos": [
@@ -340,7 +340,7 @@
       "pie": "Cierre objetivo: diciembre de 2027, sujeto a los plazos reales de cobro y liquidación."
     },
     "participacion": {
-      "kicker": "08 / PARTICIPACIÓN",
+      "kicker": "02 / TU PARTICIPACIÓN",
       "title": "70% para inversionistas. 30% para SOCCER iD.",
       "partes": [
         {
@@ -357,7 +357,7 @@
       "pie": "El reparto se aplica a las utilidades distribuibles de la temporada completa."
     },
     "ejemplo": {
-      "kicker": "08 / EJEMPLO",
+      "kicker": "TU PROPORCIÓN",
       "title": "Tu participación, en proporción a tu aportación.",
       "sub": "Ejemplo de participación; no es una tasa de rendimiento.",
       "pasos": [
@@ -377,7 +377,7 @@
       "pie": "Si aportas el 10% del capital, te corresponde el 7% de las utilidades distribuibles de la temporada."
     },
     "calendario": {
-      "kicker": "09 / CALENDARIO",
+      "kicker": "LA TEMPORADA, PASO A PASO",
       "title": "Una temporada de principio a fin.",
       "hitos": [
         {
@@ -409,7 +409,7 @@
       "pie": "La distribución depende de la cobranza y liquidación de obligaciones. El calendario se actualizará conforme se formalicen los eventos."
     },
     "experiencia": {
-      "kicker": "10 / EXPERIENCIA",
+      "kicker": "07 / EXPERIENCIA",
       "title": "Tres ediciones como antecedente.",
       "sub": "Clubes, aficionados, sedes y marcas conectados a través del futbol.",
       "ediciones": [
@@ -434,12 +434,12 @@
       "ctaUrl": "/es/socceridcup"
     },
     "medios": {
-      "kicker": "10 / RESPALDO EN MEDIOS",
+      "kicker": "08 / RESPALDO EN MEDIOS",
       "title": "La experiencia también se puede ver.",
       "sub": "Cobertura de las ediciones anteriores, en medios propios de cada plaza."
     },
     "condiciones": {
-      "kicker": "11 / CONDICIONES",
+      "kicker": "09 / CONDICIONES",
       "title": "Información y seguimiento durante el proyecto.",
       "sub": "La participación se formaliza mediante contrato.",
       "items": [
@@ -467,7 +467,7 @@
       "aviso": "No se ofrece rendimiento fijo ni recuperación íntegra garantizada. La inversión puede presentar pérdida parcial o total. El contrato establecerá reglas de distribución, pérdidas y cambios de calendario."
     },
     "contacto": {
-      "kicker": "12 / CONTACTO",
+      "kicker": "CONTACTO",
       "title": "Sé parte de SOCCER iD TOUR '27.",
       "body": "Conoce la estructura de participación y los detalles de la temporada. Nuestro equipo te acompaña a revisar el proyecto y resolver tus preguntas.",
       "cta": "QUIERO PARTICIPAR EN EL PROYECTO 2027",

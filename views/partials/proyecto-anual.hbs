@@ -6,11 +6,19 @@
          PROYECTO 2027        esta página              → detrás del candado
          PERFIL DEL PARTIDO   Cruz Azul vs. Pumas…     → /socceridcup2027/partido-N
 
-     Arriba va un panel: la foto del primer partido al centro con el nombre
-     encima, y alrededor lo que se lee de un vistazo —el resumen, los tres
-     partidos y el calendario—. Lo que necesita lectura pausada queda abajo,
-     en secciones normales. La idea es que el inversionista entienda el
-     proyecto sin hacer scroll y baje solo si quiere el detalle.
+     ORDEN: el de la presentación es el de un documento que se lee entero. Un
+     inversionista no lee así: quiere saber qué compra y qué le toca antes que
+     en qué se gasta. Arriba va un panel con lo que se entiende de un vistazo,
+     debajo la temporada en un eje, y luego las secciones en el orden en que se
+     hacen las preguntas: por qué una temporada, qué me toca, cuál es el primer
+     partido, a dónde va el capital, de dónde sale el retorno, cómo trabaja,
+     quién lo hace, qué respaldo tiene y bajo qué condiciones. NO SE QUITÓ NADA
+     de la presentación: está todo, en otro orden.
+
+     LECTURA RÁPIDA: cada bloque abre con su rótulo y un filete, las cifras van
+     en pastillas, el destino del capital en una dona con su leyenda y el
+     calendario en un eje horizontal. Son los recursos de las referencias que
+     dio el organizador, con la tipografía y los colores de la casa.
 
      Ocupa el mismo lugar que `propuesta-contenido`, así que hereda el candado,
      la barra de idioma y las variables de color de la vista.
@@ -19,9 +27,9 @@
      pintan como POR DEFINIR: ninguna se inventó. Cerrar una es escribir su
      valor en `contents/cup_tour_2027.json` y quitarle la marca. --}}
 
-  {{!-- Iconografía. Un solo sprite al principio y cada dato dice cuál le toca
-       con su campo `icon`; así no hay SVG repetido por la vista. Trazo, no
-       relleno, para que hereden el color. --}}
+  {{!-- Iconografía. Un solo sprite y cada dato dice cuál le toca con su campo
+       `icon`; así no hay SVG repetido por la vista. Trazo, no relleno, para
+       que hereden el color. --}}
   <svg class="pa-sprite" aria-hidden="true" focusable="false"><defs>
     <g id="i-balon"><circle cx="12" cy="12" r="9"/><path d="M12 7.5l3.5 2.5-1.3 4.1H9.8L8.5 10z"/><path d="M12 3v4.5M3.6 9.6l4.9.4M20.4 9.6l-4.9.4M7.2 20.2l2.6-5.6M16.8 20.2l-2.6-5.6"/></g>
     <g id="i-reparto"><circle cx="12" cy="12" r="9"/><path d="M12 12V3a9 9 0 017.8 4.5z"/><path d="M12 12l7.8-4.5"/></g>
@@ -34,7 +42,7 @@
     <g id="i-etiqueta"><path d="M11.2 3.5H20v8.8l-8.4 8.4a1.8 1.8 0 01-2.6 0l-6.2-6.2a1.8 1.8 0 010-2.6z"/><circle cx="16.2" cy="7.8" r="1.4"/></g>
     <g id="i-caja"><path d="M3.5 7.5l8.5-4 8.5 4v9l-8.5 4-8.5-4z"/><path d="M3.5 7.5l8.5 4 8.5-4M12 11.5v9"/></g>
     <g id="i-apreton"><path d="M8 12.5l3 3 2-2 3 3"/><path d="M3 9.5l3.5-3h4L13 8.5l3-2h5v8l-3 1.5"/><path d="M3 9.5v7l3 1.5"/></g>
-    <g id="i-engrane"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M4.5 7.6l2.3 1.3M17.2 15.1l2.3 1.3M4.5 16.4l2.3-1.3M17.2 8.9l2.3-1.3"/></g>
+    <g id="i-engrane"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.6v2.4M12 19v2.4M5.4 5.4l1.7 1.7M16.9 16.9l1.7 1.7M2.6 12h2.4M19 12h2.4M5.4 18.6l1.7-1.7M16.9 7.1l1.7-1.7"/></g>
     <g id="i-capas"><path d="M12 3l9 4.8-9 4.8-9-4.8z"/><path d="M3 12.4l9 4.8 9-4.8M3 16.8l9 4.8 9-4.8"/></g>
     <g id="i-grafica"><path d="M3.5 20.5h17"/><path d="M6.5 17V11M11 17V5.5M15.5 17v-8M20 17v-4"/></g>
     <g id="i-cartera"><path d="M3.5 8.5A2 2 0 015.5 6.5H18a2 2 0 012 2v9a2 2 0 01-2 2H5.5a2 2 0 01-2-2z"/><path d="M3.5 9.5h13a1.8 1.8 0 011.8 1.8v2.4a1.8 1.8 0 01-1.8 1.8h-13"/><circle cx="15.5" cy="12.5" r="1"/></g>
@@ -50,19 +58,18 @@
     <a href="/en/{{slug}}" class="{{#if isEn}}active{{/if}}">EN</a>
   </div>
 
-  {{!-- ─────────── PANEL ─────────── --}}
+  {{!-- ═══════════ PANEL: lo que se entiende sin hacer scroll ═══════════ --}}
   <div class="pa-panel">
     <div class="pa-panel__fondo" aria-hidden="true"></div>
 
     <div class="pa-panel__rejilla">
 
-      {{!-- Columna izquierda: el resumen en cifras --}}
+      {{!-- Izquierda: la temporada en cifras y lo que toca a cada quien --}}
       <aside class="pa-col-l">
         <section class="pa-box">
-          <header class="pa-box__h">
-            <h2 class="pa-box__t">{{data.resumen.title}}</h2>
-            <p class="pa-box__s">{{data.resumen.sub}}</p>
-          </header>
+          <p class="pa-rot"><span>{{data.resumen.kicker}}</span></p>
+          <h2 class="pa-box__t">{{data.resumen.title}}</h2>
+          <p class="pa-box__s">{{data.resumen.sub}}</p>
 
           <div class="pa-tiles">
             {{#each data.resumen.cifras}}
@@ -74,27 +81,11 @@
             </div>
             {{/each}}
           </div>
-        </section>
-
-        <section class="pa-box">
-          <h3 class="pa-box__t pa-box__t--sm">{{data.capital.title}}</h3>
-          <ul class="pa-kv">
-            {{#each data.resumen.pie}}
-            <li class="pa-kv__i">
-              <span>{{this.label}}</span>
-              {{#if this.pendiente}}<em class="pa-pend">{{../data.pendienteLabel}}</em>{{else}}<strong>{{this.value}}</strong>{{/if}}
-            </li>
-            {{/each}}
-          </ul>
           <p class="pa-box__pie">{{data.resumen.disclaimer}}</p>
-          <a href="#pa-capital" class="pa-link">{{data.capital.kicker}} →</a>
         </section>
 
-        {{!-- El ejemplo de participación cierra la columna: es corto, es de lo
-             que más se busca de un vistazo y deja la izquierda a la altura de
-             las otras dos. --}}
         <section class="pa-box">
-          <span class="pa-eyebrow">{{data.ejemplo.kicker}}</span>
+          <p class="pa-rot"><span>{{data.ejemplo.kicker}}</span></p>
           <h3 class="pa-box__t pa-box__t--sm">{{data.ejemplo.title}}</h3>
           <ol class="pa-pasos">
             {{#each data.ejemplo.pasos}}
@@ -108,14 +99,14 @@
         </section>
       </aside>
 
-      {{!-- Centro: la foto del primer partido con el nombre del proyecto --}}
+      {{!-- Centro: la marca sobre la foto y los tres partidos de la temporada --}}
       <main class="pa-col-c">
         <section class="pa-foto">
           <div class="pa-foto__veil" aria-hidden="true"></div>
           <div class="pa-foto__body">
             <span class="pa-badge">{{data.hero.badge}}</span>
             {{#if logo}}
-            <img class="pa-logo" src="{{logo}}" alt="{{data.hero.title}}" width="300" height="330">
+            <img class="pa-logo" src="{{logo}}" alt="{{data.hero.title}}" width="190" height="209">
             <h1 class="pa-foto__t pa-foto__t--oculto">{{data.hero.title}}</h1>
             {{else}}
             <h1 class="pa-foto__t">{{data.hero.title}}</h1>
@@ -125,16 +116,13 @@
           </div>
         </section>
 
-        {{!-- Los tres partidos, juntos y del mismo tamaño: la vista es de una
-             ronda de tres, no del primero. El que está cerrado enseña su sede
-             y lleva a su perfil; de los otros dos todavía no hay nada que
-             contar, así que se enseñan como incógnitas. --}}
+        {{!-- Los tres del mismo tamaño: la vista es de una ronda de tres, no
+             del primero. El cerrado enseña su sede y lleva a su perfil; de los
+             otros dos todavía no hay nada que contar. --}}
         <section class="pa-box">
-          <header class="pa-box__h">
-            <span class="pa-eyebrow">{{data.partidos.kicker}}</span>
-            <h2 class="pa-box__t">{{data.partidos.title}}</h2>
-            <p class="pa-box__s">{{data.partidos.sub}}</p>
-          </header>
+          <p class="pa-rot"><span>{{data.partidos.kicker}}</span></p>
+          <h2 class="pa-box__t">{{data.partidos.title}}</h2>
+          <p class="pa-box__s">{{data.partidos.sub}}</p>
 
           <div class="pa-temporada">
             {{#each partidosNav}}
@@ -153,10 +141,35 @@
         </section>
       </main>
 
-      {{!-- Columna derecha: los tres partidos y el calendario --}}
+      {{!-- Derecha: el capital que se pide y la referencia de taquilla --}}
       <aside class="pa-col-r">
         <section class="pa-box">
-          <span class="pa-eyebrow">{{data.referencia.kicker}}</span>
+          <p class="pa-rot"><span>{{data.capital.kicker}}</span></p>
+          <h3 class="pa-box__t pa-box__t--sm">{{data.capital.title}}</h3>
+          <p class="pa-box__s">{{data.capital.sub}}</p>
+
+          <ul class="pa-kv">
+            {{#each data.capital.items}}
+            <li class="pa-kv__i">
+              <span>{{this.label}}</span>
+              {{#if this.pendiente}}<em class="pa-pend">{{../data.pendienteLabel}}</em>{{else}}<strong>{{this.value}}</strong>{{/if}}
+            </li>
+            {{/each}}
+          </ul>
+
+          <div class="pa-total">
+            <span class="pa-total__l">{{data.capital.totalLabel}}</span>
+            {{#if data.capital.totalPendiente}}
+            <strong class="pa-total__v"><em class="pa-pend">{{data.pendienteLabel}}</em></strong>
+            {{else}}
+            <strong class="pa-total__v">{{data.capital.totalValue}}</strong>
+            {{/if}}
+          </div>
+          <p class="pa-box__pie">{{data.capital.disclaimer}}</p>
+        </section>
+
+        <section class="pa-box">
+          <p class="pa-rot"><span>{{data.referencia.kicker}}</span></p>
           <h3 class="pa-box__t pa-box__t--sm">{{data.referencia.title}}</h3>
           <p class="pa-box__s">{{data.referencia.sub}}</p>
           <div class="pa-ref">
@@ -173,45 +186,33 @@
             <p class="pa-nota__b">{{data.referencia.avisoBody}}</p>
           </div>
         </section>
-
-        <section class="pa-box">
-          <span class="pa-eyebrow">{{data.calendario.kicker}}</span>
-          <h3 class="pa-box__t pa-box__t--sm">{{data.calendario.title}}</h3>
-          <ol class="pa-tl">
-            {{#each data.calendario.hitos}}
-            <li class="pa-tl__i">
-              <span class="pa-tl__e">{{this.etapa}}</span>
-              <strong class="pa-tl__c">{{this.cuando}}</strong>
-              <span class="pa-tl__q">{{this.que}}</span>
-            </li>
-            {{/each}}
-          </ol>
-        </section>
       </aside>
     </div>
   </div>
 
-  {{!-- ─────────── EL DETALLE, HACIA ABAJO ─────────── --}}
+  {{!-- ═══════════ LA TEMPORADA EN UN EJE ═══════════ --}}
+  <section class="pa-ruta">
+    <div class="pa-ruta__caja">
+      <p class="pa-rot"><span>{{data.calendario.kicker}}</span></p>
+      <h2 class="pa-title pa-title--sm">{{data.calendario.title}}</h2>
 
-  <section class="pa-sec">
-    <p class="pa-kicker">{{data.partido1.kicker}}</p>
-    <h2 class="pa-title">{{data.partido1.title}}</h2>
-    <p class="pa-sub">{{data.partido1.sub}}</p>
-    <div class="pa-cifras">
-      {{#each data.partido1.datos}}
-      <div class="pa-cifra">
-        {{#if this.icon}}<svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>{{/if}}
-        <span class="pa-cifra__l">{{this.label}}</span>
-        <strong class="pa-cifra__v pa-cifra__v--md">{{this.value}}</strong>
-      </div>
-      {{/each}}
+      <ol class="pa-eje">
+        {{#each data.calendario.hitos}}
+        <li class="pa-eje__i">
+          <span class="pa-eje__e">{{this.etapa}}</span>
+          <span class="pa-eje__q">{{this.que}}</span>
+          <span class="pa-eje__punto" aria-hidden="true"></span>
+          <strong class="pa-eje__c">{{this.cuando}}</strong>
+        </li>
+        {{/each}}
+      </ol>
+      <p class="pa-aviso">{{data.calendario.pie}}</p>
     </div>
-    <p class="pa-aviso">{{data.partido1.pie}}</p>
-    {{#if urlPartido1}}<p style="margin-top:18px;"><a href="{{urlPartido1}}" class="pa-btn">{{data.partido1.cta}}</a></p>{{/if}}
   </section>
 
-  <section class="pa-sec pa-sec--alt">
-    <p class="pa-kicker">{{data.oportunidad.kicker}}</p>
+  {{!-- ═══════════ POR QUÉ UNA TEMPORADA ═══════════ --}}
+  <section class="pa-sec">
+    <p class="pa-rot"><span>{{data.oportunidad.kicker}}</span></p>
     <h2 class="pa-title">{{data.oportunidad.title}}</h2>
     <div class="pa-grid4">
       {{#each data.oportunidad.items}}
@@ -224,54 +225,82 @@
     </div>
   </section>
 
-  <section class="pa-sec" id="pa-capital">
-    <p class="pa-kicker">{{data.capital.kicker}}</p>
-    <h2 class="pa-title">{{data.capital.title}}</h2>
-    <p class="pa-sub">{{data.capital.sub}}</p>
-
-    <div class="pa-cifras">
-      {{#each data.capital.items}}
-      <div class="pa-cifra">
-        <span class="pa-cifra__l">{{this.label}}</span>
-        {{#if this.pendiente}}
-        <strong class="pa-cifra__v"><em class="pa-pend">{{../data.pendienteLabel}}</em></strong>
-        {{else}}
-        <strong class="pa-cifra__v">{{this.value}}</strong>
-        {{/if}}
-        <span class="pa-cifra__n">{{this.note}}</span>
+  {{!-- ═══════════ TU PARTICIPACIÓN ═══════════ --}}
+  <section class="pa-sec pa-sec--alt">
+    <p class="pa-rot"><span>{{data.participacion.kicker}}</span></p>
+    <h2 class="pa-title">{{data.participacion.title}}</h2>
+    <div class="pa-reparto">
+      {{#each data.participacion.partes}}
+      <div class="pa-parte">
+        <strong class="pa-parte__pct">{{this.pct}}</strong>
+        <span class="pa-parte__q">{{this.quien}}</span>
+        <p class="pa-parte__b">{{this.body}}</p>
       </div>
       {{/each}}
     </div>
-
-    <div class="pa-total">
-      <span class="pa-total__l">{{data.capital.totalLabel}}</span>
-      {{#if data.capital.totalPendiente}}
-      <strong class="pa-total__v"><em class="pa-pend">{{data.pendienteLabel}}</em></strong>
-      {{else}}
-      <strong class="pa-total__v">{{data.capital.totalValue}}</strong>
-      {{/if}}
-    </div>
-    <p class="pa-aviso">{{data.capital.disclaimer}}</p>
+    <p class="pa-aviso">{{data.participacion.pie}}</p>
   </section>
 
+  {{!-- ═══════════ EL PRIMER PARTIDO ═══════════ --}}
+  <section class="pa-sec">
+    <p class="pa-rot"><span>{{data.partido1.kicker}}</span></p>
+    <h2 class="pa-title">{{data.partido1.title}}</h2>
+    <p class="pa-sub">{{data.partido1.sub}}</p>
+    <div class="pa-cifras">
+      {{#each data.partido1.datos}}
+      <div class="pa-cifra">
+        {{#if this.icon}}<svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>{{/if}}
+        <span class="pa-cifra__l">{{this.label}}</span>
+        <strong class="pa-cifra__v pa-cifra__v--md">{{this.value}}</strong>
+      </div>
+      {{/each}}
+    </div>
+    <p class="pa-aviso">{{data.partido1.pie}}</p>
+    {{#if urlPartido1}}<p class="pa-cta"><a href="{{urlPartido1}}" class="pa-btn">{{data.partido1.cta}}</a></p>{{/if}}
+  </section>
+
+  {{!-- ═══════════ A DÓNDE VA EL CAPITAL ═══════════ --}}
   <section class="pa-sec pa-sec--alt">
-    <p class="pa-kicker">{{data.costos.kicker}}</p>
+    <p class="pa-rot"><span>{{data.costos.kicker}}</span></p>
     <h2 class="pa-title">{{data.costos.title}}</h2>
     <p class="pa-sub">{{data.costos.sub}}</p>
-    <ul class="pa-lineas">
-      {{#each data.costos.lineas}}
-      <li class="pa-linea"><span>{{this.concepto}}</span><strong>{{this.monto}}</strong></li>
-      {{/each}}
-    </ul>
-    <div class="pa-total">
-      <span class="pa-total__l">{{data.costos.totalLabel}}</span>
-      <strong class="pa-total__v">{{data.costos.totalValue}}</strong>
-      <span class="pa-cifra__n">{{data.costos.totalNote}}</span>
+
+    <div class="pa-destino">
+      {{#if donut}}
+      <figure class="pa-donut">
+        <svg viewBox="0 0 160 160" role="img" aria-label="{{data.costos.title}}">
+          <g transform="rotate(-90 80 80)">
+            <circle class="pa-donut__bg" cx="80" cy="80" r="60"></circle>
+            {{#each donut.segmentos}}
+            <circle class="pa-donut__s" cx="80" cy="80" r="60" stroke="{{this.color}}"
+                    stroke-dasharray="{{this.dash}}" stroke-dashoffset="{{this.offset}}"></circle>
+            {{/each}}
+          </g>
+        </svg>
+        <figcaption>
+          <strong>{{data.costos.totalValue}}</strong>
+          <span>{{data.costos.totalLabel}}</span>
+        </figcaption>
+      </figure>
+
+      <ul class="pa-leyenda">
+        {{#each donut.segmentos}}
+        <li class="pa-leyenda__i">
+          <span class="pa-leyenda__p" style="background: {{this.color}}"></span>
+          <span class="pa-leyenda__c">{{this.concepto}}</span>
+          <strong class="pa-leyenda__m">{{this.monto}}</strong>
+          <span class="pa-leyenda__pct">{{this.pct}}%</span>
+        </li>
+        {{/each}}
+      </ul>
+      {{/if}}
     </div>
+    <p class="pa-aviso">{{data.costos.totalNote}}</p>
   </section>
 
+  {{!-- ═══════════ DE DÓNDE SALE EL RETORNO ═══════════ --}}
   <section class="pa-sec">
-    <p class="pa-kicker">{{data.potencial.kicker}}</p>
+    <p class="pa-rot"><span>{{data.potencial.kicker}}</span></p>
     <h2 class="pa-title">{{data.potencial.title}}</h2>
     <p class="pa-sub">{{data.potencial.sub}}</p>
     <div class="pa-cols">
@@ -293,8 +322,9 @@
     </div>
   </section>
 
+  {{!-- ═══════════ CÓMO TRABAJA EL CAPITAL ═══════════ --}}
   <section class="pa-sec pa-sec--alt">
-    <p class="pa-kicker">{{data.flujo.kicker}}</p>
+    <p class="pa-rot"><span>{{data.flujo.kicker}}</span></p>
     <h2 class="pa-title">{{data.flujo.title}}</h2>
     <p class="pa-sub">{{data.flujo.sub}}</p>
     <div class="pa-grid4">
@@ -309,23 +339,9 @@
     <p class="pa-aviso">{{data.flujo.pie}}</p>
   </section>
 
+  {{!-- ═══════════ EXPERIENCIA ═══════════ --}}
   <section class="pa-sec">
-    <p class="pa-kicker">{{data.participacion.kicker}}</p>
-    <h2 class="pa-title">{{data.participacion.title}}</h2>
-    <div class="pa-reparto">
-      {{#each data.participacion.partes}}
-      <div class="pa-parte">
-        <strong class="pa-parte__pct">{{this.pct}}</strong>
-        <span class="pa-parte__q">{{this.quien}}</span>
-        <p class="pa-parte__b">{{this.body}}</p>
-      </div>
-      {{/each}}
-    </div>
-    <p class="pa-aviso">{{data.participacion.pie}}</p>
-  </section>
-
-  <section class="pa-sec">
-    <p class="pa-kicker">{{data.experiencia.kicker}}</p>
+    <p class="pa-rot"><span>{{data.experiencia.kicker}}</span></p>
     <h2 class="pa-title">{{data.experiencia.title}}</h2>
     <p class="pa-sub">{{data.experiencia.sub}}</p>
     <div class="pa-cols">
@@ -341,9 +357,10 @@
     <a href="{{data.experiencia.ctaUrl}}" class="pa-btn pa-btn--ghost">{{data.experiencia.cta}}</a>
   </section>
 
+  {{!-- ═══════════ RESPALDO EN MEDIOS ═══════════ --}}
   {{#if mediaLinks.length}}
   <section class="pa-sec pa-sec--alt">
-    <p class="pa-kicker">{{data.medios.kicker}}</p>
+    <p class="pa-rot"><span>{{data.medios.kicker}}</span></p>
     <h2 class="pa-title">{{data.medios.title}}</h2>
     <p class="pa-sub">{{data.medios.sub}}</p>
     <ul class="pa-medios">
@@ -359,8 +376,9 @@
   </section>
   {{/if}}
 
+  {{!-- ═══════════ CONDICIONES ═══════════ --}}
   <section class="pa-sec">
-    <p class="pa-kicker">{{data.condiciones.kicker}}</p>
+    <p class="pa-rot"><span>{{data.condiciones.kicker}}</span></p>
     <h2 class="pa-title">{{data.condiciones.title}}</h2>
     <p class="pa-sub">{{data.condiciones.sub}}</p>
     <div class="pa-grid4">
@@ -375,10 +393,11 @@
     <div class="pa-nota pa-nota--warn"><p class="pa-nota__b">{{data.condiciones.aviso}}</p></div>
   </section>
 
+  {{!-- ═══════════ CONTACTO ═══════════ --}}
   <section class="pa-cierre">
     <div class="pa-foto__veil" aria-hidden="true"></div>
     <div class="pa-cierre__body">
-      <p class="pa-kicker">{{data.contacto.kicker}}</p>
+      <p class="pa-rot pa-rot--centro"><span>{{data.contacto.kicker}}</span></p>
       <h2 class="pa-cierre__t">{{data.contacto.title}}</h2>
       <p class="pa-cierre__b">{{data.contacto.body}}</p>
       <a href="{{data.contacto.ctaUrl}}" class="pa-btn">{{data.contacto.cta}}</a>
@@ -386,6 +405,23 @@
   </section>
 
   <style>
+    /* ───────────── RÓTULO DE BLOQUE ─────────────
+       Cada bloque abre igual: etiqueta corta y un filete hasta el borde. Es lo
+       que deja escanear la página sin leerla, y viene de las referencias que
+       dio el organizador. */
+    .pa-rot {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 14px;
+      font-size: 11px; font-weight: 800; letter-spacing: 2.2px;
+      color: var(--pp-accent);
+    }
+    .pa-rot::after {
+      content: ''; flex: 1 1 auto; height: 1px;
+      background: rgba(255,255,255,0.16);
+    }
+    .pa-rot--centro { justify-content: center; }
+    .pa-rot--centro::after { display: none; }
+
     /* ───────────── PANEL ───────────── */
     /* La foto del estadio va de fondo de todo el panel y los paneles flotan
        encima translúcidos: así la foto se lee como una sola pieza con el
@@ -406,24 +442,18 @@
       grid-template-columns: minmax(280px, 330px) minmax(0, 1fr) minmax(290px, 360px);
       align-items: stretch;
     }
-    /* Las tres columnas miden lo mismo y la ÚLTIMA tarjeta de cada una se
-       estira hasta el fondo. Así el panel cierra parejo por arriba y por
-       abajo sin repartir el sobrante entre las tarjetas, que abría huecos
-       enormes, ni dejarlo suelto debajo, que las dejaba desparejas.
-       El aire de la barra de idioma lo pone el panel, no una columna. */
+    /* Las tres columnas miden lo mismo. En cada una, UN elemento absorbe el
+       sobrante, elegido porque crece sin dejar hueco: en el centro la foto
+       —una imagen más alta se lee igual de bien—; a los lados la última
+       tarjeta, cuya lista reparte sus renglones. */
     .pa-col-l, .pa-col-c, .pa-col-r {
       display: flex; flex-direction: column; gap: 16px; min-width: 0;
     }
-    /* En cada columna hay UN elemento que absorbe el sobrante, elegido porque
-       crece sin dejar hueco: en el centro, la foto —una imagen más alta se lee
-       igual de bien—; a los lados, la última tarjeta, cuya lista reparte sus
-       renglones. Las tarjetas de partido NO se estiran: alargarlas dejaba tres
-       cajas medio vacías. */
     .pa-col-c > :first-child { flex: 1 1 auto; }
     .pa-col-l > :last-child,
     .pa-col-r > :last-child { flex: 1 1 auto; display: flex; flex-direction: column; }
     .pa-col-l > :last-child .pa-pasos { flex: 1 1 auto; justify-content: space-between; }
-    .pa-col-r > :last-child .pa-tl { flex: 1 1 auto; justify-content: space-between; }
+    .pa-col-r > :last-child .pa-ref { flex: 1 1 auto; align-content: space-between; }
 
     .pa-box {
       padding: 22px; border-radius: 20px;
@@ -431,36 +461,37 @@
       background: rgba(var(--tour-card-rgb, 56,60,68), 0.84);
       -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px);
     }
-    .pa-box__h { margin-bottom: 18px; }
     .pa-box__t { font-size: 23px; font-weight: 900; line-height: 1.15; }
     .pa-box__t--sm { font-size: 18px; }
-    .pa-box__s { font-size: 13.5px; line-height: 1.55; color: rgba(255,255,255,0.6); margin-top: 8px; }
-    .pa-box__pie { font-size: 12.5px; line-height: 1.5; color: rgba(255,255,255,0.45); margin-top: 14px; }
-    .pa-eyebrow {
-      display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.8px;
-      color: var(--pp-accent); margin-bottom: 8px;
-    }
+    .pa-box__s { font-size: 13.5px; line-height: 1.55; color: #D2D5DC; margin: 8px 0 18px; }
+    .pa-box__pie { font-size: 12.5px; line-height: 1.5; color: #D2D5DC; opacity: .75; margin-top: 14px; }
 
     .pa-tiles { display: grid; gap: 10px; }
     .pa-tile {
       padding: 14px 16px; border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
     }
-    .pa-tile__l { display: block; font-size: 9.5px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255,255,255,0.45); }
-    .pa-tile__v { display: block; font-size: 27px; font-weight: 900; line-height: 1.1; margin: 5px 0 4px; color: var(--pp-accent); }
-    .pa-tile__n { display: block; font-size: 12px; line-height: 1.45; color: rgba(255,255,255,0.55); }
+    .pa-tile__l { display: block; font-size: 9.5px; font-weight: 800; letter-spacing: 1.5px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
+    .pa-tile__v { display: block; font-size: 27px; font-weight: 900; line-height: 1.1; margin: 5px 0 4px; color: #FFFFFF; }
+    .pa-tile__n { display: block; font-size: 12px; line-height: 1.45; color: #D2D5DC; }
 
-    .pa-kv { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 9px; }
+    .pa-kv { list-style: none; padding: 0; margin: 0 0 14px; display: grid; gap: 9px; }
     .pa-kv__i {
       display: flex; justify-content: space-between; align-items: center; gap: 12px;
-      font-size: 13.5px; color: rgba(255,255,255,0.7);
+      padding: 11px 13px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
+      font-size: 13px; color: #D2D5DC;
     }
-    .pa-kv__i strong { font-size: 15px; }
+    .pa-kv__i strong { font-size: 15px; color: #FFFFFF; }
 
-    .pa-link {
-      display: inline-block; margin-top: 14px; font-size: 11px; font-weight: 800;
-      letter-spacing: 1.2px; color: var(--pp-accent); text-decoration: none;
+    .pa-pasos { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 8px; }
+    .pa-paso {
+      display: flex; align-items: baseline; gap: 12px;
+      padding: 12px 14px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
     }
+    .pa-paso__v { font-size: 22px; font-weight: 900; color: #FFFFFF; flex-shrink: 0; min-width: 52px; }
+    .pa-paso__l { font-size: 10.5px; font-weight: 800; letter-spacing: 1.2px; line-height: 1.35; color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
 
     /* Centro */
     .pa-foto {
@@ -488,58 +519,15 @@
     .pa-logo {
       display: block; width: clamp(120px, 13vw, 190px); height: auto;
       margin: 16px auto 18px;
-      /* El aro y el letrero son negros y sobre el azul marino se apagarían. */
+      /* El aro y el letrero son negros y sobre el gris se apagarían. */
       filter: drop-shadow(0 0 26px rgba(255,255,255,0.3)) drop-shadow(0 10px 26px rgba(0,0,0,0.5));
     }
+    .pa-foto__lead { font-size: 18px; line-height: 1.45; color: rgba(255,255,255,0.9); }
+    .pa-foto__meta { font-size: 12.5px; letter-spacing: 1.3px; color: rgba(255,255,255,0.68); margin-top: 9px; }
 
-    /* Las cifras grandes en blanco: es lo que más pesa de la página y el
-       único color del logo que funciona sobre este gris. El rojo se descartó
-       (3.4 de contraste) y los rótulos chicos bajan a un gris de la familia
-       del jersey, que sí pasa el 7.0. */
-    .pa-tile__v, .pa-ref__v, .pa-parte__pct, .pa-col__anio,
-    .pa-cifra__v--big, .pa-total__v { color: #FFFFFF; }
-    .pa-pt__q { color: rgba(255,255,255,0.3); }
-
-    .pa-tile__l, .pa-dato__l, .pa-cifra__l, .pa-ref__l, .pa-tl__e,
-    .pa-pt__n, .pa-pt__cuando, .pa-medio__f, .pa-card__n,
-    .pa-parte__q, .pa-total__l { color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
-    .pa-box__s, .pa-box__pie, .pa-tile__n, .pa-cifra__n, .pa-tl__q,
-    .pa-pt__sede, .pa-pt__lugar, .pa-col__sede, .pa-caps,
-    .pa-aviso, .pa-nota__b, .pa-card__b, .pa-sub, .pa-parte__b,
-    .pa-col__f, .pa-cierre__b { color: #D2D5DC; }
-    .pa-foto__lead { font-size: 18px; line-height: 1.45; color: rgba(255,255,255,0.88); }
-    .pa-foto__meta { font-size: 12.5px; letter-spacing: 1.3px; color: rgba(255,255,255,0.6); margin-top: 9px; }
-
-    .pa-datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-    .pa-dato {
-      padding: 14px 16px; border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
-    }
-    .pa-dato__l { display: block; font-size: 9.5px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255,255,255,0.45); margin-bottom: 7px; }
-    .pa-dato__v { font-size: 16px; font-weight: 800; }
-
-    /* Derecha */
-    /* Iconografía: el azul del logo subido de luz, que sobre la tarjeta da
-       5.31 de contraste (un gráfico pide 3.0). Trazo, nunca relleno. */
-    .pa-sprite { display: none; }
-    .pa-ico {
-      display: block; width: 30px; height: 30px; margin-bottom: 10px;
-      padding: 5px; border-radius: 9px; flex-shrink: 0;
-      color: var(--tour-azul, #6B93EC);
-      background: rgba(107,147,236,0.14);
-      stroke: currentColor; stroke-width: 1.6; fill: none;
-      stroke-linecap: round; stroke-linejoin: round;
-    }
-    .pa-ico use { pointer-events: none; }
-    .pa-ref__i .pa-ico { margin-left: auto; margin-right: auto; }
-    .pa-card__h { display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
-    .pa-card__h .pa-ico { margin-bottom: 0; }
-    .pa-card__h + .pa-card__t { margin-top: 0; }
-
-    /* Los tres partidos de la temporada, del mismo tamaño. El cerrado enseña
-       sede y ciudad; los dos que se negocian enseñan una incógnita y el borde
-       punteado, para que se lean como un hueco por llenar y no como una ficha
-       a medias. */
+    /* Los tres partidos, del mismo tamaño. El cerrado enseña sede y ciudad;
+       los dos que se negocian, una incógnita y el borde punteado, para que se
+       lean como un hueco por llenar y no como una ficha a medias. */
     .pa-temporada { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .pa-pt {
       display: block; padding: 20px 18px; border-radius: 16px;
@@ -549,82 +537,77 @@
     }
     .pa-pt:hover { border-color: rgba(var(--pp-accent-rgb), 0.55); background: rgba(var(--pp-accent-rgb), 0.08); }
     .pa-pt--inc { border-style: dashed; border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.025); }
-    .pa-pt__n { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1.6px; color: var(--pp-accent); }
-    .pa-pt__q { display: block; font-size: 34px; font-weight: 900; line-height: 1; color: rgba(255,255,255,0.2); margin-top: 10px; }
-    .pa-pt__cuando { display: block; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: rgba(255,255,255,0.45); margin-top: 12px; }
+    .pa-pt__n { display: block; font-size: 11px; font-weight: 800; letter-spacing: 1.6px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
+    .pa-pt__q { display: block; font-size: 34px; font-weight: 900; line-height: 1; color: rgba(255,255,255,0.3); margin-top: 10px; }
+    .pa-pt__cuando { display: block; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); margin-top: 12px; }
     .pa-pt__t { display: block; font-size: 19px; font-weight: 900; line-height: 1.18; margin: 7px 0 7px; }
-    .pa-pt__sede { display: block; font-size: 13.5px; color: rgba(255,255,255,0.74); }
-    .pa-pt__lugar { display: block; font-size: 12.5px; color: rgba(255,255,255,0.45); }
+    .pa-pt__sede { display: block; font-size: 13.5px; color: #D2D5DC; }
+    .pa-pt__lugar { display: block; font-size: 12.5px; color: #D2D5DC; opacity: .7; }
     .pa-pt__cta {
       display: block; margin-top: 16px;
       font-size: 10.5px; font-weight: 800; letter-spacing: 1.2px; color: var(--pp-accent);
     }
-    .pa-pt--inc .pa-pt__cta { color: rgba(255,255,255,0.42); }
+    .pa-pt--inc .pa-pt__cta { color: rgba(255,255,255,0.5); }
 
-    .pa-medios { list-style: none; padding: 0; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
-    .pa-medio a {
-      display: block; padding: 18px 20px; border-radius: 14px; text-decoration: none; color: inherit;
-      border: 1px solid rgba(255,255,255,0.09); background: var(--tour-card, rgba(255,255,255,0.035));
-      transition: border-color .2s;
-    }
-    .pa-medio a:hover { border-color: rgba(var(--pp-accent-rgb), 0.5); }
-    .pa-medio__f { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.5px; color: var(--pp-accent); margin-bottom: 8px; }
-    .pa-medio__t { display: block; font-size: 15px; line-height: 1.45; }
-
-    .pa-cifra__v--md { font-size: 22px; }
-
-    /* Recuadros de incógnita: silueta y signo de interrogación en vez de datos,
-       porque de estos partidos todavía no hay nada que contar. El borde va
-       punteado para que se lean como un hueco por llenar, no como una ficha. */
-
-    .pa-pasos { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 8px; }
-    .pa-paso {
-      display: flex; align-items: baseline; gap: 12px;
-      padding: 12px 14px; border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
-    }
-    .pa-paso__v { font-size: 22px; font-weight: 900; color: #FFFFFF; flex-shrink: 0; min-width: 52px; }
-    .pa-paso__l { font-size: 10.5px; font-weight: 800; letter-spacing: 1.2px; line-height: 1.35; color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
-
-    .pa-ref { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 16px; }
+    .pa-ref { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 4px; }
     .pa-ref__i {
       padding: 16px; border-radius: 14px; text-align: center;
       border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
     }
-    .pa-ref__v { display: block; font-size: 28px; font-weight: 900; color: var(--pp-accent); line-height: 1.1; }
-    .pa-ref__l { display: block; font-size: 9.5px; font-weight: 800; letter-spacing: 1.4px; color: rgba(255,255,255,0.45); margin-top: 7px; }
-    .pa-nota--compacta { margin-top: 16px; padding: 16px 18px; }
-    .pa-nota--compacta .pa-nota__t { font-size: 14.5px; }
-    .pa-nota--compacta .pa-nota__b { font-size: 13px; }
+    .pa-ref__v { display: block; font-size: 28px; font-weight: 900; color: #FFFFFF; line-height: 1.1; }
+    .pa-ref__l { display: block; font-size: 9.5px; font-weight: 800; letter-spacing: 1.4px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); margin-top: 7px; }
+    .pa-ref__i .pa-ico { margin-left: auto; margin-right: auto; }
 
-
-    .pa-tl { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 0; }
-    .pa-tl__i { position: relative; padding: 0 0 15px 18px; border-left: 1px solid rgba(255,255,255,0.14); }
-    .pa-tl__i:last-child { padding-bottom: 0; border-left-color: transparent; }
-    .pa-tl__i::before {
-      content: ''; position: absolute; left: -4.5px; top: 4px;
-      width: 8px; height: 8px; border-radius: 50%; background: var(--pp-accent);
+    /* ───────────── LA TEMPORADA EN UN EJE ─────────────
+       El calendario como línea con su eje y sus fechas debajo: se entiende de
+       un golpe de vista, que es para lo que sirve. */
+    .pa-ruta { padding: 0 26px; margin: -14px auto 0; max-width: 1560px; }
+    .pa-ruta__caja {
+      padding: 26px 28px 24px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: var(--tour-card, rgba(255,255,255,0.04));
     }
-    .pa-tl__e { display: block; font-size: 9.5px; font-weight: 800; letter-spacing: 1.4px; color: rgba(255,255,255,0.45); }
-    .pa-tl__c { display: block; font-size: 14.5px; font-weight: 800; margin: 3px 0 2px; }
-    .pa-tl__q { display: block; font-size: 12.5px; line-height: 1.45; color: rgba(255,255,255,0.5); }
+    .pa-eje {
+      list-style: none; padding: 0; margin: 22px 0 0;
+      display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0;
+    }
+    .pa-eje__i { position: relative; padding: 0 14px 0 0; display: flex; flex-direction: column; }
+    .pa-eje__e {
+      font-size: 10px; font-weight: 800; letter-spacing: 1.6px;
+      color: var(--tour-rotulo, rgba(255,255,255,0.45));
+    }
+    .pa-eje__q { font-size: 13px; line-height: 1.45; color: #D2D5DC; margin: 7px 0 16px; flex: 1 1 auto; }
+    .pa-eje__punto {
+      position: relative; display: block; height: 2px;
+      background: rgba(255,255,255,0.18);
+    }
+    .pa-eje__punto::before {
+      content: ''; position: absolute; left: 0; top: 50%;
+      width: 11px; height: 11px; border-radius: 50%;
+      transform: translateY(-50%);
+      background: var(--tour-azul, #6B93EC);
+      box-shadow: 0 0 0 4px rgba(107,147,236,0.22);
+    }
+    .pa-eje__i:last-child .pa-eje__punto { background: linear-gradient(90deg, rgba(255,255,255,0.18), rgba(255,255,255,0)); }
+    .pa-eje__c { display: block; font-size: 14.5px; font-weight: 800; margin-top: 14px; }
 
     /* ───────────── DETALLE ───────────── */
     .pa-sec { max-width: 1120px; margin: 0 auto; padding: 78px 32px; }
     /* La sección de fondo alterno ocupa todo el ancho, así que su contenido se
        centra con el PADDING, no con `margin: auto` en los hijos: con auto, los
-       hijos más estrechos que la columna —los subtítulos, de 760— se centraban
-       ellos mismos y quedaban descolgados de su título. */
+       hijos más estrechos que la columna se centraban ellos mismos y quedaban
+       descolgados de su título. */
     .pa-sec--alt {
       background: rgba(255,255,255,0.025); max-width: none;
       padding-left: max(32px, calc((100% - 1056px) / 2));
       padding-right: max(32px, calc((100% - 1056px) / 2));
     }
     .pa-sec--alt > * { max-width: 1056px; margin-left: 0; margin-right: 0; }
-    .pa-kicker { font-size: 11.5px; font-weight: 800; letter-spacing: 2.4px; color: var(--pp-accent); margin-bottom: 14px; }
     .pa-title { font-size: 38px; font-weight: 900; line-height: 1.14; margin-bottom: 14px; }
-    .pa-sub { font-size: 17px; line-height: 1.6; color: rgba(255,255,255,0.7); max-width: 760px; margin-bottom: 36px; }
-    .pa-aviso { font-size: 13.5px; line-height: 1.6; color: rgba(255,255,255,0.45); margin-top: 26px; }
+    .pa-title--sm { font-size: 27px; margin-bottom: 0; }
+    .pa-sub { font-size: 17px; line-height: 1.6; color: #D2D5DC; max-width: 760px; margin-bottom: 36px; }
+    .pa-aviso { font-size: 13.5px; line-height: 1.6; color: #D2D5DC; opacity: .72; margin-top: 26px; }
+    .pa-cta { margin-top: 20px; }
 
     .pa-badge {
       display: inline-block; padding: 6px 18px; border-radius: 20px;
@@ -644,48 +627,106 @@
       background: rgba(217,119,6,0.18); color: #F0B429;
     }
 
+    /* Iconografía: el azul del logo subido de luz, que sobre la tarjeta da
+       5.31 de contraste (un gráfico pide 3.0). Trazo, nunca relleno. */
+    .pa-sprite { display: none; }
+    .pa-ico {
+      display: block; width: 30px; height: 30px; margin-bottom: 10px;
+      padding: 5px; border-radius: 9px; flex-shrink: 0;
+      color: var(--tour-azul, #6B93EC);
+      background: rgba(107,147,236,0.14);
+      stroke: currentColor; stroke-width: 1.6; fill: none;
+      stroke-linecap: round; stroke-linejoin: round;
+    }
+    .pa-ico use { pointer-events: none; }
+    .pa-card__h { display: flex; align-items: center; gap: 11px; margin-bottom: 12px; }
+    .pa-card__h .pa-ico { margin-bottom: 0; }
+
     .pa-cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; }
     .pa-cifra { padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.09); background: var(--tour-card, rgba(255,255,255,0.035)); }
-    .pa-cifra__l { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.6px; color: rgba(255,255,255,0.45); }
-    .pa-cifra__v { display: block; font-size: 32px; font-weight: 900; margin: 10px 0 8px; }
-    .pa-cifra__v--big { font-size: 42px; color: var(--pp-accent); }
-    .pa-cifra__n { display: block; font-size: 13px; line-height: 1.5; color: rgba(255,255,255,0.55); }
-    .pa-cifras--big .pa-cifra { text-align: center; }
+    .pa-cifra__l { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.6px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
+    .pa-cifra__v { display: block; font-size: 32px; font-weight: 900; margin: 10px 0 8px; color: #FFFFFF; }
+    .pa-cifra__v--md { font-size: 22px; }
 
     .pa-grid4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
     .pa-card { padding: 26px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.09); background: var(--tour-card, rgba(255,255,255,0.035)); }
-    .pa-card__n { font-size: 12px; font-weight: 800; letter-spacing: 2px; color: var(--pp-accent); }
-    .pa-card__t { font-size: 18px; font-weight: 800; margin: 12px 0 10px; }
-    .pa-card__b { font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,0.68); }
+    .pa-card__n { font-size: 12px; font-weight: 800; letter-spacing: 2px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
+    .pa-card__t { font-size: 18px; font-weight: 800; margin: 0 0 10px; }
+    .pa-card__b { font-size: 14.5px; line-height: 1.6; color: #D2D5DC; }
 
-    .pa-lineas { list-style: none; padding: 0; margin: 0 auto 26px; }
-    .pa-linea { display: flex; justify-content: space-between; gap: 20px; padding: 15px 2px; border-bottom: 1px solid rgba(255,255,255,0.08); font-size: 16px; }
-    .pa-linea strong { font-variant-numeric: tabular-nums; }
+    /* ───────────── DESTINO DEL CAPITAL ─────────────
+       La dona la calcula el servidor a partir del desglose, así que cambiar un
+       importe recalcula el gráfico y los porcentajes sin tocarlos a mano. */
+    .pa-destino {
+      display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+      gap: 36px; align-items: center;
+    }
+    .pa-donut { position: relative; margin: 0; }
+    .pa-donut svg { display: block; width: 100%; height: auto; }
+    .pa-donut__bg { fill: none; stroke: rgba(255,255,255,0.07); stroke-width: 22; }
+    .pa-donut__s { fill: none; stroke-width: 22; }
+    .pa-donut figcaption {
+      position: absolute; inset: 0; display: flex;
+      flex-direction: column; align-items: center; justify-content: center; text-align: center;
+    }
+    .pa-donut figcaption strong { font-size: 30px; font-weight: 900; line-height: 1; }
+    .pa-donut figcaption span {
+      font-size: 9.5px; font-weight: 800; letter-spacing: 1.5px; margin-top: 6px;
+      color: var(--tour-rotulo, rgba(255,255,255,0.45));
+    }
 
-    .pa-total { padding: 24px 26px; border-radius: 16px; border: 1px solid rgba(var(--pp-accent-rgb), 0.35); background: rgba(var(--pp-accent-rgb), 0.08); }
-    .pa-total__l { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.8px; color: rgba(255,255,255,0.6); }
-    .pa-total__v { display: block; font-size: 36px; font-weight: 900; margin-top: 8px; color: var(--pp-accent); }
+    .pa-leyenda { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; }
+    .pa-leyenda__i {
+      display: grid; grid-template-columns: 12px minmax(0, 1fr) auto 56px;
+      align-items: center; gap: 14px;
+      padding: 13px 4px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .pa-leyenda__i:last-child { border-bottom: 0; }
+    .pa-leyenda__p { width: 12px; height: 12px; border-radius: 4px; }
+    .pa-leyenda__c { font-size: 15px; color: #D2D5DC; min-width: 0; }
+    .pa-leyenda__m { font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .pa-leyenda__pct {
+      font-size: 13px; font-weight: 800; text-align: right;
+      font-variant-numeric: tabular-nums; color: var(--tour-rotulo, rgba(255,255,255,0.45));
+    }
+
+    .pa-total { padding: 20px 22px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.14); background: rgba(255,255,255,0.05); }
+    .pa-total__l { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.8px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); }
+    .pa-total__v { display: block; font-size: 30px; font-weight: 900; margin-top: 8px; color: #FFFFFF; }
 
     .pa-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
     .pa-col { padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.09); background: var(--tour-card, rgba(255,255,255,0.035)); }
     .pa-col__t { font-size: 15px; font-weight: 800; letter-spacing: 1.2px; margin-bottom: 14px; }
-    .pa-col__f { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,0.07); font-size: 14.5px; color: rgba(255,255,255,0.7); }
+    .pa-col__f { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 11px 0; border-top: 1px solid rgba(255,255,255,0.07); font-size: 14.5px; color: #D2D5DC; }
     .pa-col--ed { text-align: center; }
-    .pa-col__anio { display: block; font-size: 30px; font-weight: 900; color: var(--pp-accent); margin-bottom: 8px; }
-    .pa-col__sede { font-size: 14px; color: rgba(255,255,255,0.55); }
+    .pa-col__anio { display: block; font-size: 30px; font-weight: 900; color: #FFFFFF; margin-bottom: 8px; }
+    .pa-col__sede { font-size: 14px; color: #D2D5DC; opacity: .75; }
 
-    .pa-nota { margin-top: 26px; padding: 24px 26px; border-radius: 16px; border-left: 3px solid var(--pp-accent); background: var(--tour-card, rgba(255,255,255,0.04)); }
+    .pa-nota { margin-top: 26px; padding: 24px 26px; border-radius: 16px; border-left: 3px solid var(--tour-azul, #6B93EC); background: var(--tour-card, rgba(255,255,255,0.04)); }
     .pa-nota--warn { border-left-color: #F0B429; }
+    .pa-nota--compacta { margin-top: 16px; padding: 16px 18px; }
+    .pa-nota--compacta .pa-nota__t { font-size: 14.5px; }
+    .pa-nota--compacta .pa-nota__b { font-size: 13px; }
     .pa-nota__t { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
-    .pa-nota__b { font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,0.65); }
+    .pa-nota__b { font-size: 14.5px; line-height: 1.6; color: #D2D5DC; }
 
     .pa-reparto { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
     .pa-parte { padding: 30px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.1); background: var(--tour-card, rgba(255,255,255,0.04)); }
-    .pa-parte__pct { display: block; font-size: 54px; font-weight: 900; line-height: 1; color: var(--pp-accent); }
-    .pa-parte__q { display: block; font-size: 11.5px; font-weight: 800; letter-spacing: 2px; color: rgba(255,255,255,0.5); margin: 12px 0 14px; }
-    .pa-parte__b { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.7); }
+    .pa-parte__pct { display: block; font-size: 54px; font-weight: 900; line-height: 1; color: #FFFFFF; }
+    .pa-parte__q { display: block; font-size: 11.5px; font-weight: 800; letter-spacing: 2px; color: var(--tour-rotulo, rgba(255,255,255,0.45)); margin: 12px 0 14px; }
+    .pa-parte__b { font-size: 15px; line-height: 1.6; color: #D2D5DC; }
 
-    .pa-caps { font-size: 13.5px; letter-spacing: 0.6px; color: rgba(255,255,255,0.5); margin: 26px auto 22px; }
+    .pa-caps { font-size: 13.5px; letter-spacing: 0.6px; color: #D2D5DC; opacity: .75; margin: 26px auto 22px; }
+
+    .pa-medios { list-style: none; padding: 0; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+    .pa-medio a {
+      display: block; padding: 18px 20px; border-radius: 14px; text-decoration: none; color: inherit;
+      border: 1px solid rgba(255,255,255,0.09); background: var(--tour-card, rgba(255,255,255,0.035));
+      transition: border-color .2s;
+    }
+    .pa-medio a:hover { border-color: rgba(var(--pp-accent-rgb), 0.5); }
+    .pa-medio__f { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.5px; color: var(--tour-azul, #6B93EC); margin-bottom: 8px; }
+    .pa-medio__t { display: block; font-size: 15px; line-height: 1.45; }
 
     .pa-cierre {
       position: relative; display: flex; align-items: center; justify-content: center;
@@ -700,25 +741,34 @@
     }
     .pa-cierre__body { position: relative; z-index: 2; max-width: 780px; }
     .pa-cierre__t { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.08; margin-bottom: 16px; }
-    .pa-cierre__b { font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.8); margin-bottom: 26px; }
+    .pa-cierre__b { font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.88); margin-bottom: 26px; }
 
     /* Tablet: el panel pasa a dos columnas y el centro se queda arriba. */
     @media (max-width: 1180px) {
       .pa-panel__rejilla { grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); }
       .pa-col-c { grid-column: 1 / -1; order: -1; }
+      .pa-eje { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 0; }
+      .pa-destino { grid-template-columns: minmax(0, 1fr); gap: 24px; justify-items: center; }
+      .pa-donut { max-width: 230px; }
+      .pa-leyenda { width: 100%; }
     }
 
     @media (max-width: 860px) {
       .pa-panel { padding: 16px 16px 24px; }
       .pa-panel__rejilla { grid-template-columns: minmax(0, 1fr); }
+      .pa-ruta { padding: 0 16px; margin-top: 8px; }
+      .pa-ruta__caja { padding: 20px; }
+      .pa-eje { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+      .pa-eje__i { padding-right: 0; }
       .pa-foto { min-height: 380px; }
+      .pa-temporada { grid-template-columns: minmax(0, 1fr); }
       .pa-sec { padding: 56px 20px; }
       .pa-sec--alt { padding-left: 20px; padding-right: 20px; }
       .pa-title { font-size: 27px; }
       .pa-sub { font-size: 15.5px; }
       .pa-parte__pct { font-size: 42px; }
-      .pa-cifra__v--big { font-size: 34px; }
+      .pa-leyenda__i { grid-template-columns: 12px minmax(0, 1fr) auto; row-gap: 2px; }
+      .pa-leyenda__pct { grid-column: 2 / -1; text-align: left; }
       .pa-cierre { padding: 64px 20px; }
-      .pa-primero__h .pa-btn { width: 100%; text-align: center; }
     }
   </style>
