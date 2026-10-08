@@ -23,6 +23,9 @@ const path = require('path');
 const os = require('os');
 const fs = require('fs');
 
+const jwt = require('jsonwebtoken');
+const propuestas = require('../lib/propuestas');
+
 const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe';
 const PORT = 9433;
 const BASE = (process.argv[2] || 'http://localhost:3000').replace(/\/$/, '');
@@ -51,6 +54,12 @@ const PAGINAS = [
   '/es/socceridcup/2024',          // ficha de edición: faltaba y tenía fallos
   '/es/galeria/soccer-id-cup-2027',
   '/panel/login',
+  // Las páginas con candado. Se auditan igual que las demás: se entra
+  // firmando la cookie de acceso (ver más abajo), no tecleando un código, así
+  // que la auditoría no deja un lead ni dispara correos. Quedaban fuera y por
+  // eso sus choques gráficos no se veían aquí.
+  '/es/' + propuestas.porId('tour27').slug,        // el tour: marca gris y blanca
+  '/es/' + propuestas.porDefecto().slug,           // la propuesta en vivo: verde y carbón
 ];
 
 // Los paneles bento de la landing, que solo existen en el DOM al abrirlos.
@@ -247,8 +256,18 @@ const SONDA = () => `(() => {
     return r.result.value;
   };
 
-  await send('Page.enable'); await send('Runtime.enable');
+  await send('Page.enable'); await send('Runtime.enable'); await send('Network.enable');
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 950, deviceScaleFactor: 1, mobile: false });
+
+  // Acceso a las páginas con candado, con nivel de tour para que abran todas.
+  // Mismo truco que scripts/capturas-propuesta.js: se firma la cookie con el
+  // secreto del servidor en vez de teclear un código.
+  const secretoAcceso = process.env.PANEL_JWT_SECRET || process.env.SESSION_SECRET || 'panel-dev-secret-change-me';
+  await send('Network.setCookie', {
+    name: 'pp_acc',
+    value: jwt.sign({ n: 'tour', v: propuestas.listar().map(v => v.id) }, secretoAcceso, { expiresIn: '1h' }),
+    domain: new URL(BASE).hostname, path: '/'
+  });
 
   console.log(`
 Contraste — ${SOLO_AA ? 'mínimo legal AA (4.5 / 3.0)' : 'estándar de la casa (7.0 bajo 16px, 4.5 encima)'}`);
