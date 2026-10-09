@@ -894,9 +894,11 @@ function navPartidos(data, lang) {
  * dos grises; todos pasan de 3.0 de contraste sobre la tarjeta, que es lo que
  * pide un gráfico.
  */
-// Azul y gris alternados: tres azules seguidos no se distinguían entre sí en
-// la dona. Así cada segmento contrasta con el de al lado.
-const DONUT_COLORES = ['#6B93EC', '#C9CCD4', '#8AADF4', '#8A93A6', '#A8C2F8', '#6E7689'];
+// La familia del cian, alternando claro y oscuro: seis cianes seguidos de
+// luminancia parecida no se distinguirían entre sí. Así cada segmento
+// contrasta con el de al lado (el par peor da 1.81) y todos pasan de 3.0
+// sobre la tarjeta, que es lo que pide un gráfico (el más justo, 3.59).
+const DONUT_COLORES = ['#A8EEFF', '#31A6C4', '#38E1FF', '#2B8296', '#7FDCF0', '#67919F'];
 function donutCostos(data) {
   const lineas = ((data && data.costos) || {}).lineas || [];
   const valores = lineas.map(l => Number(String(l.monto).replace(/[^0-9.]/g, '')) || 0);

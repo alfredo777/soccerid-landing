@@ -60,6 +60,22 @@
   </div>
   {{/if}}
 
+    {{!-- Portada: la marca sobre la foto y las tres cifras que resumen todo --}}
+    <section class="pa-foto">
+      <div class="pa-foto__veil" aria-hidden="true"></div>
+      <div class="pa-foto__body">
+        <span class="pa-badge">{{data.hero.badge}}</span>
+        {{#if logo}}
+        <img class="pa-logo" src="{{logo}}" alt="{{data.hero.title}}" width="190" height="200">
+        <h1 class="pa-foto__t pa-foto__t--oculto">{{data.hero.title}}</h1>
+        {{else}}
+        <h1 class="pa-foto__t">{{data.hero.title}}</h1>
+        {{/if}}
+        <p class="pa-foto__lead">{{data.hero.lead}}</p>
+        <p class="pa-foto__meta">{{data.hero.meta}}</p>
+      </div>
+    </section>
+
   {{!-- ═══════════ CINCO BLOQUES ═══════════
        Estructura del brief "Estructura del sitio": cifras grandes, textos de
        una o dos líneas y botones visibles. Lo secundario —presupuesto,
@@ -68,22 +84,6 @@
   <div class="pa-panel">
     <div class="pa-panel__fondo" aria-hidden="true"></div>
     <div class="pa-panel__col">
-
-      {{!-- Portada: la marca sobre la foto y las tres cifras que resumen todo --}}
-      <section class="pa-foto">
-        <div class="pa-foto__veil" aria-hidden="true"></div>
-        <div class="pa-foto__body">
-          <span class="pa-badge">{{data.hero.badge}}</span>
-          {{#if logo}}
-          <img class="pa-logo" src="{{logo}}" alt="{{data.hero.title}}" width="190" height="200">
-          <h1 class="pa-foto__t pa-foto__t--oculto">{{data.hero.title}}</h1>
-          {{else}}
-          <h1 class="pa-foto__t">{{data.hero.title}}</h1>
-          {{/if}}
-          <p class="pa-foto__lead">{{data.hero.lead}}</p>
-          <p class="pa-foto__meta">{{data.hero.meta}}</p>
-        </div>
-      </section>
 
       <section class="pa-box pa-box--cifras" aria-label="{{data.hero.lead}}">
         <div class="pa-tiles">
@@ -430,7 +430,7 @@
     .pa-rot--centro::after { display: none; }
 
     /* ───────────── PANEL: una columna, fondo plano ───────────── */
-    .pa-panel { position: relative; padding: 60px 26px 60px; }
+    .pa-panel { position: relative; padding: 26px 26px 60px; }
     .pa-panel__fondo { position: absolute; inset: 0; background: var(--pp-dark); }
     .pa-panel__col { position: relative; z-index: 2; max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
     .pa-box__h { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 10px 40px; align-items: end; margin-bottom: 20px; }
@@ -468,10 +468,14 @@
     .pa-kv__n { font-size: 12px; font-weight: 400; letter-spacing: 0; color: #D2D5DC; }
 
     /* ───────────── PORTADA ───────────── */
+    /* El hero ocupa todo el ancho, como el cierre: sin tarjeta, sin bordes y
+       sin esquinas. Antes vivía dentro de la columna de 1240px y se leía como
+       un bloque más; ahora abre la página de lado a lado. */
     .pa-foto {
-      position: relative; min-height: 440px; border-radius: 22px; overflow: hidden;
-      display: flex; align-items: flex-end; justify-content: center; text-align: center; padding: 52px 28px 40px;
-      background: url('{{heroImage}}') center/cover no-repeat; border: 1px solid rgba(255,255,255,0.12);
+      position: relative; min-height: 72vh; overflow: hidden;
+      display: flex; align-items: center; justify-content: center; text-align: center;
+      padding: 96px 32px;
+      background: url('{{heroImage}}') center/cover no-repeat;
     }
     .pa-foto__veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,21,25,0.3) 0%, rgba(28,30,35,0.62) 52%, rgba(44,47,53,0.94) 100%); }
     .pa-foto__body { position: relative; z-index: 2; max-width: 620px; }
@@ -505,21 +509,24 @@
       flex: 0 0 calc(var(--w, 33%) - 3px); min-width: 0;
       display: flex; align-items: center; justify-content: space-between; gap: 10px;
       min-height: 44px; padding: 8px 14px; border-radius: 10px;
-      background: var(--tour-azul, #6B93EC);
+      background: var(--tour-grafico, #38E1FF);
       /* Tinta NEGRA sobre el azul, no el carbón de marca: #1C1E23 encima del
          azul daba 5.57 y la casa pide 7.0 bajo 16px. En negro son 7.01 sobre
          el azul base y 9.36 sobre el claro del segundo tramo. */
       color: #000000; transform-origin: left center;
     }
-    .pa-apilada__t:first-child { border-radius: 999px 10px 10px 999px; }
-    .pa-apilada__t:last-child { border-radius: 10px 999px 999px 10px; }
-    .pa-apilada__t:not(:first-child) { background: #8AADF4; }
+    /* Radio parejo, no cápsula. Con tramos del 14 % el semicírculo de 999px se
+       come casi todo el tramo y choca con los 10px del lado contrario: queda
+       deforme. Un radio igual en los cuatro vértices los deja leerse como tres
+       piezas de la misma barra. */
+    .pa-apilada__t:first-child, .pa-apilada__t:last-child { border-radius: 12px; }
+    .pa-apilada__t:not(:first-child) { background: var(--tour-grafico-2, #7FDCF0); }
     .pa-apilada__n { font-size: 10px; font-weight: 800; letter-spacing: 1.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .pa-apilada__v { font-size: 13px; font-weight: 900; white-space: nowrap; }
     .pa-apilada__t > .pa-apilada__v:only-child { margin: 0 auto; }
 
     .pa-partida { display: flex; gap: 4px; margin: 0 0 16px; }
-    .pa-partida__t { flex: 0 0 calc(var(--w, 50%) - 2px); min-width: 0; display: flex; align-items: baseline; gap: 10px; padding: 16px 18px; border-radius: 12px; background: var(--tour-azul, #6B93EC); color: #000000; transform-origin: left center; }
+    .pa-partida__t { flex: 0 0 calc(var(--w, 50%) - 2px); min-width: 0; display: flex; align-items: baseline; gap: 10px; padding: 16px 18px; border-radius: 12px; background: var(--tour-grafico, #38E1FF); color: #000000; transform-origin: left center; }
     .pa-partida__t:first-child { border-radius: 999px 12px 12px 999px; }
     .pa-partida__t:last-child { border-radius: 12px 999px 999px 12px; background: rgba(255,255,255,0.16); color: #FFFFFF; }
     .pa-partida__t strong { font-size: 26px; font-weight: 900; line-height: 1; }
@@ -545,9 +552,9 @@
        quedaba en 6.4 de contraste; así da 7.3. */
     .pa-pend { display: inline-block; padding: 3px 10px; border-radius: 999px; font-style: normal; font-size: 11px; font-weight: 800; letter-spacing: 1.2px; background: rgba(var(--tour-cian-rgb, 56,225,255), 0.08); color: var(--tour-cian, #38E1FF); }
     .pa-sprite { display: none; }
-    .pa-ico { display: block; width: 30px; height: 30px; margin-bottom: 10px; padding: 5px; border-radius: 9px; flex-shrink: 0; color: var(--tour-azul, #6B93EC); background: rgba(107,147,236,0.14); stroke: currentColor; stroke-width: 1.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .pa-ico { display: block; width: 30px; height: 30px; margin-bottom: 10px; padding: 5px; border-radius: 9px; flex-shrink: 0; color: var(--tour-grafico, #38E1FF); background: rgba(var(--tour-grafico-rgb, 56,225,255), 0.14); stroke: currentColor; stroke-width: 1.6; fill: none; stroke-linecap: round; stroke-linejoin: round; }
     .pa-ico use { pointer-events: none; }
-    .pa-nota { margin-top: 16px; padding: 18px 20px; border-radius: 14px; border-left: 3px solid var(--tour-azul, #6B93EC); background: rgba(255,255,255,0.05); }
+    .pa-nota { margin-top: 16px; padding: 18px 20px; border-radius: 14px; border-left: 3px solid var(--tour-grafico, #38E1FF); background: rgba(255,255,255,0.05); }
     .pa-nota--warn { border-left-color: var(--tour-cian, #38E1FF); }
     .pa-nota--compacta { padding: 14px 18px; }
     .pa-nota__t { font-size: 15px; font-weight: 800; margin: 0 0 10px; }
@@ -645,7 +652,7 @@
     }
     @media (max-width: 860px) {
       .pa-panel { padding: 16px 16px 32px; }
-      .pa-foto { min-height: 380px; }
+      .pa-foto { min-height: 62vh; padding: 72px 20px; }
       .pa-tiles, .pa-temporada { grid-template-columns: minmax(0, 1fr); }
       .pa-apilada__barra { flex-direction: column; }
       .pa-apilada__t, .pa-apilada__t:first-child, .pa-apilada__t:last-child { flex-basis: auto; border-radius: 10px; }
