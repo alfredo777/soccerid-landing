@@ -84,7 +84,18 @@
         "label": "INVERSIÓN MÍNIMA",
         "value": "USD $100,000",
         "participacion": "Participación del 5% en las utilidades del TOUR.",
-        "note": "Calculada sobre el capital objetivo de USD 1.4 millones."
+        "note": "Calculada sobre el capital objetivo de USD 1.4 millones.",
+        "calcTitle": "Cómo se llega al 5%",
+        "calc": [
+          {
+            "op": "USD $100,000 ÷ USD $1,400,000",
+            "res": "7.14% del capital"
+          },
+          {
+            "op": "7.14% × 70% para inversionistas",
+            "res": "5% de las utilidades"
+          }
+        ]
       },
       "items": [
         {
@@ -371,7 +382,18 @@
         "label": "MINIMUM INVESTMENT",
         "value": "USD $100,000",
         "participacion": "5% share in the TOUR profits.",
-        "note": "Based on the target capital of USD 1.4 million."
+        "note": "Based on the target capital of USD 1.4 million.",
+        "calcTitle": "How we get to 5%",
+        "calc": [
+          {
+            "op": "USD $100,000 ÷ USD $1,400,000",
+            "res": "7.14% of the capital"
+          },
+          {
+            "op": "7.14% × 70% for investors",
+            "res": "5% of the profits"
+          }
+        ]
       },
       "items": [
         {

@@ -76,7 +76,15 @@ const FUENTE = {
       label: T('INVERSIÓN MÍNIMA', 'MINIMUM INVESTMENT'),
       value: T('USD $100,000', 'USD $100,000'),
       participacion: T('Participación del 5% en las utilidades del TOUR.', '5% share in the TOUR profits.'),
-      note: T('Calculada sobre el capital objetivo de USD 1.4 millones.', 'Based on the target capital of USD 1.4 million.')
+      note: T('Calculada sobre el capital objetivo de USD 1.4 millones.', 'Based on the target capital of USD 1.4 million.'),
+      // Ejemplo del cálculo, para aclarar por qué 100K equivale al 5% de las
+      // utilidades: 100K es el 7.14 % del capital de 1.4M y, del 70 % que va a
+      // inversionistas, eso deja un 5 %.
+      calcTitle: T('Cómo se llega al 5%', 'How we get to 5%'),
+      calc: [
+        { op: T('USD $100,000 ÷ USD $1,400,000', 'USD $100,000 ÷ USD $1,400,000'), res: T('7.14% del capital', '7.14% of the capital') },
+        { op: T('7.14% × 70% para inversionistas', '7.14% × 70% for investors'), res: T('5% de las utilidades', '5% of the profits') }
+      ]
     },
     items: [
       { label: T('PARTIDO 1', 'MATCH 1'), note: T('Presupuesto completo', 'Full budget'),   value: 'USD $1,000,000', monto: 1000000 },

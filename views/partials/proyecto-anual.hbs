@@ -157,6 +157,17 @@
           <strong class="pa-minimo__v">{{data.capital.minimo.value}}</strong>
           {{#if data.capital.minimo.participacion}}<span class="pa-minimo__p">{{data.capital.minimo.participacion}}</span>{{/if}}
           {{#if data.capital.minimo.note}}<span class="pa-minimo__n">{{data.capital.minimo.note}}</span>{{/if}}
+          {{#if data.capital.minimo.calc.length}}
+          <div class="pa-calc5">
+            {{#if data.capital.minimo.calcTitle}}<span class="pa-calc5__t">{{data.capital.minimo.calcTitle}}</span>{{/if}}
+            {{#each data.capital.minimo.calc}}
+            <div class="pa-calc5__row">
+              <span class="pa-calc5__op">{{this.op}}</span>
+              <strong class="pa-calc5__res">{{this.res}}</strong>
+            </div>
+            {{/each}}
+          </div>
+          {{/if}}
         </div>
         {{/unless}}
         <div class="pa-box__pie-cta pa-box__pie-cta--solo">
@@ -615,6 +626,13 @@
     .pa-minimo__v { display: block; font-size: clamp(34px, 5vw, 48px); font-weight: 900; line-height: 1; color: var(--tour-cian, #38E1FF); }
     .pa-minimo__p { display: block; margin-top: 12px; font-size: 16px; font-weight: 700; color: #FFFFFF; }
     .pa-minimo__n { display: block; margin-top: 6px; font-size: 12.5px; color: #AEB2BB; }
+    /* Ejemplo del cálculo del 5%, dentro del mismo bloque. */
+    .pa-calc5 { margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(var(--tour-cian-rgb, 56,225,255), 0.22); }
+    .pa-calc5__t { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: var(--tour-rotulo, #C9CCD4); margin-bottom: 10px; }
+    .pa-calc5__row { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; padding: 7px 0; border-top: 1px solid rgba(255,255,255,0.07); }
+    .pa-calc5__row:first-of-type { border-top: 0; }
+    .pa-calc5__op { font-size: 13.5px; color: #C9CCD4; }
+    .pa-calc5__res { font-size: 13.5px; font-weight: 800; color: var(--tour-cian, #38E1FF); white-space: nowrap; text-align: right; }
     /* Una sola columna: la tarjeta ocupa todo el ancho del bloque. */
     .pa-retorno { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
     /* La advertencia va dentro de la tarjeta, al final, separada por un filete. */
