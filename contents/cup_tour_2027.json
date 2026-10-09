@@ -261,7 +261,7 @@
       "cta": "Ver trayectoria",
       "cajon": {
         "title": "Trayectoria",
-        "sub": "Lo que sabemos hacer y cómo lo contaron los medios en las tres ediciones anteriores.",
+        "sub": "Lo que sabemos hacer y cómo lo contaron los medios.",
         "ctaHistoria": "Conoce la historia de la copa",
         "ctaHistoriaUrl": "/es/socceridcup"
       }
@@ -537,7 +537,7 @@
       "cta": "View track record",
       "cajon": {
         "title": "Track record",
-        "sub": "What we know how to do, and how the media covered it across the three previous editions.",
+        "sub": "What we know how to do, and how the media covered it.",
         "ctaHistoria": "Discover the cup’s history",
         "ctaHistoriaUrl": "/en/socceridcup"
       }

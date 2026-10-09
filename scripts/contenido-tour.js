@@ -175,8 +175,8 @@ const FUENTE = {
     cta: T('Ver trayectoria', 'View track record'),
     cajon: {
       title: T('Trayectoria', 'Track record'),
-      sub: T('Lo que sabemos hacer y cómo lo contaron los medios en las tres ediciones anteriores.',
-             'What we know how to do, and how the media covered it across the three previous editions.'),
+      sub: T('Lo que sabemos hacer y cómo lo contaron los medios.',
+             'What we know how to do, and how the media covered it.'),
       ctaHistoria: T('Conoce la historia de la copa', 'Discover the cup\u2019s history'),
       ctaHistoriaUrl: T('/es/socceridcup', '/en/socceridcup')
     }
