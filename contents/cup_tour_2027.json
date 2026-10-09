@@ -251,9 +251,6 @@
       "cajon": {
         "title": "Trayectoria",
         "sub": "Lo que sabemos hacer y cómo lo contaron los medios en las tres ediciones anteriores.",
-        "capacidades": "Relación con clubes · Comercialización · Producción · Broadcast · Operación internacional",
-        "mediosTitle": "Cobertura en medios",
-        "mediosSub": "Notas de prensa de las ediciones anteriores, en medios de cada plaza.",
         "ctaHistoria": "Conoce la historia de la copa",
         "ctaHistoriaUrl": "/es/socceridcup"
       }
@@ -519,9 +516,6 @@
       "cajon": {
         "title": "Track record",
         "sub": "What we know how to do, and how the media covered it across the three previous editions.",
-        "capacidades": "Club relations · Commercialization · Production · Broadcast · International operations",
-        "mediosTitle": "Media coverage",
-        "mediosSub": "Press coverage of previous editions, in each market’s media.",
         "ctaHistoria": "Discover the cup’s history",
         "ctaHistoriaUrl": "/en/socceridcup"
       }

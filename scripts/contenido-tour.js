@@ -167,9 +167,6 @@ const FUENTE = {
       title: T('Trayectoria', 'Track record'),
       sub: T('Lo que sabemos hacer y cómo lo contaron los medios en las tres ediciones anteriores.',
              'What we know how to do, and how the media covered it across the three previous editions.'),
-      capacidades: T('Relación con clubes · Comercialización · Producción · Broadcast · Operación internacional', 'Club relations · Commercialization · Production · Broadcast · International operations'),
-      mediosTitle: T('Cobertura en medios', 'Media coverage'),
-      mediosSub: T('Notas de prensa de las ediciones anteriores, en medios de cada plaza.', 'Press coverage of previous editions, in each market\u2019s media.'),
       ctaHistoria: T('Conoce la historia de la copa', 'Discover the cup\u2019s history'),
       ctaHistoriaUrl: T('/es/socceridcup', '/en/socceridcup')
     }

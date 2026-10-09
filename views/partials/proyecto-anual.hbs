@@ -373,10 +373,10 @@
       <div class="pa-cajon__cuerpo">
         {{!-- Las tres ediciones NO se repiten aquí: ya están en el bloque 05,
               a la vista. El cajón es para lo que no cabe fuera. --}}
-        <p class="pa-caps">{{data.trayectoria.cajon.capacidades}}</p>
+        {{#if data.trayectoria.cajon.capacidades}}<p class="pa-caps">{{data.trayectoria.cajon.capacidades}}</p>{{/if}}
         {{#if mediaLinks.length}}
-        <h4 class="pa-cajon__h4">{{data.trayectoria.cajon.mediosTitle}}</h4>
-        <p class="pa-cajon__s">{{data.trayectoria.cajon.mediosSub}}</p>
+        {{#if data.trayectoria.cajon.mediosTitle}}<h4 class="pa-cajon__h4">{{data.trayectoria.cajon.mediosTitle}}</h4>{{/if}}
+        {{#if data.trayectoria.cajon.mediosSub}}<p class="pa-cajon__s">{{data.trayectoria.cajon.mediosSub}}</p>{{/if}}
         <ul class="pa-medios pa-medios--cajon">
           {{#each mediaLinks}}
           <li class="pa-medio">
