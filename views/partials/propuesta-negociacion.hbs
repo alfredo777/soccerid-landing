@@ -62,7 +62,10 @@
     .pp-neg__badge {
       display: inline-block; padding: 6px 18px; border-radius: 20px; margin-bottom: 22px;
       font-size: 12px; font-weight: 800; letter-spacing: 2px;
-      background: rgba(var(--pp-accent-rgb), 0.18); color: var(--pp-accent);
+      /* Cian, no el verde de la propuesta de partido: esta pantalla es del tour
+         (partidos 2 y 3) y el resalte del tour es el cian. Tinte tenue al 8 %
+         para no aclarar el fondo bajo un texto de 11 px. */
+      background: rgba(56, 225, 255, 0.08); color: #38E1FF;
     }
     .pp-neg__title { font-size: 40px; font-weight: 900; line-height: 1.12; margin-bottom: 18px; }
     .pp-neg__body { font-size: 18px; line-height: 1.6; color: rgba(255,255,255,0.78); }
