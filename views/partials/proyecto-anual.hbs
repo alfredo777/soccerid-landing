@@ -148,17 +148,7 @@
             {{/each}}
           </div>
         </div>
-        <ul class="pa-kv">
-          {{#each data.capital.items}}
-          <li class="pa-kv__i">
-            <span>{{this.label}}</span>
-            <strong>{{this.value}}</strong>
-            <span class="pa-kv__n">{{this.note}}</span>
-          </li>
-          {{/each}}
-          {{!-- El mínimo, no el total: el capital requerido ya se dice en el
-                título de este bloque y en la cifra del hero, y repetirlo una
-                tercera vez ocupaba el sitio del dato que faltaba. --}}
+        <ul class="pa-kv pa-kv--una">
           {{#unless data.capital.minimo.pendiente}}
           <li class="pa-kv__i pa-kv__i--total">
             <span>{{data.capital.minimo.label}}</span>
@@ -451,6 +441,8 @@
 
     .pa-kv { list-style: none; padding: 0; margin: 14px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
     .pa-kv--dos { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 12px 0 14px; }
+    /* Una sola tarjeta: el desglose por partido ya está en la barra de arriba. */
+    .pa-kv--una { grid-template-columns: minmax(0, 1fr); }
     .pa-kv__i {
       display: flex; flex-direction: column; gap: 7px; padding: 16px 18px; border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.055);
