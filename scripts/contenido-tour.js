@@ -134,8 +134,8 @@ const FUENTE = {
     ],
     lead: T('Experiencias y beneficios según tu participación.', 'Experiences and benefits according to your participation.'),
     cta: T('Consultar detalles', 'See details'),
-    aviso: T('Inversión a riesgo, sin garantía de rendimiento ni de recuperación íntegra del capital.',
-             'At-risk investment, with no guarantee of return or of full recovery of capital.'),
+    aviso: T("Inversión a riesgo bajo un esquema de participación en los resultados de SOCCER iD TOUR '27.",
+             "At-risk investment under a participation structure in the results of SOCCER iD TOUR '27."),
     cajon: {
       title: T('Respaldo y seguimiento', 'Backing and follow-up'),
       sub: T('La participación se formaliza mediante contrato. Esto es lo que tienes durante el proyecto.',
@@ -146,9 +146,7 @@ const FUENTE = {
         { title: T('Documentación del proyecto', 'Project documentation'), body: T('Acceso a los documentos del proyecto según tu nivel de participación.', 'Access to the project documents according to your level of participation.'), icon: 'caja' },
         { title: T('Uso de recursos', 'Use of funds'), body: T("Capital destinado exclusivamente al proyecto SOCCER iD TOUR '27.", "Capital allocated exclusively to the SOCCER iD TOUR '27 project."), icon: 'candado' },
         { title: T('Experiencias y beneficios', 'Experiences and benefits'), body: T('Disponibles según tu participación y los permisos de cada evento. Se detallan en la propuesta.', 'Available according to your participation and each event\u2019s permits. Detailed in the proposal.'), icon: 'boleto' }
-      ],
-      aviso: T('No se ofrece rendimiento fijo ni recuperación íntegra garantizada. La inversión puede presentar pérdida parcial o total. El contrato establecerá reglas de distribución, pérdidas y cambios de calendario.',
-               'No fixed return or guaranteed full recovery is offered. The investment may result in partial or total loss. The contract will set out the rules for distribution, losses and calendar changes.')
+      ]
     }
   },
 

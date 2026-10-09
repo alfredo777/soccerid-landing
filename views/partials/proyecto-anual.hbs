@@ -353,7 +353,7 @@
           </div>
           {{/each}}
         </div>
-        <div class="pa-nota pa-nota--warn"><p class="pa-nota__b">{{data.respaldo.cajon.aviso}}</p></div>
+        {{#if data.respaldo.cajon.aviso}}<div class="pa-nota pa-nota--warn"><p class="pa-nota__b">{{data.respaldo.cajon.aviso}}</p></div>{{/if}}
       </div>
     </div>
   </aside>

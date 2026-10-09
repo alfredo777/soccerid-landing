@@ -191,7 +191,7 @@
       ],
       "lead": "Experiencias y beneficios según tu participación.",
       "cta": "Consultar detalles",
-      "aviso": "Inversión a riesgo, sin garantía de rendimiento ni de recuperación íntegra del capital.",
+      "aviso": "Inversión a riesgo bajo un esquema de participación en los resultados de SOCCER iD TOUR '27.",
       "cajon": {
         "title": "Respaldo y seguimiento",
         "sub": "La participación se formaliza mediante contrato. Esto es lo que tienes durante el proyecto.",
@@ -221,8 +221,7 @@
             "body": "Disponibles según tu participación y los permisos de cada evento. Se detallan en la propuesta.",
             "icon": "boleto"
           }
-        ],
-        "aviso": "No se ofrece rendimiento fijo ni recuperación íntegra garantizada. La inversión puede presentar pérdida parcial o total. El contrato establecerá reglas de distribución, pérdidas y cambios de calendario."
+        ]
       }
     },
     "trayectoria": {
@@ -463,7 +462,7 @@
       ],
       "lead": "Experiences and benefits according to your participation.",
       "cta": "See details",
-      "aviso": "At-risk investment, with no guarantee of return or of full recovery of capital.",
+      "aviso": "At-risk investment under a participation structure in the results of SOCCER iD TOUR '27.",
       "cajon": {
         "title": "Backing and follow-up",
         "sub": "Participation is formalized through a contract. This is what you have throughout the project.",
@@ -493,8 +492,7 @@
             "body": "Available according to your participation and each event’s permits. Detailed in the proposal.",
             "icon": "boleto"
           }
-        ],
-        "aviso": "No fixed return or guaranteed full recovery is offered. The investment may result in partial or total loss. The contract will set out the rules for distribution, losses and calendar changes."
+        ]
       }
     },
     "trayectoria": {
