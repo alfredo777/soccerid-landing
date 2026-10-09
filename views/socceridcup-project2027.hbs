@@ -85,20 +85,30 @@
   @font-face { font-family: 'Raleway'; src: url('/assets/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtzpYCP.ttf') format('truetype'); font-weight: 900; font-display: swap; }
   body { font-family: 'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 
-  /* El proyecto anual va en gris intermedio, con el blanco y el negro del
-     logo iD TOUR '27. Esto NO toca las páginas de partido, que conservan el
-     verde y el carbón: el bloque solo se emite aquí.
+  /* El proyecto anual va en gris intermedio plano, con el blanco y el negro
+     del logo iD TOUR '27. El único color vivo es el CIAN, y tiene un solo
+     papel: lo que antes iba en verde neón —lo pendiente por definir y el
+     filete de las notas de riesgo—, que es lo que tiene que saltar a la
+     vista. Rótulos, cifras, iconos y barras siguen en blanco, gris y el azul
+     del logo. Esto NO toca las páginas de partido, que conservan el verde y
+     el carbón: el bloque solo se emite aquí.
 
-     Contraste sobre el gris #33363D (la casa pide 7.0 bajo 16px y 4.5
-     encima, ver docs/variables-del-proyecto.md y scripts/contraste.js):
-     blanco 12.10, gris de rótulo #C9CCD4 7.53. El rojo del logo no aparece:
-     sobre este fondo da 3.4 y no pasa ni para texto grande. */
+     Contraste (la casa pide 7.0 bajo 16px y 4.5 encima, ver
+     docs/variables-del-proyecto.md y scripts/contraste.js): blanco 12.10 y
+     gris de rótulo #C9CCD4 7.53 sobre el gris #33363D. El cian #38E1FF da
+     7.71 sobre la página y 10.14 sobre la tarjeta; en la pastilla, con su
+     tinte al 8 %, se queda en 7.3 — al 13 % que llevaba el verde bajaría a
+     6.4, por eso el tinte es más tenue. El rojo del logo no aparece: da 3.4
+     y no pasa ni para texto grande. */
   :root {
     --pp-accent: #FFFFFF;
     --pp-accent-deep: #D5D8DE;
     --pp-accent-ink: #1C1E23;
     --pp-accent-soft: #FFFFFF;
     --pp-accent-rgb: 255, 255, 255;
+    /* El resalte: cian, en el papel que tenía el verde neón. */
+    --tour-cian: #38E1FF;
+    --tour-cian-rgb: 56, 225, 255;
     --pp-dark: #33363D;
     --pp-dark2: #3B3F47;
     --tour-tinta: #1C1E23;
@@ -1588,6 +1598,50 @@
       });
     }, { threshold: 0.15 });
     piezas.forEach(function(p) { vigia.observe(p); });
+  })();
+
+  // ─── Cajones laterales del perfil anual ───
+  // Lo secundario (presupuesto, condiciones, trayectoria) se abre desde los
+  // botones [data-cajon]. Los escuchadores van delegados en document, porque
+  // este contenido se inyecta tras el candado y un escuchador atado a un
+  // botón se iría con el nodo viejo. La guarda evita apilarlos si
+  // initContenido corre dos veces.
+  (function() {
+    if (document.body.dataset.paCajones) return;
+    document.body.dataset.paCajones = '1';
+    var abierto = null, origen = null;
+
+    function cerrar() {
+      if (!abierto) return;
+      var cajon = abierto; abierto = null;
+      cajon.classList.remove('is-open');
+      cajon.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      window.setTimeout(function() { cajon.hidden = true; }, 260);
+      if (origen && origen.focus) origen.focus();
+      origen = null;
+    }
+    function abrir(nombre, desde) {
+      var cajon = document.getElementById('pa-cajon-' + nombre);
+      if (!cajon) return;
+      cerrar();
+      abierto = cajon; origen = desde || null;
+      cajon.hidden = false;
+      cajon.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      window.requestAnimationFrame(function() { cajon.classList.add('is-open'); });
+      var x = cajon.querySelector('.pa-cajon__x');
+      if (x) window.setTimeout(function() { x.focus(); }, 280);
+    }
+
+    document.addEventListener('click', function(e) {
+      var boton = e.target.closest('[data-cajon]');
+      if (boton) { e.preventDefault(); abrir(boton.getAttribute('data-cajon'), boton); return; }
+      if (e.target.closest('[data-cajon-cerrar]')) { e.preventDefault(); cerrar(); }
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && abierto) cerrar();
+    });
   })();
   {{/if}}
 

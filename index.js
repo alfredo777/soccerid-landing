@@ -872,7 +872,9 @@ app.get('/socceridcup', (req, res) => {
 // partido y si todavía se está negociando. Así no hay URLs escritas a mano en
 // el contenido.
 function navPartidos(data, lang) {
-  const cards = ((data && data.partidos) || {}).cards || [];
+  // En la estructura v2 del tour las tarjetas viven bajo `proyecto`; el
+  // nombre viejo se conserva por si otra propuesta lo usa.
+  const cards = ((data && (data.proyecto || data.partidos)) || {}).cards || [];
   return cards.map((c) => {
     const v = propuestas.porId(c.variante);
     if (!v) return null;
@@ -932,6 +934,19 @@ function graficosTour(data) {
 
   // 70 / 30: la barra partida.
   g.reparto = (((data.participacion || {}).partes) || []).map(p => ({ pct: num(p.pct), quien: p.quien }));
+
+  // Capital: la barra apilada, cada tramo a su medida. Antes los tres iban
+  // iguales porque no había cifras; ahora el partido 1 pesa el 71 % y cada
+  // anticipo el 14 %. El mínimo de 10 % evita que un tramo quede ilegible.
+  const tramos = ((data.capital || {}).items) || [];
+  const totalCapital = tramos.reduce((a, t) => a + num(t.monto), 0);
+  g.capital = tramos.map(t => {
+    const pct = totalCapital ? Math.max(10, Math.round(num(t.monto) / totalCapital * 100)) : Math.round(100 / (tramos.length || 1));
+    // En un tramo estrecho el rótulo no cabe y se recorta a "PARTI…": se
+    // deja solo la cifra, que es lo que importa; las tarjetas de debajo ya
+    // dicen de qué partido es cada una.
+    return { label: t.label, value: t.value, pct, conRotulo: pct >= 25 };
+  });
 
   // 10 % → 70 % → 7 %: tres barras encadenadas.
   g.ejemplo = (((data.ejemplo || {}).pasos) || []).map(p => ({ pct: num(p.value), value: p.value, label: p.label }));
