@@ -153,7 +153,7 @@
           <li class="pa-kv__i pa-kv__i--total">
             <span>{{data.capital.minimo.label}}</span>
             <strong>{{data.capital.minimo.value}}</strong>
-            <span class="pa-kv__n">{{data.capital.minimo.note}}</span>
+            {{#if data.capital.minimo.note}}<span class="pa-kv__n">{{data.capital.minimo.note}}</span>{{/if}}
           </li>
           {{/unless}}
         </ul>

@@ -69,8 +69,7 @@ const FUENTE = {
     // propuesta de partido enseña con un código de nivel tour.
     minimo: {
       label: T('PARTICIPA DESDE', 'PARTICIPATE FROM'),
-      value: 'USD $100,000',
-      note: T('o MXN $2,000,000', 'or MXN $2,000,000')
+      value: T('USD $100,000 o MXN $2,000,000', 'USD $100,000 or MXN $2,000,000')
     },
     items: [
       { label: T('PARTIDO 1', 'MATCH 1'), note: T('Presupuesto completo', 'Full budget'),   value: 'USD $1,000,000', monto: 1000000 },

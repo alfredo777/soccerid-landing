@@ -80,8 +80,7 @@
       "title": "USD $1,400,000 para toda la temporada.",
       "minimo": {
         "label": "PARTICIPA DESDE",
-        "value": "USD $100,000",
-        "note": "o MXN $2,000,000"
+        "value": "USD $100,000 o MXN $2,000,000"
       },
       "items": [
         {
@@ -353,8 +352,7 @@
       "title": "USD $1,400,000 for the whole season.",
       "minimo": {
         "label": "PARTICIPATE FROM",
-        "value": "USD $100,000",
-        "note": "or MXN $2,000,000"
+        "value": "USD $100,000 or MXN $2,000,000"
       },
       "items": [
         {
