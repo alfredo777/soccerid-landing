@@ -183,6 +183,7 @@
             <span class="pa-tile__l">{{data.participacion.devolucion.label}}</span>
             <strong class="pa-tile__v">{{data.participacion.devolucion.value}}</strong>
             <span class="pa-tile__n">{{data.participacion.lineas.[1]}}</span>
+            <p class="pa-tile__nota">{{data.participacion.nota}}</p>
           </div>
           {{!-- El rendimiento estimado está pendiente: cuando se valide la
                proyección entran aquí los tres escenarios (bajo, base,
@@ -193,7 +194,6 @@
             <strong class="pa-tile__v">{{data.participacion.rendimiento.value}}</strong>
           </div>
           {{/unless}}
-          <div class="pa-nota pa-nota--warn pa-nota--compacta"><p class="pa-nota__b">{{data.participacion.nota}}</p></div>
         </div>
       </section>
 
@@ -530,8 +530,14 @@
     .pa-partida__t:last-child { border-radius: 12px 999px 999px 12px; background: rgba(255,255,255,0.16); color: #FFFFFF; }
     .pa-partida__t strong { font-size: 26px; font-weight: 900; line-height: 1; }
     .pa-partida__t span { font-size: 10px; font-weight: 800; letter-spacing: 1.4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .pa-retorno { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 12px; align-items: stretch; }
-    .pa-retorno .pa-nota { margin-top: 0; display: flex; align-items: center; }
+    /* Una sola columna: la tarjeta ocupa todo el ancho del bloque. */
+    .pa-retorno { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    /* La advertencia va dentro de la tarjeta, al final, separada por un filete. */
+    .pa-tile__nota {
+      margin: 14px 0 0; padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      font-size: 13px; line-height: 1.55; color: #D2D5DC;
+    }
 
     /* ───────────── MOVIMIENTO ─────────────
        Las barras crecen al entrar en pantalla; lo dispara un observador en la
