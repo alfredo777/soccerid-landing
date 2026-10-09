@@ -133,11 +133,7 @@
             <p class="pa-rot"><span>{{data.capital.kicker}}</span></p>
             <h2 class="pa-box__t">{{data.capital.title}}</h2>
           </div>
-          {{!-- El mínimo de inversión está pendiente en el brief: no se publica
-               un campo vacío. Al cerrarse, aparece solo. --}}
-          {{#unless data.capital.minimo.pendiente}}
-          <p class="pa-box__s"><strong class="pa-box__dato">{{data.capital.minimo.label}} {{data.capital.minimo.value}}</strong></p>
-          {{/unless}}
+          <p class="pa-box__s">{{data.capital.sub}}</p>
         </div>
         {{!-- La composición del capital como barra apilada, cada tramo a su
              medida: el partido 1 pesa el 71 % y los anticipos el 14 % cada uno. --}}
@@ -160,11 +156,16 @@
             <span class="pa-kv__n">{{this.note}}</span>
           </li>
           {{/each}}
+          {{!-- El mínimo, no el total: el capital requerido ya se dice en el
+                título de este bloque y en la cifra del hero, y repetirlo una
+                tercera vez ocupaba el sitio del dato que faltaba. --}}
+          {{#unless data.capital.minimo.pendiente}}
           <li class="pa-kv__i pa-kv__i--total">
-            <span>{{data.capital.totalLabel}}</span>
-            <strong>{{data.capital.totalValue}}</strong>
-            <span class="pa-kv__n">{{data.capital.items.[0].note}} + {{data.capital.items.[1].note}}</span>
+            <span>{{data.capital.minimo.label}}</span>
+            <strong>{{data.capital.minimo.value}}</strong>
+            <span class="pa-kv__n">{{data.capital.minimo.note}}</span>
           </li>
+          {{/unless}}
         </ul>
         <div class="pa-box__pie-cta">
           <p class="pa-box__pie">{{data.capital.nota}}</p>

@@ -65,8 +65,13 @@ const FUENTE = {
   capital: {
     kicker: T('02 · CAPITAL Y DESTINO', '02 · CAPITAL AND USE OF FUNDS'),
     title: T('USD $1,400,000 para toda la temporada.', 'USD $1,400,000 for the whole season.'),
-    // Pendiente en el brief: no se publica hasta que haya cifra.
-    minimo: { label: T('Participa desde', 'Participate from'), value: '', pendiente: true },
+    // El brief lo dejaba por definir; ya hay cifra. Es el mismo mínimo que la
+    // propuesta de partido enseña con un código de nivel tour.
+    minimo: {
+      label: T('PARTICIPA DESDE', 'PARTICIPATE FROM'),
+      value: 'USD $100,000',
+      note: T('o MXN $2,000,000', 'or MXN $2,000,000')
+    },
     items: [
       { label: T('PARTIDO 1', 'MATCH 1'), note: T('Presupuesto completo', 'Full budget'),   value: 'USD $1,000,000', monto: 1000000 },
       { label: T('PARTIDO 2', 'MATCH 2'), note: T('Anticipos', 'Advances'),                 value: 'USD $200,000',   monto: 200000 },

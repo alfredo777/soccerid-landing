@@ -79,9 +79,9 @@
       "kicker": "02 · CAPITAL Y DESTINO",
       "title": "USD $1,400,000 para toda la temporada.",
       "minimo": {
-        "label": "Participa desde",
-        "value": "",
-        "pendiente": true
+        "label": "PARTICIPA DESDE",
+        "value": "USD $100,000",
+        "note": "o MXN $2,000,000"
       },
       "items": [
         {
@@ -353,9 +353,9 @@
       "kicker": "02 · CAPITAL AND USE OF FUNDS",
       "title": "USD $1,400,000 for the whole season.",
       "minimo": {
-        "label": "Participate from",
-        "value": "",
-        "pendiente": true
+        "label": "PARTICIPATE FROM",
+        "value": "USD $100,000",
+        "note": "or MXN $2,000,000"
       },
       "items": [
         {
