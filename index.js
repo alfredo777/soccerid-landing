@@ -1127,7 +1127,13 @@ function renderPropuesta(variante) {
       const crudo = propuestas.leerContenido(variante, langContenido, DEFAULT_LANG);
       if (!crudo) return next();
       // Qué se ofrece depende del nivel del código con que se entró.
-      const data = vistaDeNivel(crudo, propuestas.accesoDe(req));
+      const acceso = propuestas.accesoDe(req);
+      const data = vistaDeNivel(crudo, acceso);
+      // Entrar a un PARTIDO con un código de nivel TOUR enseña una versión
+      // recortada: el partido es una ficha dentro del tour, no la propuesta
+      // entera. Con un código de nivel partido se ve todo. La plantilla usa
+      // este flag para ocultar las secciones que no aplican en ese caso.
+      const esNivelTour = variante.tipo === 'partido' && !!acceso && acceso.nivel === 'tour';
       // Los textos de la puerta, en el idioma pedido pase lo que pase.
       const lock = propuestas.textosCandado(variante, lang, DEFAULT_LANG);
 
@@ -1172,6 +1178,7 @@ function renderPropuesta(variante) {
         // propuesta: la página existe, el contenido todavía no.
         enNegociacion: propuestas.enNegociacion(variante),
         esTour: variante.tipo === 'tour',
+        esNivelTour: esNivelTour,
         urlTour: await vueltaAlTour(req, variante, langContenido),
         // El candado se lee en los dos idiomas siempre. Dentro, en cambio,
         // solo se ofrece el idioma que existe: un conmutador que lleva a la
@@ -1214,11 +1221,14 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
   try {
     const crudo = propuestas.leerContenido(variante, lang, DEFAULT_LANG);
     if (!crudo) return next();
-    const data = vistaDeNivel(crudo, propuestas.accesoDe(req));
+    const acceso = propuestas.accesoDe(req);
+    const data = vistaDeNivel(crudo, acceso);
+    const esNivelTour = variante.tipo === 'partido' && !!acceso && acceso.nivel === 'tour';
     res.set('Cache-Control', 'no-store');
     res.set('X-Idioma-Servido', lang);
     res.render(partialDe(variante), {
       layout: false,
+      esNivelTour: esNivelTour,
       ventana: variante.ventana || null,
       heroImage: variante.hero,
       logo: variante.logo || null,

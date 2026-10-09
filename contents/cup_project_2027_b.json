@@ -704,7 +704,8 @@
         "proposal.risk.rows.2.value": "USD $82,600",
         "proposal.risk.rows.3.value": "USD $182,600",
         "calculator.investorSplit": 70,
-        "calculator.labels.pool": "70% destinado a inversionistas (pool)"
+        "calculator.labels.pool": "70% destinado a inversionistas (pool)",
+        "timeline.items.6.soloPartido": true
       }
     }
   },
@@ -1413,7 +1414,8 @@
         "proposal.risk.rows.2.value": "USD $82,600",
         "proposal.risk.rows.3.value": "USD $182,600",
         "calculator.investorSplit": 70,
-        "calculator.labels.pool": "70% allocated to investors (pool)"
+        "calculator.labels.pool": "70% allocated to investors (pool)",
+        "timeline.items.6.soloPartido": true
       }
     }
   }
