@@ -18,7 +18,10 @@
       "note": "Cuando quede formalizado, su perfil se publica en esta misma dirección: la liga que ya tienes seguirá sirviendo.",
       "ventanaLabel": "VENTANA PREVISTA",
       "paisLabel": "PAÍS",
-      "pais": "Estados Unidos"
+      "pais": "Estados Unidos",
+      "anticiposLabel": "ANTICIPOS PREVISTOS",
+      "anticiposValue": "USD $200,000",
+      "anticiposDetalle": "Clubes, estadio y permisos"
     }
   },
   "en": {
@@ -39,7 +42,10 @@
       "note": "Once it is formalized, its profile will be published at this same address: the link you already have will keep working.",
       "ventanaLabel": "EXPECTED WINDOW",
       "paisLabel": "COUNTRY",
-      "pais": "United States"
+      "pais": "United States",
+      "anticiposLabel": "EXPECTED ADVANCES",
+      "anticiposValue": "USD $200,000",
+      "anticiposDetalle": "Clubs, stadium and permits"
     }
   }
 }

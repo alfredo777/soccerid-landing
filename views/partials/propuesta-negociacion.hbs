@@ -36,6 +36,13 @@
       <p class="pp-neg__body">{{data.negociacion.body}}</p>
 
       <div class="pp-neg__datos">
+        {{#if data.negociacion.anticiposValue}}
+        <div class="pp-neg__dato pp-neg__dato--ancha">
+          <span class="pp-neg__dato-l">{{data.negociacion.anticiposLabel}}</span>
+          <strong class="pp-neg__dato-v pp-neg__dato-v--cian">{{data.negociacion.anticiposValue}}</strong>
+          {{#if data.negociacion.anticiposDetalle}}<span class="pp-neg__dato-n">{{data.negociacion.anticiposDetalle}}</span>{{/if}}
+        </div>
+        {{/if}}
         {{#if ventana}}
         <div class="pp-neg__dato">
           <span class="pp-neg__dato-l">{{data.negociacion.ventanaLabel}}</span>
@@ -83,6 +90,11 @@
       color: rgba(255,255,255,0.45); margin-bottom: 7px;
     }
     .pp-neg__dato-v { font-size: 17px; font-weight: 800; }
+    /* Pastilla ancha (ocupa el ancho de las dos de abajo), para los anticipos
+       previstos de los partidos aún por definir. */
+    .pp-neg__dato--ancha { flex-basis: 100%; width: 100%; border-color: rgba(56,225,255,0.35); background: rgba(56,225,255,0.06); }
+    .pp-neg__dato-v--cian { color: #38E1FF; font-size: 22px; }
+    .pp-neg__dato-n { display: block; margin-top: 6px; font-size: 12.5px; color: rgba(255,255,255,0.6); }
 
     .pp-neg__note {
       font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,0.5);
