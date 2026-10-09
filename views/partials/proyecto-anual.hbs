@@ -167,8 +167,8 @@
           </li>
           {{/unless}}
         </ul>
-        <div class="pa-box__pie-cta">
-          <p class="pa-box__pie">{{data.capital.nota}}</p>
+        <div class="pa-box__pie-cta{{#unless data.capital.nota}} pa-box__pie-cta--solo{{/unless}}">
+          {{#if data.capital.nota}}<p class="pa-box__pie">{{data.capital.nota}}</p>{{/if}}
           <button type="button" class="pa-btn pa-btn--ghost" data-cajon="presupuesto">{{data.capital.cta}} →</button>
         </div>
       </section>

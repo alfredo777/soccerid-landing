@@ -106,7 +106,6 @@
       "barraLabel": "CÓMO SE REPARTE EL CAPITAL",
       "totalLabel": "CAPITAL REQUERIDO",
       "totalValue": "USD $1,400,000",
-      "nota": "El capital cubre el primer partido y los anticipos de los otros dos. Los anticipos se descuentan del costo de cada evento; no se contabilizan dos veces.",
       "cta": "Ver presupuesto",
       "cajon": {
         "title": "Presupuesto del primer partido",
@@ -380,7 +379,6 @@
       "barraLabel": "HOW THE CAPITAL IS ALLOCATED",
       "totalLabel": "CAPITAL REQUIRED",
       "totalValue": "USD $1,400,000",
-      "nota": "The capital covers the first match and the advances for the other two. Advances are deducted from each event’s cost; they are not counted twice.",
       "cta": "View budget",
       "cajon": {
         "title": "First match budget",

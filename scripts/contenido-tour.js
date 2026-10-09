@@ -80,8 +80,6 @@ const FUENTE = {
     barraLabel: T('CÓMO SE REPARTE EL CAPITAL', 'HOW THE CAPITAL IS ALLOCATED'),
     totalLabel: T('CAPITAL REQUERIDO', 'CAPITAL REQUIRED'),
     totalValue: 'USD $1,400,000',
-    nota: T('El capital cubre el primer partido y los anticipos de los otros dos. Los anticipos se descuentan del costo de cada evento; no se contabilizan dos veces.',
-            'The capital covers the first match and the advances for the other two. Advances are deducted from each event\u2019s cost; they are not counted twice.'),
     cta: T('Ver presupuesto', 'View budget'),
     cajon: {
       title: T('Presupuesto del primer partido', 'First match budget'),
