@@ -79,7 +79,8 @@
       "title": "USD $1,400,000 para toda la temporada.",
       "minimo": {
         "label": "PARTICIPA DESDE",
-        "value": "USD $100,000 o MXN $2,000,000"
+        "value": "USD $100,000 o MXN $2,000,000",
+        "note": "El presupuesto restante de los partidos 2 y 3 se prevé financiar con las utilidades del primer partido y la preventa de boletos de cada encuentro."
       },
       "items": [
         {
@@ -355,7 +356,8 @@
       "title": "USD $1,400,000 for the whole season.",
       "minimo": {
         "label": "PARTICIPATE FROM",
-        "value": "USD $100,000 or MXN $2,000,000"
+        "value": "USD $100,000 or MXN $2,000,000",
+        "note": "The remaining budget for matches 2 and 3 is expected to be financed with the profits from the first match and the ticket pre-sale of each event."
       },
       "items": [
         {

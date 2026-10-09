@@ -153,10 +153,10 @@
           <li class="pa-kv__i pa-kv__i--total">
             <span>{{data.capital.minimo.label}}</span>
             <strong>{{data.capital.minimo.value}}</strong>
-            {{#if data.capital.minimo.note}}<span class="pa-kv__n">{{data.capital.minimo.note}}</span>{{/if}}
           </li>
           {{/unless}}
         </ul>
+        {{#if data.capital.minimo.note}}<div class="pa-nota pa-nota--warn pa-nota--compacta"><p class="pa-nota__b">{{data.capital.minimo.note}}</p></div>{{/if}}
         <div class="pa-box__pie-cta{{#unless data.capital.nota}} pa-box__pie-cta--solo{{/unless}}">
           {{#if data.capital.nota}}<p class="pa-box__pie">{{data.capital.nota}}</p>{{/if}}
           <button type="button" class="pa-btn pa-btn--ghost" data-cajon="presupuesto">{{data.capital.cta}} →</button>
