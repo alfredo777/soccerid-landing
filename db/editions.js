@@ -58,6 +58,32 @@ async function timeline(lang) {
   });
 }
 
+/**
+ * Fichas de las ediciones pasadas para el perfil anual del tour: lo que hace
+ * falta para enseñarlas con cara —imagen, sede y asistencia— y para enlazarlas
+ * a su página. `timeline` no sirve aquí porque solo devuelve año, partido y
+ * ciudad, y las tarjetas del tour necesitan la imagen.
+ */
+async function fichas(lang) {
+  const deDatos = (year, d) => ({
+    year: String(year),
+    match: d.match || '',
+    city: d.city || '',
+    venue: d.venue || '',
+    // El banner, y si no lo hay, la primera foto de la galería.
+    imagen: d.banner || (((d.images || [])[0] || {}).src) || null,
+    asistencia: ((d.attendance || {}).value) || null,
+    asistenciaLabel: ((d.attendance || {}).label) || null
+  });
+  try {
+    const rows = await soloReales(knex('portfolio_events').where({ status: 'past' })).orderBy('year');
+    if (rows && rows.length) return rows.map(r => deDatos(r.year, parse(r, lang)));
+  } catch (_) {}
+  const ed = readJson('cup_editions.json') || {};
+  const le = ed[lang] || ed.es || {};
+  return Object.keys(le).sort().map(y => deDatos(y, le[y]));
+}
+
 // Detalle de /socceridcup/:year — { edition, prev, next } o null (solo ediciones 'past')
 async function detail(year, lang) {
   year = String(year);
@@ -116,4 +142,4 @@ async function mediaLinks(lang) {
   return out;
 }
 
-module.exports = { timeline, detail, mediaLinks };
+module.exports = { timeline, detail, mediaLinks, fichas };

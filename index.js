@@ -991,6 +991,31 @@ function graficosTour(data) {
 }
 
 /**
+ * Las ediciones del tour, cruzadas con su ficha real.
+ *
+ * El contenido del tour nombra las tres ediciones (año, partido, sede); la
+ * imagen, la asistencia y la DIRECCIÓN de su página salen del registro de
+ * ediciones, que es donde viven. Así la tarjeta deja de ser decorativa: lleva
+ * a algún sitio, que es lo que su aspecto promete.
+ */
+function edicionesTour(data, lang, fichas) {
+  const dichas = (((data || {}).trayectoria) || {}).ediciones || [];
+  const porAnio = {};
+  (fichas || []).forEach(f => { porAnio[String(f.year)] = f; });
+  return dichas.map(e => {
+    const f = porAnio[String(e.anio)] || {};
+    return Object.assign({}, e, {
+      imagen: f.imagen || null,
+      venue: f.venue || '',
+      asistencia: f.asistencia || null,
+      asistenciaLabel: f.asistenciaLabel || null,
+      // Solo se enlaza lo que existe: sin ficha, la tarjeta no finge ser un enlace.
+      url: f.year ? `/${lang}/socceridcup/${f.year}` : null
+    });
+  });
+}
+
+/**
  * La propuesta de un partido, ajustada al NIVEL del código con que se entró.
  *
  * La regla: con un código de TOUR toda la participación es a riesgo y el
@@ -1129,6 +1154,7 @@ function renderPropuesta(variante) {
         isEn: lang === 'en',
         data: data,
         mediaLinks: mediaLinks,
+        ediciones: edicionesTour(data, langContenido, await cupEditions.fichas(langContenido)),
         // Identidad de la propuesta: la vista la usa para sus enlaces de idioma,
         // la llave de sesión del candado y el campo `variant` del formulario.
         slug: variante.slug,
@@ -1207,6 +1233,7 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
       urlTour: await vueltaAlTour(req, variante, lang),
       data: data,
       mediaLinks: await cupEditions.mediaLinks(lang),
+      ediciones: edicionesTour(data, lang, await cupEditions.fichas(lang)),
       slug: variante.slug,
       baseUrl: BASE_URL,
       year: new Date().getFullYear()

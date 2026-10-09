@@ -149,10 +149,14 @@ const FUENTE = {
     kicker: T('05 · TRAYECTORIA', '05 · TRACK RECORD'),
     title: T('Tres ediciones realizadas.', 'Three editions delivered.'),
     sub: T('2023 · 2024 · 2025. Clubes, aficionados, sedes y marcas conectados a través del futbol.', '2023 · 2024 · 2025. Clubs, fans, venues and brands connected through football.'),
+    // `foco` es la altura del recorte de la foto: la acción no está a la misma
+    // altura en las tres (2023 al 12 %, 2025 al 32 %, 2024 al 45 %) y un
+    // recorte único decapitaba a los jugadores de 2023. Se ajusta aquí, no en
+    // el CSS, porque cambia con la foto.
     ediciones: [
-      { anio: '2023', match: 'Pumas vs. Comunicaciones',      sede: 'San José, California' },
-      { anio: '2024', match: 'América vs. Atlético Nacional', sede: 'Orlando, Florida' },
-      { anio: '2025', match: 'Pumas vs. Tigres',              sede: 'Austin, Texas' }
+      { anio: '2023', match: 'Pumas vs. Comunicaciones',      sede: 'San José, California', foco: '22%' },
+      { anio: '2024', match: 'América vs. Atlético Nacional', sede: 'Orlando, Florida',     foco: '45%' },
+      { anio: '2025', match: 'Pumas vs. Tigres',              sede: 'Austin, Texas',        foco: '34%' }
     ],
     cta: T('Ver trayectoria', 'View track record'),
     cajon: {
@@ -172,7 +176,7 @@ const FUENTE = {
     body: T('Solicita la propuesta de inversión y nuestro equipo te acompaña a revisar el proyecto y resolver tus preguntas.',
             'Request the investment proposal and our team will walk you through the project and answer your questions.'),
     cta: T('Solicitar propuesta de inversión', 'Request the investment proposal'),
-    ctaUrl: 'mailto:socceridco@soccerid.co?subject=SOCCER%20iD%20TOUR%2027'
+    ctaUrl: 'mailto:leon@soccerid.co?subject=SOCCER%20iD%20TOUR%2027'
   },
 
   cajon: { cerrar: T('Cerrar', 'Close') },
