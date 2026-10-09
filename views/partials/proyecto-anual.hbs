@@ -378,19 +378,8 @@
         </button>
       </header>
       <div class="pa-cajon__cuerpo">
-        <div class="pa-lista">
-          {{#each ediciones}}
-          <a class="pa-ed pa-ed--ancha" href="{{this.url}}"{{{salida this.url}}}>
-            {{#if this.imagen}}<span class="pa-ed__foto" style="background-image: url('{{this.imagen}}'); --foco: {{#if this.foco}}{{this.foco}}{{else}}30%{{/if}}" aria-hidden="true"></span>{{/if}}
-            <span class="pa-ed__cuerpo">
-              <strong class="pa-ed__anio">{{this.anio}}</strong>
-              <span class="pa-ed__t">{{this.match}}</span>
-              <span class="pa-ed__n">{{#if this.venue}}{{this.venue}} · {{/if}}{{this.sede}}</span>
-              {{#if this.asistencia}}<span class="pa-ed__dato">{{this.asistencia}} {{this.asistenciaLabel}}</span>{{/if}}
-            </span>
-          </a>
-          {{/each}}
-        </div>
+        {{!-- Las tres ediciones NO se repiten aquí: ya están en el bloque 05,
+              a la vista. El cajón es para lo que no cabe fuera. --}}
         <p class="pa-caps">{{data.trayectoria.cajon.capacidades}}</p>
         {{#if mediaLinks.length}}
         <h4 class="pa-cajon__h4">{{data.trayectoria.cajon.mediosTitle}}</h4>
@@ -515,11 +504,14 @@
          el azul base y 9.36 sobre el claro del segundo tramo. */
       color: #000000; transform-origin: left center;
     }
-    /* Radio parejo, no cápsula. Con tramos del 14 % el semicírculo de 999px se
-       come casi todo el tramo y choca con los 10px del lado contrario: queda
-       deforme. Un radio igual en los cuatro vértices los deja leerse como tres
-       piezas de la misma barra. */
-    .pa-apilada__t:first-child, .pa-apilada__t:last-child { border-radius: 12px; }
+    /* La barra se lee como UNA pieza segmentada, igual que la del 70/30: la
+       cápsula solo en las orillas de FUERA, y recto por dentro. El tramo de en
+       medio no toca ningún extremo, así que va recto por los dos lados. */
+    .pa-apilada__t { border-radius: 0; }
+    .pa-apilada__t:first-child { border-radius: 999px 12px 12px 999px; }
+    .pa-apilada__t:last-child { border-radius: 12px 999px 999px 12px; }
+    /* Y si solo hubiera un tramo, cápsula entera. */
+    .pa-apilada__t:only-child { border-radius: 999px; }
     .pa-apilada__t:not(:first-child) { background: var(--tour-grafico-2, #7FDCF0); }
     .pa-apilada__n { font-size: 10px; font-weight: 800; letter-spacing: 1.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .pa-apilada__v { font-size: 13px; font-weight: 900; white-space: nowrap; }

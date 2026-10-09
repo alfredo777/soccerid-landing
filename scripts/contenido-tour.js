@@ -161,7 +161,8 @@ const FUENTE = {
     cta: T('Ver trayectoria', 'View track record'),
     cajon: {
       title: T('Trayectoria', 'Track record'),
-      sub: T('Tres ediciones de la SOCCER iD CUP como antecedente directo del tour.', 'Three editions of the SOCCER iD CUP as the direct precedent for the tour.'),
+      sub: T('Lo que sabemos hacer y cómo lo contaron los medios en las tres ediciones anteriores.',
+             'What we know how to do, and how the media covered it across the three previous editions.'),
       capacidades: T('Relación con clubes · Comercialización · Producción · Broadcast · Operación internacional', 'Club relations · Commercialization · Production · Broadcast · International operations'),
       mediosTitle: T('Cobertura en medios', 'Media coverage'),
       mediosSub: T('Notas de prensa de las ediciones anteriores, en medios de cada plaza.', 'Press coverage of previous editions, in each market\u2019s media.'),
