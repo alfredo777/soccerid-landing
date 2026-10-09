@@ -36,10 +36,13 @@ const FUENTE = {
   hero: {
     badge: T('PROYECTO ANUAL', 'ANNUAL PROJECT'),
     title: "SOCCER iD TOUR '27",
-    lead: T('Tres partidos internacionales. Una inversión en la temporada.', 'Three international matches. One investment in the season.'),
-    meta: T('Estados Unidos · Marzo a octubre 2027', 'United States · March to October 2027'),
+    // Dos piezas, no una frase con un salto dentro: así cada idioma parte
+    // donde le toca y la negrita no depende de dónde caiga la línea.
+    leadFuerte: T('Tres partidos internacionales.', 'Three international matches.'),
+    lead: T('Una inversión en la temporada.', 'One investment in the season.'),
+    meta: T('Estados Unidos 2027', 'United States 2027'),
     cifras: [
-      { label: T('CAPITAL REQUERIDO', 'CAPITAL REQUIRED'), value: 'USD 1.4 M', note: T('Partido 1 completo + anticipos de 2 y 3', 'Match 1 in full + advances for 2 and 3'), icon: 'dinero' },
+      { label: T('CAPITAL REQUERIDO', 'CAPITAL REQUIRED'), value: 'USD $1.4 M', note: T('Partido 1 completo + anticipos de 2 y 3', 'Match 1 in full + advances for 2 and 3'), icon: 'dinero' },
       { label: T('UTILIDADES PARA INVERSIONISTAS', 'PROFITS FOR INVESTORS'), value: '70%', note: T('30% para SOCCER iD', '30% for SOCCER iD'), icon: 'reparto' },
       { label: T('DEVOLUCIÓN PREVISTA', 'EXPECTED RETURN OF CAPITAL'), value: T('DIC 2027', 'DEC 2027'), note: T('Sujeto a cobranza y liquidación', 'Subject to collection and settlement'), icon: 'calendario-ok' }
     ]
@@ -61,17 +64,17 @@ const FUENTE = {
 
   capital: {
     kicker: T('02 · CAPITAL Y DESTINO', '02 · CAPITAL AND USE OF FUNDS'),
-    title: T('USD 1,400,000 para toda la temporada.', 'USD 1,400,000 for the whole season.'),
+    title: T('USD $1,400,000 para toda la temporada.', 'USD $1,400,000 for the whole season.'),
     // Pendiente en el brief: no se publica hasta que haya cifra.
     minimo: { label: T('Participa desde', 'Participate from'), value: '', pendiente: true },
     items: [
-      { label: T('PARTIDO 1', 'MATCH 1'), note: T('Presupuesto completo', 'Full budget'),   value: 'USD 1,000,000', monto: 1000000 },
-      { label: T('PARTIDO 2', 'MATCH 2'), note: T('Anticipos', 'Advances'),                 value: 'USD 200,000',   monto: 200000 },
-      { label: T('PARTIDO 3', 'MATCH 3'), note: T('Anticipos', 'Advances'),                 value: 'USD 200,000',   monto: 200000 }
+      { label: T('PARTIDO 1', 'MATCH 1'), note: T('Presupuesto completo', 'Full budget'),   value: 'USD $1,000,000', monto: 1000000 },
+      { label: T('PARTIDO 2', 'MATCH 2'), note: T('Anticipos', 'Advances'),                 value: 'USD $200,000',   monto: 200000 },
+      { label: T('PARTIDO 3', 'MATCH 3'), note: T('Anticipos', 'Advances'),                 value: 'USD $200,000',   monto: 200000 }
     ],
     barraLabel: T('CÓMO SE REPARTE EL CAPITAL', 'HOW THE CAPITAL IS ALLOCATED'),
     totalLabel: T('CAPITAL REQUERIDO', 'CAPITAL REQUIRED'),
-    totalValue: 'USD 1,400,000',
+    totalValue: 'USD $1,400,000',
     nota: T('El capital cubre el primer partido y los anticipos de los otros dos. Los anticipos se descuentan del costo de cada evento; no se contabilizan dos veces.',
             'The capital covers the first match and the advances for the other two. Advances are deducted from each event\u2019s cost; they are not counted twice.'),
     cta: T('Ver presupuesto', 'View budget'),
@@ -79,23 +82,25 @@ const FUENTE = {
       title: T('Presupuesto del primer partido', 'First match budget'),
       sub: T('Cruz Azul vs. Pumas · Shell Energy Stadium, Houston · Cifras del perfil del partido.', 'Cruz Azul vs. Pumas · Shell Energy Stadium, Houston · Figures from the match profile.'),
       totalLabel: 'TOTAL / USD',
-      totalValue: '1.0 M',
+      totalValue: '$1.0 M',
       anticiposTitle: T('Anticipos de los otros dos partidos', 'Advances for the other two matches'),
-      anticiposNota: T('USD 200,000 por partido, previstos. Cada uno tendrá su presupuesto completo en su propio perfil cuando se cierre.',
-                       'USD 200,000 per match, projected. Each will have its full budget on its own profile once it is closed.')
+      anticiposNota: T('USD $200,000 por partido, previstos. Cada uno tendrá su presupuesto completo en su propio perfil cuando se cierre.',
+                       'USD $200,000 per match, projected. Each will have its full budget on its own profile once it is closed.')
     }
   },
 
   // Alimenta la dona del cajón de presupuesto (lo lee donutCostos en index.js).
   costos: {
     moneda: 'USD',
+    // Los montos llevan signo: son dinero. El "USD" lo pone la etiqueta del
+    // total, para no repetirlo seis veces en la leyenda.
     lineas: [
-      { concepto: T('Fee de clubes', 'Club fees'),                 monto: '400,000' },
-      { concepto: T('Estadio y operación', 'Stadium and operations'), monto: '200,000' },
-      { concepto: T('Transporte y hospedaje', 'Travel and lodging'), monto: '250,000' },
-      { concepto: 'Marketing',                                      monto: '100,000' },
-      { concepto: T('Producción de TV', 'TV production'),          monto: '15,000' },
-      { concepto: T('Permisos y seguros', 'Permits and insurance'), monto: '35,000' }
+      { concepto: T('Fee de clubes', 'Club fees'),                 monto: '$400,000' },
+      { concepto: T('Estadio y operación', 'Stadium and operations'), monto: '$200,000' },
+      { concepto: T('Transporte y hospedaje', 'Travel and lodging'), monto: '$250,000' },
+      { concepto: 'Marketing',                                      monto: '$100,000' },
+      { concepto: T('Producción de TV', 'TV production'),          monto: '$15,000' },
+      { concepto: T('Permisos y seguros', 'Permits and insurance'), monto: '$35,000' }
     ]
   },
 
@@ -207,7 +212,7 @@ const huecos = []; const rev = (x, p) => { if (x && typeof x === 'object' && x._
 rev(FUENTE, ''); if (huecos.length) { console.error('Pares incompletos: ' + huecos.join(', ')); process.exit(1); }
 
 const salida = {
-  _nota: "Estructura del sitio v2 (brief 'SOCCER iD TOUR 2027 · Estructura del sitio'): cinco bloques compactos; presupuesto, condiciones y trayectoria van en cajones laterales fuera del recorrido principal. Este archivo lo GENERA scripts/contenido-tour.js desde una sola fuente con pares {es,en}: edita la fuente, no este JSON, para que los dos idiomas no se desincronicen. Pendientes del brief que NO se publican hasta tener cifra: capital.minimo (inversion minima) y participacion.rendimiento (escenarios bajo/base/favorable). Las cifras de anticipos (USD 200,000 por partido) y el capital requerido (USD 1.4 M) vienen del brief.",
+  _nota: "Estructura del sitio v2 (brief 'SOCCER iD TOUR 2027 · Estructura del sitio'): cinco bloques compactos; presupuesto, condiciones y trayectoria van en cajones laterales fuera del recorrido principal. Este archivo lo GENERA scripts/contenido-tour.js desde una sola fuente con pares {es,en}: edita la fuente, no este JSON, para que los dos idiomas no se desincronicen. Pendientes del brief que NO se publican hasta tener cifra: capital.minimo (inversion minima) y participacion.rendimiento (escenarios bajo/base/favorable). Las cifras de anticipos (USD $200,000 por partido) y el capital requerido (USD $1.4 M) vienen del brief.",
   es, en
 };
 fs.writeFileSync(ARCHIVO, JSON.stringify(salida, null, 2) + '\n', 'utf8');

@@ -1,5 +1,5 @@
 {
-  "_nota": "Estructura del sitio v2 (brief 'SOCCER iD TOUR 2027 · Estructura del sitio'): cinco bloques compactos; presupuesto, condiciones y trayectoria van en cajones laterales fuera del recorrido principal. Este archivo lo GENERA scripts/contenido-tour.js desde una sola fuente con pares {es,en}: edita la fuente, no este JSON, para que los dos idiomas no se desincronicen. Pendientes del brief que NO se publican hasta tener cifra: capital.minimo (inversion minima) y participacion.rendimiento (escenarios bajo/base/favorable). Las cifras de anticipos (USD 200,000 por partido) y el capital requerido (USD 1.4 M) vienen del brief.",
+  "_nota": "Estructura del sitio v2 (brief 'SOCCER iD TOUR 2027 · Estructura del sitio'): cinco bloques compactos; presupuesto, condiciones y trayectoria van en cajones laterales fuera del recorrido principal. Este archivo lo GENERA scripts/contenido-tour.js desde una sola fuente con pares {es,en}: edita la fuente, no este JSON, para que los dos idiomas no se desincronicen. Pendientes del brief que NO se publican hasta tener cifra: capital.minimo (inversion minima) y participacion.rendimiento (escenarios bajo/base/favorable). Las cifras de anticipos (USD $200,000 por partido) y el capital requerido (USD $1.4 M) vienen del brief.",
   "es": {
     "pageTitle": "SOCCER iD TOUR '27 — Tres partidos, una inversión",
     "marca": "SOCCER iD TOUR '27",
@@ -15,12 +15,13 @@
     "hero": {
       "badge": "PROYECTO ANUAL",
       "title": "SOCCER iD TOUR '27",
-      "lead": "Tres partidos internacionales. Una inversión en la temporada.",
-      "meta": "Estados Unidos · Marzo a octubre 2027",
+      "leadFuerte": "Tres partidos internacionales.",
+      "lead": "Una inversión en la temporada.",
+      "meta": "Estados Unidos 2027",
       "cifras": [
         {
           "label": "CAPITAL REQUERIDO",
-          "value": "USD 1.4 M",
+          "value": "USD $1.4 M",
           "note": "Partido 1 completo + anticipos de 2 y 3",
           "icon": "dinero"
         },
@@ -76,7 +77,7 @@
     },
     "capital": {
       "kicker": "02 · CAPITAL Y DESTINO",
-      "title": "USD 1,400,000 para toda la temporada.",
+      "title": "USD $1,400,000 para toda la temporada.",
       "minimo": {
         "label": "Participa desde",
         "value": "",
@@ -86,34 +87,34 @@
         {
           "label": "PARTIDO 1",
           "note": "Presupuesto completo",
-          "value": "USD 1,000,000",
+          "value": "USD $1,000,000",
           "monto": 1000000
         },
         {
           "label": "PARTIDO 2",
           "note": "Anticipos",
-          "value": "USD 200,000",
+          "value": "USD $200,000",
           "monto": 200000
         },
         {
           "label": "PARTIDO 3",
           "note": "Anticipos",
-          "value": "USD 200,000",
+          "value": "USD $200,000",
           "monto": 200000
         }
       ],
       "barraLabel": "CÓMO SE REPARTE EL CAPITAL",
       "totalLabel": "CAPITAL REQUERIDO",
-      "totalValue": "USD 1,400,000",
+      "totalValue": "USD $1,400,000",
       "nota": "El capital cubre el primer partido y los anticipos de los otros dos. Los anticipos se descuentan del costo de cada evento; no se contabilizan dos veces.",
       "cta": "Ver presupuesto",
       "cajon": {
         "title": "Presupuesto del primer partido",
         "sub": "Cruz Azul vs. Pumas · Shell Energy Stadium, Houston · Cifras del perfil del partido.",
         "totalLabel": "TOTAL / USD",
-        "totalValue": "1.0 M",
+        "totalValue": "$1.0 M",
         "anticiposTitle": "Anticipos de los otros dos partidos",
-        "anticiposNota": "USD 200,000 por partido, previstos. Cada uno tendrá su presupuesto completo en su propio perfil cuando se cierre."
+        "anticiposNota": "USD $200,000 por partido, previstos. Cada uno tendrá su presupuesto completo en su propio perfil cuando se cierre."
       }
     },
     "costos": {
@@ -121,27 +122,27 @@
       "lineas": [
         {
           "concepto": "Fee de clubes",
-          "monto": "400,000"
+          "monto": "$400,000"
         },
         {
           "concepto": "Estadio y operación",
-          "monto": "200,000"
+          "monto": "$200,000"
         },
         {
           "concepto": "Transporte y hospedaje",
-          "monto": "250,000"
+          "monto": "$250,000"
         },
         {
           "concepto": "Marketing",
-          "monto": "100,000"
+          "monto": "$100,000"
         },
         {
           "concepto": "Producción de TV",
-          "monto": "15,000"
+          "monto": "$15,000"
         },
         {
           "concepto": "Permisos y seguros",
-          "monto": "35,000"
+          "monto": "$35,000"
         }
       ]
     },
@@ -288,12 +289,13 @@
     "hero": {
       "badge": "ANNUAL PROJECT",
       "title": "SOCCER iD TOUR '27",
-      "lead": "Three international matches. One investment in the season.",
-      "meta": "United States · March to October 2027",
+      "leadFuerte": "Three international matches.",
+      "lead": "One investment in the season.",
+      "meta": "United States 2027",
       "cifras": [
         {
           "label": "CAPITAL REQUIRED",
-          "value": "USD 1.4 M",
+          "value": "USD $1.4 M",
           "note": "Match 1 in full + advances for 2 and 3",
           "icon": "dinero"
         },
@@ -349,7 +351,7 @@
     },
     "capital": {
       "kicker": "02 · CAPITAL AND USE OF FUNDS",
-      "title": "USD 1,400,000 for the whole season.",
+      "title": "USD $1,400,000 for the whole season.",
       "minimo": {
         "label": "Participate from",
         "value": "",
@@ -359,34 +361,34 @@
         {
           "label": "MATCH 1",
           "note": "Full budget",
-          "value": "USD 1,000,000",
+          "value": "USD $1,000,000",
           "monto": 1000000
         },
         {
           "label": "MATCH 2",
           "note": "Advances",
-          "value": "USD 200,000",
+          "value": "USD $200,000",
           "monto": 200000
         },
         {
           "label": "MATCH 3",
           "note": "Advances",
-          "value": "USD 200,000",
+          "value": "USD $200,000",
           "monto": 200000
         }
       ],
       "barraLabel": "HOW THE CAPITAL IS ALLOCATED",
       "totalLabel": "CAPITAL REQUIRED",
-      "totalValue": "USD 1,400,000",
+      "totalValue": "USD $1,400,000",
       "nota": "The capital covers the first match and the advances for the other two. Advances are deducted from each event’s cost; they are not counted twice.",
       "cta": "View budget",
       "cajon": {
         "title": "First match budget",
         "sub": "Cruz Azul vs. Pumas · Shell Energy Stadium, Houston · Figures from the match profile.",
         "totalLabel": "TOTAL / USD",
-        "totalValue": "1.0 M",
+        "totalValue": "$1.0 M",
         "anticiposTitle": "Advances for the other two matches",
-        "anticiposNota": "USD 200,000 per match, projected. Each will have its full budget on its own profile once it is closed."
+        "anticiposNota": "USD $200,000 per match, projected. Each will have its full budget on its own profile once it is closed."
       }
     },
     "costos": {
@@ -394,27 +396,27 @@
       "lineas": [
         {
           "concepto": "Club fees",
-          "monto": "400,000"
+          "monto": "$400,000"
         },
         {
           "concepto": "Stadium and operations",
-          "monto": "200,000"
+          "monto": "$200,000"
         },
         {
           "concepto": "Travel and lodging",
-          "monto": "250,000"
+          "monto": "$250,000"
         },
         {
           "concepto": "Marketing",
-          "monto": "100,000"
+          "monto": "$100,000"
         },
         {
           "concepto": "TV production",
-          "monto": "15,000"
+          "monto": "$15,000"
         },
         {
           "concepto": "Permits and insurance",
-          "monto": "35,000"
+          "monto": "$35,000"
         }
       ]
     },

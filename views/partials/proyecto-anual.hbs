@@ -71,7 +71,10 @@
         {{else}}
         <h1 class="pa-foto__t">{{data.hero.title}}</h1>
         {{/if}}
-        <p class="pa-foto__lead">{{data.hero.lead}}</p>
+        <p class="pa-foto__lead">
+          {{#if data.hero.leadFuerte}}<strong class="pa-foto__lead-f">{{data.hero.leadFuerte}}</strong>{{/if}}
+          <span class="pa-foto__lead-s">{{data.hero.lead}}</span>
+        </p>
         <p class="pa-foto__meta">{{data.hero.meta}}</p>
       </div>
     </section>
@@ -474,6 +477,11 @@
     .pa-logo { display: block; width: clamp(120px, 13vw, 190px); height: auto; margin: 16px auto 18px; filter: drop-shadow(0 8px 26px rgba(0,0,0,0.6)); }
     .pa-cierre__logo { display: block; width: clamp(104px, 11vw, 150px); height: auto; margin: 0 auto 20px; filter: drop-shadow(0 6px 20px rgba(0,0,0,0.55)); }
     .pa-foto__lead { font-size: 18px; line-height: 1.45; color: rgba(255,255,255,0.9); }
+    /* Dos renglones: el primero pesa, el segundo acompaña. Cada uno en su
+       bloque para que el corte no dependa del ancho de la ventana ni del
+       idioma, que parten en sitios distintos. */
+    .pa-foto__lead-f { display: block; font-size: 22px; font-weight: 900; color: #FFFFFF; }
+    .pa-foto__lead-s { display: block; margin-top: 4px; }
     /* Blanco translúcido nunca por debajo de 0.75 para texto chico (docs/variables-del-proyecto.md). */
     .pa-foto__meta { font-size: 12.5px; letter-spacing: 1.3px; color: rgba(255,255,255,0.86); margin-top: 9px; }
     /* Sobre la foto no hay fondo que medir: la pastilla oscura es lo que protege al rótulo. */
