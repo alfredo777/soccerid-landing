@@ -185,7 +185,8 @@ const FUENTE = {
   contacto: {
     kicker: T('CONTACTO', 'CONTACT'),
     cta: T('Solicitar propuesta de inversión', 'Request the investment proposal'),
-    ctaUrl: 'mailto:leon@soccerid.co?subject=SOCCER%20iD%20TOUR%2027'
+    ctaUrl: T('https://wa.me/17867844303?text=Hola%2C%20quiero%20la%20propuesta%20de%20inversi%C3%B3n%20de%20SOCCER%20iD%20TOUR%20%2727',
+              'https://wa.me/17867844303?text=Hi%2C%20I%27d%20like%20the%20investment%20proposal%20for%20SOCCER%20iD%20TOUR%20%2727')
   },
 
   cajon: { cerrar: T('Cerrar', 'Close') },

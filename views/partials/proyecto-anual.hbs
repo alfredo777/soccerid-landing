@@ -267,9 +267,19 @@
       <p class="pa-rot pa-rot--centro"><span>{{data.contacto.kicker}}</span></p>
       {{#if data.contacto.title}}<h2 class="pa-cierre__t">{{data.contacto.title}}</h2>{{/if}}
       {{#if data.contacto.body}}<p class="pa-cierre__b">{{data.contacto.body}}</p>{{/if}}
-      <a href="{{data.contacto.ctaUrl}}"{{{salida data.contacto.ctaUrl}}} class="pa-btn">{{data.contacto.cta}} →</a>
+      <a href="{{data.contacto.ctaUrl}}"{{{salida data.contacto.ctaUrl}}} class="pa-btn pa-btn--wa">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        {{data.contacto.cta}}
+      </a>
+      {{#if data.confidencial}}<span class="pa-cierre__conf">{{data.confidencial}}</span>{{/if}}
     </div>
   </section>
+
+  {{!-- Barra de marca, igual que en /partido-1 --}}
+  <footer class="pa-footer">
+    <a href="/{{lang}}/socceridcup" target="_blank" rel="noopener"><img src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" height="28"></a>
+    <span>&copy; {{year}} SOCCER iD{{#if data.confidencial}} · {{data.confidencial}}{{/if}}</span>
+  </footer>
 
   {{!-- ═══════════ CAJONES: lo secundario, fuera del recorrido ═══════════
        Se abren desde los botones [data-cajon]; la mecánica (abrir, cerrar,
@@ -681,6 +691,17 @@
     .pa-cierre__body { position: relative; z-index: 2; max-width: 780px; }
     .pa-cierre__t { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.08; margin-bottom: 16px; }
     .pa-cierre__b { font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.88); margin-bottom: 26px; }
+    /* Botón de WhatsApp del cierre, en el verde de la marca de WhatsApp, igual
+       que el de /partido-1. */
+    .pa-btn--wa { background: #25D366; border-color: #25D366; color: #0A2E16; display: inline-flex; align-items: center; gap: 10px; }
+    .pa-btn--wa:hover { background: #1EBE5B; border-color: #1EBE5B; }
+    .pa-btn--wa svg { width: 20px; height: 20px; }
+    .pa-cierre__conf { display: block; margin-top: 28px; font-size: 12px; letter-spacing: 3px; color: rgba(255,255,255,0.35); }
+
+    /* ───────────── BARRA DE MARCA ───────────── */
+    .pa-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 48px; border-top: 1px solid rgba(255,255,255,0.06); background: var(--pp-dark); }
+    .pa-footer img { display: block; height: 28px; width: auto; }
+    .pa-footer span { font-size: 12px; color: rgba(255,255,255,0.35); }
 
     /* ───────────── ESCALA DE PANTALLAS: 1180 · 860 · 560 ───────────── */
     @media (max-width: 1180px) {
@@ -702,6 +723,7 @@
       .pa-donut { max-width: 220px; }
       .pa-leyenda { width: 100%; }
       .pa-cierre { padding: 64px 20px; }
+      .pa-footer { padding: 16px 20px; flex-direction: column; gap: 10px; text-align: center; }
     }
     @media (max-width: 560px) {
       .pa-kv, .pa-kv--dos { grid-template-columns: minmax(0, 1fr); }
