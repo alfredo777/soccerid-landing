@@ -112,7 +112,7 @@
         </div>
         <div class="pa-temporada">
           {{#each partidosNav}}
-          <article class="pa-pt{{#unless this.abierto}} pa-pt--inc{{/unless}}">
+          <article class="pa-pt{{#if this.abierto}} pa-pt--destacado{{else}} pa-pt--inc{{/if}}">
             <span class="pa-pt__cab">
               <span class="pa-pt__n">{{this.n}}</span>
               <em class="pa-pend">{{#if this.abierto}}{{../data.proyecto.estados.previsto}}{{else}}{{../data.proyecto.estados.proceso}}{{/if}}</em>
@@ -566,6 +566,9 @@
     .pa-temporada { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .pa-pt { display: flex; flex-direction: column; padding: 20px 18px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.055); }
     .pa-pt--inc { border-style: dashed; border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.025); }
+    /* El partido confirmado resalta sobre los otros dos: acento cian, igual que
+       el bloque de inversión mínima. */
+    .pa-pt--destacado { border-color: rgba(var(--tour-cian-rgb, 56,225,255), 0.5); background: rgba(var(--tour-cian-rgb, 56,225,255), 0.08); box-shadow: 0 0 0 1px rgba(var(--tour-cian-rgb, 56,225,255), 0.18); }
     .pa-pt__cab { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .pa-pt__n { font-size: 11px; font-weight: 800; letter-spacing: 1.6px; color: var(--tour-rotulo, #C9CCD4); }
     .pa-pt__cuando { display: block; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: var(--tour-rotulo, #C9CCD4); margin-top: 14px; }
