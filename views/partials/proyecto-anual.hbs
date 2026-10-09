@@ -227,7 +227,7 @@
             <p class="pa-rot"><span>{{data.trayectoria.kicker}}</span></p>
             <h2 class="pa-box__t">{{data.trayectoria.title}}</h2>
           </div>
-          <p class="pa-box__s">{{data.trayectoria.sub}}</p>
+          {{#if data.trayectoria.sub}}<p class="pa-box__s">{{data.trayectoria.sub}}</p>{{/if}}
         </div>
         {{!-- Cada edición lleva a su ficha. Antes eran tarjetas con borde que
               no abrían nada: el aspecto prometía un enlace que no existía. --}}
@@ -239,7 +239,6 @@
               <strong class="pa-ed__anio">{{this.anio}}</strong>
               <span class="pa-ed__t">{{this.match}}</span>
               <span class="pa-ed__n">{{#if this.venue}}{{this.venue}} · {{/if}}{{this.sede}}</span>
-              {{#if this.asistencia}}<span class="pa-ed__dato">{{this.asistencia}} {{this.asistenciaLabel}}</span>{{/if}}
             </span>
           </a>
           {{/each}}
@@ -261,8 +260,8 @@
       <img class="pa-cierre__logo" src="/assets/images/logos/id-tour27-blanco.png"
            alt="{{data.marca}}" width="150" height="158" loading="lazy">
       <p class="pa-rot pa-rot--centro"><span>{{data.contacto.kicker}}</span></p>
-      <h2 class="pa-cierre__t">{{data.contacto.title}}</h2>
-      <p class="pa-cierre__b">{{data.contacto.body}}</p>
+      {{#if data.contacto.title}}<h2 class="pa-cierre__t">{{data.contacto.title}}</h2>{{/if}}
+      {{#if data.contacto.body}}<p class="pa-cierre__b">{{data.contacto.body}}</p>{{/if}}
       <a href="{{data.contacto.ctaUrl}}"{{{salida data.contacto.ctaUrl}}} class="pa-btn">{{data.contacto.cta}} →</a>
     </div>
   </section>

@@ -153,7 +153,6 @@ const FUENTE = {
   trayectoria: {
     kicker: T('05 · TRAYECTORIA', '05 · TRACK RECORD'),
     title: T('Tres ediciones realizadas.', 'Three editions delivered.'),
-    sub: T('2023 · 2024 · 2025. Clubes, aficionados, sedes y marcas conectados a través del futbol.', '2023 · 2024 · 2025. Clubs, fans, venues and brands connected through football.'),
     // `foco` es la altura del recorte de la foto: la acción no está a la misma
     // altura en las tres (2023 al 12 %, 2025 al 32 %, 2024 al 45 %) y un
     // recorte único decapitaba a los jugadores de 2023. Se ajusta aquí, no en
@@ -178,9 +177,6 @@ const FUENTE = {
 
   contacto: {
     kicker: T('CONTACTO', 'CONTACT'),
-    title: T("Sé parte de SOCCER iD TOUR '27.", "Be part of SOCCER iD TOUR '27."),
-    body: T('Solicita la propuesta de inversión y nuestro equipo te acompaña a revisar el proyecto y resolver tus preguntas.',
-            'Request the investment proposal and our team will walk you through the project and answer your questions.'),
     cta: T('Solicitar propuesta de inversión', 'Request the investment proposal'),
     ctaUrl: 'mailto:leon@soccerid.co?subject=SOCCER%20iD%20TOUR%2027'
   },

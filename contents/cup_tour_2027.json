@@ -227,7 +227,6 @@
     "trayectoria": {
       "kicker": "05 · TRAYECTORIA",
       "title": "Tres ediciones realizadas.",
-      "sub": "2023 · 2024 · 2025. Clubes, aficionados, sedes y marcas conectados a través del futbol.",
       "ediciones": [
         {
           "anio": "2023",
@@ -261,8 +260,6 @@
     },
     "contacto": {
       "kicker": "CONTACTO",
-      "title": "Sé parte de SOCCER iD TOUR '27.",
-      "body": "Solicita la propuesta de inversión y nuestro equipo te acompaña a revisar el proyecto y resolver tus preguntas.",
       "cta": "Solicitar propuesta de inversión",
       "ctaUrl": "mailto:leon@soccerid.co?subject=SOCCER%20iD%20TOUR%2027"
     },
@@ -498,7 +495,6 @@
     "trayectoria": {
       "kicker": "05 · TRACK RECORD",
       "title": "Three editions delivered.",
-      "sub": "2023 · 2024 · 2025. Clubs, fans, venues and brands connected through football.",
       "ediciones": [
         {
           "anio": "2023",
@@ -532,8 +528,6 @@
     },
     "contacto": {
       "kicker": "CONTACT",
-      "title": "Be part of SOCCER iD TOUR '27.",
-      "body": "Request the investment proposal and our team will walk you through the project and answer your questions.",
       "cta": "Request the investment proposal",
       "ctaUrl": "mailto:leon@soccerid.co?subject=SOCCER%20iD%20TOUR%2027"
     },
