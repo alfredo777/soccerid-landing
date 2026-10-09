@@ -108,7 +108,7 @@
             <p class="pa-rot"><span>{{data.proyecto.kicker}}</span></p>
             <h2 class="pa-box__t">{{data.proyecto.title}}</h2>
           </div>
-          <p class="pa-box__s">{{data.proyecto.sub}}</p>
+          {{#if data.proyecto.sub}}<p class="pa-box__s">{{data.proyecto.sub}}</p>{{/if}}
         </div>
         <div class="pa-temporada">
           {{#each partidosNav}}
@@ -170,7 +170,7 @@
             <p class="pa-rot"><span>{{data.participacion.kicker}}</span></p>
             <h2 class="pa-box__t">{{data.participacion.title}}</h2>
           </div>
-          <p class="pa-box__s">{{data.participacion.lineas.[0]}}</p>
+          {{#if data.participacion.lineas.[1]}}<p class="pa-box__s">{{data.participacion.lineas.[0]}}</p>{{/if}}
         </div>
         <div class="pa-partida" aria-hidden="true">
           {{#each graficos.reparto}}
@@ -182,7 +182,7 @@
             <svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-calendario-ok"></use></svg>
             <span class="pa-tile__l">{{data.participacion.devolucion.label}}</span>
             <strong class="pa-tile__v">{{data.participacion.devolucion.value}}</strong>
-            <span class="pa-tile__n">{{data.participacion.lineas.[1]}}</span>
+            <span class="pa-tile__n">{{data.participacion.lineas.[0]}}</span>
             <p class="pa-tile__nota">{{data.participacion.nota}}</p>
           </div>
           {{!-- El rendimiento estimado está pendiente: cuando se valide la
@@ -195,6 +195,11 @@
           </div>
           {{/unless}}
         </div>
+        {{#if data.participacion.ingresos.items.length}}
+        <div class="pa-box__pie-cta">
+          <button type="button" class="pa-btn pa-btn--ghost" data-cajon="ingresos">{{data.participacion.ingresos.cta}} →</button>
+        </div>
+        {{/if}}
       </section>
 
       {{!-- 04 · Respaldo y seguimiento: tres piezas, el detalle en su cajón y la nota de riesgo --}}
@@ -204,7 +209,7 @@
             <p class="pa-rot"><span>{{data.respaldo.kicker}}</span></p>
             <h2 class="pa-box__t">{{data.respaldo.title}}</h2>
           </div>
-          <p class="pa-box__s">{{data.respaldo.lead}}</p>
+          {{#if data.respaldo.lead}}<p class="pa-box__s">{{data.respaldo.lead}}</p>{{/if}}
         </div>
         <div class="pa-tiles">
           {{#each data.respaldo.items}}
@@ -356,6 +361,31 @@
       </div>
     </div>
   </aside>
+
+  {{!-- Fuentes de ingresos: de dónde salen las utilidades que se reparten --}}
+  {{#if data.participacion.ingresos.items.length}}
+  <aside class="pa-cajon" id="pa-cajon-ingresos" hidden aria-hidden="true">
+    <div class="pa-cajon__velo" data-cajon-cerrar></div>
+    <div class="pa-cajon__caja" role="dialog" aria-modal="true" aria-labelledby="pa-cajon-ingresos-t">
+      <header class="pa-cajon__cab">
+        <div>
+          <h3 class="pa-cajon__t" id="pa-cajon-ingresos-t">{{data.participacion.ingresos.title}}</h3>
+          {{#if data.participacion.ingresos.sub}}<p class="pa-cajon__s">{{data.participacion.ingresos.sub}}</p>{{/if}}
+        </div>
+        <button type="button" class="pa-cajon__x" data-cajon-cerrar aria-label="{{data.cajon.cerrar}}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+      <div class="pa-cajon__cuerpo">
+        <ul class="pa-fuentes">
+          {{#each data.participacion.ingresos.items}}
+          <li class="pa-fuentes__i"><span class="pa-fuentes__p" aria-hidden="true"></span>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </aside>
+  {{/if}}
 
   {{!-- Trayectoria: las ediciones, lo que se sabe hacer y la cobertura en medios --}}
   <aside class="pa-cajon" id="pa-cajon-trayectoria" hidden aria-hidden="true">
@@ -583,6 +613,10 @@
     .pa-cajon__cuerpo { padding: 22px 24px 32px; }
     .pa-cajon__pie { margin: 24px 0 0; }
     .pa-lista { display: grid; gap: 10px; }
+    .pa-fuentes { list-style: none; padding: 0; margin: 4px 0 0; }
+    .pa-fuentes__i { display: flex; align-items: center; gap: 14px; padding: 15px 2px; font-size: 16px; color: #E7E9EE; border-top: 1px solid rgba(255,255,255,0.1); }
+    .pa-fuentes__i:first-child { border-top: 0; }
+    .pa-fuentes__p { flex: 0 0 auto; width: 11px; height: 11px; border-radius: 3px; background: var(--tour-cian, #38E1FF); }
     .pa-card { padding: 18px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.045); }
     .pa-card--fila { display: flex; align-items: flex-start; gap: 14px; }
     .pa-card--fila .pa-ico { margin-bottom: 0; }

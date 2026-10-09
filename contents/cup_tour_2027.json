@@ -42,7 +42,6 @@
     "proyecto": {
       "kicker": "01 · EL PROYECTO",
       "title": "Tres partidos, un resultado.",
-      "sub": "Participa en los resultados de tres partidos en Estados Unidos. Ingresos por boletaje, patrocinios y acuerdos comerciales.",
       "estados": {
         "previsto": "Confirmado",
         "proceso": "En proceso"
@@ -158,7 +157,6 @@
         }
       ],
       "lineas": [
-        "Tu aportación determina tu participación en las utilidades de la temporada.",
         "Devolución prevista: diciembre de 2027, tras el cierre financiero de los tres partidos."
       ],
       "rendimiento": {
@@ -170,7 +168,21 @@
         "label": "DEVOLUCIÓN PREVISTA",
         "value": "Diciembre 2027"
       },
-      "nota": "El reparto del 70% no equivale a un rendimiento del 70%. Las utilidades dependen del resultado real de los tres partidos."
+      "nota": "El reparto del 70% no equivale a un rendimiento del 70%. Las utilidades dependen del resultado real de los tres partidos.",
+      "ingresos": {
+        "cta": "Ver fuentes de ingresos",
+        "title": "Fuentes de ingresos",
+        "sub": "De dónde salen las utilidades que se reparten.",
+        "items": [
+          "Venta de boletos",
+          "Derechos de TV",
+          "Publicidad en transmisión",
+          "Publicidad en estadio",
+          "Patrocinios",
+          "Porcentaje de alimentos, bebidas y estacionamiento",
+          "Merchandising"
+        ]
+      }
     },
     "respaldo": {
       "kicker": "04 · RESPALDO Y SEGUIMIENTO",
@@ -189,7 +201,6 @@
           "icon": "caja"
         }
       ],
-      "lead": "Experiencias y beneficios según tu participación.",
       "cta": "Consultar detalles",
       "aviso": "Inversión a riesgo bajo un esquema de participación en los resultados de SOCCER iD TOUR '27.",
       "cajon": {
@@ -307,7 +318,6 @@
     "proyecto": {
       "kicker": "01 · THE PROJECT",
       "title": "Three matches, one result.",
-      "sub": "Take part in the results of three matches in the United States. Revenue from ticketing, sponsorships and commercial agreements.",
       "estados": {
         "previsto": "Confirmed",
         "proceso": "In progress"
@@ -423,7 +433,6 @@
         }
       ],
       "lineas": [
-        "Your contribution determines your share of the season’s profits.",
         "Expected return of capital: December 2027, after the financial close of the three matches."
       ],
       "rendimiento": {
@@ -435,7 +444,21 @@
         "label": "EXPECTED RETURN OF CAPITAL",
         "value": "December 2027"
       },
-      "nota": "The 70% split is not a 70% return. Profits depend on the actual result of the three matches."
+      "nota": "The 70% split is not a 70% return. Profits depend on the actual result of the three matches.",
+      "ingresos": {
+        "cta": "View revenue sources",
+        "title": "Revenue sources",
+        "sub": "Where the profits that get distributed come from.",
+        "items": [
+          "Ticket sales",
+          "TV rights",
+          "Broadcast advertising",
+          "In-stadium advertising",
+          "Sponsorships",
+          "Share of food, beverage and parking",
+          "Merchandising"
+        ]
+      }
     },
     "respaldo": {
       "kicker": "04 · BACKING AND FOLLOW-UP",
@@ -454,7 +477,6 @@
           "icon": "caja"
         }
       ],
-      "lead": "Experiences and benefits according to your participation.",
       "cta": "See details",
       "aviso": "At-risk investment under a participation structure in the results of SOCCER iD TOUR '27.",
       "cajon": {

@@ -51,8 +51,6 @@ const FUENTE = {
   proyecto: {
     kicker: T('01 · EL PROYECTO', '01 · THE PROJECT'),
     title: T('Tres partidos, un resultado.', 'Three matches, one result.'),
-    sub: T('Participa en los resultados de tres partidos en Estados Unidos. Ingresos por boletaje, patrocinios y acuerdos comerciales.',
-           'Take part in the results of three matches in the United States. Revenue from ticketing, sponsorships and commercial agreements.'),
     estados: { previsto: T('Confirmado', 'Confirmed'), proceso: T('En proceso', 'In progress') },
     cta: T('Ver partido', 'View match'),
     cards: [
@@ -114,14 +112,27 @@ const FUENTE = {
       { pct: '30%', quien: 'SOCCER iD' }
     ],
     lineas: [
-      T('Tu aportación determina tu participación en las utilidades de la temporada.', 'Your contribution determines your share of the season\u2019s profits.'),
       T('Devolución prevista: diciembre de 2027, tras el cierre financiero de los tres partidos.', 'Expected return of capital: December 2027, after the financial close of the three matches.')
     ],
     // Pendiente en el brief: se sustituirá por tres escenarios cuando se valide la proyección.
     rendimiento: { label: T('Rendimiento estimado', 'Estimated return'), value: '', pendiente: true },
     devolucion: { label: T('DEVOLUCIÓN PREVISTA', 'EXPECTED RETURN OF CAPITAL'), value: T('Diciembre 2027', 'December 2027') },
     nota: T('El reparto del 70% no equivale a un rendimiento del 70%. Las utilidades dependen del resultado real de los tres partidos.',
-            'The 70% split is not a 70% return. Profits depend on the actual result of the three matches.')
+            'The 70% split is not a 70% return. Profits depend on the actual result of the three matches.'),
+    ingresos: {
+      cta: T('Ver fuentes de ingresos', 'View revenue sources'),
+      title: T('Fuentes de ingresos', 'Revenue sources'),
+      sub: T('De dónde salen las utilidades que se reparten.', 'Where the profits that get distributed come from.'),
+      items: [
+        T('Venta de boletos', 'Ticket sales'),
+        T('Derechos de TV', 'TV rights'),
+        T('Publicidad en transmisión', 'Broadcast advertising'),
+        T('Publicidad en estadio', 'In-stadium advertising'),
+        T('Patrocinios', 'Sponsorships'),
+        T('Porcentaje de alimentos, bebidas y estacionamiento', 'Share of food, beverage and parking'),
+        T('Merchandising', 'Merchandising')
+      ]
+    }
   },
 
   respaldo: {
@@ -132,7 +143,6 @@ const FUENTE = {
       { title: T('Panel privado', 'Private panel'),                  icon: 'ojo' },
       { title: T('Documentación del proyecto', 'Project documentation'), icon: 'caja' }
     ],
-    lead: T('Experiencias y beneficios según tu participación.', 'Experiences and benefits according to your participation.'),
     cta: T('Consultar detalles', 'See details'),
     aviso: T("Inversión a riesgo bajo un esquema de participación en los resultados de SOCCER iD TOUR '27.",
              "At-risk investment under a participation structure in the results of SOCCER iD TOUR '27."),
