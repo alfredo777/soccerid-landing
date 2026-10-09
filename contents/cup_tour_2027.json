@@ -91,12 +91,14 @@
         },
         {
           "label": "PARTIDO 2",
+          "barra": "ANTICIPO PARTIDO 2",
           "note": "Anticipos",
           "value": "USD $200,000",
           "monto": 200000
         },
         {
           "label": "PARTIDO 3",
+          "barra": "ANTICIPO PARTIDO 3",
           "note": "Anticipos",
           "value": "USD $200,000",
           "monto": 200000
@@ -108,7 +110,6 @@
       "cta": "Ver presupuesto",
       "cajon": {
         "title": "Presupuesto del primer partido",
-        "sub": "Cruz Azul vs. Pumas · Shell Energy Stadium, Houston · Cifras del perfil del partido.",
         "totalLabel": "TOTAL / USD",
         "totalValue": "$1.0 M",
         "anticiposTitle": "Anticipos de los otros dos partidos",
@@ -368,12 +369,14 @@
         },
         {
           "label": "MATCH 2",
+          "barra": "MATCH 2 ADVANCE",
           "note": "Advances",
           "value": "USD $200,000",
           "monto": 200000
         },
         {
           "label": "MATCH 3",
+          "barra": "MATCH 3 ADVANCE",
           "note": "Advances",
           "value": "USD $200,000",
           "monto": 200000
@@ -385,7 +388,6 @@
       "cta": "View budget",
       "cajon": {
         "title": "First match budget",
-        "sub": "Cruz Azul vs. Pumas · Shell Energy Stadium, Houston · Figures from the match profile.",
         "totalLabel": "TOTAL / USD",
         "totalValue": "$1.0 M",
         "anticiposTitle": "Advances for the other two matches",

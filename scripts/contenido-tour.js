@@ -73,8 +73,8 @@ const FUENTE = {
     },
     items: [
       { label: T('PARTIDO 1', 'MATCH 1'), note: T('Presupuesto completo', 'Full budget'),   value: 'USD $1,000,000', monto: 1000000 },
-      { label: T('PARTIDO 2', 'MATCH 2'), note: T('Anticipos', 'Advances'),                 value: 'USD $200,000',   monto: 200000 },
-      { label: T('PARTIDO 3', 'MATCH 3'), note: T('Anticipos', 'Advances'),                 value: 'USD $200,000',   monto: 200000 }
+      { label: T('PARTIDO 2', 'MATCH 2'), barra: T('ANTICIPO PARTIDO 2', 'MATCH 2 ADVANCE'), note: T('Anticipos', 'Advances'), value: 'USD $200,000',   monto: 200000 },
+      { label: T('PARTIDO 3', 'MATCH 3'), barra: T('ANTICIPO PARTIDO 3', 'MATCH 3 ADVANCE'), note: T('Anticipos', 'Advances'), value: 'USD $200,000',   monto: 200000 }
     ],
     barraLabel: T('CÓMO SE REPARTE EL CAPITAL', 'HOW THE CAPITAL IS ALLOCATED'),
     totalLabel: T('CAPITAL REQUERIDO', 'CAPITAL REQUIRED'),
@@ -82,7 +82,6 @@ const FUENTE = {
     cta: T('Ver presupuesto', 'View budget'),
     cajon: {
       title: T('Presupuesto del primer partido', 'First match budget'),
-      sub: T('Cruz Azul vs. Pumas · Shell Energy Stadium, Houston · Cifras del perfil del partido.', 'Cruz Azul vs. Pumas · Shell Energy Stadium, Houston · Figures from the match profile.'),
       totalLabel: 'TOTAL / USD',
       totalValue: '$1.0 M',
       anticiposTitle: T('Anticipos de los otros dos partidos', 'Advances for the other two matches'),

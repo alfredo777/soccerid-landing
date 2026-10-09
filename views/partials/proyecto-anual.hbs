@@ -275,9 +275,24 @@
     </div>
   </section>
 
-  {{!-- Barra de marca, igual que en /partido-1 --}}
+  {{!-- Barra de marca, igual que en /partido-1, con enlaces a la web y a
+        nuestras redes para quien aún no nos conoce. --}}
   <footer class="pa-footer">
-    <a href="/{{lang}}/socceridcup" target="_blank" rel="noopener"><img src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" height="28"></a>
+    <a class="pa-footer__marca" href="/{{lang}}" target="_blank" rel="noopener"><img src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" height="28"></a>
+    <nav class="pa-footer__redes" aria-label="{{#if isEs}}Sitio y redes{{else}}Site and social{{/if}}">
+      <a href="/{{lang}}" target="_blank" rel="noopener" title="{{#if isEs}}Sitio web{{else}}Website{{/if}}" aria-label="{{#if isEs}}Sitio web{{else}}Website{{/if}}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.7 3.8 9S14.5 18.5 12 21c-2.5-2.5-3.8-5.7-3.8-9S9.5 5.5 12 3z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/soccerid7" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.17.05 1.8.25 2.23.42.56.22.96.48 1.38.9.42.42.68.82.9 1.38.17.42.37 1.06.42 2.23.06 1.27.07 1.65.07 4.86s0 3.6-.07 4.86c-.05 1.17-.25 1.8-.42 2.23a3.7 3.7 0 01-.9 1.38 3.7 3.7 0 01-1.38.9c-.42.17-1.06.37-2.23.42-1.27.06-1.65.07-4.86.07s-3.6 0-4.86-.07c-1.17-.05-1.8-.25-2.23-.42a3.7 3.7 0 01-1.38-.9 3.7 3.7 0 01-.9-1.38c-.17-.42-.37-1.06-.42-2.23C2.2 15.6 2.2 15.2 2.2 12s0-3.6.07-4.86c.05-1.17.25-1.8.42-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.17 1.06-.37 2.23-.42C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.14 0-3.5 0-4.74.07-.9.04-1.38.2-1.7.33-.43.16-.74.36-1.06.68-.32.32-.52.63-.68 1.06-.13.32-.29.8-.33 1.7C3.4 8.96 3.4 9.3 3.4 12s0 3.04.07 4.26c.04.9.2 1.38.33 1.7.16.43.36.74.68 1.06.32.32.63.52 1.06.68.32.13.8.29 1.7.33 1.24.07 1.6.07 4.74.07s3.5 0 4.74-.07c.9-.04 1.38-.2 1.7-.33.43-.16.74-.36 1.06-.68.32-.32.52-.63.68-1.06.13-.32.29-.8.33-1.7.07-1.22.07-1.56.07-4.26s0-3.04-.07-4.26c-.04-.9-.2-1.38-.33-1.7a2.86 2.86 0 00-.68-1.06 2.86 2.86 0 00-1.06-.68c-.32-.13-.8-.29-1.7-.33C15.5 4 15.14 4 12 4zm0 3.06A4.94 4.94 0 1012 16.94 4.94 4.94 0 0012 7.06zm0 8.14A3.2 3.2 0 1112 8.8a3.2 3.2 0 010 6.4zm6.3-8.34a1.15 1.15 0 11-2.3 0 1.15 1.15 0 012.3 0z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/soccerid7" target="_blank" rel="noopener" title="Facebook" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg>
+      </a>
+      <a href="https://www.tiktok.com/@soccerid7" target="_blank" rel="noopener" title="TikTok" aria-label="TikTok">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.8a4.3 4.3 0 01-1-2.8h-3v12.1a2.6 2.6 0 11-1.9-2.5V9.5a5.6 5.6 0 102 4.3V8.6a7.2 7.2 0 004.2 1.3v-3a4.3 4.3 0 01-.3-.1z"/></svg>
+      </a>
+    </nav>
     <span>&copy; {{year}} SOCCER iD{{#if data.confidencial}} · {{data.confidencial}}{{/if}}</span>
   </footer>
 
@@ -293,7 +308,7 @@
       <header class="pa-cajon__cab">
         <div>
           <h3 class="pa-cajon__t" id="pa-cajon-presupuesto-t">{{data.capital.cajon.title}}</h3>
-          <p class="pa-cajon__s">{{data.capital.cajon.sub}}</p>
+          {{#if data.capital.cajon.sub}}<p class="pa-cajon__s">{{data.capital.cajon.sub}}</p>{{/if}}
         </div>
         <button type="button" class="pa-cajon__x" data-cajon-cerrar aria-label="{{data.cajon.cerrar}}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -702,6 +717,10 @@
     .pa-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 48px; border-top: 1px solid rgba(255,255,255,0.06); background: var(--pp-dark); }
     .pa-footer img { display: block; height: 28px; width: auto; }
     .pa-footer span { font-size: 12px; color: rgba(255,255,255,0.35); }
+    .pa-footer__redes { display: flex; align-items: center; gap: 10px; }
+    .pa-footer__redes a { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; color: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.14); transition: color .2s, border-color .2s, background .2s; }
+    .pa-footer__redes a:hover { color: #0A0B0E; background: var(--tour-cian, #38E1FF); border-color: var(--tour-cian, #38E1FF); }
+    .pa-footer__redes svg { width: 18px; height: 18px; }
 
     /* ───────────── ESCALA DE PANTALLAS: 1180 · 860 · 560 ───────────── */
     @media (max-width: 1180px) {

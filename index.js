@@ -947,7 +947,7 @@ function graficosTour(data) {
     // El rótulo va en los tres tramos. En los estrechos no cabe al lado de la
     // cifra —se recortaba a "PARTI…"—, así que se apilan: el estilo lo decide
     // con esta marca, no se oculta nada.
-    return { label: t.label, value: t.value, pct, estrecho: pct < 25 };
+    return { label: t.barra || t.label, value: t.value, pct, estrecho: pct < 25 };
   });
 
   // 10 % → 70 % → 7 %: tres barras encadenadas.
