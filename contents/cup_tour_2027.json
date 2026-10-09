@@ -44,7 +44,7 @@
       "title": "Tres partidos, un resultado.",
       "sub": "Participa en los resultados de tres partidos en Estados Unidos. Ingresos por boletaje, patrocinios y acuerdos comerciales.",
       "estados": {
-        "previsto": "Previsto",
+        "previsto": "Confirmado",
         "proceso": "En proceso"
       },
       "cta": "Ver partido",
@@ -318,7 +318,7 @@
       "title": "Three matches, one result.",
       "sub": "Take part in the results of three matches in the United States. Revenue from ticketing, sponsorships and commercial agreements.",
       "estados": {
-        "previsto": "Scheduled",
+        "previsto": "Confirmed",
         "proceso": "In progress"
       },
       "cta": "View match",

@@ -53,7 +53,7 @@ const FUENTE = {
     title: T('Tres partidos, un resultado.', 'Three matches, one result.'),
     sub: T('Participa en los resultados de tres partidos en Estados Unidos. Ingresos por boletaje, patrocinios y acuerdos comerciales.',
            'Take part in the results of three matches in the United States. Revenue from ticketing, sponsorships and commercial agreements.'),
-    estados: { previsto: T('Previsto', 'Scheduled'), proceso: T('En proceso', 'In progress') },
+    estados: { previsto: T('Confirmado', 'Confirmed'), proceso: T('En proceso', 'In progress') },
     cta: T('Ver partido', 'View match'),
     cards: [
       { n: '01', variante: '2027b',    cuando: T('27 marzo', '27 March'),             titulo: 'Cruz Azul vs. Pumas', lugar: T('Houston, Texas', 'Houston, Texas'), estado: 'previsto' },
