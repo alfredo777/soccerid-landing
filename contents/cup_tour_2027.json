@@ -42,6 +42,7 @@
     "proyecto": {
       "kicker": "01 · EL PROYECTO",
       "title": "Tres partidos, un resultado.",
+      "sub": "Ingresos por boletaje, patrocinios y acuerdos comerciales de los tres encuentros.",
       "estados": {
         "previsto": "Confirmado",
         "proceso": "En proceso"
@@ -76,11 +77,14 @@
     },
     "capital": {
       "kicker": "02 · CAPITAL Y DESTINO",
-      "title": "USD $1,400,000 para toda la temporada.",
+      "title": "USD $1,400,000 de capital inicial.",
+      "sub": "Primer partido completo y anticipos de los siguientes dos.",
+      "nota": "El presupuesto restante de los partidos 2 y 3 se prevé financiar con las utilidades del primer partido y la preventa de boletos de cada encuentro.",
       "minimo": {
-        "label": "PARTICIPA DESDE",
-        "value": "USD $100,000 o MXN $2,000,000",
-        "note": "El presupuesto restante de los partidos 2 y 3 se prevé financiar con las utilidades del primer partido y la preventa de boletos de cada encuentro."
+        "label": "INVERSIÓN MÍNIMA",
+        "value": "USD $100,000",
+        "participacion": "Participación del 5% en las utilidades del TOUR.",
+        "note": "Calculada sobre el capital objetivo de USD 1.4 millones."
       },
       "items": [
         {
@@ -151,15 +155,17 @@
       "partes": [
         {
           "pct": "70%",
-          "quien": "INVERSIONISTAS"
+          "quien": "INVERSIONISTAS",
+          "rol": "Aportan el capital para financiar el proyecto."
         },
         {
           "pct": "30%",
-          "quien": "SOCCER iD"
+          "quien": "SOCCER iD",
+          "rol": "Aporta el proyecto, negocia con clubes y sedes, comercializa, opera y administra el TOUR."
         }
       ],
       "lineas": [
-        "Devolución prevista: diciembre de 2027, tras el cierre financiero de los tres partidos."
+        "Cierre y distribución previstos, sujetos a resultados, cobranza y liquidación."
       ],
       "rendimiento": {
         "label": "Rendimiento estimado",
@@ -192,14 +198,17 @@
       "items": [
         {
           "title": "Contrato de inversión",
+          "body": "Condiciones de participación y distribución.",
           "icon": "escudo"
         },
         {
           "title": "Panel privado",
+          "body": "Avances y seguimiento financiero.",
           "icon": "ojo"
         },
         {
           "title": "Documentación del proyecto",
+          "body": "Contratos y evidencias de la operación.",
           "icon": "caja"
         }
       ],
@@ -320,6 +329,7 @@
     "proyecto": {
       "kicker": "01 · THE PROJECT",
       "title": "Three matches, one result.",
+      "sub": "Revenue from ticketing, sponsorships and commercial agreements across the three matches.",
       "estados": {
         "previsto": "Confirmed",
         "proceso": "In progress"
@@ -354,11 +364,14 @@
     },
     "capital": {
       "kicker": "02 · CAPITAL AND USE OF FUNDS",
-      "title": "USD $1,400,000 for the whole season.",
+      "title": "USD $1,400,000 of initial capital.",
+      "sub": "First match in full and advances for the next two.",
+      "nota": "The remaining budget for matches 2 and 3 is expected to be financed with the profits from the first match and the ticket pre-sale of each event.",
       "minimo": {
-        "label": "PARTICIPATE FROM",
-        "value": "USD $100,000 or MXN $2,000,000",
-        "note": "The remaining budget for matches 2 and 3 is expected to be financed with the profits from the first match and the ticket pre-sale of each event."
+        "label": "MINIMUM INVESTMENT",
+        "value": "USD $100,000",
+        "participacion": "5% share in the TOUR profits.",
+        "note": "Based on the target capital of USD 1.4 million."
       },
       "items": [
         {
@@ -429,15 +442,17 @@
       "partes": [
         {
           "pct": "70%",
-          "quien": "INVESTORS"
+          "quien": "INVESTORS",
+          "rol": "They provide the capital to finance the project."
         },
         {
           "pct": "30%",
-          "quien": "SOCCER iD"
+          "quien": "SOCCER iD",
+          "rol": "Provides the project, negotiates with clubs and venues, commercializes, operates and runs the TOUR."
         }
       ],
       "lineas": [
-        "Expected return of capital: December 2027, after the financial close of the three matches."
+        "Close and distribution expected, subject to results, collection and settlement."
       ],
       "rendimiento": {
         "label": "Estimated return",
@@ -470,14 +485,17 @@
       "items": [
         {
           "title": "Investment contract",
+          "body": "Terms of participation and distribution.",
           "icon": "escudo"
         },
         {
           "title": "Private panel",
+          "body": "Progress and financial tracking.",
           "icon": "ojo"
         },
         {
           "title": "Project documentation",
+          "body": "Contracts and operational evidence.",
           "icon": "caja"
         }
       ],

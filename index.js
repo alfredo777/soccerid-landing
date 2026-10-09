@@ -935,7 +935,7 @@ function graficosTour(data) {
   const g = {};
 
   // 70 / 30: la barra partida.
-  g.reparto = (((data.participacion || {}).partes) || []).map(p => ({ pct: num(p.pct), quien: p.quien }));
+  g.reparto = (((data.participacion || {}).partes) || []).map(p => ({ pct: num(p.pct), quien: p.quien, rol: p.rol }));
 
   // Capital: la barra apilada, cada tramo a su medida. Antes los tres iban
   // iguales porque no había cifras; ahora el partido 1 pesa el 71 % y cada

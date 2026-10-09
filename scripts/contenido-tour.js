@@ -51,6 +51,8 @@ const FUENTE = {
   proyecto: {
     kicker: T('01 · EL PROYECTO', '01 · THE PROJECT'),
     title: T('Tres partidos, un resultado.', 'Three matches, one result.'),
+    sub: T('Ingresos por boletaje, patrocinios y acuerdos comerciales de los tres encuentros.',
+           'Revenue from ticketing, sponsorships and commercial agreements across the three matches.'),
     estados: { previsto: T('Confirmado', 'Confirmed'), proceso: T('En proceso', 'In progress') },
     cta: T('Ver partido', 'View match'),
     cards: [
@@ -62,14 +64,19 @@ const FUENTE = {
 
   capital: {
     kicker: T('02 · CAPITAL Y DESTINO', '02 · CAPITAL AND USE OF FUNDS'),
-    title: T('USD $1,400,000 para toda la temporada.', 'USD $1,400,000 for the whole season.'),
-    // El brief lo dejaba por definir; ya hay cifra. Es el mismo mínimo que la
-    // propuesta de partido enseña con un código de nivel tour.
+    title: T('USD $1,400,000 de capital inicial.', 'USD $1,400,000 of initial capital.'),
+    sub: T('Primer partido completo y anticipos de los siguientes dos.',
+           'First match in full and advances for the next two.'),
+    // Nota de financiamiento, a nivel de capital (acompaña al desglose).
+    nota: T('El presupuesto restante de los partidos 2 y 3 se prevé financiar con las utilidades del primer partido y la preventa de boletos de cada encuentro.',
+            'The remaining budget for matches 2 and 3 is expected to be financed with the profits from the first match and the ticket pre-sale of each event.'),
+    // Bloque propio y protagonista: la inversión mínima. Solo dólares por ahora
+    // (los pesos se retiran hasta confirmar las condiciones de conversión).
     minimo: {
-      label: T('PARTICIPA DESDE', 'PARTICIPATE FROM'),
-      value: T('USD $100,000 o MXN $2,000,000', 'USD $100,000 or MXN $2,000,000'),
-      note: T('El presupuesto restante de los partidos 2 y 3 se prevé financiar con las utilidades del primer partido y la preventa de boletos de cada encuentro.',
-              'The remaining budget for matches 2 and 3 is expected to be financed with the profits from the first match and the ticket pre-sale of each event.')
+      label: T('INVERSIÓN MÍNIMA', 'MINIMUM INVESTMENT'),
+      value: T('USD $100,000', 'USD $100,000'),
+      participacion: T('Participación del 5% en las utilidades del TOUR.', '5% share in the TOUR profits.'),
+      note: T('Calculada sobre el capital objetivo de USD 1.4 millones.', 'Based on the target capital of USD 1.4 million.')
     },
     items: [
       { label: T('PARTIDO 1', 'MATCH 1'), note: T('Presupuesto completo', 'Full budget'),   value: 'USD $1,000,000', monto: 1000000 },
@@ -109,11 +116,11 @@ const FUENTE = {
     kicker: T('03 · PARTICIPACIÓN Y RETORNO', '03 · PARTICIPATION AND RETURN'),
     title: T('70% de las utilidades para inversionistas.', '70% of the profits for investors.'),
     partes: [
-      { pct: '70%', quien: T('INVERSIONISTAS', 'INVESTORS') },
-      { pct: '30%', quien: 'SOCCER iD' }
+      { pct: '70%', quien: T('INVERSIONISTAS', 'INVESTORS'), rol: T('Aportan el capital para financiar el proyecto.', 'They provide the capital to finance the project.') },
+      { pct: '30%', quien: 'SOCCER iD', rol: T('Aporta el proyecto, negocia con clubes y sedes, comercializa, opera y administra el TOUR.', 'Provides the project, negotiates with clubs and venues, commercializes, operates and runs the TOUR.') }
     ],
     lineas: [
-      T('Devolución prevista: diciembre de 2027, tras el cierre financiero de los tres partidos.', 'Expected return of capital: December 2027, after the financial close of the three matches.')
+      T('Cierre y distribución previstos, sujetos a resultados, cobranza y liquidación.', 'Close and distribution expected, subject to results, collection and settlement.')
     ],
     // Pendiente en el brief: se sustituirá por tres escenarios cuando se valide la proyección.
     rendimiento: { label: T('Rendimiento estimado', 'Estimated return'), value: '', pendiente: true },
@@ -140,9 +147,9 @@ const FUENTE = {
     kicker: T('04 · RESPALDO Y SEGUIMIENTO', '04 · BACKING AND FOLLOW-UP'),
     title: T('Contrato, panel privado y documentación.', 'Contract, private panel and documentation.'),
     items: [
-      { title: T('Contrato de inversión', 'Investment contract'),    icon: 'escudo' },
-      { title: T('Panel privado', 'Private panel'),                  icon: 'ojo' },
-      { title: T('Documentación del proyecto', 'Project documentation'), icon: 'caja' }
+      { title: T('Contrato de inversión', 'Investment contract'),    body: T('Condiciones de participación y distribución.', 'Terms of participation and distribution.'), icon: 'escudo' },
+      { title: T('Panel privado', 'Private panel'),                  body: T('Avances y seguimiento financiero.', 'Progress and financial tracking.'), icon: 'ojo' },
+      { title: T('Documentación del proyecto', 'Project documentation'), body: T('Contratos y evidencias de la operación.', 'Contracts and operational evidence.'), icon: 'caja' }
     ],
     cta: T('Consultar detalles', 'See details'),
     aviso: T("Inversión a riesgo bajo un esquema de participación en los resultados de SOCCER iD TOUR '27.",

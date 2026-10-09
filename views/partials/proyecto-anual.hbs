@@ -148,17 +148,18 @@
             {{/each}}
           </div>
         </div>
-        <ul class="pa-kv pa-kv--una">
-          {{#unless data.capital.minimo.pendiente}}
-          <li class="pa-kv__i pa-kv__i--total">
-            <span>{{data.capital.minimo.label}}</span>
-            <strong>{{data.capital.minimo.value}}</strong>
-          </li>
-          {{/unless}}
-        </ul>
-        {{#if data.capital.minimo.note}}<div class="pa-nota pa-nota--warn pa-nota--compacta"><p class="pa-nota__b">{{data.capital.minimo.note}}</p></div>{{/if}}
-        <div class="pa-box__pie-cta{{#unless data.capital.nota}} pa-box__pie-cta--solo{{/unless}}">
-          {{#if data.capital.nota}}<p class="pa-box__pie">{{data.capital.nota}}</p>{{/if}}
+        {{!-- Nota de financiamiento, acompañando al desglose. --}}
+        {{#if data.capital.nota}}<div class="pa-nota pa-nota--warn pa-nota--compacta"><p class="pa-nota__b">{{data.capital.nota}}</p></div>{{/if}}
+        {{!-- Inversión mínima: bloque propio y protagonista, separado del capital total. --}}
+        {{#unless data.capital.minimo.pendiente}}
+        <div class="pa-minimo">
+          <span class="pa-minimo__l">{{data.capital.minimo.label}}</span>
+          <strong class="pa-minimo__v">{{data.capital.minimo.value}}</strong>
+          {{#if data.capital.minimo.participacion}}<span class="pa-minimo__p">{{data.capital.minimo.participacion}}</span>{{/if}}
+          {{#if data.capital.minimo.note}}<span class="pa-minimo__n">{{data.capital.minimo.note}}</span>{{/if}}
+        </div>
+        {{/unless}}
+        <div class="pa-box__pie-cta pa-box__pie-cta--solo">
           <button type="button" class="pa-btn pa-btn--ghost" data-cajon="presupuesto">{{data.capital.cta}} →</button>
         </div>
       </section>
@@ -175,6 +176,17 @@
         <div class="pa-partida" aria-hidden="true">
           {{#each graficos.reparto}}
           <span class="pa-partida__t pa-anima" style="--w: {{this.pct}}%"><strong>{{this.pct}}%</strong><span>{{this.quien}}</span></span>
+          {{/each}}
+        </div>
+        {{!-- El papel de cada parte, alineado con la barra 70/30. --}}
+        <div class="pa-roles">
+          {{#each graficos.reparto}}
+          {{#if this.rol}}
+          <div class="pa-rol">
+            <span class="pa-rol__t"><strong>{{this.pct}}%</strong> · {{this.quien}}</span>
+            <span class="pa-rol__b">{{this.rol}}</span>
+          </div>
+          {{/if}}
           {{/each}}
         </div>
         <div class="pa-retorno">
@@ -215,7 +227,10 @@
           {{#each data.respaldo.items}}
           <div class="pa-tile pa-tile--fila">
             <svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>
-            <strong class="pa-tile__t">{{this.title}}</strong>
+            <div class="pa-tile__txt">
+              <strong class="pa-tile__t">{{this.title}}</strong>
+              {{#if this.body}}<span class="pa-tile__d">{{this.body}}</span>{{/if}}
+            </div>
           </div>
           {{/each}}
         </div>
@@ -489,7 +504,9 @@
     .pa-tile__n { display: block; font-size: 12px; line-height: 1.45; color: #D2D5DC; }
     .pa-tile__t { display: block; font-size: 15px; font-weight: 800; line-height: 1.3; }
     .pa-tile--fila { display: flex; align-items: center; gap: 12px; }
-    .pa-tile--fila .pa-ico { margin-bottom: 0; }
+    .pa-tile--fila .pa-ico { margin-bottom: 0; flex: 0 0 auto; }
+    .pa-tile--fila .pa-tile__txt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .pa-tile__d { font-size: 12.5px; line-height: 1.4; color: #AEB2BB; }
     .pa-tile--ed { text-align: center; }
     .pa-tile--ed .pa-tile__t { margin: 4px 0 2px; }
 
@@ -584,6 +601,20 @@
     .pa-partida__t:last-child { border-radius: 12px 999px 999px 12px; background: rgba(255,255,255,0.16); color: #FFFFFF; }
     .pa-partida__t strong { font-size: 26px; font-weight: 900; line-height: 1; }
     .pa-partida__t span { font-size: 10px; font-weight: 800; letter-spacing: 1.4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* El papel de cada parte, dos columnas alineadas con la barra 70/30. */
+    .pa-roles { display: grid; grid-template-columns: 70fr 30fr; gap: 4px; margin: 0 0 20px; }
+    .pa-rol { padding: 2px 18px 0 2px; }
+    .pa-rol:last-child { padding-left: 18px; padding-right: 2px; }
+    .pa-rol__t { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.6px; color: var(--tour-cian, #38E1FF); margin-bottom: 5px; }
+    .pa-rol__t strong { font-weight: 900; }
+    .pa-rol__b { display: block; font-size: 13px; line-height: 1.5; color: #C9CCD4; }
+    /* Inversión mínima: bloque propio, protagonista, separado del capital total. */
+    .pa-minimo { margin-top: 14px; padding: 22px 24px; border-radius: 16px;
+      border: 1px solid rgba(var(--tour-cian-rgb, 56,225,255), 0.38); background: rgba(var(--tour-cian-rgb, 56,225,255), 0.07); }
+    .pa-minimo__l { display: block; font-size: 11px; font-weight: 800; letter-spacing: 2px; color: var(--tour-rotulo, #C9CCD4); margin-bottom: 8px; }
+    .pa-minimo__v { display: block; font-size: clamp(34px, 5vw, 48px); font-weight: 900; line-height: 1; color: var(--tour-cian, #38E1FF); }
+    .pa-minimo__p { display: block; margin-top: 12px; font-size: 16px; font-weight: 700; color: #FFFFFF; }
+    .pa-minimo__n { display: block; margin-top: 6px; font-size: 12.5px; color: #AEB2BB; }
     /* Una sola columna: la tarjeta ocupa todo el ancho del bloque. */
     .pa-retorno { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
     /* La advertencia va dentro de la tarjeta, al final, separada por un filete. */
@@ -732,6 +763,8 @@
       .pa-panel { padding: 16px 16px 32px; }
       .pa-foto { min-height: 62vh; padding: 72px 20px; }
       .pa-tiles, .pa-temporada { grid-template-columns: minmax(0, 1fr); }
+      .pa-roles { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+      .pa-rol, .pa-rol:last-child { padding: 0; }
       .pa-apilada__barra { flex-direction: column; }
       .pa-apilada__t, .pa-apilada__t:first-child, .pa-apilada__t:last-child { flex-basis: auto; border-radius: 10px; }
       .pa-partida { flex-direction: column; }

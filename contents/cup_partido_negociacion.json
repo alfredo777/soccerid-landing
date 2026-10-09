@@ -11,7 +11,7 @@
       "error": "Código incorrecto. Intenta de nuevo."
     },
     "negociacion": {
-      "badge": "PERFIL PRÓXIMAMENTE",
+      "badge": "En proceso",
       "kicker": "SOCCER iD TOUR '27",
       "title": "Clubes, sede y fecha por definir.",
       "body": "Este encuentro forma parte del proyecto anual de tres partidos y todavía se está negociando.",
@@ -35,7 +35,7 @@
       "error": "Incorrect code. Please try again."
     },
     "negociacion": {
-      "badge": "PROFILE COMING SOON",
+      "badge": "In progress",
       "kicker": "SOCCER iD TOUR '27",
       "title": "Clubs, venue and date to be confirmed.",
       "body": "This match is part of the three-match annual project and is still under negotiation.",
