@@ -944,10 +944,10 @@ function graficosTour(data) {
   const totalCapital = tramos.reduce((a, t) => a + num(t.monto), 0);
   g.capital = tramos.map(t => {
     const pct = totalCapital ? Math.max(10, Math.round(num(t.monto) / totalCapital * 100)) : Math.round(100 / (tramos.length || 1));
-    // En un tramo estrecho el rótulo no cabe y se recorta a "PARTI…": se
-    // deja solo la cifra, que es lo que importa; las tarjetas de debajo ya
-    // dicen de qué partido es cada una.
-    return { label: t.label, value: t.value, pct, conRotulo: pct >= 25 };
+    // El rótulo va en los tres tramos. En los estrechos no cabe al lado de la
+    // cifra —se recortaba a "PARTI…"—, así que se apilan: el estilo lo decide
+    // con esta marca, no se oculta nada.
+    return { label: t.label, value: t.value, pct, estrecho: pct < 25 };
   });
 
   // 10 % → 70 % → 7 %: tres barras encadenadas.

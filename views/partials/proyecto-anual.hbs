@@ -141,8 +141,8 @@
           <span class="pa-apilada__l">{{data.capital.barraLabel}}</span>
           <div class="pa-apilada__barra">
             {{#each graficos.capital}}
-            <span class="pa-apilada__t pa-anima" style="--w: {{this.pct}}%" title="{{this.label}} · {{this.value}}">
-              {{#if this.conRotulo}}<span class="pa-apilada__n">{{this.label}}</span>{{/if}}
+            <span class="pa-apilada__t pa-anima{{#if this.estrecho}} pa-apilada__t--estrecho{{/if}}" style="--w: {{this.pct}}%" title="{{this.label}} · {{this.value}}">
+              <span class="pa-apilada__n">{{this.label}}</span>
               <span class="pa-apilada__v">{{this.value}}</span>
             </span>
             {{/each}}
@@ -524,7 +524,13 @@
     .pa-apilada__t:not(:first-child) { background: var(--tour-grafico-2, #7FDCF0); }
     .pa-apilada__n { font-size: 10px; font-weight: 800; letter-spacing: 1.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .pa-apilada__v { font-size: 13px; font-weight: 900; white-space: nowrap; }
-    .pa-apilada__t > .pa-apilada__v:only-child { margin: 0 auto; }
+    /* Tramo estrecho: rótulo arriba y cifra debajo, centrados. En fila no
+       caben los dos y el rótulo se cortaba. */
+    .pa-apilada__t--estrecho {
+      flex-direction: column; align-items: center; justify-content: center; gap: 1px; padding: 6px 8px;
+    }
+    .pa-apilada__t--estrecho .pa-apilada__n { font-size: 9px; letter-spacing: .8px; opacity: .75; }
+    .pa-apilada__t--estrecho .pa-apilada__v { font-size: 12px; }
 
     .pa-partida { display: flex; gap: 4px; margin: 0 0 16px; }
     .pa-partida__t { flex: 0 0 calc(var(--w, 50%) - 2px); min-width: 0; display: flex; align-items: baseline; gap: 10px; padding: 16px 18px; border-radius: 12px; background: var(--tour-grafico, #38E1FF); color: #000000; transform-origin: left center; }
