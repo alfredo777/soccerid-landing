@@ -50,6 +50,8 @@ Pendiente:
   archivo en S3: `heroku config:set TOUR_VIDEO_URL=https://... TOUR_VIDEO_POSTER=https://...`
   (ver `docs/variables-del-proyecto.md`). Conviene que sea **vertical 9:16**,
   H.264 + AAC, con `Content-Type: video/mp4` y CORS abierto al dominio.
+- Para esconderlo sin desplegar código: `heroku config:set TOUR_VIDEO_OCULTO=1`
+  (y `config:unset` para volverlo a enseñar).
 - [ ] Revisar textos de la card (kicker, título, bajada) con el usuario.
 
 

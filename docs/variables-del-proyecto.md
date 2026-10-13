@@ -47,10 +47,11 @@ no es para el front, no lo agregues a ninguna.
 
 ## 1a. Video del Tour '27 (S3)
 
-`index.js` → `videoDelTour`. Dos variables de entorno, las dos opcionales:
+`index.js` → `videoDelTour`. Tres variables de entorno, las tres opcionales:
 
 | Variable | Qué es | Si falta |
 |---|---|---|
+| `TOUR_VIDEO_OCULTO` | `1` esconde el reproductor entero (card, botón, todo) | el reproductor se muestra |
 | `TOUR_VIDEO_URL` | URL pública del `.mp4` en S3 (vertical 9:16, H.264 + AAC) | se sirve el relleno `/assets/videos/onboarding/tour-riesgo-mobile.mp4` |
 | `TOUR_VIDEO_POSTER` | URL de la carátula (el primer cuadro, JPG) | `/assets/images/tour27-video-poster.jpg` (un cuadro del video de pruebas) |
 

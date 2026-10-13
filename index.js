@@ -1099,6 +1099,9 @@ function partialDe(variante) {
  * La carátula de relleno es un cuadro de ese mismo video de pruebas.
  */
 function videoDelTour(variante, req, lang) {
+  // Interruptor para esconder el reproductor sin tocar código (por ejemplo
+  // mientras no esté el video real): TOUR_VIDEO_OCULTO=1 en las config vars.
+  if (/^(1|true|si|sí)$/i.test(String(process.env.TOUR_VIDEO_OCULTO || '').trim())) return null;
   if (!variante || variante.tipo !== 'tour') return null;
   const acceso = propuestas.accesoDe(req);
   if (!acceso || acceso.nivel !== 'tour') return null;
