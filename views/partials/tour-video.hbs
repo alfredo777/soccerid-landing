@@ -126,6 +126,11 @@
     /* Desplegado: el video toma el ancho de la card en 9:16 (324 × 576 en
        web) y nunca pasa de este alto, para que la fila siga a la vista. */
     --tv-despl-max: 60vh;
+    /* La flecha de "volver arriba" (.pp-btt, estilada en la vista). El boton
+       de reabrir se cuelga de estos dos numeros para quedar a su misma altura:
+       si alla se mueve la flecha, aqui se cambian y el par sigue alineado. */
+    --tv-btt-borde: 32px;
+    --tv-btt-tam: 48px;
     position: fixed; inset: 0; z-index: 95;
     pointer-events: none;
     font-family: inherit;
@@ -135,8 +140,14 @@
   /* ─── Etapa 0, cerrado con la X: el botón abajo a la IZQUIERDA ─── */
   .tv__boton {
     position: absolute;
-    left: var(--tv-margen-boton, 16px);
-    bottom: calc(var(--tv-margen-boton, 16px) + env(safe-area-inset-bottom, 0px));
+    /* A la MISMA ALTURA que la flecha de volver arriba (.pp-btt, en la vista:
+       fija a 32px del borde y 48px de lado). Este circulo mide 52, asi que su
+       bottom baja la mitad de la diferencia y los dos centros quedan en la
+       misma linea. Mismo borde de 32 a la izquierda que la flecha a la
+       derecha. Sin env(safe-area): la flecha tampoco la lleva, y si una la
+       suma y la otra no, dejan de estar alineadas. */
+    left: var(--tv-btt-borde);
+    bottom: calc(var(--tv-btt-borde) - (52px - var(--tv-btt-tam)) / 2);
     width: 52px; height: 52px; border-radius: 50%;
     border: 1px solid var(--tv-vidrio-borde); padding: 0;
     background: var(--tv-fondo);
@@ -150,28 +161,39 @@
   .tv__boton:hover { transform: scale(1.06); background: rgba(var(--tv-acento-rgb), 0.14); }
   .tv__boton svg { width: 24px; height: 24px; }
   /* ONDAS. Cerrada la card con la X, este boton es lo unico que queda del
-     video y vive en una esquina: late para que se vea que ahi sigue. Son dos
-     anillos escalonados que salen del borde y se desvanecen. No capturan el
-     dedo, asi que no estorban al toque del propio boton. */
+     video y vive en una esquina, asi que tiene que llamar. Son dos anillos
+     cian gruesos que salen del borde y se abren hasta casi el triple, mas un
+     halo que empuja desde el propio boton: las tres cosas corren al mismo
+     compas, de modo que se lee como UNA onda con cuerpo y no como tres cosas
+     parpadeando. Nada de esto captura el dedo, asi que no estorba al toque. */
   .tv__boton::before,
   .tv__boton::after {
     content: ""; position: absolute; inset: 0; border-radius: 50%;
-    border: 1px solid rgba(var(--tv-acento-rgb), 0.6);
+    border: 2px solid rgba(var(--tv-acento-rgb), 0.95);
     pointer-events: none; opacity: 0;
-    animation: tv-onda 2.8s cubic-bezier(.25,.6,.35,1) infinite;
+    animation: tv-onda 2.2s cubic-bezier(.2,.6,.3,1) infinite;
   }
-  /* El segundo anillo sale a mitad del ciclo: dos ondas en camino, nunca un
-     parpadeo doble. */
-  .tv__boton::after { animation-delay: 1.4s; }
-  /* Con el dedo o el raton encima ya esta visto: se calla. */
+  /* El segundo anillo sale a mitad del ciclo: siempre hay una onda en camino,
+     nunca un parpadeo doble. */
+  .tv__boton::after { animation-delay: 1.1s; }
+  /* El halo sale del boton mismo y le da peso a la onda. Las dos sombras de
+     siempre se repiten en cada paso: box-shadow se anima entera o no se anima. */
+  .tv__boton { animation: tv-onda-halo 2.2s cubic-bezier(.2,.6,.3,1) infinite; }
+  /* Con el dedo o el raton encima ya esta visto: se calla todo. */
+  .tv__boton:hover { animation: none; }
   .tv__boton:hover::before, .tv__boton:hover::after { animation: none; opacity: 0; }
   @keyframes tv-onda {
-    0%   { transform: scale(1); opacity: .6; }
-    70%  { opacity: 0; }
-    100% { transform: scale(2.15); opacity: 0; }
+    0%   { transform: scale(1); opacity: .95; }
+    60%  { opacity: .4; }
+    100% { transform: scale(2.7); opacity: 0; }
   }
-  /* Quien pidio menos movimiento no ve las ondas; el boton se queda quieto. */
+  @keyframes tv-onda-halo {
+    0%        { box-shadow: 0 12px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 0 rgba(var(--tv-acento-rgb), 0.5); }
+    70%, 100% { box-shadow: 0 12px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 20px rgba(var(--tv-acento-rgb), 0); }
+  }
+  /* Quien pidio menos movimiento no ve nada de esto; el boton se queda quieto. */
   @media (prefers-reduced-motion: reduce) {
+    .tv__boton { animation: none; }
     .tv__boton::before, .tv__boton::after { animation: none; display: none; }
   }
   /* Mientras la card esté cerrada no se le pone nada encima a la fila */
@@ -367,7 +389,7 @@
 
   /* ─── Celular ─── */
   @media (max-width: 640px) {
-    .tv { --tv-margen: 0px; --tv-margen-boton: 12px; --tv-despl-max: 52vh; }
+    .tv { --tv-margen: 0px; --tv-despl-max: 52vh; }
     /* En celular la card va PEGADA al borde de abajo y a todo lo ancho, como
        el mini reproductor de Rockstars MX: flotando con margen se veía
        suelta, con un hueco debajo. Solo las esquinas de arriba se redondean
