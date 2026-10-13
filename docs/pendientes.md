@@ -11,6 +11,11 @@ etapas y la card nunca se va a un modal centrado con velo.
 2. **Desplegado** — la misma card, en su esquina, crece y el video toma el
    ancho de la card debajo de la fila (como el reproductor de Rockstars MX).
 3. **Maximizado** — el video a toda la pantalla, en web y en celular igual.
+0. **Cerrado con la X** — la card se va y queda un botón redondo abajo a la
+   izquierda con icono de video que la vuelve a abrir **directo en desplegado**. El cierre se guarda
+   12 h (lo que dura el acceso del código) en `localStorage`, llave
+   `tv-cerrado:<variante>`: la cookie es httpOnly y no se puede leer desde el
+   navegador, así que se imita su vigencia.
 
 Es un `<video>` HTML5 nativo porque el archivo se va a servir desde **Amazon
 S3**; nada de embeds de terceros. Tokens del tour (cian, gris, Raleway).
@@ -46,8 +51,6 @@ Pendiente:
   (ver `docs/variables-del-proyecto.md`). Conviene que sea **vertical 9:16**,
   H.264 + AAC, con `Content-Type: video/mp4` y CORS abierto al dominio.
 - [ ] Revisar textos de la card (kicker, título, bajada) con el usuario.
-- [ ] Decidir si la X la quita para toda la visita (`sessionStorage`) o solo
-  hasta recargar (hoy: hasta recargar).
 
 
 ## Asistente de contenidos con IA — Claude Haiku 4.5 — HECHO

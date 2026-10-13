@@ -1115,6 +1115,7 @@ function videoDelTour(variante, req, lang) {
     txtDesplegar: isEs ? 'Desplegar o recoger el video' : 'Expand or collapse the video',
     txtRestaurar: isEs ? 'Salir de pantalla completa' : 'Exit full screen',
     txtCerrar: isEs ? 'Cerrar el video' : 'Close the video',
+    txtReabrir: isEs ? 'Ver el video del tour' : 'Watch the tour video',
     txtSonido: isEs ? 'Activar o silenciar el sonido' : 'Toggle sound',
     txtPausa: isEs ? 'Reproducir o pausar' : 'Play or pause',
     txtProgreso: isEs ? 'Avance del video' : 'Video progress'

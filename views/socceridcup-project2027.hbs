@@ -1661,13 +1661,42 @@
       if (n >= 2) { sonido(true); pintarTiempo(); }
       if (n === 3) { var x = tv.querySelector('.tv__x--g'); if (x) x.focus(); }
     }
-    // La X de la fila quita la card del todo (en esta visita).
+    // ─── Etapa 0: cerrado con la X ───
+    // La card se va y queda el botón de abajo a la izquierda. El cierre se
+    // GUARDA mientras dure el acceso del código (12 h, lo mismo que la cookie
+    // pp_acc), para que el video no vuelva a saltar en cada página ni en cada
+    // recarga. Va en localStorage con fecha de caducidad porque la cookie es
+    // httpOnly y desde aquí no se puede leer: se imita su vigencia.
+    var LLAVE = 'tv-cerrado:' + (tv.getAttribute('data-variante') || 'tour');
+    var VIGENCIA = 12 * 60 * 60 * 1000;
+    var boton = tv.querySelector('[data-tv-reabrir]');
+    function cerradoGuardado() {
+      try { var h = parseInt(localStorage.getItem(LLAVE), 10); return !!h && (Date.now() - h) < VIGENCIA; } catch (_) { return false; }
+    }
+    function guardarCierre(si) {
+      try { if (si) localStorage.setItem(LLAVE, String(Date.now())); else localStorage.removeItem(LLAVE); } catch (_) {}
+    }
+    function minimizar() {
+      tv.classList.add('tv--minimizado');
+      document.body.classList.remove('tv-visible');
+      if (boton) boton.hidden = false;
+    }
     function cerrar() {
       irA(1);
       video.pause();
+      guardarCierre(true);
       tv.classList.remove('tv--visible');
-      document.body.classList.remove('tv-visible');
-      window.setTimeout(function() { tv.hidden = true; tv.setAttribute('aria-hidden', 'true'); }, 350);
+      window.setTimeout(minimizar, 300);
+      if (boton) boton.focus();
+    }
+    // El botón reabre DIRECTO en desplegado (fase 2): quien lo toca quiere ver
+    // el video, no la fila.
+    function reabrir() {
+      guardarCierre(false);
+      if (boton) boton.hidden = true;
+      tv.classList.remove('tv--minimizado');
+      document.body.classList.add('tv-visible');
+      window.requestAnimationFrame(function() { tv.classList.add('tv--visible'); irA(2); });
     }
     function buscar(e) {
       if (!progreso || !video.duration) return;
@@ -1686,6 +1715,7 @@
         if (e.target.closest('[data-tv-alternar]')) { e.preventDefault(); irA(etapa === 1 ? 2 : 1); return; }
         if (e.target.closest('[data-tv-restaurar]')) { e.preventDefault(); irA(2); return; }
         if (e.target.closest('[data-tv-cerrar]')) { e.preventDefault(); cerrar(); return; }
+        if (e.target.closest('[data-tv-reabrir]')) { e.preventDefault(); reabrir(); return; }
         if (e.target.closest('[data-tv-sonido]')) { e.preventDefault(); sonido(video.muted); return; }
         if (e.target.closest('[data-tv-play]') || e.target.closest('[data-tv-toque]')) { e.preventDefault(); alternarPlay(); return; }
         if (e.target.closest('[data-tv-progreso]')) { buscar(e); }
@@ -1755,8 +1785,10 @@
     ['timeupdate', 'loadedmetadata', 'durationchange'].forEach(function(ev) { video.addEventListener(ev, pintarTiempo); });
 
     // Aparece poco después de que se ve la propuesta, no encima del preloader.
+    // Si ya se cerró con la X (y el cierre sigue vigente) solo sale el botón.
     tv.hidden = false; tv.setAttribute('aria-hidden', 'false');
     reflejar();
+    if (cerradoGuardado()) { video.pause(); minimizar(); return; }
     window.setTimeout(function() {
       tv.classList.add('tv--visible');
       document.body.classList.add('tv-visible');

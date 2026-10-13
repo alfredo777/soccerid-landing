@@ -14,7 +14,13 @@
      El JS vive en la vista (socceridcup-project2027.hbs, en initContenido),
      porque este contenido se inyecta tras el candado y un <script> inyectado
      no corre. Aquí solo hay marcado y estilos. --}}
-<div class="tv" id="tvCard" data-tv hidden aria-hidden="true">
+<div class="tv" id="tvCard" data-tv data-variante="{{variantId}}" hidden aria-hidden="true">
+  {{!-- Etapa 0, CERRADO CON LA X: la card se va y queda este botón abajo a
+       la izquierda. El cierre se guarda mientras dure el acceso del código
+       (12 h), para que no vuelva a saltar en cada página. --}}
+  <button type="button" class="tv__boton" data-tv-reabrir hidden aria-label="{{videoTour.txtReabrir}}" title="{{videoTour.txtReabrir}}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="14" height="14" rx="3"/><path d="M16.5 10l5-3v10l-5-3z"/></svg>
+  </button>
   <div class="tv__card">
     {{!-- Asa de arrastre (solo celular): se jala con el dedo para desplegar
          el reproductor, y tocarla también lo despliega o recoge. --}}
@@ -122,6 +128,26 @@
     font-family: inherit;
   }
   .tv[hidden] { display: none; }
+
+  /* ─── Etapa 0, cerrado con la X: el botón abajo a la IZQUIERDA ─── */
+  .tv__boton {
+    position: absolute;
+    left: var(--tv-margen-boton, 16px);
+    bottom: calc(var(--tv-margen-boton, 16px) + env(safe-area-inset-bottom, 0px));
+    width: 52px; height: 52px; border-radius: 50%;
+    border: 1px solid var(--tv-vidrio-borde); padding: 0;
+    background: var(--tv-fondo);
+    backdrop-filter: blur(24px) saturate(140%); -webkit-backdrop-filter: blur(24px) saturate(140%);
+    color: var(--tv-acento); cursor: pointer; pointer-events: auto;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+    transition: transform .15s ease, background .15s ease;
+  }
+  .tv__boton[hidden] { display: none; }
+  .tv__boton:hover { transform: scale(1.06); background: rgba(var(--tv-acento-rgb), 0.14); }
+  .tv__boton svg { width: 24px; height: 24px; }
+  /* Mientras la card esté cerrada no se le pone nada encima a la fila */
+  .tv.tv--minimizado .tv__card { display: none; }
 
   /* ─── Etapa 1, CERRADO: la fila abajo a la derecha ─── */
   .tv__card {
@@ -313,7 +339,7 @@
 
   /* ─── Celular ─── */
   @media (max-width: 640px) {
-    .tv { --tv-margen: 0px; --tv-despl-max: 52vh; }
+    .tv { --tv-margen: 0px; --tv-margen-boton: 12px; --tv-despl-max: 52vh; }
     /* En celular la card va PEGADA al borde de abajo y a todo lo ancho, como
        el mini reproductor de Rockstars MX: flotando con margen se veía
        suelta, con un hueco debajo. Solo las esquinas de arriba se redondean
