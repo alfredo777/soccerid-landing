@@ -1607,6 +1607,110 @@
     piezas.forEach(function(p) { vigia.observe(p); });
   })();
 
+  // ─── Video del tour: card flotante abajo a la derecha + pantalla de celular ───
+  // Marcado y medidas en views/partials/tour-video.hbs. Un solo <video> para
+  // los dos estados: al abrir y cerrar solo cambia la clase del contenedor,
+  // así la reproducción no se corta. Escuchadores delegados en document por
+  // la misma razón que los cajones (el contenido se inyecta tras el candado).
+  (function() {
+    var tv = document.getElementById('tvCard');
+    if (!tv) return;
+    var video = document.getElementById('tvVideo');
+    var tiempo = document.getElementById('tvTiempo');
+    var lleno = document.getElementById('tvLleno');
+    var progreso = tv.querySelector('[data-tv-progreso]');
+    var abierto = false, origen = null;
+
+    function fmt(seg) {
+      if (!isFinite(seg)) return '0:00';
+      var m = Math.floor(seg / 60), s = Math.floor(seg % 60);
+      return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+    function reflejar() {
+      tv.classList.toggle('tv--reproduciendo', !video.paused && !video.ended);
+      tv.classList.toggle('tv--pausa', video.paused || video.ended);
+      tv.classList.toggle('tv--con-sonido', !video.muted);
+      tv.querySelectorAll('[data-tv-sonido]').forEach(function(b) { b.setAttribute('aria-pressed', video.muted ? 'false' : 'true'); });
+    }
+    function pintarTiempo() {
+      if (tiempo) tiempo.textContent = fmt(video.currentTime) + ' / ' + fmt(video.duration);
+      var pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
+      if (lleno) lleno.style.width = pct + '%';
+      if (progreso) progreso.setAttribute('aria-valuenow', String(Math.round(pct)));
+    }
+    function reproducir() { var p = video.play(); if (p && p.catch) p.catch(function() {}); }
+    function alternar() { if (video.paused || video.ended) reproducir(); else video.pause(); }
+    // El navegador no deja arrancar con audio sin un gesto del usuario: la
+    // card empieza en silencio y el sonido entra con el botón o al abrirla.
+    function sonido(encender) { video.muted = !encender; if (encender && video.paused) reproducir(); reflejar(); }
+
+    function abrir(desde) {
+      if (abierto) return;
+      abierto = true; origen = desde || null;
+      tv.classList.add('tv--abierto');
+      document.body.style.overflow = 'hidden';
+      sonido(true);
+      pintarTiempo();
+      var x = tv.querySelector('.tv__x--g'); if (x) x.focus();
+    }
+    function contraer() {
+      if (!abierto) return;
+      abierto = false;
+      tv.classList.remove('tv--abierto');
+      document.body.style.overflow = '';
+      if (origen && origen.focus) origen.focus();
+      origen = null;
+    }
+    // La X de la card la quita del todo (en esta visita). Si estaba abierta,
+    // primero vuelve a la miniatura y luego se va.
+    function cerrar() {
+      contraer();
+      video.pause();
+      tv.classList.remove('tv--visible');
+      document.body.classList.remove('tv-visible');
+      window.setTimeout(function() { tv.hidden = true; tv.setAttribute('aria-hidden', 'true'); }, 350);
+    }
+    function buscar(e) {
+      if (!progreso || !video.duration) return;
+      var r = progreso.getBoundingClientRect();
+      var x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+      video.currentTime = Math.max(0, Math.min(1, x / r.width)) * video.duration;
+      pintarTiempo();
+    }
+
+    if (!document.body.dataset.tvListo) {
+      document.body.dataset.tvListo = '1';
+      document.addEventListener('click', function(e) {
+        var t = document.getElementById('tvCard'); if (!t || !t.contains(e.target)) return;
+        if (e.target.closest('[data-tv-abrir]')) { e.preventDefault(); abrir(e.target.closest('[data-tv-abrir]')); return; }
+        if (e.target.closest('[data-tv-contraer]')) { e.preventDefault(); contraer(); return; }
+        if (e.target.closest('[data-tv-cerrar]')) { e.preventDefault(); cerrar(); return; }
+        if (e.target.closest('[data-tv-sonido]')) { e.preventDefault(); sonido(video.muted); return; }
+        if (e.target.closest('[data-tv-play]') || e.target.closest('[data-tv-toque]')) { e.preventDefault(); alternar(); return; }
+        if (e.target.closest('[data-tv-progreso]')) { buscar(e); }
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && abierto) contraer();
+        if (e.target && e.target.hasAttribute && e.target.hasAttribute('data-tv-progreso') && video.duration) {
+          if (e.key === 'ArrowRight') { video.currentTime = Math.min(video.duration, video.currentTime + 5); e.preventDefault(); }
+          if (e.key === 'ArrowLeft') { video.currentTime = Math.max(0, video.currentTime - 5); e.preventDefault(); }
+          if (e.key === ' ' || e.key === 'Enter') { alternar(); e.preventDefault(); }
+        }
+      });
+    }
+    ['play', 'pause', 'ended', 'volumechange'].forEach(function(ev) { video.addEventListener(ev, reflejar); });
+    ['timeupdate', 'loadedmetadata', 'durationchange'].forEach(function(ev) { video.addEventListener(ev, pintarTiempo); });
+
+    // Aparece poco después de que se ve la propuesta, no encima del preloader.
+    tv.hidden = false; tv.setAttribute('aria-hidden', 'false');
+    reflejar();
+    window.setTimeout(function() {
+      tv.classList.add('tv--visible');
+      document.body.classList.add('tv-visible');
+      reproducir();
+    }, 900);
+  })();
+
   // ─── Cajones laterales del perfil anual ───
   // Lo secundario (presupuesto, condiciones, trayectoria) se abre desde los
   // botones [data-cajon]. Los escuchadores van delegados en document, porque

@@ -678,3 +678,6 @@
       .pa-cajon__cab, .pa-cajon__cuerpo { padding-left: 16px; padding-right: 16px; }
     }
   </style>
+
+{{!-- El video del tour (card flotante). Solo llega `videoTour` con acceso de nivel tour. --}}
+{{#if videoTour}}{{> tour-video}}{{/if}}

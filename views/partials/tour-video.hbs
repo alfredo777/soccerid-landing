@@ -1,0 +1,293 @@
+{{!-- ═══════════ VIDEO DEL TOUR: card flotante + pantalla de celular ═══════════
+     Solo para quien entró con código de NIVEL TOUR (lo decide index.js, que
+     manda `videoTour`; sin él este partial no se emite).
+
+     Es un <video> HTML5 nativo —el archivo vendrá de Amazon S3, no de un
+     embed de terceros— y es UN SOLO elemento para los dos estados: cerrado
+     (la miniatura abajo a la derecha, reproduciendo) y abierto (la pantalla
+     de celular centrada). No se mueve en el DOM al abrir y cerrar: solo
+     cambia la clase del contenedor, y así la reproducción no se corta.
+
+     El JS vive en la vista (socceridcup-project2027.hbs, en initContenido),
+     porque este contenido se inyecta tras el candado y un <script> inyectado
+     no corre. Aquí solo hay marcado y estilos. --}}
+<div class="tv" id="tvCard" data-tv hidden aria-hidden="true">
+  <div class="tv__velo" data-tv-cerrar aria-hidden="true"></div>
+
+  <div class="tv__card">
+    {{!-- Cabeza: solo se ve en el estado abierto, sobre el video --}}
+    <header class="tv__cabeza">
+      <div class="tv__cabeza-datos">
+        <span class="tv__kicker">{{videoTour.kicker}}</span>
+        <strong class="tv__titulo-g">{{videoTour.titulo}}</strong>
+      </div>
+      <button type="button" class="tv__x tv__x--g" data-tv-contraer aria-label="{{videoTour.txtContraer}}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    </header>
+
+    {{!-- El video: miniatura 9:16 en la card, pantalla completa al abrir --}}
+    <div class="tv__marco" id="tvMarco">
+      <video id="tvVideo" class="tv__video"
+             src="{{videoTour.src}}"
+             poster="{{videoTour.poster}}"
+             playsinline muted loop autoplay preload="metadata"
+             aria-label="{{videoTour.titulo}}"></video>
+      <button type="button" class="tv__abrir" id="tvAbrir" data-tv-abrir aria-label="{{videoTour.txtAbrir}}">
+        <span class="tv__abrir-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+        </span>
+      </button>
+      {{!-- Pausa/continúa tocando la pantalla, solo en abierto --}}
+      <button type="button" class="tv__toque" data-tv-toque aria-label="{{videoTour.txtPausa}}"></button>
+      <div class="tv__pausado" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10-6.5z"/></svg>
+      </div>
+    </div>
+
+    {{!-- Fila de la card: datos + acciones (solo en cerrado) --}}
+    <div class="tv__datos" data-tv-abrir>
+      <span class="tv__kicker">{{videoTour.kicker}}</span>
+      <strong class="tv__titulo">{{videoTour.titulo}}</strong>
+      <span class="tv__sub">{{videoTour.sub}}</span>
+    </div>
+    <div class="tv__acciones">
+      <button type="button" class="tv__btn tv__btn--sonido" data-tv-sonido aria-pressed="false" aria-label="{{videoTour.txtSonido}}">
+        <svg class="tv__ico-mudo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M23 9l-6 6M17 9l6 6"/></svg>
+        <svg class="tv__ico-sonido" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 010 7M19 5.5a9.5 9.5 0 010 13"/></svg>
+      </button>
+      <button type="button" class="tv__play" data-tv-play aria-label="{{videoTour.txtPausa}}">
+        <svg class="tv__ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10-6.5z"/></svg>
+        <svg class="tv__ico-pausa" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+      </button>
+      <button type="button" class="tv__x" data-tv-cerrar aria-label="{{videoTour.txtCerrar}}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    {{!-- Barra de abajo: progreso, tiempo y sonido (solo en abierto) --}}
+    <div class="tv__barra">
+      <button type="button" class="tv__btn tv__btn--barra" data-tv-play aria-label="{{videoTour.txtPausa}}">
+        <svg class="tv__ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10-6.5z"/></svg>
+        <svg class="tv__ico-pausa" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+      </button>
+      <span class="tv__tiempo" id="tvTiempo">0:00 / 0:00</span>
+      <div class="tv__progreso" data-tv-progreso role="slider" aria-label="{{videoTour.txtProgreso}}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0">
+        <div class="tv__progreso-lleno" id="tvLleno"></div>
+      </div>
+      <button type="button" class="tv__btn tv__btn--barra" data-tv-sonido aria-pressed="false" aria-label="{{videoTour.txtSonido}}">
+        <svg class="tv__ico-mudo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M23 9l-6 6M17 9l6 6"/></svg>
+        <svg class="tv__ico-sonido" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 010 7M19 5.5a9.5 9.5 0 010 13"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ─── Medidas del reproductor del tour ───
+     Todas las dimensiones salen de aquí. La card cerrada mide lo mismo en
+     web y en celular a propósito: en web es una card pequeña abajo a la
+     derecha, del tamaño de la de un teléfono, no una barra a lo ancho. */
+  .tv {
+    --tv-card-ancho: 344px;    /* card cerrada, web */
+    --tv-card-alto: 112px;     /* 96 de miniatura + 8 de margen arriba y abajo */
+    --tv-mini-ancho: 54px;     /* miniatura 9:16 */
+    --tv-mini-alto: 96px;
+    --tv-margen: 16px;         /* separación del borde de la pantalla */
+    --tv-play: 48px;           /* botón principal, como el de Rockstars MX */
+    --tv-radio: 18px;
+    --tv-fondo: rgba(var(--tour-card-rgb, 30, 34, 44), 0.96);
+    --tv-acento: var(--tour-cian, #38E1FF);
+    --tv-acento-rgb: var(--tour-cian-rgb, 56, 225, 255);
+    --tv-tinta: var(--tour-tinta, #1C1E23);
+    --tv-rotulo: var(--tour-rotulo, #C9CCD4);
+    /* Pantalla de celular (estado abierto), en web: 9:16 limitado por la
+       altura de la ventana. A 900 px de alto da 774 × 435. */
+    --tv-tel-alto: min(86vh, 844px);
+    --tv-tel-radio: 36px;
+    --tv-tel-bisel: 6px;
+    position: fixed; inset: 0; z-index: 95;
+    pointer-events: none;
+    font-family: inherit;
+  }
+  .tv[hidden] { display: none; }
+
+  /* Velo: solo en abierto */
+  .tv__velo {
+    position: absolute; inset: 0;
+    background: rgba(10, 11, 14, 0.78);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    opacity: 0; transition: opacity .25s ease;
+  }
+
+  /* ─── Estado CERRADO: la card abajo a la derecha ─── */
+  .tv__card {
+    position: absolute;
+    right: var(--tv-margen);
+    bottom: calc(var(--tv-margen) + env(safe-area-inset-bottom, 0px));
+    width: var(--tv-card-ancho); height: var(--tv-card-alto);
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 10px 8px 8px;
+    background: var(--tv-fondo);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--tv-radio);
+    box-shadow: 0 18px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(var(--tv-acento-rgb), 0.08);
+    color: #fff;
+    pointer-events: auto;
+    transform: translateY(calc(100% + 24px)); opacity: 0;
+    transition: transform .32s cubic-bezier(.2,.8,.2,1), opacity .25s ease;
+  }
+  .tv.tv--visible .tv__card { transform: none; opacity: 1; }
+
+  .tv__marco {
+    position: relative; flex: none;
+    width: var(--tv-mini-ancho); height: var(--tv-mini-alto);
+    border-radius: 10px; overflow: hidden; background: #000;
+  }
+  .tv__video { display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
+  /* Toda la miniatura abre; el icono de expandir asoma en la esquina */
+  .tv__abrir {
+    position: absolute; inset: 0; border: 0; padding: 0; margin: 0;
+    background: transparent; cursor: pointer; color: #fff;
+  }
+  .tv__abrir-ico {
+    position: absolute; right: 4px; bottom: 4px;
+    width: 20px; height: 20px; border-radius: 6px;
+    background: rgba(0,0,0,0.55);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tv__abrir-ico svg { width: 12px; height: 12px; }
+  .tv__toque, .tv__pausado, .tv__cabeza, .tv__barra { display: none; }
+
+  .tv__datos { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; cursor: pointer; }
+  .tv__kicker {
+    font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--tv-acento);
+  }
+  .tv__titulo, .tv__sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tv__titulo { font-size: 14px; font-weight: 800; line-height: 1.2; }
+  .tv__sub { font-size: 12px; color: var(--tv-rotulo); }
+
+  .tv__acciones { display: flex; align-items: center; gap: 6px; flex: none; }
+  .tv__btn, .tv__x {
+    width: 34px; height: 34px; border-radius: 10px; border: 0; padding: 0;
+    background: transparent; color: var(--tv-rotulo); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s ease, color .15s ease;
+  }
+  .tv__btn:hover, .tv__x:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  .tv__btn svg, .tv__x svg { width: 18px; height: 18px; }
+  .tv__play {
+    width: var(--tv-play); height: var(--tv-play); border-radius: 50%; border: 0; padding: 0;
+    background: var(--tv-acento); color: var(--tv-tinta); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 18px rgba(var(--tv-acento-rgb), 0.35);
+    transition: transform .15s ease;
+  }
+  .tv__play:hover { transform: scale(1.06); }
+  .tv__play svg { width: 24px; height: 24px; }
+  /* Iconos según estado: el <video> manda, la clase del contenedor refleja */
+  .tv__ico-pausa, .tv__ico-sonido { display: none; }
+  .tv--reproduciendo .tv__ico-play { display: none; }
+  .tv--reproduciendo .tv__ico-pausa { display: block; }
+  .tv--con-sonido .tv__ico-mudo { display: none; }
+  .tv--con-sonido .tv__ico-sonido { display: block; }
+  .tv--con-sonido .tv__btn--sonido { color: var(--tv-acento); }
+  /* Mientras va en silencio, el botón de sonido llama la atención: es la
+     única manera de que suene, porque el navegador no deja arrancar con audio. */
+  .tv:not(.tv--con-sonido) .tv__btn--sonido { animation: tv-latido 2.4s ease-in-out infinite; }
+  @keyframes tv-latido { 0%, 100% { background: transparent; } 50% { background: rgba(var(--tv-acento-rgb), 0.14); color: #fff; } }
+
+  /* El botón de "volver arriba" de la página vive en la misma esquina:
+     mientras la card esté, sube a quedar encima de ella. */
+  body.tv-visible .pp-btt { bottom: calc(var(--tv-margen, 16px) + 112px + 16px); }
+
+  /* ─── Estado ABIERTO: la pantalla de celular, centrada ─── */
+  .tv--abierto { z-index: 170; pointer-events: auto; }
+  .tv--abierto .tv__velo { opacity: 1; }
+  .tv.tv--abierto .tv__card {
+    /* La card deja de ser una fila y se vuelve el teléfono, centrado.
+       Se ancla por left/top: con right/bottom más aspect-ratio el ancho se
+       resolvía antes de conocer la altura y el marco quedaba descentrado. */
+    left: 50%; top: 50%; right: auto; bottom: auto;
+    transform: translate(-50%, -50%);
+    width: auto; height: var(--tv-tel-alto);
+    aspect-ratio: 9 / 16;
+    padding: 0; gap: 0; display: block;
+    background: #0B0C10;
+    border: var(--tv-tel-bisel) solid #0B0C10;
+    border-radius: var(--tv-tel-radio);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08), 0 0 80px rgba(var(--tv-acento-rgb), 0.12);
+    overflow: hidden;
+  }
+  .tv--abierto .tv__marco {
+    width: 100%; height: 100%;
+    border-radius: calc(var(--tv-tel-radio) - var(--tv-tel-bisel));
+  }
+  .tv--abierto .tv__video { object-fit: contain; }
+  .tv--abierto .tv__abrir, .tv--abierto .tv__datos, .tv--abierto .tv__acciones { display: none; }
+  .tv--abierto .tv__toque { display: block; position: absolute; inset: 0; border: 0; background: transparent; cursor: pointer; }
+  .tv--abierto.tv--pausa .tv__pausado {
+    display: flex; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 72px; height: 72px; border-radius: 50%; pointer-events: none;
+    background: rgba(var(--tv-acento-rgb), 0.92); color: var(--tv-tinta);
+    align-items: center; justify-content: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  }
+  .tv--abierto .tv__pausado svg { width: 34px; height: 34px; margin-left: 3px; }
+
+  .tv--abierto .tv__cabeza {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    position: absolute; left: 0; right: 0; top: 0; z-index: 2;
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 14px 28px 18px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.72), rgba(0,0,0,0));
+    color: #fff;
+  }
+  .tv__cabeza-datos { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .tv__titulo-g { font-size: 15px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tv__x--g { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.12); color: #fff; flex: none; }
+  .tv__x--g:hover { background: rgba(255,255,255,0.22); }
+  .tv__x--g svg { width: 20px; height: 20px; }
+
+  .tv--abierto .tv__barra {
+    display: flex; align-items: center; gap: 10px;
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+    padding: 28px 14px calc(14px + env(safe-area-inset-bottom, 0px));
+    background: linear-gradient(0deg, rgba(0,0,0,0.78), rgba(0,0,0,0));
+    color: #fff;
+  }
+  .tv__btn--barra { width: 36px; height: 36px; color: #fff; flex: none; }
+  .tv__tiempo { font-size: 12px; font-variant-numeric: tabular-nums; color: var(--tv-rotulo); flex: none; min-width: 78px; }
+  .tv__progreso {
+    flex: 1; height: 4px; border-radius: 4px; background: rgba(255,255,255,0.22);
+    position: relative; cursor: pointer;
+  }
+  .tv__progreso::before { content: ""; position: absolute; inset: -12px 0; }  /* zona de toque más alta */
+  .tv__progreso-lleno { height: 100%; width: 0; border-radius: 4px; background: var(--tv-acento); }
+  .tv__progreso-lleno::after {
+    content: ""; position: absolute; top: 50%; right: -6px; transform: translateY(-50%);
+    width: 12px; height: 12px; border-radius: 50%; background: var(--tv-acento);
+    box-shadow: 0 0 0 3px rgba(var(--tv-acento-rgb), 0.25);
+  }
+  .tv__progreso-lleno { position: relative; }
+
+  /* ─── Celular ─── */
+  @media (max-width: 640px) {
+    .tv { --tv-margen: 12px; }
+    /* La card toma el ancho de la pantalla, como el mini reproductor de
+       Rockstars MX, con el mismo alto de 112 */
+    .tv__card { left: var(--tv-margen); width: auto; }
+    /* Abierto: a toda la pantalla, sin bisel ni esquinas: ya ES un celular */
+    .tv.tv--abierto .tv__card {
+      inset: 0;
+      transform: none; width: auto; height: auto; aspect-ratio: auto;
+      border: 0; border-radius: 0; box-shadow: none;
+    }
+    .tv--abierto .tv__marco { border-radius: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tv__card, .tv__velo { transition: none; }
+    .tv:not(.tv--con-sonido) .tv__btn--sonido { animation: none; background: rgba(var(--tv-acento-rgb), 0.14); }
+  }
+</style>

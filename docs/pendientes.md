@@ -1,5 +1,38 @@
 # Pendientes del panel
 
+## Video del Tour '27 — reproductor flotante (en curso)
+
+Para quien entra a `/socceridcup2027` con código de **nivel tour** (el acceso
+completo): una card pequeña abajo a la derecha que reproduce el video en una
+miniatura vertical y, al tocarla, se abre como pantalla de celular. Es un
+`<video>` HTML5 nativo porque el archivo se va a servir desde **Amazon S3**;
+nada de embeds de terceros. Diseño inspirado en el mini reproductor de
+Rockstars MX, pero con los tokens del tour (cian, gris, Raleway).
+
+- Marcado y **todas las medidas**: `views/partials/tour-video.hbs` (variables
+  `--tv-*` al inicio del `<style>`). Mecánica: `initContenido` en
+  `views/socceridcup-project2027.hbs`. Datos: `videoDelTour` en `index.js`.
+- Card cerrada: 344 × 112 px en web (abajo 16, derecha 16); en celular toma el
+  ancho de la pantalla con margen de 12. Miniatura 54 × 96 (9:16), botón de
+  play de 48, botón «volver arriba» sube para no encimarse.
+- Abierta: en web, marco de celular 9:16 de `min(86vh, 844px)` de alto
+  (a 900 px de ventana: 762 × 423), esquinas de 36, bisel de 6, velo con
+  desenfoque. En celular, a toda la pantalla.
+- Un solo `<video>` para los dos estados: al abrir solo cambia la clase, la
+  reproducción no se corta. Arranca **en silencio** (el navegador no permite
+  audio sin gesto); el sonido entra con el botón que late o al abrir.
+
+Pendiente:
+- [ ] **El video real.** Hoy va **de relleno** el tour del panel
+  (`tour-riesgo-mobile.mp4`, 720×1280) solo para fijar tamaños. Cuando esté el
+  archivo en S3: `heroku config:set TOUR_VIDEO_URL=https://... TOUR_VIDEO_POSTER=https://...`
+  (ver `docs/variables-del-proyecto.md`). Conviene que sea **vertical 9:16**,
+  H.264 + AAC, con `Content-Type: video/mp4` y CORS abierto al dominio.
+- [ ] Revisar textos de la card (kicker, título, bajada) con el usuario.
+- [ ] Decidir si la X la quita para toda la visita (`sessionStorage`) o solo
+  hasta recargar (hoy: hasta recargar).
+
+
 ## Asistente de contenidos con IA — Claude Haiku 4.5 — HECHO
 
 Botón **"Redactar con IA"** en el admin. La IA **propone**, el admin **revisa, edita y
