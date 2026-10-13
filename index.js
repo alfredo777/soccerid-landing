@@ -1105,7 +1105,8 @@ function videoDelTour(variante, req, lang) {
   return {
     src: process.env.TOUR_VIDEO_URL || '/assets/videos/onboarding/tour-riesgo-mobile.mp4',
     poster: process.env.TOUR_VIDEO_POSTER || '/assets/images/tour27-video-poster.jpg',
-    kicker: isEs ? "Video · Tour '27" : "Video · Tour '27",
+    // Corto a propósito: en la card cerrada de web la pastilla tiene ~100 px.
+    kicker: "Tour '27",
     titulo: isEs ? 'Conoce el proyecto' : 'Meet the project',
     sub: isEs ? 'Exclusivo para acceso completo' : 'Exclusive for full access',
     txtAbrir: isEs ? 'Ver el video más grande' : 'See the video larger',

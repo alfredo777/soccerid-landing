@@ -100,9 +100,13 @@
     --tv-mini-ancho: 54px;     /* miniatura 9:16 */
     --tv-mini-alto: 96px;
     --tv-margen: 16px;         /* separación del borde de la pantalla */
-    --tv-play: 48px;           /* botón principal, como el de Rockstars MX */
-    --tv-radio: 18px;
-    --tv-fondo: rgba(var(--tour-card-rgb, 30, 34, 44), 0.96);
+    --tv-play: 42px;           /* botón principal, en vidrio */
+    --tv-radio: 20px;
+    /* Vidrio: la card deja ver la página detrás (pedido del usuario, para
+       despegarse del reproductor de Rockstars MX, que es opaco). El
+       desenfoque hace legible el texto encima de lo que sea. */
+    --tv-fondo: rgba(var(--tour-card-rgb, 30, 34, 44), 0.55);
+    --tv-vidrio-borde: rgba(255, 255, 255, 0.14);
     --tv-acento: var(--tour-cian, #38E1FF);
     --tv-acento-rgb: var(--tour-cian-rgb, 56, 225, 255);
     --tv-tinta: var(--tour-tinta, #1C1E23);
@@ -126,10 +130,11 @@
     /* 96 de miniatura + 7 + 7 de relleno + el borde = 112 de alto */
     padding: 7px 10px 7px 7px;
     background: var(--tv-fondo);
-    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(24px) saturate(140%); -webkit-backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid var(--tv-vidrio-borde);
     border-radius: var(--tv-radio);
-    box-shadow: 0 18px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(var(--tv-acento-rgb), 0.08);
+    box-shadow: 0 18px 48px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+    overflow: hidden;
     color: #fff;
     pointer-events: auto;
     transform: translateY(calc(100% + 24px)); opacity: 0;
@@ -140,9 +145,11 @@
   .tv__marco {
     position: relative; flex: none; order: 1;
     width: var(--tv-mini-ancho); height: var(--tv-mini-alto);
-    border-radius: 10px; overflow: hidden; background: #000;
+    border-radius: 12px; overflow: hidden; background: #000;
+    box-shadow: 0 0 0 1px rgba(var(--tv-acento-rgb), 0.45);
   }
   .tv__video { display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
+  .tv.tv--desplegado .tv__video { background: rgba(0,0,0,0.6); }
   /* Toda la miniatura avanza una etapa; el icono asoma en la esquina */
   .tv__abrir {
     position: absolute; inset: 0; border: 0; padding: 0; margin: 0;
@@ -157,18 +164,24 @@
   .tv__abrir-ico svg { width: 12px; height: 12px; }
   .tv__toque, .tv__pausado, .tv__cabeza, .tv__barra { display: none; }
 
-  .tv__datos { order: 2; min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; cursor: pointer; }
+  .tv__datos { order: 2; min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 3px; cursor: pointer; }
   .tv__kicker {
-    font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    align-self: flex-start; max-width: 100%;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-size: 9.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
     color: var(--tv-acento);
+    padding: 2px 8px; border-radius: 999px;
+    border: 1px solid rgba(var(--tv-acento-rgb), 0.45);
+    background: rgba(var(--tv-acento-rgb), 0.08);
   }
+  .tv__cabeza .tv__kicker { align-self: flex-start; }
   .tv__titulo, .tv__sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .tv__titulo { font-size: 14px; font-weight: 800; line-height: 1.2; }
   .tv__sub { font-size: 12px; color: var(--tv-rotulo); }
 
-  .tv__acciones { order: 3; display: flex; align-items: center; gap: 4px; flex: none; }
+  .tv__acciones { order: 3; display: flex; align-items: center; gap: 2px; flex: none; }
   .tv__btn, .tv__x {
-    width: 34px; height: 34px; border-radius: 10px; border: 0; padding: 0;
+    width: 32px; height: 32px; border-radius: 10px; border: 0; padding: 0;
     background: transparent; color: var(--tv-rotulo); cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     transition: background .15s ease, color .15s ease;
@@ -177,14 +190,23 @@
   .tv__btn svg, .tv__x svg { width: 18px; height: 18px; }
   .tv__btn--pliegue svg { transition: transform .2s ease; }
   .tv__play {
-    width: var(--tv-play); height: var(--tv-play); border-radius: 50%; border: 0; padding: 0;
-    background: var(--tv-acento); color: var(--tv-tinta); cursor: pointer;
+    width: var(--tv-play); height: var(--tv-play); border-radius: 50%; padding: 0;
+    border: 1px solid rgba(255,255,255,0.28);
+    background: rgba(255,255,255,0.10); color: #fff; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 6px 18px rgba(var(--tv-acento-rgb), 0.35);
-    transition: transform .15s ease;
+    transition: transform .15s ease, background .15s ease, border-color .15s ease;
   }
-  .tv__play:hover { transform: scale(1.06); }
-  .tv__play svg { width: 24px; height: 24px; }
+  .tv__play:hover { transform: scale(1.06); background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.45); }
+  .tv__play svg { width: 22px; height: 22px; }
+  .tv__play .tv__ico-play { margin-left: 2px; }
+  /* Línea de avance al pie de la card, en cerrado: se sabe cuánto va sin
+     desplegar. Es una pseudo-barra que el JS alimenta con --tv-avance. */
+  .tv__card::after {
+    content: ""; position: absolute; left: 0; bottom: 0; height: 2px;
+    width: calc(var(--tv-avance, 0) * 1%);
+    background: var(--tv-acento); transition: width .25s linear;
+  }
+  .tv.tv--desplegado .tv__card::after, .tv.tv--maximizado .tv__card::after { display: none; }
   /* Iconos según estado: el <video> manda, la clase del contenedor refleja */
   .tv__ico-pausa, .tv__ico-sonido { display: none; }
   .tv--reproduciendo .tv__ico-play { display: none; }
@@ -212,7 +234,8 @@
   .tv.tv--desplegado .tv__marco {
     order: 3; flex: 1 1 100%; width: 100%; height: auto;
     aspect-ratio: 9 / 16; max-height: var(--tv-despl-max);
-    border-radius: 12px;
+    border-radius: 14px;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.10);
   }
   .tv.tv--desplegado .tv__video { object-fit: contain; }
   .tv.tv--desplegado .tv__btn--pliegue svg { transform: rotate(180deg); }
@@ -227,10 +250,11 @@
   .tv.tv--maximizado { z-index: 170; }
   .tv.tv--maximizado .tv__card {
     inset: 0; width: auto; padding: 0; gap: 0; display: block;
-    background: #000; border: 0; border-radius: 0; box-shadow: none;
-    backdrop-filter: none; -webkit-backdrop-filter: none;
+    background: rgba(6, 7, 10, 0.92); border: 0; border-radius: 0; box-shadow: none;
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   }
-  .tv.tv--maximizado .tv__marco { width: 100%; height: 100%; max-height: none; aspect-ratio: auto; border-radius: 0; }
+  .tv.tv--maximizado .tv__marco { width: 100%; height: 100%; max-height: none; aspect-ratio: auto; border-radius: 0; box-shadow: none; }
+  .tv.tv--maximizado .tv__video { background: transparent; }
   .tv.tv--maximizado .tv__video { object-fit: contain; }
   .tv.tv--maximizado .tv__abrir, .tv.tv--maximizado .tv__datos, .tv.tv--maximizado .tv__acciones { display: none; }
 

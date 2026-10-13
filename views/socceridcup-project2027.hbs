@@ -1639,6 +1639,7 @@
       var pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
       if (lleno) lleno.style.width = pct + '%';
       if (progreso) progreso.setAttribute('aria-valuenow', String(Math.round(pct)));
+      tv.style.setProperty('--tv-avance', pct.toFixed(1));
     }
     function reproducir() { var p = video.play(); if (p && p.catch) p.catch(function() {}); }
     function alternarPlay() { if (video.paused || video.ended) reproducir(); else video.pause(); }

@@ -14,6 +14,9 @@ etapas y la card nunca se va a un modal centrado con velo.
 
 Es un `<video>` HTML5 nativo porque el archivo se va a servir desde **Amazon
 S3**; nada de embeds de terceros. Tokens del tour (cian, gris, Raleway).
+**Vidrio, no opaca** (pedido del usuario, para despegarse de Rockstars): fondo
+al 55 % con desenfoque, play en vidrio en vez de círculo sólido, kicker en
+pastilla y una línea cian de avance al pie de la card cerrada.
 
 - Marcado y **todas las medidas**: `views/partials/tour-video.hbs` (variables
   `--tv-*` al inicio del `<style>`). Mecánica: `initContenido` en
