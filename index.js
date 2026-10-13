@@ -1096,6 +1096,8 @@ function partialDe(variante) {
  * S3: `TOUR_VIDEO_URL` y `TOUR_VIDEO_POSTER` apuntan allá cuando existan.
  * Mientras tanto se usa UN VIDEO DE RELLENO (el tour del panel, en vertical
  * 720×1280) nada más para fijar tamaños y dimensiones; no es el video final.
+ * La carátula de relleno es un recuadro gris punteado con un play (pedido
+ * del usuario, para que las capturas no enseñen un video que no es).
  */
 function videoDelTour(variante, req, lang) {
   if (!variante || variante.tipo !== 'tour') return null;
@@ -1104,7 +1106,7 @@ function videoDelTour(variante, req, lang) {
   const isEs = lang !== 'en';
   return {
     src: process.env.TOUR_VIDEO_URL || '/assets/videos/onboarding/tour-riesgo-mobile.mp4',
-    poster: process.env.TOUR_VIDEO_POSTER || '/assets/images/tour27-video-poster.jpg',
+    poster: process.env.TOUR_VIDEO_POSTER || '/assets/images/tour27-video-poster.png',
     // Corto a propósito: en la card cerrada de web la pastilla tiene ~100 px.
     kicker: "Tour '27",
     titulo: isEs ? 'Conoce el proyecto' : 'Meet the project',
