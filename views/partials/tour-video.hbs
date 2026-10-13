@@ -16,6 +16,9 @@
      no corre. Aquí solo hay marcado y estilos. --}}
 <div class="tv" id="tvCard" data-tv hidden aria-hidden="true">
   <div class="tv__card">
+    {{!-- Asa de arrastre (solo celular): se jala con el dedo para desplegar
+         el reproductor, y tocarla también lo despliega o recoge. --}}
+    <button type="button" class="tv__asa" data-tv-alternar aria-label="{{videoTour.txtDesplegar}}"></button>
     {{!-- Cabeza: solo en MAXIMIZADO, sobre el video; el botón vuelve a desplegado --}}
     <header class="tv__cabeza">
       <div class="tv__cabeza-datos">
@@ -162,7 +165,7 @@
     display: flex; align-items: center; justify-content: center;
   }
   .tv__abrir-ico svg { width: 12px; height: 12px; }
-  .tv__toque, .tv__pausado, .tv__cabeza, .tv__barra { display: none; }
+  .tv__toque, .tv__pausado, .tv__cabeza, .tv__barra, .tv__asa { display: none; }
 
   .tv__datos { order: 2; min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 3px; cursor: pointer; }
   .tv__kicker {
@@ -317,11 +320,33 @@
        y el relleno de abajo absorbe la safe area del teléfono. */
     .tv__card {
       left: 0; right: 0; bottom: 0; width: auto;
+      /* El gesto vertical es nuestro (deslizar abre y recoge); el horizontal
+         se le deja a la página. Sin esto el navegador decide por su cuenta. */
+      touch-action: pan-x;
+      -webkit-tap-highlight-color: transparent;
+      /* Sitio para el asa de arrastre, arriba */
+      padding-top: 18px;
       border-radius: var(--tv-radio) var(--tv-radio) 0 0;
       border-bottom: 0;
       padding-bottom: calc(7px + env(safe-area-inset-bottom, 0px));
     }
     .tv.tv--desplegado .tv__card { padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+    /* El asa: una franja de toque de 22 px a lo ancho (para que el dedo la
+       encuentre sin apuntar) con la barra visible al centro, como las hojas
+       de iOS. Deslizarla hacia arriba despliega; tocarla, también. */
+    .tv__asa {
+      display: block; position: absolute; top: 0; left: 0; right: 0; height: 22px;
+      border: 0; padding: 0; background: transparent; cursor: grab; z-index: 2;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tv__asa::before {
+      content: ""; position: absolute; top: 7px; left: 50%; transform: translateX(-50%);
+      width: 48px; height: 5px; border-radius: 5px;
+      background: rgba(255,255,255,0.6);
+    }
+    .tv__asa:active::before, .tv.tv--desplegado .tv__asa::before { background: var(--tv-acento); }
+    .tv.tv--maximizado .tv__card { padding-top: 0; touch-action: none; }
+    .tv.tv--maximizado .tv__asa { display: none; }
     .tv.tv--maximizado .tv__card { inset: 0; padding-bottom: 0; border-radius: 0; }
   }
   @media (prefers-reduced-motion: reduce) {

@@ -30,6 +30,11 @@ pastilla y una línea cian de avance al pie de la card cerrada.
   de arriba.
 - Maximizado: a toda la ventana, fondo negro, video contenido; cabeza con
   título y botón de restaurar; barra abajo. Escape baja una etapa.
+- **Gestos en celular**: deslizar hacia arriba sobre la card avanza una etapa
+  y hacia abajo la baja (umbral de 44 px; la card sigue al dedo con freno).
+  Hay una **barra de arrastre** arriba de la card (48 × 5, franja de toque de
+  22 px), como en las hojas de iOS: se jala con el dedo o se toca. En la barra de
+  progreso el dedo busca en el video, no cambia de etapa.
 - Un solo `<video>` para las tres etapas: cambia la clase, no el DOM, y la
   reproducción no se corta. Arranca **en silencio** (el navegador no permite
   audio sin gesto); el sonido entra con el botón que late o al desplegar.

@@ -1699,6 +1699,58 @@
         }
       });
     }
+    // ─── Gestos táctiles (celular) ───
+    // Deslizar hacia ARRIBA sobre la card avanza una etapa (cerrado →
+    // desplegado → maximizado); hacia ABAJO la baja una. Mientras el dedo
+    // arrastra, la card lo sigue un poco (con freno) para que se sienta que
+    // responde; al soltar, si pasó el umbral cambia de etapa, si no vuelve.
+    // La barra de progreso queda fuera del gesto: ahí el dedo busca en el
+    // video. Se enlaza directo a la card (no delegado) porque los
+    // escuchadores táctiles tienen que ser pasivos o no, según el caso.
+    (function() {
+      var card = tv.querySelector('.tv__card');
+      if (!card || !('ontouchstart' in window)) return;
+      var UMBRAL = 44, FRENO = 0.35, TOPE = 56;
+      var y0 = null, x0 = null, dy = 0, arrastrando = false, enProgreso = false;
+
+      function enBarra(t) { return !!(t && t.closest && t.closest('[data-tv-progreso]')); }
+      function alInicio(e) {
+        if (e.touches.length !== 1) return;
+        enProgreso = enBarra(e.target);
+        if (enProgreso) { buscar(e); return; }
+        y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; dy = 0; arrastrando = false;
+        card.style.transition = 'none';
+      }
+      function alMover(e) {
+        if (enProgreso) { buscar(e); e.preventDefault(); return; }
+        if (y0 === null) return;
+        var t = e.touches[0];
+        dy = t.clientY - y0;
+        // Un gesto más horizontal que vertical no es nuestro
+        if (!arrastrando && Math.abs(t.clientX - x0) > Math.abs(dy)) { y0 = null; card.style.transition = ''; return; }
+        if (Math.abs(dy) > 6) arrastrando = true;
+        if (!arrastrando) return;
+        e.preventDefault();
+        // No se arrastra hacia donde no hay etapa
+        var permitido = (dy < 0 && etapa < 3) || (dy > 0 && etapa > 1);
+        var sigue = permitido ? Math.max(-TOPE, Math.min(TOPE, dy * FRENO)) : 0;
+        if (etapa < 3) card.style.transform = 'translateY(' + sigue + 'px)';
+      }
+      function alSoltar() {
+        if (enProgreso) { enProgreso = false; return; }
+        if (y0 === null) return;
+        card.style.transition = ''; card.style.transform = '';
+        var d = dy; y0 = null; dy = 0;
+        if (!arrastrando) return;
+        if (d <= -UMBRAL && etapa < 3) irA(etapa + 1);
+        else if (d >= UMBRAL && etapa > 1) irA(etapa - 1);
+      }
+      card.addEventListener('touchstart', alInicio, { passive: true });
+      card.addEventListener('touchmove', alMover, { passive: false });
+      card.addEventListener('touchend', alSoltar);
+      card.addEventListener('touchcancel', alSoltar);
+    })();
+
     ['play', 'pause', 'ended', 'volumechange'].forEach(function(ev) { video.addEventListener(ev, reflejar); });
     ['timeupdate', 'loadedmetadata', 'durationchange'].forEach(function(ev) { video.addEventListener(ev, pintarTiempo); });
 
