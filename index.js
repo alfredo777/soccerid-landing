@@ -935,7 +935,7 @@ function graficosTour(data) {
   const g = {};
 
   // 70 / 30: la barra partida.
-  g.reparto = (((data.participacion || {}).partes) || []).map(p => ({ pct: num(p.pct), quien: p.quien }));
+  g.reparto = (((data.participacion || {}).partes) || []).map(p => ({ pct: num(p.pct), quien: p.quien, rol: p.rol }));
 
   // Capital: la barra apilada, cada tramo a su medida. Antes los tres iban
   // iguales porque no había cifras; ahora el partido 1 pesa el 71 % y cada
@@ -947,7 +947,7 @@ function graficosTour(data) {
     // El rótulo va en los tres tramos. En los estrechos no cabe al lado de la
     // cifra —se recortaba a "PARTI…"—, así que se apilan: el estilo lo decide
     // con esta marca, no se oculta nada.
-    return { label: t.label, value: t.value, pct, estrecho: pct < 25 };
+    return { label: t.barra || t.label, value: t.value, pct, estrecho: pct < 25 };
   });
 
   // 10 % → 70 % → 7 %: tres barras encadenadas.
@@ -1164,7 +1164,13 @@ function renderPropuesta(variante) {
       const crudo = propuestas.leerContenido(variante, langContenido, DEFAULT_LANG);
       if (!crudo) return next();
       // Qué se ofrece depende del nivel del código con que se entró.
-      const data = vistaDeNivel(crudo, propuestas.accesoDe(req));
+      const acceso = propuestas.accesoDe(req);
+      const data = vistaDeNivel(crudo, acceso);
+      // Entrar a un PARTIDO con un código de nivel TOUR enseña una versión
+      // recortada: el partido es una ficha dentro del tour, no la propuesta
+      // entera. Con un código de nivel partido se ve todo. La plantilla usa
+      // este flag para ocultar las secciones que no aplican en ese caso.
+      const esNivelTour = variante.tipo === 'partido' && !!acceso && acceso.nivel === 'tour';
       // Los textos de la puerta, en el idioma pedido pase lo que pase.
       const lock = propuestas.textosCandado(variante, lang, DEFAULT_LANG);
 
@@ -1209,6 +1215,7 @@ function renderPropuesta(variante) {
         // propuesta: la página existe, el contenido todavía no.
         enNegociacion: propuestas.enNegociacion(variante),
         esTour: variante.tipo === 'tour',
+        esNivelTour: esNivelTour,
         urlTour: await vueltaAlTour(req, variante, langContenido),
         videoTour: videoDelTour(variante, req, langContenido),
         // El candado se lee en los dos idiomas siempre. Dentro, en cambio,
@@ -1252,11 +1259,14 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
   try {
     const crudo = propuestas.leerContenido(variante, lang, DEFAULT_LANG);
     if (!crudo) return next();
-    const data = vistaDeNivel(crudo, propuestas.accesoDe(req));
+    const acceso = propuestas.accesoDe(req);
+    const data = vistaDeNivel(crudo, acceso);
+    const esNivelTour = variante.tipo === 'partido' && !!acceso && acceso.nivel === 'tour';
     res.set('Cache-Control', 'no-store');
     res.set('X-Idioma-Servido', lang);
     res.render(partialDe(variante), {
       layout: false,
+      esNivelTour: esNivelTour,
       ventana: variante.ventana || null,
       heroImage: variante.hero,
       logo: variante.logo || null,

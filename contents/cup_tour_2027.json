@@ -42,7 +42,7 @@
     "proyecto": {
       "kicker": "01 · EL PROYECTO",
       "title": "Tres partidos, un resultado.",
-      "sub": "Participa en los resultados de tres partidos en Estados Unidos. Ingresos por boletaje, patrocinios y acuerdos comerciales.",
+      "sub": "Ingresos por boletaje, patrocinios y acuerdos comerciales de los tres encuentros.",
       "estados": {
         "previsto": "Confirmado",
         "proceso": "En proceso"
@@ -77,10 +77,25 @@
     },
     "capital": {
       "kicker": "02 · CAPITAL Y DESTINO",
-      "title": "USD $1,400,000 para toda la temporada.",
+      "title": "USD $1,400,000 de capital inicial.",
+      "sub": "Primer partido completo y anticipos de los siguientes dos.",
+      "nota": "El presupuesto restante de los partidos 2 y 3 se prevé financiar con las utilidades del primer partido y la preventa de boletos de cada encuentro.",
       "minimo": {
-        "label": "PARTICIPA DESDE",
-        "value": "USD $100,000 o MXN $2,000,000"
+        "label": "INVERSIÓN MÍNIMA",
+        "value": "USD $100,000",
+        "participacion": "Participación del 5% en las utilidades del TOUR.",
+        "note": "Calculada sobre el capital objetivo de USD 1.4 millones.",
+        "calcTitle": "Cómo se llega al 5%",
+        "calc": [
+          {
+            "op": "USD $100,000 ÷ USD $1,400,000",
+            "res": "7.14% del capital"
+          },
+          {
+            "op": "7.14% × 70% para inversionistas",
+            "res": "5% de las utilidades"
+          }
+        ]
       },
       "items": [
         {
@@ -91,12 +106,14 @@
         },
         {
           "label": "PARTIDO 2",
+          "barra": "ANTICIPO PARTIDO 2",
           "note": "Anticipos",
           "value": "USD $200,000",
           "monto": 200000
         },
         {
           "label": "PARTIDO 3",
+          "barra": "ANTICIPO PARTIDO 3",
           "note": "Anticipos",
           "value": "USD $200,000",
           "monto": 200000
@@ -108,7 +125,6 @@
       "cta": "Ver presupuesto",
       "cajon": {
         "title": "Presupuesto del primer partido",
-        "sub": "Cruz Azul vs. Pumas · Shell Energy Stadium, Houston · Cifras del perfil del partido.",
         "totalLabel": "TOTAL / USD",
         "totalValue": "$1.0 M",
         "anticiposTitle": "Anticipos de los otros dos partidos",
@@ -150,16 +166,17 @@
       "partes": [
         {
           "pct": "70%",
-          "quien": "INVERSIONISTAS"
+          "quien": "INVERSIONISTAS",
+          "rol": "Aportan el capital para financiar el proyecto."
         },
         {
           "pct": "30%",
-          "quien": "SOCCER iD"
+          "quien": "SOCCER iD",
+          "rol": "Aporta el proyecto, negocia con clubes y sedes, comercializa, opera y administra el TOUR."
         }
       ],
       "lineas": [
-        "Tu aportación determina tu participación en las utilidades de la temporada.",
-        "Devolución prevista: diciembre de 2027, tras el cierre financiero de los tres partidos."
+        "Cierre y distribución previstos, sujetos a resultados, cobranza y liquidación."
       ],
       "rendimiento": {
         "label": "Rendimiento estimado",
@@ -170,7 +187,21 @@
         "label": "DEVOLUCIÓN PREVISTA",
         "value": "Diciembre 2027"
       },
-      "nota": "El reparto del 70% no equivale a un rendimiento del 70%. Las utilidades dependen del resultado real de los tres partidos."
+      "nota": "El reparto del 70% no equivale a un rendimiento del 70%. Las utilidades dependen del resultado real de los tres partidos.",
+      "ingresos": {
+        "cta": "Ver fuentes de ingresos",
+        "title": "Fuentes de ingresos",
+        "sub": "De dónde salen las utilidades que se reparten.",
+        "items": [
+          "Venta de boletos",
+          "Derechos de TV",
+          "Publicidad en transmisión",
+          "Publicidad en estadio",
+          "Patrocinios",
+          "Porcentaje de alimentos, bebidas y estacionamiento",
+          "Merchandising"
+        ]
+      }
     },
     "respaldo": {
       "kicker": "04 · RESPALDO Y SEGUIMIENTO",
@@ -178,18 +209,20 @@
       "items": [
         {
           "title": "Contrato de inversión",
+          "body": "Condiciones de participación y distribución.",
           "icon": "escudo"
         },
         {
           "title": "Panel privado",
+          "body": "Avances y seguimiento financiero.",
           "icon": "ojo"
         },
         {
           "title": "Documentación del proyecto",
+          "body": "Contratos y evidencias de la operación.",
           "icon": "caja"
         }
       ],
-      "lead": "Experiencias y beneficios según tu participación.",
       "cta": "Consultar detalles",
       "aviso": "Inversión a riesgo bajo un esquema de participación en los resultados de SOCCER iD TOUR '27.",
       "cajon": {
@@ -227,7 +260,6 @@
     "trayectoria": {
       "kicker": "05 · TRAYECTORIA",
       "title": "Tres ediciones realizadas.",
-      "sub": "2023 · 2024 · 2025. Clubes, aficionados, sedes y marcas conectados a través del futbol.",
       "ediciones": [
         {
           "anio": "2023",
@@ -251,20 +283,15 @@
       "cta": "Ver trayectoria",
       "cajon": {
         "title": "Trayectoria",
-        "sub": "Lo que sabemos hacer y cómo lo contaron los medios en las tres ediciones anteriores.",
-        "capacidades": "Relación con clubes · Comercialización · Producción · Broadcast · Operación internacional",
-        "mediosTitle": "Cobertura en medios",
-        "mediosSub": "Notas de prensa de las ediciones anteriores, en medios de cada plaza.",
+        "sub": "Lo que sabemos hacer y cómo lo contaron los medios.",
         "ctaHistoria": "Conoce la historia de la copa",
         "ctaHistoriaUrl": "/es/socceridcup"
       }
     },
     "contacto": {
       "kicker": "CONTACTO",
-      "title": "Sé parte de SOCCER iD TOUR '27.",
-      "body": "Solicita la propuesta de inversión y nuestro equipo te acompaña a revisar el proyecto y resolver tus preguntas.",
       "cta": "Solicitar propuesta de inversión",
-      "ctaUrl": "mailto:leon@soccerid.co?subject=SOCCER%20iD%20TOUR%2027"
+      "ctaUrl": "https://wa.me/17867844303?text=Hola%2C%20quiero%20la%20propuesta%20de%20inversi%C3%B3n%20de%20SOCCER%20iD%20TOUR%20%2727"
     },
     "cajon": {
       "cerrar": "Cerrar"
@@ -313,7 +340,7 @@
     "proyecto": {
       "kicker": "01 · THE PROJECT",
       "title": "Three matches, one result.",
-      "sub": "Take part in the results of three matches in the United States. Revenue from ticketing, sponsorships and commercial agreements.",
+      "sub": "Revenue from ticketing, sponsorships and commercial agreements across the three matches.",
       "estados": {
         "previsto": "Confirmed",
         "proceso": "In progress"
@@ -348,10 +375,25 @@
     },
     "capital": {
       "kicker": "02 · CAPITAL AND USE OF FUNDS",
-      "title": "USD $1,400,000 for the whole season.",
+      "title": "USD $1,400,000 of initial capital.",
+      "sub": "First match in full and advances for the next two.",
+      "nota": "The remaining budget for matches 2 and 3 is expected to be financed with the profits from the first match and the ticket pre-sale of each event.",
       "minimo": {
-        "label": "PARTICIPATE FROM",
-        "value": "USD $100,000 or MXN $2,000,000"
+        "label": "MINIMUM INVESTMENT",
+        "value": "USD $100,000",
+        "participacion": "5% share in the TOUR profits.",
+        "note": "Based on the target capital of USD 1.4 million.",
+        "calcTitle": "How we get to 5%",
+        "calc": [
+          {
+            "op": "USD $100,000 ÷ USD $1,400,000",
+            "res": "7.14% of the capital"
+          },
+          {
+            "op": "7.14% × 70% for investors",
+            "res": "5% of the profits"
+          }
+        ]
       },
       "items": [
         {
@@ -362,12 +404,14 @@
         },
         {
           "label": "MATCH 2",
+          "barra": "MATCH 2 ADVANCE",
           "note": "Advances",
           "value": "USD $200,000",
           "monto": 200000
         },
         {
           "label": "MATCH 3",
+          "barra": "MATCH 3 ADVANCE",
           "note": "Advances",
           "value": "USD $200,000",
           "monto": 200000
@@ -379,7 +423,6 @@
       "cta": "View budget",
       "cajon": {
         "title": "First match budget",
-        "sub": "Cruz Azul vs. Pumas · Shell Energy Stadium, Houston · Figures from the match profile.",
         "totalLabel": "TOTAL / USD",
         "totalValue": "$1.0 M",
         "anticiposTitle": "Advances for the other two matches",
@@ -421,16 +464,17 @@
       "partes": [
         {
           "pct": "70%",
-          "quien": "INVESTORS"
+          "quien": "INVESTORS",
+          "rol": "They provide the capital to finance the project."
         },
         {
           "pct": "30%",
-          "quien": "SOCCER iD"
+          "quien": "SOCCER iD",
+          "rol": "Provides the project, negotiates with clubs and venues, commercializes, operates and runs the TOUR."
         }
       ],
       "lineas": [
-        "Your contribution determines your share of the season’s profits.",
-        "Expected return of capital: December 2027, after the financial close of the three matches."
+        "Close and distribution expected, subject to results, collection and settlement."
       ],
       "rendimiento": {
         "label": "Estimated return",
@@ -441,7 +485,21 @@
         "label": "EXPECTED RETURN OF CAPITAL",
         "value": "December 2027"
       },
-      "nota": "The 70% split is not a 70% return. Profits depend on the actual result of the three matches."
+      "nota": "The 70% split is not a 70% return. Profits depend on the actual result of the three matches.",
+      "ingresos": {
+        "cta": "View revenue sources",
+        "title": "Revenue sources",
+        "sub": "Where the profits that get distributed come from.",
+        "items": [
+          "Ticket sales",
+          "TV rights",
+          "Broadcast advertising",
+          "In-stadium advertising",
+          "Sponsorships",
+          "Share of food, beverage and parking",
+          "Merchandising"
+        ]
+      }
     },
     "respaldo": {
       "kicker": "04 · BACKING AND FOLLOW-UP",
@@ -449,18 +507,20 @@
       "items": [
         {
           "title": "Investment contract",
+          "body": "Terms of participation and distribution.",
           "icon": "escudo"
         },
         {
           "title": "Private panel",
+          "body": "Progress and financial tracking.",
           "icon": "ojo"
         },
         {
           "title": "Project documentation",
+          "body": "Contracts and operational evidence.",
           "icon": "caja"
         }
       ],
-      "lead": "Experiences and benefits according to your participation.",
       "cta": "See details",
       "aviso": "At-risk investment under a participation structure in the results of SOCCER iD TOUR '27.",
       "cajon": {
@@ -498,7 +558,6 @@
     "trayectoria": {
       "kicker": "05 · TRACK RECORD",
       "title": "Three editions delivered.",
-      "sub": "2023 · 2024 · 2025. Clubs, fans, venues and brands connected through football.",
       "ediciones": [
         {
           "anio": "2023",
@@ -522,20 +581,15 @@
       "cta": "View track record",
       "cajon": {
         "title": "Track record",
-        "sub": "What we know how to do, and how the media covered it across the three previous editions.",
-        "capacidades": "Club relations · Commercialization · Production · Broadcast · International operations",
-        "mediosTitle": "Media coverage",
-        "mediosSub": "Press coverage of previous editions, in each market’s media.",
+        "sub": "What we know how to do, and how the media covered it.",
         "ctaHistoria": "Discover the cup’s history",
         "ctaHistoriaUrl": "/en/socceridcup"
       }
     },
     "contacto": {
       "kicker": "CONTACT",
-      "title": "Be part of SOCCER iD TOUR '27.",
-      "body": "Request the investment proposal and our team will walk you through the project and answer your questions.",
       "cta": "Request the investment proposal",
-      "ctaUrl": "mailto:leon@soccerid.co?subject=SOCCER%20iD%20TOUR%2027"
+      "ctaUrl": "https://wa.me/17867844303?text=Hi%2C%20I%27d%20like%20the%20investment%20proposal%20for%20SOCCER%20iD%20TOUR%20%2727"
     },
     "cajon": {
       "cerrar": "Close"

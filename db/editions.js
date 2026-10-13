@@ -123,6 +123,15 @@ function marcarDestacada(links, year) {
   return links.map((m, i) => Object.assign({}, m, { year: year, featured: i === 0 }));
 }
 
+// Notas que el cliente pidió retirar del cajón de cobertura (eran la 2, 6 y 9
+// de la lista: una por año). Se filtran por URL para que no dependa del orden.
+const MEDIA_OCULTAS = [
+  'milenio.com/deportes/futbol-internacional/pumas-vs-comunicaciones-resumen-y-resultado-partido-amistoso',
+  'espn.com.mx/futbol/partido/_/juegoId/467221/atletico-nacional-america',
+  'marca.com/mx/futbol/liga-mx/2025/03/22/67df2979c30c377a8e2cdc5e-directo.html'
+];
+const mediaVisible = links => links.filter(m => !MEDIA_OCULTAS.some(u => (m.url || '').includes(u)));
+
 async function mediaLinks(lang) {
   try {
     const rows = await soloReales(knex('portfolio_events').where({ status: 'past' })).orderBy('year');
@@ -132,14 +141,14 @@ async function mediaLinks(lang) {
         const d = parse(r, lang);
         if (d && d.mediaLinks) out = out.concat(marcarDestacada(d.mediaLinks, r.year));
       });
-      return out;
+      return mediaVisible(out);
     }
   } catch (_) {}
   const ed = readJson('cup_editions.json') || {};
   const le = ed[lang] || ed.es || {};
   let out = [];
   Object.keys(le).forEach(y => { if (le[y].mediaLinks) out = out.concat(marcarDestacada(le[y].mediaLinks, y)); });
-  return out;
+  return mediaVisible(out);
 }
 
 module.exports = { timeline, detail, mediaLinks, fichas };

@@ -108,11 +108,11 @@
             <p class="pa-rot"><span>{{data.proyecto.kicker}}</span></p>
             <h2 class="pa-box__t">{{data.proyecto.title}}</h2>
           </div>
-          <p class="pa-box__s">{{data.proyecto.sub}}</p>
+          {{#if data.proyecto.sub}}<p class="pa-box__s">{{data.proyecto.sub}}</p>{{/if}}
         </div>
         <div class="pa-temporada">
           {{#each partidosNav}}
-          <article class="pa-pt{{#unless this.abierto}} pa-pt--inc{{/unless}}">
+          <article class="pa-pt{{#if this.abierto}} pa-pt--destacado{{else}} pa-pt--inc{{/if}}">
             <span class="pa-pt__cab">
               <span class="pa-pt__n">{{this.n}}</span>
               <em class="pa-pend">{{#if this.abierto}}{{../data.proyecto.estados.previsto}}{{else}}{{../data.proyecto.estados.proceso}}{{/if}}</em>
@@ -148,17 +148,29 @@
             {{/each}}
           </div>
         </div>
-        <ul class="pa-kv pa-kv--una">
-          {{#unless data.capital.minimo.pendiente}}
-          <li class="pa-kv__i pa-kv__i--total">
-            <span>{{data.capital.minimo.label}}</span>
-            <strong>{{data.capital.minimo.value}}</strong>
-            {{#if data.capital.minimo.note}}<span class="pa-kv__n">{{data.capital.minimo.note}}</span>{{/if}}
-          </li>
-          {{/unless}}
-        </ul>
-        <div class="pa-box__pie-cta{{#unless data.capital.nota}} pa-box__pie-cta--solo{{/unless}}">
-          {{#if data.capital.nota}}<p class="pa-box__pie">{{data.capital.nota}}</p>{{/if}}
+        {{!-- Nota de financiamiento, acompañando al desglose. --}}
+        {{#if data.capital.nota}}<div class="pa-nota pa-nota--warn pa-nota--compacta"><p class="pa-nota__b">{{data.capital.nota}}</p></div>{{/if}}
+        {{!-- Inversión mínima: bloque propio y protagonista, separado del capital total. --}}
+        {{#unless data.capital.minimo.pendiente}}
+        <div class="pa-minimo">
+          <span class="pa-minimo__l">{{data.capital.minimo.label}}</span>
+          <strong class="pa-minimo__v">{{data.capital.minimo.value}}</strong>
+          {{#if data.capital.minimo.participacion}}<span class="pa-minimo__p">{{data.capital.minimo.participacion}}</span>{{/if}}
+          {{#if data.capital.minimo.note}}<span class="pa-minimo__n">{{data.capital.minimo.note}}</span>{{/if}}
+          {{#if data.capital.minimo.calc.length}}
+          <div class="pa-calc5">
+            {{#if data.capital.minimo.calcTitle}}<span class="pa-calc5__t">{{data.capital.minimo.calcTitle}}</span>{{/if}}
+            {{#each data.capital.minimo.calc}}
+            <div class="pa-calc5__row">
+              <span class="pa-calc5__op">{{this.op}}</span>
+              <strong class="pa-calc5__res">{{this.res}}</strong>
+            </div>
+            {{/each}}
+          </div>
+          {{/if}}
+        </div>
+        {{/unless}}
+        <div class="pa-box__pie-cta pa-box__pie-cta--solo">
           <button type="button" class="pa-btn pa-btn--ghost" data-cajon="presupuesto">{{data.capital.cta}} →</button>
         </div>
       </section>
@@ -170,11 +182,22 @@
             <p class="pa-rot"><span>{{data.participacion.kicker}}</span></p>
             <h2 class="pa-box__t">{{data.participacion.title}}</h2>
           </div>
-          <p class="pa-box__s">{{data.participacion.lineas.[0]}}</p>
+          {{#if data.participacion.lineas.[1]}}<p class="pa-box__s">{{data.participacion.lineas.[0]}}</p>{{/if}}
         </div>
         <div class="pa-partida" aria-hidden="true">
           {{#each graficos.reparto}}
           <span class="pa-partida__t pa-anima" style="--w: {{this.pct}}%"><strong>{{this.pct}}%</strong><span>{{this.quien}}</span></span>
+          {{/each}}
+        </div>
+        {{!-- El papel de cada parte, alineado con la barra 70/30. --}}
+        <div class="pa-roles">
+          {{#each graficos.reparto}}
+          {{#if this.rol}}
+          <div class="pa-rol">
+            <span class="pa-rol__t"><strong>{{this.pct}}%</strong> · {{this.quien}}</span>
+            <span class="pa-rol__b">{{this.rol}}</span>
+          </div>
+          {{/if}}
           {{/each}}
         </div>
         <div class="pa-retorno">
@@ -182,7 +205,7 @@
             <svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-calendario-ok"></use></svg>
             <span class="pa-tile__l">{{data.participacion.devolucion.label}}</span>
             <strong class="pa-tile__v">{{data.participacion.devolucion.value}}</strong>
-            <span class="pa-tile__n">{{data.participacion.lineas.[1]}}</span>
+            <span class="pa-tile__n">{{data.participacion.lineas.[0]}}</span>
             <p class="pa-tile__nota">{{data.participacion.nota}}</p>
           </div>
           {{!-- El rendimiento estimado está pendiente: cuando se valide la
@@ -195,6 +218,11 @@
           </div>
           {{/unless}}
         </div>
+        {{#if data.participacion.ingresos.items.length}}
+        <div class="pa-box__pie-cta pa-box__pie-cta--solo">
+          <button type="button" class="pa-btn pa-btn--ghost" data-cajon="ingresos">{{data.participacion.ingresos.cta}} →</button>
+        </div>
+        {{/if}}
       </section>
 
       {{!-- 04 · Respaldo y seguimiento: tres piezas, el detalle en su cajón y la nota de riesgo --}}
@@ -204,13 +232,16 @@
             <p class="pa-rot"><span>{{data.respaldo.kicker}}</span></p>
             <h2 class="pa-box__t">{{data.respaldo.title}}</h2>
           </div>
-          <p class="pa-box__s">{{data.respaldo.lead}}</p>
+          {{#if data.respaldo.lead}}<p class="pa-box__s">{{data.respaldo.lead}}</p>{{/if}}
         </div>
         <div class="pa-tiles">
           {{#each data.respaldo.items}}
           <div class="pa-tile pa-tile--fila">
             <svg class="pa-ico" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-{{this.icon}}"></use></svg>
-            <strong class="pa-tile__t">{{this.title}}</strong>
+            <div class="pa-tile__txt">
+              <strong class="pa-tile__t">{{this.title}}</strong>
+              {{#if this.body}}<span class="pa-tile__d">{{this.body}}</span>{{/if}}
+            </div>
           </div>
           {{/each}}
         </div>
@@ -227,7 +258,7 @@
             <p class="pa-rot"><span>{{data.trayectoria.kicker}}</span></p>
             <h2 class="pa-box__t">{{data.trayectoria.title}}</h2>
           </div>
-          <p class="pa-box__s">{{data.trayectoria.sub}}</p>
+          {{#if data.trayectoria.sub}}<p class="pa-box__s">{{data.trayectoria.sub}}</p>{{/if}}
         </div>
         {{!-- Cada edición lleva a su ficha. Antes eran tarjetas con borde que
               no abrían nada: el aspecto prometía un enlace que no existía. --}}
@@ -239,7 +270,6 @@
               <strong class="pa-ed__anio">{{this.anio}}</strong>
               <span class="pa-ed__t">{{this.match}}</span>
               <span class="pa-ed__n">{{#if this.venue}}{{this.venue}} · {{/if}}{{this.sede}}</span>
-              {{#if this.asistencia}}<span class="pa-ed__dato">{{this.asistencia}} {{this.asistenciaLabel}}</span>{{/if}}
             </span>
           </a>
           {{/each}}
@@ -261,11 +291,36 @@
       <img class="pa-cierre__logo" src="/assets/images/logos/id-tour27-blanco.png"
            alt="{{data.marca}}" width="150" height="158" loading="lazy">
       <p class="pa-rot pa-rot--centro"><span>{{data.contacto.kicker}}</span></p>
-      <h2 class="pa-cierre__t">{{data.contacto.title}}</h2>
-      <p class="pa-cierre__b">{{data.contacto.body}}</p>
-      <a href="{{data.contacto.ctaUrl}}"{{{salida data.contacto.ctaUrl}}} class="pa-btn">{{data.contacto.cta}} →</a>
+      {{#if data.contacto.title}}<h2 class="pa-cierre__t">{{data.contacto.title}}</h2>{{/if}}
+      {{#if data.contacto.body}}<p class="pa-cierre__b">{{data.contacto.body}}</p>{{/if}}
+      <a href="{{data.contacto.ctaUrl}}"{{{salida data.contacto.ctaUrl}}} class="pa-btn pa-btn--wa">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        {{data.contacto.cta}}
+      </a>
+      {{#if data.confidencial}}<span class="pa-cierre__conf">{{data.confidencial}}</span>{{/if}}
     </div>
   </section>
+
+  {{!-- Barra de marca, igual que en /partido-1, con enlaces a la web y a
+        nuestras redes para quien aún no nos conoce. --}}
+  <footer class="pa-footer">
+    <a class="pa-footer__marca" href="/{{lang}}" target="_blank" rel="noopener"><img src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" height="28"></a>
+    <nav class="pa-footer__redes" aria-label="{{#if isEs}}Sitio y redes{{else}}Site and social{{/if}}">
+      <a href="/{{lang}}" target="_blank" rel="noopener" title="{{#if isEs}}Sitio web{{else}}Website{{/if}}" aria-label="{{#if isEs}}Sitio web{{else}}Website{{/if}}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.7 3.8 9S14.5 18.5 12 21c-2.5-2.5-3.8-5.7-3.8-9S9.5 5.5 12 3z"/></svg>
+      </a>
+      <a href="https://www.instagram.com/soccerid7" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.17.05 1.8.25 2.23.42.56.22.96.48 1.38.9.42.42.68.82.9 1.38.17.42.37 1.06.42 2.23.06 1.27.07 1.65.07 4.86s0 3.6-.07 4.86c-.05 1.17-.25 1.8-.42 2.23a3.7 3.7 0 01-.9 1.38 3.7 3.7 0 01-1.38.9c-.42.17-1.06.37-2.23.42-1.27.06-1.65.07-4.86.07s-3.6 0-4.86-.07c-1.17-.05-1.8-.25-2.23-.42a3.7 3.7 0 01-1.38-.9 3.7 3.7 0 01-.9-1.38c-.17-.42-.37-1.06-.42-2.23C2.2 15.6 2.2 15.2 2.2 12s0-3.6.07-4.86c.05-1.17.25-1.8.42-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.17 1.06-.37 2.23-.42C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.14 0-3.5 0-4.74.07-.9.04-1.38.2-1.7.33-.43.16-.74.36-1.06.68-.32.32-.52.63-.68 1.06-.13.32-.29.8-.33 1.7C3.4 8.96 3.4 9.3 3.4 12s0 3.04.07 4.26c.04.9.2 1.38.33 1.7.16.43.36.74.68 1.06.32.32.63.52 1.06.68.32.13.8.29 1.7.33 1.24.07 1.6.07 4.74.07s3.5 0 4.74-.07c.9-.04 1.38-.2 1.7-.33.43-.16.74-.36 1.06-.68.32-.32.52-.63.68-1.06.13-.32.29-.8.33-1.7.07-1.22.07-1.56.07-4.26s0-3.04-.07-4.26c-.04-.9-.2-1.38-.33-1.7a2.86 2.86 0 00-.68-1.06 2.86 2.86 0 00-1.06-.68c-.32-.13-.8-.29-1.7-.33C15.5 4 15.14 4 12 4zm0 3.06A4.94 4.94 0 1012 16.94 4.94 4.94 0 0012 7.06zm0 8.14A3.2 3.2 0 1112 8.8a3.2 3.2 0 010 6.4zm6.3-8.34a1.15 1.15 0 11-2.3 0 1.15 1.15 0 012.3 0z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/soccerid7" target="_blank" rel="noopener" title="Facebook" aria-label="Facebook">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12a10 10 0 10-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.77-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0022 12z"/></svg>
+      </a>
+      <a href="https://www.tiktok.com/@soccerid_7" target="_blank" rel="noopener" title="TikTok" aria-label="TikTok">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.08-.14 1.62.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+      </a>
+    </nav>
+    <span>&copy; {{year}} SOCCER iD{{#if data.confidencial}} · {{data.confidencial}}{{/if}}</span>
+  </footer>
 
   {{!-- ═══════════ CAJONES: lo secundario, fuera del recorrido ═══════════
        Se abren desde los botones [data-cajon]; la mecánica (abrir, cerrar,
@@ -279,7 +334,7 @@
       <header class="pa-cajon__cab">
         <div>
           <h3 class="pa-cajon__t" id="pa-cajon-presupuesto-t">{{data.capital.cajon.title}}</h3>
-          <p class="pa-cajon__s">{{data.capital.cajon.sub}}</p>
+          {{#if data.capital.cajon.sub}}<p class="pa-cajon__s">{{data.capital.cajon.sub}}</p>{{/if}}
         </div>
         <button type="button" class="pa-cajon__x" data-cajon-cerrar aria-label="{{data.cajon.cerrar}}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
@@ -358,6 +413,31 @@
     </div>
   </aside>
 
+  {{!-- Fuentes de ingresos: de dónde salen las utilidades que se reparten --}}
+  {{#if data.participacion.ingresos.items.length}}
+  <aside class="pa-cajon" id="pa-cajon-ingresos" hidden aria-hidden="true">
+    <div class="pa-cajon__velo" data-cajon-cerrar></div>
+    <div class="pa-cajon__caja" role="dialog" aria-modal="true" aria-labelledby="pa-cajon-ingresos-t">
+      <header class="pa-cajon__cab">
+        <div>
+          <h3 class="pa-cajon__t" id="pa-cajon-ingresos-t">{{data.participacion.ingresos.title}}</h3>
+          {{#if data.participacion.ingresos.sub}}<p class="pa-cajon__s">{{data.participacion.ingresos.sub}}</p>{{/if}}
+        </div>
+        <button type="button" class="pa-cajon__x" data-cajon-cerrar aria-label="{{data.cajon.cerrar}}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+      <div class="pa-cajon__cuerpo">
+        <ul class="pa-fuentes">
+          {{#each data.participacion.ingresos.items}}
+          <li class="pa-fuentes__i"><span class="pa-fuentes__p" aria-hidden="true"></span>{{this}}</li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </aside>
+  {{/if}}
+
   {{!-- Trayectoria: las ediciones, lo que se sabe hacer y la cobertura en medios --}}
   <aside class="pa-cajon" id="pa-cajon-trayectoria" hidden aria-hidden="true">
     <div class="pa-cajon__velo" data-cajon-cerrar></div>
@@ -374,10 +454,10 @@
       <div class="pa-cajon__cuerpo">
         {{!-- Las tres ediciones NO se repiten aquí: ya están en el bloque 05,
               a la vista. El cajón es para lo que no cabe fuera. --}}
-        <p class="pa-caps">{{data.trayectoria.cajon.capacidades}}</p>
+        {{#if data.trayectoria.cajon.capacidades}}<p class="pa-caps">{{data.trayectoria.cajon.capacidades}}</p>{{/if}}
         {{#if mediaLinks.length}}
-        <h4 class="pa-cajon__h4">{{data.trayectoria.cajon.mediosTitle}}</h4>
-        <p class="pa-cajon__s">{{data.trayectoria.cajon.mediosSub}}</p>
+        {{#if data.trayectoria.cajon.mediosTitle}}<h4 class="pa-cajon__h4">{{data.trayectoria.cajon.mediosTitle}}</h4>{{/if}}
+        {{#if data.trayectoria.cajon.mediosSub}}<p class="pa-cajon__s">{{data.trayectoria.cajon.mediosSub}}</p>{{/if}}
         <ul class="pa-medios pa-medios--cajon">
           {{#each mediaLinks}}
           <li class="pa-medio">
@@ -435,7 +515,9 @@
     .pa-tile__n { display: block; font-size: 12px; line-height: 1.45; color: #D2D5DC; }
     .pa-tile__t { display: block; font-size: 15px; font-weight: 800; line-height: 1.3; }
     .pa-tile--fila { display: flex; align-items: center; gap: 12px; }
-    .pa-tile--fila .pa-ico { margin-bottom: 0; }
+    .pa-tile--fila .pa-ico { margin-bottom: 0; flex: 0 0 auto; }
+    .pa-tile--fila .pa-tile__txt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .pa-tile__d { font-size: 12.5px; line-height: 1.4; color: #AEB2BB; }
     .pa-tile--ed { text-align: center; }
     .pa-tile--ed .pa-tile__t { margin: 4px 0 2px; }
 
@@ -460,7 +542,7 @@
       position: relative; min-height: 72vh; overflow: hidden;
       display: flex; align-items: center; justify-content: center; text-align: center;
       padding: 96px 32px;
-      background: url('{{heroImage}}') center/cover no-repeat;
+      background: url('/assets/images/back-tour-27.png') center/cover no-repeat;
     }
     .pa-foto__veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,21,25,0.3) 0%, rgba(28,30,35,0.62) 52%, rgba(44,47,53,0.94) 100%); }
     .pa-foto__body { position: relative; z-index: 2; max-width: 620px; }
@@ -484,6 +566,9 @@
     .pa-temporada { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     .pa-pt { display: flex; flex-direction: column; padding: 20px 18px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.055); }
     .pa-pt--inc { border-style: dashed; border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.025); }
+    /* El partido confirmado resalta sobre los otros dos: acento cian, igual que
+       el bloque de inversión mínima. */
+    .pa-pt--destacado { border-color: rgba(var(--tour-cian-rgb, 56,225,255), 0.5); background: rgba(var(--tour-cian-rgb, 56,225,255), 0.08); box-shadow: 0 0 0 1px rgba(var(--tour-cian-rgb, 56,225,255), 0.18); }
     .pa-pt__cab { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .pa-pt__n { font-size: 11px; font-weight: 800; letter-spacing: 1.6px; color: var(--tour-rotulo, #C9CCD4); }
     .pa-pt__cuando { display: block; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: var(--tour-rotulo, #C9CCD4); margin-top: 14px; }
@@ -530,6 +615,27 @@
     .pa-partida__t:last-child { border-radius: 12px 999px 999px 12px; background: rgba(255,255,255,0.16); color: #FFFFFF; }
     .pa-partida__t strong { font-size: 26px; font-weight: 900; line-height: 1; }
     .pa-partida__t span { font-size: 10px; font-weight: 800; letter-spacing: 1.4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* El papel de cada parte, dos columnas alineadas con la barra 70/30. */
+    .pa-roles { display: grid; grid-template-columns: 70fr 30fr; gap: 4px; margin: 0 0 20px; }
+    .pa-rol { padding: 2px 18px 0 2px; }
+    .pa-rol:last-child { padding-left: 18px; padding-right: 2px; }
+    .pa-rol__t { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.6px; color: var(--tour-cian, #38E1FF); margin-bottom: 5px; }
+    .pa-rol__t strong { font-weight: 900; }
+    .pa-rol__b { display: block; font-size: 13px; line-height: 1.5; color: #C9CCD4; }
+    /* Inversión mínima: bloque propio, protagonista, separado del capital total. */
+    .pa-minimo { margin-top: 14px; padding: 22px 24px; border-radius: 16px;
+      border: 1px solid rgba(var(--tour-cian-rgb, 56,225,255), 0.38); background: rgba(var(--tour-cian-rgb, 56,225,255), 0.07); }
+    .pa-minimo__l { display: block; font-size: 11px; font-weight: 800; letter-spacing: 2px; color: var(--tour-rotulo, #C9CCD4); margin-bottom: 8px; }
+    .pa-minimo__v { display: block; font-size: clamp(34px, 5vw, 48px); font-weight: 900; line-height: 1; color: var(--tour-cian, #38E1FF); }
+    .pa-minimo__p { display: block; margin-top: 12px; font-size: 16px; font-weight: 700; color: #FFFFFF; }
+    .pa-minimo__n { display: block; margin-top: 6px; font-size: 12.5px; color: #AEB2BB; }
+    /* Ejemplo del cálculo del 5%, dentro del mismo bloque. */
+    .pa-calc5 { margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(var(--tour-cian-rgb, 56,225,255), 0.22); }
+    .pa-calc5__t { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: var(--tour-rotulo, #C9CCD4); margin-bottom: 10px; }
+    .pa-calc5__row { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; padding: 7px 0; border-top: 1px solid rgba(255,255,255,0.07); }
+    .pa-calc5__row:first-of-type { border-top: 0; }
+    .pa-calc5__op { font-size: 13.5px; color: #C9CCD4; }
+    .pa-calc5__res { font-size: 13.5px; font-weight: 800; color: var(--tour-cian, #38E1FF); white-space: nowrap; text-align: right; }
     /* Una sola columna: la tarjeta ocupa todo el ancho del bloque. */
     .pa-retorno { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
     /* La advertencia va dentro de la tarjeta, al final, separada por un filete. */
@@ -584,6 +690,10 @@
     .pa-cajon__cuerpo { padding: 22px 24px 32px; }
     .pa-cajon__pie { margin: 24px 0 0; }
     .pa-lista { display: grid; gap: 10px; }
+    .pa-fuentes { list-style: none; padding: 0; margin: 4px 0 0; }
+    .pa-fuentes__i { display: flex; align-items: center; gap: 14px; padding: 15px 2px; font-size: 16px; color: #E7E9EE; border-top: 1px solid rgba(255,255,255,0.1); }
+    .pa-fuentes__i:first-child { border-top: 0; }
+    .pa-fuentes__p { flex: 0 0 auto; width: 11px; height: 11px; border-radius: 3px; background: var(--tour-cian, #38E1FF); }
     .pa-card { padding: 18px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.045); }
     .pa-card--fila { display: flex; align-items: flex-start; gap: 14px; }
     .pa-card--fila .pa-ico { margin-bottom: 0; }
@@ -643,11 +753,26 @@
     .pa-medio__t { display: block; font-size: 14px; line-height: 1.45; }
 
     /* ───────────── CIERRE ───────────── */
-    .pa-cierre { position: relative; display: flex; align-items: center; justify-content: center; text-align: center; min-height: 54vh; padding: 86px 32px; background: url('{{heroImage}}') center/cover no-repeat; }
+    .pa-cierre { position: relative; display: flex; align-items: center; justify-content: center; text-align: center; min-height: 54vh; padding: 86px 32px; background: url('/assets/images/back-tour-27.png') center/cover no-repeat; }
     .pa-cierre .pa-foto__veil { background: linear-gradient(180deg, rgba(18,20,24,0.74) 0%, rgba(26,28,33,0.84) 100%); }
     .pa-cierre__body { position: relative; z-index: 2; max-width: 780px; }
     .pa-cierre__t { font-size: clamp(28px, 4vw, 44px); font-weight: 900; line-height: 1.08; margin-bottom: 16px; }
     .pa-cierre__b { font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.88); margin-bottom: 26px; }
+    /* Botón de WhatsApp del cierre, en el verde de la marca de WhatsApp, igual
+       que el de /partido-1. */
+    .pa-btn--wa { background: #25D366; border-color: #25D366; color: #0A2E16; display: inline-flex; align-items: center; gap: 10px; }
+    .pa-btn--wa:hover { background: #1EBE5B; border-color: #1EBE5B; }
+    .pa-btn--wa svg { width: 20px; height: 20px; }
+    .pa-cierre__conf { display: block; margin-top: 28px; font-size: 12px; letter-spacing: 3px; color: rgba(255,255,255,0.35); }
+
+    /* ───────────── BARRA DE MARCA ───────────── */
+    .pa-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 20px 48px; border-top: 1px solid rgba(255,255,255,0.06); background: var(--pp-dark); }
+    .pa-footer img { display: block; height: 28px; width: auto; }
+    .pa-footer span { font-size: 12px; color: rgba(255,255,255,0.35); }
+    .pa-footer__redes { display: flex; align-items: center; gap: 10px; }
+    .pa-footer__redes a { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 50%; color: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.14); transition: color .2s, border-color .2s, background .2s; }
+    .pa-footer__redes a:hover { color: #0A0B0E; background: var(--tour-cian, #38E1FF); border-color: var(--tour-cian, #38E1FF); }
+    .pa-footer__redes svg { width: 18px; height: 18px; }
 
     /* ───────────── ESCALA DE PANTALLAS: 1180 · 860 · 560 ───────────── */
     @media (max-width: 1180px) {
@@ -659,6 +784,8 @@
       .pa-panel { padding: 16px 16px 32px; }
       .pa-foto { min-height: 62vh; padding: 72px 20px; }
       .pa-tiles, .pa-temporada { grid-template-columns: minmax(0, 1fr); }
+      .pa-roles { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+      .pa-rol, .pa-rol:last-child { padding: 0; }
       .pa-apilada__barra { flex-direction: column; }
       .pa-apilada__t, .pa-apilada__t:first-child, .pa-apilada__t:last-child { flex-basis: auto; border-radius: 10px; }
       .pa-partida { flex-direction: column; }
@@ -669,6 +796,7 @@
       .pa-donut { max-width: 220px; }
       .pa-leyenda { width: 100%; }
       .pa-cierre { padding: 64px 20px; }
+      .pa-footer { padding: 16px 20px; flex-direction: column; gap: 10px; text-align: center; }
     }
     @media (max-width: 560px) {
       .pa-kv, .pa-kv--dos { grid-template-columns: minmax(0, 1fr); }

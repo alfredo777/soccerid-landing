@@ -11,14 +11,17 @@
       "error": "Código incorrecto. Intenta de nuevo."
     },
     "negociacion": {
-      "badge": "PERFIL PRÓXIMAMENTE",
+      "badge": "En proceso",
       "kicker": "SOCCER iD TOUR '27",
       "title": "Clubes, sede y fecha por definir.",
       "body": "Este encuentro forma parte del proyecto anual de tres partidos y todavía se está negociando.",
       "note": "Cuando quede formalizado, su perfil se publica en esta misma dirección: la liga que ya tienes seguirá sirviendo.",
       "ventanaLabel": "VENTANA PREVISTA",
       "paisLabel": "PAÍS",
-      "pais": "Estados Unidos"
+      "pais": "Estados Unidos",
+      "anticiposLabel": "ANTICIPOS PREVISTOS",
+      "anticiposValue": "USD $200,000",
+      "anticiposDetalle": "Clubes, estadio y permisos"
     }
   },
   "en": {
@@ -32,14 +35,17 @@
       "error": "Incorrect code. Please try again."
     },
     "negociacion": {
-      "badge": "PROFILE COMING SOON",
+      "badge": "In progress",
       "kicker": "SOCCER iD TOUR '27",
       "title": "Clubs, venue and date to be confirmed.",
       "body": "This match is part of the three-match annual project and is still under negotiation.",
       "note": "Once it is formalized, its profile will be published at this same address: the link you already have will keep working.",
       "ventanaLabel": "EXPECTED WINDOW",
       "paisLabel": "COUNTRY",
-      "pais": "United States"
+      "pais": "United States",
+      "anticiposLabel": "EXPECTED ADVANCES",
+      "anticiposValue": "USD $200,000",
+      "anticiposDetalle": "Clubs, stadium and permits"
     }
   }
 }

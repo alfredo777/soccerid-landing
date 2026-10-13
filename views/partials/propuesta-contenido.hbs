@@ -25,7 +25,10 @@
   </div>
   {{/if}}
 
-  {{!-- ═══ MENÚ LATERAL ═══ --}}
+  {{!-- ═══ MENÚ LATERAL ═══
+        Con código de nivel tour solo quedaría un enlace (El proyecto), así que
+        el menú entero se oculta; con código de partido se ve completo. --}}
+  {{#unless esNivelTour}}
   <nav class="pp-nav" id="ppNav" aria-label="{{#if isEs}}Navegación de secciones{{else}}Section navigation{{/if}}">
     <a href="#ppProyecto" class="pp-nav__item" data-tip="{{data.nav.project}}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>
@@ -47,6 +50,7 @@
     </button>
     {{/if}}
   </nav>
+  {{/unless}}
 
   {{!-- ═══ HERO ═══ --}}
   <section class="pp-hero">
@@ -65,11 +69,12 @@
         <span>{{data.hero.city}}</span>
       </div>
       <p class="pp-hero__date">{{data.hero.date}}</p>
-      <a href="/{{lang}}/socceridcup" target="_blank" class="pp-hero__cup-btn">{{data.hero.cupBtn}}</a>
+      {{#unless esNivelTour}}<a href="/{{lang}}/socceridcup" target="_blank" class="pp-hero__cup-btn">{{data.hero.cupBtn}}</a>{{/unless}}
     </div>
   </section>
 
   {{!-- ═══ BRIEF / RESUMEN ═══ --}}
+  {{#unless esNivelTour}}
   {{#if data.brief}}
   <section class="pp-section pp-brief-section" id="ppResumen">
     <h2 class="pp-section__title">{{data.brief.title}}</h2>
@@ -86,10 +91,11 @@
     </div>
   </section>
   {{/if}}
+  {{/unless}}
 
   {{!-- ═══ HIGHLIGHTS ═══ --}}
   <section class="pp-section pp-section--alt" id="ppProyecto">
-    <h2 class="pp-section__title">{{data.highlights.title}}</h2>
+    <h2 class="pp-section__title">{{#if esNivelTour}}{{#if isEs}}ASPECTOS DESTACADOS{{else}}HIGHLIGHTS{{/if}}{{else}}{{data.highlights.title}}{{/if}}</h2>
     <div class="pp-highlights">
       {{#each data.highlights.columns}}
       <div class="pp-hl-col">
@@ -233,6 +239,7 @@
   </section>
 
   {{!-- ═══ ¿POR QUÉ INVERTIR? ═══ --}}
+  {{#unless esNivelTour}}
   {{#if data.why.reasons.length}}
   <section class="pp-section pp-section--alt">
     <h2 class="pp-section__title">{{data.why.title}}</h2>
@@ -243,6 +250,7 @@
     </ul>
   </section>
   {{/if}}
+  {{/unless}}
 
   {{!-- ═══ FUNDS ═══ --}}
   <section class="pp-section">
@@ -293,6 +301,11 @@
     </div>
   </section>
 
+  {{!-- Con código de nivel tour, el partido es una ficha del tour: se ocultan
+        la experiencia, los eventos, la presencia en medios y TV, el respaldo de
+        clubes y comercial, y el detrás de la operación. Con código de partido
+        se ve todo. --}}
+  {{#unless esNivelTour}}
   {{!-- ═══ 4 · EXPERIENCIA Y CAPACIDAD DE EJECUCIÓN ═══ --}}
   <section class="pp-section pp-section--alt" id="ppExperiencia">
     <h2 class="pp-section__title" style="margin-bottom:6px;">{{data.track.title}}</h2>
@@ -442,6 +455,7 @@
       <div class="bts-dots" aria-hidden="true"></div>
     </div>
   </section>
+  {{/unless}}
 
   <style>
     .bts-head { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:22px; flex-wrap:wrap; }
@@ -481,6 +495,9 @@
     }
   </style>
 
+  {{!-- Modalidades y ejemplos de participación: ocultos con código de nivel
+        tour (la mecánica de inversión se explica en la propia página del tour). --}}
+  {{#unless esNivelTour}}
   {{!-- ═══ STRUCTURE · MODALIDADES DE INVERSIÓN ═══ --}}
   <section class="pp-section" id="ppModalidades">
     <h2 class="pp-section__title">{{data.structure.title}}</h2>
@@ -676,6 +693,7 @@
       <strong>{{data.proposal.ticketValue}}</strong>
     </div>
   </section>
+  {{/unless}}
 
   {{!-- ═══ TIMELINE ═══ --}}
   <section class="pp-section">
@@ -685,10 +703,12 @@
         <span class="pp-timeline__col-per">{{data.timeline.periodLabel}}</span>
       </div>
       {{#each data.timeline.items}}
+      {{#unless this.soloPartido}}
       <div class="pp-timeline__row{{#if this.highlight}} pp-timeline__row--highlight{{/if}}{{#if this.active}} pp-timeline__row--active{{/if}}">
         <span class="pp-timeline__activity">{{{this.activity}}}{{#if this.active}} <span class="pp-timeline__badge">{{#if ../isEs}}Etapa activa{{else}}Active stage{{/if}}</span>{{/if}}</span>
         <span class="pp-timeline__period">{{this.period}}</span>
       </div>
+      {{/unless}}
       {{/each}}
     </div>
   </section>
@@ -714,6 +734,7 @@
   </footer>
 
   {{!-- ═══ CALCULADORA DE UTILIDADES ═══ --}}
+  {{#unless esNivelTour}}
   {{#if data.calculator}}
   <script type="application/json" id="ppCalcCfg">{{{jsonScript data.calculator}}}</script>
   <div class="pp-calc" id="ppCalc" hidden>
@@ -784,6 +805,7 @@
     </div>
   </div>
   {{/if}}
+  {{/unless}}
 
   <button class="pp-btt" id="ppBtt" type="button" aria-label="{{#if isEs}}Volver al inicio de la página{{else}}Back to top{{/if}}">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>

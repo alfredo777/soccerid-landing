@@ -51,8 +51,8 @@ const FUENTE = {
   proyecto: {
     kicker: T('01 · EL PROYECTO', '01 · THE PROJECT'),
     title: T('Tres partidos, un resultado.', 'Three matches, one result.'),
-    sub: T('Participa en los resultados de tres partidos en Estados Unidos. Ingresos por boletaje, patrocinios y acuerdos comerciales.',
-           'Take part in the results of three matches in the United States. Revenue from ticketing, sponsorships and commercial agreements.'),
+    sub: T('Ingresos por boletaje, patrocinios y acuerdos comerciales de los tres encuentros.',
+           'Revenue from ticketing, sponsorships and commercial agreements across the three matches.'),
     estados: { previsto: T('Confirmado', 'Confirmed'), proceso: T('En proceso', 'In progress') },
     cta: T('Ver partido', 'View match'),
     cards: [
@@ -64,17 +64,32 @@ const FUENTE = {
 
   capital: {
     kicker: T('02 · CAPITAL Y DESTINO', '02 · CAPITAL AND USE OF FUNDS'),
-    title: T('USD $1,400,000 para toda la temporada.', 'USD $1,400,000 for the whole season.'),
-    // El brief lo dejaba por definir; ya hay cifra. Es el mismo mínimo que la
-    // propuesta de partido enseña con un código de nivel tour.
+    title: T('USD $1,400,000 de capital inicial.', 'USD $1,400,000 of initial capital.'),
+    sub: T('Primer partido completo y anticipos de los siguientes dos.',
+           'First match in full and advances for the next two.'),
+    // Nota de financiamiento, a nivel de capital (acompaña al desglose).
+    nota: T('El presupuesto restante de los partidos 2 y 3 se prevé financiar con las utilidades del primer partido y la preventa de boletos de cada encuentro.',
+            'The remaining budget for matches 2 and 3 is expected to be financed with the profits from the first match and the ticket pre-sale of each event.'),
+    // Bloque propio y protagonista: la inversión mínima. Solo dólares por ahora
+    // (los pesos se retiran hasta confirmar las condiciones de conversión).
     minimo: {
-      label: T('PARTICIPA DESDE', 'PARTICIPATE FROM'),
-      value: T('USD $100,000 o MXN $2,000,000', 'USD $100,000 or MXN $2,000,000')
+      label: T('INVERSIÓN MÍNIMA', 'MINIMUM INVESTMENT'),
+      value: T('USD $100,000', 'USD $100,000'),
+      participacion: T('Participación del 5% en las utilidades del TOUR.', '5% share in the TOUR profits.'),
+      note: T('Calculada sobre el capital objetivo de USD 1.4 millones.', 'Based on the target capital of USD 1.4 million.'),
+      // Ejemplo del cálculo, para aclarar por qué 100K equivale al 5% de las
+      // utilidades: 100K es el 7.14 % del capital de 1.4M y, del 70 % que va a
+      // inversionistas, eso deja un 5 %.
+      calcTitle: T('Cómo se llega al 5%', 'How we get to 5%'),
+      calc: [
+        { op: T('USD $100,000 ÷ USD $1,400,000', 'USD $100,000 ÷ USD $1,400,000'), res: T('7.14% del capital', '7.14% of the capital') },
+        { op: T('7.14% × 70% para inversionistas', '7.14% × 70% for investors'), res: T('5% de las utilidades', '5% of the profits') }
+      ]
     },
     items: [
       { label: T('PARTIDO 1', 'MATCH 1'), note: T('Presupuesto completo', 'Full budget'),   value: 'USD $1,000,000', monto: 1000000 },
-      { label: T('PARTIDO 2', 'MATCH 2'), note: T('Anticipos', 'Advances'),                 value: 'USD $200,000',   monto: 200000 },
-      { label: T('PARTIDO 3', 'MATCH 3'), note: T('Anticipos', 'Advances'),                 value: 'USD $200,000',   monto: 200000 }
+      { label: T('PARTIDO 2', 'MATCH 2'), barra: T('ANTICIPO PARTIDO 2', 'MATCH 2 ADVANCE'), note: T('Anticipos', 'Advances'), value: 'USD $200,000',   monto: 200000 },
+      { label: T('PARTIDO 3', 'MATCH 3'), barra: T('ANTICIPO PARTIDO 3', 'MATCH 3 ADVANCE'), note: T('Anticipos', 'Advances'), value: 'USD $200,000',   monto: 200000 }
     ],
     barraLabel: T('CÓMO SE REPARTE EL CAPITAL', 'HOW THE CAPITAL IS ALLOCATED'),
     totalLabel: T('CAPITAL REQUERIDO', 'CAPITAL REQUIRED'),
@@ -82,7 +97,6 @@ const FUENTE = {
     cta: T('Ver presupuesto', 'View budget'),
     cajon: {
       title: T('Presupuesto del primer partido', 'First match budget'),
-      sub: T('Cruz Azul vs. Pumas · Shell Energy Stadium, Houston · Cifras del perfil del partido.', 'Cruz Azul vs. Pumas · Shell Energy Stadium, Houston · Figures from the match profile.'),
       totalLabel: 'TOTAL / USD',
       totalValue: '$1.0 M',
       anticiposTitle: T('Anticipos de los otros dos partidos', 'Advances for the other two matches'),
@@ -110,29 +124,41 @@ const FUENTE = {
     kicker: T('03 · PARTICIPACIÓN Y RETORNO', '03 · PARTICIPATION AND RETURN'),
     title: T('70% de las utilidades para inversionistas.', '70% of the profits for investors.'),
     partes: [
-      { pct: '70%', quien: T('INVERSIONISTAS', 'INVESTORS') },
-      { pct: '30%', quien: 'SOCCER iD' }
+      { pct: '70%', quien: T('INVERSIONISTAS', 'INVESTORS'), rol: T('Aportan el capital para financiar el proyecto.', 'They provide the capital to finance the project.') },
+      { pct: '30%', quien: 'SOCCER iD', rol: T('Aporta el proyecto, negocia con clubes y sedes, comercializa, opera y administra el TOUR.', 'Provides the project, negotiates with clubs and venues, commercializes, operates and runs the TOUR.') }
     ],
     lineas: [
-      T('Tu aportación determina tu participación en las utilidades de la temporada.', 'Your contribution determines your share of the season\u2019s profits.'),
-      T('Devolución prevista: diciembre de 2027, tras el cierre financiero de los tres partidos.', 'Expected return of capital: December 2027, after the financial close of the three matches.')
+      T('Cierre y distribución previstos, sujetos a resultados, cobranza y liquidación.', 'Close and distribution expected, subject to results, collection and settlement.')
     ],
     // Pendiente en el brief: se sustituirá por tres escenarios cuando se valide la proyección.
     rendimiento: { label: T('Rendimiento estimado', 'Estimated return'), value: '', pendiente: true },
     devolucion: { label: T('DEVOLUCIÓN PREVISTA', 'EXPECTED RETURN OF CAPITAL'), value: T('Diciembre 2027', 'December 2027') },
     nota: T('El reparto del 70% no equivale a un rendimiento del 70%. Las utilidades dependen del resultado real de los tres partidos.',
-            'The 70% split is not a 70% return. Profits depend on the actual result of the three matches.')
+            'The 70% split is not a 70% return. Profits depend on the actual result of the three matches.'),
+    ingresos: {
+      cta: T('Ver fuentes de ingresos', 'View revenue sources'),
+      title: T('Fuentes de ingresos', 'Revenue sources'),
+      sub: T('De dónde salen las utilidades que se reparten.', 'Where the profits that get distributed come from.'),
+      items: [
+        T('Venta de boletos', 'Ticket sales'),
+        T('Derechos de TV', 'TV rights'),
+        T('Publicidad en transmisión', 'Broadcast advertising'),
+        T('Publicidad en estadio', 'In-stadium advertising'),
+        T('Patrocinios', 'Sponsorships'),
+        T('Porcentaje de alimentos, bebidas y estacionamiento', 'Share of food, beverage and parking'),
+        T('Merchandising', 'Merchandising')
+      ]
+    }
   },
 
   respaldo: {
     kicker: T('04 · RESPALDO Y SEGUIMIENTO', '04 · BACKING AND FOLLOW-UP'),
     title: T('Contrato, panel privado y documentación.', 'Contract, private panel and documentation.'),
     items: [
-      { title: T('Contrato de inversión', 'Investment contract'),    icon: 'escudo' },
-      { title: T('Panel privado', 'Private panel'),                  icon: 'ojo' },
-      { title: T('Documentación del proyecto', 'Project documentation'), icon: 'caja' }
+      { title: T('Contrato de inversión', 'Investment contract'),    body: T('Condiciones de participación y distribución.', 'Terms of participation and distribution.'), icon: 'escudo' },
+      { title: T('Panel privado', 'Private panel'),                  body: T('Avances y seguimiento financiero.', 'Progress and financial tracking.'), icon: 'ojo' },
+      { title: T('Documentación del proyecto', 'Project documentation'), body: T('Contratos y evidencias de la operación.', 'Contracts and operational evidence.'), icon: 'caja' }
     ],
-    lead: T('Experiencias y beneficios según tu participación.', 'Experiences and benefits according to your participation.'),
     cta: T('Consultar detalles', 'See details'),
     aviso: T("Inversión a riesgo bajo un esquema de participación en los resultados de SOCCER iD TOUR '27.",
              "At-risk investment under a participation structure in the results of SOCCER iD TOUR '27."),
@@ -153,7 +179,6 @@ const FUENTE = {
   trayectoria: {
     kicker: T('05 · TRAYECTORIA', '05 · TRACK RECORD'),
     title: T('Tres ediciones realizadas.', 'Three editions delivered.'),
-    sub: T('2023 · 2024 · 2025. Clubes, aficionados, sedes y marcas conectados a través del futbol.', '2023 · 2024 · 2025. Clubs, fans, venues and brands connected through football.'),
     // `foco` es la altura del recorte de la foto: la acción no está a la misma
     // altura en las tres (2023 al 12 %, 2025 al 32 %, 2024 al 45 %) y un
     // recorte único decapitaba a los jugadores de 2023. Se ajusta aquí, no en
@@ -166,11 +191,8 @@ const FUENTE = {
     cta: T('Ver trayectoria', 'View track record'),
     cajon: {
       title: T('Trayectoria', 'Track record'),
-      sub: T('Lo que sabemos hacer y cómo lo contaron los medios en las tres ediciones anteriores.',
-             'What we know how to do, and how the media covered it across the three previous editions.'),
-      capacidades: T('Relación con clubes · Comercialización · Producción · Broadcast · Operación internacional', 'Club relations · Commercialization · Production · Broadcast · International operations'),
-      mediosTitle: T('Cobertura en medios', 'Media coverage'),
-      mediosSub: T('Notas de prensa de las ediciones anteriores, en medios de cada plaza.', 'Press coverage of previous editions, in each market\u2019s media.'),
+      sub: T('Lo que sabemos hacer y cómo lo contaron los medios.',
+             'What we know how to do, and how the media covered it.'),
       ctaHistoria: T('Conoce la historia de la copa', 'Discover the cup\u2019s history'),
       ctaHistoriaUrl: T('/es/socceridcup', '/en/socceridcup')
     }
@@ -178,11 +200,9 @@ const FUENTE = {
 
   contacto: {
     kicker: T('CONTACTO', 'CONTACT'),
-    title: T("Sé parte de SOCCER iD TOUR '27.", "Be part of SOCCER iD TOUR '27."),
-    body: T('Solicita la propuesta de inversión y nuestro equipo te acompaña a revisar el proyecto y resolver tus preguntas.',
-            'Request the investment proposal and our team will walk you through the project and answer your questions.'),
     cta: T('Solicitar propuesta de inversión', 'Request the investment proposal'),
-    ctaUrl: 'mailto:leon@soccerid.co?subject=SOCCER%20iD%20TOUR%2027'
+    ctaUrl: T('https://wa.me/17867844303?text=Hola%2C%20quiero%20la%20propuesta%20de%20inversi%C3%B3n%20de%20SOCCER%20iD%20TOUR%20%2727',
+              'https://wa.me/17867844303?text=Hi%2C%20I%27d%20like%20the%20investment%20proposal%20for%20SOCCER%20iD%20TOUR%20%2727')
   },
 
   cajon: { cerrar: T('Cerrar', 'Close') },
