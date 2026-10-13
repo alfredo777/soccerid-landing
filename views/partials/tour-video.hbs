@@ -162,7 +162,7 @@
   .tv__boton svg { width: 24px; height: 24px; }
   /* ONDAS. Cerrada la card con la X, este boton es lo unico que queda del
      video y vive en una esquina, asi que tiene que llamar. Son dos anillos
-     cian gruesos que salen del borde y se abren hasta casi el triple, mas un
+     cian gruesos que salen del borde y se abren al doble escaso, mas un
      halo que empuja desde el propio boton: las tres cosas corren al mismo
      compas, de modo que se lee como UNA onda con cuerpo y no como tres cosas
      parpadeando. Nada de esto captura el dedo, asi que no estorba al toque. */
@@ -185,11 +185,11 @@
   @keyframes tv-onda {
     0%   { transform: scale(1); opacity: .95; }
     60%  { opacity: .4; }
-    100% { transform: scale(2.7); opacity: 0; }
+    100% { transform: scale(2.05); opacity: 0; }
   }
   @keyframes tv-onda-halo {
     0%        { box-shadow: 0 12px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 0 rgba(var(--tv-acento-rgb), 0.5); }
-    70%, 100% { box-shadow: 0 12px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 20px rgba(var(--tv-acento-rgb), 0); }
+    70%, 100% { box-shadow: 0 12px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 13px rgba(var(--tv-acento-rgb), 0); }
   }
   /* Quien pidio menos movimiento no ve nada de esto; el boton se queda quieto. */
   @media (prefers-reduced-motion: reduce) {
