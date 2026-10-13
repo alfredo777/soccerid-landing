@@ -1087,6 +1087,43 @@ function partialDe(variante) {
   return 'partials/propuesta-contenido';
 }
 
+/**
+ * El video del tour: la card flotante que reproduce abajo a la derecha y se
+ * abre como pantalla de celular. SOLO para quien entró con código de NIVEL
+ * TOUR —el acceso completo—; con nivel de partido no se emite nada.
+ *
+ * Es un <video> HTML5 nativo porque el archivo se va a servir desde Amazon
+ * S3: `TOUR_VIDEO_URL` y `TOUR_VIDEO_POSTER` apuntan allá cuando existan.
+ * Mientras tanto se usa UN VIDEO DE RELLENO (el tour del panel, en vertical
+ * 720×1280) nada más para fijar tamaños y dimensiones; no es el video final.
+ * La carátula de relleno es un cuadro de ese mismo video de pruebas.
+ */
+function videoDelTour(variante, req, lang) {
+  // Interruptor para esconder el reproductor sin tocar código (por ejemplo
+  // mientras no esté el video real): TOUR_VIDEO_OCULTO=1 en las config vars.
+  if (/^(1|true|si|sí)$/i.test(String(process.env.TOUR_VIDEO_OCULTO || '').trim())) return null;
+  if (!variante || variante.tipo !== 'tour') return null;
+  const acceso = propuestas.accesoDe(req);
+  if (!acceso || acceso.nivel !== 'tour') return null;
+  const isEs = lang !== 'en';
+  return {
+    src: process.env.TOUR_VIDEO_URL || '/assets/videos/onboarding/tour-riesgo-mobile.mp4',
+    poster: process.env.TOUR_VIDEO_POSTER || '/assets/images/tour27-video-poster.jpg',
+    // Corto a propósito: en la card cerrada de web la pastilla tiene ~100 px.
+    kicker: "Tour '27",
+    titulo: isEs ? 'Conoce el proyecto' : 'Meet the project',
+    sub: isEs ? 'Exclusivo para acceso completo' : 'Exclusive for full access',
+    txtAbrir: isEs ? 'Ver el video más grande' : 'See the video larger',
+    txtDesplegar: isEs ? 'Desplegar o recoger el video' : 'Expand or collapse the video',
+    txtRestaurar: isEs ? 'Salir de pantalla completa' : 'Exit full screen',
+    txtCerrar: isEs ? 'Cerrar el video' : 'Close the video',
+    txtReabrir: isEs ? 'Ver el video del tour' : 'Watch the tour video',
+    txtSonido: isEs ? 'Activar o silenciar el sonido' : 'Toggle sound',
+    txtPausa: isEs ? 'Reproducir o pausar' : 'Play or pause',
+    txtProgreso: isEs ? 'Avance del video' : 'Video progress'
+  };
+}
+
 function renderPropuesta(variante) {
   return async (req, res, next) => {
     const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
@@ -1180,6 +1217,7 @@ function renderPropuesta(variante) {
         esTour: variante.tipo === 'tour',
         esNivelTour: esNivelTour,
         urlTour: await vueltaAlTour(req, variante, langContenido),
+        videoTour: videoDelTour(variante, req, langContenido),
         // El candado se lee en los dos idiomas siempre. Dentro, en cambio,
         // solo se ofrece el idioma que existe: un conmutador que lleva a la
         // misma página en el mismo idioma es peor que no tenerlo.
@@ -1243,6 +1281,7 @@ app.get('/api/propuesta/:id/contenido', async (req, res, next) => {
       // propuestas que SÍ están en los dos idiomas.
       hayEn: idiomas.includes('en'),
       urlTour: await vueltaAlTour(req, variante, lang),
+      videoTour: videoDelTour(variante, req, lang),
       data: data,
       mediaLinks: await cupEditions.mediaLinks(lang),
       ediciones: edicionesTour(data, lang, await cupEditions.fichas(lang)),

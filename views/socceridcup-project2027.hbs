@@ -1608,6 +1608,195 @@
     piezas.forEach(function(p) { vigia.observe(p); });
   })();
 
+  // ─── Video del tour: card flotante en tres etapas ───
+  // 1 cerrado (fila con miniatura) · 2 desplegado (la card crece en su
+  // esquina) · 3 maximizado (a toda la pantalla). Marcado y medidas en
+  // views/partials/tour-video.hbs. Un solo <video>: al cambiar de etapa
+  // cambia la clase del contenedor, no el DOM, y la reproducción no se
+  // corta. Escuchadores delegados en document por la misma razón que los
+  // cajones (el contenido se inyecta tras el candado).
+  (function() {
+    var tv = document.getElementById('tvCard');
+    if (!tv) return;
+    var video = document.getElementById('tvVideo');
+    var tiempo = document.getElementById('tvTiempo');
+    var lleno = document.getElementById('tvLleno');
+    var progreso = tv.querySelector('[data-tv-progreso]');
+    var etapa = 1;
+
+    function fmt(seg) {
+      if (!isFinite(seg)) return '0:00';
+      var m = Math.floor(seg / 60), s = Math.floor(seg % 60);
+      return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+    function reflejar() {
+      tv.classList.toggle('tv--reproduciendo', !video.paused && !video.ended);
+      tv.classList.toggle('tv--pausa', video.paused || video.ended);
+      tv.classList.toggle('tv--con-sonido', !video.muted);
+      tv.querySelectorAll('[data-tv-sonido]').forEach(function(b) { b.setAttribute('aria-pressed', video.muted ? 'false' : 'true'); });
+    }
+    function pintarTiempo() {
+      if (tiempo) tiempo.textContent = fmt(video.currentTime) + ' / ' + fmt(video.duration);
+      var pct = video.duration ? (video.currentTime / video.duration) * 100 : 0;
+      if (lleno) lleno.style.width = pct + '%';
+      if (progreso) progreso.setAttribute('aria-valuenow', String(Math.round(pct)));
+      tv.style.setProperty('--tv-avance', pct.toFixed(1));
+    }
+    function reproducir() { var p = video.play(); if (p && p.catch) p.catch(function() {}); }
+    function alternarPlay() { if (video.paused || video.ended) reproducir(); else video.pause(); }
+    // El navegador no deja arrancar con audio sin un gesto del usuario: la
+    // card empieza en silencio y el sonido entra con el botón o al desplegar.
+    function sonido(encender) { video.muted = !encender; if (encender && video.paused) reproducir(); reflejar(); }
+
+    function irA(n) {
+      n = Math.max(1, Math.min(3, n));
+      if (n === etapa) return;
+      etapa = n;
+      tv.classList.toggle('tv--desplegado', n === 2);
+      tv.classList.toggle('tv--maximizado', n === 3);
+      document.body.classList.toggle('tv-desplegado', n === 2);
+      document.body.classList.toggle('tv-maximizado', n === 3);
+      document.body.style.overflow = n === 3 ? 'hidden' : '';
+      var pliegue = tv.querySelector('[data-tv-alternar]');
+      if (pliegue) pliegue.setAttribute('aria-expanded', n >= 2 ? 'true' : 'false');
+      if (n >= 2) { sonido(true); pintarTiempo(); }
+      if (n === 3) { var x = tv.querySelector('.tv__x--g'); if (x) x.focus(); }
+    }
+    // ─── Etapa 0: cerrado con la X ───
+    // La card se va y queda el botón de abajo a la izquierda. El cierre se
+    // GUARDA mientras dure el acceso del código (12 h, lo mismo que la cookie
+    // pp_acc), para que el video no vuelva a saltar en cada página ni en cada
+    // recarga. Va en localStorage con fecha de caducidad porque la cookie es
+    // httpOnly y desde aquí no se puede leer: se imita su vigencia.
+    var LLAVE = 'tv-cerrado:' + (tv.getAttribute('data-variante') || 'tour');
+    var VIGENCIA = 12 * 60 * 60 * 1000;
+    var boton = tv.querySelector('[data-tv-reabrir]');
+    function cerradoGuardado() {
+      try { var h = parseInt(localStorage.getItem(LLAVE), 10); return !!h && (Date.now() - h) < VIGENCIA; } catch (_) { return false; }
+    }
+    function guardarCierre(si) {
+      try { if (si) localStorage.setItem(LLAVE, String(Date.now())); else localStorage.removeItem(LLAVE); } catch (_) {}
+    }
+    function minimizar() {
+      tv.classList.add('tv--minimizado');
+      document.body.classList.remove('tv-visible');
+      if (boton) boton.hidden = false;
+    }
+    function cerrar() {
+      irA(1);
+      video.pause();
+      guardarCierre(true);
+      tv.classList.remove('tv--visible');
+      window.setTimeout(minimizar, 300);
+      if (boton) boton.focus();
+    }
+    // El botón reabre DIRECTO en desplegado (fase 2): quien lo toca quiere ver
+    // el video, no la fila.
+    function reabrir() {
+      guardarCierre(false);
+      if (boton) boton.hidden = true;
+      tv.classList.remove('tv--minimizado');
+      document.body.classList.add('tv-visible');
+      window.requestAnimationFrame(function() { tv.classList.add('tv--visible'); irA(2); });
+    }
+    function buscar(e) {
+      if (!progreso || !video.duration) return;
+      var r = progreso.getBoundingClientRect();
+      var x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+      video.currentTime = Math.max(0, Math.min(1, x / r.width)) * video.duration;
+      pintarTiempo();
+    }
+
+    if (!document.body.dataset.tvListo) {
+      document.body.dataset.tvListo = '1';
+      document.addEventListener('click', function(e) {
+        var t = document.getElementById('tvCard'); if (!t || !t.contains(e.target)) return;
+        // La miniatura (y su botón de la esquina) avanzan una etapa
+        if (e.target.closest('[data-tv-abrir]')) { e.preventDefault(); irA(etapa === 1 ? 2 : 3); return; }
+        if (e.target.closest('[data-tv-alternar]')) { e.preventDefault(); irA(etapa === 1 ? 2 : 1); return; }
+        if (e.target.closest('[data-tv-restaurar]')) { e.preventDefault(); irA(2); return; }
+        if (e.target.closest('[data-tv-cerrar]')) { e.preventDefault(); cerrar(); return; }
+        if (e.target.closest('[data-tv-reabrir]')) { e.preventDefault(); reabrir(); return; }
+        if (e.target.closest('[data-tv-sonido]')) { e.preventDefault(); sonido(video.muted); return; }
+        if (e.target.closest('[data-tv-play]') || e.target.closest('[data-tv-toque]')) { e.preventDefault(); alternarPlay(); return; }
+        if (e.target.closest('[data-tv-progreso]')) { buscar(e); }
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && etapa > 1) irA(etapa - 1);
+        if (e.target && e.target.hasAttribute && e.target.hasAttribute('data-tv-progreso') && video.duration) {
+          if (e.key === 'ArrowRight') { video.currentTime = Math.min(video.duration, video.currentTime + 5); e.preventDefault(); }
+          if (e.key === 'ArrowLeft') { video.currentTime = Math.max(0, video.currentTime - 5); e.preventDefault(); }
+          if (e.key === ' ' || e.key === 'Enter') { alternarPlay(); e.preventDefault(); }
+        }
+      });
+    }
+    // ─── Gestos táctiles (celular) ───
+    // Deslizar hacia ARRIBA sobre la card avanza una etapa (cerrado →
+    // desplegado → maximizado); hacia ABAJO la baja una. Mientras el dedo
+    // arrastra, la card lo sigue un poco (con freno) para que se sienta que
+    // responde; al soltar, si pasó el umbral cambia de etapa, si no vuelve.
+    // La barra de progreso queda fuera del gesto: ahí el dedo busca en el
+    // video. Se enlaza directo a la card (no delegado) porque los
+    // escuchadores táctiles tienen que ser pasivos o no, según el caso.
+    (function() {
+      var card = tv.querySelector('.tv__card');
+      if (!card || !('ontouchstart' in window)) return;
+      var UMBRAL = 44, FRENO = 0.35, TOPE = 56;
+      var y0 = null, x0 = null, dy = 0, arrastrando = false, enProgreso = false;
+
+      function enBarra(t) { return !!(t && t.closest && t.closest('[data-tv-progreso]')); }
+      function alInicio(e) {
+        if (e.touches.length !== 1) return;
+        enProgreso = enBarra(e.target);
+        if (enProgreso) { buscar(e); return; }
+        y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; dy = 0; arrastrando = false;
+        card.style.transition = 'none';
+      }
+      function alMover(e) {
+        if (enProgreso) { buscar(e); e.preventDefault(); return; }
+        if (y0 === null) return;
+        var t = e.touches[0];
+        dy = t.clientY - y0;
+        // Un gesto más horizontal que vertical no es nuestro
+        if (!arrastrando && Math.abs(t.clientX - x0) > Math.abs(dy)) { y0 = null; card.style.transition = ''; return; }
+        if (Math.abs(dy) > 6) arrastrando = true;
+        if (!arrastrando) return;
+        e.preventDefault();
+        // No se arrastra hacia donde no hay etapa
+        var permitido = (dy < 0 && etapa < 3) || (dy > 0 && etapa > 1);
+        var sigue = permitido ? Math.max(-TOPE, Math.min(TOPE, dy * FRENO)) : 0;
+        if (etapa < 3) card.style.transform = 'translateY(' + sigue + 'px)';
+      }
+      function alSoltar() {
+        if (enProgreso) { enProgreso = false; return; }
+        if (y0 === null) return;
+        card.style.transition = ''; card.style.transform = '';
+        var d = dy; y0 = null; dy = 0;
+        if (!arrastrando) return;
+        if (d <= -UMBRAL && etapa < 3) irA(etapa + 1);
+        else if (d >= UMBRAL && etapa > 1) irA(etapa - 1);
+      }
+      card.addEventListener('touchstart', alInicio, { passive: true });
+      card.addEventListener('touchmove', alMover, { passive: false });
+      card.addEventListener('touchend', alSoltar);
+      card.addEventListener('touchcancel', alSoltar);
+    })();
+
+    ['play', 'pause', 'ended', 'volumechange'].forEach(function(ev) { video.addEventListener(ev, reflejar); });
+    ['timeupdate', 'loadedmetadata', 'durationchange'].forEach(function(ev) { video.addEventListener(ev, pintarTiempo); });
+
+    // Aparece poco después de que se ve la propuesta, no encima del preloader.
+    // Si ya se cerró con la X (y el cierre sigue vigente) solo sale el botón.
+    tv.hidden = false; tv.setAttribute('aria-hidden', 'false');
+    reflejar();
+    if (cerradoGuardado()) { video.pause(); minimizar(); return; }
+    window.setTimeout(function() {
+      tv.classList.add('tv--visible');
+      document.body.classList.add('tv-visible');
+      reproducir();
+    }, 900);
+  })();
+
   // ─── Cajones laterales del perfil anual ───
   // Lo secundario (presupuesto, condiciones, trayectoria) se abre desde los
   // botones [data-cajon]. Los escuchadores van delegados en document, porque

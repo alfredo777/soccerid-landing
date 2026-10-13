@@ -1,5 +1,60 @@
 # Pendientes del panel
 
+## Video del Tour '27 — reproductor flotante en tres etapas (en curso)
+
+Para quien entra a `/socceridcup2027` con código de **nivel tour** (el acceso
+completo): una card pequeña abajo a la derecha que reproduce el video en una
+miniatura vertical. **No es un lightbox** (el usuario lo rechazó): son tres
+etapas y la card nunca se va a un modal centrado con velo.
+
+1. **Cerrado** — la fila con la miniatura reproduciendo.
+2. **Desplegado** — la misma card, en su esquina, crece y el video toma el
+   ancho de la card debajo de la fila (como el reproductor de Rockstars MX).
+3. **Maximizado** — el video a toda la pantalla, en web y en celular igual.
+0. **Cerrado con la X** — la card se va y queda un botón redondo abajo a la
+   izquierda con icono de **claqueta** que la vuelve a abrir **directo en desplegado**. El cierre se guarda
+   12 h (lo que dura el acceso del código) en `localStorage`, llave
+   `tv-cerrado:<variante>`: la cookie es httpOnly y no se puede leer desde el
+   navegador, así que se imita su vigencia.
+
+Es un `<video>` HTML5 nativo porque el archivo se va a servir desde **Amazon
+S3**; nada de embeds de terceros. Tokens del tour (cian, gris, Raleway).
+**Vidrio, no opaca** (pedido del usuario, para despegarse de Rockstars): fondo
+al 55 % con desenfoque, play en vidrio en vez de círculo sólido, kicker en
+pastilla y una línea cian de avance al pie de la card cerrada.
+
+- Marcado y **todas las medidas**: `views/partials/tour-video.hbs` (variables
+  `--tv-*` al inicio del `<style>`). Mecánica: `initContenido` en
+  `views/socceridcup-project2027.hbs`. Datos: `videoDelTour` en `index.js`.
+- Cerrado: 344 × 112 px en web (abajo 16, derecha 16); en celular va pegada
+  al borde de abajo y a todo lo ancho, con solo las esquinas de arriba redondeadas. Miniatura 54 × 96 (9:16), botón de
+  play de 48, botón «volver arriba» sube para no encimarse.
+- Desplegado: misma esquina y mismo ancho; el video en 9:16 a lo ancho de la
+  card, con tope de 60vh en web (322 × 540 a 900 px de ventana) y 52vh en
+  celular. Progreso, tiempo y sonido sobre el video; maximizar en la esquina
+  de arriba.
+- Maximizado: a toda la ventana, fondo negro, video contenido; cabeza con
+  título y botón de restaurar; barra abajo. Escape baja una etapa.
+- **Gestos en celular**: deslizar hacia arriba sobre la card avanza una etapa
+  y hacia abajo la baja (umbral de 44 px; la card sigue al dedo con freno).
+  Hay una **barra de arrastre** arriba de la card (48 × 5, franja de toque de
+  22 px), como en las hojas de iOS: se jala con el dedo o se toca. En la barra de
+  progreso el dedo busca en el video, no cambia de etapa.
+- Un solo `<video>` para las tres etapas: cambia la clase, no el DOM, y la
+  reproducción no se corta. Arranca **en silencio** (el navegador no permite
+  audio sin gesto); el sonido entra con el botón que late o al desplegar.
+
+Pendiente:
+- [ ] **El video real.** Hoy va **de pruebas** el tour del panel
+  (`tour-riesgo-mobile.mp4`, 720×1280), con su carátula, solo para fijar tamaños. Cuando esté el
+  archivo en S3: `heroku config:set TOUR_VIDEO_URL=https://... TOUR_VIDEO_POSTER=https://...`
+  (ver `docs/variables-del-proyecto.md`). Conviene que sea **vertical 9:16**,
+  H.264 + AAC, con `Content-Type: video/mp4` y CORS abierto al dominio.
+- Para esconderlo sin desplegar código: `heroku config:set TOUR_VIDEO_OCULTO=1`
+  (y `config:unset` para volverlo a enseñar).
+- [ ] Revisar textos de la card (kicker, título, bajada) con el usuario.
+
+
 ## Asistente de contenidos con IA — Claude Haiku 4.5 — HECHO
 
 Botón **"Redactar con IA"** en el admin. La IA **propone**, el admin **revisa, edita y
