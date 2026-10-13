@@ -12,7 +12,7 @@ etapas y la card nunca se va a un modal centrado con velo.
    ancho de la card debajo de la fila (como el reproductor de Rockstars MX).
 3. **Maximizado** — el video a toda la pantalla, en web y en celular igual.
 0. **Cerrado con la X** — la card se va y queda un botón redondo abajo a la
-   izquierda con icono de **claqueta** que la vuelve a abrir **directo en desplegado**. El cierre se guarda
+   izquierda con icono de **play** que la vuelve a abrir **directo en desplegado**. El cierre se guarda
    12 h (lo que dura el acceso del código) en `localStorage`, llave
    `tv-cerrado:<variante>`: la cookie es httpOnly y no se puede leer desde el
    navegador, así que se imita su vigencia.

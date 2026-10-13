@@ -19,8 +19,10 @@
        la izquierda. El cierre se guarda mientras dure el acceso del código
        (12 h), para que no vuelva a saltar en cada página. --}}
   <button type="button" class="tv__boton" data-tv-reabrir hidden aria-label="{{videoTour.txtReabrir}}" title="{{videoTour.txtReabrir}}">
-    {{!-- Claqueta: elegida por el usuario sobre el play, que se confundía con el de la card --}}
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5h17v8.5a1.5 1.5 0 01-1.5 1.5H5a1.5 1.5 0 01-1.5-1.5z"/><path d="M3.5 10.5L2.8 7.2a1.5 1.5 0 011.1-1.8l13.6-3.1a1.5 1.5 0 011.8 1.1l.7 3.3"/><path d="M7.5 10.5l2.3-3.6M12.3 10.5l2.3-3.6M17 10.5l2.4-3.6"/></svg>
+    {{!-- Play macizo. El triangulo mide 12 de ancho y su centro cae 1.5 a la
+         derecha del centro de la caja: esa es la correccion optica que lo hace
+         VER centrado dentro del circulo. Por eso no lleva margen. --}}
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7.5 5.6v12.8a1 1 0 001.52.85l10.4-6.4a1 1 0 000-1.7L9.02 4.75A1 1 0 007.5 5.6z"/></svg>
   </button>
   <div class="tv__card">
     {{!-- Asa de arrastre (solo celular): se jala con el dedo para desplegar
@@ -147,6 +149,31 @@
   .tv__boton[hidden] { display: none; }
   .tv__boton:hover { transform: scale(1.06); background: rgba(var(--tv-acento-rgb), 0.14); }
   .tv__boton svg { width: 24px; height: 24px; }
+  /* ONDAS. Cerrada la card con la X, este boton es lo unico que queda del
+     video y vive en una esquina: late para que se vea que ahi sigue. Son dos
+     anillos escalonados que salen del borde y se desvanecen. No capturan el
+     dedo, asi que no estorban al toque del propio boton. */
+  .tv__boton::before,
+  .tv__boton::after {
+    content: ""; position: absolute; inset: 0; border-radius: 50%;
+    border: 1px solid rgba(var(--tv-acento-rgb), 0.6);
+    pointer-events: none; opacity: 0;
+    animation: tv-onda 2.8s cubic-bezier(.25,.6,.35,1) infinite;
+  }
+  /* El segundo anillo sale a mitad del ciclo: dos ondas en camino, nunca un
+     parpadeo doble. */
+  .tv__boton::after { animation-delay: 1.4s; }
+  /* Con el dedo o el raton encima ya esta visto: se calla. */
+  .tv__boton:hover::before, .tv__boton:hover::after { animation: none; opacity: 0; }
+  @keyframes tv-onda {
+    0%   { transform: scale(1); opacity: .6; }
+    70%  { opacity: 0; }
+    100% { transform: scale(2.15); opacity: 0; }
+  }
+  /* Quien pidio menos movimiento no ve las ondas; el boton se queda quieto. */
+  @media (prefers-reduced-motion: reduce) {
+    .tv__boton::before, .tv__boton::after { animation: none; display: none; }
+  }
   /* Mientras la card esté cerrada no se le pone nada encima a la fila */
   .tv.tv--minimizado .tv__card { display: none; }
 
