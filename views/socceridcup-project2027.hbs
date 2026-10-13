@@ -1607,11 +1607,13 @@
     piezas.forEach(function(p) { vigia.observe(p); });
   })();
 
-  // ─── Video del tour: card flotante abajo a la derecha + pantalla de celular ───
-  // Marcado y medidas en views/partials/tour-video.hbs. Un solo <video> para
-  // los dos estados: al abrir y cerrar solo cambia la clase del contenedor,
-  // así la reproducción no se corta. Escuchadores delegados en document por
-  // la misma razón que los cajones (el contenido se inyecta tras el candado).
+  // ─── Video del tour: card flotante en tres etapas ───
+  // 1 cerrado (fila con miniatura) · 2 desplegado (la card crece en su
+  // esquina) · 3 maximizado (a toda la pantalla). Marcado y medidas en
+  // views/partials/tour-video.hbs. Un solo <video>: al cambiar de etapa
+  // cambia la clase del contenedor, no el DOM, y la reproducción no se
+  // corta. Escuchadores delegados en document por la misma razón que los
+  // cajones (el contenido se inyecta tras el candado).
   (function() {
     var tv = document.getElementById('tvCard');
     if (!tv) return;
@@ -1619,7 +1621,7 @@
     var tiempo = document.getElementById('tvTiempo');
     var lleno = document.getElementById('tvLleno');
     var progreso = tv.querySelector('[data-tv-progreso]');
-    var abierto = false, origen = null;
+    var etapa = 1;
 
     function fmt(seg) {
       if (!isFinite(seg)) return '0:00';
@@ -1639,32 +1641,28 @@
       if (progreso) progreso.setAttribute('aria-valuenow', String(Math.round(pct)));
     }
     function reproducir() { var p = video.play(); if (p && p.catch) p.catch(function() {}); }
-    function alternar() { if (video.paused || video.ended) reproducir(); else video.pause(); }
+    function alternarPlay() { if (video.paused || video.ended) reproducir(); else video.pause(); }
     // El navegador no deja arrancar con audio sin un gesto del usuario: la
-    // card empieza en silencio y el sonido entra con el botón o al abrirla.
+    // card empieza en silencio y el sonido entra con el botón o al desplegar.
     function sonido(encender) { video.muted = !encender; if (encender && video.paused) reproducir(); reflejar(); }
 
-    function abrir(desde) {
-      if (abierto) return;
-      abierto = true; origen = desde || null;
-      tv.classList.add('tv--abierto');
-      document.body.style.overflow = 'hidden';
-      sonido(true);
-      pintarTiempo();
-      var x = tv.querySelector('.tv__x--g'); if (x) x.focus();
+    function irA(n) {
+      n = Math.max(1, Math.min(3, n));
+      if (n === etapa) return;
+      etapa = n;
+      tv.classList.toggle('tv--desplegado', n === 2);
+      tv.classList.toggle('tv--maximizado', n === 3);
+      document.body.classList.toggle('tv-desplegado', n === 2);
+      document.body.classList.toggle('tv-maximizado', n === 3);
+      document.body.style.overflow = n === 3 ? 'hidden' : '';
+      var pliegue = tv.querySelector('[data-tv-alternar]');
+      if (pliegue) pliegue.setAttribute('aria-expanded', n >= 2 ? 'true' : 'false');
+      if (n >= 2) { sonido(true); pintarTiempo(); }
+      if (n === 3) { var x = tv.querySelector('.tv__x--g'); if (x) x.focus(); }
     }
-    function contraer() {
-      if (!abierto) return;
-      abierto = false;
-      tv.classList.remove('tv--abierto');
-      document.body.style.overflow = '';
-      if (origen && origen.focus) origen.focus();
-      origen = null;
-    }
-    // La X de la card la quita del todo (en esta visita). Si estaba abierta,
-    // primero vuelve a la miniatura y luego se va.
+    // La X de la fila quita la card del todo (en esta visita).
     function cerrar() {
-      contraer();
+      irA(1);
       video.pause();
       tv.classList.remove('tv--visible');
       document.body.classList.remove('tv-visible');
@@ -1682,19 +1680,21 @@
       document.body.dataset.tvListo = '1';
       document.addEventListener('click', function(e) {
         var t = document.getElementById('tvCard'); if (!t || !t.contains(e.target)) return;
-        if (e.target.closest('[data-tv-abrir]')) { e.preventDefault(); abrir(e.target.closest('[data-tv-abrir]')); return; }
-        if (e.target.closest('[data-tv-contraer]')) { e.preventDefault(); contraer(); return; }
+        // La miniatura (y su botón de la esquina) avanzan una etapa
+        if (e.target.closest('[data-tv-abrir]')) { e.preventDefault(); irA(etapa === 1 ? 2 : 3); return; }
+        if (e.target.closest('[data-tv-alternar]')) { e.preventDefault(); irA(etapa === 1 ? 2 : 1); return; }
+        if (e.target.closest('[data-tv-restaurar]')) { e.preventDefault(); irA(2); return; }
         if (e.target.closest('[data-tv-cerrar]')) { e.preventDefault(); cerrar(); return; }
         if (e.target.closest('[data-tv-sonido]')) { e.preventDefault(); sonido(video.muted); return; }
-        if (e.target.closest('[data-tv-play]') || e.target.closest('[data-tv-toque]')) { e.preventDefault(); alternar(); return; }
+        if (e.target.closest('[data-tv-play]') || e.target.closest('[data-tv-toque]')) { e.preventDefault(); alternarPlay(); return; }
         if (e.target.closest('[data-tv-progreso]')) { buscar(e); }
       });
       document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && abierto) contraer();
+        if (e.key === 'Escape' && etapa > 1) irA(etapa - 1);
         if (e.target && e.target.hasAttribute && e.target.hasAttribute('data-tv-progreso') && video.duration) {
           if (e.key === 'ArrowRight') { video.currentTime = Math.min(video.duration, video.currentTime + 5); e.preventDefault(); }
           if (e.key === 'ArrowLeft') { video.currentTime = Math.max(0, video.currentTime - 5); e.preventDefault(); }
-          if (e.key === ' ' || e.key === 'Enter') { alternar(); e.preventDefault(); }
+          if (e.key === ' ' || e.key === 'Enter') { alternarPlay(); e.preventDefault(); }
         }
       });
     }

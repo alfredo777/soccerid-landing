@@ -3,30 +3,33 @@
      manda `videoTour`; sin él este partial no se emite).
 
      Es un <video> HTML5 nativo —el archivo vendrá de Amazon S3, no de un
-     embed de terceros— y es UN SOLO elemento para los dos estados: cerrado
-     (la miniatura abajo a la derecha, reproduciendo) y abierto (la pantalla
-     de celular centrada). No se mueve en el DOM al abrir y cerrar: solo
-     cambia la clase del contenedor, y así la reproducción no se corta.
+     embed de terceros— y es UN SOLO elemento para las TRES etapas:
+       1. cerrado     — la fila abajo a la derecha, con la miniatura reproduciendo
+       2. desplegado  — la misma card, en su esquina, con el video grande debajo
+       3. maximizado  — el video a toda la pantalla
+     Sin lightbox ni velo: no es un modal. El video no se mueve en el DOM al
+     cambiar de etapa, solo cambia la clase del contenedor, y así la
+     reproducción no se corta.
 
      El JS vive en la vista (socceridcup-project2027.hbs, en initContenido),
      porque este contenido se inyecta tras el candado y un <script> inyectado
      no corre. Aquí solo hay marcado y estilos. --}}
 <div class="tv" id="tvCard" data-tv hidden aria-hidden="true">
-  <div class="tv__velo" data-tv-cerrar aria-hidden="true"></div>
-
   <div class="tv__card">
-    {{!-- Cabeza: solo se ve en el estado abierto, sobre el video --}}
+    {{!-- Cabeza: solo en MAXIMIZADO, sobre el video; el botón vuelve a desplegado --}}
     <header class="tv__cabeza">
       <div class="tv__cabeza-datos">
         <span class="tv__kicker">{{videoTour.kicker}}</span>
         <strong class="tv__titulo-g">{{videoTour.titulo}}</strong>
       </div>
-      <button type="button" class="tv__x tv__x--g" data-tv-contraer aria-label="{{videoTour.txtContraer}}">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      <button type="button" class="tv__x tv__x--g" data-tv-restaurar aria-label="{{videoTour.txtRestaurar}}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></svg>
       </button>
     </header>
 
-    {{!-- El video: miniatura 9:16 en la card, pantalla completa al abrir --}}
+    {{!-- El video: miniatura 9:16 en cerrado, grande dentro de la card en
+         desplegado, a toda la pantalla en maximizado. El botón de la esquina
+         avanza una etapa (cerrado → desplegado → maximizado). --}}
     <div class="tv__marco" id="tvMarco">
       <video id="tvVideo" class="tv__video"
              src="{{videoTour.src}}"
@@ -38,7 +41,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
         </span>
       </button>
-      {{!-- Pausa/continúa tocando la pantalla, solo en abierto --}}
+      {{!-- Pausa/continúa tocando el video, en desplegado y maximizado --}}
       <button type="button" class="tv__toque" data-tv-toque aria-label="{{videoTour.txtPausa}}"></button>
       <div class="tv__pausado" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10-6.5z"/></svg>
@@ -60,12 +63,15 @@
         <svg class="tv__ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10-6.5z"/></svg>
         <svg class="tv__ico-pausa" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
       </button>
+      <button type="button" class="tv__btn tv__btn--pliegue" data-tv-alternar aria-expanded="false" aria-label="{{videoTour.txtDesplegar}}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
+      </button>
       <button type="button" class="tv__x" data-tv-cerrar aria-label="{{videoTour.txtCerrar}}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
     </div>
 
-    {{!-- Barra de abajo: progreso, tiempo y sonido (solo en abierto) --}}
+    {{!-- Barra sobre el video: progreso, tiempo y sonido (desplegado y maximizado) --}}
     <div class="tv__barra">
       <button type="button" class="tv__btn tv__btn--barra" data-tv-play aria-label="{{videoTour.txtPausa}}">
         <svg class="tv__ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10-6.5z"/></svg>
@@ -101,33 +107,24 @@
     --tv-acento-rgb: var(--tour-cian-rgb, 56, 225, 255);
     --tv-tinta: var(--tour-tinta, #1C1E23);
     --tv-rotulo: var(--tour-rotulo, #C9CCD4);
-    /* Pantalla de celular (estado abierto), en web: 9:16 limitado por la
-       altura de la ventana. A 900 px de alto da 774 × 435. */
-    --tv-tel-alto: min(86vh, 844px);
-    --tv-tel-radio: 36px;
-    --tv-tel-bisel: 6px;
+    /* Desplegado: el video toma el ancho de la card en 9:16 (324 × 576 en
+       web) y nunca pasa de este alto, para que la fila siga a la vista. */
+    --tv-despl-max: 60vh;
     position: fixed; inset: 0; z-index: 95;
     pointer-events: none;
     font-family: inherit;
   }
   .tv[hidden] { display: none; }
 
-  /* Velo: solo en abierto */
-  .tv__velo {
-    position: absolute; inset: 0;
-    background: rgba(10, 11, 14, 0.78);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    opacity: 0; transition: opacity .25s ease;
-  }
-
-  /* ─── Estado CERRADO: la card abajo a la derecha ─── */
+  /* ─── Etapa 1, CERRADO: la fila abajo a la derecha ─── */
   .tv__card {
     position: absolute;
     right: var(--tv-margen);
     bottom: calc(var(--tv-margen) + env(safe-area-inset-bottom, 0px));
-    width: var(--tv-card-ancho); height: var(--tv-card-alto);
-    display: flex; align-items: center; gap: 12px;
-    padding: 8px 10px 8px 8px;
+    width: var(--tv-card-ancho);
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+    /* 96 de miniatura + 7 + 7 de relleno + el borde = 112 de alto */
+    padding: 7px 10px 7px 7px;
     background: var(--tv-fondo);
     backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255,255,255,0.08);
@@ -141,15 +138,15 @@
   .tv.tv--visible .tv__card { transform: none; opacity: 1; }
 
   .tv__marco {
-    position: relative; flex: none;
+    position: relative; flex: none; order: 1;
     width: var(--tv-mini-ancho); height: var(--tv-mini-alto);
     border-radius: 10px; overflow: hidden; background: #000;
   }
   .tv__video { display: block; width: 100%; height: 100%; object-fit: cover; background: #000; }
-  /* Toda la miniatura abre; el icono de expandir asoma en la esquina */
+  /* Toda la miniatura avanza una etapa; el icono asoma en la esquina */
   .tv__abrir {
     position: absolute; inset: 0; border: 0; padding: 0; margin: 0;
-    background: transparent; cursor: pointer; color: #fff;
+    background: transparent; cursor: pointer; color: #fff; z-index: 3;
   }
   .tv__abrir-ico {
     position: absolute; right: 4px; bottom: 4px;
@@ -160,7 +157,7 @@
   .tv__abrir-ico svg { width: 12px; height: 12px; }
   .tv__toque, .tv__pausado, .tv__cabeza, .tv__barra { display: none; }
 
-  .tv__datos { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; cursor: pointer; }
+  .tv__datos { order: 2; min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; cursor: pointer; }
   .tv__kicker {
     font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
     color: var(--tv-acento);
@@ -169,7 +166,7 @@
   .tv__titulo { font-size: 14px; font-weight: 800; line-height: 1.2; }
   .tv__sub { font-size: 12px; color: var(--tv-rotulo); }
 
-  .tv__acciones { display: flex; align-items: center; gap: 6px; flex: none; }
+  .tv__acciones { order: 3; display: flex; align-items: center; gap: 4px; flex: none; }
   .tv__btn, .tv__x {
     width: 34px; height: 34px; border-radius: 10px; border: 0; padding: 0;
     background: transparent; color: var(--tv-rotulo); cursor: pointer;
@@ -178,6 +175,7 @@
   }
   .tv__btn:hover, .tv__x:hover { background: rgba(255,255,255,0.08); color: #fff; }
   .tv__btn svg, .tv__x svg { width: 18px; height: 18px; }
+  .tv__btn--pliegue svg { transition: transform .2s ease; }
   .tv__play {
     width: var(--tv-play); height: var(--tv-play); border-radius: 50%; border: 0; padding: 0;
     background: var(--tv-acento); color: var(--tv-tinta); cursor: pointer;
@@ -202,42 +200,56 @@
   /* El botón de "volver arriba" de la página vive en la misma esquina:
      mientras la card esté, sube a quedar encima de ella. */
   body.tv-visible .pp-btt { bottom: calc(var(--tv-margen, 16px) + 112px + 16px); }
+  body.tv-desplegado .pp-btt, body.tv-maximizado .pp-btt { opacity: 0; pointer-events: none; }
 
-  /* ─── Estado ABIERTO: la pantalla de celular, centrada ─── */
-  .tv--abierto { z-index: 170; pointer-events: auto; }
-  .tv--abierto .tv__velo { opacity: 1; }
-  .tv.tv--abierto .tv__card {
-    /* La card deja de ser una fila y se vuelve el teléfono, centrado.
-       Se ancla por left/top: con right/bottom más aspect-ratio el ancho se
-       resolvía antes de conocer la altura y el marco quedaba descentrado. */
-    left: 50%; top: 50%; right: auto; bottom: auto;
-    transform: translate(-50%, -50%);
-    width: auto; height: var(--tv-tel-alto);
-    aspect-ratio: 9 / 16;
-    padding: 0; gap: 0; display: block;
-    background: #0B0C10;
-    border: var(--tv-tel-bisel) solid #0B0C10;
-    border-radius: var(--tv-tel-radio);
-    box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08), 0 0 80px rgba(var(--tv-acento-rgb), 0.12);
-    overflow: hidden;
+  /* ─── Etapa 2, DESPLEGADO: la misma card, en su esquina, con el video
+     grande debajo de la fila (como el reproductor de Rockstars MX). La fila
+     se queda arriba, sin miniatura; el video toma el ancho de la card en
+     9:16. Nada de velo: la página sigue ahí. ─── */
+  .tv.tv--desplegado .tv__card { gap: 10px 12px; padding: 7px 10px 10px; }
+  .tv.tv--desplegado .tv__datos { order: 1; padding-left: 4px; }
+  .tv.tv--desplegado .tv__acciones { order: 2; }
+  .tv.tv--desplegado .tv__marco {
+    order: 3; flex: 1 1 100%; width: 100%; height: auto;
+    aspect-ratio: 9 / 16; max-height: var(--tv-despl-max);
+    border-radius: 12px;
   }
-  .tv--abierto .tv__marco {
-    width: 100%; height: 100%;
-    border-radius: calc(var(--tv-tel-radio) - var(--tv-tel-bisel));
+  .tv.tv--desplegado .tv__video { object-fit: contain; }
+  .tv.tv--desplegado .tv__btn--pliegue svg { transform: rotate(180deg); }
+  /* El botón de maximizar sube a la esquina de arriba: abajo está la barra
+     de progreso con el botón de sonido y se encimaban. */
+  .tv.tv--desplegado .tv__abrir { inset: 0 0 auto auto; width: 44px; height: 44px; }
+  .tv.tv--desplegado .tv__abrir-ico { right: 8px; top: 8px; bottom: auto; width: 28px; height: 28px; border-radius: 8px; }
+  .tv.tv--desplegado .tv__abrir-ico svg { width: 15px; height: 15px; }
+
+  /* ─── Etapa 3, MAXIMIZADO: el video a toda la pantalla. No es un modal
+     con marco: la card se vuelve la pantalla, en web y en celular igual. ─── */
+  .tv.tv--maximizado { z-index: 170; }
+  .tv.tv--maximizado .tv__card {
+    inset: 0; width: auto; padding: 0; gap: 0; display: block;
+    background: #000; border: 0; border-radius: 0; box-shadow: none;
+    backdrop-filter: none; -webkit-backdrop-filter: none;
   }
-  .tv--abierto .tv__video { object-fit: contain; }
-  .tv--abierto .tv__abrir, .tv--abierto .tv__datos, .tv--abierto .tv__acciones { display: none; }
-  .tv--abierto .tv__toque { display: block; position: absolute; inset: 0; border: 0; background: transparent; cursor: pointer; }
-  .tv--abierto.tv--pausa .tv__pausado {
+  .tv.tv--maximizado .tv__marco { width: 100%; height: 100%; max-height: none; aspect-ratio: auto; border-radius: 0; }
+  .tv.tv--maximizado .tv__video { object-fit: contain; }
+  .tv.tv--maximizado .tv__abrir, .tv.tv--maximizado .tv__datos, .tv.tv--maximizado .tv__acciones { display: none; }
+
+  /* Lo que comparten desplegado y maximizado: tocar el video pausa, la barra
+     de progreso sobre el video, y el aviso de pausa al centro. */
+  .tv.tv--desplegado .tv__toque, .tv.tv--maximizado .tv__toque {
+    display: block; position: absolute; inset: 0; border: 0; background: transparent; cursor: pointer;
+  }
+  .tv.tv--desplegado.tv--pausa .tv__pausado, .tv.tv--maximizado.tv--pausa .tv__pausado {
     display: flex; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-    width: 72px; height: 72px; border-radius: 50%; pointer-events: none;
+    width: 64px; height: 64px; border-radius: 50%; pointer-events: none;
     background: rgba(var(--tv-acento-rgb), 0.92); color: var(--tv-tinta);
     align-items: center; justify-content: center;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4);
   }
-  .tv--abierto .tv__pausado svg { width: 34px; height: 34px; margin-left: 3px; }
+  .tv__pausado svg { width: 30px; height: 30px; margin-left: 3px; }
+  .tv.tv--maximizado .tv__pausado { width: 72px; height: 72px; }
 
-  .tv--abierto .tv__cabeza {
+  .tv.tv--maximizado .tv__cabeza {
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
     position: absolute; left: 0; right: 0; top: 0; z-index: 2;
     padding: calc(14px + env(safe-area-inset-top, 0px)) 14px 28px 18px;
@@ -250,13 +262,14 @@
   .tv__x--g:hover { background: rgba(255,255,255,0.22); }
   .tv__x--g svg { width: 20px; height: 20px; }
 
-  .tv--abierto .tv__barra {
-    display: flex; align-items: center; gap: 10px;
+  .tv.tv--desplegado .tv__barra, .tv.tv--maximizado .tv__barra {
+    display: flex; align-items: center; gap: 8px;
     position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
-    padding: 28px 14px calc(14px + env(safe-area-inset-bottom, 0px));
+    padding: 24px 10px 8px;
     background: linear-gradient(0deg, rgba(0,0,0,0.78), rgba(0,0,0,0));
     color: #fff;
   }
+  .tv.tv--maximizado .tv__barra { gap: 10px; padding: 28px 14px calc(14px + env(safe-area-inset-bottom, 0px)); }
   .tv__btn--barra { width: 36px; height: 36px; color: #fff; flex: none; }
   .tv__tiempo { font-size: 12px; font-variant-numeric: tabular-nums; color: var(--tv-rotulo); flex: none; min-width: 78px; }
   .tv__progreso {
@@ -264,30 +277,31 @@
     position: relative; cursor: pointer;
   }
   .tv__progreso::before { content: ""; position: absolute; inset: -12px 0; }  /* zona de toque más alta */
-  .tv__progreso-lleno { height: 100%; width: 0; border-radius: 4px; background: var(--tv-acento); }
+  .tv__progreso-lleno { position: relative; height: 100%; width: 0; border-radius: 4px; background: var(--tv-acento); }
   .tv__progreso-lleno::after {
     content: ""; position: absolute; top: 50%; right: -6px; transform: translateY(-50%);
     width: 12px; height: 12px; border-radius: 50%; background: var(--tv-acento);
     box-shadow: 0 0 0 3px rgba(var(--tv-acento-rgb), 0.25);
   }
-  .tv__progreso-lleno { position: relative; }
 
   /* ─── Celular ─── */
   @media (max-width: 640px) {
-    .tv { --tv-margen: 12px; }
-    /* La card toma el ancho de la pantalla, como el mini reproductor de
-       Rockstars MX, con el mismo alto de 112 */
-    .tv__card { left: var(--tv-margen); width: auto; }
-    /* Abierto: a toda la pantalla, sin bisel ni esquinas: ya ES un celular */
-    .tv.tv--abierto .tv__card {
-      inset: 0;
-      transform: none; width: auto; height: auto; aspect-ratio: auto;
-      border: 0; border-radius: 0; box-shadow: none;
+    .tv { --tv-margen: 0px; --tv-despl-max: 52vh; }
+    /* En celular la card va PEGADA al borde de abajo y a todo lo ancho, como
+       el mini reproductor de Rockstars MX: flotando con margen se veía
+       suelta, con un hueco debajo. Solo las esquinas de arriba se redondean
+       y el relleno de abajo absorbe la safe area del teléfono. */
+    .tv__card {
+      left: 0; right: 0; bottom: 0; width: auto;
+      border-radius: var(--tv-radio) var(--tv-radio) 0 0;
+      border-bottom: 0;
+      padding-bottom: calc(7px + env(safe-area-inset-bottom, 0px));
     }
-    .tv--abierto .tv__marco { border-radius: 0; }
+    .tv.tv--desplegado .tv__card { padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+    .tv.tv--maximizado .tv__card { inset: 0; padding-bottom: 0; border-radius: 0; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .tv__card, .tv__velo { transition: none; }
+    .tv__card { transition: none; }
     .tv:not(.tv--con-sonido) .tv__btn--sonido { animation: none; background: rgba(var(--tv-acento-rgb), 0.14); }
   }
 </style>

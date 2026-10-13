@@ -1,26 +1,35 @@
 # Pendientes del panel
 
-## Video del Tour '27 — reproductor flotante (en curso)
+## Video del Tour '27 — reproductor flotante en tres etapas (en curso)
 
 Para quien entra a `/socceridcup2027` con código de **nivel tour** (el acceso
 completo): una card pequeña abajo a la derecha que reproduce el video en una
-miniatura vertical y, al tocarla, se abre como pantalla de celular. Es un
-`<video>` HTML5 nativo porque el archivo se va a servir desde **Amazon S3**;
-nada de embeds de terceros. Diseño inspirado en el mini reproductor de
-Rockstars MX, pero con los tokens del tour (cian, gris, Raleway).
+miniatura vertical. **No es un lightbox** (el usuario lo rechazó): son tres
+etapas y la card nunca se va a un modal centrado con velo.
+
+1. **Cerrado** — la fila con la miniatura reproduciendo.
+2. **Desplegado** — la misma card, en su esquina, crece y el video toma el
+   ancho de la card debajo de la fila (como el reproductor de Rockstars MX).
+3. **Maximizado** — el video a toda la pantalla, en web y en celular igual.
+
+Es un `<video>` HTML5 nativo porque el archivo se va a servir desde **Amazon
+S3**; nada de embeds de terceros. Tokens del tour (cian, gris, Raleway).
 
 - Marcado y **todas las medidas**: `views/partials/tour-video.hbs` (variables
   `--tv-*` al inicio del `<style>`). Mecánica: `initContenido` en
   `views/socceridcup-project2027.hbs`. Datos: `videoDelTour` en `index.js`.
-- Card cerrada: 344 × 112 px en web (abajo 16, derecha 16); en celular toma el
-  ancho de la pantalla con margen de 12. Miniatura 54 × 96 (9:16), botón de
+- Cerrado: 344 × 112 px en web (abajo 16, derecha 16); en celular va pegada
+  al borde de abajo y a todo lo ancho, con solo las esquinas de arriba redondeadas. Miniatura 54 × 96 (9:16), botón de
   play de 48, botón «volver arriba» sube para no encimarse.
-- Abierta: en web, marco de celular 9:16 de `min(86vh, 844px)` de alto
-  (a 900 px de ventana: 762 × 423), esquinas de 36, bisel de 6, velo con
-  desenfoque. En celular, a toda la pantalla.
-- Un solo `<video>` para los dos estados: al abrir solo cambia la clase, la
+- Desplegado: misma esquina y mismo ancho; el video en 9:16 a lo ancho de la
+  card, con tope de 60vh en web (322 × 540 a 900 px de ventana) y 52vh en
+  celular. Progreso, tiempo y sonido sobre el video; maximizar en la esquina
+  de arriba.
+- Maximizado: a toda la ventana, fondo negro, video contenido; cabeza con
+  título y botón de restaurar; barra abajo. Escape baja una etapa.
+- Un solo `<video>` para las tres etapas: cambia la clase, no el DOM, y la
   reproducción no se corta. Arranca **en silencio** (el navegador no permite
-  audio sin gesto); el sonido entra con el botón que late o al abrir.
+  audio sin gesto); el sonido entra con el botón que late o al desplegar.
 
 Pendiente:
 - [ ] **El video real.** Hoy va **de relleno** el tour del panel
