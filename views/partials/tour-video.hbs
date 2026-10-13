@@ -18,8 +18,10 @@
   {{!-- Etapa 0, CERRADO CON LA X: la card se va y queda este botón abajo a
        la izquierda. El cierre se guarda mientras dure el acceso del código
        (12 h), para que no vuelva a saltar en cada página. --}}
-  <button type="button" class="tv__boton" data-tv-reabrir hidden aria-label="{{videoTour.txtReabrir}}" title="{{videoTour.txtReabrir}}">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5" width="14" height="14" rx="3"/><path d="M16.5 10l5-3v10l-5-3z"/></svg>
+  <button type="button" class="tv__boton tv__boton--{{videoTour.icono}}" data-tv-reabrir hidden aria-label="{{videoTour.txtReabrir}}" title="{{videoTour.txtReabrir}}">
+    {{!-- Dos iconos a elegir (TOUR_VIDEO_ICONO): play, o claqueta --}}
+    <svg class="tv__ico-boton-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8.5 5.2v13.6a1 1 0 001.5.86l11-6.8a1 1 0 000-1.72l-11-6.8a1 1 0 00-1.5.86z"/></svg>
+    <svg class="tv__ico-boton-claqueta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5h17v8.5a1.5 1.5 0 01-1.5 1.5H5a1.5 1.5 0 01-1.5-1.5z"/><path d="M3.5 10.5L2.8 7.2a1.5 1.5 0 011.1-1.8l13.6-3.1a1.5 1.5 0 011.8 1.1l.7 3.3"/><path d="M7.5 10.5l2.3-3.6M12.3 10.5l2.3-3.6M17 10.5l2.4-3.6"/></svg>
   </button>
   <div class="tv__card">
     {{!-- Asa de arrastre (solo celular): se jala con el dedo para desplegar
@@ -145,7 +147,9 @@
   }
   .tv__boton[hidden] { display: none; }
   .tv__boton:hover { transform: scale(1.06); background: rgba(var(--tv-acento-rgb), 0.14); }
-  .tv__boton svg { width: 24px; height: 24px; }
+  .tv__boton svg { width: 24px; height: 24px; display: none; }
+  .tv__boton--play .tv__ico-boton-play { display: block; margin-left: 3px; }
+  .tv__boton--claqueta .tv__ico-boton-claqueta { display: block; }
   /* Mientras la card esté cerrada no se le pone nada encima a la fila */
   .tv.tv--minimizado .tv__card { display: none; }
 

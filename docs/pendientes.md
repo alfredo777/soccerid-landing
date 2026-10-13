@@ -50,6 +50,10 @@ Pendiente:
   archivo en S3: `heroku config:set TOUR_VIDEO_URL=https://... TOUR_VIDEO_POSTER=https://...`
   (ver `docs/variables-del-proyecto.md`). Conviene que sea **vertical 9:16**,
   H.264 + AAC, con `Content-Type: video/mp4` y CORS abierto al dominio.
+- [ ] **Icono del botón de «cerrado con la X»**: hay dos opciones, se conmutan
+  con `TOUR_VIDEO_ICONO=play|claqueta` (hoy por defecto `play`). Capturas en
+  `capturas-prod/tour-video/opciones-boton/`. Cuando el usuario elija, se deja
+  una sola y se quita la variable.
 - [ ] Revisar textos de la card (kicker, título, bajada) con el usuario.
 
 

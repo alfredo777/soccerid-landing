@@ -1116,6 +1116,9 @@ function videoDelTour(variante, req, lang) {
     txtRestaurar: isEs ? 'Salir de pantalla completa' : 'Exit full screen',
     txtCerrar: isEs ? 'Cerrar el video' : 'Close the video',
     txtReabrir: isEs ? 'Ver el video del tour' : 'Watch the tour video',
+    // Icono del botón de "cerrado con la X": 'play' o 'claqueta'. Dos opciones
+    // en espera de que el usuario elija; mientras, se conmuta por variable.
+    icono: process.env.TOUR_VIDEO_ICONO === 'claqueta' ? 'claqueta' : 'play',
     txtSonido: isEs ? 'Activar o silenciar el sonido' : 'Toggle sound',
     txtPausa: isEs ? 'Reproducir o pausar' : 'Play or pause',
     txtProgreso: isEs ? 'Avance del video' : 'Video progress'
