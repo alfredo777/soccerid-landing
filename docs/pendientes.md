@@ -12,7 +12,7 @@ etapas y la card nunca se va a un modal centrado con velo.
    ancho de la card debajo de la fila (como el reproductor de Rockstars MX).
 3. **Maximizado** — el video a toda la pantalla, en web y en celular igual.
 0. **Cerrado con la X** — la card se va y queda un botón redondo abajo a la
-   izquierda con icono de video que la vuelve a abrir **directo en desplegado**. El cierre se guarda
+   izquierda con icono de **claqueta** que la vuelve a abrir **directo en desplegado**. El cierre se guarda
    12 h (lo que dura el acceso del código) en `localStorage`, llave
    `tv-cerrado:<variante>`: la cookie es httpOnly y no se puede leer desde el
    navegador, así que se imita su vigencia.
@@ -45,15 +45,11 @@ pastilla y una línea cian de avance al pie de la card cerrada.
   audio sin gesto); el sonido entra con el botón que late o al desplegar.
 
 Pendiente:
-- [ ] **El video real.** Hoy va **de relleno** el tour del panel
-  (`tour-riesgo-mobile.mp4`, 720×1280) solo para fijar tamaños. Cuando esté el
+- [ ] **El video real.** Hoy va **de pruebas** el tour del panel
+  (`tour-riesgo-mobile.mp4`, 720×1280), con su carátula, solo para fijar tamaños. Cuando esté el
   archivo en S3: `heroku config:set TOUR_VIDEO_URL=https://... TOUR_VIDEO_POSTER=https://...`
   (ver `docs/variables-del-proyecto.md`). Conviene que sea **vertical 9:16**,
   H.264 + AAC, con `Content-Type: video/mp4` y CORS abierto al dominio.
-- [ ] **Icono del botón de «cerrado con la X»**: hay dos opciones, se conmutan
-  con `TOUR_VIDEO_ICONO=play|claqueta` (hoy por defecto `play`). Capturas en
-  `capturas-prod/tour-video/opciones-boton/`. Cuando el usuario elija, se deja
-  una sola y se quita la variable.
 - [ ] Revisar textos de la card (kicker, título, bajada) con el usuario.
 
 

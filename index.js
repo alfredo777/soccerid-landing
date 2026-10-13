@@ -1096,8 +1096,7 @@ function partialDe(variante) {
  * S3: `TOUR_VIDEO_URL` y `TOUR_VIDEO_POSTER` apuntan allá cuando existan.
  * Mientras tanto se usa UN VIDEO DE RELLENO (el tour del panel, en vertical
  * 720×1280) nada más para fijar tamaños y dimensiones; no es el video final.
- * La carátula de relleno es un recuadro gris punteado con un play (pedido
- * del usuario, para que las capturas no enseñen un video que no es).
+ * La carátula de relleno es un cuadro de ese mismo video de pruebas.
  */
 function videoDelTour(variante, req, lang) {
   if (!variante || variante.tipo !== 'tour') return null;
@@ -1106,7 +1105,7 @@ function videoDelTour(variante, req, lang) {
   const isEs = lang !== 'en';
   return {
     src: process.env.TOUR_VIDEO_URL || '/assets/videos/onboarding/tour-riesgo-mobile.mp4',
-    poster: process.env.TOUR_VIDEO_POSTER || '/assets/images/tour27-video-poster.png',
+    poster: process.env.TOUR_VIDEO_POSTER || '/assets/images/tour27-video-poster.jpg',
     // Corto a propósito: en la card cerrada de web la pastilla tiene ~100 px.
     kicker: "Tour '27",
     titulo: isEs ? 'Conoce el proyecto' : 'Meet the project',
@@ -1116,9 +1115,6 @@ function videoDelTour(variante, req, lang) {
     txtRestaurar: isEs ? 'Salir de pantalla completa' : 'Exit full screen',
     txtCerrar: isEs ? 'Cerrar el video' : 'Close the video',
     txtReabrir: isEs ? 'Ver el video del tour' : 'Watch the tour video',
-    // Icono del botón de "cerrado con la X": 'play' o 'claqueta'. Dos opciones
-    // en espera de que el usuario elija; mientras, se conmuta por variable.
-    icono: process.env.TOUR_VIDEO_ICONO === 'claqueta' ? 'claqueta' : 'play',
     txtSonido: isEs ? 'Activar o silenciar el sonido' : 'Toggle sound',
     txtPausa: isEs ? 'Reproducir o pausar' : 'Play or pause',
     txtProgreso: isEs ? 'Avance del video' : 'Video progress'
