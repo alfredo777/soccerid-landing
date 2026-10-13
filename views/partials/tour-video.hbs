@@ -111,7 +111,6 @@
     --tv-card-alto: 112px;     /* 96 de miniatura + 8 de margen arriba y abajo */
     --tv-mini-ancho: 54px;     /* miniatura 9:16 */
     --tv-mini-alto: 96px;
-    --tv-margen: 16px;         /* separación del borde de la pantalla */
     --tv-play: 42px;           /* botón principal, en vidrio */
     --tv-radio: 20px;
     /* Vidrio: la card deja ver la página detrás (pedido del usuario, para
@@ -126,9 +125,10 @@
     /* Desplegado: el video toma el ancho de la card en 9:16 (324 × 576 en
        web) y nunca pasa de este alto, para que la fila siga a la vista. */
     --tv-despl-max: 60vh;
-    /* La flecha de "volver arriba" (.pp-btt, estilada en la vista). El boton
-       de reabrir se cuelga de estos dos numeros para quedar a su misma altura:
-       si alla se mueve la flecha, aqui se cambian y el par sigue alineado. */
+    /* La flecha de "volver arriba" (.pp-btt, estilada en la vista). La card y
+       el boton de reabrir se cuelgan de estos dos numeros para quedar a su
+       misma altura, en la esquina de enfrente: si alla se mueve la flecha,
+       aqui se cambian y los tres siguen alineados. */
     --tv-btt-borde: 32px;
     --tv-btt-tam: 48px;
     position: fixed; inset: 0; z-index: 95;
@@ -199,11 +199,16 @@
   /* Mientras la card esté cerrada no se le pone nada encima a la fila */
   .tv.tv--minimizado .tv__card { display: none; }
 
-  /* ─── Etapa 1, CERRADO: la fila abajo a la derecha ─── */
+  /* ─── Etapa 1, CERRADO: la fila abajo a la IZQUIERDA ─── */
   .tv__card {
     position: absolute;
-    right: var(--tv-margen);
-    bottom: calc(var(--tv-margen) + env(safe-area-inset-bottom, 0px));
+    /* Esquina de abajo a la IZQUIERDA, en la misma linea de apoyo que la
+       flecha de volver arriba (.pp-btt, a 32px del borde de enfrente): la
+       card y la flecha quedan a la misma altura, cada una en su esquina, y
+       el video ya no le cae encima. Mismas medidas que el boton de reabrir,
+       que vive en esta misma esquina cuando la card se cierra con la X. */
+    left: var(--tv-btt-borde);
+    bottom: var(--tv-btt-borde);
     width: var(--tv-card-ancho);
     display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
     /* 96 de miniatura + 7 + 7 de relleno + el borde = 112 de alto */
@@ -300,8 +305,10 @@
 
   /* El botón de "volver arriba" de la página vive en la misma esquina:
      mientras la card esté, sube a quedar encima de ella. */
-  body.tv-visible .pp-btt { bottom: calc(var(--tv-margen, 16px) + 112px + 16px); }
-  body.tv-desplegado .pp-btt, body.tv-maximizado .pp-btt { opacity: 0; pointer-events: none; }
+  /* Maximizado es el video a toda la pantalla: ahi no va nada encima. Desplegado
+     ya no esconde la flecha en web, porque la card crece en la esquina de
+     ENFRENTE y no la tapa; en celular si, y se apaga abajo. */
+  body.tv-maximizado .pp-btt { opacity: 0; pointer-events: none; }
 
   /* ─── Etapa 2, DESPLEGADO: la misma card, en su esquina, con el video
      grande debajo de la fila (como el reproductor de Rockstars MX). La fila
@@ -389,7 +396,12 @@
 
   /* ─── Celular ─── */
   @media (max-width: 640px) {
-    .tv { --tv-margen: 0px; --tv-despl-max: 52vh; }
+    .tv { --tv-despl-max: 52vh; }
+    /* Aqui la card si se le pone encima a la flecha de volver arriba: ocupa
+       todo el ancho, pegada al borde de abajo. Son sus 112px de alto mas el
+       hueco de siempre. En web no hace falta, la card esta en la otra esquina. */
+    body.tv-visible .pp-btt { bottom: 128px; }
+    body.tv-desplegado .pp-btt { opacity: 0; pointer-events: none; }
     /* En celular la card va PEGADA al borde de abajo y a todo lo ancho, como
        el mini reproductor de Rockstars MX: flotando con margen se veía
        suelta, con un hueco debajo. Solo las esquinas de arriba se redondean
