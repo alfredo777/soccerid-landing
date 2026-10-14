@@ -43,10 +43,23 @@
          desplegado, a toda la pantalla en maximizado. El botón de la esquina
          avanza una etapa (cerrado → desplegado → maximizado). --}}
     <div class="tv__marco" id="tvMarco">
+      {{!-- preload="auto": el navegador empieza a bajarse el video en cuanto
+           existe este elemento, sin esperar a que se intente reproducir. La
+           card entra 900 ms despues de que la propuesta se ve, y con solo la
+           cabecera descargada esos 900 ms no alcanzan: se quedaba en la
+           caratula un rato. Pidiendolo entero desde el principio, cuando
+           aparece ya tiene con que arrancar.
+
+           Es el unico video de la pagina y solo se emite detras del candado,
+           con acceso de nivel tour, asi que la descarga no compite con el
+           resto de propuestas ni le cae a nadie de paso. Lo que si seria una
+           groseria es bajar varios megas sin avisar en una red medida: con
+           "ahorro de datos" o en 2G el JS lo baja a "none" (la precarga, en
+           initContenido). --}}
       <video id="tvVideo" class="tv__video"
              src="{{videoTour.src}}"
              poster="{{videoTour.poster}}"
-             playsinline muted loop autoplay preload="metadata"
+             playsinline muted loop autoplay preload="auto"
              aria-label="{{videoTour.titulo}}"></video>
       <button type="button" class="tv__abrir" id="tvAbrir" data-tv-abrir aria-label="{{videoTour.txtAbrir}}">
         <span class="tv__abrir-ico" aria-hidden="true">

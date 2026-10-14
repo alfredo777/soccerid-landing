@@ -1624,6 +1624,18 @@
     var progreso = tv.querySelector('[data-tv-progreso]');
     var etapa = 1;
 
+    // PRECARGA. El marcado pide el video entero (preload="auto" en
+    // partials/tour-video.hbs) para que la card no entre enseñando la
+    // carátula: a los 900 ms ya tiene con qué reproducir. Pero bajar varios
+    // megas sin avisar en una red medida es una grosería, así que con
+    // "ahorro de datos" encendido o en 2G se cancela la precarga; el video
+    // se traerá solo cuando de verdad vaya a reproducirse.
+    (function() {
+      var red = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      if (!red) return;
+      if (red.saveData || /(^|-)2g$/.test(red.effectiveType || '')) video.preload = 'none';
+    })();
+
     function fmt(seg) {
       if (!isFinite(seg)) return '0:00';
       var m = Math.floor(seg / 60), s = Math.floor(seg % 60);
