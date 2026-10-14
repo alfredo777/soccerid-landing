@@ -1088,15 +1088,17 @@ function partialDe(variante) {
 }
 
 /**
- * El video del tour: la card flotante que reproduce abajo a la derecha y se
+ * El video del tour: la card flotante que reproduce abajo a la izquierda y se
  * abre como pantalla de celular. SOLO para quien entró con código de NIVEL
  * TOUR —el acceso completo—; con nivel de partido no se emite nada.
  *
- * Es un <video> HTML5 nativo porque el archivo se va a servir desde Amazon
- * S3: `TOUR_VIDEO_URL` y `TOUR_VIDEO_POSTER` apuntan allá cuando existan.
- * Mientras tanto se usa UN VIDEO DE RELLENO (el tour del panel, en vertical
- * 720×1280) nada más para fijar tamaños y dimensiones; no es el video final.
- * La carátula de relleno es un cuadro de ese mismo video de pruebas.
+ * Es un <video> HTML5 nativo porque los archivos se sirven desde Amazon S3,
+ * uno por idioma: TOUR_VIDEO_URL (espanol) y TOUR_VIDEO_URL_EN (ingles), con
+ * sus caratulas en TOUR_VIDEO_POSTER y TOUR_VIDEO_POSTER_EN. Si falta la
+ * inglesa se sirve la espanola: media card es mejor que una card vacia. La
+ * caratula por defecto es un cuadro del propio video, sacado con ffmpeg y
+ * guardado en assets/images/. Solo si no hay NINGUNA variable puesta se cae
+ * al video de relleno (el tour del panel), que ya no deberia hacer falta.
  */
 function videoDelTour(variante, req, lang) {
   // Interruptor para esconder el reproductor sin tocar código (por ejemplo
@@ -1107,8 +1109,12 @@ function videoDelTour(variante, req, lang) {
   if (!acceso || acceso.nivel !== 'tour') return null;
   const isEs = lang !== 'en';
   return {
-    src: process.env.TOUR_VIDEO_URL || '/assets/videos/onboarding/tour-riesgo-mobile.mp4',
-    poster: process.env.TOUR_VIDEO_POSTER || '/assets/images/tour27-video-poster.jpg',
+    // Un archivo por idioma, los dos en S3. En ingles mandan las variables
+    // _EN; si no estan puestas se cae al español, que es mejor que una card
+    // sin video. La caratula por defecto es un cuadro del propio video, para
+    // que la card no entre en negro mientras arranca.
+    src: (!isEs && process.env.TOUR_VIDEO_URL_EN) || process.env.TOUR_VIDEO_URL || '/assets/videos/onboarding/tour-riesgo-mobile.mp4',
+    poster: (!isEs && process.env.TOUR_VIDEO_POSTER_EN) || process.env.TOUR_VIDEO_POSTER || ('/assets/images/tour27-poster-' + (isEs ? 'es' : 'en') + '.jpg'),
     // Corto a propósito: en la card cerrada de web la pastilla tiene ~100 px.
     kicker: "Tour '27",
     titulo: isEs ? 'Conoce el proyecto' : 'Meet the project',

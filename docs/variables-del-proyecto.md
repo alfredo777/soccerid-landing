@@ -47,17 +47,28 @@ no es para el front, no lo agregues a ninguna.
 
 ## 1a. Video del Tour '27 (S3)
 
-`index.js` → `videoDelTour`. Tres variables de entorno, las tres opcionales:
+`index.js` → `videoDelTour`. Cinco variables de entorno, todas opcionales:
 
 | Variable | Qué es | Si falta |
 |---|---|---|
 | `TOUR_VIDEO_OCULTO` | `1` esconde el reproductor entero (card, botón, todo) | el reproductor se muestra |
-| `TOUR_VIDEO_URL` | URL pública del `.mp4` en S3 (vertical 9:16, H.264 + AAC) | se sirve el relleno `/assets/videos/onboarding/tour-riesgo-mobile.mp4` |
-| `TOUR_VIDEO_POSTER` | URL de la carátula (el primer cuadro, JPG) | `/assets/images/tour27-video-poster.jpg` (un cuadro del video de pruebas) |
+| `TOUR_VIDEO_URL` | URL pública del `.mp4` en español | se sirve el relleno `/assets/videos/onboarding/tour-riesgo-mobile.mp4` |
+| `TOUR_VIDEO_POSTER` | carátula del español | `/assets/images/tour27-poster-es.jpg` |
+| `TOUR_VIDEO_URL_EN` | el `.mp4` en inglés | se sirve el español |
+| `TOUR_VIDEO_POSTER_EN` | carátula del inglés | `/assets/images/tour27-poster-en.jpg` |
 
 El reproductor solo se emite para accesos de **nivel tour**; con nivel de
 partido no aparece. El bucket tiene que mandar `Content-Type: video/mp4` y
 aceptar `Range` (S3 lo hace solo), si no Safari no arranca el video.
+
+**La forma del video manda en el diseño.** Los archivos de 2027 son
+horizontales (772×432, 16:9) y la card se dibuja con esa proporción: el token
+`--tv-aspecto` en `views/partials/tour-video.hbs`, más `--tv-mini-ancho` y
+`--tv-mini-alto` para la miniatura. Si algún día el video vuelve a ser
+vertical hay que cambiar esos tres números, o el recuadro recorta la imagen.
+
+Las carátulas se sacaron del segundo 2 de cada archivo con
+`ffmpeg -ss 2 -i <url> -frames:v 1 -q:v 4 <salida>.jpg`.
 
 ## 1b. Colores de marca
 

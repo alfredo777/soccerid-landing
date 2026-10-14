@@ -122,8 +122,14 @@
   .tv {
     --tv-card-ancho: 344px;    /* card cerrada, web */
     --tv-card-alto: 112px;     /* 96 de miniatura + 8 de margen arriba y abajo */
-    --tv-mini-ancho: 54px;     /* miniatura 9:16 */
-    --tv-mini-alto: 96px;
+    /* La forma del VIDEO manda en las tres etapas. Los archivos finales son
+       horizontales (772x432), asi que la miniatura y el recuadro grande van
+       en 16:9: con un marco 9:16 el "cover" se comia los lados y solo se veia
+       una rebanada del centro. Si algun dia el video vuelve a ser vertical,
+       se cambian estos tres numeros y las tres etapas siguen. */
+    --tv-aspecto: 16 / 9;
+    --tv-mini-ancho: 96px;     /* miniatura 16:9, como el video */
+    --tv-mini-alto: 54px;
     --tv-play: 42px;           /* botón principal, en vidrio */
     --tv-radio: 20px;
     /* Vidrio: la card deja ver la página detrás (pedido del usuario, para
@@ -135,8 +141,9 @@
     --tv-acento-rgb: var(--tour-cian-rgb, 56, 225, 255);
     --tv-tinta: var(--tour-tinta, #1C1E23);
     --tv-rotulo: var(--tour-rotulo, #C9CCD4);
-    /* Desplegado: el video toma el ancho de la card en 9:16 (324 × 576 en
-       web) y nunca pasa de este alto, para que la fila siga a la vista. */
+    /* Desplegado: el video toma el ancho de la card en su proporcion (324 ×
+       182 en web, 16:9) y nunca pasa de este alto, para que la fila siga a la
+       vista. */
     --tv-despl-max: 60vh;
     /* La flecha de "volver arriba" (.pp-btt, estilada en la vista). La card y
        el boton de reabrir se cuelgan de estos dos numeros para quedar a su
@@ -224,7 +231,7 @@
     bottom: var(--tv-btt-borde);
     width: var(--tv-card-ancho);
     display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
-    /* 96 de miniatura + 7 + 7 de relleno + el borde = 112 de alto */
+    /* 54 de miniatura + 7 + 7 de relleno + el borde = 70 de alto */
     padding: 7px 10px 7px 7px;
     background: var(--tv-fondo);
     backdrop-filter: blur(24px) saturate(140%); -webkit-backdrop-filter: blur(24px) saturate(140%);
@@ -325,14 +332,14 @@
 
   /* ─── Etapa 2, DESPLEGADO: la misma card, en su esquina, con el video
      grande debajo de la fila (como el reproductor de Rockstars MX). La fila
-     se queda arriba, sin miniatura; el video toma el ancho de la card en
-     9:16. Nada de velo: la página sigue ahí. ─── */
+     se queda arriba, sin miniatura; el video toma el ancho de la card en su
+     proporcion. Nada de velo: la página sigue ahí. ─── */
   .tv.tv--desplegado .tv__card { gap: 10px 12px; padding: 7px 10px 10px; }
   .tv.tv--desplegado .tv__datos { order: 1; padding-left: 4px; }
   .tv.tv--desplegado .tv__acciones { order: 2; }
   .tv.tv--desplegado .tv__marco {
     order: 3; flex: 1 1 100%; width: 100%; height: auto;
-    aspect-ratio: 9 / 16; max-height: var(--tv-despl-max);
+    aspect-ratio: var(--tv-aspecto); max-height: var(--tv-despl-max);
     border-radius: 14px;
     box-shadow: 0 0 0 1px rgba(255,255,255,0.10);
   }
@@ -413,7 +420,10 @@
     /* Aqui la card si se le pone encima a la flecha de volver arriba: ocupa
        todo el ancho, pegada al borde de abajo. Son sus 112px de alto mas el
        hueco de siempre. En web no hace falta, la card esta en la otra esquina. */
-    body.tv-visible .pp-btt { bottom: 128px; }
+    /* La card pegada abajo mide la miniatura mas sus rellenos; la flecha se
+       pone justo encima. Se calcula para que siga cuadrando si cambia la
+       forma del video. */
+    body.tv-visible .pp-btt { bottom: calc(var(--tv-mini-alto, 54px) + 42px); }
     body.tv-desplegado .pp-btt { opacity: 0; pointer-events: none; }
     /* En celular la card va PEGADA al borde de abajo y a todo lo ancho, como
        el mini reproductor de Rockstars MX: flotando con margen se veía
