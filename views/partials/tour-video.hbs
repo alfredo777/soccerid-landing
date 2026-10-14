@@ -61,7 +61,10 @@
       <video id="tvVideo" class="tv__video"
              src="{{videoTour.src}}"
              poster="{{videoTour.poster}}"
-             playsinline muted loop autoplay preload="auto"
+             {{!-- Sin loop: se ve UNA vez. Al terminar queda apuntado en la
+                  sesion y la card ya no vuelve a arrancar sola; el play la
+                  revive. Ver "ya visto" en initContenido. --}}
+             playsinline muted autoplay preload="auto"
              aria-label="{{videoTour.titulo}}"></video>
       <button type="button" class="tv__abrir" id="tvAbrir" data-tv-abrir aria-label="{{videoTour.txtAbrir}}">
         <span class="tv__abrir-ico" aria-hidden="true">

@@ -1680,6 +1680,15 @@
     // pp_acc), para que el video no vuelva a saltar en cada página ni en cada
     // recarga. Va en localStorage con fecha de caducidad porque la cookie es
     // httpOnly y desde aquí no se puede leer: se imita su vigencia.
+    // Ya visto: el video se reproduce UNA vez. Cuando termina queda apuntado
+    // y a partir de ahi la card entra quieta, enseñando su carátula, hasta
+    // que alguien le dé al play. Va en sessionStorage, no en localStorage:
+    // dura lo que la pestaña, que es lo que dura la sesión de quien mira.
+    var LLAVE_VISTO = 'tv-visto:' + (tv.getAttribute('data-variante') || 'tour');
+    function yaVisto() {
+      try { return sessionStorage.getItem(LLAVE_VISTO) === '1'; } catch (_) { return false; }
+    }
+
     var LLAVE = 'tv-cerrado:' + (tv.getAttribute('data-variante') || 'tour');
     var VIGENCIA = 12 * 60 * 60 * 1000;
     var boton = tv.querySelector('[data-tv-reabrir]');
@@ -1795,6 +1804,13 @@
     })();
 
     ['play', 'pause', 'ended', 'volumechange'].forEach(function(ev) { video.addEventListener(ev, reflejar); });
+    video.addEventListener('ended', function() {
+      try { sessionStorage.setItem(LLAVE_VISTO, '1'); } catch (_) {}
+      // Vuelve al principio: así la card se queda en el primer cuadro en vez
+      // de congelada en el último, y el play de después arranca desde cero.
+      try { video.currentTime = 0; } catch (_) {}
+      reflejar(); pintarTiempo();
+    });
     ['timeupdate', 'loadedmetadata', 'durationchange'].forEach(function(ev) { video.addEventListener(ev, pintarTiempo); });
 
     // Aparece poco después de que se ve la propuesta, no encima del preloader.
@@ -1805,7 +1821,9 @@
     window.setTimeout(function() {
       tv.classList.add('tv--visible');
       document.body.classList.add('tv-visible');
-      reproducir();
+      // Solo arranca sola la primera vez. Ya vista, la card aparece quieta y
+      // espera: volver a verla es cosa de quien mira, no de la página.
+      if (!yaVisto()) reproducir();
     }, 900);
   })();
 
