@@ -1118,7 +1118,6 @@ function videoDelTour(variante, req, lang) {
     // Corto a propósito: en la card cerrada de web la pastilla tiene ~100 px.
     kicker: "Tour '27",
     titulo: isEs ? 'Conoce el proyecto' : 'Meet the project',
-    sub: isEs ? 'Exclusivo para acceso completo' : 'Exclusive for full access',
     txtAbrir: isEs ? 'Ver el video más grande' : 'See the video larger',
     txtDesplegar: isEs ? 'Desplegar o recoger el video' : 'Expand or collapse the video',
     txtRestaurar: isEs ? 'Salir de pantalla completa' : 'Exit full screen',

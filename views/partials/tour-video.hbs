@@ -7,8 +7,10 @@
        1. cerrado     — la fila abajo a la derecha, con la miniatura reproduciendo
        2. desplegado  — la misma card, en su esquina, con el video grande debajo
        3. maximizado  — el video a toda la pantalla
-     Sin lightbox ni velo: no es un modal. El video no se mueve en el DOM al
-     cambiar de etapa, solo cambia la clase del contenedor, y así la
+     Sin lightbox: no es un modal, no se centra ni bloquea la pagina. En
+     celular la etapa 2 oscurece el fondo, porque la card se come la
+     pantalla, pero ni ahi captura el toque. El video no se mueve en el DOM
+     al cambiar de etapa, solo cambia la clase del contenedor, y así la
      reproducción no se corta.
 
      El JS vive en la vista (socceridcup-project2027.hbs, en initContenido),
@@ -77,7 +79,6 @@
     <div class="tv__datos" data-tv-abrir>
       <span class="tv__kicker">{{videoTour.kicker}}</span>
       <strong class="tv__titulo">{{videoTour.titulo}}</strong>
-      <span class="tv__sub">{{videoTour.sub}}</span>
     </div>
     <div class="tv__acciones">
       <button type="button" class="tv__btn tv__btn--sonido" data-tv-sonido aria-pressed="false" aria-label="{{videoTour.txtSonido}}">
@@ -279,9 +280,8 @@
     background: rgba(var(--tv-acento-rgb), 0.08);
   }
   .tv__cabeza .tv__kicker { align-self: flex-start; }
-  .tv__titulo, .tv__sub { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tv__titulo { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .tv__titulo { font-size: 14px; font-weight: 800; line-height: 1.2; }
-  .tv__sub { font-size: 12px; color: var(--tv-rotulo); }
 
   .tv__acciones { order: 3; display: flex; align-items: center; gap: 2px; flex: none; }
   .tv__btn, .tv__x {
@@ -333,7 +333,8 @@
   /* ─── Etapa 2, DESPLEGADO: la misma card, en su esquina, con el video
      grande debajo de la fila (como el reproductor de Rockstars MX). La fila
      se queda arriba, sin miniatura; el video toma el ancho de la card en su
-     proporcion. Nada de velo: la página sigue ahí. ─── */
+     proporcion. En celular, ademas, el fondo se oscurece (ver el velo en el
+     bloque de celular); en web no hace falta. ─── */
   .tv.tv--desplegado .tv__card { gap: 10px 12px; padding: 7px 10px 10px; }
   .tv.tv--desplegado .tv__datos { order: 1; padding-left: 4px; }
   .tv.tv--desplegado .tv__acciones { order: 2; }
@@ -417,6 +418,19 @@
   /* ─── Celular ─── */
   @media (max-width: 640px) {
     .tv { --tv-despl-max: 52vh; }
+    /* Velo, SOLO en celular. Aqui la card desplegada se come casi toda la
+       pantalla de borde a borde y el poco fondo que asoma estorba; en web la
+       card es chica, vive en su esquina y la propuesta se sigue leyendo al
+       lado, asi que oscurecerla seria de mas. En maximizado tampoco se pone:
+       el video ya ocupa todo. Sigue sin ser un modal, hereda el
+       pointer-events:none de .tv y no bloquea la pagina; al ir antes que la
+       card en el orden de pintado se queda detras sin pelear z-index. */
+    .tv::before {
+      content: ""; position: absolute; inset: 0;
+      background: #000; opacity: 0;
+      transition: opacity .32s ease;
+    }
+    .tv.tv--desplegado::before { opacity: .55; }
     /* Aqui la card si se le pone encima a la flecha de volver arriba: ocupa
        todo el ancho, pegada al borde de abajo. Son sus 112px de alto mas el
        hueco de siempre. En web no hace falta, la card esta en la otra esquina. */
