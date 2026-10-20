@@ -41,9 +41,9 @@
 </div>
 
 {{!-- Menú lateral de la landing original (dot-nav de main.css / main.js).
-      En celular es EL menú y se ve siempre; en escritorio las puertas del
-      hero ya son el menú, así que no se pinta. Cada ícono lleva a su
-      sección; el resaltado sigue el scroll por `data-section`. --}}
+      En celular aparece al bajar, como en la original (en la primera
+      pantalla las puertas ya son el menú); en escritorio no se pinta. Cada
+      ícono lleva a su sección. --}}
 <nav class="dot-nav dot-nav--inicio" id="dotNav" aria-label="{{#if isEs}}Secciones{{else}}Sections{{/if}}">
   <a href="#hero" class="dot-nav__item active" data-section="hero" data-tooltip="{{#if isEs}}Inicio{{else}}Home{{/if}}">
     <span class="dot-nav__icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span>
@@ -76,11 +76,13 @@
 <nav class="puertas" id="secciones" aria-label="{{#if isEs}}Secciones{{else}}Sections{{/if}}">
   {{#each secciones}}
   <a class="puerta puerta--{{this.slug}}" id="sec-{{this.slug}}" href="{{this.url}}" style="--i:{{@index}}; --foto:url('{{this.foto}}')">
-    <span class="puerta__num">{{this.num}}</span>
+    <span class="puerta__icono" aria-hidden="true">{{> icono-seccion slug=this.slug}}</span>
     <span class="puerta__ir" aria-hidden="true">→</span>
     <span class="puerta__cuerpo">
       <span class="puerta__sub">{{#if this.submarca}}{{this.submarca}}{{else}}SOCCER iD{{/if}}</span>
-      <span class="puerta__nombre">{{this.nombre}}</span>
+      {{!-- El nombre va en una sola línea para que las seis puertas queden
+            simétricas; el nombre largo vive en el menú y en la página. --}}
+      <span class="puerta__nombre">{{#if this.corto}}{{this.corto}}{{else}}{{this.nombre}}{{/if}}</span>
       <span class="puerta__linea">{{this.linea}}</span>
     </span>
   </a>

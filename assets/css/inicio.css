@@ -93,7 +93,13 @@
 .puerta::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(5,4,21,0.92) 0%, rgba(5,4,21,0.35) 55%, rgba(5,4,21,0.1) 100%); }
 .puerta:hover { flex: 2.4; border-color: rgba(var(--brand-blue-rgb), 0.7); box-shadow: 0 16px 50px rgba(var(--brand-blue-rgb), 0.25); }
 .puerta:hover::before { opacity: 1; transform: none; }
-.puerta__num { position: absolute; top: 18px; left: 20px; z-index: 2; font-size: 12px; font-weight: 800; letter-spacing: .12em; color: var(--brand-lime); }
+.puerta__icono {
+  position: absolute; top: 14px; left: 14px; z-index: 2;
+  width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); color: var(--brand-lime);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.puerta__icono svg { width: 18px; height: 18px; }
 .puerta__ir {
   position: absolute; top: 14px; right: 14px; z-index: 2;
   width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
@@ -103,7 +109,7 @@
 .puerta:hover .puerta__ir { background: var(--brand-blue); transform: rotate(-45deg); }
 .puerta__cuerpo { position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 2; display: flex; flex-direction: column; gap: 4px; }
 .puerta__sub { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,0.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.puerta__nombre { font-size: clamp(1.3rem, 1.9vw, 1.9rem); font-weight: 900; letter-spacing: -.02em; line-height: 1.05; }
+.puerta__nombre { font-size: clamp(1.3rem, 1.8vw, 1.8rem); font-weight: 900; letter-spacing: -.02em; line-height: 1.05; white-space: nowrap; }
 .puerta__linea { font-size: 13px; color: rgba(255,255,255,0.78); max-width: 320px; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .45s, opacity .35s .1s; }
 .puerta:hover .puerta__linea { max-height: 60px; opacity: 1; }
 
@@ -139,31 +145,38 @@
 @media (min-width: 1025px) and (max-width: 1600px) { .redes-v2__chip small { display: none; } }
 
 /* ─── Celular y tableta ───────────────────────────────────────────── */
+/* La misma idea que en escritorio: isotipo, lema y las seis puertas en la
+   primera pantalla, en dos columnas y tres filas. La banda de abajo es de
+   la píldora del partido. */
 @media (max-width: 1024px) {
-  .hero-section { min-height: 0; height: 82vh; }
-  .puertas { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: auto; height: auto; margin: 0; padding: 22px 16px 10px; }
-  .puerta { height: 210px; flex: none; opacity: 1; transform: none; animation: none; }
-  .puerta--tour { grid-column: 1 / -1; height: 260px; }
-  .puerta::before { opacity: .8; transform: none; }
-  .puerta__linea { max-height: none; opacity: 1; }
-  .puerta__nombre { font-size: 1.6rem; }
-  .redes-v2 { height: auto; margin-top: 0; padding: 30px 16px 110px; }
+  .hero-section { padding-top: 84px; }
+  .hero-logo-text img { width: 72px; height: 72px; }
+  .puertas { --alto: clamp(330px, calc(100vh - 395px), 560px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 10px; width: calc(100% - 32px); margin: calc(-1 * var(--alto) - 118px) auto 0; }
+  .puerta { flex: none; border-radius: 18px; }
+  .puerta:hover { flex: none; }
+  .puerta::before { opacity: .7; transform: none; }
+  .puerta__linea { display: none; }
+  .puerta__nombre { font-size: 1.25rem; }
+  .puerta__sub { font-size: 10px; }
+  .puerta__cuerpo { left: 14px; right: 14px; bottom: 14px; }
+  .puerta__icono { width: 34px; height: 34px; top: 10px; left: 10px; }
+  .puerta__icono svg { width: 16px; height: 16px; }
+  .puerta__ir { width: 32px; height: 32px; top: 10px; right: 10px; font-size: 15px; }
+  .redes-v2 { height: auto; margin-top: 118px; padding: 40px 16px 110px; } /* 118: la banda de la píldora del partido */
   .redes-v2 .section-header { display: block; margin-bottom: 22px; }
   .redes-v2__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .redes-v2__chip { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 18px; white-space: normal; }
   .redes-v2__chip:nth-child(n) { grid-column: auto; grid-row: auto; }
-  .redes-v2__chip { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 18px; }
   .redes-v2__chip span { font-size: 15px; }
-  .dot-nav--inicio { display: flex; opacity: 1; pointer-events: auto; }
+  .redes-v2__chip small { display: block; }
+  /* El lateral se comporta como en la original: aparece al bajar. */
+  .dot-nav--inicio { display: flex; }
 }
 @media (max-width: 768px) {
-  /* El selector de idioma del layout va fijo arriba a la derecha (≈90 px);
-     la píldora le deja ese hueco para no quedar debajo. */
   /* En celular la píldora es sólo el isotipo, a la izquierda; el menú es
      el lateral de la derecha. */
   .pildora { left: 12px; transform: none; padding: 5px; }
   .pildora__nav, .pildora__menu { display: none; }
-  .puertas { grid-template-columns: 1fr; }
-  .puerta, .puerta--tour { height: 200px; }
   .redes-v2__grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) {
