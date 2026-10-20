@@ -135,8 +135,8 @@
    que se ve desde el primer momento y no espera al scroll como el original. */
 .dot-nav--inicio { display: none; }
 
-/* En laptop chica no caben los seis usuarios junto a la píldora: sólo nombres. */
-@media (min-width: 1025px) and (max-width: 1366px) { .redes-v2__chip small { display: none; } }
+/* Hasta 1600 px no caben los seis usuarios junto a la píldora: sólo nombres. */
+@media (min-width: 1025px) and (max-width: 1600px) { .redes-v2__chip small { display: none; } }
 
 /* ─── Celular y tableta ───────────────────────────────────────────── */
 @media (max-width: 1024px) {
