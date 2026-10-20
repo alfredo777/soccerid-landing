@@ -1,8 +1,8 @@
 /* ═══════════════════════════════════════════════════════════════════════
    HOME · nueva distribución sobre la base de la landing original.
-   Esta hoja SOLO añade lo nuevo (píldora, menú, bento de seis, tarjeta
-   flotante, redes). Todo lo demás (fondo, hero, vidrio, bento base,
-   preloader, dock) viene de main.css, que es lo que daba el encanto.
+   Esta hoja SOLO añade lo nuevo (píldora, menú, las seis puertas, redes).
+   Todo lo demás (fondo, hero, vidrio, dot-nav, preloader, dock) viene de
+   main.css, que es lo que daba el encanto.
    Marca: solo el isotipo, el círculo con el iD y la playera.
    Colores: el azul y el verde del logo, por variable, como manda main.css.
    ═══════════════════════════════════════════════════════════════════════ */
@@ -60,76 +60,112 @@
 .menu__redes { margin-top: auto; padding-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; }
 .menu__redes a { font-size: 13px; font-weight: 700; color: #fff; text-decoration: none; padding: 9px 15px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); }
 
-/* ─── Hero: solo retoques sobre el original ───────────────────────── */
+/* ─── Hero: el home es el menú ────────────────────────────────────── */
+/* En escritorio el contenido del hero sube (isotipo + lema arriba) y las
+   seis puertas se montan encima con margen negativo, de modo que la
+   primera pantalla ya lo tiene todo: no hay que bajar para elegir. */
 .hero-logo-text img { filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5)); }
-.hero-marcas { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 18px; margin-top: 8px; }
-.hero-marcas span {
-  font-size: 12px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
-  color: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 18px;
-}
-.hero-marcas span + span::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--brand-lime); }
+.hero-section { height: auto; min-height: 100vh; align-items: flex-start; padding-top: clamp(80px, 11vh, 120px); }
+.hero-logo-text img { width: 84px; height: 84px; }
+/* El tamaño del lema en celular ya está calibrado en main.css (dos líneas
+   exactas); sólo se toca en escritorio. */
+@media (min-width: 1025px) { .hero-tagline { font-size: 1.4rem; margin-bottom: 0; } }
 
-/* ─── Bento de seis secciones ─────────────────────────────────────── */
-.bento-v2 {
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(3, 190px);
-  grid-template-areas:
-    "tour tour travel travel"
-    "tour tour legends podcast"
-    "opiniones opiniones nosotros nosotros";
+/* ─── Las seis puertas ────────────────────────────────────────────── */
+/* Las puertas terminan 130 px antes del borde inferior de la pantalla: esa
+   banda es de la píldora del próximo partido (fija, al centro) y de las
+   redes, que se reparten a sus lados. */
+/* Alto de las puertas: lo que queda de pantalla tras el bloque de arriba
+   (≈270 px) y la banda de abajo (130 px). Medido en 1280×720 y 1440×900. */
+.puertas { --alto: clamp(250px, calc(100vh - 420px), 470px); position: relative; z-index: 4; display: flex; gap: 10px; width: min(1320px, calc(100% - 80px)); height: var(--alto); margin: calc(-1 * var(--alto) - 130px) auto 0; }
+.puerta {
+  position: relative; flex: 1; min-width: 0; border-radius: 22px; overflow: hidden; isolation: isolate;
+  text-decoration: none; color: #fff;
+  background: rgba(10, 10, 26, 0.42); border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+  opacity: 0; transform: translateY(26px); animation: puertaEntra .7s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay: calc(var(--i) * 80ms + 200ms);
+  transition: flex .55s cubic-bezier(.2,.8,.2,1), border-color .3s, box-shadow .3s;
 }
-.item-tour { grid-area: tour; } .item-travel { grid-area: travel; } .item-legends { grid-area: legends; }
-.item-podcast { grid-area: podcast; } .item-opiniones { grid-area: opiniones; } .item-nosotros { grid-area: nosotros; }
-.bento-v2__item { display: block; text-decoration: none; color: inherit; opacity: 0; transform: translateY(30px); animation: bentoEntra .7s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay: calc(var(--i) * 90ms + 150ms); }
-@keyframes bentoEntra { to { opacity: 1; transform: none; } }
-.bento-v2__item::before { background-image: var(--foto); }
-.item-tour::before { background-position: center 12%; }
-.bento-v2__num { position: absolute; top: 18px; left: 22px; font-size: 12px; font-weight: 800; letter-spacing: .12em; color: var(--brand-lime); }
-.bento-v2__sub { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
-.bento-v2 .bento-content h3 { font-size: clamp(1.4rem, 2.4vw, 2.2rem); font-weight: 900; letter-spacing: -.02em; margin-bottom: 4px; }
-.bento-v2 .bento-content p { font-size: 14px; color: rgba(255,255,255,0.75); margin: 0; max-width: 360px; }
-.bento-v2__ir {
-  position: absolute; top: 16px; right: 18px; z-index: 3;
-  width: 40px; height: 40px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  color: #fff; font-size: 18px; transition: background .25s, transform .35s cubic-bezier(.2,.8,.2,1);
+@keyframes puertaEntra { to { opacity: 1; transform: none; } }
+.puerta::before { content: ''; position: absolute; inset: 0; z-index: -2; background: var(--foto) center / cover no-repeat; opacity: .5; transform: scale(1.06); transition: opacity .5s, transform .9s cubic-bezier(.2,.8,.2,1); }
+.puerta--tour::before { background-position: center 12%; }
+.puerta::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(5,4,21,0.92) 0%, rgba(5,4,21,0.35) 55%, rgba(5,4,21,0.1) 100%); }
+.puerta:hover { flex: 2.4; border-color: rgba(var(--brand-blue-rgb), 0.7); box-shadow: 0 16px 50px rgba(var(--brand-blue-rgb), 0.25); }
+.puerta:hover::before { opacity: 1; transform: none; }
+.puerta__num { position: absolute; top: 18px; left: 20px; z-index: 2; font-size: 12px; font-weight: 800; letter-spacing: .12em; color: var(--brand-lime); }
+.puerta__ir {
+  position: absolute; top: 14px; right: 14px; z-index: 2;
+  width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); font-size: 17px;
+  transition: background .25s, transform .35s cubic-bezier(.2,.8,.2,1);
 }
-.bento-v2__item:hover .bento-v2__ir { background: var(--brand-blue); transform: rotate(-45deg); }
-
+.puerta:hover .puerta__ir { background: var(--brand-blue); transform: rotate(-45deg); }
+.puerta__cuerpo { position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 2; display: flex; flex-direction: column; gap: 4px; }
+.puerta__sub { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,0.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.puerta__nombre { font-size: clamp(1.3rem, 1.9vw, 1.9rem); font-weight: 900; letter-spacing: -.02em; line-height: 1.05; }
+.puerta__linea { font-size: 13px; color: rgba(255,255,255,0.78); max-width: 320px; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .45s, opacity .35s .1s; }
+.puerta:hover .puerta__linea { max-height: 60px; opacity: 1; }
 
 /* ─── Redes ───────────────────────────────────────────────────────── */
-.redes-v2 { padding: 40px 20px 110px; }
-.redes-v2 .section-header { margin-bottom: 26px; }
-.redes-v2__grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; max-width: 1200px; margin: 0 auto; }
+/* En escritorio la fila de redes cierra la primera pantalla, justo bajo las
+   puertas; el título «Síguenos» sólo hace falta en celular. */
+.redes-v2 { position: relative; z-index: 4; height: 130px; padding: 38px 40px 0; }
+.redes-v2 .section-header { display: none; }
+/* Tres chips a cada lado de la píldora del partido, que ocupa el centro
+   (columna 4, vacía a propósito). Todos en la misma fila. */
+.redes-v2__grid { display: grid; grid-template-columns: auto auto auto minmax(380px, 1fr) auto auto auto; justify-content: space-between; align-items: center; column-gap: 8px; max-width: 1180px; margin: 0 auto; } /* 1180 y no 1320: el dock de Instagram y WhatsApp vive en el borde derecho */
+.redes-v2__chip { grid-row: 1; }
+.redes-v2__chip:nth-child(1) { grid-column: 1; } .redes-v2__chip:nth-child(2) { grid-column: 2; } .redes-v2__chip:nth-child(3) { grid-column: 3; }
+.redes-v2__chip:nth-child(4) { grid-column: 5; } .redes-v2__chip:nth-child(5) { grid-column: 6; } .redes-v2__chip:nth-child(6) { grid-column: 7; }
 .redes-v2__chip {
-  display: flex; flex-direction: column; gap: 14px; padding: 18px; border-radius: 18px; text-decoration: none; color: #fff;
+  display: inline-flex; align-items: baseline; gap: 8px; padding: 9px 14px; border-radius: 999px; text-decoration: none; color: #fff; white-space: nowrap;
   background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   transition: transform .2s, border-color .2s, background .2s;
 }
 .redes-v2__chip:hover { transform: translateY(-3px); border-color: rgba(var(--brand-blue-rgb), 0.7); background: rgba(var(--brand-blue-rgb), 0.18); }
-.redes-v2__chip span { font-weight: 800; font-size: 15px; }
+.redes-v2__chip span { font-weight: 800; font-size: 13px; }
 .redes-v2__chip small { font-size: 12px; color: rgba(255,255,255,0.6); }
 .footer-content { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; padding: 24px 20px; color: rgba(255,255,255,0.6); font-size: 13px; }
 .footer-content a { color: inherit; }
 
-/* ─── Celular ─────────────────────────────────────────────────────── */
+/* ─── Menú lateral (dot-nav original) ─────────────────────────────── */
+/* En escritorio las puertas ya son el menú. En celular es EL menú, así
+   que se ve desde el primer momento y no espera al scroll como el original. */
+.dot-nav--inicio { display: none; }
+
+/* En laptop chica no caben los seis usuarios junto a la píldora: sólo nombres. */
+@media (min-width: 1025px) and (max-width: 1366px) { .redes-v2__chip small { display: none; } }
+
+/* ─── Celular y tableta ───────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .bento-v2 { grid-template-rows: repeat(4, 180px); grid-template-areas: "tour tour travel travel" "tour tour legends podcast" "opiniones opiniones opiniones opiniones" "nosotros nosotros nosotros nosotros"; }
-  .redes-v2__grid { grid-template-columns: repeat(3, 1fr); }
+  .hero-section { min-height: 0; height: 82vh; }
+  .puertas { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: auto; height: auto; margin: 0; padding: 22px 16px 10px; }
+  .puerta { height: 210px; flex: none; opacity: 1; transform: none; animation: none; }
+  .puerta--tour { grid-column: 1 / -1; height: 260px; }
+  .puerta::before { opacity: .8; transform: none; }
+  .puerta__linea { max-height: none; opacity: 1; }
+  .puerta__nombre { font-size: 1.6rem; }
+  .redes-v2 { height: auto; margin-top: 0; padding: 30px 16px 110px; }
+  .redes-v2 .section-header { display: block; margin-bottom: 22px; }
+  .redes-v2__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .redes-v2__chip:nth-child(n) { grid-column: auto; grid-row: auto; }
+  .redes-v2__chip { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 18px; }
+  .redes-v2__chip span { font-size: 15px; }
+  .dot-nav--inicio { display: flex; opacity: 1; pointer-events: auto; }
 }
 @media (max-width: 768px) {
   /* El selector de idioma del layout va fijo arriba a la derecha (≈90 px);
      la píldora le deja ese hueco para no quedar debajo. */
-  .pildora { left: 12px; right: 104px; transform: none; justify-content: space-between; }
-  .pildora__nav { display: none; }
-  .bento-v2 { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-rows: 200px; grid-template-areas: "tour" "travel" "legends" "podcast" "opiniones" "nosotros"; }
-  .item-tour { grid-row: span 1; }
+  /* En celular la píldora es sólo el isotipo, a la izquierda; el menú es
+     el lateral de la derecha. */
+  .pildora { left: 12px; transform: none; padding: 5px; }
+  .pildora__nav, .pildora__menu { display: none; }
+  .puertas { grid-template-columns: 1fr; }
+  .puerta, .puerta--tour { height: 200px; }
   .redes-v2__grid { grid-template-columns: repeat(2, 1fr); }
-  .hero-marcas { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .bento-v2__item { animation: none; opacity: 1; transform: none; }
+  .puerta { animation: none; opacity: 1; transform: none; }
 }

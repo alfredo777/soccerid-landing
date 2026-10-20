@@ -1,8 +1,8 @@
 {{!-- Home de la nueva distribución, construido SOBRE la landing original:
       su hero con la foto del estadio y el isotipo (el círculo con el iD y la
-      playera; nunca el lockup completo), su vidrio esmerilado, sus paneles
-      bento con fotografía y su dock flotante. Lo nuevo es la distribución
-      en seis secciones, el menú en píldora y los colores de marca. --}}
+      playera; nunca el lockup completo), su vidrio esmerilado, su menú
+      lateral y su dock flotante. Lo nuevo: en escritorio el home ES el
+      menú (seis puertas en la primera pantalla); en celular, tarjetas. --}}
 <link rel="stylesheet" href="/assets/css/inicio.css?v={{version}}">
 
 <div class="preloader" id="preloader">
@@ -13,7 +13,9 @@
   <div class="preloader-subtext">Cargando...</div>
 </div>
 
-{{!-- Menú en píldora, de vidrio. Las cuatro marcas y el menú completo. --}}
+{{!-- Menú en píldora, de vidrio. En escritorio: las cuatro marcas y el menú
+      completo. En celular se queda sólo el isotipo: el menú es el lateral
+      de la landing original (dot-nav), que vive abajo. --}}
 <header class="pildora">
   <a class="pildora__iso" href="/{{lang}}" aria-label="SOCCER iD, inicio">
     <img src="{{img '/assets/images/logo-iso-blanco.png'}}" alt="" width="34" height="34">
@@ -38,6 +40,21 @@
   </div>
 </div>
 
+{{!-- Menú lateral de la landing original (dot-nav de main.css / main.js).
+      En celular es EL menú y se ve siempre; en escritorio las puertas del
+      hero ya son el menú, así que no se pinta. Cada ícono lleva a su
+      sección; el resaltado sigue el scroll por `data-section`. --}}
+<nav class="dot-nav dot-nav--inicio" id="dotNav" aria-label="{{#if isEs}}Secciones{{else}}Sections{{/if}}">
+  <a href="#hero" class="dot-nav__item active" data-section="hero" data-tooltip="{{#if isEs}}Inicio{{else}}Home{{/if}}">
+    <span class="dot-nav__icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></span>
+  </a>
+  {{#each secciones}}
+  <a href="{{this.url}}" class="dot-nav__item" data-section="sec-{{this.slug}}" data-tooltip="{{this.nombre}}">
+    <span class="dot-nav__icon">{{> icono-seccion slug=this.slug}}</span>
+  </a>
+  {{/each}}
+</nav>
+
 <section class="hero-section" id="hero">
   <div class="hero-video-container">
     <picture>
@@ -48,38 +65,34 @@
   <div class="hero-content">
     <div class="hero-logo-text"><img src="{{img '/assets/images/logo-iso-blanco.png'}}" width="110" height="110" alt="SOCCER iD"></div>
     <h1 class="hero-tagline">AMAMOS TANTO EL DEPORTE<br>QUE NOS ATREVIMOS A REINVENTARLO</h1>
-    <div class="hero-marcas" aria-hidden="true">
-      {{#each marcas}}<span>{{this.nombre}}</span>{{/each}}
-    </div>
   </div>
   {{!-- Sin indicador de scroll propio: la píldora del próximo partido que
         pone el layout ya trae su «desliza» en el mismo sitio. --}}
 </section>
 
-<div class="main-container" id="secciones">
-  <div class="container">
-    <div class="bento-grid bento-v2">
-      {{#each secciones}}
-      <a class="bento-item bento-v2__item item-{{this.slug}}" href="{{this.url}}" style="--i:{{@index}}; --foto:url('{{this.foto}}')">
-        <div class="bento-content">
-          <span class="bento-v2__num">{{this.num}}</span>
-          <span class="bento-v2__sub">{{#if this.submarca}}{{this.submarca}}{{else}}SOCCER iD{{/if}}</span>
-          <h3>{{this.nombre}}</h3>
-          <p>{{this.linea}}</p>
-        </div>
-        <span class="bento-v2__ir" aria-hidden="true">→</span>
-      </a>
-      {{/each}}
-    </div>
-  </div>
-</div>
+{{!-- Las seis puertas. En escritorio suben sobre el hero como seis paneles
+      verticales de vidrio, uno junto a otro: el home ES el menú y no hay que
+      bajar para elegir. En celular se apilan como tarjetas. --}}
+<nav class="puertas" id="secciones" aria-label="{{#if isEs}}Secciones{{else}}Sections{{/if}}">
+  {{#each secciones}}
+  <a class="puerta puerta--{{this.slug}}" id="sec-{{this.slug}}" href="{{this.url}}" style="--i:{{@index}}; --foto:url('{{this.foto}}')">
+    <span class="puerta__num">{{this.num}}</span>
+    <span class="puerta__ir" aria-hidden="true">→</span>
+    <span class="puerta__cuerpo">
+      <span class="puerta__sub">{{#if this.submarca}}{{this.submarca}}{{else}}SOCCER iD{{/if}}</span>
+      <span class="puerta__nombre">{{this.nombre}}</span>
+      <span class="puerta__linea">{{this.linea}}</span>
+    </span>
+  </a>
+  {{/each}}
+</nav>
 
+{{!-- Redes: en escritorio es una línea bajo las puertas, dentro de la
+      primera pantalla; en celular, la cuadrícula de chips. --}}
 <section class="redes-v2">
-  <div class="container">
-    <div class="section-header"><h2>{{#if isEs}}Síguenos{{else}}Follow us{{/if}}</h2><p>@soccerid7</p></div>
-    <div class="redes-v2__grid">
-      {{#each redes}}<a class="redes-v2__chip" href="{{this.url}}" target="_blank" rel="noopener"><span>{{this.nombre}}</span><small>{{this.usuario}}</small></a>{{/each}}
-    </div>
+  <div class="section-header"><h2>{{#if isEs}}Síguenos{{else}}Follow us{{/if}}</h2><p>@soccerid7</p></div>
+  <div class="redes-v2__grid">
+    {{#each redes}}<a class="redes-v2__chip" href="{{this.url}}" target="_blank" rel="noopener"><span>{{this.nombre}}</span><small>{{this.usuario}}</small></a>{{/each}}
   </div>
 </section>
 
