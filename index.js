@@ -1621,7 +1621,7 @@ function seccionesV2(lang) {
       linea: es ? 'Las figuras que hicieron historia, de cerca.' : 'The players who made history, up close.' },
     { slug: 'podcast', num: '04', marca: true, color: 'podcast', nombre: 'Podcast', submarca: 'SOCCER iD Podcast',
       linea: es ? 'Conversaciones de fútbol, sin prisa.' : 'Football conversations, no rush.' },
-    { slug: 'opiniones', num: '05', marca: false, color: 'apoyo', nombre: es ? 'Opiniones y media' : 'Reviews & media', corto: es ? 'Opiniones' : 'Reviews',
+    { slug: 'opiniones', num: '05', marca: false, color: 'apoyo', nombre: es ? 'Opiniones y media' : 'Reviews & media', corto: 'Media',
       linea: es ? 'Lo que dicen quienes vivieron la experiencia, y la prensa.' : 'What people and the press say.' },
     { slug: 'nosotros', num: '06', marca: false, color: 'apoyo', nombre: es ? 'Quiénes somos' : 'About us', corto: es ? 'Nosotros' : 'About',
       linea: es ? 'La historia y el equipo detrás de SOCCER iD.' : 'The story and the team behind SOCCER iD.' }
