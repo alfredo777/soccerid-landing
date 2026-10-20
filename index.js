@@ -1631,12 +1631,12 @@ function seccionesV2(lang) {
 // Una foto de las que ya tiene el sitio por sección, para el home. Se ven en
 // escala de grises: el home no lleva color.
 const FOTOS_SECCION = {
-  tour: '/assets/images/gallery/cup2025/1.jpg',
-  travel: '/assets/images/gallery/vip/1.jpg',
+  tour: '/assets/images/idcup.jpg',               // la del panel SOCCER iD CUP original
+  travel: '/assets/images/vip2.jpg',              // la del panel Asientos VIP original
   legends: '/assets/images/gallery/cup2023/2.jpg',
-  podcast: '/assets/images/gallery/somos/2.png',
-  opiniones: '/assets/images/gallery/fan/1@2x.png',
-  nosotros: '/assets/images/gallery/somos/4.JPG'
+  podcast: '/assets/images/gallery/socceridcup/1.jpg',
+  opiniones: '/assets/images/opi2.jpg',           // la del panel Reviews original
+  nosotros: '/assets/images/somoss.jpg'           // la del panel Quiénes somos original
 };
 
 /** Lo común a todas las páginas de la nueva distribución. */
@@ -1645,9 +1645,10 @@ function datosV2(lang, slug) {
   const secciones = seccionesV2(lang);
   const actual = secciones.find(sx => sx.slug === slug) || null;
   return Object.assign(base, {
-    // El home tiene layout propio (blanco y negro, sin color); las secciones
-    // interiores siguen con el suyo mientras se decide la línea del sitio.
-    layout: slug ? 'v2' : 'inicio',
+    // El home usa el layout ORIGINAL (main): su hoja, su preloader, su dock
+    // flotante. La nueva distribución se construye encima de lo que ya
+    // funcionaba, no desde cero. Las secciones interiores siguen con el suyo.
+    layout: slug ? 'v2' : 'main',
     secciones,
     marcas: secciones.filter(sx => sx.marca),
     apoyo: secciones.filter(sx => !sx.marca),

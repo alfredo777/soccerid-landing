@@ -1,53 +1,91 @@
-{{!-- Home, cuarta vuelta: desde cero y SIN COLOR. Blanco y negro. Las fotos
-      del sitio van en escala de grises y la tipografía manda. Las seis
-      secciones son seis fotos con su nombre encima. --}}
-<section class="portada">
-  <picture class="portada__foto" aria-hidden="true">
-    <source srcset="/assets/images/opi2-web.webp" type="image/webp">
-    <img src="/assets/images/opi2-web.jpg" alt="">
-  </picture>
-  <div class="portada__texto">
-    <p class="portada__lema">{{#if isEs}}Amamos tanto el deporte que nos atrevimos a reinventarlo{{else}}We love sport so much we dared to reinvent it{{/if}}</p>
-    <h1 class="portada__marca">SOCCER <span>iD</span></h1>
+{{!-- Home de la nueva distribución, construido SOBRE la landing original:
+      su hero con la foto del estadio y el isotipo (el círculo con el iD y la
+      playera; nunca el lockup completo), su vidrio esmerilado, sus paneles
+      bento con fotografía y su dock flotante. Lo nuevo es la distribución
+      en seis secciones, el menú en píldora y los colores de marca. --}}
+<link rel="stylesheet" href="/assets/css/inicio.css?v={{version}}">
+
+<div class="preloader" id="preloader">
+  <div class="preloader-logo-container">
+    <div class="preloader-spinner"></div>
+    <div class="preloader-logo"><img src="{{img '/assets/images/logo-iso-blanco.png'}}" alt="SOCCER iD"></div>
   </div>
-  <a class="portada__baja" href="#secciones" aria-label="{{#if isEs}}Bajar{{else}}Scroll{{/if}}">↓</a>
-</section>
+  <div class="preloader-subtext">Cargando...</div>
+</div>
 
-<section class="secciones" id="secciones" aria-label="{{#if isEs}}Secciones{{else}}Sections{{/if}}">
-  {{#each secciones}}
-  <a class="celda" href="{{this.url}}" style="--i:{{@index}}">
-    <img class="celda__foto" src="{{this.foto}}" alt="">
-    <span class="celda__velo" aria-hidden="true"></span>
-    <span class="celda__num">{{this.num}}</span>
-    <span class="celda__texto">
-      <span class="celda__sub">{{#if this.submarca}}{{this.submarca}}{{else}}SOCCER iD{{/if}}</span>
-      <span class="celda__nombre">{{this.nombre}}</span>
-      <span class="celda__linea">{{this.linea}}</span>
-    </span>
-    <span class="celda__ir" aria-hidden="true">→</span>
+{{!-- Menú en píldora, de vidrio. Las cuatro marcas y el menú completo. --}}
+<header class="pildora">
+  <a class="pildora__iso" href="/{{lang}}" aria-label="SOCCER iD, inicio">
+    <img src="{{img '/assets/images/logo-iso-blanco.png'}}" alt="" width="34" height="34">
   </a>
-  {{/each}}
+  <nav class="pildora__nav" aria-label="Marcas">
+    {{#each marcas}}<a href="{{this.url}}">{{this.nombre}}</a>{{/each}}
+  </nav>
+  <a class="pildora__menu" href="#menu"><span class="pildora__punto"></span>{{#if isEs}}Menú{{else}}Menu{{/if}}</a>
+</header>
+
+<div class="menu" id="menu" role="dialog" aria-label="{{#if isEs}}Menú{{else}}Menu{{/if}}">
+  <div class="menu__scrim"></div>
+  <div class="menu__panel">
+    <div class="menu__cab">
+      <img src="{{img '/assets/images/logo-iso-blanco.png'}}" alt="SOCCER iD" width="40" height="40">
+      <a class="menu__x" href="#" aria-label="{{#if isEs}}Cerrar{{else}}Close{{/if}}">×</a>
+    </div>
+    <ol class="menu__lista">
+      {{#each secciones}}<li><a href="{{this.url}}"><small>{{this.num}}</small><span>{{this.nombre}}</span><em>{{this.linea}}</em></a></li>{{/each}}
+    </ol>
+    <div class="menu__redes">{{#each redes}}<a href="{{this.url}}" target="_blank" rel="noopener">{{this.nombre}}</a>{{/each}}</div>
+  </div>
+</div>
+
+<section class="hero-section" id="hero">
+  <div class="hero-video-container">
+    <picture>
+      <source srcset="{{img '/assets/images/opi2-web.webp'}}" type="image/webp">
+      <img src="{{img '/assets/images/opi2-web.jpg'}}" alt="Estadio de fútbol" class="hero-image" style="display:block;">
+    </picture>
+  </div>
+  <div class="hero-content">
+    <div class="hero-logo-text"><img src="{{img '/assets/images/logo-iso-blanco.png'}}" width="110" height="110" alt="SOCCER iD"></div>
+    <h1 class="hero-tagline">AMAMOS TANTO EL DEPORTE<br>QUE NOS ATREVIMOS A REINVENTARLO</h1>
+    <div class="hero-marcas" aria-hidden="true">
+      {{#each marcas}}<span>{{this.nombre}}</span>{{/each}}
+    </div>
+  </div>
+  {{!-- Sin indicador de scroll propio: la píldora del próximo partido que
+        pone el layout ya trae su «desliza» en el mismo sitio. --}}
 </section>
 
-{{!-- Lo vivo, en una lista de texto. Datos reales; lo que no hay, no sale. --}}
-<section class="ahora">
-  <h2 class="ahora__t">{{#if isEs}}Ahora{{else}}Now{{/if}}</h2>
-  <ol class="ahora__lista">
-    {{#if ahora.tour}}
-    <li><a href="{{ahora.tour.url}}"><span class="ahora__k">Tour</span><span class="ahora__v">{{ahora.tour.nombre}} · {{#if isEs}}tres partidos en Estados Unidos{{else}}three matches in the US{{/if}}</span><span class="ahora__ir">→</span></a></li>
-    {{/if}}
-    {{#if ahora.partido}}
-    <li><a href="/{{lang}}/travel"><span class="ahora__k">Travel</span><span class="ahora__v">{{ahora.partido.team1}} vs {{ahora.partido.team2}} · {{ahora.partido.dia}} {{ahora.partido.mes}} · {{ahora.partido.venue}}</span><span class="ahora__ir">→</span></a></li>
-    {{/if}}
-    {{#if ahora.podcast}}
-    <li><a href="/{{lang}}/podcast"><span class="ahora__k">Podcast</span><span class="ahora__v">{{ahora.podcast.total}} {{#if isEs}}episodios en YouTube{{else}}episodes on YouTube{{/if}}</span><span class="ahora__ir">→</span></a></li>
-    {{/if}}
-  </ol>
+<div class="main-container" id="secciones">
+  <div class="container">
+    <div class="bento-grid bento-v2">
+      {{#each secciones}}
+      <a class="bento-item bento-v2__item item-{{this.slug}}" href="{{this.url}}" style="--i:{{@index}}; --foto:url('{{this.foto}}')">
+        <div class="bento-content">
+          <span class="bento-v2__num">{{this.num}}</span>
+          <span class="bento-v2__sub">{{#if this.submarca}}{{this.submarca}}{{else}}SOCCER iD{{/if}}</span>
+          <h3>{{this.nombre}}</h3>
+          <p>{{this.linea}}</p>
+        </div>
+        <span class="bento-v2__ir" aria-hidden="true">→</span>
+      </a>
+      {{/each}}
+    </div>
+  </div>
+</div>
+
+<section class="redes-v2">
+  <div class="container">
+    <div class="section-header"><h2>{{#if isEs}}Síguenos{{else}}Follow us{{/if}}</h2><p>@soccerid7</p></div>
+    <div class="redes-v2__grid">
+      {{#each redes}}<a class="redes-v2__chip" href="{{this.url}}" target="_blank" rel="noopener"><span>{{this.nombre}}</span><small>{{this.usuario}}</small></a>{{/each}}
+    </div>
+  </div>
 </section>
 
-<section class="redes">
-  <h2 class="redes__t">{{#if isEs}}Síguenos{{else}}Follow us{{/if}}</h2>
-  <ul class="redes__lista">
-    {{#each redes}}<li><a href="{{this.url}}" target="_blank" rel="noopener"><span>{{this.nombre}}</span><small>{{this.usuario}}</small></a></li>{{/each}}
-  </ul>
-</section>
+<footer class="footer">
+  <div class="footer-content">
+    <img src="{{img '/assets/images/logo-iso-blanco.png'}}" alt="SOCCER iD" width="44" height="44">
+    <p>© {{year}} SOCCER iD · <a href="/{{lang}}/privacy">{{#if isEs}}Privacidad{{else}}Privacy{{/if}}</a> · <a href="/{{lang}}/terms">{{#if isEs}}Términos{{else}}Terms{{/if}}</a></p>
+  </div>
+</footer>
