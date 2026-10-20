@@ -1,0 +1,60 @@
+{{!-- Travel Club: aquí viven ahora los partidos. Solo los de hoy en adelante. --}}
+<section class="cabecera envoltura">
+  <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Travel</p>
+  <div class="cabecera__fila">
+    <div>
+      <div class="cabecera__marca">SOCCER iD Travel Club</div>
+      <h1 class="titular">Travel</h1>
+    </div>
+    <p class="bajada">{{#if isEs}}Te llevamos a cualquier estadio. Palcos en la Liga MX, viajes y experiencias para vivir el partido de cerca.{{else}}We take you to any stadium.{{/if}}</p>
+  </div>
+</section>
+
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Próximos partidos{{else}}Upcoming matches{{/if}}</p>
+  <div class="partidos">
+    {{#each partidos}}
+    <article class="partido">
+      <div class="partido__fecha"><div class="partido__dia">{{this.dia}}</div><div class="partido__mes">{{this.mes}}</div></div>
+      <div>
+        <div class="partido__equipos">
+          <img class="partido__escudo" src="{{this.team1Icon}}" alt="">{{this.team1}}
+          <span class="partido__vs">vs</span>
+          <img class="partido__escudo" src="{{this.team2Icon}}" alt="">{{this.team2}}
+        </div>
+        <div class="partido__meta">{{this.venue}} · {{this.time}}</div>
+      </div>
+      <div class="partido__torneo"><b>{{this.badge}}</b>{{this.torneo}}{{#if this.jornada}} · {{this.jornada}}{{/if}}</div>
+      <a class="boton" href="https://wa.me/12315158991?text={{#if ../isEs}}Hola!%20Quiero%20accesos%20para%20{{else}}Hi!%20I%20want%20access%20for%20{{/if}}{{this.team1}}%20vs%20{{this.team2}}" target="_blank" rel="noopener">{{#if ../isEs}}Reservar{{else}}Book{{/if}} <span class="flecha">↗</span></a>
+    </article>
+    {{else}}
+    <p class="bajada">{{#if isEs}}No hay partidos publicados por ahora.{{else}}No matches published yet.{{/if}}</p>
+    {{/each}}
+  </div>
+</section>
+
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Experiencias{{else}}Experiences{{/if}}</p>
+  <div class="experiencias">
+    {{#if vip}}
+    <article class="experiencia">
+      <div class="experiencia__foto" style="background-image:url('/assets/images/gallery/vip/1.jpg')"></div>
+      <div class="experiencia__cuerpo">
+        <span class="pastilla">{{vip.tag}}</span>
+        <h3>{{#if isEs}}Asientos VIP{{else}}VIP seats{{/if}}</h3>
+        {{{vip.description}}}
+      </div>
+    </article>
+    {{/if}}
+    {{#if fan}}
+    <article class="experiencia">
+      <div class="experiencia__foto" style="background-image:url('/assets/images/gallery/fan/1@2x.png')"></div>
+      <div class="experiencia__cuerpo">
+        <span class="pastilla">{{fan.tag}}</span>
+        <h3>Fan Experience</h3>
+        {{{fan.description}}}
+      </div>
+    </article>
+    {{/if}}
+  </div>
+</section>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{#if actual}}{{actual.nombre}} · SOCCER iD{{else}}SOCCER iD{{/if}}</title>
+  <meta name="description" content="{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}">
+  <link rel="canonical" href="{{baseUrl}}/{{lang}}{{#if actual}}/{{actual.slug}}{{/if}}">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+  <link rel="stylesheet" href="/assets/css/v2.css?v={{version}}">
+</head>
+<body class="v2 {{#if actual}}v2--{{actual.color}}{{else}}v2--inicio{{/if}}">
+
+  {{!-- Menú en píldora. En escritorio enseña las cuatro marcas; las dos
+        secciones de apoyo y las redes viven en el menú completo, que se abre
+        con «Menú». Funciona sin JavaScript: el menú completo es un ancla
+        (#menu) que se pinta con :target. --}}
+  <header class="nav">
+    <div class="nav__pildora">
+      <a class="nav__logo" href="/{{lang}}" aria-label="SOCCER iD, inicio">
+        <img src="/assets/images/logo-horizontal-azul.png" alt="SOCCER iD" width="132" height="30">
+      </a>
+      <nav class="nav__marcas" aria-label="Marcas">
+        {{#each marcas}}
+        <a class="nav__link {{#eq ../actual.slug this.slug}}is-activo{{/eq}}" href="{{this.url}}">{{this.nombre}}</a>
+        {{/each}}
+      </nav>
+      <a class="nav__menu" href="#menu" aria-label="Abrir el menú">
+        <span class="nav__menu-punto" aria-hidden="true"></span>{{#if isEs}}Menú{{else}}Menu{{/if}}
+      </a>
+    </div>
+  </header>
+
+  {{!-- Menú completo: las seis secciones como lista y las redes. --}}
+  <div class="menu" id="menu" role="dialog" aria-label="{{#if isEs}}Menú{{else}}Menu{{/if}}">
+    <div class="menu__cab">
+      <img src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" width="132" height="30">
+      <a class="menu__x" href="#" aria-label="{{#if isEs}}Cerrar el menú{{else}}Close menu{{/if}}">{{#if isEs}}Cerrar{{else}}Close{{/if}}</a>
+    </div>
+    <ol class="menu__lista">
+      {{#each secciones}}
+      <li><a href="{{this.url}}" class="menu__item"><span class="menu__num">{{this.num}}</span><span class="menu__nombre">{{this.nombre}}</span><span class="menu__flecha" aria-hidden="true">↗</span></a></li>
+      {{/each}}
+    </ol>
+    <div class="menu__redes">
+      {{#each redes}}<a href="{{this.url}}" target="_blank" rel="noopener">{{this.nombre}}</a>{{/each}}
+    </div>
+  </div>
+
+  <main class="pagina">
+    {{{body}}}
+  </main>
+
+  <footer class="pie">
+    <div class="pie__fila">
+      <img src="/assets/images/logo-horizontal-azul.png" alt="SOCCER iD" width="132" height="30">
+      <nav class="pie__nav" aria-label="Secciones">
+        {{#each secciones}}<a href="{{this.url}}">{{this.nombre}}</a>{{/each}}
+      </nav>
+    </div>
+    <div class="pie__fila pie__fila--abajo">
+      <div class="pie__redes">
+        {{#each redes}}<a href="{{this.url}}" target="_blank" rel="noopener">{{this.nombre}}</a>{{/each}}
+      </div>
+      <span class="pie__legal">© {{year}} SOCCER iD · <a href="/{{lang}}/privacy">{{#if isEs}}Privacidad{{else}}Privacy{{/if}}</a> · <a href="/{{lang}}/terms">{{#if isEs}}Términos{{else}}Terms{{/if}}</a></span>
+    </div>
+  </footer>
+</body>
+</html>

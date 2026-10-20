@@ -1,0 +1,41 @@
+<section class="cabecera envoltura">
+  <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / {{actual.nombre}}</p>
+  <div class="cabecera__fila">
+    <div>
+      <div class="cabecera__marca">SOCCER iD</div>
+      <h1 class="titular">{{actual.nombre}}</h1>
+    </div>
+    <p class="bajada">{{actual.linea}}</p>
+  </div>
+</section>
+
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Opiniones{{else}}Reviews{{/if}}</p>
+  <div class="opiniones">
+    {{#each opiniones}}
+    <article class="opinion">
+      <div class="opinion__estrellas" aria-label="{{this.stars}} de 5">★★★★★</div>
+      <p class="opinion__texto">{{this.text}}</p>
+      <div class="opinion__quien">
+        <img class="opinion__foto" src="{{this.image}}" alt="">
+        <div><div class="opinion__nombre">{{this.name}}</div><div class="opinion__handle">{{this.handle}}</div></div>
+      </div>
+    </article>
+    {{/each}}
+  </div>
+</section>
+
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}En los medios{{else}}In the media{{/if}}</p>
+  <div class="notas">
+    {{#each articulos}}
+    <a class="nota" href="/{{../lang}}/articulo/{{this.id}}">
+      <div class="nota__foto" style="background-image:url('{{this.image}}')"></div>
+      <div class="nota__cuerpo">
+        <div class="nota__fuente">{{this.source}}</div>
+        <div class="nota__titulo">{{this.title}}</div>
+      </div>
+    </a>
+    {{/each}}
+  </div>
+</section>

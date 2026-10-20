@@ -1,0 +1,16 @@
+<section class="cabecera envoltura">
+  <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / {{actual.nombre}}</p>
+  <div class="cabecera__marca">SOCCER iD</div>
+  <h1 class="titular">{{actual.nombre}}</h1>
+</section>
+
+<section class="seccion envoltura">
+  <div class="somos">
+    <div class="somos__texto">{{{quienes.description}}}</div>
+    <div class="somos__fotos">
+      {{#each quienes.gallery}}
+      <div class="somos__foto" style="background-image:url('{{this.src}}')" role="img" aria-label="{{this.alt}}"></div>
+      {{/each}}
+    </div>
+  </div>
+</section>

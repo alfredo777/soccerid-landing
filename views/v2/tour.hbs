@@ -1,0 +1,56 @@
+{{!-- Tour: dos bloques con rótulo propio para que nadie confunda el Tour
+      (lo que viene, 2027, con candado) con las ediciones (lo que ya se jugó). --}}
+<section class="cabecera envoltura">
+  <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Tour</p>
+  <div class="cabecera__fila">
+    <div>
+      <div class="cabecera__marca">SOCCER iD CUP</div>
+      <h1 class="titular">Tour</h1>
+    </div>
+    <p class="bajada">{{#if isEs}}Partidos internacionales de fútbol mexicano en Estados Unidos. El Tour es lo que viene; las ediciones, lo que ya se jugó.{{else}}International Mexican football matches in the United States.{{/if}}</p>
+  </div>
+</section>
+
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Lo que viene{{else}}What's next{{/if}}</p>
+  <article class="tour27">
+    <div>
+      <img class="tour27__logo" src="/assets/images/logos/id-tour27-blanco.png" alt="{{tour.nombre}}">
+      <h2>{{tour.nombre}}</h2>
+      <p>{{#if isEs}}Tres partidos internacionales en Estados Unidos, en una sola temporada. La propuesta completa es privada y se abre con código.{{else}}Three international matches in the United States, one season.{{/if}}</p>
+      <a class="boton boton--claro" href="{{tour.url}}">{{#if isEs}}Ver la propuesta · acceso con código{{else}}View proposal · code required{{/if}} <span class="flecha">↗</span></a>
+    </div>
+    <ol class="tour27__partidos">
+      {{#each tour.partidos}}
+      <li class="tour27__partido">
+        <span class="tour27__num">{{#if ../isEs}}Partido{{else}}Match{{/if}} {{this.num}}</span>
+        <span class="tour27__nombre">{{this.nombre}}</span>
+        {{#if this.confirmado}}<span class="pastilla pastilla--ok">{{#if ../isEs}}Confirmado{{else}}Confirmed{{/if}}</span>{{else}}<span class="tour27__ventana">{{this.ventana}}</span>{{/if}}
+      </li>
+      {{/each}}
+    </ol>
+  </article>
+
+  <div class="aclaracion">
+    <span class="pastilla">{{#if isEs}}Ojo{{else}}Note{{/if}}</span>
+    <span>{{#if isEs}}<b>El Tour '27 no es una edición más.</b> Es el proyecto de la próxima temporada. Las ediciones de abajo ya se jugaron y son su respaldo.{{else}}<b>Tour '27 is not another edition.</b> It is next season's project.{{/if}}</span>
+  </div>
+
+  <p class="rotulo">{{#if isEs}}Lo que ya se jugó · Ediciones{{else}}Already played · Editions{{/if}}</p>
+  <div class="ediciones">
+    {{#each ediciones}}
+    <a class="edicion" href="{{this.url}}">
+      <div class="edicion__foto" {{#if this.imagen}}style="background-image:url('{{this.imagen}}')"{{/if}}></div>
+      <div class="edicion__cuerpo">
+        <div class="edicion__anio">{{this.year}}</div>
+        <div class="edicion__partido">{{this.match}}</div>
+        <div class="edicion__lugar">{{this.venue}}{{#if this.city}} · {{this.city}}{{/if}}</div>
+        <div class="edicion__pie">
+          <span>{{#if this.asistencia}}{{this.asistencia}} {{this.asistenciaLabel}}{{/if}}</span>
+          <span>{{#if ../isEs}}Ver edición{{else}}View{{/if}} ↗</span>
+        </div>
+      </div>
+    </a>
+    {{/each}}
+  </div>
+</section>

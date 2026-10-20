@@ -1561,8 +1561,158 @@ app.get('/:lang', (req, res, next) => {
     domain: isProduction ? '.soccerid.co' : undefined
   });
   
-  res.render('index', loadViewData(lang, '/'));
+  // Nueva distribución: el home es el menú de las seis secciones. El home
+  // anterior (views/index.hbs) se queda en el repo mientras se valida.
+  rutaV2(null)(req, res, next);
 });
+
+// ═══════════════════════════════════════════════════════════════════════
+// NUEVA DISTRIBUCIÓN DEL SITIO
+//
+// El sitio deja de ser un home largo con anclas y pasa a cuatro marcas y dos
+// secciones de apoyo, cada una en su propia página. Se abren de forma
+// independiente: quien llega por un enlace a /travel no tiene que pasar por
+// el home, y cada marca puede crecer sin empujar a las demás.
+//
+//   Marcas:    Tour (SOCCER iD CUP) · Travel Club · Legends · Podcast
+//   Apoyo:     Opiniones y media · Quiénes somos
+//
+// Decisiones de esta distribución:
+//   - Los PARTIDOS se mudan a Travel: son viajes y palcos que se venden, no
+//     parte de la copa.
+//   - El TOUR y las EDICIONES viven en la misma página pero separados con
+//     rótulo: el Tour es lo que viene (2027, con candado), las ediciones son
+//     lo que ya se jugó. Mezclarlos fue la confusión que se pidió evitar.
+//   - SEGUROS iD sale del sitio. Su contenido sigue en los JSON por si vuelve.
+//   - Legends no tiene material todavía: su página lo dice y lo de relleno
+//     va marcado. Nada de leyendas inventadas.
+// ═══════════════════════════════════════════════════════════════════════
+
+const REDES = [
+  { id: 'instagram', nombre: 'Instagram', usuario: '@soccerid7', url: 'https://www.instagram.com/soccerid7' },
+  { id: 'tiktok', nombre: 'TikTok', usuario: '@soccerid_7', url: 'https://tiktok.com/@soccerid_7' },
+  { id: 'youtube', nombre: 'YouTube', usuario: 'SOCCER iD', url: 'https://www.youtube.com/channel/UC4Mf2_KUFB5PVfHlKhSpkiQ' },
+  { id: 'facebook', nombre: 'Facebook', usuario: 'soccerid7', url: 'https://facebook.com/soccerid7' },
+  { id: 'linkedin', nombre: 'LinkedIn', usuario: 'SOCCER iD', url: 'https://www.linkedin.com/company/soccer-id/' },
+  { id: 'whatsapp', nombre: 'WhatsApp', usuario: 'Escríbenos', url: 'https://wa.me/12315158991' }
+];
+
+/** Las seis secciones, en el orden del menú. `marca` distingue las cuatro principales. */
+function seccionesV2(lang) {
+  const es = lang !== 'en';
+  return [
+    { slug: 'tour', num: '01', marca: true, color: 'tour', nombre: 'Tour', submarca: 'SOCCER iD CUP',
+      linea: es ? "El Tour '27 y las ediciones que ya se jugaron." : "Tour '27 and the editions already played." },
+    { slug: 'travel', num: '02', marca: true, color: 'travel', nombre: 'Travel', submarca: 'SOCCER iD Travel Club',
+      linea: es ? 'Partidos, palcos y viajes a cualquier estadio.' : 'Matches, suites and trips to any stadium.' },
+    { slug: 'legends', num: '03', marca: true, color: 'legends', nombre: 'Legends', submarca: 'SOCCER iD Legends',
+      linea: es ? 'Las figuras que hicieron historia, de cerca.' : 'The players who made history, up close.' },
+    { slug: 'podcast', num: '04', marca: true, color: 'podcast', nombre: 'Podcast', submarca: 'SOCCER iD Podcast',
+      linea: es ? 'Conversaciones de fútbol, sin prisa.' : 'Football conversations, no rush.' },
+    { slug: 'opiniones', num: '05', marca: false, color: 'apoyo', nombre: es ? 'Opiniones y media' : 'Reviews & media',
+      linea: es ? 'Lo que dicen quienes vivieron la experiencia, y la prensa.' : 'What people and the press say.' },
+    { slug: 'nosotros', num: '06', marca: false, color: 'apoyo', nombre: es ? 'Quiénes somos' : 'About us',
+      linea: es ? 'Amamos tanto el deporte que nos atrevimos a reinventarlo.' : 'We love sport so much we dared to reinvent it.' }
+  ].map(sx => Object.assign(sx, { url: `/${lang}/${sx.slug}` }));
+}
+
+/** Lo común a todas las páginas de la nueva distribución. */
+function datosV2(lang, slug) {
+  const base = loadViewData(lang, slug ? `/${slug}` : '/');
+  const secciones = seccionesV2(lang);
+  const actual = secciones.find(sx => sx.slug === slug) || null;
+  return Object.assign(base, {
+    layout: 'v2',
+    secciones,
+    marcas: secciones.filter(sx => sx.marca),
+    apoyo: secciones.filter(sx => !sx.marca),
+    actual,
+    redes: REDES,
+    ['es_' + (slug || 'inicio')]: true
+  });
+}
+
+/** Partidos de hoy en adelante, en orden. Los que ya pasaron no se venden. */
+function partidosFuturos(lista) {
+  const hoy = new Date().toISOString().slice(0, 10);
+  return (Array.isArray(lista) ? lista : [])
+    .filter(p => (p.dateISO || '') >= hoy)
+    .sort((a, b) => (a.dateISO || '').localeCompare(b.dateISO || ''))
+    .map(p => {
+      const d = new Date(p.dateISO + 'T12:00:00');
+      return Object.assign({}, p, {
+        dia: String(d.getDate()).padStart(2, '0'),
+        mes: d.toLocaleDateString('es-MX', { month: 'short' }).replace('.', '').toUpperCase()
+      });
+    });
+}
+
+function rutaV2(slug, armar) {
+  return async (req, res, next) => {
+    const lang = req.params.lang;
+    if (!SUPPORTED_LANGS.includes(lang)) return next();
+    try {
+      const data = datosV2(lang, slug);
+      if (armar) Object.assign(data, await armar(lang, data));
+      res.render(slug ? `v2/${slug}` : 'v2/inicio', data);
+    } catch (e) {
+      console.error('Error en la sección ' + (slug || 'inicio') + ':', e);
+      next(e);
+    }
+  };
+}
+
+app.get('/:lang/tour', rutaV2('tour', async (lang) => {
+  // Lo que viene: el Tour '27 y sus tres partidos, leídos del registro de
+  // propuestas. Lo que ya pasó: las ediciones, de la base. Nunca en la misma lista.
+  const tour = propuestas.porTipo('tour');
+  const partidos = propuestas.listar()
+    .filter(v => v.tipo === 'partido' && !v.oculta && v.id !== '2027')
+    .sort((a, b) => (a.orden || 0) - (b.orden || 0))
+    .map((v, i) => ({
+      num: i + 1,
+      nombre: propuestas.enNegociacion(v) ? (lang === 'en' ? 'To be announced' : 'Por anunciar') : v.label,
+      ventana: v.ventana || (lang === 'en' ? 'Confirmed' : 'Confirmado'),
+      confirmado: !propuestas.enNegociacion(v)
+    }));
+  return {
+    tour: { nombre: tour ? tour.label : "SOCCER iD TOUR '27", url: `/${lang}/${tour ? tour.slug : 'socceridcup2027'}`, partidos },
+    ediciones: (await cupEditions.fichas(lang)).map(f => Object.assign({}, f, { url: `/${lang}/socceridcup/${f.year}` }))
+  };
+}));
+
+app.get('/:lang/travel', rutaV2('travel', async (lang, data) => ({
+  partidos: partidosFuturos(data.upcoming_events),
+  vip: (data.panel_templates || {}).vip || null,
+  fan: (data.panel_templates || {}).fan || null
+})));
+
+app.get('/:lang/legends', rutaV2('legends'));
+
+app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
+  const pod = data.podcast || {};
+  const eps = (pod.episodios || []).map((e, i, arr) => ({
+    num: arr.length - i,
+    url: `https://www.youtube.com/watch?v=${e.videoId}`
+  }));
+  return { canal: pod.canal, episodios: eps };
+}));
+
+app.get('/:lang/opiniones', rutaV2('opiniones', async (lang, data) => {
+  const t = data.panel_templates || {};
+  return {
+    // Seguros iD sale del sitio: una opinión que lo elogia anunciaría un
+    // servicio que ya no se ofrece. Se filtra aquí y el JSON queda intacto.
+    opiniones: ((t.opiniones || {}).testimonials || []).filter(o => !/seguros\s*id/i.test(o.text || '')),
+    articulos: ((t.media || {}).articles || []).slice(0, 6)
+  };
+}));
+
+app.get('/:lang/nosotros', rutaV2('nosotros', async (lang, data) => {
+  const q = (data.panel_templates || {}).quienes || null;
+  // Cuatro fotos: con más, la columna de imágenes dobla en alto al texto.
+  return { quienes: q ? Object.assign({}, q, { gallery: (q.gallery || []).slice(0, 4) }) : null };
+}));
 
 // Otras páginas con idioma
 app.get('/:lang/:page', (req, res, next) => {

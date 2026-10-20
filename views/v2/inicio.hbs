@@ -1,0 +1,51 @@
+{{!-- Home de la nueva distribución: el menú del sitio. Cuatro marcas con su
+      color sólido, dos secciones de apoyo y las redes. Nada más: cada sección
+      se abre en su propia página. --}}
+<section class="inicio-hero envoltura">
+  <p class="kicker">SOCCER iD</p>
+  <h1 class="titular">{{#if isEs}}Amamos tanto el deporte que nos atrevimos a <em>reinventarlo</em>{{else}}We love sport so much we dared to <em>reinvent it</em>{{/if}}</h1>
+  <p class="bajada">{{#if isEs}}Partidos internacionales, viajes a cualquier estadio, las leyendas de cerca y conversaciones de fútbol.{{else}}International matches, trips to any stadium, legends up close and football conversations.{{/if}}</p>
+</section>
+
+<section class="envoltura" aria-label="{{#if isEs}}Marcas{{else}}Brands{{/if}}">
+  <div class="marcas">
+    {{#each marcas}}
+    <a class="marca marca--{{this.color}}" href="{{this.url}}">
+      <div class="marca__arriba">
+        <span class="marca__num">{{this.num}}</span>
+        <span class="marca__flecha" aria-hidden="true">↗</span>
+      </div>
+      <div class="marca__abajo">
+        <span class="marca__sub">{{this.submarca}}</span>
+        <h2 class="marca__nombre">{{this.nombre}}</h2>
+        <p class="marca__linea">{{this.linea}}</p>
+      </div>
+    </a>
+    {{/each}}
+  </div>
+
+  <div class="apoyo">
+    {{#each apoyo}}
+    <a class="apoyo__item" href="{{this.url}}">
+      <span class="apoyo__num">{{this.num}}</span>
+      <div class="apoyo__texto">
+        <div class="apoyo__nombre">{{this.nombre}}</div>
+        <div class="apoyo__linea">{{this.linea}}</div>
+      </div>
+      <span class="apoyo__flecha" aria-hidden="true">↗</span>
+    </a>
+    {{/each}}
+  </div>
+</section>
+
+<section class="seccion envoltura" aria-label="{{#if isEs}}Redes{{else}}Social{{/if}}">
+  <p class="rotulo">{{#if isEs}}Síguenos{{else}}Follow us{{/if}}</p>
+  <div class="redes">
+    {{#each redes}}
+    <a class="red" href="{{this.url}}" target="_blank" rel="noopener">
+      <span class="red__nombre">{{this.nombre}}</span>
+      <span class="red__usuario">{{this.usuario}} ↗</span>
+    </a>
+    {{/each}}
+  </div>
+</section>

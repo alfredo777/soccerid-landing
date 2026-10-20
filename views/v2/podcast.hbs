@@ -1,0 +1,21 @@
+{{!-- Podcast, minimalista a pedido: un titular, el canal y la lista. Los
+      títulos de los episodios los da YouTube; aquí no se inventan. --}}
+<section class="cabecera envoltura">
+  <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Podcast</p>
+  <div class="podcast">
+    <div class="cabecera__marca">SOCCER iD Podcast</div>
+    <h1 class="titular">Podcast</h1>
+    <p class="bajada" style="margin:18px 0 26px">{{#if isEs}}Conversaciones de fútbol, sin prisa.{{else}}Football conversations, no rush.{{/if}}</p>
+    <a class="boton boton--lleno" href="{{canal}}" target="_blank" rel="noopener">{{#if isEs}}Escuchar en YouTube{{else}}Listen on YouTube{{/if}} <span class="flecha">↗</span></a>
+
+    <ol class="episodios">
+      {{#each episodios}}
+      <li class="episodio"><a href="{{this.url}}" target="_blank" rel="noopener">
+        <span class="episodio__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10-6.5z"/></svg></span>
+        <span class="episodio__num">{{#if ../isEs}}Episodio{{else}}Episode{{/if}} {{this.num}}</span>
+        <span class="episodio__donde">YouTube ↗</span>
+      </a></li>
+      {{/each}}
+    </ol>
+  </div>
+</section>

@@ -1,0 +1,66 @@
+{
+  "_nota": "Episodios del podcast para la sección /podcast de la nueva distribución. Hoy la misma lista vive también en assets/js/cast.js (el widget del home anterior): si se agrega un episodio, va en los dos hasta que el widget lea de aquí. Los títulos no se guardan: los da YouTube.",
+  "canal": "https://www.youtube.com/channel/UC4Mf2_KUFB5PVfHlKhSpkiQ",
+  "episodios": [
+    {
+      "videoId": "6be3c9Q0aNI"
+    },
+    {
+      "videoId": "D9_J0BIaqiM"
+    },
+    {
+      "videoId": "aM7MoWc11hE"
+    },
+    {
+      "videoId": "BfI0EsOZUwE"
+    },
+    {
+      "videoId": "8veHWVVAPp4"
+    },
+    {
+      "videoId": "8Qim8pHt8Dg"
+    },
+    {
+      "videoId": "US64H15OCFU"
+    },
+    {
+      "videoId": "tCPYuv8kzdo"
+    },
+    {
+      "videoId": "KLye5Rpsl3s"
+    },
+    {
+      "videoId": "acayaWq7pKM"
+    },
+    {
+      "videoId": "tz5TDeK5RPc"
+    },
+    {
+      "videoId": "2nLsAHtwhgA"
+    },
+    {
+      "videoId": "FrKTXACDYDE"
+    },
+    {
+      "videoId": "the1PGYO71M"
+    },
+    {
+      "videoId": "TYpYyXJ63pM"
+    },
+    {
+      "videoId": "i3p1JV_LMmI"
+    },
+    {
+      "videoId": "n5GotLj0iH8"
+    },
+    {
+      "videoId": "fiZVQ1-86hc"
+    },
+    {
+      "videoId": "6Hu-jZrxQ6g"
+    },
+    {
+      "videoId": "MJPHOQufNlM"
+    }
+  ]
+}
