@@ -1561,9 +1561,21 @@ app.get('/:lang', (req, res, next) => {
     domain: isProduction ? '.soccerid.co' : undefined
   });
   
-  // Nueva distribución: el home es el menú de las seis secciones. El home
-  // anterior (views/index.hbs) se queda en el repo mientras se valida.
-  rutaV2(null)(req, res, next);
+  // Nueva distribución: el home es el menú de las seis secciones, más un
+  // bloque «Ahora» con lo vivo de cada marca. El home anterior
+  // (views/index.hbs) se queda en el repo mientras se valida.
+  rutaV2(null, async (lang, data) => {
+    const tour = propuestas.porTipo('tour');
+    const proximo = partidosFuturos(data.upcoming_events)[0] || null;
+    const eps = ((data.podcast || {}).episodios || []);
+    return {
+      ahora: {
+        tour: tour ? { nombre: tour.label, url: `/${lang}/tour` } : null,
+        partido: proximo,
+        podcast: eps.length ? { total: eps.length, ultimo: `https://www.youtube.com/watch?v=${eps[0].videoId}` } : null
+      }
+    };
+  })(req, res, next);
 });
 
 // ═══════════════════════════════════════════════════════════════════════

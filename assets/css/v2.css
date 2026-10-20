@@ -8,14 +8,14 @@
    PLANO quiere decir: sin degradados, sin sombras, sin brillos. La jerarquía
    la dan el color sólido, el tamaño de la letra y el aire.
 
-   TRES COLORES, y nada más (pedido del usuario: la primera vuelta, con un
-   color por marca, se leía como un revoltijo):
-     azul   #1B17EF  el protagonista: titulares de acento, números, botones
-     verde  #78F750  el acento, poco y en sitios fijos: la cinta, la flecha
-     blanco          el fondo
-   La letra va en tinta casi negra, que no cuenta como color.
-   Todas las secciones llevan el MISMO tratamiento: una sola línea.
-   El verde nunca va como texto sobre blanco: ahí da 1.4 y no se lee.
+   EN OSCURO, con TRES COLORES (pedido del usuario; la primera vuelta con un
+   color por marca se leía como un revoltijo, y la segunda en claro quedó pobre):
+     fondo   #0B0B14  casi negro, tirando a azul
+     azul    #1B17EF  SUPERFICIES: botones, la cinta, la banda, la fila al pasar
+     verde   #78F750  el acento y el texto de realce: números, palabra clave
+   La letra va en blanco. El azul de marca NUNCA es texto sobre el fondo
+   oscuro: da 1.45 de contraste (ver docs/variables-del-proyecto.md). Por
+   eso lo que antes iba en azul como texto ahora va en verde (14 : 1).
    ═══════════════════════════════════════════════════════════════════════ */
 
 @font-face { font-family: 'Raleway'; src: url('/assets/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaooCP.ttf') format('truetype'); font-weight: 400; font-display: swap; }
@@ -29,11 +29,12 @@
   --azul: #1B17EF;
   --azul-osc: #0D0AA8;
   --lima: #78F750;
-  --tinta: #121218;
-  --tinta-2: #55566A;      /* 6.9 sobre el fondo: texto secundario */
-  --fondo: #FFFFFF;
-  --superficie: #FFFFFF;
-  --linea: #E2E2EA;
+  --tinta: #FFFFFF;                     /* la letra */
+  --tinta-2: #B8B9C9;                   /* 8.9 sobre el fondo: secundario */
+  --fondo: #0B0B14;
+  --superficie: #13131F;
+  --linea: rgba(255, 255, 255, 0.13);
+  --negro: #0B0B14;                     /* texto sobre verde y sobre blanco */
 
   /* Una sola línea: todas las secciones usan el azul. */
   --c-tour: var(--azul);
@@ -70,7 +71,7 @@ img { display: block; max-width: 100%; }
 .nav__pildora {
   pointer-events: auto;
   display: flex; align-items: center; gap: 8px;
-  background: var(--superficie);
+  background: rgba(19, 19, 31, 0.92);
   border: 1px solid var(--linea);
   border-radius: 999px;
   padding: 7px 7px 7px 22px;
@@ -78,14 +79,14 @@ img { display: block; max-width: 100%; }
 .nav__logo img { height: 24px; width: auto; }
 .nav__marcas {
   display: flex; gap: 2px; margin-left: 18px;
-  background: #F3F3F7; border-radius: 999px; padding: 4px;
+  background: rgba(255,255,255,.06); border-radius: 999px; padding: 4px;
 }
 .nav__link {
   font-size: 14px; font-weight: 600; color: var(--tinta-2);
   padding: 8px 16px; border-radius: 999px;
   transition: background .15s, color .15s;
 }
-.nav__link:hover { color: var(--tinta); background: var(--superficie); }
+.nav__link:hover { color: var(--tinta); background: rgba(255,255,255,.08); }
 .nav__link.is-activo { background: var(--azul); color: #fff; }
 .nav__menu {
   display: inline-flex; align-items: center; gap: 9px;
@@ -126,26 +127,26 @@ img { display: block; max-width: 100%; }
   font-size: clamp(38px, 6.4vw, 76px); font-weight: 800;
   letter-spacing: -.03em; line-height: 1.02;
 }
-.titular em { font-style: normal; color: var(--azul); }
+.titular em { font-style: normal; color: var(--lima); }
 .bajada { font-size: 18px; color: var(--tinta-2); max-width: 620px; }
 .boton {
   display: inline-flex; align-items: center; gap: 10px;
   font-size: 15px; font-weight: 700;
   border-radius: 999px; padding: 13px 22px;
-  border: 1.5px solid var(--tinta); color: var(--tinta);
-  transition: background .15s, color .15s;
+  border: 1.5px solid rgba(255,255,255,.6); color: #fff;
+  transition: background .15s, color .15s, border-color .15s;
 }
-.boton:hover { background: var(--tinta); color: #fff; }
+.boton:hover { background: #fff; color: var(--negro); border-color: #fff; }
 .boton--lleno { background: var(--azul); border-color: var(--azul); color: #fff; }
 .boton--lleno:hover { background: var(--azul-osc); border-color: var(--azul-osc); }
 .boton--claro { border-color: rgba(255,255,255,.7); color: #fff; }
-.boton--claro:hover { background: #fff; color: var(--azul); }
+.boton--claro:hover { background: #fff; color: var(--negro); }
 .flecha { font-size: 1.05em; line-height: 1; }
 .pastilla {
   display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .04em;
-  padding: 5px 11px; border-radius: 999px; background: var(--fondo); color: var(--tinta-2);
+  padding: 5px 11px; border-radius: 999px; background: rgba(255,255,255,.08); color: var(--tinta-2);
 }
-.pastilla--ok { background: var(--lima); color: var(--tinta); }
+.pastilla--ok { background: var(--lima); color: var(--negro); }
 .pastilla--muestra { background: transparent; border: 1.5px dashed var(--tinta-2); color: var(--tinta-2); }
 .rotulo {
   display: flex; align-items: center; gap: 14px;
@@ -153,56 +154,78 @@ img { display: block; max-width: 100%; }
   color: var(--tinta-2); margin: 0 0 18px;
 }
 .rotulo::after { content: ''; flex: 1; height: 1px; background: var(--linea); }
+.rotulo { color: var(--tinta-2); }
 /* padding-block y no `padding: X 0`: el atajo pondría en cero el margen
    lateral de .envoltura y el contenido quedaría pegado al borde en celular. */
 .seccion { padding-block: 56px; }
 
-/* ─── Home: índice de una sola línea ──────────────────────────────── */
-.hero { padding-block: 72px 48px; }
+/* ─── Home en oscuro ──────────────────────────────────────────────── */
+.v2--inicio .pagina { padding-top: 0; }
+.hero { position: relative; min-height: 92vh; display: flex; align-items: flex-end; overflow: hidden; }
+.hero__foto, .hero__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* Velo plano de un solo color: la foto se adivina, el texto manda. */
+.hero__velo { position: absolute; inset: 0; background: rgba(11, 11, 20, 0.78); }
+.hero__cuerpo { position: relative; padding-block: 160px 72px; }
 .etiqueta {
   display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .16em;
-  background: var(--lima); color: var(--tinta); padding: 6px 12px; border-radius: 999px;
+  background: var(--lima); color: var(--negro); padding: 6px 12px; border-radius: 999px;
   margin-bottom: 26px;
 }
 .hero .titular { max-width: 1000px; font-size: clamp(42px, 7.2vw, 96px); }
-.hero .bajada { margin-top: 24px; }
+.hero .bajada { margin-top: 24px; font-size: 19px; }
+.hero__acciones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 34px; }
 
-/* Cinta: la única pieza que se mueve sola. Lenta, para acompañar y no distraer. */
 .cinta { background: var(--azul); color: #fff; overflow: hidden; padding-block: 18px; }
 .cinta__pista { display: flex; align-items: center; gap: 28px; width: max-content; animation: cinta 38s linear infinite; }
 .cinta__pista span { font-size: clamp(18px, 2.2vw, 26px); font-weight: 800; letter-spacing: -.01em; white-space: nowrap; }
 .cinta__pista i { width: 10px; height: 10px; border-radius: 50%; background: var(--lima); flex: none; }
 @keyframes cinta { to { transform: translateX(-50%); } }
 
-.indice { padding-block: 24px 72px; }
+.ahora { padding-block: 64px 24px; }
+.ahora__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.tarjeta {
+  display: flex; flex-direction: column; gap: 10px; min-height: 240px;
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio);
+  padding: 26px 26px 24px; transition: border-color .2s, transform .25s cubic-bezier(.2,.8,.2,1);
+}
+.tarjeta:hover { border-color: rgba(255,255,255,.4); transform: translateY(-3px); }
+.tarjeta--azul { background: var(--azul); border-color: var(--azul); }
+.tarjeta__k { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--lima); }
+.tarjeta__fecha { font-size: 15px; font-weight: 700; color: var(--tinta-2); }
+.tarjeta__fecha b { font-size: 34px; font-weight: 900; color: #fff; letter-spacing: -.02em; margin-right: 4px; }
+.tarjeta__t { font-size: 26px; font-weight: 800; letter-spacing: -.025em; line-height: 1.1; }
+.tarjeta__vs { font-size: 14px; font-weight: 700; color: var(--tinta-2); margin: 0 4px; }
+.tarjeta--azul .tarjeta__vs, .tarjeta--azul .tarjeta__d, .tarjeta--azul .tarjeta__fecha { color: rgba(255,255,255,.85); }
+.tarjeta__d { font-size: 15px; color: var(--tinta-2); flex: 1; }
+.tarjeta__ir { font-size: 14px; font-weight: 800; color: var(--lima); }
+
+.indice { padding-block: 40px 72px; }
 .indice__lista { list-style: none; border-top: 1px solid var(--linea); }
 .indice__lista li { opacity: 0; transform: translateY(14px); animation: entra .55s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(var(--i) * 70ms + 120ms); }
 @keyframes entra { to { opacity: 1; transform: none; } }
 
-/* La fila se llena de azul de izquierda a derecha al pasar. Es un fondo de un
-   solo color que crece, no un degradado: sigue siendo plano. */
+/* La fila se llena de azul al pasar. Un solo color que crece, no un degradado. */
 .fila {
   display: grid; grid-template-columns: 64px minmax(0, 1.1fr) minmax(0, 1fr) 56px;
   align-items: center; gap: 24px;
   padding: 26px 18px; border-bottom: 1px solid var(--linea);
   background: linear-gradient(var(--azul), var(--azul)) no-repeat left / 0% 100%;
-  transition: background-size .45s cubic-bezier(.2,.8,.2,1), color .25s;
+  transition: background-size .45s cubic-bezier(.2,.8,.2,1);
 }
-.fila__num { font-size: 15px; font-weight: 800; color: var(--azul); transition: color .25s; }
+.fila__num { font-size: 15px; font-weight: 800; color: var(--lima); }
 .fila__nombre { font-size: clamp(34px, 5vw, 64px); font-weight: 800; letter-spacing: -.035em; line-height: 1; }
 .fila__texto { display: flex; flex-direction: column; gap: 4px; }
-.fila__sub { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--azul); transition: color .25s; }
+.fila__sub { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--lima); }
 .fila__linea { font-size: 15px; color: var(--tinta-2); transition: color .25s; }
 .fila__flecha {
   width: 52px; height: 52px; border-radius: 50%; justify-self: end;
   display: flex; align-items: center; justify-content: center; font-size: 20px;
-  border: 1.5px solid var(--linea); color: var(--tinta);
+  border: 1.5px solid rgba(255,255,255,.35); color: #fff;
   transition: background .25s, border-color .25s, color .25s, transform .35s cubic-bezier(.2,.8,.2,1);
 }
-.fila:hover { background-size: 100% 100%; color: #fff; }
-.fila:hover .fila__num, .fila:hover .fila__sub { color: var(--lima); }
-.fila:hover .fila__linea { color: rgba(255,255,255,.85); }
-.fila:hover .fila__flecha { background: var(--lima); border-color: var(--lima); color: var(--tinta); transform: rotate(45deg); }
+.fila:hover { background-size: 100% 100%; }
+.fila:hover .fila__linea { color: rgba(255,255,255,.88); }
+.fila:hover .fila__flecha { background: var(--lima); border-color: var(--lima); color: var(--negro); transform: rotate(45deg); }
 
 .banda { background: var(--azul); color: #fff; }
 .banda__dentro { padding-block: 44px; display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap; }
@@ -212,7 +235,7 @@ img { display: block; max-width: 100%; }
   font-size: 15px; font-weight: 700; padding: 11px 18px; border-radius: 999px;
   border: 1.5px solid rgba(255,255,255,.55); transition: background .2s, color .2s, border-color .2s;
 }
-.banda__redes a:hover { background: var(--lima); border-color: var(--lima); color: var(--tinta); }
+.banda__redes a:hover { background: var(--lima); border-color: var(--lima); color: var(--negro); }
 .v2--inicio .pie { margin-top: 0; border-top: 0; }
 
 /* ─── Cabecera de cada sección ────────────────────────────────────── */
@@ -348,7 +371,7 @@ img { display: block; max-width: 100%; }
 .pie__fila img { height: 22px; width: auto; }
 .pie__fila--abajo { margin-top: 26px; }
 .pie__nav, .pie__redes { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 14px; font-weight: 600; }
-.pie__nav a:hover, .pie__redes a:hover { color: var(--azul); }
+.pie__nav a:hover, .pie__redes a:hover { color: var(--lima); }
 .pie__redes { gap: 6px 18px; color: var(--tinta-2); }
 .pie__legal { font-size: 13px; color: var(--tinta-2); }
 
@@ -375,7 +398,10 @@ img { display: block; max-width: 100%; }
   .somos { gap: 26px; }
   .somos__texto { font-size: 18px; }
   .pagina { padding-top: 88px; }
-  .hero { padding-block: 40px 32px; }
+  .hero { min-height: 84vh; }
+  .hero__cuerpo { padding-block: 120px 44px; }
+  .ahora__grid { grid-template-columns: 1fr; }
+  .tarjeta { min-height: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
