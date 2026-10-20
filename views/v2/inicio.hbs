@@ -1,89 +1,53 @@
-{{!-- Home de la nueva distribución, tercera vuelta: en oscuro.
-      Tres colores sobre fondo oscuro: azul para superficies, verde para el
-      acento y blanco para la letra. El índice de secciones es el centro; el
-      hero con foto y el bloque «Ahora» le dan cuerpo con datos reales. --}}
-<section class="hero">
-  <picture class="hero__foto" aria-hidden="true">
+{{!-- Home, cuarta vuelta: desde cero y SIN COLOR. Blanco y negro. Las fotos
+      del sitio van en escala de grises y la tipografía manda. Las seis
+      secciones son seis fotos con su nombre encima. --}}
+<section class="portada">
+  <picture class="portada__foto" aria-hidden="true">
     <source srcset="/assets/images/opi2-web.webp" type="image/webp">
     <img src="/assets/images/opi2-web.jpg" alt="">
   </picture>
-  <div class="hero__velo" aria-hidden="true"></div>
-  <div class="envoltura hero__cuerpo">
-    <span class="etiqueta">SOCCER iD</span>
-    <h1 class="titular">{{#if isEs}}Amamos tanto el deporte que nos atrevimos a <em>reinventarlo</em>{{else}}We love sport so much we dared to <em>reinvent it</em>{{/if}}</h1>
-    <p class="bajada">{{#if isEs}}Partidos internacionales, viajes a cualquier estadio, las leyendas de cerca y conversaciones de fútbol.{{else}}International matches, trips to any stadium, legends up close and football conversations.{{/if}}</p>
-    <div class="hero__acciones">
-      <a class="boton boton--lleno" href="/{{lang}}/tour">{{#if isEs}}Conocer el Tour '27{{else}}Discover Tour '27{{/if}} <span class="flecha">↗</span></a>
-      <a class="boton boton--claro" href="#secciones">{{#if isEs}}Ver las secciones{{else}}See the sections{{/if}} <span class="flecha">↓</span></a>
-    </div>
+  <div class="portada__texto">
+    <p class="portada__lema">{{#if isEs}}Amamos tanto el deporte que nos atrevimos a reinventarlo{{else}}We love sport so much we dared to reinvent it{{/if}}</p>
+    <h1 class="portada__marca">SOCCER <span>iD</span></h1>
   </div>
+  <a class="portada__baja" href="#secciones" aria-label="{{#if isEs}}Bajar{{else}}Scroll{{/if}}">↓</a>
 </section>
 
-<div class="cinta" aria-hidden="true">
-  <div class="cinta__pista">
-    {{#each marcas}}<span>SOCCER iD {{this.nombre}}</span><i></i>{{/each}}
-    {{#each marcas}}<span>SOCCER iD {{this.nombre}}</span><i></i>{{/each}}
-    {{#each marcas}}<span>SOCCER iD {{this.nombre}}</span><i></i>{{/each}}
-    {{#each marcas}}<span>SOCCER iD {{this.nombre}}</span><i></i>{{/each}}
-  </div>
-</div>
+<section class="secciones" id="secciones" aria-label="{{#if isEs}}Secciones{{else}}Sections{{/if}}">
+  {{#each secciones}}
+  <a class="celda" href="{{this.url}}" style="--i:{{@index}}">
+    <img class="celda__foto" src="{{this.foto}}" alt="">
+    <span class="celda__velo" aria-hidden="true"></span>
+    <span class="celda__num">{{this.num}}</span>
+    <span class="celda__texto">
+      <span class="celda__sub">{{#if this.submarca}}{{this.submarca}}{{else}}SOCCER iD{{/if}}</span>
+      <span class="celda__nombre">{{this.nombre}}</span>
+      <span class="celda__linea">{{this.linea}}</span>
+    </span>
+    <span class="celda__ir" aria-hidden="true">→</span>
+  </a>
+  {{/each}}
+</section>
 
-{{!-- Lo vivo de cada marca, con datos reales. Si una no tiene nada, no sale. --}}
-<section class="ahora envoltura" aria-label="{{#if isEs}}Ahora{{else}}Now{{/if}}">
-  <p class="rotulo">{{#if isEs}}Ahora{{else}}Now{{/if}}</p>
-  <div class="ahora__grid">
+{{!-- Lo vivo, en una lista de texto. Datos reales; lo que no hay, no sale. --}}
+<section class="ahora">
+  <h2 class="ahora__t">{{#if isEs}}Ahora{{else}}Now{{/if}}</h2>
+  <ol class="ahora__lista">
     {{#if ahora.tour}}
-    <a class="tarjeta tarjeta--azul" href="{{ahora.tour.url}}">
-      <span class="tarjeta__k">Tour</span>
-      <strong class="tarjeta__t">{{ahora.tour.nombre}}</strong>
-      <span class="tarjeta__d">{{#if isEs}}Tres partidos internacionales en Estados Unidos. Propuesta privada con código.{{else}}Three international matches in the US. Private proposal, code required.{{/if}}</span>
-      <span class="tarjeta__ir">{{#if isEs}}Ver el Tour{{else}}See the Tour{{/if}} ↗</span>
-    </a>
+    <li><a href="{{ahora.tour.url}}"><span class="ahora__k">Tour</span><span class="ahora__v">{{ahora.tour.nombre}} · {{#if isEs}}tres partidos en Estados Unidos{{else}}three matches in the US{{/if}}</span><span class="ahora__ir">→</span></a></li>
     {{/if}}
     {{#if ahora.partido}}
-    <a class="tarjeta" href="/{{lang}}/travel">
-      <span class="tarjeta__k">Travel · {{#if isEs}}Próximo partido{{else}}Next match{{/if}}</span>
-      <span class="tarjeta__fecha"><b>{{ahora.partido.dia}}</b> {{ahora.partido.mes}}</span>
-      <strong class="tarjeta__t">{{ahora.partido.team1}} <span class="tarjeta__vs">vs</span> {{ahora.partido.team2}}</strong>
-      <span class="tarjeta__d">{{ahora.partido.venue}} · {{ahora.partido.time}}</span>
-      <span class="tarjeta__ir">{{#if isEs}}Reservar{{else}}Book{{/if}} ↗</span>
-    </a>
+    <li><a href="/{{lang}}/travel"><span class="ahora__k">Travel</span><span class="ahora__v">{{ahora.partido.team1}} vs {{ahora.partido.team2}} · {{ahora.partido.dia}} {{ahora.partido.mes}} · {{ahora.partido.venue}}</span><span class="ahora__ir">→</span></a></li>
     {{/if}}
     {{#if ahora.podcast}}
-    <a class="tarjeta" href="/{{lang}}/podcast">
-      <span class="tarjeta__k">Podcast</span>
-      <strong class="tarjeta__t">{{ahora.podcast.total}} {{#if isEs}}episodios{{else}}episodes{{/if}}</strong>
-      <span class="tarjeta__d">{{#if isEs}}Conversaciones de fútbol, sin prisa. El más reciente te espera.{{else}}Football conversations, no rush.{{/if}}</span>
-      <span class="tarjeta__ir">{{#if isEs}}Escuchar{{else}}Listen{{/if}} ↗</span>
-    </a>
+    <li><a href="/{{lang}}/podcast"><span class="ahora__k">Podcast</span><span class="ahora__v">{{ahora.podcast.total}} {{#if isEs}}episodios en YouTube{{else}}episodes on YouTube{{/if}}</span><span class="ahora__ir">→</span></a></li>
     {{/if}}
-  </div>
-</section>
-
-<section class="indice envoltura" id="secciones" aria-label="{{#if isEs}}Secciones{{else}}Sections{{/if}}">
-  <p class="rotulo">{{#if isEs}}El sitio{{else}}The site{{/if}}</p>
-  <ol class="indice__lista">
-    {{#each secciones}}
-    <li style="--i:{{@index}}">
-      <a class="fila" href="{{this.url}}">
-        <span class="fila__num">{{this.num}}</span>
-        <span class="fila__nombre">{{this.nombre}}</span>
-        <span class="fila__texto">
-          <span class="fila__sub">{{#if this.submarca}}{{this.submarca}}{{else}}SOCCER iD{{/if}}</span>
-          <span class="fila__linea">{{this.linea}}</span>
-        </span>
-        <span class="fila__flecha" aria-hidden="true">↗</span>
-      </a>
-    </li>
-    {{/each}}
   </ol>
 </section>
 
-<section class="banda">
-  <div class="envoltura banda__dentro">
-    <p class="banda__t">{{#if isEs}}Síguenos{{else}}Follow us{{/if}}</p>
-    <div class="banda__redes">
-      {{#each redes}}<a href="{{this.url}}" target="_blank" rel="noopener">{{this.nombre}} <span aria-hidden="true">↗</span></a>{{/each}}
-    </div>
-  </div>
+<section class="redes">
+  <h2 class="redes__t">{{#if isEs}}Síguenos{{else}}Follow us{{/if}}</h2>
+  <ul class="redes__lista">
+    {{#each redes}}<li><a href="{{this.url}}" target="_blank" rel="noopener"><span>{{this.nombre}}</span><small>{{this.usuario}}</small></a></li>{{/each}}
+  </ul>
 </section>

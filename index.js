@@ -1625,8 +1625,19 @@ function seccionesV2(lang) {
       linea: es ? 'Lo que dicen quienes vivieron la experiencia, y la prensa.' : 'What people and the press say.' },
     { slug: 'nosotros', num: '06', marca: false, color: 'apoyo', nombre: es ? 'Quiénes somos' : 'About us',
       linea: es ? 'La historia y el equipo detrás de SOCCER iD.' : 'The story and the team behind SOCCER iD.' }
-  ].map(sx => Object.assign(sx, { url: `/${lang}/${sx.slug}` }));
+  ].map(sx => Object.assign(sx, { url: `/${lang}/${sx.slug}`, foto: FOTOS_SECCION[sx.slug] }));
 }
+
+// Una foto de las que ya tiene el sitio por sección, para el home. Se ven en
+// escala de grises: el home no lleva color.
+const FOTOS_SECCION = {
+  tour: '/assets/images/gallery/cup2025/1.jpg',
+  travel: '/assets/images/gallery/vip/1.jpg',
+  legends: '/assets/images/gallery/cup2023/2.jpg',
+  podcast: '/assets/images/gallery/somos/2.png',
+  opiniones: '/assets/images/gallery/fan/1@2x.png',
+  nosotros: '/assets/images/gallery/somos/4.JPG'
+};
 
 /** Lo común a todas las páginas de la nueva distribución. */
 function datosV2(lang, slug) {
@@ -1634,7 +1645,9 @@ function datosV2(lang, slug) {
   const secciones = seccionesV2(lang);
   const actual = secciones.find(sx => sx.slug === slug) || null;
   return Object.assign(base, {
-    layout: 'v2',
+    // El home tiene layout propio (blanco y negro, sin color); las secciones
+    // interiores siguen con el suyo mientras se decide la línea del sitio.
+    layout: slug ? 'v2' : 'inicio',
     secciones,
     marcas: secciones.filter(sx => sx.marca),
     apoyo: secciones.filter(sx => !sx.marca),
