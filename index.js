@@ -1612,7 +1612,7 @@ function seccionesV2(lang) {
     { slug: 'opiniones', num: '05', marca: false, color: 'apoyo', nombre: es ? 'Opiniones y media' : 'Reviews & media',
       linea: es ? 'Lo que dicen quienes vivieron la experiencia, y la prensa.' : 'What people and the press say.' },
     { slug: 'nosotros', num: '06', marca: false, color: 'apoyo', nombre: es ? 'Quiénes somos' : 'About us',
-      linea: es ? 'Amamos tanto el deporte que nos atrevimos a reinventarlo.' : 'We love sport so much we dared to reinvent it.' }
+      linea: es ? 'La historia y el equipo detrás de SOCCER iD.' : 'The story and the team behind SOCCER iD.' }
   ].map(sx => Object.assign(sx, { url: `/${lang}/${sx.slug}` }));
 }
 

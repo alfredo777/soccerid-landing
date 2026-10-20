@@ -8,13 +8,13 @@
    PLANO quiere decir: sin degradados, sin sombras, sin brillos. La jerarquía
    la dan el color sólido, el tamaño de la letra y el aire.
 
-   Los colores de marca son los del logo (sep 2026), los mismos de
-   docs/variables-del-proyecto.md. Cada una de las cuatro marcas tiene un
-   color sólido propio para reconocerla a primera vista:
-     Tour     azul de marca    texto blanco   (8.7 de contraste)
-     Travel   tinta casi negra texto blanco, acento verde
-     Legends  azul profundo    texto blanco   (12.4)
-     Podcast  verde neón       texto tinta    (14.2)
+   TRES COLORES, y nada más (pedido del usuario: la primera vuelta, con un
+   color por marca, se leía como un revoltijo):
+     azul   #1B17EF  el protagonista: titulares de acento, números, botones
+     verde  #78F750  el acento, poco y en sitios fijos: la cinta, la flecha
+     blanco          el fondo
+   La letra va en tinta casi negra, que no cuenta como color.
+   Todas las secciones llevan el MISMO tratamiento: una sola línea.
    El verde nunca va como texto sobre blanco: ahí da 1.4 y no se lee.
    ═══════════════════════════════════════════════════════════════════════ */
 
@@ -31,14 +31,15 @@
   --lima: #78F750;
   --tinta: #121218;
   --tinta-2: #55566A;      /* 6.9 sobre el fondo: texto secundario */
-  --fondo: #F5F5F8;
+  --fondo: #FFFFFF;
   --superficie: #FFFFFF;
   --linea: #E2E2EA;
 
+  /* Una sola línea: todas las secciones usan el azul. */
   --c-tour: var(--azul);
-  --c-travel: var(--tinta);
-  --c-legends: var(--azul-osc);
-  --c-podcast: var(--lima);
+  --c-travel: var(--azul);
+  --c-legends: var(--azul);
+  --c-podcast: var(--azul);
 
   --radio: 22px;
   --radio-sm: 14px;
@@ -77,7 +78,7 @@ img { display: block; max-width: 100%; }
 .nav__logo img { height: 24px; width: auto; }
 .nav__marcas {
   display: flex; gap: 2px; margin-left: 18px;
-  background: var(--fondo); border-radius: 999px; padding: 4px;
+  background: #F3F3F7; border-radius: 999px; padding: 4px;
 }
 .nav__link {
   font-size: 14px; font-weight: 600; color: var(--tinta-2);
@@ -89,7 +90,7 @@ img { display: block; max-width: 100%; }
 .nav__menu {
   display: inline-flex; align-items: center; gap: 9px;
   font-size: 14px; font-weight: 700;
-  background: var(--tinta); color: #fff;
+  background: var(--azul); color: #fff;
   padding: 11px 20px; border-radius: 999px; margin-left: 4px;
 }
 .nav__menu-punto { width: 8px; height: 8px; border-radius: 50%; background: var(--lima); }
@@ -156,64 +157,63 @@ img { display: block; max-width: 100%; }
    lateral de .envoltura y el contenido quedaría pegado al borde en celular. */
 .seccion { padding-block: 56px; }
 
-/* ─── Home: titular y menú de marcas ──────────────────────────────── */
-.inicio-hero { text-align: center; padding-block: 64px 56px; }
-.inicio-hero .kicker { margin-bottom: 18px; }
-.inicio-hero .titular { max-width: 980px; margin: 0 auto; }
-.inicio-hero .bajada { margin: 22px auto 0; }
+/* ─── Home: índice de una sola línea ──────────────────────────────── */
+.hero { padding-block: 72px 48px; }
+.etiqueta {
+  display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .16em;
+  background: var(--lima); color: var(--tinta); padding: 6px 12px; border-radius: 999px;
+  margin-bottom: 26px;
+}
+.hero .titular { max-width: 1000px; font-size: clamp(42px, 7.2vw, 96px); }
+.hero .bajada { margin-top: 24px; }
 
-.marcas { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.marca {
-  position: relative; display: flex; flex-direction: column;
-  min-height: 300px; padding: 30px 32px;
-  border-radius: var(--radio); color: #fff;
-  transition: transform .2s;
-}
-.marca:hover { transform: translateY(-3px); }
-.marca--tour { background: var(--c-tour); }
-.marca--travel { background: var(--c-travel); }
-.marca--legends { background: var(--c-legends); }
-.marca--podcast { background: var(--c-podcast); color: var(--tinta); }
-.marca__arriba { display: flex; align-items: center; justify-content: space-between; }
-.marca__num { font-size: 14px; font-weight: 800; letter-spacing: .08em; opacity: .75; }
-.marca__flecha {
-  width: 46px; height: 46px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  border: 1.5px solid currentColor; font-size: 20px;
-  transition: background .2s, color .2s;
-}
-.marca:hover .marca__flecha { background: #fff; color: var(--tinta); border-color: #fff; }
-.marca--podcast:hover .marca__flecha { background: var(--tinta); color: var(--lima); border-color: var(--tinta); }
-.marca__abajo { margin-top: auto; }
-.marca__sub { font-size: 13px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; opacity: .8; }
-.marca__nombre { font-size: clamp(44px, 6vw, 72px); font-weight: 900; letter-spacing: -.035em; line-height: 1; margin: 6px 0 10px; }
-.marca__linea { font-size: 16px; max-width: 360px; opacity: .88; }
-.marca--travel .marca__sub { color: var(--lima); opacity: 1; }
+/* Cinta: la única pieza que se mueve sola. Lenta, para acompañar y no distraer. */
+.cinta { background: var(--azul); color: #fff; overflow: hidden; padding-block: 18px; }
+.cinta__pista { display: flex; align-items: center; gap: 28px; width: max-content; animation: cinta 38s linear infinite; }
+.cinta__pista span { font-size: clamp(18px, 2.2vw, 26px); font-weight: 800; letter-spacing: -.01em; white-space: nowrap; }
+.cinta__pista i { width: 10px; height: 10px; border-radius: 50%; background: var(--lima); flex: none; }
+@keyframes cinta { to { transform: translateX(-50%); } }
 
-.apoyo { margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.apoyo__item {
-  display: flex; align-items: center; gap: 20px;
-  background: var(--superficie); border: 1px solid var(--linea);
-  border-radius: var(--radio); padding: 26px 30px;
-  transition: border-color .15s;
-}
-.apoyo__item:hover { border-color: var(--tinta); }
-.apoyo__num { font-size: 14px; font-weight: 800; color: var(--azul); }
-.apoyo__texto { flex: 1; }
-.apoyo__nombre { font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
-.apoyo__linea { font-size: 14px; color: var(--tinta-2); }
-.apoyo__flecha { font-size: 20px; color: var(--tinta-2); }
+.indice { padding-block: 24px 72px; }
+.indice__lista { list-style: none; border-top: 1px solid var(--linea); }
+.indice__lista li { opacity: 0; transform: translateY(14px); animation: entra .55s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(var(--i) * 70ms + 120ms); }
+@keyframes entra { to { opacity: 1; transform: none; } }
 
-.redes { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
-.red {
-  background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio-sm);
-  padding: 18px; display: flex; flex-direction: column; gap: 22px;
-  transition: background .15s, border-color .15s, color .15s;
+/* La fila se llena de azul de izquierda a derecha al pasar. Es un fondo de un
+   solo color que crece, no un degradado: sigue siendo plano. */
+.fila {
+  display: grid; grid-template-columns: 64px minmax(0, 1.1fr) minmax(0, 1fr) 56px;
+  align-items: center; gap: 24px;
+  padding: 26px 18px; border-bottom: 1px solid var(--linea);
+  background: linear-gradient(var(--azul), var(--azul)) no-repeat left / 0% 100%;
+  transition: background-size .45s cubic-bezier(.2,.8,.2,1), color .25s;
 }
-.red:hover { background: var(--tinta); border-color: var(--tinta); color: #fff; }
-.red__nombre { font-weight: 800; font-size: 16px; }
-.red__usuario { font-size: 13px; color: var(--tinta-2); }
-.red:hover .red__usuario { color: rgba(255,255,255,.75); }
+.fila__num { font-size: 15px; font-weight: 800; color: var(--azul); transition: color .25s; }
+.fila__nombre { font-size: clamp(34px, 5vw, 64px); font-weight: 800; letter-spacing: -.035em; line-height: 1; }
+.fila__texto { display: flex; flex-direction: column; gap: 4px; }
+.fila__sub { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--azul); transition: color .25s; }
+.fila__linea { font-size: 15px; color: var(--tinta-2); transition: color .25s; }
+.fila__flecha {
+  width: 52px; height: 52px; border-radius: 50%; justify-self: end;
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+  border: 1.5px solid var(--linea); color: var(--tinta);
+  transition: background .25s, border-color .25s, color .25s, transform .35s cubic-bezier(.2,.8,.2,1);
+}
+.fila:hover { background-size: 100% 100%; color: #fff; }
+.fila:hover .fila__num, .fila:hover .fila__sub { color: var(--lima); }
+.fila:hover .fila__linea { color: rgba(255,255,255,.85); }
+.fila:hover .fila__flecha { background: var(--lima); border-color: var(--lima); color: var(--tinta); transform: rotate(45deg); }
+
+.banda { background: var(--azul); color: #fff; }
+.banda__dentro { padding-block: 44px; display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap; }
+.banda__t { font-size: clamp(30px, 4vw, 48px); font-weight: 800; letter-spacing: -.03em; }
+.banda__redes { display: flex; flex-wrap: wrap; gap: 8px; }
+.banda__redes a {
+  font-size: 15px; font-weight: 700; padding: 11px 18px; border-radius: 999px;
+  border: 1.5px solid rgba(255,255,255,.55); transition: background .2s, color .2s, border-color .2s;
+}
+.banda__redes a:hover { background: var(--lima); border-color: var(--lima); color: var(--tinta); }
+.v2--inicio .pie { margin-top: 0; border-top: 0; }
 
 /* ─── Cabecera de cada sección ────────────────────────────────────── */
 .cabecera { padding-block: 40px 8px; }
@@ -225,12 +225,9 @@ img { display: block; max-width: 100%; }
 .v2--tour { --color-seccion: var(--c-tour); }
 .v2--travel { --color-seccion: var(--c-travel); }
 .v2--legends { --color-seccion: var(--c-legends); }
-.v2--podcast { --color-seccion: var(--lima); }
+.v2--podcast { --color-seccion: var(--azul); }
 .v2--apoyo { --color-seccion: var(--azul); }
-.v2--tour .nav__link.is-activo { background: var(--c-tour); }
-.v2--travel .nav__link.is-activo { background: var(--c-travel); }
-.v2--legends .nav__link.is-activo { background: var(--c-legends); }
-.v2--podcast .nav__link.is-activo { background: var(--lima); color: var(--tinta); }
+
 
 /* ─── Tour: lo que viene y lo que ya pasó ─────────────────────────── */
 .tour27 {
@@ -360,9 +357,10 @@ img { display: block; max-width: 100%; }
   .nav__marcas { display: none; }
   .nav { top: 12px; }
   .nav__pildora { width: 100%; justify-content: space-between; padding-left: 18px; }
-  .marcas, .apoyo { grid-template-columns: 1fr; }
-  .marca { min-height: 220px; padding: 24px; }
-  .redes { grid-template-columns: repeat(2, 1fr); }
+  .fila { grid-template-columns: 34px minmax(0, 1fr) 42px; gap: 6px 12px; padding: 20px 6px; }
+  .fila__texto { grid-column: 2 / 4; }
+  .fila__flecha { grid-row: 1; grid-column: 3; width: 42px; height: 42px; font-size: 17px; }
+  .banda__dentro { padding-block: 34px; }
   .tour27 { grid-template-columns: 1fr; padding: 26px; gap: 26px; }
   /* El partido en dos renglones: rótulo arriba, nombre y estado abajo. En una
      sola fila el nombre se partía en cuatro líneas. */
@@ -377,10 +375,12 @@ img { display: block; max-width: 100%; }
   .somos { gap: 26px; }
   .somos__texto { font-size: 18px; }
   .pagina { padding-top: 88px; }
-  .inicio-hero { padding-block: 40px 36px; }
+  .hero { padding-block: 40px 32px; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
+  .cinta__pista { animation: none; }
+  .indice__lista li { animation: none; opacity: 1; transform: none; }
 }
 
 /* Los textos que vienen de los JSON traen text-align: justify en línea. En
