@@ -28,10 +28,10 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
    seis puertas se montan encima con margen negativo, de modo que la
    primera pantalla ya lo tiene todo: no hay que bajar para elegir. */
 .hero-logo-text img { filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5)); }
-.hero-section { height: auto; min-height: 100vh; align-items: flex-start; padding-top: clamp(80px, 11vh, 120px); }
-/* El fondo del mockup: el estadio se ve entero, en frío y apagado, con el
-   pasto y la línea central a la vista abajo. Un velo azul marino parejo,
-   apenas más denso arriba, y nada de degradado negro al pie. */
+/* Isotipo y lema arriba, con poco aire sobre ellos y más hacia las puertas. */
+.hero-section { height: auto; min-height: 100vh; align-items: flex-start; padding-top: clamp(44px, 5.5vh, 64px); }
+.hero-logo-text { margin-bottom: 14px; }
+.hero-logo-text img { width: clamp(84px, 7vw, 104px); height: auto; }
 /* Calibrado contra el mockup midiendo cielo, gradas y pasto: la foto se
    levanta (brillo 1.25, un poco de sepia para que la gente de las gradas
    se vea cálida) y encima va un velo neutro, denso en el cielo y en el
@@ -86,16 +86,17 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 /* En escritorio las redes son seis círculos centrados bajo las puertas, como
    en el mockup. Para dejarles el centro, la píldora del próximo partido (del
    layout, fija) se recorre a la izquierda sólo en esta página. */
-.redes-v2 { position: relative; z-index: 4; height: 150px; padding: 46px 40px 0; }
+/* Chicas y discretas: son un pie, no un bloque. */
+.redes-v2 { position: relative; z-index: 4; height: 150px; padding: 54px 40px 0; }
 .redes-v2 .section-header { display: none; }
-.redes-v2__grid { display: flex; justify-content: center; gap: 22px; }
+.redes-v2__grid { display: flex; justify-content: center; gap: 14px; }
 .redes-v2__chip {
-  width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  color: #fff; text-decoration: none; border: 2px solid rgba(255,255,255,0.85); background: rgba(8,12,24,0.35);
+  width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,0.85); text-decoration: none; border: 1.5px solid rgba(255,255,255,0.6); background: rgba(8,12,24,0.35);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   transition: transform .2s, background .2s, border-color .2s, color .2s;
 }
-.redes-v2__chip svg { width: 22px; height: 22px; }
+.redes-v2__chip svg { width: 16px; height: 16px; }
 .redes-v2__chip span, .redes-v2__chip small { display: none; }
 .redes-v2__chip:hover { transform: translateY(-3px); background: var(--brand-lime); border-color: var(--brand-lime); color: #0b1020; }
 .footer-content { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; padding: 24px 20px; color: rgba(255,255,255,0.6); font-size: 13px; }
@@ -114,7 +115,7 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
    primera pantalla, en dos columnas y tres filas. La banda de abajo es de
    la píldora del partido. */
 @media (max-width: 1024px) {
-  .hero-section { padding-top: 84px; }
+  .hero-section { padding-top: 56px; }
   .hero-logo-text img { width: 72px; height: 72px; }
   .puertas { --alto: clamp(330px, calc(100vh - 370px), 560px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 10px; width: calc(100% - 32px); margin: calc(-1 * var(--alto) - 90px) auto 0; }
   .puerta { flex: none; border-radius: 18px; }
@@ -128,8 +129,8 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
   .puerta__icono svg { width: 16px; height: 16px; }
   .redes-v2 { height: 90px; margin-top: 0; padding: 18px 16px 0; }
   .redes-v2__grid { gap: 10px; }
-  .redes-v2__chip { width: 46px; height: 46px; }
-  .redes-v2__chip svg { width: 20px; height: 20px; }
+  .redes-v2__chip { width: 36px; height: 36px; }
+  .redes-v2__chip svg { width: 15px; height: 15px; }
   /* El lateral se comporta como en la original: aparece al bajar. */
   .dot-nav--inicio { display: flex; }
 }
