@@ -21,7 +21,12 @@ body .lang-btn { padding: 8px 16px; border-radius: 999px; color: rgba(255,255,25
 body .lang-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
 body .lang-btn.active { background: #fff; color: #0b1020; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
 body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
-@media (max-width: 768px) { body .lang-btn { padding: 7px 12px; } }
+/* En celular, más chico: banderas de 15 px y píldora compacta. */
+@media (max-width: 768px) {
+  body .language-selector { padding: 4px; }
+  body .lang-btn { padding: 5px 9px; }
+  body .lang-flag { font-size: 15px; }
+}
 
 /* ─── Hero: el home es el menú ────────────────────────────────────── */
 /* En escritorio el contenido del hero sube (isotipo + lema arriba) y las
@@ -143,9 +148,9 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
   .puerta__icono { width: 34px; height: 34px; top: 10px; left: 10px; }
   .puerta__icono svg { width: 16px; height: 16px; }
   .redes-v2 { height: 90px; margin-top: 0; padding: 18px 16px 0; }
-  .redes-v2__grid { gap: 10px; }
-  .redes-v2__chip { width: 36px; height: 36px; }
-  .redes-v2__chip svg { width: 15px; height: 15px; }
+  .redes-v2__grid { gap: 8px; }
+  .redes-v2__chip { width: 30px; height: 30px; border-width: 1px; }
+  .redes-v2__chip svg { width: 13px; height: 13px; }
   /* El lateral se comporta como en la original: aparece al bajar. */
   .dot-nav--inicio { display: flex; }
 }
