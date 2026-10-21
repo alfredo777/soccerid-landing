@@ -116,8 +116,10 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
    cielo, gradas y pasto contra la captura de web, para que quede igual
    de mate. */
 @media (max-width: 1024px) {
-  .hero-image { filter: saturate(0.7) brightness(1.1) sepia(0.2); }
-  .hero-video-container::after { background: linear-gradient(180deg, rgba(18,20,24,0.70) 0%, rgba(18,20,24,0.45) 40%, rgba(18,20,24,0.74) 100%); }
+  /* Más mate que en web: menos saturación y contraste, y un velo gris
+     casi parejo, para que el fondo acompañe y no compita con las cards. */
+  .hero-image { filter: saturate(0.45) brightness(0.95) contrast(0.85) sepia(0.15); }
+  .hero-video-container::after { background: linear-gradient(180deg, rgba(38,40,46,0.72) 0%, rgba(38,40,46,0.62) 40%, rgba(38,40,46,0.74) 100%); }
 }
 /* La misma idea que en escritorio: isotipo, lema y las seis puertas en la
    primera pantalla, en dos columnas y tres filas. La banda de abajo es de
