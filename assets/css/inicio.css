@@ -130,7 +130,12 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
   .puertas { --alto: clamp(330px, calc(100vh - 370px), 560px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 10px; width: calc(100% - 32px); margin: calc(-1 * var(--alto) - 90px) auto 0; }
   .puerta { flex: none; border-radius: 18px; }
   .puerta:hover { flex: none; }
-  .puerta::before { opacity: .92; transform: none; }
+  /* En celular no hay hover: la foto va al 100 %, el oscurecido sólo en el
+     pie, y un borde y una sombra más marcados para que la card resalte
+     sobre el fondo mate. */
+  .puerta { border-color: rgba(255,255,255,0.22); box-shadow: 0 14px 40px rgba(0,0,0,0.55); }
+  .puerta::before { opacity: 1; transform: none; filter: saturate(1.08) contrast(1.05); }
+  .puerta::after { background: linear-gradient(to top, rgba(5,4,21,0.90) 0%, rgba(5,4,21,0.62) 30%, rgba(5,4,21,0.10) 58%, rgba(5,4,21,0) 100%); }
   .puerta__nombre { font-size: 1.25rem; }
   .puerta__linea { font-size: 12px; }
   .puerta__barra { width: 30px; height: 3px; margin: 5px 0 6px; }
