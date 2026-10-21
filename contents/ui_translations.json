@@ -14,7 +14,7 @@
       "loading": "Cargando..."
     },
     "hero": {
-      "tagline": "AMAMOS TANTO EL DEPORTE<br>QUE NOS ATREVIMOS A REINVENTARLO",
+      "tagline": "AMAMOS TANTO EL DEPORTE<br>QUE NOS ATREVIMOS <em>A REINVENTARLO</em>",
       "scroll": "Desliza"
     },
     "events": {
@@ -86,7 +86,7 @@
       "loading": "Loading..."
     },
     "hero": {
-      "tagline": "WE LOVE SPORTS SO MUCH<br>THAT WE DARED TO REINVENT IT",
+      "tagline": "WE LOVE SPORTS SO MUCH<br>THAT WE DARED <em>TO REINVENT IT</em>",
       "scroll": "Scroll"
     },
     "events": {

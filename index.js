@@ -1614,17 +1614,23 @@ function seccionesV2(lang) {
   const es = lang !== 'en';
   return [
     { slug: 'tour', num: '01', marca: true, color: 'tour', nombre: 'Tour', submarca: 'SOCCER iD CUP',
-      linea: es ? "El Tour '27 y las ediciones que ya se jugaron." : "Tour '27 and the editions already played." },
+      linea: es ? "El Tour '27 y las ediciones que ya se jugaron." : "Tour '27 and the editions already played.",
+      lema: es ? 'Vive el fútbol como nunca antes' : 'Live football like never before', barra: '#78F750' },
     { slug: 'travel', num: '02', marca: true, color: 'travel', nombre: 'Travel', submarca: 'SOCCER iD Travel Club',
-      linea: es ? 'Partidos, palcos y viajes a cualquier estadio.' : 'Matches, suites and trips to any stadium.' },
+      linea: es ? 'Partidos, palcos y viajes a cualquier estadio.' : 'Matches, suites and trips to any stadium.',
+      lema: es ? 'Destinos que vibran con el fútbol' : 'Destinations that live football', barra: '#4FD6FF' },
     { slug: 'legends', num: '03', marca: true, color: 'legends', nombre: 'Legends', submarca: 'SOCCER iD Legends',
-      linea: es ? 'Las figuras que hicieron historia, de cerca.' : 'The players who made history, up close.' },
+      linea: es ? 'Las figuras que hicieron historia, de cerca.' : 'The players who made history, up close.',
+      lema: es ? 'Historias que nunca se olvidan' : 'Stories never forgotten', barra: '#FFD84D' },
     { slug: 'podcast', num: '04', marca: true, color: 'podcast', nombre: 'Podcast', submarca: 'SOCCER iD Podcast',
-      linea: es ? 'Conversaciones de fútbol, sin prisa.' : 'Football conversations, no rush.' },
+      linea: es ? 'Conversaciones de fútbol, sin prisa.' : 'Football conversations, no rush.',
+      lema: es ? 'Voces que viven el deporte' : 'Voices that live the game', barra: '#F04DFF' },
     { slug: 'opiniones', num: '05', marca: false, color: 'apoyo', nombre: es ? 'Opiniones y media' : 'Reviews & media', corto: 'Media',
-      linea: es ? 'Lo que dicen quienes vivieron la experiencia, y la prensa.' : 'What people and the press say.' },
+      linea: es ? 'Lo que dicen quienes vivieron la experiencia, y la prensa.' : 'What people and the press say.',
+      lema: es ? 'Noticias, análisis y más' : 'News, analysis and more', barra: '#4FD6FF' },
     { slug: 'nosotros', num: '06', marca: false, color: 'apoyo', nombre: es ? 'Quiénes somos' : 'About us', corto: es ? 'Nosotros' : 'About',
-      linea: es ? 'La historia y el equipo detrás de SOCCER iD.' : 'The story and the team behind SOCCER iD.' }
+      linea: es ? 'La historia y el equipo detrás de SOCCER iD.' : 'The story and the team behind SOCCER iD.',
+      lema: es ? 'Una comunidad global' : 'A global community', barra: '#FF4D4D' }
   ].map(sx => Object.assign(sx, { url: `/${lang}/${sx.slug}`, foto: FOTOS_SECCION[sx.slug] }));
 }
 

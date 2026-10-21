@@ -64,7 +64,7 @@
   </div>
   <div class="hero-content">
     <div class="hero-logo-text"><img src="{{img '/assets/images/logo-iso-blanco.png'}}" width="110" height="110" alt="SOCCER iD"></div>
-    <h1 class="hero-tagline">AMAMOS TANTO EL DEPORTE<br>QUE NOS ATREVIMOS A REINVENTARLO</h1>
+    <h1 class="hero-tagline">AMAMOS TANTO EL DEPORTE<br>QUE NOS ATREVIMOS <em>A REINVENTARLO</em></h1>
   </div>
   {{!-- Sin indicador de scroll propio: la píldora del próximo partido que
         pone el layout ya trae su «desliza» en el mismo sitio. --}}
@@ -75,15 +75,13 @@
       bajar para elegir. En celular se apilan como tarjetas. --}}
 <nav class="puertas" id="secciones" aria-label="{{#if isEs}}Secciones{{else}}Sections{{/if}}">
   {{#each secciones}}
-  <a class="puerta puerta--{{this.slug}}" id="sec-{{this.slug}}" href="{{this.url}}" style="--i:{{@index}}; --foto:url('{{this.foto}}')">
+  <a class="puerta puerta--{{this.slug}}" id="sec-{{this.slug}}" href="{{this.url}}" style="--i:{{@index}}; --foto:url('{{this.foto}}'); --barra:{{this.barra}}">
     <span class="puerta__icono" aria-hidden="true">{{> icono-seccion slug=this.slug}}</span>
-    <span class="puerta__ir" aria-hidden="true">→</span>
     <span class="puerta__cuerpo">
-      <span class="puerta__sub">{{#if this.submarca}}{{this.submarca}}{{else}}SOCCER iD{{/if}}</span>
-      {{!-- El nombre va en una sola línea para que las seis puertas queden
-            simétricas; el nombre largo vive en el menú y en la página. --}}
+      {{!-- Sólo el nombre, en una línea, con su barra de color y el lema. --}}
       <span class="puerta__nombre">{{#if this.corto}}{{this.corto}}{{else}}{{this.nombre}}{{/if}}</span>
-      <span class="puerta__linea">{{this.linea}}</span>
+      <span class="puerta__barra" aria-hidden="true"></span>
+      <span class="puerta__linea">{{this.lema}}</span>
     </span>
   </a>
   {{/each}}
@@ -94,7 +92,7 @@
 <section class="redes-v2">
   <div class="section-header"><h2>{{#if isEs}}Síguenos{{else}}Follow us{{/if}}</h2><p>@soccerid7</p></div>
   <div class="redes-v2__grid">
-    {{#each redes}}<a class="redes-v2__chip" href="{{this.url}}" target="_blank" rel="noopener"><span>{{this.nombre}}</span><small>{{this.usuario}}</small></a>{{/each}}
+    {{#each redes}}<a class="redes-v2__chip" href="{{this.url}}" target="_blank" rel="noopener" aria-label="{{this.nombre}}" title="{{this.nombre}}">{{> icono-red id=this.id}}<span>{{this.nombre}}</span><small>{{this.usuario}}</small></a>{{/each}}
   </div>
 </section>
 

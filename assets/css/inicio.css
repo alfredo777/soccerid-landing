@@ -66,14 +66,16 @@
    primera pantalla ya lo tiene todo: no hay que bajar para elegir. */
 .hero-logo-text img { filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5)); }
 .hero-section { height: auto; min-height: 100vh; align-items: flex-start; padding-top: clamp(80px, 11vh, 120px); }
-/* El fondo nuevo (fondo-estadio) es más luminoso que el anterior, así que el
-   velo original lo apagaba: se aclara arriba (el isotipo y el lema siguen
-   legibles con su sombra) y se mantiene oscuro abajo, donde van las puertas. */
-.hero-video-container::after { background: linear-gradient(180deg, rgba(22,24,27,0.18) 0%, rgba(22,24,27,0.38) 45%, rgba(22,24,27,0.88) 100%); }
+/* El fondo del mockup: el estadio se ve entero, en frío y apagado, con el
+   pasto y la línea central a la vista abajo. Un velo azul marino parejo,
+   apenas más denso arriba, y nada de degradado negro al pie. */
+.hero-video-container::after { background: linear-gradient(180deg, rgba(8,12,24,0.62) 0%, rgba(8,12,24,0.45) 40%, rgba(8,12,24,0.30) 100%); }
+.hero-image { filter: saturate(0.72) brightness(0.82); }
 .hero-logo-text img { width: 84px; height: 84px; }
 /* El tamaño del lema en celular ya está calibrado en main.css (dos líneas
    exactas); sólo se toca en escritorio. */
-@media (min-width: 1025px) { .hero-tagline { font-size: 1.4rem; margin-bottom: 0; } }
+@media (min-width: 1025px) { .hero-tagline { font-size: 1.6rem; margin-bottom: 0; } }
+.hero-section .hero-tagline em { font-style: italic; color: var(--brand-lime); }
 
 /* ─── Las seis puertas ────────────────────────────────────────────── */
 /* Las puertas terminan 130 px antes del borde inferior de la pantalla: esa
@@ -94,51 +96,43 @@
 @keyframes puertaEntra { to { opacity: 1; transform: none; } }
 .puerta::before { content: ''; position: absolute; inset: 0; z-index: -2; background: var(--foto) center / cover no-repeat; opacity: .5; transform: scale(1.06); transition: opacity .5s, transform .9s cubic-bezier(.2,.8,.2,1); }
 .puerta--tour::before { background-position: center 12%; }
-.puerta::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(5,4,21,0.92) 0%, rgba(5,4,21,0.35) 55%, rgba(5,4,21,0.1) 100%); }
+.puerta::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(5,4,21,0.94) 0%, rgba(5,4,21,0.55) 45%, rgba(5,4,21,0.08) 100%); }
 .puerta:hover { flex: 2.4; border-color: rgba(var(--brand-blue-rgb), 0.7); box-shadow: 0 16px 50px rgba(var(--brand-blue-rgb), 0.25); }
 .puerta:hover::before { opacity: 1; transform: none; }
 .puerta__icono {
   position: absolute; top: 14px; left: 14px; z-index: 2;
   width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); color: var(--brand-lime);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  background: var(--brand-lime); color: #0b1020; box-shadow: 0 4px 16px rgba(0,0,0,0.35);
 }
 .puerta__icono svg { width: 18px; height: 18px; }
-.puerta__ir {
-  position: absolute; top: 14px; right: 14px; z-index: 2;
-  width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); font-size: 17px;
-  transition: background .25s, transform .35s cubic-bezier(.2,.8,.2,1);
-}
-.puerta:hover .puerta__ir { background: var(--brand-blue); transform: rotate(-45deg); }
-.puerta__cuerpo { position: absolute; left: 20px; right: 20px; bottom: 20px; z-index: 2; display: flex; flex-direction: column; gap: 4px; }
-.puerta__sub { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,0.7); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.puerta__cuerpo { position: absolute; left: 20px; right: 20px; bottom: 22px; z-index: 2; display: flex; flex-direction: column; gap: 0; }
 .puerta__nombre { font-size: clamp(1.3rem, 1.8vw, 1.8rem); font-weight: 900; letter-spacing: -.02em; line-height: 1.05; white-space: nowrap; }
-.puerta__linea { font-size: 13px; color: rgba(255,255,255,0.78); max-width: 320px; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .45s, opacity .35s .1s; }
-.puerta:hover .puerta__linea { max-height: 60px; opacity: 1; }
+.puerta__barra { display: block; width: 40px; height: 4px; border-radius: 2px; background: var(--barra, var(--brand-lime)); margin: 8px 0 10px; }
+/* Dos líneas reservadas siempre, para que los seis títulos queden a la
+   misma altura aunque el lema sea de una sola línea. */
+.puerta__linea { font-size: 14px; line-height: 1.3; min-height: 2.6em; color: rgba(255,255,255,0.88); max-width: 300px; }
 
 /* ─── Redes ───────────────────────────────────────────────────────── */
-/* En escritorio la fila de redes cierra la primera pantalla, justo bajo las
-   puertas; el título «Síguenos» sólo hace falta en celular. */
-.redes-v2 { position: relative; z-index: 4; height: 130px; padding: 38px 40px 0; }
+/* En escritorio las redes son seis círculos centrados bajo las puertas, como
+   en el mockup. Para dejarles el centro, la píldora del próximo partido (del
+   layout, fija) se recorre a la izquierda sólo en esta página. */
+.redes-v2 { position: relative; z-index: 4; height: 130px; padding: 34px 40px 0; }
 .redes-v2 .section-header { display: none; }
-/* Tres chips a cada lado de la píldora del partido, que ocupa el centro
-   (columna 4, vacía a propósito). Todos en la misma fila. */
-.redes-v2__grid { display: grid; grid-template-columns: auto auto auto minmax(380px, 1fr) auto auto auto; justify-content: space-between; align-items: center; column-gap: 8px; max-width: 1180px; margin: 0 auto; } /* 1180 y no 1320: el dock de Instagram y WhatsApp vive en el borde derecho */
-.redes-v2__chip { grid-row: 1; }
-.redes-v2__chip:nth-child(1) { grid-column: 1; } .redes-v2__chip:nth-child(2) { grid-column: 2; } .redes-v2__chip:nth-child(3) { grid-column: 3; }
-.redes-v2__chip:nth-child(4) { grid-column: 5; } .redes-v2__chip:nth-child(5) { grid-column: 6; } .redes-v2__chip:nth-child(6) { grid-column: 7; }
+.redes-v2__grid { display: flex; justify-content: center; gap: 22px; }
 .redes-v2__chip {
-  display: inline-flex; align-items: baseline; gap: 8px; padding: 9px 14px; border-radius: 999px; text-decoration: none; color: #fff; white-space: nowrap;
-  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-  transition: transform .2s, border-color .2s, background .2s;
+  width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  color: #fff; text-decoration: none; border: 2px solid rgba(255,255,255,0.85); background: rgba(8,12,24,0.35);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transition: transform .2s, background .2s, border-color .2s, color .2s;
 }
-.redes-v2__chip:hover { transform: translateY(-3px); border-color: rgba(var(--brand-blue-rgb), 0.7); background: rgba(var(--brand-blue-rgb), 0.18); }
-.redes-v2__chip span { font-weight: 800; font-size: 13px; }
-.redes-v2__chip small { font-size: 12px; color: rgba(255,255,255,0.6); }
+.redes-v2__chip svg { width: 22px; height: 22px; }
+.redes-v2__chip span, .redes-v2__chip small { display: none; }
+.redes-v2__chip:hover { transform: translateY(-3px); background: var(--brand-lime); border-color: var(--brand-lime); color: #0b1020; }
 .footer-content { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; padding: 24px 20px; color: rgba(255,255,255,0.6); font-size: 13px; }
 .footer-content a { color: inherit; }
+/* Las reglas de la píldora viven en un <style> del layout que llega después
+   de esta hoja; por eso van con body delante (más específicas). */
+@media (min-width: 1025px) { body .mn-mini { left: 40px; transform: translateX(0) translateY(220%); } body .mn-mini.active { transform: translateX(0) translateY(0); } }
 
 /* ─── Menú lateral (dot-nav original) ─────────────────────────────── */
 /* En escritorio las puertas ya son el menú. En celular es EL menú, así
@@ -159,20 +153,15 @@
   .puerta { flex: none; border-radius: 18px; }
   .puerta:hover { flex: none; }
   .puerta::before { opacity: .7; transform: none; }
-  .puerta__linea { display: none; }
   .puerta__nombre { font-size: 1.25rem; }
-  .puerta__sub { font-size: 10px; }
-  .puerta__cuerpo { left: 14px; right: 14px; bottom: 14px; }
+  .puerta__linea { font-size: 12px; }
+  .puerta__barra { width: 30px; height: 3px; margin: 5px 0 6px; }
+  .puerta__cuerpo { left: 14px; right: 14px; bottom: 12px; }
   .puerta__icono { width: 34px; height: 34px; top: 10px; left: 10px; }
   .puerta__icono svg { width: 16px; height: 16px; }
-  .puerta__ir { width: 32px; height: 32px; top: 10px; right: 10px; font-size: 15px; }
   .redes-v2 { height: auto; margin-top: 118px; padding: 40px 16px 110px; } /* 118: la banda de la píldora del partido */
   .redes-v2 .section-header { display: block; margin-bottom: 22px; }
-  .redes-v2__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .redes-v2__chip { display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 18px; white-space: normal; }
-  .redes-v2__chip:nth-child(n) { grid-column: auto; grid-row: auto; }
-  .redes-v2__chip span { font-size: 15px; }
-  .redes-v2__chip small { display: block; }
+  .redes-v2__grid { flex-wrap: wrap; gap: 14px; }
   /* El lateral se comporta como en la original: aparece al bajar. */
   .dot-nav--inicio { display: flex; }
 }
@@ -181,7 +170,6 @@
      el lateral de la derecha. */
   .pildora { left: 12px; transform: none; padding: 5px; }
   .pildora__nav, .pildora__menu { display: none; }
-  .redes-v2__grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) {
   .puerta { animation: none; opacity: 1; transform: none; }
