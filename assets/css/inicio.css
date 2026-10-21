@@ -132,7 +132,7 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 @media (max-width: 1024px) {
   .hero-section { padding-top: 56px; }
   .hero-logo-text img { width: 72px; height: 72px; }
-  .puertas { --alto: clamp(330px, calc(100vh - 370px), 560px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 10px; width: calc(100% - 32px); margin: calc(-1 * var(--alto) - 90px) auto 0; }
+  .puertas { --alto: clamp(330px, calc(100vh - 370px), 560px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 10px; width: calc(100% - 32px); margin: calc(-1 * var(--alto) - 130px) auto 0; }
   .puerta { flex: none; border-radius: 18px; }
   .puerta:hover { flex: none; }
   /* En celular no hay hover: la foto va al 100 %, el oscurecido sólo en el
@@ -147,7 +147,7 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
   .puerta__cuerpo { left: 14px; right: 14px; bottom: 12px; }
   .puerta__icono { width: 34px; height: 34px; top: 10px; left: 10px; }
   .puerta__icono svg { width: 16px; height: 16px; }
-  .redes-v2 { height: 90px; margin-top: 0; padding: 18px 16px 0; }
+  .redes-v2 { height: 130px; margin-top: 0; padding: 26px 16px 0; }
   .redes-v2__grid { gap: 8px; }
   .redes-v2__chip { width: 30px; height: 30px; border-width: 1px; }
   .redes-v2__chip svg { width: 13px; height: 13px; }
