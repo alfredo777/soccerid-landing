@@ -32,8 +32,12 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 /* El fondo del mockup: el estadio se ve entero, en frío y apagado, con el
    pasto y la línea central a la vista abajo. Un velo azul marino parejo,
    apenas más denso arriba, y nada de degradado negro al pie. */
-.hero-video-container::after { background: linear-gradient(180deg, rgba(4,7,16,0.74) 0%, rgba(4,7,16,0.56) 30%, rgba(4,7,16,0.40) 62%, rgba(4,7,16,0.28) 100%); }
-.hero-image { filter: saturate(0.8) brightness(0.8); }
+/* Calibrado contra el mockup midiendo cielo, gradas y pasto: la foto se
+   levanta (brillo 1.25, un poco de sepia para que la gente de las gradas
+   se vea cálida) y encima va un velo neutro, denso en el cielo y en el
+   pasto y ligero a la altura de las gradas. */
+.hero-video-container::after { background: linear-gradient(180deg, rgba(18,20,24,0.65) 0%, rgba(18,20,24,0.30) 45%, rgba(18,20,24,0.74) 100%); }
+.hero-image { filter: saturate(0.7) brightness(1.25) sepia(0.2); }
 .hero-logo-text img { width: 84px; height: 84px; }
 /* El tamaño del lema en celular ya está calibrado en main.css (dos líneas
    exactas); sólo se toca en escritorio. */
