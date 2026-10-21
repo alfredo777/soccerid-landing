@@ -61,9 +61,11 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
   transition: flex .55s cubic-bezier(.2,.8,.2,1), border-color .3s, box-shadow .3s;
 }
 @keyframes puertaEntra { to { opacity: 1; transform: none; } }
-.puerta::before { content: ''; position: absolute; inset: 0; z-index: -2; background: var(--foto) center / cover no-repeat; opacity: .5; transform: scale(1.06); transition: opacity .5s, transform .9s cubic-bezier(.2,.8,.2,1); }
+/* La foto va a plena luz, como en el mockup; sólo se oscurece el pie,
+   donde va el texto. */
+.puerta::before { content: ''; position: absolute; inset: 0; z-index: -2; background: var(--foto) center / cover no-repeat; opacity: .92; transform: scale(1.04); transition: opacity .5s, transform .9s cubic-bezier(.2,.8,.2,1); }
 .puerta--tour::before { background-position: center 12%; }
-.puerta::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(5,4,21,0.94) 0%, rgba(5,4,21,0.55) 45%, rgba(5,4,21,0.08) 100%); }
+.puerta::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(5,4,21,0.92) 0%, rgba(5,4,21,0.70) 22%, rgba(5,4,21,0.15) 50%, rgba(5,4,21,0) 100%); }
 .puerta:hover { flex: 2.4; border-color: rgba(var(--brand-blue-rgb), 0.7); box-shadow: 0 16px 50px rgba(var(--brand-blue-rgb), 0.25); }
 .puerta:hover::before { opacity: 1; transform: none; }
 .puerta__icono {
@@ -117,7 +119,7 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
   .puertas { --alto: clamp(330px, calc(100vh - 370px), 560px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 10px; width: calc(100% - 32px); margin: calc(-1 * var(--alto) - 90px) auto 0; }
   .puerta { flex: none; border-radius: 18px; }
   .puerta:hover { flex: none; }
-  .puerta::before { opacity: .7; transform: none; }
+  .puerta::before { opacity: .92; transform: none; }
   .puerta__nombre { font-size: 1.25rem; }
   .puerta__linea { font-size: 12px; }
   .puerta__barra { width: 30px; height: 3px; margin: 5px 0 6px; }
