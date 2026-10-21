@@ -111,6 +111,14 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 @media (min-width: 1025px) and (max-width: 1600px) { .redes-v2__chip small { display: none; } }
 
 /* ─── Celular y tableta ───────────────────────────────────────────── */
+/* La foto vertical es más luminosa que la horizontal, así que con el
+   mismo velo se veía viva y contrastada. Velo propio, calibrado midiendo
+   cielo, gradas y pasto contra la captura de web, para que quede igual
+   de mate. */
+@media (max-width: 1024px) {
+  .hero-image { filter: saturate(0.7) brightness(1.1) sepia(0.2); }
+  .hero-video-container::after { background: linear-gradient(180deg, rgba(18,20,24,0.70) 0%, rgba(18,20,24,0.45) 40%, rgba(18,20,24,0.74) 100%); }
+}
 /* La misma idea que en escritorio: isotipo, lema y las seis puertas en la
    primera pantalla, en dos columnas y tres filas. La banda de abajo es de
    la píldora del partido. */
