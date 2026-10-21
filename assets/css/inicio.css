@@ -66,6 +66,10 @@
    primera pantalla ya lo tiene todo: no hay que bajar para elegir. */
 .hero-logo-text img { filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5)); }
 .hero-section { height: auto; min-height: 100vh; align-items: flex-start; padding-top: clamp(80px, 11vh, 120px); }
+/* El fondo nuevo (fondo-estadio) es más luminoso que el anterior, así que el
+   velo original lo apagaba: se aclara arriba (el isotipo y el lema siguen
+   legibles con su sombra) y se mantiene oscuro abajo, donde van las puertas. */
+.hero-video-container::after { background: linear-gradient(180deg, rgba(22,24,27,0.18) 0%, rgba(22,24,27,0.38) 45%, rgba(22,24,27,0.88) 100%); }
 .hero-logo-text img { width: 84px; height: 84px; }
 /* El tamaño del lema en celular ya está calibrado en main.css (dos líneas
    exactas); sólo se toca en escritorio. */
