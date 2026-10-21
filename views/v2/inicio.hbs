@@ -13,32 +13,9 @@
   <div class="preloader-subtext">Cargando...</div>
 </div>
 
-{{!-- Menú en píldora, de vidrio. En escritorio: las cuatro marcas y el menú
-      completo. En celular se queda sólo el isotipo: el menú es el lateral
-      de la landing original (dot-nav), que vive abajo. --}}
-<header class="pildora">
-  <a class="pildora__iso" href="/{{lang}}" aria-label="SOCCER iD, inicio">
-    <img src="{{img '/assets/images/logo-iso-blanco.png'}}" alt="" width="34" height="34">
-  </a>
-  <nav class="pildora__nav" aria-label="Marcas">
-    {{#each marcas}}<a href="{{this.url}}">{{this.nombre}}</a>{{/each}}
-  </nav>
-  <a class="pildora__menu" href="#menu"><span class="pildora__punto"></span>{{#if isEs}}Menú{{else}}Menu{{/if}}</a>
-</header>
-
-<div class="menu" id="menu" role="dialog" aria-label="{{#if isEs}}Menú{{else}}Menu{{/if}}">
-  <div class="menu__scrim"></div>
-  <div class="menu__panel">
-    <div class="menu__cab">
-      <img src="{{img '/assets/images/logo-iso-blanco.png'}}" alt="SOCCER iD" width="40" height="40">
-      <a class="menu__x" href="#" aria-label="{{#if isEs}}Cerrar{{else}}Close{{/if}}">×</a>
-    </div>
-    <ol class="menu__lista">
-      {{#each secciones}}<li><a href="{{this.url}}"><small>{{this.num}}</small><span>{{this.nombre}}</span><em>{{this.linea}}</em></a></li>{{/each}}
-    </ol>
-    <div class="menu__redes">{{#each redes}}<a href="{{this.url}}" target="_blank" rel="noopener">{{this.nombre}}</a>{{/each}}</div>
-  </div>
-</div>
+{{!-- Sin barra de menú arriba: en el mockup sólo están el selector de
+      idioma (del layout) y, al centro, el isotipo con el lema. Las puertas
+      son el menú. --}}
 
 {{!-- Menú lateral de la landing original (dot-nav de main.css / main.js).
       En celular aparece al bajar, como en la original (en la primera
@@ -63,7 +40,7 @@
     </picture>
   </div>
   <div class="hero-content">
-    <div class="hero-logo-text"><img src="{{img '/assets/images/logo-iso-blanco.png'}}" width="110" height="110" alt="SOCCER iD"></div>
+    <div class="hero-logo-text"><img src="{{img '/assets/images/logo-iso-blanco.png'}}" width="100" height="100" alt="SOCCER iD"></div>
     <h1 class="hero-tagline">AMAMOS TANTO EL DEPORTE<br>QUE NOS ATREVIMOS <em>A REINVENTARLO</em></h1>
   </div>
   {{!-- Sin indicador de scroll propio: la píldora del próximo partido que

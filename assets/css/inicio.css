@@ -7,58 +7,11 @@
    Colores: el azul y el verde del logo, por variable, como manda main.css.
    ═══════════════════════════════════════════════════════════════════════ */
 
-/* ─── Píldora de vidrio ───────────────────────────────────────────── */
-.pildora {
-  position: fixed; top: 18px; left: 50%; transform: translateX(-50%); z-index: 9995;
-  display: flex; align-items: center; gap: 6px;
-  padding: 6px 6px 6px 8px; border-radius: 999px;
-  background: rgba(10, 10, 26, 0.55);
-  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
-}
-.pildora__iso { display: flex; width: 40px; height: 40px; align-items: center; justify-content: center; }
-.pildora__iso img { width: 34px; height: 34px; }
-.pildora__nav { display: flex; gap: 2px; padding: 0 4px; }
-.pildora__nav a {
-  font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.78);
-  padding: 9px 15px; border-radius: 999px; text-decoration: none;
-  transition: background .2s, color .2s;
-}
-.pildora__nav a:hover { background: rgba(255,255,255,0.1); color: #fff; }
-.pildora__menu {
-  display: inline-flex; align-items: center; gap: 9px;
-  font-size: 14px; font-weight: 800; color: #fff; text-decoration: none;
-  padding: 10px 18px; border-radius: 999px;
-  background: linear-gradient(135deg, var(--brand-blue), var(--brand-blue-deep));
-  box-shadow: 0 6px 20px rgba(var(--brand-blue-rgb), 0.35);
-}
-.pildora__punto { width: 8px; height: 8px; border-radius: 50%; background: var(--brand-lime); box-shadow: 0 0 10px var(--brand-lime); }
-
-/* ─── Menú completo (ancla, sin JavaScript) ───────────────────────── */
-.menu { position: fixed; inset: 0; z-index: 10050; visibility: hidden; opacity: 0; transition: opacity .25s, visibility .25s; }
-.menu:target { visibility: visible; opacity: 1; }
-.menu__scrim { position: absolute; inset: 0; background: rgba(5,4,21,0.72); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-.menu__panel {
-  position: relative; max-width: 760px; margin: 0 auto; height: 100%; padding: 24px 24px 32px;
-  display: flex; flex-direction: column; color: #fff; overflow-y: auto;
-  animation: menuEntra .3s cubic-bezier(.2,.8,.3,1);
-}
-@keyframes menuEntra { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
-.menu__cab { display: flex; align-items: center; justify-content: space-between; }
-.menu__x { width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); color: #fff; font-size: 26px; line-height: 1; display: flex; align-items: center; justify-content: center; text-decoration: none; }
-.menu__lista { list-style: none; margin: 34px 0 0; padding: 0; }
-.menu__lista a {
-  display: grid; grid-template-columns: 34px 1fr; column-gap: 14px; align-items: baseline;
-  padding: 16px 14px; border-radius: 16px; color: #fff; text-decoration: none;
-  transition: background .2s;
-}
-.menu__lista a:hover { background: rgba(255,255,255,0.07); }
-.menu__lista small { font-size: 12px; font-weight: 800; color: var(--brand-lime); }
-.menu__lista span { font-size: clamp(30px, 6vw, 48px); font-weight: 900; letter-spacing: -.02em; line-height: 1.05; }
-.menu__lista em { grid-column: 2; font-style: normal; font-size: 14px; color: rgba(255,255,255,0.65); margin-top: 4px; }
-.menu__redes { margin-top: auto; padding-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; }
-.menu__redes a { font-size: 13px; font-weight: 700; color: #fff; text-decoration: none; padding: 9px 15px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.06); }
+/* ─── Lo que el mockup no lleva ───────────────────────────────────── */
+/* Ni la hoja del próximo partido, ni su píldora, ni el dock flotante: el
+   inicio es el isotipo, el lema, las seis puertas y las redes. Todo eso
+   sigue en el layout para las demás páginas; aquí se apaga con CSS. */
+body .mn-sheet, body .mn-overlay, body .mn-mini, body .sid-dock { display: none !important; }
 
 /* ─── Hero: el home es el menú ────────────────────────────────────── */
 /* En escritorio el contenido del hero sube (isotipo + lema arriba) y las
@@ -69,12 +22,12 @@
 /* El fondo del mockup: el estadio se ve entero, en frío y apagado, con el
    pasto y la línea central a la vista abajo. Un velo azul marino parejo,
    apenas más denso arriba, y nada de degradado negro al pie. */
-.hero-video-container::after { background: linear-gradient(180deg, rgba(8,12,24,0.62) 0%, rgba(8,12,24,0.45) 40%, rgba(8,12,24,0.30) 100%); }
-.hero-image { filter: saturate(0.72) brightness(0.82); }
+.hero-video-container::after { background: linear-gradient(180deg, rgba(4,7,16,0.74) 0%, rgba(4,7,16,0.56) 30%, rgba(4,7,16,0.40) 62%, rgba(4,7,16,0.28) 100%); }
+.hero-image { filter: saturate(0.8) brightness(0.8); }
 .hero-logo-text img { width: 84px; height: 84px; }
 /* El tamaño del lema en celular ya está calibrado en main.css (dos líneas
    exactas); sólo se toca en escritorio. */
-@media (min-width: 1025px) { .hero-tagline { font-size: 1.6rem; margin-bottom: 0; } }
+@media (min-width: 1025px) { .hero-tagline { font-size: clamp(1.6rem, 2.1vw, 2rem); margin-bottom: 0; line-height: 1.35; } }
 .hero-section .hero-tagline em { font-style: italic; color: var(--brand-lime); }
 
 /* ─── Las seis puertas ────────────────────────────────────────────── */
@@ -83,7 +36,7 @@
    redes, que se reparten a sus lados. */
 /* Alto de las puertas: lo que queda de pantalla tras el bloque de arriba
    (≈270 px) y la banda de abajo (130 px). Medido en 1280×720 y 1440×900. */
-.puertas { --alto: clamp(250px, calc(100vh - 420px), 470px); position: relative; z-index: 4; display: flex; gap: 10px; width: min(1320px, calc(100% - 80px)); height: var(--alto); margin: calc(-1 * var(--alto) - 130px) auto 0; }
+.puertas { --alto: clamp(250px, calc(100vh - 480px), 440px); position: relative; z-index: 4; display: flex; gap: 10px; width: min(1320px, calc(100% - 80px)); height: var(--alto); margin: calc(-1 * var(--alto) - 150px) auto 0; }
 .puerta {
   position: relative; flex: 1; min-width: 0; border-radius: 22px; overflow: hidden; isolation: isolate;
   text-decoration: none; color: #fff;
@@ -100,11 +53,12 @@
 .puerta:hover { flex: 2.4; border-color: rgba(var(--brand-blue-rgb), 0.7); box-shadow: 0 16px 50px rgba(var(--brand-blue-rgb), 0.25); }
 .puerta:hover::before { opacity: 1; transform: none; }
 .puerta__icono {
-  position: absolute; top: 14px; left: 14px; z-index: 2;
-  width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  background: var(--brand-lime); color: #0b1020; box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  position: absolute; top: 16px; left: 16px; z-index: 2;
+  width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: rgba(8,12,24,0.55); border: 1px solid rgba(255,255,255,0.3); color: var(--brand-lime);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
 }
-.puerta__icono svg { width: 18px; height: 18px; }
+.puerta__icono svg { width: 20px; height: 20px; }
 .puerta__cuerpo { position: absolute; left: 20px; right: 20px; bottom: 22px; z-index: 2; display: flex; flex-direction: column; gap: 0; }
 .puerta__nombre { font-size: clamp(1.3rem, 1.8vw, 1.8rem); font-weight: 900; letter-spacing: -.02em; line-height: 1.05; white-space: nowrap; }
 .puerta__barra { display: block; width: 40px; height: 4px; border-radius: 2px; background: var(--barra, var(--brand-lime)); margin: 8px 0 10px; }
@@ -116,11 +70,11 @@
 /* En escritorio las redes son seis círculos centrados bajo las puertas, como
    en el mockup. Para dejarles el centro, la píldora del próximo partido (del
    layout, fija) se recorre a la izquierda sólo en esta página. */
-.redes-v2 { position: relative; z-index: 4; height: 130px; padding: 34px 40px 0; }
+.redes-v2 { position: relative; z-index: 4; height: 150px; padding: 46px 40px 0; }
 .redes-v2 .section-header { display: none; }
 .redes-v2__grid { display: flex; justify-content: center; gap: 22px; }
 .redes-v2__chip {
-  width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
   color: #fff; text-decoration: none; border: 2px solid rgba(255,255,255,0.85); background: rgba(8,12,24,0.35);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   transition: transform .2s, background .2s, border-color .2s, color .2s;
@@ -130,9 +84,6 @@
 .redes-v2__chip:hover { transform: translateY(-3px); background: var(--brand-lime); border-color: var(--brand-lime); color: #0b1020; }
 .footer-content { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; padding: 24px 20px; color: rgba(255,255,255,0.6); font-size: 13px; }
 .footer-content a { color: inherit; }
-/* Las reglas de la píldora viven en un <style> del layout que llega después
-   de esta hoja; por eso van con body delante (más específicas). */
-@media (min-width: 1025px) { body .mn-mini { left: 40px; transform: translateX(0) translateY(220%); } body .mn-mini.active { transform: translateX(0) translateY(0); } }
 
 /* ─── Menú lateral (dot-nav original) ─────────────────────────────── */
 /* En escritorio las puertas ya son el menú. En celular es EL menú, así
@@ -149,7 +100,7 @@
 @media (max-width: 1024px) {
   .hero-section { padding-top: 84px; }
   .hero-logo-text img { width: 72px; height: 72px; }
-  .puertas { --alto: clamp(330px, calc(100vh - 395px), 560px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 10px; width: calc(100% - 32px); margin: calc(-1 * var(--alto) - 118px) auto 0; }
+  .puertas { --alto: clamp(330px, calc(100vh - 370px), 560px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 10px; width: calc(100% - 32px); margin: calc(-1 * var(--alto) - 90px) auto 0; }
   .puerta { flex: none; border-radius: 18px; }
   .puerta:hover { flex: none; }
   .puerta::before { opacity: .7; transform: none; }
@@ -159,17 +110,16 @@
   .puerta__cuerpo { left: 14px; right: 14px; bottom: 12px; }
   .puerta__icono { width: 34px; height: 34px; top: 10px; left: 10px; }
   .puerta__icono svg { width: 16px; height: 16px; }
-  .redes-v2 { height: auto; margin-top: 118px; padding: 40px 16px 110px; } /* 118: la banda de la píldora del partido */
-  .redes-v2 .section-header { display: block; margin-bottom: 22px; }
-  .redes-v2__grid { flex-wrap: wrap; gap: 14px; }
+  .redes-v2 { height: 90px; margin-top: 0; padding: 18px 16px 0; }
+  .redes-v2__grid { gap: 10px; }
+  .redes-v2__chip { width: 46px; height: 46px; }
+  .redes-v2__chip svg { width: 20px; height: 20px; }
   /* El lateral se comporta como en la original: aparece al bajar. */
   .dot-nav--inicio { display: flex; }
 }
 @media (max-width: 768px) {
   /* En celular la píldora es sólo el isotipo, a la izquierda; el menú es
      el lateral de la derecha. */
-  .pildora { left: 12px; transform: none; padding: 5px; }
-  .pildora__nav, .pildora__menu { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .puerta { animation: none; opacity: 1; transform: none; }
