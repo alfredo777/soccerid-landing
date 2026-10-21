@@ -34,7 +34,11 @@
 
 <section class="hero-section" id="hero">
   <div class="hero-video-container">
+    {{!-- Dos fondos: el vertical para celular y tableta en vertical, el
+          horizontal para web. El navegador elige por el media query. --}}
     <picture>
+      <source media="(max-width: 1024px)" srcset="{{img '/assets/images/fondo-estadio-movil.webp'}}" type="image/webp">
+      <source media="(max-width: 1024px)" srcset="{{img '/assets/images/fondo-estadio-movil.jpg'}}">
       <source srcset="{{img '/assets/images/fondo-estadio.webp'}}" type="image/webp">
       <img src="{{img '/assets/images/fondo-estadio.jpg'}}" alt="Estadio de fútbol" class="hero-image" style="display:block;">
     </picture>
