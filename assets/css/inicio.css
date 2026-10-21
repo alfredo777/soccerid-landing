@@ -13,6 +13,16 @@
    sigue en el layout para las demás páginas; aquí se apaga con CSS. */
 body .mn-sheet, body .mn-overlay, body .mn-mini, body .sid-dock { display: none !important; }
 
+/* ─── Selector de idioma, como el mockup ──────────────────────────── */
+/* Píldora oscura translúcida; el idioma activo en blanco con texto oscuro,
+   el otro en gris. Va con body delante para ganarle a main.css. */
+body .language-selector { padding: 6px; border-radius: 999px; background: rgba(8,12,24,0.55); border: 1px solid rgba(255,255,255,0.14); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 6px 24px rgba(0,0,0,0.35); gap: 4px; }
+body .lang-btn { padding: 8px 16px; border-radius: 999px; color: rgba(255,255,255,0.55); font-weight: 700; }
+body .lang-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
+body .lang-btn.active { background: #fff; color: #0b1020; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
+body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
+@media (max-width: 768px) { body .lang-btn { padding: 7px 12px; } }
+
 /* ─── Hero: el home es el menú ────────────────────────────────────── */
 /* En escritorio el contenido del hero sube (isotipo + lema arriba) y las
    seis puertas se montan encima con margen negativo, de modo que la
