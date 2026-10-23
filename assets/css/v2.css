@@ -397,6 +397,41 @@ a.pilar:hover { border-color: var(--tinta); }
 .carrusel__flecha:hover:not(:disabled) { background: var(--acento-chico); border-color: var(--acento-chico); color: var(--negro); }
 .carrusel__flecha:disabled { opacity: .35; cursor: default; }
 
+/* ─── Desplazamiento: dónde estoy ─────────────────────────────────── */
+/* Barra de progreso de la página, pegada al borde de arriba. Las secciones
+   son largas —Tour pasa de cinco mil píxeles— y en un teléfono no hay
+   barra de scroll que lo diga. Va por encima de la píldora del menú. */
+.progreso {
+  position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 70;
+  pointer-events: none; background: transparent;
+}
+.progreso__barra {
+  height: 100%; width: 100%; background: var(--acento);
+  transform: scaleX(0); transform-origin: left;
+}
+
+/* Indicador de posición dentro de un carrusel. Sólo en táctil: con ratón
+   están las flechas, que ya dicen si queda algo. Sin esto, en el teléfono
+   no hay manera de saber cuántas fotos hay ni por dónde vas. */
+.deslizador {
+  position: relative; height: 3px; border-radius: 999px; overflow: hidden;
+  background: var(--linea); margin: 12px 0 0;
+}
+.carrusel .deslizador { margin-inline: var(--gutter); }
+/* Posición y ancho en porcentaje del riel, no con transform: mezclar una
+   escala con una traslación en porcentaje se presta a error, y aquí lo que
+   importa es que el pulgar caiga EXACTAMENTE donde va. Son 3 px: el coste
+   de animar `left` en vez de `transform` no se nota. */
+.deslizador__pulgar {
+  position: absolute; top: 0; bottom: 0; left: 0; width: 100%;
+  border-radius: inherit; background: var(--acento);
+}
+@media (hover: hover) and (pointer: fine) { .deslizador { display: none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .progreso__barra { transition: transform .1s linear; }
+  .deslizador__pulgar { transition: left .1s linear, width .1s linear; }
+}
+
 /* ─── Volver arriba ───────────────────────────────────────────────── */
 /* Flotante abajo a la derecha. En celular se separa del borde con el
    `safe-area` para no quedar bajo la barra del sistema. El acento es el

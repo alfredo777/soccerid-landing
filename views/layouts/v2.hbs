@@ -84,6 +84,9 @@
     <span class="pie__legal">© {{year}} SOCCER iD</span>
   </footer>
 
+  {{!-- Cuánto llevas leído. El marcado lo pone el script, no la plantilla:
+        sin JavaScript no hay barra que se quede en cero mintiendo. --}}
+
   {{!-- Volver arriba. Las secciones son largas —Tour mide más de cinco mil
         píxeles— y en un teléfono volver al menú es un viaje. Aparece al
         pasar la primera pantalla y se esconde solo si no hay nada que
@@ -114,6 +117,58 @@
       window.addEventListener('scroll', revisar, { passive: true });
       window.addEventListener('resize', revisar);
       revisar();
+    })();
+
+    // ── Cuánto llevas leído ────────────────────────────────────────────
+    (function () {
+      var barra = document.createElement('div');
+      barra.className = 'progreso__barra';
+      var caja = document.createElement('div');
+      caja.className = 'progreso';
+      caja.setAttribute('aria-hidden', 'true');   // decorativo: no se anuncia
+      caja.appendChild(barra);
+      document.body.appendChild(caja);
+
+      function pintar() {
+        var recorrido = document.documentElement.scrollHeight - window.innerHeight;
+        // Una página que cabe entera no tiene progreso que mostrar.
+        caja.hidden = recorrido < 200;
+        barra.style.transform = 'scaleX(' + (recorrido > 0 ? Math.min(1, window.scrollY / recorrido) : 0) + ')';
+      }
+
+      window.addEventListener('scroll', pintar, { passive: true });
+      window.addEventListener('resize', pintar);
+      pintar();
+    })();
+
+    // ── Dónde vas dentro de cada carrusel ──────────────────────────────
+    // El indicador lo crea el script, así que las vistas no cargan con
+    // marcado que sólo sirve si hay JavaScript.
+    (function () {
+      var pistas = document.querySelectorAll('.mosaico, .opiniones, .publicaciones');
+      Array.prototype.forEach.call(pistas, function (pista) {
+        var sobra = pista.scrollWidth - pista.clientWidth;
+        if (sobra < 20) return;          // no se desplaza: no hay nada que indicar
+
+        var pulgar = document.createElement('div');
+        pulgar.className = 'deslizador__pulgar';
+        var riel = document.createElement('div');
+        riel.className = 'deslizador';
+        riel.setAttribute('aria-hidden', 'true');
+        riel.appendChild(pulgar);
+        pista.parentNode.insertBefore(riel, pista.nextSibling);
+
+        function pintar() {
+          var total = pista.scrollWidth;
+          // El pulgar ocupa la parte visible y se coloca donde empieza.
+          pulgar.style.width = (pista.clientWidth / total * 100) + '%';
+          pulgar.style.left = (pista.scrollLeft / total * 100) + '%';
+        }
+
+        pista.addEventListener('scroll', pintar, { passive: true });
+        window.addEventListener('resize', pintar);
+        pintar();
+      });
     })();
   </script>
 </body>
