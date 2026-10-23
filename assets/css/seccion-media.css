@@ -1,0 +1,28 @@
+/* Media · reportajes y opiniones
+   Sólo lo PROPIO de esta sección. Lo compartido —fichas de color, menú,
+   portada, cifras, hitos, pilares, mosaico, aliados, prensa, eventos,
+   contacto, carrusel, video, pie— vive en v2.css, que se carga antes.
+   La carga el layout a partir de `hojaSeccion` (ver views/layouts/v2.hbs). */
+
+/* Una tarjeta y pico en celular, tres en escritorio. */
+.opinion { flex: 0 0 min(360px, 84%); scroll-snap-align: start; }
+
+/* ─── Opiniones y media ───────────────────────────────────────────── */
+.opinion { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+.opinion__estrellas { color: var(--acento-chico); letter-spacing: 3px; font-size: 15px; }
+.opinion__texto { font-size: 15px; line-height: 1.6; flex: 1; }
+.opinion__quien { display: flex; align-items: center; gap: 12px; }
+.opinion__foto { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; background: var(--linea); }
+.opinion__nombre { font-weight: 800; font-size: 15px; }
+.opinion__handle { font-size: 13px; color: var(--tinta-2); }
+.notas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.nota { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); overflow: hidden; transition: border-color .15s; display: flex; flex-direction: column; }
+.nota:hover { border-color: var(--tinta); }
+.nota__foto { aspect-ratio: 16 / 9; background: var(--linea) center / cover no-repeat; }
+.nota__cuerpo { padding: 18px 20px 20px; }
+.nota__fuente { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--acento-chico); }
+.nota__titulo { font-size: 16px; font-weight: 800; line-height: 1.35; margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .notas { grid-template-columns: 1fr; }
+}

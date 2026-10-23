@@ -1,21 +1,124 @@
-{{!-- Podcast, minimalista a pedido: un titular, el canal y la lista. Los
-      títulos de los episodios los da YouTube; aquí no se inventan. --}}
-<section class="cabecera envoltura">
-  <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Podcast</p>
-  <div class="podcast">
-    <div class="cabecera__marca">SOCCER iD Podcast</div>
-    <h1 class="titular">Podcast</h1>
-    <p class="bajada" style="margin:18px 0 26px">{{#if isEs}}Conversaciones de fútbol, sin prisa.{{else}}Football conversations, no rush.{{/if}}</p>
-    <a class="boton boton--lleno" href="{{canal}}" target="_blank" rel="noopener">{{#if isEs}}Escuchar en YouTube{{else}}Listen on YouTube{{/if}} <span class="flecha">↗</span></a>
+{{!-- Podcast · reproductor con la lista al lado, como una playlist.
 
-    <ol class="episodios">
-      {{#each episodios}}
-      <li class="episodio"><a href="{{this.url}}" target="_blank" rel="noopener">
-        <span class="episodio__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l10-6.5z"/></svg></span>
-        <span class="episodio__num">{{#if ../isEs}}Episodio{{else}}Episode{{/if}} {{this.num}}</span>
-        <span class="episodio__donde">YouTube ↗</span>
-      </a></li>
+      Cada fila es un enlace de verdad al video en YouTube. El script lo
+      intercepta para cambiar el reproductor sin salir de la página; si el
+      script no corre, el enlace sigue llevando a YouTube. Nunca una fila
+      muerta.
+
+      Título, duración y fecha los publica el canal y los guarda
+      `node scripts/podcast-titulos.js`. Aquí no se inventa ninguno. --}}
+
+<section class="portada portada--podcast">
+  {{!-- Sin foto: la portada llevaba la miniatura del último episodio y el
+        reproductor, cuatro dedos más abajo, repetía el mismo fotograma con
+        el mismo letrero. Aquí la portada sólo presenta el programa y el
+        protagonismo se lo lleva el reproductor, que es a lo que se viene. --}}
+  <div class="portada__velo"></div>
+  <div class="portada__cuerpo">
+    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Podcast</p>
+    <div class="cabecera__marca">SOCCER iD Podcast</div>
+    <h1 class="portada__titulo">Podcast</h1>
+    <p class="portada__bajada">{{#if isEs}}Conversaciones de fútbol, sin prisa. Charlas largas con quienes viven el juego por dentro: jugadores, directivos, periodistas y la gente que hace que un partido exista.{{else}}Football conversations, no rush. Long talks with the people who live the game from the inside: players, executives, reporters and everyone who makes a match happen.{{/if}}</p>
+    <div class="portada__pastillas">
+      <span class="pastilla">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10-6.5z"/></svg>
+        {{episodios.length}} {{#if isEs}}episodios{{else}}episodes{{/if}}
+      </span>
+    </div>
+    <div class="portada__acciones">
+      {{#each plataformas}}
+      <a class="boton {{#if @first}}boton--lleno{{/if}}" href="{{this.url}}" target="_blank" rel="noopener">{{#if ../isEs}}Escuchar en{{else}}Listen on{{/if}} {{this.nombre}} <span class="flecha">↗</span></a>
       {{/each}}
-    </ol>
+    </div>
+  </div>
+</section>
+
+{{#if ultimo}}
+<section class="seccion envoltura">
+  <div class="reproductor">
+
+    <div class="reproductor__video">
+      <div class="video">
+        <iframe id="reproductorCaja"
+                src="https://www.youtube-nocookie.com/embed/{{ultimo.videoId}}?rel=0"
+                title="{{#if ultimo.titulo}}{{ultimo.titulo}}{{else}}SOCCER iD Podcast{{/if}}"
+                allowfullscreen
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      </div>
+      <p class="video__pie">
+        <span class="video__num" id="reproductorNum">{{#if isEs}}Episodio{{else}}Episode{{/if}} {{ultimo.num}}</span>
+        <span id="reproductorTitulo">{{ultimo.titulo}}</span>
+      </p>
+    </div>
+
+    <aside class="lista">
+      <div class="lista__cab">
+        <span>{{#if isEs}}Todos los episodios{{else}}All episodes{{/if}}</span>
+        <span class="lista__cuenta">{{episodios.length}}</span>
+      </div>
+      <ol class="lista__pista" id="listaEpisodios">
+        {{#each episodios}}
+        <li>
+          <a class="fila-ep{{#if @first}} is-activa{{/if}}" href="{{this.url}}" target="_blank" rel="noopener"
+             data-video="{{this.videoId}}" data-num="{{this.num}}" data-titulo="{{this.titulo}}">
+            <span class="fila-ep__mini">
+              <img src="https://i.ytimg.com/vi/{{this.videoId}}/mqdefault.jpg" alt="" loading="lazy" width="120" height="68">
+              {{#if this.reloj}}<span class="fila-ep__reloj">{{this.reloj}}</span>{{/if}}
+            </span>
+            <span class="fila-ep__texto">
+              <span class="fila-ep__meta">{{#if ../isEs}}Episodio{{else}}Episode{{/if}} {{this.num}}{{#if this.fechaTexto}} · {{this.fechaTexto}}{{/if}}</span>
+              <span class="fila-ep__titulo">{{#if this.titulo}}{{this.titulo}}{{else}}{{#if ../isEs}}Sin título{{else}}Untitled{{/if}}{{/if}}</span>
+              <span class="fila-ep__canal">SOCCER iD</span>
+            </span>
+          </a>
+        </li>
+        {{/each}}
+      </ol>
+    </aside>
+
+  </div>
+</section>
+
+<script>
+  // Al tocar una fila, el reproductor cambia de episodio sin salir de la
+  // página. Si esto no corre, cada fila sigue siendo su enlace a YouTube.
+  (function () {
+    var caja = document.getElementById('reproductorCaja');
+    var lista = document.getElementById('listaEpisodios');
+    var rotuloNum = document.getElementById('reproductorNum');
+    var rotuloTit = document.getElementById('reproductorTitulo');
+    if (!caja || !lista) return;
+
+    var palabra = rotuloNum ? rotuloNum.textContent.replace(/\s*\d+\s*$/, '').trim() : 'Episodio';
+
+    lista.addEventListener('click', function (e) {
+      var fila = e.target.closest('.fila-ep');
+      if (!fila || !fila.dataset.video) return;
+      // Con una tecla de por medio (abrir en otra pestaña), que mande el enlace.
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+
+      caja.src = 'https://www.youtube-nocookie.com/embed/' + fila.dataset.video + '?rel=0&autoplay=1';
+      caja.title = fila.dataset.titulo || 'SOCCER iD Podcast';
+      if (rotuloNum) rotuloNum.textContent = palabra + ' ' + fila.dataset.num;
+      if (rotuloTit) rotuloTit.textContent = fila.dataset.titulo || '';
+
+      lista.querySelectorAll('.fila-ep').forEach(function (f) { f.classList.remove('is-activa'); });
+      fila.classList.add('is-activa');
+    });
+  })();
+</script>
+{{/if}}
+
+<section class="cierre">
+  <div class="cierre__velo"></div>
+  <div class="cierre__cuerpo">
+    <h2 class="cierre__t">{{#if isEs}}Escúchalo donde ya escuchas{{else}}Listen where you already listen{{/if}}</h2>
+    <p class="cierre__d">{{#if isEs}}Suscríbete y te llega cada episodio nuevo.{{else}}Subscribe and every new episode reaches you.{{/if}}</p>
+    <div class="portada__acciones" style="justify-content:center">
+      {{#each plataformas}}
+      <a class="boton {{#if @first}}boton--lleno{{/if}}" href="{{this.url}}" target="_blank" rel="noopener">{{this.nombre}} <span class="flecha">↗</span></a>
+      {{/each}}
+    </div>
   </div>
 </section>

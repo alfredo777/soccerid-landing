@@ -1,0 +1,194 @@
+{{!-- Ficha de una edición de la SOCCER iD CUP, en el sistema nuevo.
+
+      Es la hermana pequeña de Tour: misma anatomía (portada, cifras,
+      momentos, video, patrocinadores, prensa, cierre) pero contando UNA
+      edición ya jugada, no el proyecto que viene. Lo propio de aquí son
+      las publicaciones de los clubes y el detrás de cámaras.
+
+      Las publicaciones y el video de bastidores van por año porque son
+      enlaces concretos a Instagram y Facebook, no un listado en la base. --}}
+
+<section class="portada">
+  <img class="portada__foto" src="{{edition.banner}}" alt="{{edition.title}}">
+  <div class="portada__velo"></div>
+  <div class="portada__cuerpo">
+    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / <a href="/{{lang}}/tour">Tour</a> / {{edition.year}}</p>
+    <div class="cabecera__marca">SOCCER iD CUP</div>
+    <h1 class="portada__titulo">{{edition.year}}</h1>
+    <p class="portada__bajada">{{edition.match}}</p>
+    <div class="portada__pastillas">
+      <span class="pastilla">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        {{edition.city}}
+      </span>
+      <span class="pastilla">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 7v4a9 9 0 0018 0V7M3 7c0-1.1 4.03-2 9-2s9 .9 9 2"/></svg>
+        {{edition.venue}}
+      </span>
+      {{#if edition.attendance.value}}
+      <span class="pastilla">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        {{edition.attendance.value}} {{edition.attendance.label}}
+      </span>
+      {{/if}}
+    </div>
+  </div>
+</section>
+
+{{!-- La edición, en números. --}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}La edición{{else}}The edition{{/if}}</p>
+  <p class="bajada" style="max-width:760px;margin-bottom:26px">{{edition.description}}</p>
+  {{#if edition.stats}}
+  <div class="cifras">
+    {{#each edition.stats}}
+    <div class="cifra">
+      <div class="cifra__valor">{{this.value}}</div>
+      <div class="cifra__etiqueta">{{this.label}}</div>
+      <div class="cifra__sub">{{this.sub}}</div>
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+</section>
+
+{{!-- Momentos. --}}
+{{#if edition.images}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Momentos{{else}}Moments{{/if}}</p>
+  <div class="mosaico">
+    {{#each edition.images}}
+    <div class="mosaico__foto" style="background-image:url('{{this.src}}')" role="img" aria-label="{{this.alt}}"></div>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
+
+{{!-- El resumen en video. --}}
+{{#if edition.videos}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}El partido{{else}}The match{{/if}}</p>
+  {{#each edition.videos}}
+  <div class="video" {{#unless @first}}style="margin-top:14px"{{/unless}}>
+    <iframe src="https://www.youtube-nocookie.com/embed/{{this.id}}" title="{{this.title}}" loading="lazy" allowfullscreen
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+  </div>
+  {{/each}}
+</section>
+{{/if}}
+
+{{!-- Publicaciones de los clubes: carrusel, se arrastra con el dedo. --}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Publicaciones de los clubes{{else}}Club posts{{/if}}</p>
+  <div class="carrusel">
+    <div class="publicaciones" data-pista tabindex="0" role="region"
+         aria-label="{{#if isEs}}Publicaciones, se arrastra para ver más{{else}}Posts, drag to see more{{/if}}">
+      {{#each publicaciones}}
+      <article class="publicacion">
+        <div class="publicacion__club"><span class="publicacion__color" style="--club:{{this.color}}"></span>{{this.club}} · {{../edition.year}}</div>
+        <div class="publicacion__embed">
+          <iframe src="https://www.instagram.com/p/{{this.post}}/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen title="{{this.club}}"></iframe>
+        </div>
+      </article>
+      {{else}}
+      <p class="vacio">{{#if isEs}}No hay publicaciones guardadas de esta edición.{{else}}No saved posts for this edition.{{/if}}</p>
+      {{/each}}
+    </div>
+    <div class="carrusel__mandos">
+      <button type="button" class="carrusel__flecha" data-ir="-1" aria-label="{{#if isEs}}Anterior{{else}}Previous{{/if}}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button type="button" class="carrusel__flecha" data-ir="1" aria-label="{{#if isEs}}Siguiente{{else}}Next{{/if}}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+{{!-- Detrás de cámaras. El video vive en Facebook y no se deja embeber,
+      así que va un póster que lleva allá. --}}
+{{#if bastidores}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Detrás de cámaras{{else}}Behind the scenes{{/if}}</p>
+  <a class="bastidores" href="{{bastidores.url}}" target="_blank" rel="noopener"
+     style="background-image:url('{{bastidores.poster}}')">
+    <span class="bastidores__velo"></span>
+    <span class="bastidores__play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+    <span class="bastidores__donde">{{#if isEs}}Ver en Facebook{{else}}Watch on Facebook{{/if}} ↗</span>
+  </a>
+</section>
+{{/if}}
+
+{{!-- Patrocinadores de esta edición. --}}
+{{#if edition.sponsors}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Patrocinadores{{else}}Sponsors{{/if}}</p>
+  <div class="aliados">
+    {{#each edition.sponsors}}
+    <div class="aliado"><img src="{{this.src}}" alt="{{this.alt}}" loading="lazy"></div>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
+
+{{!-- Prensa. --}}
+{{#if edition.mediaLinks}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}En los medios{{else}}In the media{{/if}}</p>
+  <div class="prensa">
+    {{#each edition.mediaLinks}}
+    <a class="prensa__nota" href="{{this.url}}" target="_blank" rel="noopener">
+      <span>
+        <span class="prensa__fuente">{{this.source}}</span>
+        <span class="prensa__titulo">{{this.title}}</span>
+      </span>
+      <span class="flecha">↗</span>
+    </a>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
+
+{{!-- Paso a la edición anterior o siguiente. --}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Otras ediciones{{else}}Other editions{{/if}}</p>
+  <div class="entre">
+    {{#if prevEdition}}
+    <a class="entre__ir" href="/{{lang}}/socceridcup/{{prevEdition.year}}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      <span style="min-width:0">
+        <span class="entre__que">{{#if isEs}}Anterior{{else}}Previous{{/if}}</span>
+        <span class="entre__anio" style="display:block">{{prevEdition.year}}</span>
+        <span class="entre__partido" style="display:block">{{prevEdition.match}}</span>
+      </span>
+    </a>
+    {{else}}<span></span>{{/if}}
+
+    <a class="entre__todas" href="/{{lang}}/tour" aria-label="{{#if isEs}}Todas las ediciones{{else}}All editions{{/if}}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    </a>
+
+    {{#if nextEdition}}
+    <a class="entre__ir entre__ir--sig" href="/{{lang}}/socceridcup/{{nextEdition.year}}">
+      <span style="min-width:0">
+        <span class="entre__que">{{#if isEs}}Siguiente{{else}}Next{{/if}}</span>
+        <span class="entre__anio" style="display:block">{{nextEdition.year}}</span>
+        <span class="entre__partido" style="display:block">{{nextEdition.match}}</span>
+      </span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+    {{else}}<span></span>{{/if}}
+  </div>
+</section>
+
+<section class="cierre">
+  <img class="cierre__foto" src="{{edition.banner}}" alt="">
+  <div class="cierre__velo"></div>
+  <div class="cierre__cuerpo">
+    <h2 class="cierre__t">{{#if isEs}}Sé parte de la experiencia{{else}}Be part of the experience{{/if}}</h2>
+    <p class="cierre__d">{{#if isEs}}La siguiente edición es el Tour '27. Hablemos.{{else}}The next one is Tour '27. Let's talk.{{/if}}</p>
+    <a class="boton boton--lleno" href="/{{lang}}/tour">{{#if isEs}}Ver el Tour{{else}}See the Tour{{/if}} <span class="flecha">↗</span></a>
+  </div>
+</section>
+
+{{> carrusel-js}}

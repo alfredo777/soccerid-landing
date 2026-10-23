@@ -3,14 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{#if actual}}{{actual.nombre}} · SOCCER iD{{else}}SOCCER iD{{/if}}</title>
-  <meta name="description" content="{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}">
-  <link rel="canonical" href="{{baseUrl}}/{{lang}}{{#if actual}}/{{actual.slug}}{{/if}}">
+  {{!-- Por defecto el título y la canónica salen de la sección. Una página
+        que vive dentro de una sección pero tiene entidad propia —la ficha
+        de una edición— los manda con `tituloPagina` y `rutaCanonica`, para
+        no salir las tres ediciones como «Tour · SOCCER iD». --}}
+  <title>{{#if tituloPagina}}{{tituloPagina}}{{else}}{{#if actual}}{{actual.nombre}} · SOCCER iD{{else}}SOCCER iD{{/if}}{{/if}}</title>
+  <meta name="description" content="{{#if descripcionPagina}}{{descripcionPagina}}{{else}}{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}{{/if}}">
+  <link rel="canonical" href="{{baseUrl}}{{#if rutaCanonica}}{{rutaCanonica}}{{else}}/{{lang}}{{#if actual}}/{{actual.slug}}{{/if}}{{/if}}">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
   <link rel="stylesheet" href="/assets/css/v2.css?v={{version}}">
+  {{!-- Lo propio de esta sección, después de la base para poder
+        afinarla sin pelear con la especificidad. --}}
+  {{#if hojaSeccion}}<link rel="stylesheet" href="/assets/css/seccion-{{hojaSeccion}}.css?v={{version}}">{{/if}}
 </head>
-<body class="v2 {{#if actual}}v2--{{actual.color}}{{else}}v2--inicio{{/if}}">
+{{!-- El acento de la página es el color de la barra que esa sección ya lleva
+      bajo su nombre en el index. Viene del dato (`barra`), no de una clase
+      por sección, así que cambiar un color en index.js lo cambia aquí sin
+      tocar CSS. `barraTexto` es el mismo color aclarado lo justo para que el
+      texto chico cumpla la regla de contraste; en cuatro de las seis
+      secciones es idéntico. --}}
+<body class="v2 {{#if actual}}v2--{{actual.color}}{{else}}v2--inicio{{/if}}"
+      {{#if actual.barra}}style="--acento: {{actual.barra}}; --acento-chico: {{actual.barraTexto}}"{{/if}}>
 
   {{!-- Menú en píldora. En escritorio enseña las cuatro marcas; las dos
         secciones de apoyo y las redes viven en el menú completo, que se abre
@@ -52,19 +66,22 @@
     {{{body}}}
   </main>
 
+  {{!-- Pie: todo centrado y en columna, igual que el home. El logo es el
+        lockup completo en blanco, medido por ancho con la altura en auto
+        (1200×271) para que no se deforme. --}}
   <footer class="pie">
-    <div class="pie__fila">
-      <img src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" width="132" height="30">
-      <nav class="pie__nav" aria-label="Secciones">
-        {{#each secciones}}<a href="{{this.url}}">{{this.nombre}}</a>{{/each}}
-      </nav>
+    <img class="pie__marca" src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" width="1200" height="271">
+    <nav class="pie__nav" aria-label="{{#if isEs}}Secciones{{else}}Sections{{/if}}">
+      {{#each secciones}}<a href="{{this.url}}">{{this.nombre}}</a>{{/each}}
+    </nav>
+    <div class="pie__redes">
+      {{#each redes}}<a href="{{this.url}}" target="_blank" rel="noopener">{{this.nombre}}</a>{{/each}}
     </div>
-    <div class="pie__fila pie__fila--abajo">
-      <div class="pie__redes">
-        {{#each redes}}<a href="{{this.url}}" target="_blank" rel="noopener">{{this.nombre}}</a>{{/each}}
-      </div>
-      <span class="pie__legal">© {{year}} SOCCER iD · <a href="/{{lang}}/privacy">{{#if isEs}}Privacidad{{else}}Privacy{{/if}}</a> · <a href="/{{lang}}/terms">{{#if isEs}}Términos{{else}}Terms{{/if}}</a></span>
-    </div>
+    <nav class="pie__legales" aria-label="{{#if isEs}}Avisos{{else}}Legal{{/if}}">
+      <a href="/{{lang}}/privacy">{{#if isEs}}Privacidad{{else}}Privacy{{/if}}</a>
+      <a href="/{{lang}}/terms">{{#if isEs}}Términos{{else}}Terms{{/if}}</a>
+    </nav>
+    <span class="pie__legal">© {{year}} SOCCER iD</span>
   </footer>
 </body>
 </html>

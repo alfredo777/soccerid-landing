@@ -1,21 +1,81 @@
-{{!-- Legends todavía no tiene material. La página existe para fijar el lugar
-      en la distribución; lo de abajo es relleno y lo dice. --}}
-<section class="cabecera envoltura">
-  <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Legends</p>
-  <div class="cabecera__fila">
-    <div>
-      <div class="cabecera__marca">SOCCER iD Legends</div>
-      <h1 class="titular">Legends</h1>
+{{!-- Legends · la misma anatomía que Tour y Travel: portada, qué es,
+      calendario de próximos eventos, contacto y cierre.
+
+      AVISO HONESTO: Legends todavía no tiene material. Aquí NO se inventan
+      nombres de leyendas ni fechas. La página queda armada y en cuanto
+      haya roster y calendario se llenan los dos bloques de abajo; mientras
+      tanto cada uno dice que está vacío, en vez de enseñar tarjetas de
+      mentira que alguien pueda confundir con contenido real. --}}
+
+<section class="portada">
+  <img class="portada__foto" src="/assets/images/gallery/cup2023/2.jpg" alt="SOCCER iD Legends">
+  <div class="portada__velo"></div>
+  <div class="portada__cuerpo">
+    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Legends</p>
+    <div class="cabecera__marca">SOCCER iD Legends</div>
+    <h1 class="portada__titulo">Legends</h1>
+    <p class="portada__bajada">{{#if isEs}}Las figuras que hicieron historia en el fútbol mexicano, de cerca: partidos de leyendas, encuentros y experiencias con ellas.{{else}}The players who made history in Mexican football, up close: legends matches, meet-ups and experiences with them.{{/if}}</p>
+    <div class="portada__pastillas">
+      <span class="pastilla">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+        {{#if eventos.length}}{{eventos.length}} {{#if isEs}}fechas{{else}}dates{{/if}}{{else}}{{#if isEs}}Calendario por anunciar{{else}}Calendar to be announced{{/if}}{{/if}}
+      </span>
     </div>
-    <p class="bajada">{{#if isEs}}Las figuras que hicieron historia en el fútbol mexicano, de cerca: partidos de leyendas, encuentros y experiencias con ellas.{{else}}The players who made history, up close.{{/if}}</p>
+    <div class="portada__acciones">
+      <a class="boton boton--lleno" href="#contacto">{{#if isEs}}Quiero que me avisen{{else}}Keep me posted{{/if}}</a>
+    </div>
   </div>
 </section>
 
+{{!-- Qué es Legends: los tres formatos de la marca. --}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}Próximamente{{else}}Coming soon{{/if}} <span class="pastilla pastilla--muestra">{{#if isEs}}Contenido de muestra{{else}}Sample content{{/if}}</span></p>
-  <div class="legends-grid">
-    <div class="legend-vacia"><b>{{#if isEs}}Leyenda por anunciar{{else}}Legend TBA{{/if}}</b><span>{{#if isEs}}Espacio reservado{{else}}Placeholder{{/if}}</span></div>
-    <div class="legend-vacia"><b>{{#if isEs}}Leyenda por anunciar{{else}}Legend TBA{{/if}}</b><span>{{#if isEs}}Espacio reservado{{else}}Placeholder{{/if}}</span></div>
-    <div class="legend-vacia"><b>{{#if isEs}}Leyenda por anunciar{{else}}Legend TBA{{/if}}</b><span>{{#if isEs}}Espacio reservado{{else}}Placeholder{{/if}}</span></div>
+  <p class="rotulo">{{#if isEs}}Qué es Legends{{else}}What Legends is{{/if}}</p>
+  <div class="pilares">
+    <div class="pilar">
+      <div class="pilar__num">01</div>
+      <h3>{{#if isEs}}Partidos de leyendas{{else}}Legends matches{{/if}}</h3>
+      <p>{{#if isEs}}Encuentros entre figuras que ya colgaron los botines, con el mismo cuidado de producción que una edición de la copa.{{else}}Matches between players who have already hung up their boots, produced with the same care as a cup edition.{{/if}}</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">02</div>
+      <h3>{{#if isEs}}Encuentros{{else}}Meet-ups{{/if}}</h3>
+      <p>{{#if isEs}}Cenas, charlas y firmas: estar cerca de quien marcó una época, no verlo desde la grada.{{else}}Dinners, talks and signings: being close to the players who defined an era, not watching from the stands.{{/if}}</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">03</div>
+      <h3>{{#if isEs}}Experiencias a medida{{else}}Tailored experiences{{/if}}</h3>
+      <p>{{#if isEs}}Para marcas y clubes que quieren a una leyenda en su evento, con todo lo que eso implica resuelto.{{else}}For brands and clubs that want a legend at their event, with everything it takes handled.{{/if}}</p>
+    </div>
+  </div>
+</section>
+
+{{!-- El calendario. Vacío hasta que haya fechas de verdad. --}}
+<section class="seccion envoltura" id="calendario">
+  <p class="rotulo">{{#if isEs}}Próximos eventos{{else}}Upcoming events{{/if}}</p>
+  <div class="eventos">
+    {{#each eventos}}
+    <article class="evento">
+      <div class="evento__fecha"><div class="evento__dia">{{this.dia}}</div><div class="evento__mes">{{this.mes}}</div></div>
+      <div>
+        <div class="evento__nombre">{{this.nombre}}</div>
+        <div class="evento__meta">{{this.lugar}}{{#if this.hora}} · {{this.hora}}{{/if}}</div>
+      </div>
+      <a class="boton" href="{{this.url}}">{{#if ../isEs}}Más información{{else}}More info{{/if}} <span class="flecha">↗</span></a>
+    </article>
+    {{else}}
+    <p class="vacio">{{#if isEs}}Todavía no hay fechas publicadas. Déjanos tu contacto abajo y eres de los primeros en enterarte.{{else}}No dates published yet. Leave us your contact below and you'll be among the first to know.{{/if}}</p>
+    {{/each}}
+  </div>
+</section>
+
+<div id="contacto">{{> contacto asunto='Hola!%20Quiero%20informaci%C3%B3n%20de%20SOCCER%20iD%20Legends'}}</div>
+
+<section class="cierre">
+  <img class="cierre__foto" src="/assets/images/gallery/cup2024/3.jpg" alt="">
+  <div class="cierre__velo"></div>
+  <div class="cierre__cuerpo">
+    <h2 class="cierre__t">{{#if isEs}}¿Quieres una leyenda en tu evento?{{else}}Want a legend at your event?{{/if}}</h2>
+    <p class="cierre__d">{{#if isEs}}Marcas, clubes y ciudades: cuéntanos qué tienes en mente.{{else}}Brands, clubs and cities: tell us what you have in mind.{{/if}}</p>
+    <a class="boton boton--lleno" href="https://wa.me/12315158991?text={{#if isEs}}Hola!%20Quiero%20informaci%C3%B3n%20de%20SOCCER%20iD%20Legends{{else}}Hi!%20I%27d%20like%20info%20about%20SOCCER%20iD%20Legends{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Escríbenos{{else}}Write to us{{/if}} <span class="flecha">↗</span></a>
   </div>
 </section>

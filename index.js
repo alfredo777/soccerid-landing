@@ -1476,35 +1476,25 @@ app.get('/:lang/socceridcup/:year', async (req, res, next) => {
     const nav = await cupEditions.detail(year, lang);
     if (!nav || !nav.edition) return next();
     const edition = nav.edition;
-
-    const isEs = lang === 'es';
     edition.imageCount = edition.images ? edition.images.length : 0;
-    const ogTitle = `${edition.title} | SOCCER iD`;
-    const ogDesc = edition.description;
-    const ogImage = edition.banner || '/assets/images/og-image.jpg';
 
-    const prevEdition = nav.prev;
-    const nextEdition = nav.next;
-
-    res.render('socceridcup-edition', {
-      layout: 'promo',
-      title: ogTitle,
-      description: ogDesc,
-      ogTitle: ogTitle,
-      ogDescription: ogDesc,
-      ogImage: ogImage,
-      ogLocale: isEs ? 'es_ES' : 'en_US',
-      lang: lang,
-      baseUrl: BASE_URL,
+    // La ficha vive DENTRO de Tour: hereda su menú y su sección activa, pero
+    // manda su propio título y su propia canónica (ver views/layouts/v2.hbs).
+    const data = datosV2(lang, 'tour');
+    Object.assign(data, {
+      tituloPagina: edition.title + ' · SOCCER iD',
+      descripcionPagina: edition.description,
+      rutaCanonica: `/${lang}/socceridcup/${year}`,
       currentPath: `/socceridcup/${year}`,
-      isEs: isEs,
-      isEn: lang === 'en',
-      edition: edition,
-      prevEdition: prevEdition,
-      nextEdition: nextEdition,
-      year: new Date().getFullYear(),
-      version: APP_VERSION
+      // Vive dentro de Tour pero sus bloques son otros: su propia hoja.
+      hojaSeccion: 'edicion',
+      edition,
+      prevEdition: nav.prev,
+      nextEdition: nav.next,
+      publicaciones: PUBLICACIONES_EDICION[String(year)] || [],
+      bastidores: BASTIDORES_EDICION[String(year)] || null
     });
+    res.render('v2/edicion', data);
   } catch (e) {
     console.error('Error cargando edición:', e);
     next();
@@ -1609,6 +1599,40 @@ const REDES = [
   { id: 'whatsapp', nombre: 'WhatsApp', usuario: 'Escríbenos', url: 'https://wa.me/12315158991' }
 ];
 
+/**
+ * La barra de color de una sección, aclarada lo justo para que el texto
+ * CHICO (menos de 16px) llegue a 7.0 de contraste, que es lo que pide la
+ * regla de la casa (ver docs/variables-del-proyecto.md, sección 1c, y
+ * scripts/contraste.js).
+ *
+ * Existe porque dos de los seis colores no llegan tal cual: el magenta del
+ * podcast da 6.73 y el rojo de nosotros 5.99 sobre el fondo oscuro. En vez
+ * de elegir a mano un tono para cada uno —que se desincronizaría en cuanto
+ * alguien cambie una barra— se calcula: se mezcla con blanco de uno en uno
+ * por ciento hasta que pasa. Los cuatro que ya cumplen salen intactos.
+ */
+function acentoLegible(hex) {
+  const FONDOS = ['#0B0B14', '#13131F'];   // el fondo y la superficie
+  const canales = h => [1, 3, 5].map(i => parseInt(h.substr(i, 2), 16));
+  const luz = h => {
+    const c = canales(h).map(v => v / 255).map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+  };
+  const razon = (a, b) => {
+    const l1 = luz(a), l2 = luz(b);
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  };
+  const pasa = h => FONDOS.every(f => razon(h, f) >= 7.0);
+  if (pasa(hex)) return hex;
+  for (let p = 0.01; p <= 0.9; p += 0.01) {
+    const claro = '#' + canales(hex)
+      .map(v => Math.round(v + (255 - v) * p).toString(16).padStart(2, '0'))
+      .join('').toUpperCase();
+    if (pasa(claro)) return claro;
+  }
+  return hex;   // no debería pasar; si pasa, el auditor lo reporta
+}
+
 /** Las seis secciones, en el orden del menú. `marca` distingue las cuatro principales. */
 function seccionesV2(lang) {
   const es = lang !== 'en';
@@ -1624,14 +1648,19 @@ function seccionesV2(lang) {
       lema: es ? 'Historias que nunca se olvidan' : 'Stories never forgotten', barra: '#FFD84D' },
     { slug: 'podcast', num: '04', marca: true, color: 'podcast', nombre: 'Podcast', submarca: 'SOCCER iD Podcast',
       linea: es ? 'Conversaciones de fútbol, sin prisa.' : 'Football conversations, no rush.',
-      lema: es ? 'Voces que viven el deporte' : 'Voices that live the game', barra: '#F04DFF' },
+      lema: es ? 'Voces que viven el deporte' : 'Voices that live the game', barra: '#FF4D4D' },
     { slug: 'opiniones', num: '05', marca: false, color: 'apoyo', nombre: es ? 'Opiniones y media' : 'Reviews & media', corto: 'Media',
       linea: es ? 'Lo que dicen quienes vivieron la experiencia, y la prensa.' : 'What people and the press say.',
-      lema: es ? 'Noticias, análisis y más' : 'News, analysis and more', barra: '#4FD6FF' },
+      lema: es ? 'Noticias, análisis y más' : 'News, analysis and more', barra: '#FF8A3D' },
     { slug: 'nosotros', num: '06', marca: false, color: 'apoyo', nombre: es ? 'Quiénes somos' : 'About us', corto: es ? 'Nosotros' : 'About',
       linea: es ? 'La historia y el equipo detrás de SOCCER iD.' : 'The story and the team behind SOCCER iD.',
-      lema: es ? 'Una comunidad global' : 'A global community', barra: '#FF4D4D' }
-  ].map(sx => Object.assign(sx, { url: `/${lang}/${sx.slug}`, foto: FOTOS_SECCION[sx.slug] }));
+      lema: es ? 'Una comunidad global' : 'A global community', barra: '#2EE6A8' }
+  ].map(sx => Object.assign(sx, {
+    url: `/${lang}/${sx.slug}`,
+    foto: FOTOS_SECCION[sx.slug],
+    // El mismo color, legible en texto chico. La página lo usa como acento.
+    barraTexto: acentoLegible(sx.barra)
+  }));
 }
 
 // Una foto de las que ya tiene el sitio por sección, para el home. Se ven en
@@ -1643,6 +1672,78 @@ const FOTOS_SECCION = {
   podcast: '/assets/images/gallery/socceridcup/1.jpg',
   opiniones: '/assets/images/opi2.jpg',           // la del panel Reviews original
   nosotros: '/assets/images/somoss.jpg'           // la del panel Quiénes somos original
+};
+
+/**
+ * La ficha de la SOCCER iD CUP, de `gallery_pages.json`. Es la que ya usaba
+ * /socceridcup; la sección Tour la reaprovecha para no mantener dos copias
+ * de las mismas cifras. Devuelve null si el archivo no está.
+ */
+function fichaCup(lang) {
+  try {
+    const ruta = path.join(__dirname, 'contents', 'gallery_pages.json');
+    if (!fs.existsSync(ruta)) return null;
+    const todas = JSON.parse(fs.readFileSync(ruta, 'utf8'));
+    const lista = todas[lang] || todas[DEFAULT_LANG] || [];
+    return lista.find(g => g.id === 'soccer-id-cup-2027') || null;
+  } catch (e) {
+    console.error('No pude leer la ficha de la copa:', e.message);
+    return null;
+  }
+}
+
+/**
+ * Publicaciones de los clubes y video de bastidores, por edición.
+ *
+ * Estaban escritos a mano dentro de views/socceridcup-edition.hbs, en
+ * bloques `{{#eq edition.year ...}}`. Son enlaces concretos a Instagram y a
+ * Facebook, no filas de la base, así que siguen siendo una constante; pero
+ * aquí se ven de un vistazo y la vista queda limpia.
+ */
+const PUBLICACIONES_EDICION = {
+  '2023': [
+    { club: 'Pumas', color: '#c8a24a', post: 'C3rNzPHMSoT' },
+    { club: 'Pumas', color: '#c8a24a', post: 'C45zMSiLAal' },
+    { club: 'Comunicaciones', color: '#e8e8e8', post: 'C3ql6KWx0eR' },
+    { club: 'Comunicaciones', color: '#e8e8e8', post: 'C44uMApuSf7' }
+  ],
+  '2024': [
+    { club: 'América', color: '#ffe600', post: 'C_MIUMKy4KW' },
+    { club: 'América', color: '#ffe600', post: 'C-ibrhTxVFY' },
+    { club: 'Atlético Nacional', color: '#009639', post: 'C_nUjsJROIO' },
+    { club: 'Atlético Nacional', color: '#009639', post: 'C_eW4TIqzlG' }
+  ],
+  '2025': [
+    { club: 'Pumas', color: '#c8a24a', post: 'DHMbo_-uwxz' },
+    { club: 'Pumas', color: '#c8a24a', post: 'DHgc8InsfGf' },
+    { club: 'Tigres', color: '#ff8a00', post: 'DXYZnyvjSx4' },
+    { club: 'Tigres', color: '#ff8a00', post: 'DXYZdVQDU3q' }
+  ]
+};
+
+/** El video de bastidores vive en Facebook y no se deja embeber: póster y enlace. */
+const BASTIDORES_EDICION = {
+  '2024': { url: 'https://www.facebook.com/soccerid7/videos/907822141540511/', poster: '/assets/images/gallery/cup2024/bts.jpg' },
+  '2025': { url: 'https://www.facebook.com/reel/1372392885003887', poster: '/assets/images/gallery/cup2025/bts.jpg' }
+};
+
+/**
+ * Qué hoja de estilos propia carga cada sección, además de v2.css.
+ *
+ * El nombre del archivo es `assets/css/seccion-<valor>.css`. No todas tienen:
+ * Legends se arma entera con bloques comunes (pilares, eventos, contacto), así
+ * que no carga ninguna y no hay un archivo vacío dando vueltas.
+ *
+ * Los archivos van planos y no en una carpeta `secciones/` porque la ruta que
+ * los sirve es `/assets/css/:filename`, de un solo tramo, y además nombra el
+ * caché con ese mismo nombre (ver más arriba). Una barra lo rompería.
+ */
+const HOJA_DE_SECCION = {
+  tour: 'tour',
+  travel: 'travel',
+  podcast: 'podcast',
+  opiniones: 'media',
+  nosotros: 'nosotros'
 };
 
 /** Lo común a todas las páginas de la nueva distribución. */
@@ -1659,6 +1760,7 @@ function datosV2(lang, slug) {
     marcas: secciones.filter(sx => sx.marca),
     apoyo: secciones.filter(sx => !sx.marca),
     actual,
+    hojaSeccion: HOJA_DE_SECCION[slug] || null,
     redes: REDES,
     ['es_' + (slug || 'inicio')]: true
   });
@@ -1697,6 +1799,9 @@ function rutaV2(slug, armar) {
 app.get('/:lang/tour', rutaV2('tour', async (lang) => {
   // Lo que viene: el Tour '27 y sus tres partidos, leídos del registro de
   // propuestas. Lo que ya pasó: las ediciones, de la base. Nunca en la misma lista.
+  // El resto de la página (portada, cifras, alcance, momentos, prensa) sale
+  // de la misma ficha que alimenta /socceridcup, para que no haya dos
+  // verdades sobre la copa.
   const tour = propuestas.porTipo('tour');
   const partidos = propuestas.listar()
     .filter(v => v.tipo === 'partido' && !v.oculta && v.id !== '2027')
@@ -1707,7 +1812,22 @@ app.get('/:lang/tour', rutaV2('tour', async (lang) => {
       ventana: v.ventana || (lang === 'en' ? 'Confirmed' : 'Confirmado'),
       confirmado: !propuestas.enNegociacion(v)
     }));
+  // La ficha de la copa: la misma de /socceridcup. Si falta el archivo la
+  // página se pinta igual, sólo sin portada ni cifras.
+  const galeria = fichaCup(lang);
+  const historia = await cupEditions.timeline(lang);
   return {
+    galeria,
+    // Los años que todavía no son una edición jugada (la pausa del Mundial
+    // y lo que sigue). Las jugadas ya salen como fichas, con foto.
+    // 2027 está en la base sin texto: en vez de una fila muda, se dice lo
+    // que su estado ya significa.
+    pendientes: historia.filter(h => !h.link).map(h => Object.assign({}, h, {
+      match: h.match || (h.tone === 'pause'
+        ? (lang === 'en' ? 'On pause' : 'En pausa')
+        : (lang === 'en' ? 'Coming soon' : 'Próximamente')),
+      city: h.city || (lang === 'en' ? 'To be confirmed' : 'Por confirmar')
+    })),
     tour: { nombre: tour ? tour.label : "SOCCER iD TOUR '27", url: `/${lang}/${tour ? tour.slug : 'socceridcup2027'}`, partidos },
     ediciones: (await cupEditions.fichas(lang)).map(f => Object.assign({}, f, { url: `/${lang}/socceridcup/${f.year}` }))
   };
@@ -1723,11 +1843,40 @@ app.get('/:lang/legends', rutaV2('legends'));
 
 app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
   const pod = data.podcast || {};
-  const eps = (pod.episodios || []).map((e, i, arr) => ({
-    num: arr.length - i,
+  // OJO con el orden: el JSON guarda los episodios del MÁS VIEJO al más
+  // nuevo. El primero es el #1 y el último, el más reciente. Comprobado
+  // contra los títulos que publica YouTube (oEmbed) el 21/10/2026: el
+  // índice 0 es «SOCCER ID» #1 y el 19, «Se ACABÓ el Mundial | SOCCER iD #20».
+  // Antes se numeraban al revés (arr.length - i), así que el episodio 1
+  // aparecía rotulado como el 20.
+  // Título, duración y fecha los guarda `node scripts/podcast-titulos.js`
+  // preguntándoselos a YouTube. Si alguno falta, la fila se pinta sin él:
+  // ni se inventa ni se rompe la lista.
+  const mes = lang === 'en'
+    ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    : ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  const fechaTexto = iso => {
+    if (!iso) return '';
+    const [a, m, d] = iso.split('-').map(Number);
+    if (!a || !m || !d) return '';
+    return lang === 'en' ? `${mes[m - 1]} ${d}, ${a}` : `${d} ${mes[m - 1]} ${a}`;
+  };
+  const eps = (pod.episodios || []).map((e, i) => ({
+    num: i + 1,
+    videoId: e.videoId,
+    titulo: e.titulo || '',
+    reloj: e.reloj || '',
+    fechaTexto: fechaTexto(e.fecha),
     url: `https://www.youtube.com/watch?v=${e.videoId}`
-  }));
-  return { canal: pod.canal, episodios: eps };
+  })).reverse();   // en pantalla, del más nuevo al más viejo
+  // Dónde está publicado. Se pinta lo que esté lleno en contents/podcast.json:
+  // añadir la URL de Spotify ahí basta para que aparezca el botón, sin tocar
+  // código. Un enlace vacío no se pinta, para no mandar a nadie a la nada.
+  const plataformas = [
+    { nombre: 'YouTube', url: pod.canal },
+    { nombre: 'Spotify', url: pod.spotify }
+  ].filter(p => p.url);
+  return { plataformas, episodios: eps, ultimo: eps.length ? eps[0] : null };
 }));
 
 app.get('/:lang/opiniones', rutaV2('opiniones', async (lang, data) => {
@@ -1742,8 +1891,18 @@ app.get('/:lang/opiniones', rutaV2('opiniones', async (lang, data) => {
 
 app.get('/:lang/nosotros', rutaV2('nosotros', async (lang, data) => {
   const q = (data.panel_templates || {}).quienes || null;
-  // Cuatro fotos: con más, la columna de imágenes dobla en alto al texto.
-  return { quienes: q ? Object.assign({}, q, { gallery: (q.gallery || []).slice(0, 4) }) : null };
+  return {
+    // Cuatro fotos: con más, la columna de imágenes dobla en alto al texto.
+    quienes: q ? Object.assign({}, q, { gallery: (q.gallery || []).slice(0, 4) }) : null,
+    // La historia año por año: las mismas ediciones que pinta Tour, para
+    // que ningún año se cuente de dos maneras distintas.
+    historia: (await cupEditions.timeline(lang)).map(h => Object.assign({}, h, {
+      match: h.match || (h.tone === 'pause'
+        ? (lang === 'en' ? 'On pause' : 'En pausa')
+        : (lang === 'en' ? 'Coming soon' : 'Próximamente')),
+      city: h.city || (lang === 'en' ? 'To be confirmed' : 'Por confirmar')
+    }))
+  };
 }));
 
 // Otras páginas con idioma

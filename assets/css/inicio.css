@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════════════
    HOME · nueva distribución sobre la base de la landing original.
    Esta hoja SOLO añade lo nuevo (píldora, menú, las seis puertas, redes).
-   Todo lo demás (fondo, hero, vidrio, dot-nav, preloader, dock) viene de
+   Todo lo demás (fondo, hero, vidrio, preloader, dock) viene de
    main.css, que es lo que daba el encanto.
    Marca: solo el isotipo, el círculo con el iD y la playera.
    Colores: el azul y el verde del logo, por variable, como manda main.css.
@@ -17,7 +17,7 @@ body .mn-sheet, body .mn-overlay, body .mn-mini, body .sid-dock { display: none 
 /* Píldora oscura translúcida; el idioma activo en blanco con texto oscuro,
    el otro en gris. Va con body delante para ganarle a main.css. */
 body .language-selector { padding: 6px; border-radius: 999px; background: rgba(8,12,24,0.55); border: 1px solid rgba(255,255,255,0.14); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 6px 24px rgba(0,0,0,0.35); gap: 4px; }
-body .lang-btn { padding: 8px 16px; border-radius: 999px; color: rgba(255,255,255,0.55); font-weight: 700; }
+body .lang-btn { padding: 8px 16px; border-radius: 999px; color: rgba(255,255,255,0.66); font-weight: 700; }
 body .lang-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
 body .lang-btn.active { background: #fff; color: #0b1020; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
 body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
@@ -29,33 +29,41 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 }
 
 /* ─── Hero: el home es el menú ────────────────────────────────────── */
-/* En escritorio el contenido del hero sube (isotipo + lema arriba) y las
-   seis puertas se montan encima con margen negativo, de modo que la
-   primera pantalla ya lo tiene todo: no hay que bajar para elegir. */
+/* El hero es la primera pantalla entera y lleva dentro todo: la marca, el
+   lema, las seis puertas y las redes. Así no hay que bajar para elegir. */
 .hero-logo-text img { filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5)); }
-/* Isotipo y lema arriba, con poco aire sobre ellos y más hacia las puertas. */
-.hero-section { height: auto; min-height: 100vh; align-items: flex-start; padding-top: clamp(44px, 5.5vh, 64px); }
+.hero-section { height: auto; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 0; }
 .hero-logo-text { margin-bottom: 14px; }
-.hero-logo-text img { width: clamp(84px, 7vw, 104px); height: auto; }
+/* El isotipo escala con la pantalla, no se queda chico en un monitor. */
+.hero-logo-text img { width: clamp(84px, 5vw, 128px); height: auto; }
 /* Calibrado contra el mockup midiendo cielo, gradas y pasto: la foto se
    levanta (brillo 1.25, un poco de sepia para que la gente de las gradas
    se vea cálida) y encima va un velo neutro, denso en el cielo y en el
    pasto y ligero a la altura de las gradas. */
 .hero-video-container::after { background: linear-gradient(180deg, rgba(18,20,24,0.65) 0%, rgba(18,20,24,0.30) 45%, rgba(18,20,24,0.74) 100%); }
 .hero-image { filter: saturate(0.7) brightness(1.25) sepia(0.2); }
-.hero-logo-text img { width: 84px; height: 84px; }
 /* El tamaño del lema en celular ya está calibrado en main.css (dos líneas
    exactas); sólo se toca en escritorio. */
-@media (min-width: 1025px) { .hero-tagline { font-size: clamp(1.6rem, 2.1vw, 2rem); margin-bottom: 0; line-height: 1.35; } }
+@media (min-width: 1025px) { .hero-tagline { font-size: clamp(1.6rem, 2vw, 2.6rem); margin-bottom: 0; line-height: 1.35; } }
 .hero-section .hero-tagline em { font-style: italic; color: var(--brand-lime); }
 
+/* ─── La columna de la primera pantalla ───────────────────────────── */
+/* Tres piezas en vertical: cabecera (marca y lema), las seis puertas y las
+   redes. La cabecera y las redes miden lo suyo; las puertas se quedan con
+   todo lo que sobre, hasta su tope. Si aun así sobra espacio —un monitor
+   alto—, `justify-content: center` lo parte por igual arriba y abajo en vez
+   de dejar un hueco en medio. Nada de alturas fijas ni de colgar las
+   puertas del borde de abajo con un margen negativo: eso es lo que abría
+   el hueco al crecer la pantalla. */
+.hero-content { flex: 1 1 auto; max-width: none; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(20px, 3.2vh, 46px); padding: clamp(26px, 4.5vh, 60px) clamp(24px, 3vw, 56px) clamp(22px, 3.5vh, 48px); }
+.hero-cabecera { flex: 0 0 auto; }
+
 /* ─── Las seis puertas ────────────────────────────────────────────── */
-/* Las puertas terminan 130 px antes del borde inferior de la pantalla: esa
-   banda es de la píldora del próximo partido (fija, al centro) y de las
-   redes, que se reparten a sus lados. */
-/* Alto de las puertas: lo que queda de pantalla tras el bloque de arriba
-   (≈270 px) y la banda de abajo (130 px). Medido en 1280×720 y 1440×900. */
-.puertas { --alto: clamp(250px, calc(100vh - 480px), 440px); position: relative; z-index: 4; display: flex; gap: 10px; width: min(1320px, calc(100% - 80px)); height: var(--alto); margin: calc(-1 * var(--alto) - 150px) auto 0; }
+/* `flex: 1 1 0` con `min-height: 0`: crecen y se encogen con la pantalla.
+   El tope evita que en un monitor muy alto se vuelvan paneles enormes. */
+/* El texto de las cards va a la izquierda: la columna del hero centra el
+   lema y las puertas heredaban ese centrado. */
+.puertas { text-align: left; position: relative; z-index: 4; flex: 1 1 0; min-height: 0; max-height: clamp(340px, 58vh, 720px); display: flex; gap: 12px; width: min(100%, 1920px, max(1560px, 70vw)); margin: 0; }
 .puerta {
   position: relative; flex: 1; min-width: 0; border-radius: 22px; overflow: hidden; isolation: isolate;
   text-decoration: none; color: #fff;
@@ -71,7 +79,11 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 .puerta::before { content: ''; position: absolute; inset: 0; z-index: -2; background: var(--foto) center / cover no-repeat; opacity: .92; transform: scale(1.04); transition: opacity .5s, transform .9s cubic-bezier(.2,.8,.2,1); }
 .puerta--tour::before { background-position: center 12%; }
 .puerta::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(5,4,21,0.92) 0%, rgba(5,4,21,0.70) 22%, rgba(5,4,21,0.15) 50%, rgba(5,4,21,0) 100%); }
-.puerta:hover { flex: 2.4; border-color: rgba(var(--brand-blue-rgb), 0.7); box-shadow: 0 16px 50px rgba(var(--brand-blue-rgb), 0.25); }
+/* Al pasar, la card crece y se le marca el borde. Nada de halo de color:
+   antes el azul de marca pintaba el borde y una sombra de 50 px, y era lo
+   último que quedaba del azul en el inicio. El realce lo da el borde claro
+   y una sombra más honda, en negro, como en las secciones. */
+.puerta:hover { flex: 2.4; border-color: rgba(255,255,255,0.55); box-shadow: 0 18px 54px rgba(0,0,0,0.55); }
 .puerta:hover::before { opacity: 1; transform: none; }
 .puerta__icono {
   position: absolute; top: 16px; left: 16px; z-index: 2;
@@ -88,11 +100,10 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 .puerta__linea { font-size: 14px; line-height: 1.3; min-height: 2.6em; color: rgba(255,255,255,0.88); max-width: 300px; }
 
 /* ─── Redes ───────────────────────────────────────────────────────── */
-/* En escritorio las redes son seis círculos centrados bajo las puertas, como
-   en el mockup. Para dejarles el centro, la píldora del próximo partido (del
-   layout, fija) se recorre a la izquierda sólo en esta página. */
-/* Chicas y discretas: son un pie, no un bloque. */
-.redes-v2 { position: relative; z-index: 4; height: 150px; padding: 54px 40px 0; }
+/* Seis círculos centrados bajo las puertas, como en el mockup. Chicos y
+   discretos: son un pie, no un bloque. Miden lo suyo y el hueco que los
+   separa de las puertas lo pone el `gap` de la columna. */
+.redes-v2 { position: relative; z-index: 4; flex: 0 0 auto; height: auto; padding: 0; }
 .redes-v2 .section-header { display: none; }
 .redes-v2__grid { display: flex; justify-content: center; gap: 14px; }
 .redes-v2__chip {
@@ -104,13 +115,27 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 .redes-v2__chip svg { width: 16px; height: 16px; }
 .redes-v2__chip span, .redes-v2__chip small { display: none; }
 .redes-v2__chip:hover { transform: translateY(-3px); background: var(--brand-lime); border-color: var(--brand-lime); color: #0b1020; }
-.footer-content { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; padding: 24px 20px; color: rgba(255,255,255,0.6); font-size: 13px; }
-.footer-content a { color: inherit; }
+/* ─── Pie ────────────────────────────────────────── */
+/* Una sola columna centrada: logo completo, enlaces y aviso, en ese orden. */
+/* Los grises del pie los subió el auditor de contraste: a 13px la regla de
+   la casa pide 7.0 y con 0.6 de blanco daban 6.68. Y `.footer-content a`
+   ganaba por especificidad a `.footer-link`, así que los enlaces caían al
+   gris del contenedor en vez de usar el suyo; por eso ya no está. */
+.footer-content { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; max-width: 1200px; margin: 0 auto; padding: 28px 20px 32px; color: rgba(255,255,255,0.68); font-size: 13px; }
+/* El ancho manda y la altura va en auto: el archivo es 1200×271 y los
+   atributos del <img> llevan esa misma medida, así que el navegador
+   reserva el hueco exacto y el logo no se deforma nunca. */
+.footer-marca { width: 200px; height: auto; display: block; }
+.footer-content .footer-links { margin-bottom: 0; gap: 10px 24px; }
+.footer-link { color: rgba(255,255,255,0.82); font-size: 13px; }
+.footer-link:hover { color: var(--brand-lime, #78F750); }
+.footer-legal { margin: 0; }
 
-/* ─── Menú lateral (dot-nav original) ─────────────────────────────── */
-/* En escritorio las puertas ya son el menú. En celular es EL menú, así
-   que se ve desde el primer momento y no espera al scroll como el original. */
-.dot-nav--inicio { display: none; }
+/* ─── Sin menú lateral ───────────────────────────────────────────── */
+/* El home no pinta el dot-nav de la landing original, ni en web ni en
+   celular: las seis puertas son el único menú y el lateral se encimaba
+   sobre las cards. La regla queda por si alguna hoja heredada lo saca. */
+.dot-nav--inicio { display: none !important; }
 
 /* Hasta 1600 px no caben los seis usuarios junto a la píldora: sólo nombres. */
 @media (min-width: 1025px) and (max-width: 1600px) { .redes-v2__chip small { display: none; } }
@@ -130,9 +155,11 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
    primera pantalla, en dos columnas y tres filas. La banda de abajo es de
    la píldora del partido. */
 @media (max-width: 1024px) {
-  .hero-section { padding-top: 56px; }
+  /* La misma columna, con menos aire. */
+  .hero-content { gap: clamp(14px, 2.4vh, 26px); padding: clamp(18px, 3.4vh, 34px) 16px clamp(16px, 2.6vh, 28px); }
   .hero-logo-text img { width: 72px; height: 72px; }
-  .puertas { --alto: clamp(330px, calc(100vh - 370px), 560px); display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 10px; width: calc(100% - 32px); margin: calc(-1 * var(--alto) - 130px) auto 0; }
+  /* Dos columnas por tres filas que llenan lo que queda de pantalla. */
+  .puertas { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 10px; width: 100%; max-height: none; }
   .puerta { flex: none; border-radius: 18px; }
   .puerta:hover { flex: none; }
   /* En celular no hay hover: la foto va al 100 %, el oscurecido sólo en el
@@ -147,16 +174,11 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
   .puerta__cuerpo { left: 14px; right: 14px; bottom: 12px; }
   .puerta__icono { width: 34px; height: 34px; top: 10px; left: 10px; }
   .puerta__icono svg { width: 16px; height: 16px; }
-  .redes-v2 { height: 130px; margin-top: 0; padding: 26px 16px 0; }
   .redes-v2__grid { gap: 8px; }
   .redes-v2__chip { width: 30px; height: 30px; border-width: 1px; }
   .redes-v2__chip svg { width: 13px; height: 13px; }
-  /* El lateral se comporta como en la original: aparece al bajar. */
-  .dot-nav--inicio { display: flex; }
-}
-@media (max-width: 768px) {
-  /* En celular la píldora es sólo el isotipo, a la izquierda; el menú es
-     el lateral de la derecha. */
+  .footer-marca { width: 164px; }
+  .footer-content { gap: 14px; padding: 24px 20px 28px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .puerta { animation: none; opacity: 1; transform: none; }

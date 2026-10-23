@@ -1,0 +1,68 @@
+/* Tour · SOCCER iD CUP
+   Sólo lo PROPIO de esta sección. Lo compartido —fichas de color, menú,
+   portada, cifras, hitos, pilares, mosaico, aliados, prensa, eventos,
+   contacto, carrusel, video, pie— vive en v2.css, que se carga antes.
+   La carga el layout a partir de `hojaSeccion` (ver views/layouts/v2.hbs). */
+
+/* ─── Tour: lo que viene y lo que ya pasó ─────────────────────────── */
+.tour27 {
+  /* Vidrio CON foto detrás, la misma mecánica que las puertas del index:
+     `::before` la foto en mate, `::after` el velo, y encima el contenido.
+     Antes era un rectángulo de azul sólido y se comía la página; en vidrio
+     a secas, sobre el fondo plano, no se veía nada. */
+  position: relative; isolation: isolate; overflow: hidden;
+  background: var(--vidrio); border: 1px solid var(--vidrio-borde);
+  color: var(--tinta); border-radius: var(--radio);
+  padding: 36px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px;
+}
+.tour27::before {
+  content: ''; position: absolute; inset: 0; z-index: -2; border-radius: inherit;
+  background: var(--tour-foto) center / cover no-repeat;
+  filter: saturate(.5) brightness(.9) sepia(.18);
+}
+.tour27::after {
+  content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+  background: linear-gradient(100deg, rgba(18,20,24,.92) 0%, rgba(18,20,24,.80) 52%, rgba(18,20,24,.66) 100%);
+}
+.tour27__logo { width: 120px; height: auto; margin-bottom: 26px; }
+.tour27 h2 { font-size: clamp(34px, 4.4vw, 52px); font-weight: 900; letter-spacing: -.03em; line-height: 1.02; }
+.tour27 p { font-size: 17px; opacity: .9; margin: 14px 0 26px; max-width: 420px; }
+.tour27__partidos { list-style: none; display: flex; flex-direction: column; gap: 10px; align-self: center; }
+.tour27__partido {
+  display: flex; align-items: center; gap: 16px;
+  background: rgba(255,255,255,.06); border: 1px solid var(--vidrio-borde);
+  border-radius: var(--radio-sm); padding: 16px 18px;
+}
+.tour27__num { font-size: 13px; font-weight: 800; width: 76px; opacity: .8; }
+.tour27__nombre { flex: 1; font-weight: 800; font-size: 17px; }
+.tour27__ventana { font-size: 13px; opacity: .85; }
+.tour27__partido .pastilla { background: rgba(255,255,255,.1); color: var(--tinta-2); }
+.tour27__partido .pastilla--ok { background: var(--acento-chico); color: var(--negro); }
+
+.aclaracion {
+  display: flex; gap: 14px; align-items: center;
+  margin: 26px 0; padding: 16px 20px;
+  border: 1.5px dashed var(--linea); border-radius: var(--radio-sm);
+  font-size: 14px; color: var(--tinta-2);
+}
+.aclaracion b { color: var(--tinta); }
+
+.ediciones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.edicion { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); overflow: hidden; transition: border-color .15s; }
+.edicion:hover { border-color: var(--tinta); }
+.edicion__foto { aspect-ratio: 16 / 10; background: var(--linea) center / cover no-repeat; }
+.edicion__cuerpo { padding: 20px 22px 22px; }
+.edicion__anio { font-size: 44px; font-weight: 900; letter-spacing: -.03em; line-height: 1; color: var(--acento); }
+.edicion__partido { font-weight: 800; font-size: 17px; margin: 8px 0 2px; }
+.edicion__lugar { font-size: 14px; color: var(--tinta-2); }
+.edicion__pie { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; font-size: 14px; font-weight: 700; }
+
+@media (max-width: 900px) {
+  .tour27 { grid-template-columns: 1fr; padding: 26px; gap: 26px; }
+  /* El partido en dos renglones: rótulo arriba, nombre y estado abajo. En una
+     sola fila el nombre se partía en cuatro líneas. */
+  .tour27__partido { flex-wrap: wrap; row-gap: 4px; }
+  .tour27__num { width: 100%; }
+  .tour27__nombre { font-size: 16px; }
+  .ediciones { grid-template-columns: 1fr; }
+}

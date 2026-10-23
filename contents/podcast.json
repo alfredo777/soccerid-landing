@@ -1,66 +1,168 @@
 {
-  "_nota": "Episodios del podcast para la sección /podcast de la nueva distribución. Hoy la misma lista vive también en assets/js/cast.js (el widget del home anterior): si se agrega un episodio, va en los dos hasta que el widget lea de aquí. Los títulos no se guardan: los da YouTube.",
+  "_nota": "Episodios del podcast para /podcast. Van del MAS VIEJO al mas nuevo: el primero es el #1. Los titulos los rellena `node scripts/podcast-titulos.js` preguntandoselos a YouTube; al agregar un episodio basta con su videoId y correr el script. Hoy la misma lista vive tambien en assets/js/cast.js (el widget del home anterior): si se agrega uno, va en los dos hasta que el widget lea de aqui.",
   "canal": "https://www.youtube.com/channel/UC4Mf2_KUFB5PVfHlKhSpkiQ",
+  "_nota_spotify": "Pega aqui la URL del show en Spotify y el boton aparece solo en /podcast. Vacio = no se pinta.",
+  "spotify": "",
   "episodios": [
     {
-      "videoId": "6be3c9Q0aNI"
+      "videoId": "6be3c9Q0aNI",
+      "titulo": "Javier Aguirre no quiere a Ochoa | Kinsky lo hizo peor que Jörgensen | SOCCER ID #1",
+      "duracion": 4144,
+      "reloj": "1:09:04",
+      "fecha": "2026-03-12",
+      "vistas": 140364
     },
     {
-      "videoId": "D9_J0BIaqiM"
+      "videoId": "D9_J0BIaqiM",
+      "titulo": "Vinicius es el nuevo Mr Champions | ¿DT o personaje de Disney? | SOCCER ID #2",
+      "duracion": 5534,
+      "reloj": "1:32:14",
+      "fecha": "2026-03-19",
+      "vistas": 250776
     },
     {
-      "videoId": "aM7MoWc11hE"
+      "videoId": "aM7MoWc11hE",
+      "titulo": "Hablé con presidente de México para no salir de Pumas | Enrique Borja | SOCCER ID #3",
+      "duracion": 6522,
+      "reloj": "1:48:42",
+      "fecha": "2026-03-26",
+      "vistas": 270793
     },
     {
-      "videoId": "BfI0EsOZUwE"
+      "videoId": "BfI0EsOZUwE",
+      "titulo": "Italia es la PEOR campeona del mundo | El Estadio Azteca SÍ está chido | SOCCER ID #4",
+      "duracion": 6409,
+      "reloj": "1:46:49",
+      "fecha": "2026-04-02",
+      "vistas": 302542
     },
     {
-      "videoId": "8veHWVVAPp4"
+      "videoId": "8veHWVVAPp4",
+      "titulo": "Neuer es el MEJOR de la historia | Nuestro primer recuerdo mundialista | SOCCER ID #5",
+      "duracion": 6212,
+      "reloj": "1:43:32",
+      "fecha": "2026-04-09",
+      "vistas": 385462
     },
     {
-      "videoId": "8Qim8pHt8Dg"
+      "videoId": "8Qim8pHt8Dg",
+      "titulo": "El Madrid tiene que vender a VINICIUS | La MEJOR experiencia en la vida de Werever | SOCCER ID #6",
+      "duracion": 6163,
+      "reloj": "1:42:43",
+      "fecha": "2026-04-16",
+      "vistas": 222377
     },
     {
-      "videoId": "US64H15OCFU"
+      "videoId": "US64H15OCFU",
+      "titulo": "CR7 debería de ser el EJEMPLO A SEGUIR de todos | El Impostor con Mich de Fan10 | SOCCER ID #7",
+      "duracion": 5785,
+      "reloj": "1:36:25",
+      "fecha": "2026-04-23",
+      "vistas": 288660
     },
     {
-      "videoId": "tCPYuv8kzdo"
+      "videoId": "tCPYuv8kzdo",
+      "titulo": "PSG vs Bayern fue CINE | La lista de Aguirre NO tiene sentido | SOCCER iD #8 ",
+      "duracion": 5536,
+      "reloj": "1:32:16",
+      "fecha": "2026-04-30",
+      "vistas": 296079
     },
     {
-      "videoId": "KLye5Rpsl3s"
+      "videoId": "KLye5Rpsl3s",
+      "titulo": "Quieren FUERA a Mbappé | Toque de queda en la selección mexicana | La Champions | SOCCER iD #9",
+      "duracion": 5729,
+      "reloj": "1:35:29",
+      "fecha": "2026-05-07",
+      "vistas": 202501
     },
     {
-      "videoId": "acayaWq7pKM"
+      "videoId": "acayaWq7pKM",
+      "titulo": "Florentino hizo el RIDÍCULO | Efraín Juárez FUE PELÍCULA | SOCCER iD #10",
+      "duracion": 4847,
+      "reloj": "1:20:47",
+      "fecha": "2026-05-14",
+      "vistas": 366893
     },
     {
-      "videoId": "tz5TDeK5RPc"
+      "videoId": "tz5TDeK5RPc",
+      "titulo": "Arsenal CAMPEÓN | Huiquipedia vs Efrastóteles | SOCCER iD #11",
+      "duracion": 6880,
+      "reloj": "1:54:40",
+      "fecha": "2026-05-21",
+      "vistas": 162854
     },
     {
-      "videoId": "2nLsAHtwhgA"
+      "videoId": "2nLsAHtwhgA",
+      "titulo": "Esto va a suceder en la final de la Champions | La lista FINAL de la selección | SOCCER iD #12",
+      "duracion": 5744,
+      "reloj": "1:35:44",
+      "fecha": "2026-05-28",
+      "vistas": 211112
     },
     {
-      "videoId": "FrKTXACDYDE"
+      "videoId": "FrKTXACDYDE",
+      "titulo": "La guía DEFINITIVA | Esta es la FIGURA de cada selección | SOCCER iD #12 +1",
+      "duracion": 8723,
+      "reloj": "2:25:23",
+      "fecha": "2026-06-04",
+      "vistas": 267995
     },
     {
-      "videoId": "the1PGYO71M"
+      "videoId": "the1PGYO71M",
+      "titulo": "La FUNA de Marck del Aguila | J1 de la Copa del Mundo | Los RÉCORDS de MESSI | SOCCER iD #14 ",
+      "duracion": 8707,
+      "reloj": "2:25:07",
+      "fecha": "2026-06-18",
+      "vistas": 214307
     },
     {
-      "videoId": "TYpYyXJ63pM"
+      "videoId": "TYpYyXJ63pM",
+      "titulo": "Messi rompió TODOS los récords | haramball del Vasco  | SOCCER iD #15",
+      "duracion": 6164,
+      "reloj": "1:42:44",
+      "fecha": "2026-06-24",
+      "vistas": 93193
     },
     {
-      "videoId": "i3p1JV_LMmI"
+      "videoId": "i3p1JV_LMmI",
+      "titulo": "El Mundial de México será el MEJOR de su historia | Nos MOJAMOS en los 16vos | SOCCER iD #16",
+      "duracion": 4468,
+      "reloj": "1:14:28",
+      "fecha": "2026-06-29",
+      "vistas": 147205
     },
     {
-      "videoId": "n5GotLj0iH8"
+      "videoId": "n5GotLj0iH8",
+      "titulo": "El mejor Mundial en la HISTORIA de la Selección Mexicana | Messi terminó el debate | SOCCER iD #17",
+      "duracion": 6739,
+      "reloj": "1:52:19",
+      "fecha": "2026-07-08",
+      "vistas": 1517
     },
     {
-      "videoId": "fiZVQ1-86hc"
+      "videoId": "fiZVQ1-86hc",
+      "titulo": "El posible partido con MENOS AURA del Mundial | el VAR se equivocó para TODOS | SOCCER iD #18",
+      "duracion": 6594,
+      "reloj": "1:49:54",
+      "fecha": "2026-07-13",
+      "vistas": 201957
     },
     {
-      "videoId": "6Hu-jZrxQ6g"
+      "videoId": "6Hu-jZrxQ6g",
+      "titulo": "En la final habrá un NUEVO Mr. Mundial y Balón de Oro | SOCCER iD #19",
+      "duracion": 6388,
+      "reloj": "1:46:28",
+      "fecha": "2026-07-16",
+      "vistas": 2374
     },
     {
-      "videoId": "MJPHOQufNlM"
+      "videoId": "MJPHOQufNlM",
+      "titulo": "Se ACABÓ el Mundial | SOCCER iD #20",
+      "duracion": 4001,
+      "reloj": "1:06:41",
+      "fecha": "2026-07-20",
+      "vistas": 1627
     }
   ]
 }

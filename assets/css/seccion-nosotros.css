@@ -1,0 +1,20 @@
+/* Nosotros · nuestra historia
+   Sólo lo PROPIO de esta sección. Lo compartido —fichas de color, menú,
+   portada, cifras, hitos, pilares, mosaico, aliados, prensa, eventos,
+   contacto, carrusel, video, pie— vive en v2.css, que se carga antes.
+   La carga el layout a partir de `hojaSeccion` (ver views/layouts/v2.hbs). */
+
+/* ─── Quiénes somos ───────────────────────────────────────────────── */
+.somos { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.somos__texto { font-size: 21px; line-height: 1.6; }
+.somos__texto b { font-weight: 800; }
+.somos__fotos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.somos__foto { aspect-ratio: 1; border-radius: var(--radio-sm); background: var(--linea) center / cover no-repeat; }
+
+@media (max-width: 900px) {
+  .somos { grid-template-columns: 1fr; gap: 26px; }
+  .somos__texto { font-size: 18px; }
+}
+
+/* Mismo caso que en Travel: el texto llega del JSON con justify en línea. */
+.somos__texto p { text-align: left !important; }

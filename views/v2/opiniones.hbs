@@ -1,32 +1,30 @@
-<section class="cabecera envoltura">
-  <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / {{actual.nombre}}</p>
-  <div class="cabecera__fila">
-    <div>
-      <div class="cabecera__marca">SOCCER iD</div>
-      <h1 class="titular">{{actual.nombre}}</h1>
+{{!-- Media · la combinación de las dos cosas que se dicen de SOCCER iD:
+      lo que publica la prensa (reportajes) y lo que dice quien ya vivió la
+      experiencia (influencers y clientes).
+
+      Primero los reportajes, porque son de terceros y pesan más; después
+      los comentarios, que son testimonio. Las dos listas salen del mismo
+      almacén de contenido que administra el panel. --}}
+
+<section class="portada">
+  <img class="portada__foto" src="/assets/images/opi2.jpg" alt="">
+  <div class="portada__velo"></div>
+  <div class="portada__cuerpo">
+    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / {{actual.nombre}}</p>
+    <div class="cabecera__marca">SOCCER iD</div>
+    <h1 class="portada__titulo">Media</h1>
+    <p class="portada__bajada">{{#if isEs}}Lo que se ha publicado sobre nosotros y lo que dicen quienes ya estuvieron ahí.{{else}}What has been published about us and what the people who were there say.{{/if}}</p>
+    <div class="portada__pastillas">
+      {{#if articulos.length}}<span class="pastilla">{{articulos.length}} {{#if isEs}}reportajes{{else}}features{{/if}}</span>{{/if}}
+      {{#if opiniones.length}}<span class="pastilla">{{opiniones.length}} {{#if isEs}}comentarios{{else}}comments{{/if}}</span>{{/if}}
     </div>
-    <p class="bajada">{{actual.linea}}</p>
   </div>
 </section>
 
+{{!-- Reportajes. --}}
+{{#if articulos.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}Opiniones{{else}}Reviews{{/if}}</p>
-  <div class="opiniones">
-    {{#each opiniones}}
-    <article class="opinion">
-      <div class="opinion__estrellas" aria-label="{{this.stars}} de 5">★★★★★</div>
-      <p class="opinion__texto">{{this.text}}</p>
-      <div class="opinion__quien">
-        <img class="opinion__foto" src="{{this.image}}" alt="">
-        <div><div class="opinion__nombre">{{this.name}}</div><div class="opinion__handle">{{this.handle}}</div></div>
-      </div>
-    </article>
-    {{/each}}
-  </div>
-</section>
-
-<section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}En los medios{{else}}In the media{{/if}}</p>
+  <p class="rotulo">{{#if isEs}}Reportajes{{else}}Features{{/if}}</p>
   <div class="notas">
     {{#each articulos}}
     <a class="nota" href="/{{../lang}}/articulo/{{this.id}}">
@@ -37,5 +35,51 @@
       </div>
     </a>
     {{/each}}
+  </div>
+</section>
+{{/if}}
+
+{{!-- Comentarios de influencers y clientes. --}}
+{{#if opiniones.length}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Lo que dicen de nosotros{{else}}What they say about us{{/if}}</p>
+  {{!-- Carrusel: se arrastra con el dedo. El desplazamiento y la inercia los
+        pone el navegador; el script de abajo sólo añade las flechas para
+        quien usa ratón. Sin JavaScript sigue arrastrándose igual. --}}
+  <div class="carrusel">
+    <div class="opiniones" data-pista id="carruselOpiniones" tabindex="0" role="region"
+         aria-label="{{#if isEs}}Opiniones, se arrastra para ver más{{else}}Reviews, drag to see more{{/if}}">
+      {{#each opiniones}}
+      <article class="opinion">
+        <div class="opinion__estrellas" aria-label="{{this.stars}} / 5">★★★★★</div>
+        <p class="opinion__texto">{{this.text}}</p>
+        <div class="opinion__quien">
+          <img class="opinion__foto" src="{{this.image}}" alt="" loading="lazy">
+          <div><div class="opinion__nombre">{{this.name}}</div><div class="opinion__handle">{{this.handle}}</div></div>
+        </div>
+      </article>
+      {{/each}}
+    </div>
+    <div class="carrusel__mandos">
+      <button type="button" class="carrusel__flecha" data-ir="-1" aria-controls="carruselOpiniones" aria-label="{{#if isEs}}Anterior{{else}}Previous{{/if}}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button type="button" class="carrusel__flecha" data-ir="1" aria-controls="carruselOpiniones" aria-label="{{#if isEs}}Siguiente{{else}}Next{{/if}}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+{{> carrusel-js}}
+{{/if}}
+
+<section class="cierre">
+  <img class="cierre__foto" src="/assets/images/gallery/socceridcup/3.jpg" alt="">
+  <div class="cierre__velo"></div>
+  <div class="cierre__cuerpo">
+    <h2 class="cierre__t">{{#if isEs}}¿Escribes sobre fútbol?{{else}}Do you write about football?{{/if}}</h2>
+    <p class="cierre__d">{{#if isEs}}Acreditaciones, material de prensa y entrevistas: escríbenos.{{else}}Credentials, press kit and interviews: write to us.{{/if}}</p>
+    <a class="boton boton--lleno" href="mailto:contacto@soccerid.co?subject={{#if isEs}}Prensa{{else}}Press{{/if}}">contacto@soccerid.co <span class="flecha">↗</span></a>
   </div>
 </section>

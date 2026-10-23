@@ -60,6 +60,11 @@ const PAGINAS = [
   // eso sus choques gráficos no se veían aquí.
   '/es/' + propuestas.porId('tour27').slug,        // el tour: marca gris y blanca
   '/es/' + propuestas.porDefecto().slug,           // la propuesta en vivo: verde y carbón
+  // Las seis secciones de la nueva distribución. Quedaban fuera, y por eso
+  // sus choques (el azul de marca usado como texto sobre el fondo oscuro)
+  // no aparecían aquí.
+  '/es/tour', '/es/travel', '/es/legends',
+  '/es/podcast', '/es/opiniones', '/es/nosotros',
 ];
 
 // Los paneles bento de la landing, que solo existen en el DOM al abrirlos.

@@ -8,14 +8,20 @@
    PLANO quiere decir: sin degradados, sin sombras, sin brillos. La jerarquía
    la dan el color sólido, el tamaño de la letra y el aire.
 
-   EN OSCURO, con TRES COLORES (pedido del usuario; la primera vuelta con un
-   color por marca se leía como un revoltijo, y la segunda en claro quedó pobre):
+   MATE Y VERDE, el mismo estándar que el index (21/10/2026). Antes el azul
+   de marca pintaba las superficies —botones, el menú, el panel del Tour— y
+   las secciones se veían de otra casa que el home. Ya no:
      fondo   #0B0B14  casi negro, tirando a azul
-     azul    #1B17EF  SUPERFICIES: botones, la cinta, la banda, la fila al pasar
-     verde   #78F750  el acento y el texto de realce: números, palabra clave
-   La letra va en blanco. El azul de marca NUNCA es texto sobre el fondo
-   oscuro: da 1.45 de contraste (ver docs/variables-del-proyecto.md). Por
-   eso lo que antes iba en azul como texto ahora va en verde (14 : 1).
+     vidrio  rgba(10,10,26,.42) + borde blanco al 12 %: la tarjeta del index,
+             translúcida y mate. ES la superficie. Nada de bloques saturados.
+     verde   #78F750  el acento Y la acción: botones llenos, el chip activo
+             del menú, los números, los íconos.
+     azul    #1B17EF  SÓLO marca (el logo). NO se usa como superficie ni como
+             texto: sobre el fondo oscuro da 1.45 de contraste.
+   Sobre el verde la letra va en negro (#0B0B14); sobre el fondo, en blanco.
+   Las fotos van mate: desaturadas y con velo, como el hero del index.
+   La regla de contraste está en docs/variables-del-proyecto.md, sección 1c,
+   y la vigila `node scripts/contraste.js`.
    ═══════════════════════════════════════════════════════════════════════ */
 
 @font-face { font-family: 'Raleway'; src: url('/assets/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaooCP.ttf') format('truetype'); font-weight: 400; font-display: swap; }
@@ -26,8 +32,23 @@
 @font-face { font-family: 'Raleway'; src: url('/assets/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtzpYCP.ttf') format('truetype'); font-weight: 900; font-display: swap; }
 
 :root {
-  --azul: #1B17EF;
+  --azul: #1B17EF;                      /* SÓLO marca. Nunca superficie ni texto. */
   --azul-osc: #0D0AA8;
+
+  /* EL ACENTO DE LA SECCIÓN. Lo pone el layout en el <body>, sacado de la
+     barra de color que cada sección ya tiene bajo su nombre en el index
+     (campo `barra` de seccionesV2, en index.js). Aquí van los valores de
+     reserva: si una página no manda ninguno, se queda en verde.
+
+     Son DOS porque la regla de la casa pide 7.0 de contraste al texto de
+     menos de 16px, y el magenta del podcast (6.73) y el rojo de nosotros
+     (5.99) no llegan. `--acento-chico` es el mismo color aclarado lo justo.
+     Ver docs/variables-del-proyecto.md, sección 1c. */
+  --acento: var(--acento);                /* superficies y texto de 16px o más */
+  --acento-chico: var(--acento);          /* texto de menos de 16px */
+  /* El vidrio del index: translúcido, mate, con un borde apenas visible. */
+  --vidrio: rgba(10, 10, 26, 0.42);
+  --vidrio-borde: rgba(255, 255, 255, 0.12);
   --lima: #78F750;
   --tinta: #FFFFFF;                     /* la letra */
   --tinta-2: #B8B9C9;                   /* 8.9 sobre el fondo: secundario */
@@ -36,11 +57,6 @@
   --linea: rgba(255, 255, 255, 0.13);
   --negro: #0B0B14;                     /* texto sobre verde y sobre blanco */
 
-  /* Una sola línea: todas las secciones usan el azul. */
-  --c-tour: var(--azul);
-  --c-travel: var(--azul);
-  --c-legends: var(--azul);
-  --c-podcast: var(--azul);
 
   --radio: 22px;
   --radio-sm: 14px;
@@ -87,19 +103,24 @@ img { display: block; max-width: 100%; }
   transition: background .15s, color .15s;
 }
 .nav__link:hover { color: var(--tinta); background: rgba(255,255,255,.08); }
-.nav__link.is-activo { background: var(--azul); color: #fff; }
+/* `--acento-chico` y no `--acento`: el texto va en negro a 14px y la
+   regla pide 7.0 por debajo de 16px. */
+.nav__link.is-activo { background: var(--acento-chico); color: var(--negro); }
 .nav__menu {
   display: inline-flex; align-items: center; gap: 9px;
   font-size: 14px; font-weight: 700;
-  background: var(--azul); color: #fff;
+  background: var(--acento-chico); color: var(--negro);
   padding: 11px 20px; border-radius: 999px; margin-left: 4px;
 }
-.nav__menu-punto { width: 8px; height: 8px; border-radius: 50%; background: var(--lima); }
+/* Sobre el verde el punto va en negro, no en verde sobre verde. */
+.nav__menu-punto { width: 8px; height: 8px; border-radius: 50%; background: var(--negro); }
 
 /* ─── Menú completo (ancla #menu, sin JavaScript) ─────────────────── */
 .menu {
   position: fixed; inset: 0; z-index: 80;
-  background: var(--azul); color: #fff;
+  /* Mate, como el index: casi negro con un desenfoque detrás. */
+  background: rgba(11, 11, 20, 0.94); color: #fff;
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
   display: flex; flex-direction: column;
   padding: 28px var(--gutter) 32px;
   visibility: hidden; opacity: 0; transition: opacity .2s, visibility .2s;
@@ -114,10 +135,10 @@ img { display: block; max-width: 100%; }
   display: flex; align-items: baseline; gap: 22px;
   padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.22);
 }
-.menu__num { font-size: 14px; font-weight: 700; color: var(--lima); width: 28px; }
+.menu__num { font-size: 14px; font-weight: 700; color: var(--acento-chico); width: 28px; }
 .menu__nombre { font-size: clamp(30px, 6vw, 56px); font-weight: 800; letter-spacing: -.02em; line-height: 1.05; flex: 1; }
 .menu__flecha { font-size: 24px; opacity: .7; }
-.menu__item:hover .menu__nombre { color: var(--lima); }
+.menu__item:hover .menu__nombre { color: var(--acento); }
 .menu__redes { max-width: var(--ancho); width: 100%; margin: auto auto 0; padding-top: 36px; display: flex; flex-wrap: wrap; gap: 8px; }
 .menu__redes a { font-size: 14px; font-weight: 600; border: 1.5px solid rgba(255,255,255,.55); border-radius: 999px; padding: 9px 16px; }
 
@@ -127,7 +148,7 @@ img { display: block; max-width: 100%; }
   font-size: clamp(38px, 6.4vw, 76px); font-weight: 800;
   letter-spacing: -.03em; line-height: 1.02;
 }
-.titular em { font-style: normal; color: var(--lima); }
+.titular em { font-style: normal; color: var(--acento); }
 .bajada { font-size: 18px; color: var(--tinta-2); max-width: 620px; }
 .boton {
   display: inline-flex; align-items: center; gap: 10px;
@@ -137,8 +158,13 @@ img { display: block; max-width: 100%; }
   transition: background .15s, color .15s, border-color .15s;
 }
 .boton:hover { background: #fff; color: var(--negro); border-color: #fff; }
-.boton--lleno { background: var(--azul); border-color: var(--azul); color: #fff; }
-.boton--lleno:hover { background: var(--azul-osc); border-color: var(--azul-osc); }
+/* La acción va en verde con letra negra: 11 : 1 de contraste y es el
+   acento que ya usa el index. */
+/* El botón lleva su texto en negro a 15px: mismo motivo. El oscurecido al
+   pasar se saca del propio color con un filtro, para que funcione con
+   cualquier acento sin tener que guardar una segunda ficha por sección. */
+.boton--lleno { background: var(--acento-chico); border-color: var(--acento-chico); color: var(--negro); }
+.boton--lleno:hover { filter: brightness(.92); }
 .boton--claro { border-color: rgba(255,255,255,.7); color: #fff; }
 .boton--claro:hover { background: #fff; color: var(--negro); }
 .flecha { font-size: 1.05em; line-height: 1; }
@@ -146,7 +172,7 @@ img { display: block; max-width: 100%; }
   display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .04em;
   padding: 5px 11px; border-radius: 999px; background: rgba(255,255,255,.08); color: var(--tinta-2);
 }
-.pastilla--ok { background: var(--lima); color: var(--negro); }
+.pastilla--ok { background: var(--acento-chico); color: var(--negro); }
 .pastilla--muestra { background: transparent; border: 1.5px dashed var(--tinta-2); color: var(--tinta-2); }
 .rotulo {
   display: flex; align-items: center; gap: 14px;
@@ -159,256 +185,217 @@ img { display: block; max-width: 100%; }
    lateral de .envoltura y el contenido quedaría pegado al borde en celular. */
 .seccion { padding-block: 56px; }
 
-/* ─── Home en oscuro ──────────────────────────────────────────────── */
-.v2--inicio .pagina { padding-top: 0; }
-.hero { position: relative; min-height: 92vh; display: flex; align-items: flex-end; overflow: hidden; }
-.hero__foto, .hero__foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-/* Velo plano de un solo color: la foto se adivina, el texto manda. */
-.hero__velo { position: absolute; inset: 0; background: rgba(11, 11, 20, 0.78); }
-.hero__cuerpo { position: relative; padding-block: 160px 72px; }
-.etiqueta {
-  display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .16em;
-  background: var(--lima); color: var(--negro); padding: 6px 12px; border-radius: 999px;
-  margin-bottom: 26px;
-}
-.hero .titular { max-width: 1000px; font-size: clamp(42px, 7.2vw, 96px); }
-.hero .bajada { margin-top: 24px; font-size: 19px; }
-.hero__acciones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 34px; }
-
-.cinta { background: var(--azul); color: #fff; overflow: hidden; padding-block: 18px; }
-.cinta__pista { display: flex; align-items: center; gap: 28px; width: max-content; animation: cinta 38s linear infinite; }
-.cinta__pista span { font-size: clamp(18px, 2.2vw, 26px); font-weight: 800; letter-spacing: -.01em; white-space: nowrap; }
-.cinta__pista i { width: 10px; height: 10px; border-radius: 50%; background: var(--lima); flex: none; }
-@keyframes cinta { to { transform: translateX(-50%); } }
-
-.ahora { padding-block: 64px 24px; }
-.ahora__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.tarjeta {
-  display: flex; flex-direction: column; gap: 10px; min-height: 240px;
-  background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio);
-  padding: 26px 26px 24px; transition: border-color .2s, transform .25s cubic-bezier(.2,.8,.2,1);
-}
-.tarjeta:hover { border-color: rgba(255,255,255,.4); transform: translateY(-3px); }
-.tarjeta--azul { background: var(--azul); border-color: var(--azul); }
-.tarjeta__k { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--lima); }
-.tarjeta__fecha { font-size: 15px; font-weight: 700; color: var(--tinta-2); }
-.tarjeta__fecha b { font-size: 34px; font-weight: 900; color: #fff; letter-spacing: -.02em; margin-right: 4px; }
-.tarjeta__t { font-size: 26px; font-weight: 800; letter-spacing: -.025em; line-height: 1.1; }
-.tarjeta__vs { font-size: 14px; font-weight: 700; color: var(--tinta-2); margin: 0 4px; }
-.tarjeta--azul .tarjeta__vs, .tarjeta--azul .tarjeta__d, .tarjeta--azul .tarjeta__fecha { color: rgba(255,255,255,.85); }
-.tarjeta__d { font-size: 15px; color: var(--tinta-2); flex: 1; }
-.tarjeta__ir { font-size: 14px; font-weight: 800; color: var(--lima); }
-
-.indice { padding-block: 40px 72px; }
-.indice__lista { list-style: none; border-top: 1px solid var(--linea); }
-.indice__lista li { opacity: 0; transform: translateY(14px); animation: entra .55s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: calc(var(--i) * 70ms + 120ms); }
-@keyframes entra { to { opacity: 1; transform: none; } }
-
-/* La fila se llena de azul al pasar. Un solo color que crece, no un degradado. */
-.fila {
-  display: grid; grid-template-columns: 64px minmax(0, 1.1fr) minmax(0, 1fr) 56px;
-  align-items: center; gap: 24px;
-  padding: 26px 18px; border-bottom: 1px solid var(--linea);
-  background: linear-gradient(var(--azul), var(--azul)) no-repeat left / 0% 100%;
-  transition: background-size .45s cubic-bezier(.2,.8,.2,1);
-}
-.fila__num { font-size: 15px; font-weight: 800; color: var(--lima); }
-.fila__nombre { font-size: clamp(34px, 5vw, 64px); font-weight: 800; letter-spacing: -.035em; line-height: 1; }
-.fila__texto { display: flex; flex-direction: column; gap: 4px; }
-.fila__sub { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--lima); }
-.fila__linea { font-size: 15px; color: var(--tinta-2); transition: color .25s; }
-.fila__flecha {
-  width: 52px; height: 52px; border-radius: 50%; justify-self: end;
-  display: flex; align-items: center; justify-content: center; font-size: 20px;
-  border: 1.5px solid rgba(255,255,255,.35); color: #fff;
-  transition: background .25s, border-color .25s, color .25s, transform .35s cubic-bezier(.2,.8,.2,1);
-}
-.fila:hover { background-size: 100% 100%; }
-.fila:hover .fila__linea { color: rgba(255,255,255,.88); }
-.fila:hover .fila__flecha { background: var(--lima); border-color: var(--lima); color: var(--negro); transform: rotate(45deg); }
-
-.banda { background: var(--azul); color: #fff; }
-.banda__dentro { padding-block: 44px; display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap; }
-.banda__t { font-size: clamp(30px, 4vw, 48px); font-weight: 800; letter-spacing: -.03em; }
-.banda__redes { display: flex; flex-wrap: wrap; gap: 8px; }
-.banda__redes a {
-  font-size: 15px; font-weight: 700; padding: 11px 18px; border-radius: 999px;
-  border: 1.5px solid rgba(255,255,255,.55); transition: background .2s, color .2s, border-color .2s;
-}
-.banda__redes a:hover { background: var(--lima); border-color: var(--lima); color: var(--negro); }
-.v2--inicio .pie { margin-top: 0; border-top: 0; }
+/* El home v2 (hero, cinta, tarjetas, índice y banda) se retiró: el inicio
+   vive en el layout `main` con assets/css/inicio.css. Sus reglas estaban
+   aquí sin que ninguna vista las usara, y eran el último sitio donde
+   sobrevivía el azul como superficie. */
 
 /* ─── Cabecera de cada sección ────────────────────────────────────── */
 .cabecera { padding-block: 40px 8px; }
 .cabecera__miga { font-size: 13px; font-weight: 600; color: var(--tinta-2); margin-bottom: 18px; }
-.cabecera__miga a:hover { color: var(--azul); }
+.cabecera__miga a:hover { color: var(--acento-chico); }
 .cabecera__fila { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
 .cabecera__marca { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 10px; }
-.cabecera__marca::before { content: ''; width: 12px; height: 12px; border-radius: 4px; background: var(--color-seccion, var(--azul)); }
-.v2--tour { --color-seccion: var(--c-tour); }
-.v2--travel { --color-seccion: var(--c-travel); }
-.v2--legends { --color-seccion: var(--c-legends); }
-.v2--podcast { --color-seccion: var(--azul); }
-.v2--apoyo { --color-seccion: var(--azul); }
+/* El cuadrito de la marca es el acento de la sección, igual que la barra
+   bajo su nombre en el index. Antes había una ficha por marca (--c-tour y
+   compañía) y las seis valían lo mismo; ahora el valor llega del <body>. */
+.cabecera__marca::before { content: ''; width: 12px; height: 12px; border-radius: 4px; background: var(--acento); }
 
 
-/* ─── Tour: lo que viene y lo que ya pasó ─────────────────────────── */
-.tour27 {
-  background: var(--c-tour); color: #fff; border-radius: var(--radio);
-  padding: 36px; display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px;
+/* ═══════════════════════════════════════════════════════════════════════
+   BLOQUES DE SECCIÓN · la anatomía de la página de iD CUP, traída al
+   sistema plano de esta hoja. Los comparten Tour, Legends y Travel para
+   que las tres marcas se lean como la misma casa y no como tres sitios.
+
+   El orden de una sección completa es siempre el mismo:
+     portada → cifras → hitos → pilares → mosaico
+     → aliados → prensa → (eventos · contacto) → cierre
+   Ninguno es obligatorio: la vista pinta los que tienen material.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ─── Portada: la foto a sangre con el título encima ──────────────── */
+/* Sale del ancho de lectura y se come el espacio que .pagina reserva para
+   la píldora del menú, para que la imagen llegue al borde de arriba. */
+.portada { position: relative; margin-top: -104px; min-height: clamp(440px, 70vh, 740px); display: flex; align-items: flex-end; overflow: hidden; }
+/* Mate, con el mismo tratamiento que el hero del index: desaturada y
+   apenas cálida, para que acompañe y no compita con el texto. */
+.portada__foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.62) brightness(1.02) sepia(.18); }
+/* Dos velos encima de la foto. El vertical: denso arriba (ahí va la píldora
+   del menú) y abajo (ahí muere en el fondo), ligero en medio para que la
+   foto respire. El horizontal: oscurece sólo la mitad izquierda, que es
+   donde va el texto, y deja la derecha de la foto a la vista. Sin él, la
+   bajada cruzaba por encima de los jugadores y costaba leerla. */
+.portada__velo { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(18,20,24,.82) 0%, rgba(18,20,24,.48) 46%, rgba(18,20,24,0) 86%), linear-gradient(180deg, rgba(18,20,24,.86) 0%, rgba(18,20,24,.36) 38%, rgba(18,20,24,.72) 72%, var(--fondo) 100%); }
+.portada__cuerpo { position: relative; z-index: 2; width: 100%; max-width: var(--ancho); margin: 0 auto; padding: 140px var(--gutter) clamp(34px, 5vh, 56px); }
+.portada__titulo { font-size: clamp(46px, 7.2vw, 96px); font-weight: 900; letter-spacing: -.04em; line-height: .95; }
+.portada__titulo em { font-style: normal; color: var(--acento); }
+.portada__bajada { font-size: clamp(16px, 1.25vw, 20px); color: var(--tinta-2); max-width: 640px; margin-top: 18px; }
+.portada__pastillas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+.portada__pastillas .pastilla { background: rgba(255,255,255,.12); color: var(--tinta); display: inline-flex; align-items: center; gap: 8px; }
+.portada__pastillas svg { width: 14px; height: 14px; }
+.portada__acciones { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+
+/* ─── Cifras: los números, en grande ──────────────────────────────── */
+.cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+.cifra { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); padding: 26px 24px 28px; }
+.cifra__icono { width: 34px; height: 34px; color: var(--acento); margin-bottom: 16px; }
+.cifra__icono svg { width: 100%; height: 100%; }
+.cifra__valor { font-size: clamp(38px, 4.2vw, 58px); font-weight: 900; letter-spacing: -.04em; line-height: 1; color: var(--acento); }
+.cifra__etiqueta { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; margin-top: 14px; }
+.cifra__sub { font-size: 14px; color: var(--tinta-2); margin-top: 4px; }
+
+/* ─── Hitos: la línea de tiempo de las ediciones ──────────────────── */
+.hitos { display: flex; flex-direction: column; }
+.hito { display: grid; grid-template-columns: 112px 1fr 24px; align-items: center; gap: 20px; padding: 20px 4px; border-top: 1px solid var(--linea); transition: padding .15s; }
+.hito:last-child { border-bottom: 1px solid var(--linea); }
+a.hito:hover { padding-left: 14px; }
+.hito__anio { font-size: clamp(26px, 2.6vw, 34px); font-weight: 900; letter-spacing: -.03em; line-height: 1; color: var(--acento); }
+.hito--pendiente .hito__anio { color: var(--tinta-2); }
+.hito__partido { font-size: 18px; font-weight: 800; }
+.hito__lugar { font-size: 14px; color: var(--tinta-2); margin-top: 2px; }
+.hito__flecha { color: var(--tinta-2); }
+.hito__flecha svg { width: 18px; height: 18px; }
+a.hito:hover .hito__flecha { color: var(--acento); }
+
+/* ─── Pilares: qué hacemos ────────────────────────────────────────── */
+.pilares { display: grid; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); gap: 14px; }
+.pilar { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); padding: 26px 24px 28px; }
+.pilar__num { font-size: 12px; font-weight: 800; letter-spacing: .14em; color: var(--acento-chico); }
+.pilar h3 { font-size: 21px; font-weight: 800; letter-spacing: -.02em; margin: 10px 0 8px; }
+.pilar p { font-size: 15px; color: var(--tinta-2); }
+/* En Nosotros los pilares son enlaces a cada marca. */
+a.pilar { transition: border-color .15s; }
+a.pilar:hover { border-color: var(--tinta); }
+
+/* ─── Mosaico: la galería ─────────────────────────────────────────── */
+.mosaico { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.mosaico__foto { aspect-ratio: 1; border-radius: var(--radio-sm); background: var(--superficie) center / cover no-repeat; border: 1px solid var(--linea); }
+/* La primera y la sexta van dobles: rompe la retícula y evita el muestrario. */
+.mosaico__foto:nth-child(1), .mosaico__foto:nth-child(6) { grid-column: span 2; aspect-ratio: 2 / 1; }
+
+/* ─── Aliados: los logos de quien respalda ────────────────────────── */
+.aliados { display: flex; flex-wrap: wrap; gap: 12px; }
+.aliado { flex: 1 1 180px; min-height: 92px; display: flex; align-items: center; justify-content: center; padding: 18px 26px; background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio-sm); }
+/* Los logos vienen de muchas marcas y con muchos fondos: en blanco puro
+   todos pesan igual y ninguno rompe la paleta. */
+.aliado img { max-height: 38px; width: auto; filter: brightness(0) invert(1); opacity: .82; }
+.aliado__texto { font-size: 15px; font-weight: 800; color: var(--tinta-2); text-align: center; }
+
+/* ─── Prensa: enlaces a lo que se publicó ─────────────────────────── */
+.prensa { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.prensa__nota { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; padding: 20px 22px; background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio-sm); transition: border-color .15s; }
+.prensa__nota:hover { border-color: var(--tinta); }
+.prensa__fuente { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--acento-chico); }
+.prensa__titulo { font-size: 16px; font-weight: 700; line-height: 1.4; margin-top: 7px; }
+.prensa__nota .flecha { color: var(--tinta-2); flex: none; }
+
+/* ─── Eventos: el calendario de lo que viene ──────────────────────── */
+/* Como .partido pero sin escudos: sirve para cualquier fecha, no sólo
+   para un partido de dos equipos. */
+.eventos { display: flex; flex-direction: column; gap: 10px; }
+.evento { display: grid; grid-template-columns: 84px 1fr auto; align-items: center; gap: 24px; padding: 16px 18px 16px 16px; background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); }
+.evento__fecha { background: rgba(255,255,255,.08); border: 1px solid var(--vidrio-borde); color: var(--tinta); border-radius: var(--radio-sm); text-align: center; padding: 10px 0; }
+.evento__dia { font-size: 28px; font-weight: 900; line-height: 1; }
+.evento__mes { font-size: 12px; font-weight: 800; letter-spacing: .1em; color: var(--acento-chico); margin-top: 4px; }
+.evento__nombre { font-size: 18px; font-weight: 800; }
+.evento__meta { font-size: 14px; color: var(--tinta-2); margin-top: 4px; }
+.vacio { padding: 34px 24px; border: 1.5px dashed var(--linea); border-radius: var(--radio); text-align: center; color: var(--tinta-2); font-size: 15px; }
+
+/* ─── Contacto ────────────────────────────────────────────────────── */
+.contacto { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: center; }
+.contacto__texto h3 { font-size: clamp(26px, 3vw, 38px); font-weight: 900; letter-spacing: -.03em; line-height: 1.05; }
+.contacto__texto p { font-size: 16px; color: var(--tinta-2); margin: 14px 0 0; max-width: 460px; }
+.contacto__vias { display: flex; flex-direction: column; gap: 10px; }
+.via { display: flex; align-items: center; gap: 16px; padding: 18px 20px; background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio-sm); transition: border-color .15s; }
+.via:hover { border-color: var(--tinta); }
+.via__icono { width: 42px; height: 42px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; background: var(--acento); color: var(--negro); }
+.via__icono svg { width: 19px; height: 19px; }
+.via__que { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--tinta-2); }
+.via__dato { font-size: 17px; font-weight: 800; }
+
+/* ─── Cierre: la llamada final, a sangre ──────────────────────────── */
+.cierre { position: relative; margin-top: 76px; overflow: hidden; }
+.cierre__foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.62) brightness(1.02) sepia(.18); }
+.cierre__velo { position: absolute; inset: 0; background: rgba(18,20,24,.82); }
+.cierre__cuerpo { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; padding: clamp(56px, 8vh, 96px) var(--gutter); text-align: center; }
+.cierre__t { font-size: clamp(30px, 4.4vw, 54px); font-weight: 900; letter-spacing: -.03em; line-height: 1.04; }
+.cierre__d { font-size: 17px; color: var(--tinta-2); margin: 16px 0 28px; }
+.cierre + .pie { margin-top: 0; border-top: 0; }
+
+/* ─── Celular y tableta para los bloques de sección ───────────────── */
+/* Mismo corte que el resto de la hoja (900 px): con 860 quedaba una franja
+   entre 861 y 900 donde media sección era de escritorio y la otra media,
+   de celular. */
+@media (max-width: 900px) {
+  .portada { margin-top: -92px; min-height: clamp(380px, 62vh, 560px); }
+  .portada__cuerpo { padding-top: 120px; }
+  .mosaico { grid-template-columns: repeat(2, 1fr); }
+  .mosaico__foto:nth-child(1), .mosaico__foto:nth-child(6) { grid-column: span 2; }
+  .prensa, .contacto { grid-template-columns: 1fr; }
+  .hito { grid-template-columns: 76px 1fr 20px; gap: 14px; }
+  .evento { grid-template-columns: 70px 1fr; gap: 16px; }
+  .evento > .boton { grid-column: 1 / -1; justify-content: center; }
 }
-.tour27__logo { width: 120px; height: auto; margin-bottom: 26px; }
-.tour27 h2 { font-size: clamp(34px, 4.4vw, 52px); font-weight: 900; letter-spacing: -.03em; line-height: 1.02; }
-.tour27 p { font-size: 17px; opacity: .9; margin: 14px 0 26px; max-width: 420px; }
-.tour27__partidos { list-style: none; display: flex; flex-direction: column; gap: 10px; align-self: center; }
-.tour27__partido {
-  display: flex; align-items: center; gap: 16px;
-  background: rgba(255,255,255,.1); border-radius: var(--radio-sm); padding: 16px 18px;
+
+/* ─── Reproductor de video ────────────────────────────────────────── */
+/* Lo usan Podcast y la ficha de edición, por eso vive aquí. */
+.video { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radio); overflow: hidden; border: 1px solid var(--linea); background: #000; }
+.video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+/* ─── Carrusel ────────────────────────────────────────────────────── */
+/* Las opiniones van en carrusel, no en retícula: se arrastran con el dedo.
+   El desplazamiento es el del navegador —con su inercia y su rebote—, y el
+   `scroll-snap` hace que cada tarjeta quede encuadrada al soltar. Sin
+   JavaScript ya funciona; el script sólo añade las flechas para el ratón.
+
+   `.carrusel` se sale del ancho de lectura y se lo devuelve como relleno:
+   así la primera tarjeta queda alineada con el texto y las demás se
+   asoman por el borde de la pantalla, que es lo que invita a arrastrar. */
+.carrusel { position: relative; margin-inline: calc(-1 * var(--gutter)); }
+.opiniones {
+  display: flex; gap: 14px;
+  padding-inline: var(--gutter); padding-block: 2px 6px;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;            /* la barra sobra: la referencia son los puntos */
 }
-.tour27__num { font-size: 13px; font-weight: 800; width: 76px; opacity: .8; }
-.tour27__nombre { flex: 1; font-weight: 800; font-size: 17px; }
-.tour27__ventana { font-size: 13px; opacity: .85; }
-.tour27__partido .pastilla { background: rgba(255,255,255,.16); color: #fff; }
-.tour27__partido .pastilla--ok { background: var(--lima); color: var(--tinta); }
-
-.aclaracion {
-  display: flex; gap: 14px; align-items: center;
-  margin: 26px 0; padding: 16px 20px;
-  border: 1.5px dashed var(--linea); border-radius: var(--radio-sm);
-  font-size: 14px; color: var(--tinta-2);
+.opiniones::-webkit-scrollbar { display: none; }
+.opiniones:focus-visible { outline: 2px solid var(--acento); outline-offset: 4px; }
+/* Flechas: sólo donde hay ratón. En táctil estorban y el dedo basta. */
+.carrusel__mandos { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .carrusel__mandos { display: flex; gap: 8px; justify-content: flex-end; margin: 14px var(--gutter) 0; }
 }
-.aclaracion b { color: var(--tinta); }
-
-.ediciones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.edicion { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); overflow: hidden; transition: border-color .15s; }
-.edicion:hover { border-color: var(--tinta); }
-.edicion__foto { aspect-ratio: 16 / 10; background: var(--linea) center / cover no-repeat; }
-.edicion__cuerpo { padding: 20px 22px 22px; }
-.edicion__anio { font-size: 44px; font-weight: 900; letter-spacing: -.03em; line-height: 1; color: var(--azul); }
-.edicion__partido { font-weight: 800; font-size: 17px; margin: 8px 0 2px; }
-.edicion__lugar { font-size: 14px; color: var(--tinta-2); }
-.edicion__pie { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; font-size: 14px; font-weight: 700; }
-
-/* ─── Travel: partidos y experiencias ─────────────────────────────── */
-.partidos { display: flex; flex-direction: column; gap: 10px; }
-.partido {
-  display: grid; grid-template-columns: 84px 1fr auto auto; align-items: center; gap: 24px;
-  background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio);
-  padding: 16px 18px 16px 16px;
-}
-.partido__fecha { background: var(--tinta); color: #fff; border-radius: var(--radio-sm); text-align: center; padding: 10px 0; }
-.partido__dia { font-size: 28px; font-weight: 900; line-height: 1; }
-.partido__mes { font-size: 12px; font-weight: 800; letter-spacing: .1em; color: var(--lima); margin-top: 4px; }
-.partido__equipos { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 18px; }
-.partido__escudo { width: 34px; height: 34px; object-fit: contain; }
-.partido__vs { font-size: 13px; font-weight: 700; color: var(--tinta-2); }
-.partido__meta { font-size: 14px; color: var(--tinta-2); margin-top: 4px; }
-.partido__torneo { text-align: right; font-size: 13px; color: var(--tinta-2); }
-.partido__torneo b { display: block; color: var(--tinta); font-size: 14px; }
-
-.experiencias { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.experiencia { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); overflow: hidden; }
-.experiencia__foto { aspect-ratio: 16 / 8; background: var(--linea) center / cover no-repeat; }
-.experiencia__cuerpo { padding: 22px 24px 26px; }
-.experiencia__cuerpo h3 { font-size: 24px; font-weight: 800; letter-spacing: -.02em; margin: 8px 0 8px; }
-.experiencia__cuerpo p { font-size: 15px; color: var(--tinta-2); }
-
-/* ─── Legends: sin material todavía ───────────────────────────────── */
-.legends-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.legend-vacia {
-  aspect-ratio: 3 / 4; border: 1.5px dashed #C9C9D6; border-radius: var(--radio);
-  display: flex; flex-direction: column; justify-content: flex-end; padding: 22px;
-  background: repeating-linear-gradient(135deg, transparent 0 14px, rgba(13,10,168,.035) 14px 28px);
-}
-.legend-vacia b { font-size: 20px; font-weight: 800; color: var(--tinta-2); }
-.legend-vacia span { font-size: 13px; color: var(--tinta-2); }
-
-/* ─── Podcast: minimalista ────────────────────────────────────────── */
-.podcast { max-width: 760px; }
-.episodios { list-style: none; border-top: 1px solid var(--linea); margin-top: 34px; }
-.episodio a {
-  display: flex; align-items: center; gap: 20px;
-  padding: 18px 4px; border-bottom: 1px solid var(--linea);
-  transition: padding .15s;
-}
-.episodio a:hover { padding-left: 14px; }
-.episodio__play {
-  width: 40px; height: 40px; border-radius: 50%; flex: none;
-  background: var(--lima); color: var(--tinta);
+.carrusel__flecha {
+  width: 42px; height: 42px; border-radius: 50%; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
+  background: transparent; border: 1.5px solid var(--linea); color: var(--tinta);
+  font: inherit; transition: background .15s, border-color .15s, color .15s, opacity .15s;
 }
-.episodio__play svg { width: 14px; height: 14px; margin-left: 2px; }
-.episodio__num { font-size: 20px; font-weight: 800; letter-spacing: -.01em; flex: 1; }
-.episodio__donde { font-size: 14px; color: var(--tinta-2); }
-
-/* ─── Opiniones y media ───────────────────────────────────────────── */
-.opiniones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.opinion { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-.opinion__estrellas { color: var(--azul); letter-spacing: 3px; font-size: 15px; }
-.opinion__texto { font-size: 15px; line-height: 1.6; flex: 1; }
-.opinion__quien { display: flex; align-items: center; gap: 12px; }
-.opinion__foto { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; background: var(--linea); }
-.opinion__nombre { font-weight: 800; font-size: 15px; }
-.opinion__handle { font-size: 13px; color: var(--tinta-2); }
-.notas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.nota { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); overflow: hidden; transition: border-color .15s; display: flex; flex-direction: column; }
-.nota:hover { border-color: var(--tinta); }
-.nota__foto { aspect-ratio: 16 / 9; background: var(--linea) center / cover no-repeat; }
-.nota__cuerpo { padding: 18px 20px 20px; }
-.nota__fuente { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--azul); }
-.nota__titulo { font-size: 16px; font-weight: 800; line-height: 1.35; margin-top: 8px; }
-
-/* ─── Quiénes somos ───────────────────────────────────────────────── */
-.somos { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
-.somos__texto { font-size: 21px; line-height: 1.6; }
-.somos__texto b { font-weight: 800; }
-.somos__fotos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.somos__foto { aspect-ratio: 1; border-radius: var(--radio-sm); background: var(--linea) center / cover no-repeat; }
+.carrusel__flecha svg { width: 18px; height: 18px; }
+.carrusel__flecha:hover:not(:disabled) { background: var(--acento-chico); border-color: var(--acento-chico); color: var(--negro); }
+.carrusel__flecha:disabled { opacity: .35; cursor: default; }
 
 /* ─── Pie ─────────────────────────────────────────────────────────── */
-.pie { max-width: var(--ancho); margin: 64px auto 0; padding: 34px var(--gutter) 40px; border-top: 1px solid var(--linea); }
-.pie__fila { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
-.pie__fila img { height: 22px; width: auto; }
-.pie__fila--abajo { margin-top: 26px; }
-.pie__nav, .pie__redes { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 14px; font-weight: 600; }
-.pie__nav a:hover, .pie__redes a:hover { color: var(--lima); }
-.pie__redes { gap: 6px 18px; color: var(--tinta-2); }
+/* Una sola columna centrada: logo, secciones, redes, avisos y copyright. */
+.pie { max-width: var(--ancho); margin: 64px auto 0; padding: 34px var(--gutter) 40px; border-top: 1px solid var(--linea); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; }
+.pie__marca { width: 200px; height: auto; display: block; }
+.pie__nav, .pie__redes, .pie__legales { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; font-size: 14px; font-weight: 600; }
+.pie__nav a:hover, .pie__redes a:hover, .pie__legales a:hover { color: var(--acento-chico); }
+.pie__redes { gap: 8px 18px; color: var(--tinta-2); }
+.pie__legales { gap: 8px 20px; font-size: 13px; font-weight: 500; color: var(--tinta-2); }
 .pie__legal { font-size: 13px; color: var(--tinta-2); }
+@media (max-width: 768px) { .pie__marca { width: 164px; } .pie { gap: 14px; } }
 
 /* ─── Celular ─────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .nav__marcas { display: none; }
   .nav { top: 12px; }
   .nav__pildora { width: 100%; justify-content: space-between; padding-left: 18px; }
-  .fila { grid-template-columns: 34px minmax(0, 1fr) 42px; gap: 6px 12px; padding: 20px 6px; }
-  .fila__texto { grid-column: 2 / 4; }
-  .fila__flecha { grid-row: 1; grid-column: 3; width: 42px; height: 42px; font-size: 17px; }
-  .banda__dentro { padding-block: 34px; }
-  .tour27 { grid-template-columns: 1fr; padding: 26px; gap: 26px; }
-  /* El partido en dos renglones: rótulo arriba, nombre y estado abajo. En una
-     sola fila el nombre se partía en cuatro líneas. */
-  .tour27__partido { flex-wrap: wrap; row-gap: 4px; }
-  .tour27__num { width: 100%; }
-  .tour27__nombre { font-size: 16px; }
-  .ediciones, .opiniones, .notas, .legends-grid { grid-template-columns: 1fr; }
-  .experiencias, .somos { grid-template-columns: 1fr; }
-  .partido { grid-template-columns: 64px 1fr; gap: 14px; }
-  .partido__torneo, .partido .boton { grid-column: 2; text-align: left; justify-self: start; }
-  .partido__equipos { font-size: 16px; flex-wrap: wrap; }
-  .somos { gap: 26px; }
-  .somos__texto { font-size: 18px; }
   .pagina { padding-top: 88px; }
-  .hero { min-height: 84vh; }
-  .hero__cuerpo { padding-block: 120px 44px; }
-  .ahora__grid { grid-template-columns: 1fr; }
-  .tarjeta { min-height: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
-  .cinta__pista { animation: none; }
-  .indice__lista li { animation: none; opacity: 1; transform: none; }
 }
-
-/* Los textos que vienen de los JSON traen text-align: justify en línea. En
-   columnas angostas abre huecos entre palabras; aquí se alinean a la izquierda. */
-.experiencia__cuerpo p, .somos__texto p { text-align: left !important; }

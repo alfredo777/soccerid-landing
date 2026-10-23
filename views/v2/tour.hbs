@@ -1,23 +1,77 @@
-{{!-- Tour: dos bloques con rótulo propio para que nadie confunda el Tour
-      (lo que viene, 2027, con candado) con las ediciones (lo que ya se jugó). --}}
-<section class="cabecera envoltura">
-  <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Tour</p>
-  <div class="cabecera__fila">
-    <div>
-      <div class="cabecera__marca">SOCCER iD CUP</div>
-      <h1 class="titular">Tour</h1>
+{{!-- Tour · SOCCER iD CUP.
+      Trae la anatomía de la página de iD CUP (portada, cifras, alcance,
+      ediciones, qué hacemos, momentos, patrocinadores, prensa y cierre) al
+      sistema plano de v2.css. Lo que la página de iD CUP no tenía y aquí sí:
+      el bloque del Tour '27, que es lo que viene y va con candado.
+
+      Dos listas que NUNCA se mezclan: el Tour '27 (lo que viene) y las
+      ediciones (lo que ya se jugó). --}}
+
+<section class="portada">
+  <img class="portada__foto" src="{{galeria.banner}}" alt="{{galeria.title}}">
+  <div class="portada__velo"></div>
+  <div class="portada__cuerpo">
+    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Tour</p>
+    <div class="cabecera__marca">{{galeria.badge}}</div>
+    <h1 class="portada__titulo">Tour</h1>
+    <p class="portada__bajada">{{galeria.subtitle}}</p>
+    <div class="portada__pastillas">
+      <span class="pastilla">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+        {{galeria.date}}
+      </span>
+      <span class="pastilla">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        {{galeria.venue}}
+      </span>
     </div>
-    <p class="bajada">{{#if isEs}}Partidos internacionales de fútbol mexicano en Estados Unidos. El Tour es lo que viene; las ediciones, lo que ya se jugó.{{else}}International Mexican football matches in the United States.{{/if}}</p>
+    <div class="portada__acciones">
+      <a class="boton boton--lleno" href="{{tour.url}}">{{#if isEs}}Ver la propuesta '27 · con código{{else}}View the '27 proposal · code required{{/if}} <span class="flecha">↗</span></a>
+      <a class="boton" href="https://wa.me/17867844303?text={{galeria.ctaMessage}}" target="_blank" rel="noopener">{{galeria.ctaText}} <span class="flecha">↗</span></a>
+    </div>
   </div>
 </section>
 
+{{!-- El evento, en números. --}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}El evento{{else}}The event{{/if}}</p>
+  <p class="bajada" style="max-width:760px;margin-bottom:26px">{{galeria.description}}</p>
+  <div class="cifras">
+    {{#each galeria.stats}}
+    <div class="cifra">
+      <div class="cifra__valor">{{this.value}}</div>
+      <div class="cifra__etiqueta">{{this.label}}</div>
+      <div class="cifra__sub">{{this.sub}}</div>
+    </div>
+    {{/each}}
+  </div>
+</section>
+
+{{!-- Alcance: las mismas cifras, con el ícono que dice de dónde salen. --}}
+{{#if galeria.reach}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Alcance de la copa{{else}}Cup reach{{/if}}</p>
+  <div class="cifras">
+    {{#each galeria.reach}}
+    <div class="cifra">
+      <div class="cifra__icono">{{> icono-alcance icon=this.icon}}</div>
+      <div class="cifra__valor">{{this.value}}</div>
+      <div class="cifra__etiqueta">{{this.label}}</div>
+    </div>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
+
+{{!-- Lo que viene: el Tour '27. Va con su rótulo propio para que nadie lo
+      confunda con una edición más. --}}
 <section class="seccion envoltura">
   <p class="rotulo">{{#if isEs}}Lo que viene{{else}}What's next{{/if}}</p>
-  <article class="tour27">
+  <article class="tour27" style="--tour-foto:url('/assets/images/gallery/cup2025/1.jpg')">
     <div>
       <img class="tour27__logo" src="/assets/images/logos/id-tour27-blanco.png" alt="{{tour.nombre}}">
       <h2>{{tour.nombre}}</h2>
-      <p>{{#if isEs}}Tres partidos internacionales en Estados Unidos, en una sola temporada. La propuesta completa es privada y se abre con código.{{else}}Three international matches in the United States, one season.{{/if}}</p>
+      <p>{{#if isEs}}Tres partidos internacionales en Estados Unidos, en una sola temporada. La propuesta completa es privada y se abre con código.{{else}}Three international matches in the United States, one season. The full proposal is private and opens with a code.{{/if}}</p>
       <a class="boton boton--claro" href="{{tour.url}}">{{#if isEs}}Ver la propuesta · acceso con código{{else}}View proposal · code required{{/if}} <span class="flecha">↗</span></a>
     </div>
     <ol class="tour27__partidos">
@@ -33,9 +87,12 @@
 
   <div class="aclaracion">
     <span class="pastilla">{{#if isEs}}Ojo{{else}}Note{{/if}}</span>
-    <span>{{#if isEs}}<b>El Tour '27 no es una edición más.</b> Es el proyecto de la próxima temporada. Las ediciones de abajo ya se jugaron y son su respaldo.{{else}}<b>Tour '27 is not another edition.</b> It is next season's project.{{/if}}</span>
+    <span>{{#if isEs}}<b>El Tour '27 no es una edición más.</b> Es el proyecto de la próxima temporada. Las ediciones de abajo ya se jugaron y son su respaldo.{{else}}<b>Tour '27 is not another edition.</b> It is next season's project. The editions below have already been played and are its track record.{{/if}}</span>
   </div>
+</section>
 
+{{!-- Lo que ya se jugó: las ediciones, con foto y asistencia. --}}
+<section class="seccion envoltura">
   <p class="rotulo">{{#if isEs}}Lo que ya se jugó · Ediciones{{else}}Already played · Editions{{/if}}</p>
   <div class="ediciones">
     {{#each ediciones}}
@@ -52,5 +109,101 @@
       </div>
     </a>
     {{/each}}
+  </div>
+
+  {{!-- Los años que todavía no son una edición: la pausa del Mundial y lo
+        que sigue. Sólo se pintan los que no tienen ficha. --}}
+  {{#if pendientes}}
+  <div class="hitos" style="margin-top:26px">
+    {{#each pendientes}}
+    <div class="hito hito--pendiente">
+      <span class="hito__anio">{{this.year}}</span>
+      <div>
+        <div class="hito__partido">{{this.match}}</div>
+        <div class="hito__lugar">{{this.city}}</div>
+      </div>
+      <span></span>
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+</section>
+
+{{!-- Qué hacemos: los cuatro pilares, los mismos de la página de iD CUP. --}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Qué hacemos{{else}}What we do{{/if}}</p>
+  <div class="pilares">
+    <div class="pilar">
+      <div class="pilar__num">01</div>
+      <h3>{{#if isEs}}Gestión de eventos{{else}}Event management{{/if}}</h3>
+      <p>{{#if isEs}}Damos vida a partidos internacionales mediante una planeación y ejecución especializada.{{else}}We bring international soccer matches to life through expert planning and execution.{{/if}}</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">02</div>
+      <h3>{{#if isEs}}Clubes{{else}}Clubs{{/if}}</h3>
+      <p>{{#if isEs}}Trabajamos con los principales clubes profesionales de Latinoamérica.{{else}}We work with leading professional soccer clubs across Latin America.{{/if}}</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">03</div>
+      <h3>{{#if isEs}}Estrategia comercial{{else}}Commercial strategy{{/if}}</h3>
+      <p>{{#if isEs}}Desarrollamos estrategias de boletaje, patrocinios y experiencias premium.{{else}}We develop ticketing, sponsorship and premium hospitality strategies.{{/if}}</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">04</div>
+      <h3>{{#if isEs}}Medios{{else}}Media{{/if}}</h3>
+      <p>{{#if isEs}}Gestionamos la producción de transmisiones y el contenido digital para maximizar el alcance de cada evento.{{else}}We manage broadcast production and digital content to maximize audience reach.{{/if}}</p>
+    </div>
+  </div>
+</section>
+
+{{!-- Momentos. --}}
+{{#if galeria.images}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Momentos{{else}}Moments{{/if}}</p>
+  <div class="mosaico">
+    {{#each galeria.images}}
+    <div class="mosaico__foto" style="background-image:url('{{this.src}}')" role="img" aria-label="{{this.alt}}"></div>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
+
+{{!-- Patrocinadores. Seguros iD no va: ese servicio ya no se ofrece. --}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Patrocinadores{{else}}Sponsors{{/if}}</p>
+  <div class="aliados">
+    <div class="aliado"><img src="/assets/images/sponsors/caliente.png" alt="Caliente MX"></div>
+    <div class="aliado"><img src="/assets/images/sponsors/fox-sports.png" alt="Fox Sports"></div>
+    <div class="aliado"><img src="/assets/images/sponsors/voit.png" alt="Voit"></div>
+    <div class="aliado"><img src="/assets/images/sponsors/nuestra-vision.png" alt="Nuestra Visión"></div>
+  </div>
+</section>
+
+{{!-- Prensa. --}}
+{{#if galeria.mediaLinks}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}En los medios{{else}}In the media{{/if}}</p>
+  <div class="prensa">
+    {{#each galeria.mediaLinks}}
+    <a class="prensa__nota" href="{{this.url}}" target="_blank" rel="noopener">
+      <span>
+        <span class="prensa__fuente">{{this.source}}</span>
+        <span class="prensa__titulo">{{this.title}}</span>
+      </span>
+      <span class="flecha">↗</span>
+    </a>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
+
+{{!-- Cierre. --}}
+<section class="cierre">
+  <img class="cierre__foto" src="/assets/images/gallery/cup2025/5.jpg" alt="">
+  <div class="cierre__velo"></div>
+  <div class="cierre__cuerpo">
+    <h2 class="cierre__t">{{#if isEs}}Sé parte de la experiencia{{else}}Be part of the experience{{/if}}</h2>
+    <p class="cierre__d">{{#if isEs}}Clubes, marcas y ciudades sede: hablemos del Tour '27.{{else}}Clubs, brands and host cities: let's talk about Tour '27.{{/if}}</p>
+    <a class="boton boton--lleno" href="https://wa.me/17867844303?text={{galeria.ctaMessage}}" target="_blank" rel="noopener">{{galeria.ctaText}} <span class="flecha">↗</span></a>
   </div>
 </section>

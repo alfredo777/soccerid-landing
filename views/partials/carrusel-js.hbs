@@ -1,0 +1,43 @@
+{{!-- Las flechas de TODOS los carruseles de la página. Se incluye una vez,
+      al final de la vista.
+
+      Contrato: un `.carrusel` que contenga un elemento con `data-pista`
+      (el que desplaza) y botones `.carrusel__flecha` con `data-ir` a -1 o 1.
+      Si este script no corre, la pista se arrastra igual con el dedo: el
+      desplazamiento y el encuadre los hace el CSS, no el JavaScript. --}}
+<script>
+  (function () {
+    document.querySelectorAll('.carrusel').forEach(function (caja) {
+      var pista = caja.querySelector('[data-pista]');
+      var flechas = caja.querySelectorAll('.carrusel__flecha');
+      if (!pista || !flechas.length) return;
+
+      function paso() {
+        // El ancho de una tarjeta más el hueco, leídos del DOM: la tarjeta
+        // mide distinto en cada pantalla y no hay número que valga para todas.
+        var primera = pista.firstElementChild;
+        if (!primera) return pista.clientWidth;
+        var hueco = parseFloat(getComputedStyle(pista).columnGap) || 14;
+        return primera.getBoundingClientRect().width + hueco;
+      }
+
+      function repintar() {
+        // 2 px de margen: el navegador redondea y el final nunca cae exacto.
+        var fin = pista.scrollWidth - pista.clientWidth - 2;
+        flechas.forEach(function (b) {
+          b.disabled = b.dataset.ir === '-1' ? pista.scrollLeft <= 2 : pista.scrollLeft >= fin;
+        });
+      }
+
+      flechas.forEach(function (b) {
+        b.addEventListener('click', function () {
+          pista.scrollBy({ left: paso() * Number(b.dataset.ir), behavior: 'smooth' });
+        });
+      });
+
+      pista.addEventListener('scroll', repintar, { passive: true });
+      window.addEventListener('resize', repintar);
+      repintar();
+    });
+  })();
+</script>

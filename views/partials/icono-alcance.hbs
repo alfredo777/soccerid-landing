@@ -1,0 +1,6 @@
+{{!-- Los tres íconos del bloque de alcance: estadio, televisión y redes.
+      El dato manda el ícono (campo `icon` de gallery_pages.json); si llega
+      uno que no está, no se pinta nada en vez de salir un hueco raro. --}}
+{{#eq icon 'stadium'}}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7v4a9 9 0 0018 0V7"/><path d="M3 7c0-1.1 4.03-2 9-2s9 .9 9 2"/><ellipse cx="12" cy="7" rx="9" ry="2"/></svg>{{/eq}}
+{{#eq icon 'tv'}}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><path d="M17 2l-5 5-5-5"/></svg>{{/eq}}
+{{#eq icon 'social'}}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>{{/eq}}
