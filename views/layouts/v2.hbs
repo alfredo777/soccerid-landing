@@ -83,5 +83,38 @@
     </nav>
     <span class="pie__legal">© {{year}} SOCCER iD</span>
   </footer>
+
+  {{!-- Volver arriba. Las secciones son largas —Tour mide más de cinco mil
+        píxeles— y en un teléfono volver al menú es un viaje. Aparece al
+        pasar la primera pantalla y se esconde solo si no hay nada que
+        subir. Es un ancla de verdad: sin JavaScript sigue llevando al
+        principio de la página. --}}
+  <a class="arriba" id="volverArriba" href="#" aria-label="{{#if isEs}}Volver arriba{{else}}Back to top{{/if}}" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </a>
+
+  <script>
+    (function () {
+      var boton = document.getElementById('volverArriba');
+      if (!boton) return;
+
+      function revisar() {
+        // Una pantalla de margen: antes de eso, el menú está a la vista.
+        boton.hidden = window.scrollY < window.innerHeight * 0.9;
+      }
+
+      boton.addEventListener('click', function (e) {
+        e.preventDefault();
+        // `scroll-behavior: smooth` está en la hoja; quien pida menos
+        // movimiento sube de golpe, que es lo correcto.
+        var suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({ top: 0, behavior: suave ? 'smooth' : 'auto' });
+      });
+
+      window.addEventListener('scroll', revisar, { passive: true });
+      window.addEventListener('resize', revisar);
+      revisar();
+    })();
+  </script>
 </body>
 </html>

@@ -329,8 +329,27 @@ a.pilar:hover { border-color: var(--tinta); }
 @media (max-width: 900px) {
   .portada { margin-top: -92px; min-height: clamp(380px, 62vh, 560px); }
   .portada__cuerpo { padding-top: 120px; }
-  .mosaico { grid-template-columns: repeat(2, 1fr); }
-  .mosaico__foto:nth-child(1), .mosaico__foto:nth-child(6) { grid-column: span 2; }
+  /* La galería se arrastra, no se apila: ocho fotos en dos columnas son
+     cuatro pantallas de scroll vertical en un teléfono, y además rompen el
+     ritmo de la página. En fila, con una foto y pico a la vista, se ven
+     todas sin salir del sitio. El desplazamiento y el encuadre los hace el
+     navegador, como en los demás carruseles de la casa. */
+  .mosaico {
+    display: flex; gap: 10px;
+    margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter);
+    overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scroll-padding-inline: var(--gutter);
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .mosaico::-webkit-scrollbar { display: none; }
+  /* Todas del mismo tamaño: en fila, una doble no aporta ritmo, sólo
+     descoloca el encuadre al soltar. */
+  .mosaico__foto,
+  .mosaico__foto:nth-child(1),
+  .mosaico__foto:nth-child(6) {
+    flex: 0 0 min(300px, 76%); scroll-snap-align: start;
+    aspect-ratio: 4 / 3; grid-column: auto;
+  }
   .prensa, .contacto { grid-template-columns: 1fr; }
   .hito { grid-template-columns: 76px 1fr 20px; gap: 14px; }
   .evento { grid-template-columns: 70px 1fr; gap: 16px; }
@@ -377,6 +396,28 @@ a.pilar:hover { border-color: var(--tinta); }
 .carrusel__flecha svg { width: 18px; height: 18px; }
 .carrusel__flecha:hover:not(:disabled) { background: var(--acento-chico); border-color: var(--acento-chico); color: var(--negro); }
 .carrusel__flecha:disabled { opacity: .35; cursor: default; }
+
+/* ─── Volver arriba ───────────────────────────────────────────────── */
+/* Flotante abajo a la derecha. En celular se separa del borde con el
+   `safe-area` para no quedar bajo la barra del sistema. El acento es el
+   de la sección, igual que todo lo demás. */
+.arriba {
+  position: fixed; z-index: 60;
+  right: 18px; bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(19, 19, 31, 0.92); color: var(--tinta);
+  border: 1px solid var(--linea);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  transition: background .15s, border-color .15s, color .15s, transform .15s;
+}
+.arriba svg { width: 20px; height: 20px; }
+.arriba:hover, .arriba:focus-visible {
+  background: var(--acento-chico); border-color: var(--acento-chico);
+  color: var(--negro); transform: translateY(-2px);
+}
+@media (max-width: 900px) { .arriba { right: 14px; width: 44px; height: 44px; } }
+@media (prefers-reduced-motion: reduce) { .arriba { transition: none; } }
 
 /* ─── Pie ─────────────────────────────────────────────────────────── */
 /* Una sola columna centrada: logo, secciones, redes, avisos y copyright. */
