@@ -30,47 +30,33 @@
 </section>
 {{/if}}
 
-{{!-- La historia, año por año. --}}
-{{#if historia.length}}
+{{!-- Qué hacemos. Estaba en Tour, pero habla de la empresa y no de la
+      copa: su sitio es aquí. Y aquí NO van las ediciones de la SOCCER iD
+      CUP ni las cuatro marcas: las ediciones son de Tour y las marcas son
+      el índice. Esta página cuenta quiénes somos, nada más. --}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}Año por año{{else}}Year by year{{/if}}</p>
-  <div class="hitos">
-    {{#each historia}}
-    {{#if this.link}}
-    <a class="hito" href="/{{../lang}}/socceridcup/{{this.year}}">
-      <span class="hito__anio">{{this.year}}</span>
-      <div>
-        <div class="hito__partido">{{this.match}}</div>
-        <div class="hito__lugar">{{this.city}}</div>
-      </div>
-      <span class="hito__flecha"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></span>
-    </a>
-    {{else}}
-    <div class="hito hito--pendiente">
-      <span class="hito__anio">{{this.year}}</span>
-      <div>
-        <div class="hito__partido">{{this.match}}</div>
-        <div class="hito__lugar">{{this.city}}</div>
-      </div>
-      <span></span>
-    </div>
-    {{/if}}
-    {{/each}}
-  </div>
-</section>
-{{/if}}
-
-{{!-- Lo que hacemos hoy: las cuatro marcas, con su puerta. --}}
-<section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}Lo que hacemos hoy{{else}}What we do today{{/if}}</p>
+  <p class="rotulo">{{#if isEs}}Qué hacemos{{else}}What we do{{/if}}</p>
   <div class="pilares">
-    {{#each marcas}}
-    <a class="pilar" href="{{this.url}}">
-      <div class="pilar__num">{{this.num}}</div>
-      <h3>{{this.submarca}}</h3>
-      <p>{{this.linea}}</p>
-    </a>
-    {{/each}}
+    <div class="pilar">
+      <div class="pilar__num">01</div>
+      <h3>{{#if isEs}}Gestión de eventos{{else}}Event management{{/if}}</h3>
+      <p>{{#if isEs}}Damos vida a partidos internacionales mediante una planeación y ejecución especializada.{{else}}We bring international soccer matches to life through expert planning and execution.{{/if}}</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">02</div>
+      <h3>{{#if isEs}}Clubes{{else}}Clubs{{/if}}</h3>
+      <p>{{#if isEs}}Trabajamos con los principales clubes profesionales de Latinoamérica.{{else}}We work with leading professional soccer clubs across Latin America.{{/if}}</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">03</div>
+      <h3>{{#if isEs}}Estrategia comercial{{else}}Commercial strategy{{/if}}</h3>
+      <p>{{#if isEs}}Desarrollamos estrategias de boletaje, patrocinios y experiencias premium.{{else}}We develop ticketing, sponsorship and premium hospitality strategies.{{/if}}</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">04</div>
+      <h3>{{#if isEs}}Medios{{else}}Media{{/if}}</h3>
+      <p>{{#if isEs}}Gestionamos la producción de transmisiones y el contenido digital para maximizar el alcance de cada evento.{{else}}We manage broadcast production and digital content to maximize audience reach.{{/if}}</p>
+    </div>
   </div>
 </section>
 

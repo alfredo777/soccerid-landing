@@ -1885,7 +1885,8 @@ app.get('/:lang/opiniones', rutaV2('opiniones', async (lang, data) => {
     // Seguros iD sale del sitio: una opinión que lo elogia anunciaría un
     // servicio que ya no se ofrece. Se filtra aquí y el JSON queda intacto.
     opiniones: ((t.opiniones || {}).testimonials || []).filter(o => !/seguros\s*id/i.test(o.text || '')),
-    articulos: ((t.media || {}).articles || []).slice(0, 6)
+    // Todos: Media es el sitio de los reportajes generales, no un resumen.
+    articulos: (t.media || {}).articles || []
   };
 }));
 
@@ -1893,15 +1894,9 @@ app.get('/:lang/nosotros', rutaV2('nosotros', async (lang, data) => {
   const q = (data.panel_templates || {}).quienes || null;
   return {
     // Cuatro fotos: con más, la columna de imágenes dobla en alto al texto.
-    quienes: q ? Object.assign({}, q, { gallery: (q.gallery || []).slice(0, 4) }) : null,
-    // La historia año por año: las mismas ediciones que pinta Tour, para
-    // que ningún año se cuente de dos maneras distintas.
-    historia: (await cupEditions.timeline(lang)).map(h => Object.assign({}, h, {
-      match: h.match || (h.tone === 'pause'
-        ? (lang === 'en' ? 'On pause' : 'En pausa')
-        : (lang === 'en' ? 'Coming soon' : 'Próximamente')),
-      city: h.city || (lang === 'en' ? 'To be confirmed' : 'Por confirmar')
-    }))
+    quienes: q ? Object.assign({}, q, { gallery: (q.gallery || []).slice(0, 4) }) : null
+    // Las ediciones de la copa NO se pintan aquí: son de Tour. Esta página
+    // cuenta quiénes somos y nada más.
   };
 }));
 
