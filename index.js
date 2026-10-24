@@ -1562,7 +1562,7 @@ app.get('/:lang', (req, res, next) => {
       ahora: {
         tour: tour ? { nombre: tour.label, url: `/${lang}/tour` } : null,
         partido: proximo,
-        podcast: eps.length ? { total: eps.length, ultimo: `https://www.youtube.com/watch?v=${eps[0].videoId}` } : null
+        podcast: eps.length ? { total: eps.length, ultimo: `https://www.youtube.com/watch?v=${eps[eps.length - 1].videoId}` } : null
       }
     };
   })(req, res, next);

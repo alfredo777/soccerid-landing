@@ -20,7 +20,20 @@ document.addEventListener('DOMContentLoaded', () => {
         "https://www.youtube.com/watch?v=n5GotLj0iH8",
         "https://www.youtube.com/watch?v=fiZVQ1-86hc",
         "https://www.youtube.com/watch?v=6Hu-jZrxQ6g",
-        "https://www.youtube.com/watch?v=MJPHOQufNlM"
+        "https://www.youtube.com/watch?v=MJPHOQufNlM",
+        "https://www.youtube.com/watch?v=LELlKrdz6yc",
+        "https://www.youtube.com/watch?v=9DgEsp8CNLc",
+        "https://www.youtube.com/watch?v=sy6zm1r4Dmk",
+        "https://www.youtube.com/watch?v=bhgnwRRd9so",
+        "https://www.youtube.com/watch?v=NFNka-UaOM8",
+        "https://www.youtube.com/watch?v=lCqXbWyjsqQ",
+        "https://www.youtube.com/watch?v=4vGIOprFxt0",
+        "https://www.youtube.com/watch?v=VkcMKGy9P18",
+        "https://www.youtube.com/watch?v=Nmpf-QeY594",
+        "https://www.youtube.com/watch?v=yemoNEn5X7g",
+        "https://www.youtube.com/watch?v=_OfmyXbft14",
+        "https://www.youtube.com/watch?v=RjpQ9V_FgaU",
+        "https://www.youtube.com/watch?v=N_70A_yp1Us"
     ];
 
     const audiosData = [
