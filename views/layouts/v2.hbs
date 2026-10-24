@@ -28,7 +28,7 @@
 
   {{!-- Menú en píldora. En escritorio enseña las cuatro marcas; las dos
         secciones de apoyo y las redes viven en el menú completo, que se abre
-        con «Menú». Funciona sin JavaScript: el menú completo es un ancla
+        con el botón de tres rayas. Funciona sin JavaScript: el menú completo es un ancla
         (#menu) que se pinta con :target. --}}
   <header class="nav">
     <div class="nav__pildora">
@@ -40,8 +40,8 @@
         <a class="nav__link {{#eq ../actual.slug this.slug}}is-activo{{/eq}}" href="{{this.url}}">{{this.nombre}}</a>
         {{/each}}
       </nav>
-      <a class="nav__menu" href="#menu" aria-label="Abrir el menú">
-        <span class="nav__menu-punto" aria-hidden="true"></span>{{#if isEs}}Menú{{else}}Menu{{/if}}
+      <a class="nav__menu" href="#menu" aria-label="{{#if isEs}}Abrir el menú{{else}}Open menu{{/if}}">
+        <svg class="nav__menu-icono" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </a>
     </div>
   </header>
@@ -58,7 +58,7 @@
       {{/each}}
     </ol>
     <div class="menu__redes">
-      {{#each redes}}<a href="{{this.url}}" target="_blank" rel="noopener">{{this.nombre}}</a>{{/each}}
+      {{#each redes}}<a class="red-icono" href="{{this.url}}" target="_blank" rel="noopener" aria-label="{{this.nombre}}" title="{{this.nombre}}">{{> icono-red id=this.id}}</a>{{/each}}
     </div>
   </div>
 
@@ -68,14 +68,12 @@
 
   {{!-- Pie: todo centrado y en columna, igual que el home. El logo es el
         lockup completo en blanco, medido por ancho con la altura en auto
-        (1200×271) para que no se deforme. --}}
+        (1200×271) para que no se deforme. Sin lista de secciones: el menú
+        de arriba siempre está a la mano y repetirlo aquí abajo sobraba. --}}
   <footer class="pie">
     <img class="pie__marca" src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" width="1200" height="271">
-    <nav class="pie__nav" aria-label="{{#if isEs}}Secciones{{else}}Sections{{/if}}">
-      {{#each secciones}}<a href="{{this.url}}">{{this.nombre}}</a>{{/each}}
-    </nav>
     <div class="pie__redes">
-      {{#each redes}}<a href="{{this.url}}" target="_blank" rel="noopener">{{this.nombre}}</a>{{/each}}
+      {{#each redes}}<a class="red-icono" href="{{this.url}}" target="_blank" rel="noopener" aria-label="{{this.nombre}}" title="{{this.nombre}}">{{> icono-red id=this.id}}</a>{{/each}}
     </div>
     <nav class="pie__legales" aria-label="{{#if isEs}}Avisos{{else}}Legal{{/if}}">
       <a href="/{{lang}}/privacy">{{#if isEs}}Privacidad{{else}}Privacy{{/if}}</a>

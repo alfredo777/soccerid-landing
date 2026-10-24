@@ -138,7 +138,8 @@
   <div class="prensa">
     {{#each edition.mediaLinks}}
     <a class="prensa__nota" href="{{this.url}}" target="_blank" rel="noopener">
-      <span>
+      {{#if this.image}}<img class="prensa__img" src="{{this.image}}" alt="" loading="lazy">{{/if}}
+      <span class="prensa__texto">
         <span class="prensa__fuente">{{this.source}}</span>
         <span class="prensa__titulo">{{this.title}}</span>
       </span>

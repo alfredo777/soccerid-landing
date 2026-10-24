@@ -1,0 +1,79 @@
+{
+  "_nota": "Legends. `proximos` va por fecha (dateISO) y sólo se pintan los de hoy en adelante; `pasados`, del más nuevo al más viejo. Todo lo que lleva \"muestra\": true es INVENTADO para ver el diseño y sale con la pastilla punteada «Muestra»: no son leyendas ni fechas confirmadas. Se reemplaza por lo real y se le quita la marca (o se borra).",
+  "es": {
+    "proximos": [
+      {
+        "dateISO": "2026-12-05",
+        "nombre": "Meet & Greet con leyendas del fútbol mexicano",
+        "tipo": "Meet & Greet",
+        "lugar": "Ciudad de México",
+        "hora": "6:00 PM",
+        "muestra": true
+      }
+    ],
+    "pasados": [
+      {
+        "titulo": "Convivencia privada con leyendas",
+        "tipo": "Convivencia privada",
+        "lugar": "Ciudad de México",
+        "fecha": "Agosto 2026",
+        "foto": "/assets/images/gallery/somos/6.jpg",
+        "muestra": true
+      },
+      {
+        "titulo": "Meet & Greet antes de la copa",
+        "tipo": "Meet & Greet",
+        "lugar": "Austin, Texas",
+        "fecha": "Marzo 2025",
+        "foto": "/assets/images/gallery/cup2025/3.jpg",
+        "muestra": true
+      },
+      {
+        "titulo": "Evento corporativo con una leyenda",
+        "tipo": "Corporativo",
+        "lugar": "Monterrey, N.L.",
+        "fecha": "Noviembre 2024",
+        "foto": "/assets/images/gallery/cup2024/4.jpg",
+        "muestra": true
+      }
+    ]
+  },
+  "en": {
+    "proximos": [
+      {
+        "dateISO": "2026-12-05",
+        "nombre": "Meet & Greet with Mexican football legends",
+        "tipo": "Meet & Greet",
+        "lugar": "Mexico City",
+        "hora": "6:00 PM",
+        "muestra": true
+      }
+    ],
+    "pasados": [
+      {
+        "titulo": "Private gathering with legends",
+        "tipo": "Private gathering",
+        "lugar": "Mexico City",
+        "fecha": "August 2026",
+        "foto": "/assets/images/gallery/somos/6.jpg",
+        "muestra": true
+      },
+      {
+        "titulo": "Meet & Greet before the cup",
+        "tipo": "Meet & Greet",
+        "lugar": "Austin, Texas",
+        "fecha": "March 2025",
+        "foto": "/assets/images/gallery/cup2025/3.jpg",
+        "muestra": true
+      },
+      {
+        "titulo": "Corporate event with a legend",
+        "tipo": "Corporate",
+        "lugar": "Monterrey, N.L.",
+        "fecha": "November 2024",
+        "foto": "/assets/images/gallery/cup2024/4.jpg",
+        "muestra": true
+      }
+    ]
+  }
+}

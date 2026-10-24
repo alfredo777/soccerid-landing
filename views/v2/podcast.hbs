@@ -110,6 +110,57 @@
 </script>
 {{/if}}
 
+{{!-- Patrocinadores actuales: de contents/podcast.json. Sin logo se pinta
+      el nombre; los de muestra lo dicen con la pastilla punteada. --}}
+{{#if patrocinadores.length}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Patrocinadores{{else}}Sponsors{{/if}}</p>
+  <div class="aliados">
+    {{#each patrocinadores}}
+    <{{#if this.url}}a href="{{this.url}}" target="_blank" rel="noopener"{{else}}div{{/if}} class="aliado aliado--texto">
+      {{#if this.logo}}<img src="{{this.logo}}" alt="{{this.nombre}}">{{else}}<span class="aliado__nombre">{{this.nombre}}</span>{{/if}}
+      {{#if this.muestra}}<span class="pastilla pastilla--muestra">{{#if ../isEs}}Muestra{{else}}Sample{{/if}}</span>{{/if}}
+    </{{#if this.url}}a{{else}}div{{/if}}>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
+
+{{!-- Sé patrocinador: las cifras del canal y lo que una marca puede tener. --}}
+<section class="seccion envoltura" id="patrocina">
+  <p class="rotulo">{{#if isEs}}Sé patrocinador{{else}}Become a sponsor{{/if}}</p>
+  <p class="bajada" style="max-width:760px;margin-bottom:26px">{{#if isEs}}Tu marca en la conversación de fútbol que la afición sí escucha completa: episodios largos, cada semana, con invitados del medio.{{else}}Your brand inside the football conversation fans actually listen to in full: long episodes, every week, with guests from the game.{{/if}}</p>
+  <div class="cifras">
+    {{#each cifras}}
+    <div class="cifra">
+      <div class="cifra__valor">{{this.valor}}</div>
+      <div class="cifra__etiqueta">{{this.etiqueta}}</div>
+    </div>
+    {{/each}}
+  </div>
+  <div class="pilares" style="margin-top:14px">
+    <div class="pilar">
+      <div class="pilar__num">01</div>
+      <h3>{{#if isEs}}Mención en el episodio{{else}}In-episode mention{{/if}}</h3>
+      <p>{{#if isEs}}Los conductores presentan tu marca con sus palabras, al inicio o a mitad del programa.{{else}}The hosts present your brand in their own words, at the start or mid-show.{{/if}}</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">02</div>
+      <h3>{{#if isEs}}Segmento patrocinado{{else}}Sponsored segment{{/if}}</h3>
+      <p>{{#if isEs}}Una sección fija con el nombre de tu marca: la predicción, el once ideal, la polémica de la semana.{{else}}A recurring segment named after your brand: the prediction, the ideal XI, the week's big debate.{{/if}}</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">03</div>
+      <h3>{{#if isEs}}Presencia en video{{else}}On-screen presence{{/if}}</h3>
+      <p>{{#if isEs}}Tu logo en el set y en pantalla, y tu producto en manos de los conductores.{{else}}Your logo on set and on screen, and your product in the hosts' hands.{{/if}}</p>
+    </div>
+  </div>
+  <div class="portada__acciones" style="margin-top:22px">
+    <a class="boton boton--lleno" href="https://wa.me/12315158991?text={{#if isEs}}Hola!%20Quiero%20patrocinar%20el%20podcast%20de%20SOCCER%20iD{{else}}Hi!%20I%27d%20like%20to%20sponsor%20the%20SOCCER%20iD%20podcast{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Quiero patrocinar{{else}}I want to sponsor{{/if}} <span class="flecha">↗</span></a>
+    <a class="boton" href="mailto:contacto@soccerid.co?subject={{#if isEs}}Patrocinio%20del%20podcast{{else}}Podcast%20sponsorship{{/if}}">contacto@soccerid.co <span class="flecha">↗</span></a>
+  </div>
+</section>
+
 <section class="cierre">
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">

@@ -86,3 +86,8 @@
   /* En una columna el cálculo de arriba ya no aplica: tope fijo. */
   .lista { max-height: 460px; }
 }
+
+/* ─── Patrocinadores ──────────────────────────────────────────────── */
+/* Sin logo, el nombre en letra; la pastilla de muestra va debajo. */
+.aliado--texto { flex-direction: column; gap: 8px; }
+.aliado__nombre { font-size: 17px; font-weight: 800; letter-spacing: -.01em; color: var(--tinta); }

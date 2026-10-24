@@ -1839,7 +1839,11 @@ app.get('/:lang/travel', rutaV2('travel', async (lang, data) => ({
   fan: (data.panel_templates || {}).fan || null
 })));
 
-app.get('/:lang/legends', rutaV2('legends'));
+// Próximos (de hoy en adelante, con su día y mes) y pasados, de
+// contents/legends.json. Lo de muestra lo marca la vista.
+app.get('/:lang/legends', rutaV2('legends', async (lang, data) => ({
+  eventos: partidosFuturos((data.legends || {}).proximos)
+})));
 
 app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
   const pod = data.podcast || {};
@@ -1876,7 +1880,23 @@ app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
     { nombre: 'YouTube', url: pod.canal },
     { nombre: 'Spotify', url: pod.spotify }
   ].filter(p => p.url);
-  return { plataformas, episodios: eps, ultimo: eps.length ? eps[0] : null };
+  // Para «Sé patrocinador»: las cifras salen de lo que el canal ya publicó
+  // (vistas y duración que guarda el script), no de un número escrito a mano.
+  const crudos = pod.episodios || [];
+  const vistas = crudos.reduce((t, e) => t + (e.vistas || 0), 0);
+  const horas = Math.round(crudos.reduce((t, e) => t + (e.duracion || 0), 0) / 3600);
+  const compacto = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace('.0', '') + 'M'
+    : n >= 1e3 ? Math.round(n / 1e3) + 'K' : String(n);
+  const cifras = [
+    { valor: String(crudos.length), etiqueta: lang === 'en' ? 'Episodes' : 'Episodios' },
+    { valor: compacto(vistas), etiqueta: lang === 'en' ? 'YouTube views' : 'Vistas en YouTube' },
+    { valor: compacto(crudos.length ? Math.round(vistas / crudos.length) : 0), etiqueta: lang === 'en' ? 'Views per episode' : 'Vistas por episodio' },
+    { valor: `${horas} h`, etiqueta: lang === 'en' ? 'Of conversation' : 'De conversación' }
+  ];
+  return {
+    plataformas, episodios: eps, ultimo: eps.length ? eps[0] : null,
+    cifras, patrocinadores: pod.patrocinadores || []
+  };
 }));
 
 app.get('/:lang/opiniones', rutaV2('opiniones', async (lang, data) => {

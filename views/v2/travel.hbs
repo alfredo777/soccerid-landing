@@ -11,7 +11,7 @@
     <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Travel</p>
     <div class="cabecera__marca">SOCCER iD Travel Club</div>
     <h1 class="portada__titulo">Travel</h1>
-    <p class="portada__bajada">{{#if isEs}}Te llevamos a cualquier estadio. Palcos en la Liga MX, viajes y experiencias para vivir el partido de cerca.{{else}}We take you to any stadium. Liga MX suites, trips and experiences to live the match up close.{{/if}}</p>
+    <p class="portada__bajada">{{#if isEs}}Te llevamos a cualquier estadio. Palcos en la Liga MX, viajes con vuelo y hospedaje, y experiencias para vivir el partido de cerca.{{else}}We take you to any stadium. Liga MX suites, trips with flights and lodging, and experiences to live the match up close.{{/if}}</p>
     <div class="portada__pastillas">
       <span class="pastilla">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
@@ -29,11 +29,13 @@
   </div>
 </section>
 
-{{!-- Experiencias: lo que la marca ofrece, antes del calendario. --}}
-{{#if vip}}
+{{!-- Experiencias: lo que la marca ofrece, antes del calendario. Asientos
+      VIP y Fan Experience salen de panel_templates; Vuelo y hospedaje es
+      fijo porque no depende de un partido. --}}
 <section class="seccion envoltura">
   <p class="rotulo">{{#if isEs}}Experiencias{{else}}Experiences{{/if}}</p>
   <div class="experiencias">
+    {{#if vip}}
     <article class="experiencia">
       <div class="experiencia__foto" style="background-image:url('/assets/images/gallery/vip/1.jpg')"></div>
       <div class="experiencia__cuerpo">
@@ -42,6 +44,7 @@
         {{{vip.description}}}
       </div>
     </article>
+    {{/if}}
     {{#if fan}}
     <article class="experiencia">
       <div class="experiencia__foto" style="background-image:url('/assets/images/gallery/fan/1@2x.png')"></div>
@@ -52,9 +55,16 @@
       </div>
     </article>
     {{/if}}
+    <article class="experiencia">
+      <div class="experiencia__foto" style="background-image:url('/assets/images/gallery/cup2025/4.jpg')"></div>
+      <div class="experiencia__cuerpo">
+        <span class="pastilla">{{#if isEs}}Viaje completo{{else}}Full trip{{/if}}</span>
+        <h3>{{#if isEs}}Vuelo y hospedaje{{else}}Flight and lodging{{/if}}</h3>
+        <p>{{#if isEs}}Te llevamos al partido desde tu ciudad: vuelo, hotel cerca del estadio, traslados y tu lugar en la grada o en el palco. Tú sólo llegas a disfrutar.{{else}}We take you to the match from your city: flight, a hotel near the stadium, transfers and your seat in the stands or the suite. You just show up and enjoy.{{/if}}</p>
+      </div>
+    </article>
   </div>
 </section>
-{{/if}}
 
 {{!-- El calendario. --}}
 <section class="seccion envoltura" id="calendario">
@@ -79,6 +89,17 @@
     {{/each}}
   </div>
 </section>
+
+{{!-- Viajes pasados: lo que ya hicimos. Sale de contents/travel.json; los
+      que llevan `muestra` son de ejemplo y lo dicen en pantalla. --}}
+{{#if travel.pasados.length}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Viajes pasados{{else}}Past trips{{/if}}</p>
+  <div class="recuerdos">
+    {{#each travel.pasados}}{{> recuerdo}}{{/each}}
+  </div>
+</section>
+{{/if}}
 
 {{> contacto asunto='Hola!%20Quiero%20informaci%C3%B3n%20del%20Travel%20Club'}}
 

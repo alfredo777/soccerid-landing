@@ -1,0 +1,59 @@
+{
+  "_nota": "Travel Club. `pasados` son los viajes que ya se hicieron, del más nuevo al más viejo. Los que llevan \"muestra\": true son de ejemplo para ver el diseño: en pantalla salen con la pastilla punteada «Muestra». Se reemplazan por los reales y se les quita la marca (o se borran).",
+  "es": {
+    "pasados": [
+      {
+        "titulo": "Pumas vs Tigres · SOCCER iD Cup",
+        "lugar": "Austin, Texas",
+        "fecha": "Marzo 2025",
+        "detalle": "Vuelo, hotel y palco para ver la copa en Q2 Stadium.",
+        "foto": "/assets/images/gallery/cup2025/2.jpg",
+        "muestra": true
+      },
+      {
+        "titulo": "América vs Atlético Nacional",
+        "lugar": "Orlando, Florida",
+        "fecha": "Octubre 2024",
+        "detalle": "Fin de semana con traslados, hospedaje y acceso al partido.",
+        "foto": "/assets/images/gallery/cup2024/2.jpg",
+        "muestra": true
+      },
+      {
+        "titulo": "Clásico en palco",
+        "lugar": "Estadio Banorte, CDMX",
+        "fecha": "Septiembre 2026",
+        "detalle": "Palco VIP con comida, bebida y estacionamiento incluidos.",
+        "foto": "/assets/images/gallery/vip/3.jpg",
+        "muestra": true
+      }
+    ]
+  },
+  "en": {
+    "pasados": [
+      {
+        "titulo": "Pumas vs Tigres · SOCCER iD Cup",
+        "lugar": "Austin, Texas",
+        "fecha": "March 2025",
+        "detalle": "Flight, hotel and a suite to watch the cup at Q2 Stadium.",
+        "foto": "/assets/images/gallery/cup2025/2.jpg",
+        "muestra": true
+      },
+      {
+        "titulo": "América vs Atlético Nacional",
+        "lugar": "Orlando, Florida",
+        "fecha": "October 2024",
+        "detalle": "A weekend with transfers, lodging and match access.",
+        "foto": "/assets/images/gallery/cup2024/2.jpg",
+        "muestra": true
+      },
+      {
+        "titulo": "Clásico from a suite",
+        "lugar": "Estadio Banorte, CDMX",
+        "fecha": "September 2026",
+        "detalle": "VIP suite with food, drinks and parking included.",
+        "foto": "/assets/images/gallery/vip/3.jpg",
+        "muestra": true
+      }
+    ]
+  }
+}

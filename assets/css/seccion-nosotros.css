@@ -18,3 +18,7 @@
 
 /* Mismo caso que en Travel: el texto llega del JSON con justify en línea. */
 .somos__texto p { text-align: left !important; }
+
+/* ─── Premios ─────────────────────────────────────────────────────── */
+.premio__cab { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.premio__icono { width: 26px; height: 26px; color: var(--acento-chico); flex: none; }

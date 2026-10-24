@@ -60,6 +60,26 @@
   </div>
 </section>
 
+{{!-- Premios: de contents/premios.json. Los de muestra lo dicen. --}}
+{{#if premios.lista.length}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Premios y reconocimientos{{else}}Awards and recognition{{/if}}</p>
+  <div class="pilares">
+    {{#each premios.lista}}
+    <div class="pilar premio">
+      <div class="premio__cab">
+        <svg class="premio__icono" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg>
+        <span class="pilar__num">{{this.anio}}</span>
+        {{#if this.muestra}}<span class="pastilla pastilla--muestra">{{#if ../isEs}}Muestra{{else}}Sample{{/if}}</span>{{/if}}
+      </div>
+      <h3>{{this.nombre}}</h3>
+      <p>{{this.otorga}}</p>
+    </div>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
+
 <section class="cierre">
   <img class="cierre__foto" src="/assets/images/gallery/socceridcup/7.jpeg" alt="">
   <div class="cierre__velo"></div>

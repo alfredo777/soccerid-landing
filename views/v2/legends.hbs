@@ -1,11 +1,9 @@
 {{!-- Legends · la misma anatomía que Tour y Travel: portada, qué es,
       calendario de próximos eventos, contacto y cierre.
 
-      AVISO HONESTO: Legends todavía no tiene material. Aquí NO se inventan
-      nombres de leyendas ni fechas. La página queda armada y en cuanto
-      haya roster y calendario se llenan los dos bloques de abajo; mientras
-      tanto cada uno dice que está vacío, en vez de enseñar tarjetas de
-      mentira que alguien pueda confundir con contenido real. --}}
+      Próximos y pasados salen de contents/legends.json. Lo que lleva
+      `muestra` es inventado para ver el diseño y lo dice en pantalla con la
+      pastilla punteada, para que nadie lo confunda con contenido real. --}}
 
 <section class="portada">
   <img class="portada__foto" src="/assets/images/gallery/cup2023/2.jpg" alt="SOCCER iD Legends">
@@ -14,11 +12,11 @@
     <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Legends</p>
     <div class="cabecera__marca">SOCCER iD Legends</div>
     <h1 class="portada__titulo">Legends</h1>
-    <p class="portada__bajada">{{#if isEs}}Las figuras que hicieron historia en el fútbol mexicano, de cerca: partidos de leyendas, encuentros y experiencias con ellas.{{else}}The players who made history in Mexican football, up close: legends matches, meet-ups and experiences with them.{{/if}}</p>
+    <p class="portada__bajada">{{#if isEs}}Las figuras que hicieron historia en el fútbol mexicano, de cerca: meet & greets, convivencias privadas y eventos corporativos.{{else}}The players who made history in Mexican football, up close: meet & greets, private gatherings and corporate events.{{/if}}</p>
     <div class="portada__pastillas">
       <span class="pastilla">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
-        {{#if eventos.length}}{{eventos.length}} {{#if isEs}}fechas{{else}}dates{{/if}}{{else}}{{#if isEs}}Calendario por anunciar{{else}}Calendar to be announced{{/if}}{{/if}}
+        {{#if eventos.length}}{{eventos.length}} {{#eq eventos.length 1}}{{#if isEs}}fecha{{else}}date{{/if}}{{else}}{{#if isEs}}fechas{{else}}dates{{/if}}{{/eq}}{{else}}{{#if isEs}}Calendario por anunciar{{else}}Calendar to be announced{{/if}}{{/if}}
       </span>
     </div>
     <div class="portada__acciones">
@@ -33,23 +31,23 @@
   <div class="pilares">
     <div class="pilar">
       <div class="pilar__num">01</div>
-      <h3>{{#if isEs}}Partidos de leyendas{{else}}Legends matches{{/if}}</h3>
-      <p>{{#if isEs}}Encuentros entre figuras que ya colgaron los botines, con el mismo cuidado de producción que una edición de la copa.{{else}}Matches between players who have already hung up their boots, produced with the same care as a cup edition.{{/if}}</p>
+      <h3>Meet &amp; Greets</h3>
+      <p>{{#if isEs}}Fotos, firmas y unas palabras con quien marcó una época. Estar cerca de la leyenda, no verla desde la grada.{{else}}Photos, autographs and a few words with the player who defined an era. Being close to the legend, not watching from the stands.{{/if}}</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">02</div>
-      <h3>{{#if isEs}}Encuentros{{else}}Meet-ups{{/if}}</h3>
-      <p>{{#if isEs}}Cenas, charlas y firmas: estar cerca de quien marcó una época, no verlo desde la grada.{{else}}Dinners, talks and signings: being close to the players who defined an era, not watching from the stands.{{/if}}</p>
+      <h3>{{#if isEs}}Convivencias privadas{{else}}Private gatherings{{/if}}</h3>
+      <p>{{#if isEs}}Una comida, una cena o una tarde de fútbol en grupo reducido, con la leyenda contando lo que no sale en las entrevistas.{{else}}A lunch, a dinner or an afternoon of football in a small group, with the legend telling what never makes the interviews.{{/if}}</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">03</div>
-      <h3>{{#if isEs}}Experiencias a medida{{else}}Tailored experiences{{/if}}</h3>
-      <p>{{#if isEs}}Para marcas y clubes que quieren a una leyenda en su evento, con todo lo que eso implica resuelto.{{else}}For brands and clubs that want a legend at their event, with everything it takes handled.{{/if}}</p>
+      <h3>{{#if isEs}}Corporativos{{else}}Corporate{{/if}}</h3>
+      <p>{{#if isEs}}Para empresas y marcas que quieren a una leyenda en su evento, convención o campaña, con todo lo que eso implica resuelto.{{else}}For companies and brands that want a legend at their event, convention or campaign, with everything it takes handled.{{/if}}</p>
     </div>
   </div>
 </section>
 
-{{!-- El calendario. Vacío hasta que haya fechas de verdad. --}}
+{{!-- El calendario: sólo de hoy en adelante. --}}
 <section class="seccion envoltura" id="calendario">
   <p class="rotulo">{{#if isEs}}Próximos eventos{{else}}Upcoming events{{/if}}</p>
   <div class="eventos">
@@ -57,16 +55,26 @@
     <article class="evento">
       <div class="evento__fecha"><div class="evento__dia">{{this.dia}}</div><div class="evento__mes">{{this.mes}}</div></div>
       <div>
-        <div class="evento__nombre">{{this.nombre}}</div>
-        <div class="evento__meta">{{this.lugar}}{{#if this.hora}} · {{this.hora}}{{/if}}</div>
+        <div class="evento__nombre">{{this.nombre}}{{#if this.muestra}}<span class="pastilla pastilla--muestra">{{#if ../isEs}}Muestra{{else}}Sample{{/if}}</span>{{/if}}</div>
+        <div class="evento__meta">{{#if this.tipo}}{{this.tipo}} · {{/if}}{{this.lugar}}{{#if this.hora}} · {{this.hora}}{{/if}}</div>
       </div>
-      <a class="boton" href="{{this.url}}">{{#if ../isEs}}Más información{{else}}More info{{/if}} <span class="flecha">↗</span></a>
+      <a class="boton" href="https://wa.me/12315158991?text={{#if ../isEs}}Hola!%20Quiero%20informaci%C3%B3n%20de%20{{else}}Hi!%20I%27d%20like%20info%20about%20{{/if}}{{this.nombre}}" target="_blank" rel="noopener">{{#if ../isEs}}Más información{{else}}More info{{/if}} <span class="flecha">↗</span></a>
     </article>
     {{else}}
     <p class="vacio">{{#if isEs}}Todavía no hay fechas publicadas. Déjanos tu contacto abajo y eres de los primeros en enterarte.{{else}}No dates published yet. Leave us your contact below and you'll be among the first to know.{{/if}}</p>
     {{/each}}
   </div>
 </section>
+
+{{!-- Eventos pasados. --}}
+{{#if legends.pasados.length}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Eventos pasados{{else}}Past events{{/if}}</p>
+  <div class="recuerdos">
+    {{#each legends.pasados}}{{> recuerdo}}{{/each}}
+  </div>
+</section>
+{{/if}}
 
 <div id="contacto">{{> contacto asunto='Hola!%20Quiero%20informaci%C3%B3n%20de%20SOCCER%20iD%20Legends'}}</div>
 

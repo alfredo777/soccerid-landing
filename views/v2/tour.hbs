@@ -26,8 +26,7 @@
       </span>
     </div>
     <div class="portada__acciones">
-      <a class="boton boton--lleno" href="{{tour.url}}">{{#if isEs}}Ver la propuesta '27 · con código{{else}}View the '27 proposal · code required{{/if}} <span class="flecha">↗</span></a>
-      <a class="boton" href="https://wa.me/17867844303?text={{galeria.ctaMessage}}" target="_blank" rel="noopener">{{galeria.ctaText}} <span class="flecha">↗</span></a>
+      <a class="boton boton--lleno" href="https://wa.me/17867844303?text={{galeria.ctaMessage}}" target="_blank" rel="noopener">{{galeria.ctaText}} <span class="flecha">↗</span></a>
     </div>
   </div>
 </section>
@@ -71,8 +70,8 @@
     <div>
       <img class="tour27__logo" src="/assets/images/logos/id-tour27-blanco.png" alt="{{tour.nombre}}">
       <h2>{{tour.nombre}}</h2>
-      <p>{{#if isEs}}Tres partidos internacionales en Estados Unidos, en una sola temporada. La propuesta completa es privada y se abre con código.{{else}}Three international matches in the United States, one season. The full proposal is private and opens with a code.{{/if}}</p>
-      <a class="boton boton--claro" href="{{tour.url}}">{{#if isEs}}Ver la propuesta · acceso con código{{else}}View proposal · code required{{/if}} <span class="flecha">↗</span></a>
+      <p>{{#if isEs}}Tres partidos internacionales en Estados Unidos, en una sola temporada.{{else}}Three international matches in the United States, one season.{{/if}}</p>
+      <a class="boton boton--claro" href="https://wa.me/17867844303?text={{#if isEs}}Hola!%20Quiero%20colaborar%20en%20el%20Tour%20%2727%20de%20SOCCER%20iD{{else}}Hi!%20I%27d%20like%20to%20be%20part%20of%20the%20SOCCER%20iD%20Tour%20%2727{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Quiero colaborar / ser parte{{else}}I want to collaborate / be part{{/if}} <span class="flecha">↗</span></a>
     </div>
     <ol class="tour27__partidos">
       {{#each tour.partidos}}
@@ -159,7 +158,8 @@
   <div class="prensa">
     {{#each galeria.mediaLinks}}
     <a class="prensa__nota" href="{{this.url}}" target="_blank" rel="noopener">
-      <span>
+      {{#if this.image}}<img class="prensa__img" src="{{this.image}}" alt="" loading="lazy">{{/if}}
+      <span class="prensa__texto">
         <span class="prensa__fuente">{{this.source}}</span>
         <span class="prensa__titulo">{{this.title}}</span>
       </span>

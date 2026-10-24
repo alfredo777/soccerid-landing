@@ -3,6 +3,14 @@
   "canal": "https://www.youtube.com/channel/UC4Mf2_KUFB5PVfHlKhSpkiQ",
   "_nota_spotify": "Pega aqui la URL del show en Spotify y el boton aparece solo en /podcast. Vacio = no se pinta.",
   "spotify": "",
+  "_nota_patrocinadores": "Patrocinadores actuales del podcast, para /podcast. Cada uno: nombre, logo (ruta a la imagen; sin logo se pinta el nombre) y url opcional. Caliente sale en las miniaturas del canal como «Presentado por Caliente» (episodios 21 a 33). Si se agrega uno de ejemplo, ponle \"muestra\": true y sale con la pastilla punteada. Lista vacía = el bloque no se pinta.",
+  "patrocinadores": [
+    {
+      "nombre": "Caliente",
+      "logo": "/assets/images/sponsors/caliente.png",
+      "url": "https://www.caliente.mx"
+    }
+  ],
   "episodios": [
     {
       "videoId": "6be3c9Q0aNI",

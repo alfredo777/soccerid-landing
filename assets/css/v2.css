@@ -107,13 +107,14 @@ img { display: block; max-width: 100%; }
    regla pide 7.0 por debajo de 16px. */
 .nav__link.is-activo { background: var(--acento-chico); color: var(--negro); }
 .nav__menu {
-  display: inline-flex; align-items: center; gap: 9px;
-  font-size: 14px; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; flex: none;
   background: var(--acento-chico); color: var(--negro);
-  padding: 11px 20px; border-radius: 999px; margin-left: 4px;
+  border-radius: 999px; margin-left: 4px;
 }
-/* Sobre el verde el punto va en negro, no en verde sobre verde. */
-.nav__menu-punto { width: 8px; height: 8px; border-radius: 50%; background: var(--negro); }
+/* Tres rayas, sin palabra: el ícono de menú que todo el mundo reconoce.
+   Sobre el verde van en negro, igual que iba el punto. */
+.nav__menu-icono { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
 
 /* ─── Menú completo (ancla #menu, sin JavaScript) ─────────────────── */
 .menu {
@@ -140,7 +141,10 @@ img { display: block; max-width: 100%; }
 .menu__flecha { font-size: 24px; opacity: .7; }
 .menu__item:hover .menu__nombre { color: var(--acento); }
 .menu__redes { max-width: var(--ancho); width: 100%; margin: auto auto 0; padding-top: 36px; display: flex; flex-wrap: wrap; gap: 8px; }
-.menu__redes a { font-size: 14px; font-weight: 600; border: 1.5px solid rgba(255,255,255,.55); border-radius: 999px; padding: 9px 16px; }
+/* Las redes, como íconos en círculo (el nombre va en aria-label y title). */
+.red-icono { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1.5px solid rgba(255,255,255,.55); border-radius: 50%; transition: border-color .15s, color .15s; }
+.red-icono svg { width: 20px; height: 20px; }
+.red-icono:hover { border-color: var(--acento-chico); color: var(--acento-chico); }
 
 /* ─── Piezas comunes ──────────────────────────────────────────────── */
 .kicker { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-2); }
@@ -288,6 +292,10 @@ a.pilar:hover { border-color: var(--tinta); }
 .prensa__fuente { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--acento-chico); }
 .prensa__titulo { font-size: 16px; font-weight: 700; line-height: 1.4; margin-top: 7px; }
 .prensa__nota .flecha { color: var(--tinta-2); flex: none; }
+/* La miniatura va a la izquierda y el texto ocupa lo que sobra. Sin imagen,
+   la nota se ve igual que antes. */
+.prensa__img { flex: none; width: 112px; aspect-ratio: 4 / 3; object-fit: cover; border-radius: calc(var(--radio-sm) - 4px); background: var(--linea); }
+.prensa__texto { flex: 1; min-width: 0; }
 
 /* ─── Eventos: el calendario de lo que viene ──────────────────────── */
 /* Como .partido pero sin escudos: sirve para cualquier fecha, no sólo
@@ -300,6 +308,20 @@ a.pilar:hover { border-color: var(--tinta); }
 .evento__nombre { font-size: 18px; font-weight: 800; }
 .evento__meta { font-size: 14px; color: var(--tinta-2); margin-top: 4px; }
 .vacio { padding: 34px 24px; border: 1.5px dashed var(--linea); border-radius: var(--radio); text-align: center; color: var(--tinta-2); font-size: 15px; }
+/* Un evento de muestra lleva su pastilla punteada junto al nombre. */
+.evento__nombre .pastilla--muestra { margin-left: 8px; vertical-align: middle; }
+
+/* ─── Recuerdos: lo que ya pasó (viajes, eventos). Partial `recuerdo` ── */
+.recuerdos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.recuerdo { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); overflow: hidden; }
+.recuerdo__foto { position: relative; aspect-ratio: 16 / 10; background: var(--linea) center / cover no-repeat; }
+/* La pastilla de muestra va sobre la foto: necesita su propio fondo para leerse. */
+.recuerdo__muestra { position: absolute; top: 12px; left: 12px; background: rgba(11,11,20,.78); color: #fff; border-color: rgba(255,255,255,.7); }
+.recuerdo__cuerpo { padding: 18px 20px 22px; }
+.recuerdo__tipo { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--acento-chico); }
+.recuerdo__titulo { font-size: 19px; font-weight: 800; letter-spacing: -.01em; line-height: 1.25; margin: 6px 0 6px; }
+.recuerdo__meta { font-size: 14px; color: var(--tinta-2); }
+.recuerdo__detalle { font-size: 14px; color: var(--tinta-2); margin-top: 10px; }
 
 /* ─── Contacto ────────────────────────────────────────────────────── */
 .contacto { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: center; }
@@ -351,6 +373,7 @@ a.pilar:hover { border-color: var(--tinta); }
     aspect-ratio: 4 / 3; grid-column: auto;
   }
   .prensa, .contacto { grid-template-columns: 1fr; }
+  .prensa__img { width: 84px; }
   .hito { grid-template-columns: 76px 1fr 20px; gap: 14px; }
   .evento { grid-template-columns: 70px 1fr; gap: 16px; }
   .evento > .boton { grid-column: 1 / -1; justify-content: center; }
@@ -458,9 +481,10 @@ a.pilar:hover { border-color: var(--tinta); }
 /* Una sola columna centrada: logo, secciones, redes, avisos y copyright. */
 .pie { max-width: var(--ancho); margin: 64px auto 0; padding: 34px var(--gutter) 40px; border-top: 1px solid var(--linea); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; }
 .pie__marca { width: 200px; height: auto; display: block; }
-.pie__nav, .pie__redes, .pie__legales { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; font-size: 14px; font-weight: 600; }
-.pie__nav a:hover, .pie__redes a:hover, .pie__legales a:hover { color: var(--acento-chico); }
-.pie__redes { gap: 8px 18px; color: var(--tinta-2); }
+.pie__redes, .pie__legales { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; font-size: 14px; font-weight: 600; }
+.pie__legales a:hover { color: var(--acento-chico); }
+.pie__redes { gap: 10px; color: var(--tinta-2); }
+.pie__redes .red-icono { border-color: var(--linea); }
 .pie__legales { gap: 8px 20px; font-size: 13px; font-weight: 500; color: var(--tinta-2); }
 .pie__legal { font-size: 13px; color: var(--tinta-2); }
 @media (max-width: 768px) { .pie__marca { width: 164px; } .pie { gap: 14px; } }
