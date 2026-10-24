@@ -23,7 +23,7 @@
     <div class="somos__texto">{{{quienes.description}}}</div>
     <div class="somos__fotos">
       {{#each quienes.gallery}}
-      <div class="somos__foto" style="background-image:url('{{this.src}}')" role="img" aria-label="{{this.alt}}"></div>
+      <button type="button" class="somos__foto" style="background-image:url('{{this.src}}')" data-ampliar="{{this.src}}" aria-label="{{this.alt}}"></button>
       {{/each}}
     </div>
   </div>

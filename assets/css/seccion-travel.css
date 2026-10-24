@@ -38,3 +38,10 @@
 /* Los textos que vienen de los JSON traen text-align: justify en línea. En
    columnas angostas abre huecos entre palabras; aquí se alinean a la izquierda. */
 .experiencia__cuerpo p { text-align: left !important; }
+
+/* ─── Ficha de partido ────────────────────────────────────────────── */
+.duelo { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; font-size: clamp(30px, 4.6vw, 60px); font-weight: 900; letter-spacing: -.03em; line-height: 1.05; }
+.duelo__equipo { display: inline-flex; align-items: center; gap: 14px; }
+.duelo__equipo img { width: clamp(40px, 5vw, 68px); height: clamp(40px, 5vw, 68px); object-fit: contain; }
+.duelo__vs { font-size: .42em; font-weight: 700; color: var(--tinta-2); }
+a.partido__equipos:hover { color: var(--acento-chico); }

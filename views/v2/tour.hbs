@@ -134,7 +134,7 @@
   <p class="rotulo">{{#if isEs}}Momentos{{else}}Moments{{/if}}</p>
   <div class="mosaico">
     {{#each galeria.images}}
-    <div class="mosaico__foto" style="background-image:url('{{this.src}}')" role="img" aria-label="{{this.alt}}"></div>
+    <button type="button" class="mosaico__foto" style="background-image:url('{{this.src}}')" data-ampliar="{{this.src}}" aria-label="{{this.alt}}"></button>
     {{/each}}
   </div>
 </section>

@@ -29,6 +29,7 @@
       {{#each plataformas}}
       <a class="boton {{#if @first}}boton--lleno{{/if}}" href="{{this.url}}" target="_blank" rel="noopener">{{#if ../isEs}}Escuchar en{{else}}Listen on{{/if}} {{this.nombre}} <span class="flecha">↗</span></a>
       {{/each}}
+      {{#if instagram}}<a class="boton boton--icono" href="{{instagram}}" target="_blank" rel="noopener">{{> icono-red id="instagram"}} @soccerid_podcast</a>{{/if}}
     </div>
   </div>
 </section>
@@ -170,6 +171,7 @@
       {{#each plataformas}}
       <a class="boton {{#if @first}}boton--lleno{{/if}}" href="{{this.url}}" target="_blank" rel="noopener">{{this.nombre}} <span class="flecha">↗</span></a>
       {{/each}}
+      {{#if instagram}}<a class="boton boton--icono" href="{{instagram}}" target="_blank" rel="noopener">{{> icono-red id="instagram"}} Instagram</a>{{/if}}
     </div>
   </div>
 </section>

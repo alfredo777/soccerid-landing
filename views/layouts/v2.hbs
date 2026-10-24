@@ -10,6 +10,23 @@
   <title>{{#if tituloPagina}}{{tituloPagina}}{{else}}{{#if actual}}{{actual.nombre}} · SOCCER iD{{else}}SOCCER iD{{/if}}{{/if}}</title>
   <meta name="description" content="{{#if descripcionPagina}}{{descripcionPagina}}{{else}}{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}{{/if}}">
   <link rel="canonical" href="{{baseUrl}}{{#if rutaCanonica}}{{rutaCanonica}}{{else}}/{{lang}}{{#if actual}}/{{actual.slug}}{{/if}}{{/if}}">
+  {{!-- Vista previa al compartir. Sólo la piden las páginas que se mandan
+        por WhatsApp con su propia foto (un partido, un reportaje). --}}
+  {{#if ogImage}}
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{baseUrl}}{{rutaCanonica}}">
+  <meta property="og:title" content="{{ogTitle}}">
+  <meta property="og:description" content="{{ogDescription}}">
+  <meta property="og:image" content="{{baseUrl}}{{ogImage}}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="SOCCER iD">
+  <meta property="og:locale" content="{{ogLocale}}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ogTitle}}">
+  <meta name="twitter:description" content="{{ogDescription}}">
+  <meta name="twitter:image" content="{{baseUrl}}{{ogImage}}">
+  {{/if}}
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
   <link rel="stylesheet" href="/assets/css/v2.css?v={{version}}">
@@ -169,5 +186,6 @@
       });
     })();
   </script>
+  <script src="/assets/js/v2-lightbox.js?v={{version}}" defer></script>
 </body>
 </html>

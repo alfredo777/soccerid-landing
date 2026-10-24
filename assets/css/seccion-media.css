@@ -26,3 +26,8 @@
 @media (max-width: 900px) {
   .notas { grid-template-columns: 1fr; }
 }
+
+/* ─── Revista: las páginas en rejilla; al tocar una se abre el visor ── */
+.revista { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.revista__pagina { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio-sm); overflow: hidden; aspect-ratio: 3 / 4; }
+.revista__pagina img { width: 100%; height: 100%; object-fit: cover; display: block; }

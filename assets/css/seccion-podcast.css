@@ -91,3 +91,7 @@
 /* Sin logo, el nombre en letra; la pastilla de muestra va debajo. */
 .aliado--texto { flex-direction: column; gap: 8px; }
 .aliado__nombre { font-size: 17px; font-weight: 800; letter-spacing: -.01em; color: var(--tinta); }
+
+/* Botón con ícono de red (Instagram del podcast). */
+.boton--icono { display: inline-flex; align-items: center; gap: 8px; }
+.boton--icono svg { width: 18px; height: 18px; }

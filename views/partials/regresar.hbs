@@ -1,0 +1,20 @@
+{{!-- Regresar a la sección de donde cuelga la página (`regresar.url`, que
+      manda la ruta). Si se llegó desde este mismo sitio, el script usa el
+      historial para volver al punto exacto de la lista, con su scroll; si
+      se llegó de fuera (un enlace compartido), el enlace lleva a la
+      sección. Nunca al inicio sin más. --}}
+<a class="boton" href="{{@root.regresar.url}}" data-regresar>
+  <span class="flecha" aria-hidden="true">←</span> {{@root.regresar.texto}}
+</a>
+<script>
+  (function () {
+    var b = document.currentScript.previousElementSibling;
+    b.addEventListener('click', function (e) {
+      var ref = document.referrer;
+      if (ref && ref.indexOf(location.origin) === 0 && history.length > 1) {
+        e.preventDefault();
+        history.back();
+      }
+    });
+  })();
+</script>

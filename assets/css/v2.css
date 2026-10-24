@@ -499,3 +499,41 @@ a.pilar:hover { border-color: var(--tinta); }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+
+/* ─── Visor de fotos (assets/js/v2-lightbox.js) ───────────────────── */
+/* Las fotos que se amplían son botones: se ven igual, pero se pueden tocar
+   y se alcanzan con el teclado. */
+[data-ampliar] { cursor: zoom-in; padding: 0; font: inherit; color: inherit; transition: opacity .15s, transform .15s; }
+[data-ampliar]:hover { opacity: .88; }
+[data-ampliar]:focus-visible { outline: 2px solid var(--acento-chico); outline-offset: 3px; }
+.con-visor, .con-visor body { overflow: hidden; }
+.visor { position: fixed; inset: 0; z-index: 200; background: #07070d; display: flex; flex-direction: column; }
+.visor[hidden] { display: none; }
+.visor__barra { display: flex; align-items: center; justify-content: space-between; padding: 14px var(--gutter); flex: none; }
+.visor__cuenta { font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--tinta-2); }
+/* Una foto por pantalla; el dedo desliza y cada foto se queda centrada. */
+.visor__pista {
+  flex: 1; min-height: 0; display: flex; overflow-x: auto; overflow-y: hidden;
+  scroll-snap-type: x mandatory; overscroll-behavior: contain; scrollbar-width: none; outline: none;
+}
+.visor__pista::-webkit-scrollbar { display: none; }
+.visor__foto { flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always; display: flex; align-items: center; justify-content: center; padding: 0 var(--gutter) 24px; margin: 0; }
+.visor__foto img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: var(--radio-sm); user-select: none; -webkit-user-drag: none; }
+.visor__x, .visor__flecha {
+  display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 46px;
+  border-radius: 50%; background: rgba(255,255,255,.1); color: #fff; border: 1px solid rgba(255,255,255,.2); cursor: pointer;
+}
+.visor__x:hover, .visor__flecha:hover { background: rgba(255,255,255,.2); }
+.visor__x svg, .visor__flecha svg { width: 22px; height: 22px; }
+.visor__flecha { position: absolute; top: 50%; transform: translateY(-50%); }
+.visor__flecha[hidden] { display: none; }
+.visor__flecha--ant { left: 18px; }
+.visor__flecha--sig { right: 18px; }
+/* En el teléfono se desliza con el dedo: las flechas sobran y tapan la foto. */
+@media (hover: none) and (pointer: coarse) { .visor__flecha { display: none; } }
+
+/* ─── Fichas: una página dentro de una sección (reportaje, partido) ── */
+/* El título es una frase, no el nombre de una marca: va más chico que en
+   las portadas de sección para que un titular largo quepa en tres líneas. */
+.portada--ficha .portada__titulo { font-size: clamp(32px, 4.4vw, 58px); line-height: 1.05; letter-spacing: -.03em; max-width: 900px; }
+.compartir { display: flex; flex-wrap: wrap; gap: 10px; }

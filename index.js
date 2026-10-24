@@ -662,23 +662,21 @@ app.get('/:lang/evento/:id', (req, res, next) => {
       ? '/assets/images/og/' + path.basename(evento.image).replace(/\.\w+$/, '.jpg')
       : '/assets/images/og/photo-1489944440615-453fc2b6a9a9.jpg';
 
-    res.render('evento', {
-      layout: 'promo',
-      title: ogTitle,
-      description: ogDesc,
+    // Con el diseño nuevo, como una página más de Travel: su menú, su
+    // color y su regreso al calendario. Debajo, los siguientes partidos.
+    const data = datosV2(lang, 'travel');
+    const otros = partidosFuturos(langEvents).filter(e => e.id !== eventId).slice(0, 3);
+    res.render('v2/evento', Object.assign(data, {
+      tituloPagina: ogTitle,
+      descripcionPagina: ogDesc,
+      rutaCanonica: `/${lang}/evento/${eventId}`,
       ogTitle: ogTitle,
       ogDescription: ogDesc,
       ogImage: ogImage,
-      ogLocale: lang === 'es' ? 'es_ES' : 'en_US',
-      lang: lang,
-      baseUrl: BASE_URL,
-      currentPath: `/evento/${eventId}`,
-      isEs: isEs,
-      isEn: lang === 'en',
       evento: evento,
-      year: new Date().getFullYear(),
-      version: APP_VERSION
-    });
+      otros: otros,
+      regresar: { url: `/${lang}/travel#calendario`, texto: isEs ? 'Volver al calendario' : 'Back to the calendar' }
+    }));
   } catch (e) {
     console.error('Error cargando evento:', e);
     next();
@@ -722,23 +720,21 @@ app.get('/:lang/articulo/:id', (req, res, next) => {
       articulo.pageCount = articulo.magazineData.pages.length;
     }
 
-    res.render('articulo', {
-      layout: 'promo',
-      title: ogTitle,
-      description: ogDesc,
+    // Con el diseño nuevo, como una página más de Media. Regresar lleva a
+    // Media (o atrás en el historial), no al inicio. Debajo, otros tres.
+    const data = datosV2(lang, 'opiniones');
+    const otros = media.articles.filter(a => a.id !== articleId).slice(0, 3);
+    res.render('v2/articulo', Object.assign(data, {
+      tituloPagina: ogTitle,
+      descripcionPagina: ogDesc,
+      rutaCanonica: `/${lang}/articulo/${articleId}`,
       ogTitle: ogTitle,
       ogDescription: ogDesc,
       ogImage: ogImage,
-      ogLocale: lang === 'es' ? 'es_ES' : 'en_US',
-      lang: lang,
-      baseUrl: BASE_URL,
-      currentPath: `/articulo/${articleId}`,
-      isEs: isEs,
-      isEn: lang === 'en',
       articulo: articulo,
-      year: new Date().getFullYear(),
-      version: APP_VERSION
-    });
+      otros: otros,
+      regresar: { url: `/${lang}/opiniones`, texto: isEs ? 'Volver a Media' : 'Back to Media' }
+    }));
   } catch (e) {
     console.error('Error cargando artículo:', e);
     next();
@@ -1895,7 +1891,7 @@ app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
   ];
   return {
     plataformas, episodios: eps, ultimo: eps.length ? eps[0] : null,
-    cifras, patrocinadores: pod.patrocinadores || []
+    cifras, patrocinadores: pod.patrocinadores || [], instagram: pod.instagram || ''
   };
 }));
 

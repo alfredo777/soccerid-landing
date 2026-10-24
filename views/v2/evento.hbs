@@ -1,0 +1,91 @@
+{{!-- Un partido del calendario de Travel. Antes vivía en el layout viejo
+      (promo); ahora es una página más de Travel, con su menú, su color y
+      su regreso al calendario. Es la URL que se comparte por WhatsApp, así
+      que el botón de reservar va arriba, a la vista. --}}
+
+<section class="portada portada--ficha">
+  {{#if evento.image}}<img class="portada__foto" src="{{evento.image}}" alt="">{{/if}}
+  <div class="portada__velo"></div>
+  <div class="portada__cuerpo">
+    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / <a href="/{{lang}}/travel">Travel</a> / {{evento.team1}} vs {{evento.team2}}</p>
+    <div class="cabecera__marca">{{evento.badge}} · {{evento.torneo}}{{#if evento.jornada}} · {{evento.jornada}}{{/if}}</div>
+    <h1 class="duelo">
+      <span class="duelo__equipo"><img src="{{evento.team1Icon}}" alt="">{{evento.team1}}</span>
+      <span class="duelo__vs">vs</span>
+      <span class="duelo__equipo"><img src="{{evento.team2Icon}}" alt="">{{evento.team2}}</span>
+    </h1>
+    <div class="portada__pastillas">
+      <span class="pastilla">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+        {{evento.date}}
+      </span>
+      <span class="pastilla">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+        {{evento.time}}
+      </span>
+      <span class="pastilla">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        {{evento.venue}}
+      </span>
+    </div>
+    <div class="portada__acciones">
+      <a class="boton boton--lleno" href="https://wa.me/12315158991?text={{#if isEs}}Hola!%20Quiero%20accesos%20VIP%20para%20{{else}}Hi!%20I%20want%20VIP%20access%20for%20{{/if}}{{evento.team1}}%20vs%20{{evento.team2}}" target="_blank" rel="noopener">{{#if isEs}}Reservar accesos VIP{{else}}Book VIP access{{/if}} <span class="flecha">↗</span></a>
+      {{> regresar}}
+    </div>
+  </div>
+</section>
+
+{{!-- Cómo vivirlo: las mismas tres experiencias de Travel, en corto. --}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Cómo vivirlo{{else}}How to live it{{/if}}</p>
+  <div class="pilares">
+    <div class="pilar">
+      <div class="pilar__num">01</div>
+      <h3>{{#if isEs}}Asientos VIP{{else}}VIP seats{{/if}}</h3>
+      <p>{{#if isEs}}Palco o asiento preferente, con la mejor vista del estadio.{{else}}A suite or premium seat, with the best view in the stadium.{{/if}}</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">02</div>
+      <h3>Fan Experience</h3>
+      <p>{{#if isEs}}Accesos y momentos que no se compran en taquilla.{{else}}Access and moments you can't buy at the box office.{{/if}}</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">03</div>
+      <h3>{{#if isEs}}Vuelo y hospedaje{{else}}Flight and lodging{{/if}}</h3>
+      <p>{{#if isEs}}Si vienes de fuera, armamos el viaje completo hasta tu lugar.{{else}}Coming from out of town? We put together the whole trip to your seat.{{/if}}</p>
+    </div>
+  </div>
+</section>
+
+{{!-- Compartir: esta página se manda por WhatsApp. --}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Compartir{{else}}Share{{/if}}</p>
+  <div class="compartir">
+    <a class="red-icono" href="https://wa.me/?text={{evento.team1}}%20vs%20{{evento.team2}}%20{{baseUrl}}/{{lang}}/evento/{{evento.id}}" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">{{> icono-red id="whatsapp"}}</a>
+    <a class="red-icono" href="https://www.facebook.com/sharer/sharer.php?u={{baseUrl}}/{{lang}}/evento/{{evento.id}}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">{{> icono-red id="facebook"}}</a>
+  </div>
+</section>
+
+{{!-- Otros partidos: los siguientes del calendario. --}}
+{{#if otros.length}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Otros partidos{{else}}Other matches{{/if}}</p>
+  <div class="partidos">
+    {{#each otros}}
+    <article class="partido">
+      <div class="partido__fecha"><div class="partido__dia">{{this.dia}}</div><div class="partido__mes">{{this.mes}}</div></div>
+      <div>
+        <a class="partido__equipos" href="/{{../lang}}/evento/{{this.id}}">
+          <img class="partido__escudo" src="{{this.team1Icon}}" alt="">{{this.team1}}
+          <span class="partido__vs">vs</span>
+          <img class="partido__escudo" src="{{this.team2Icon}}" alt="">{{this.team2}}
+        </a>
+        <div class="partido__meta">{{this.venue}} · {{this.time}}</div>
+      </div>
+      <div class="partido__torneo"><b>{{this.badge}}</b>{{this.torneo}}{{#if this.jornada}} · {{this.jornada}}{{/if}}</div>
+      <a class="boton" href="/{{../lang}}/evento/{{this.id}}">{{#if ../isEs}}Ver partido{{else}}See match{{/if}} <span class="flecha">→</span></a>
+    </article>
+    {{/each}}
+  </div>
+</section>
+{{/if}}

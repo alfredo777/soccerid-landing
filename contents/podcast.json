@@ -2,7 +2,9 @@
   "_nota": "Episodios del podcast para /podcast. Van del MAS VIEJO al mas nuevo: el primero es el #1. Los titulos los rellena `node scripts/podcast-titulos.js` preguntandoselos a YouTube; al agregar un episodio basta con su videoId y correr el script. Hoy la misma lista vive tambien en assets/js/cast.js (el widget del home anterior): si se agrega uno, va en los dos hasta que el widget lea de aqui.",
   "canal": "https://www.youtube.com/channel/UC4Mf2_KUFB5PVfHlKhSpkiQ",
   "_nota_spotify": "Pega aqui la URL del show en Spotify y el boton aparece solo en /podcast. Vacio = no se pinta.",
-  "spotify": "",
+  "spotify": "https://open.spotify.com/show/1sbpDSju5JcrnLqO2qhutY",
+  "_nota_instagram": "La cuenta de Instagram del podcast (no la de SOCCER iD). Vacío = no se pinta.",
+  "instagram": "https://www.instagram.com/soccerid_podcast",
   "_nota_patrocinadores": "Patrocinadores actuales del podcast, para /podcast. Cada uno: nombre, logo (ruta a la imagen; sin logo se pinta el nombre) y url opcional. Caliente sale en las miniaturas del canal como «Presentado por Caliente» (episodios 21 a 33). Si se agrega uno de ejemplo, ponle \"muestra\": true y sale con la pastilla punteada. Lista vacía = el bloque no se pinta.",
   "patrocinadores": [
     {

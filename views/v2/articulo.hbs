@@ -1,0 +1,84 @@
+{{!-- Un reportaje, dentro de Media. Antes vivía en el layout viejo (promo)
+      y su flecha mandaba siempre al inicio; ahora es una página más de la
+      sección y regresar lleva a donde se estaba.
+
+      Los reportajes son de terceros: aquí va la portada, el resumen y el
+      enlace al original. El video se ve aquí mismo y la revista se hojea
+      con el visor de fotos. --}}
+
+<section class="portada portada--ficha">
+  <img class="portada__foto" src="{{articulo.image}}" alt="">
+  <div class="portada__velo"></div>
+  <div class="portada__cuerpo">
+    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / <a href="/{{lang}}/opiniones">Media</a> / {{#if isEs}}Reportajes{{else}}Features{{/if}}</p>
+    <div class="cabecera__marca">{{articulo.source}}{{#if articulo.typeBadge}} · {{articulo.typeBadge}}{{/if}}</div>
+    <h1 class="portada__titulo">{{articulo.title}}</h1>
+    {{#if articulo.excerpt}}<p class="portada__bajada">{{articulo.excerpt}}</p>{{/if}}
+    <div class="portada__acciones">
+      {{#eq articulo.type "link"}}
+      <a class="boton boton--lleno" href="{{articulo.url}}" target="_blank" rel="noopener">{{#if isEs}}Leer el artículo completo{{else}}Read the full article{{/if}} <span class="flecha">↗</span></a>
+      {{/eq}}
+      {{#eq articulo.type "video"}}
+      <a class="boton boton--lleno" href="#video">{{#if isEs}}Ver el video{{else}}Watch the video{{/if}}</a>
+      {{/eq}}
+      {{#eq articulo.type "magazine"}}
+      {{#if articulo.url}}<a class="boton boton--lleno" href="{{articulo.url}}" target="_blank" rel="noopener">{{#if isEs}}Leer la revista{{else}}Read the magazine{{/if}} <span class="flecha">↗</span></a>{{/if}}
+      {{/eq}}
+      {{> regresar}}
+    </div>
+  </div>
+</section>
+
+{{#eq articulo.type "video"}}
+<section class="seccion envoltura" id="video">
+  <p class="rotulo">Video</p>
+  <div class="video">
+    <video controls playsinline preload="metadata" poster="{{articulo.image}}">
+      <source src="{{articulo.videoUrl}}" type="video/mp4">
+    </video>
+  </div>
+</section>
+{{/eq}}
+
+{{#eq articulo.type "magazine"}}
+{{#if articulo.magazineData.pages}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}La revista{{else}}The magazine{{/if}} · {{articulo.pageCount}} {{#if isEs}}páginas{{else}}pages{{/if}}</p>
+  <div class="revista" data-galeria>
+    {{#each articulo.magazineData.pages}}
+    <button type="button" class="revista__pagina" data-ampliar="{{this.url}}" aria-label="{{#if this.alt}}{{this.alt}}{{else}}{{#if ../isEs}}Página{{else}}Page{{/if}} {{inc @index}}{{/if}}">
+      <img src="{{this.url}}" alt="" loading="lazy" draggable="false">
+    </button>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
+{{/eq}}
+
+{{!-- Compartir. --}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Compartir{{else}}Share{{/if}}</p>
+  <div class="compartir">
+    <a class="red-icono" href="https://wa.me/?text={{articulo.title}}%20{{baseUrl}}/{{lang}}/articulo/{{articulo.id}}" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">{{> icono-red id="whatsapp"}}</a>
+    <a class="red-icono" href="https://www.facebook.com/sharer/sharer.php?u={{baseUrl}}/{{lang}}/articulo/{{articulo.id}}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">{{> icono-red id="facebook"}}</a>
+    <a class="red-icono" href="https://www.linkedin.com/sharing/share-offsite/?url={{baseUrl}}/{{lang}}/articulo/{{articulo.id}}" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">{{> icono-red id="linkedin"}}</a>
+  </div>
+</section>
+
+{{!-- Más reportajes: los demás, para no terminar en un callejón. --}}
+{{#if otros.length}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{#if isEs}}Más reportajes{{else}}More features{{/if}}</p>
+  <div class="notas">
+    {{#each otros}}
+    <a class="nota" href="/{{../lang}}/articulo/{{this.id}}">
+      <div class="nota__foto" style="background-image:url('{{this.image}}')"></div>
+      <div class="nota__cuerpo">
+        <div class="nota__fuente">{{this.source}}</div>
+        <div class="nota__titulo">{{this.title}}</div>
+      </div>
+    </a>
+    {{/each}}
+  </div>
+</section>
+{{/if}}

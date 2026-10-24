@@ -74,11 +74,11 @@
     <article class="partido">
       <div class="partido__fecha"><div class="partido__dia">{{this.dia}}</div><div class="partido__mes">{{this.mes}}</div></div>
       <div>
-        <div class="partido__equipos">
+        <a class="partido__equipos" href="/{{../lang}}/evento/{{this.id}}">
           <img class="partido__escudo" src="{{this.team1Icon}}" alt="">{{this.team1}}
           <span class="partido__vs">vs</span>
           <img class="partido__escudo" src="{{this.team2Icon}}" alt="">{{this.team2}}
-        </div>
+        </a>
         <div class="partido__meta">{{this.venue}} · {{this.time}}</div>
       </div>
       <div class="partido__torneo"><b>{{this.badge}}</b>{{this.torneo}}{{#if this.jornada}} · {{this.jornada}}{{/if}}</div>
