@@ -1,0 +1,17 @@
+/* Onda al tocar (assets/js/toque.js). La comparten el inicio y las
+   secciones, que cargan hojas base distintas; por eso va aparte.
+
+   La onda toma el color de la letra del elemento: clara sobre los botones
+   oscuros, oscura sobre los llenos de color. Así funciona con cualquier
+   acento sin una regla por sección. */
+.toque {
+  position: absolute; inset: 0; z-index: 1;
+  overflow: hidden; pointer-events: none;
+}
+.toque__onda {
+  position: absolute; border-radius: 50%;
+  background: currentColor; opacity: .22;
+  transform: scale(0);
+  transition: transform .45s cubic-bezier(.2, .8, .2, 1), opacity .35s ease;
+}
+.toque__onda.is-crece { transform: scale(1); }
