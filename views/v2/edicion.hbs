@@ -87,7 +87,9 @@
       <article class="publicacion">
         <div class="publicacion__club"><span class="publicacion__color" style="--club:{{this.color}}"></span>{{this.club}} · {{../edition.year}}</div>
         <div class="publicacion__embed">
-          <iframe src="https://www.instagram.com/p/{{this.post}}/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen title="{{this.club}}"></iframe>
+          <iframe src="https://www.instagram.com/p/{{this.post}}/embed" loading="lazy" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen title="{{this.club}}" tabindex="-1"></iframe>
+          <a class="publicacion__escudo" href="https://www.instagram.com/p/{{this.post}}/" target="_blank" rel="noopener"
+             aria-label="{{#if ../isEs}}Ver la publicación de{{else}}See the post by{{/if}} {{this.club}} {{#if ../isEs}}en{{else}}on{{/if}} Instagram"></a>
         </div>
       </article>
       {{else}}

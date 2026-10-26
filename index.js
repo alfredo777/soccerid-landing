@@ -670,6 +670,9 @@ app.get('/:lang/evento/:id', (req, res, next) => {
       tituloPagina: ogTitle,
       descripcionPagina: ogDesc,
       rutaCanonica: `/${lang}/evento/${eventId}`,
+      // Los ids de partido son los mismos en los dos idiomas: el cambio de
+      // idioma del menú lleva a este mismo partido, no al calendario.
+      currentPath: `/evento/${eventId}`,
       ogTitle: ogTitle,
       ogDescription: ogDesc,
       ogImage: ogImage,

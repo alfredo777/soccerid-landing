@@ -106,6 +106,15 @@
 
       lista.querySelectorAll('.fila-ep').forEach(function (f) { f.classList.remove('is-activa'); });
       fila.classList.add('is-activa');
+
+      // En una columna el video queda arriba de la lista y el episodio
+      // arrancaba fuera de la vista. Si no se ve entero, se sube hasta él;
+      // el margen deja libre la píldora del menú.
+      var r = caja.getBoundingClientRect();
+      if (r.top < 80 || r.bottom > window.innerHeight) {
+        var suave = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        window.scrollTo({ top: window.scrollY + r.top - 88, behavior: suave ? 'smooth' : 'auto' });
+      }
     });
   })();
 </script>

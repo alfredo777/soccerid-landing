@@ -127,10 +127,15 @@ img { display: block; max-width: 100%; }
   visibility: hidden; opacity: 0; transition: opacity .2s, visibility .2s;
   overflow-y: auto;
 }
-.menu:target { visibility: visible; opacity: 1; }
+.menu:target, .menu.is-abierta { visibility: visible; opacity: 1; }
+/* Con el menú abierto, el dedo no mueve la página de abajo. */
+html.con-menu, html.con-menu body { overflow: hidden; }
 .menu__cab { display: flex; align-items: center; justify-content: space-between; max-width: var(--ancho); width: 100%; margin: 0 auto; }
 .menu__cab img { height: 26px; width: auto; }
-.menu__x { font-weight: 700; font-size: 14px; border: 1.5px solid rgba(255,255,255,.55); border-radius: 999px; padding: 9px 18px; }
+/* El idioma va junto a Cerrar, empujando desde la derecha. */
+.menu__idioma { margin-left: auto; margin-right: 8px; display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; font-size: 14px; font-weight: 800; letter-spacing: .08em; color: var(--tinta-2); border-radius: 999px; }
+.menu__idioma:active { color: var(--tinta); background: rgba(255,255,255,.12); }
+.menu__x { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; font-size: 14px; border: 1.5px solid rgba(255,255,255,.55); border-radius: 999px; padding: 0 18px; }
 .menu__lista { list-style: none; max-width: var(--ancho); width: 100%; margin: 48px auto 0; }
 .menu__item {
   display: flex; align-items: baseline; gap: 22px;
@@ -498,7 +503,44 @@ a.pilar:hover { border-color: var(--tinta); }
 }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
+  html { scroll-behavior: auto; }
 }
+
+/* ─── Toque ───────────────────────────────────────────────────────── */
+/* En un teléfono no hay hover: si al presionar no cambia nada, el toque se
+   siente muerto hasta que la página navega. Cada cosa tocable responde al
+   bajar el dedo. `manipulation` quita la espera del doble toque para zoom,
+   y el resaltado gris del navegador se apaga porque `:active` lo sustituye
+   (quitar uno sin poner el otro deja el toque sin respuesta). */
+a, button, [role="button"] { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.boton, .nav__menu, .menu__x, .arriba, .red-icono, .visor__x {
+  transition: background .15s, color .15s, border-color .15s, filter .15s, transform .12s;
+}
+.boton:active, .nav__menu:active, .menu__x:active, .red-icono:active, .visor__x:active { transform: scale(.96); }
+.boton:active { background: rgba(255,255,255,.14); }
+.boton--lleno:active { background: var(--acento-chico); filter: brightness(.85); }
+.arriba:active { transform: scale(.92); background: var(--acento-chico); color: var(--negro); }
+.nav__link:active { background: rgba(255,255,255,.12); color: var(--tinta); }
+.menu__item:active .menu__nombre { color: var(--acento); }
+.menu__item:active { border-bottom-color: var(--acento); }
+a.pilar:active, .prensa__nota:active, .via:active, .entre__ir:active, .entre__todas:active,
+.nota:active, .edicion:active, a.aliado:active {
+  border-color: var(--tinta); background-color: rgba(255,255,255,.07); transform: scale(.985);
+}
+a.hito:active { background: rgba(255,255,255,.05); }
+a.hito:active .hito__flecha { color: var(--acento); }
+.fila-ep:active { background: rgba(255,255,255,.1); }
+[data-ampliar]:active { transform: scale(.97); opacity: .85; }
+.bastidores:active .bastidores__velo { background: rgba(18,20,24,.3); }
+.pie__legales a:active, .cabecera__miga a:active { color: var(--acento-chico); }
+a.pilar, .prensa__nota, .via, .entre__ir, .entre__todas, .nota, .edicion, a.aliado {
+  transition: border-color .15s, background-color .15s, transform .12s;
+}
+
+/* Áreas de toque de 44 px sin agrandar lo que se ve: los avisos legales del
+   pie son texto de 13 px y medían 20 de alto. */
+.pie__legales a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 6px; }
+.pie__legales { gap: 0 12px; }
 
 /* ─── Visor de fotos (assets/js/v2-lightbox.js) ───────────────────── */
 /* Las fotos que se amplían son botones: se ven igual, pero se pueden tocar
@@ -515,6 +557,9 @@ a.pilar:hover { border-color: var(--tinta); }
 .visor__pista {
   flex: 1; min-height: 0; display: flex; overflow-x: auto; overflow-y: hidden;
   scroll-snap-type: x mandatory; overscroll-behavior: contain; scrollbar-width: none; outline: none;
+  /* El horizontal es del carrete; el vertical lo toma el script para
+     cerrar deslizando hacia abajo, sin que el navegador mueva la página. */
+  touch-action: pan-x pinch-zoom;
 }
 .visor__pista::-webkit-scrollbar { display: none; }
 .visor__foto { flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always; display: flex; align-items: center; justify-content: center; padding: 0 var(--gutter) 24px; margin: 0; }

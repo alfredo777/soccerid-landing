@@ -67,6 +67,11 @@
   <div class="menu" id="menu" role="dialog" aria-label="{{#if isEs}}Menú{{else}}Menu{{/if}}">
     <div class="menu__cab">
       <img src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" width="132" height="30">
+      {{!-- La misma página en el otro idioma (`currentPath`). En un
+            reportaje lleva a Media: los reportajes no son los mismos en
+            los dos idiomas. --}}
+      <a class="menu__idioma" href="{{#if isEs}}{{langUrl "en"}}{{else}}{{langUrl "es"}}{{/if}}" hreflang="{{#if isEs}}en{{else}}es{{/if}}"
+         aria-label="{{#if isEs}}Ver en inglés{{else}}View in Spanish{{/if}}">{{#if isEs}}EN{{else}}ES{{/if}}</a>
       <a class="menu__x" href="#" aria-label="{{#if isEs}}Cerrar el menú{{else}}Close menu{{/if}}">{{#if isEs}}Cerrar{{else}}Close{{/if}}</a>
     </div>
     <ol class="menu__lista">
@@ -112,6 +117,56 @@
   </a>
 
   <script>
+    // ── Menú completo ──────────────────────────────────────────────────
+    // Sin JavaScript abre y cierra por el ancla (#menu y #). Con él, se
+    // conmuta una clase: cerrar con `href="#"` subía la página al principio
+    // y cada apertura dejaba una entrada en el historial. Aquí se empuja
+    // UNA entrada al abrir, para que el «atrás» del teléfono lo cierre.
+    (function () {
+      var menu = document.getElementById('menu');
+      var abrir = document.querySelector('.nav__menu');
+      var cerrarBtn = menu && menu.querySelector('.menu__x');
+      if (!menu || !abrir || !cerrarBtn) return;
+
+      function pintar(abierto) {
+        menu.classList.toggle('is-abierta', abierto);
+        document.documentElement.classList.toggle('con-menu', abierto);
+      }
+
+      abrir.addEventListener('click', function (e) {
+        e.preventDefault();
+        history.pushState({ menu: 1 }, '');
+        pintar(true);
+      });
+      cerrarBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (history.state && history.state.menu) history.back();
+        else pintar(false);
+      });
+      window.addEventListener('popstate', function () {
+        if (menu.classList.contains('is-abierta')) pintar(false);
+      });
+      // Al elegir una sección, la página nueva ocupa el lugar de la entrada
+      // del menú: si no, «atrás» caería en esta misma página con el menú
+      // cerrado y habría que pulsarlo dos veces.
+      menu.addEventListener('click', function (e) {
+        var a = e.target.closest('a[href]');
+        if (!a || a === cerrarBtn || a.target === '_blank') return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        if (!(history.state && history.state.menu)) return;
+        e.preventDefault();
+        location.replace(a.href);
+      });
+      // Volver desde otra página con la caché de atrás restaura el menú
+      // abierto; se cierra para que se vea la página donde se estaba.
+      window.addEventListener('pageshow', function (e) {
+        if (e.persisted) pintar(false);
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && menu.classList.contains('is-abierta')) cerrarBtn.click();
+      });
+    })();
+
     (function () {
       var boton = document.getElementById('volverArriba');
       if (!boton) return;
@@ -160,11 +215,11 @@
     // El indicador lo crea el script, así que las vistas no cargan con
     // marcado que sólo sirve si hay JavaScript.
     (function () {
+      // El riel se crea siempre y se esconde mientras no haya desborde: al
+      // girar el teléfono o achicar la ventana, un carrusel que cabía pasa a
+      // desplazarse y tiene que aparecer su indicador.
       var pistas = document.querySelectorAll('.mosaico, .opiniones, .publicaciones');
       Array.prototype.forEach.call(pistas, function (pista) {
-        var sobra = pista.scrollWidth - pista.clientWidth;
-        if (sobra < 20) return;          // no se desplaza: no hay nada que indicar
-
         var pulgar = document.createElement('div');
         pulgar.className = 'deslizador__pulgar';
         var riel = document.createElement('div');
@@ -175,6 +230,8 @@
 
         function pintar() {
           var total = pista.scrollWidth;
+          riel.hidden = total - pista.clientWidth < 20;   // no se desplaza: nada que indicar
+          if (riel.hidden) return;
           // El pulgar ocupa la parte visible y se coloca donde empieza.
           pulgar.style.width = (pista.clientWidth / total * 100) + '%';
           pulgar.style.left = (pista.scrollLeft / total * 100) + '%';

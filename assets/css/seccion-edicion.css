@@ -6,8 +6,9 @@
 
 /* ─── Ficha de edición ────────────────────────────────────────────── */
 /* Publicaciones de los clubes: el mismo carrusel de las opiniones, con el
-   embed de Instagram dentro. Mientras se arrastra, el iframe no recibe los
-   toques: si no, el dedo se queda atrapado dentro del embed. */
+   embed de Instagram dentro. Un escudo transparente tapa el embed: el
+   iframe de otro origen se queda con el gesto y el carrusel no se podía
+   arrastrar. Con el escudo, arrastrar desliza y tocar abre la publicación. */
 .publicaciones {
   display: flex; gap: 14px;
   padding-inline: var(--gutter); padding-block: 2px 6px;
@@ -30,8 +31,10 @@
 }
 /* El punto lleva el color del club; se lo pasa la vista por variable. */
 .publicacion__color { width: 9px; height: 9px; border-radius: 50%; flex: none; background: var(--club, var(--acento)); }
-.publicacion__embed { height: 470px; background: #000; }
+.publicacion__embed { position: relative; height: 470px; background: #000; }
 .publicacion__embed iframe { width: 100%; height: 100%; border: 0; display: block; }
+.publicacion__escudo { position: absolute; inset: 0; z-index: 1; }
+.publicacion__escudo:focus-visible { outline: 2px solid var(--acento-chico); outline-offset: -4px; }
 
 /* Detrás de cámaras: un póster que lleva al video, que está en Facebook y
    no se puede embeber. */

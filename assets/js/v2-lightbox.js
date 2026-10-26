@@ -70,6 +70,9 @@
     origen = foto;
     caja.hidden = false;
     document.documentElement.classList.add('con-visor');
+    // Una entrada en el historial: el «atrás» del teléfono cierra el visor
+    // en vez de sacar a la persona de la página.
+    history.pushState({ visor: 1 }, '');
     // Primero se pinta la caja, luego se mide y se salta a la foto tocada.
     requestAnimationFrame(function () {
       ir(lista.indexOf(foto), false);
@@ -78,12 +81,58 @@
     });
   }
 
-  function cerrar() {
+  // Lo que de verdad cierra. Lo llama `popstate`, así que botón, fondo,
+  // Esc y gesto pasan todos por el historial y no queda una entrada huérfana.
+  function ocultar() {
+    if (caja.hidden) return;
     caja.hidden = true;
+    caja.style.transform = caja.style.opacity = caja.style.transition = '';
     pista.innerHTML = '';
     document.documentElement.classList.remove('con-visor');
     if (origen) origen.focus({ preventScroll: true });
   }
+
+  function cerrar() {
+    if (history.state && history.state.visor) history.back();
+    else ocultar();
+  }
+
+  window.addEventListener('popstate', ocultar);
+
+  // Deslizar hacia abajo cierra, como en la galería del teléfono. La caja
+  // sigue al dedo y se desvanece; pasado el umbral se va, si no, regresa.
+  // Sólo cuenta si el gesto empieza vertical: el horizontal es del carrete.
+  var y0 = 0, x0 = 0, dy = 0, modo = null;
+  pista.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1) { modo = 'no'; return; }
+    y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; dy = 0; modo = null;
+    caja.style.transition = 'none';
+  }, { passive: true });
+  pista.addEventListener('touchmove', function (e) {
+    if (modo === 'no' || e.touches.length !== 1) return;
+    var my = e.touches[0].clientY - y0, mx = e.touches[0].clientX - x0;
+    if (modo === null) {
+      if (Math.abs(my) < 8 && Math.abs(mx) < 8) return;
+      modo = my > 0 && Math.abs(my) > Math.abs(mx) ? 'bajar' : 'no';
+    }
+    if (modo !== 'bajar') return;
+    dy = Math.max(0, my);
+    caja.style.transform = 'translateY(' + dy + 'px)';
+    caja.style.opacity = String(Math.max(0.3, 1 - dy / 400));
+  }, { passive: true });
+  pista.addEventListener('touchend', function () {
+    if (modo !== 'bajar') return;
+    modo = null;
+    caja.style.transition = 'transform .2s ease, opacity .2s ease';
+    if (dy > 90) {
+      caja.style.transform = 'translateY(100%)';
+      caja.style.opacity = '0';
+      setTimeout(cerrar, 180);
+    } else {
+      caja.style.transform = '';
+      caja.style.opacity = '';
+    }
+  });
 
   Array.prototype.forEach.call(fotos, function (f) {
     f.addEventListener('click', function () { abrir(f); });
