@@ -498,6 +498,12 @@ a.pilar:hover { border-color: var(--tinta); }
 
 /* ─── Celular ─────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
+  /* Botones compactos: con 15px, interlineado de 1.55 y 13px de relleno
+     medían 51 de alto y tres apilados se comían media pantalla. 44 es el
+     mínimo que se toca bien; el alto lo fija min-height, no el relleno. */
+  .boton { font-size: 14px; line-height: 1.2; min-height: 44px; padding: 0 18px; gap: 8px; }
+  .boton.boton--icono svg { width: 16px; height: 16px; }   /* le gana a seccion-podcast.css, que carga después */
+  .portada__acciones { gap: 8px; }
   .nav__marcas { display: none; }
   .nav { top: 12px; }
   .nav__pildora { width: 100%; justify-content: space-between; padding-left: 18px; }
