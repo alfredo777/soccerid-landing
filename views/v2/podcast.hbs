@@ -25,11 +25,14 @@
         {{episodios.length}} {{#if isEs}}episodios{{else}}episodes{{/if}}
       </span>
     </div>
-    <div class="portada__acciones">
+    {{!-- En el teléfono van en una fila: «YouTube», «Spotify» y el
+          Instagram en círculo. La frase completa y el usuario se esconden
+          con CSS (`.escucha`); el aria-label conserva el nombre entero. --}}
+    <div class="portada__acciones escucha">
       {{#each plataformas}}
-      <a class="boton {{#if @first}}boton--lleno{{/if}}" href="{{this.url}}" target="_blank" rel="noopener">{{#if ../isEs}}Escuchar en{{else}}Listen on{{/if}} {{this.nombre}} <span class="flecha">↗</span></a>
+      <a class="boton boton--icono {{#if @first}}boton--lleno{{/if}}" href="{{this.url}}" target="_blank" rel="noopener">{{> icono-red id=this.id}}<span class="escucha__largo">{{#if ../isEs}}Escuchar en{{else}}Listen on{{/if}} </span>{{this.nombre}} <span class="flecha escucha__largo">↗</span></a>
       {{/each}}
-      {{#if instagram}}<a class="boton boton--icono" href="{{instagram}}" target="_blank" rel="noopener">{{> icono-red id="instagram"}} @soccerid_podcast</a>{{/if}}
+      {{#if instagram}}<a class="boton boton--icono escucha__red" href="{{instagram}}" target="_blank" rel="noopener" aria-label="Instagram @soccerid_podcast">{{> icono-red id="instagram"}}<span class="escucha__largo">@soccerid_podcast</span></a>{{/if}}
     </div>
   </div>
 </section>
@@ -176,11 +179,11 @@
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">{{#if isEs}}Escúchalo donde ya escuchas{{else}}Listen where you already listen{{/if}}</h2>
     <p class="cierre__d">{{#if isEs}}Suscríbete y te llega cada episodio nuevo.{{else}}Subscribe and every new episode reaches you.{{/if}}</p>
-    <div class="portada__acciones" style="justify-content:center">
+    <div class="portada__acciones escucha" style="justify-content:center">
       {{#each plataformas}}
-      <a class="boton {{#if @first}}boton--lleno{{/if}}" href="{{this.url}}" target="_blank" rel="noopener">{{this.nombre}} <span class="flecha">↗</span></a>
+      <a class="boton boton--icono {{#if @first}}boton--lleno{{/if}}" href="{{this.url}}" target="_blank" rel="noopener">{{> icono-red id=this.id}}{{this.nombre}} <span class="flecha escucha__largo">↗</span></a>
       {{/each}}
-      {{#if instagram}}<a class="boton boton--icono" href="{{instagram}}" target="_blank" rel="noopener">{{> icono-red id="instagram"}} Instagram</a>{{/if}}
+      {{#if instagram}}<a class="boton boton--icono escucha__red" href="{{instagram}}" target="_blank" rel="noopener" aria-label="Instagram">{{> icono-red id="instagram"}}<span class="escucha__largo">Instagram</span></a>{{/if}}
     </div>
   </div>
 </section>

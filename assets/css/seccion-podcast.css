@@ -92,6 +92,21 @@
 .aliado--texto { flex-direction: column; gap: 8px; }
 .aliado__nombre { font-size: 17px; font-weight: 800; letter-spacing: -.01em; color: var(--tinta); }
 
-/* Botón con ícono de red (Instagram del podcast). */
+/* Botón con ícono de red (YouTube, Spotify, Instagram del podcast). */
 .boton--icono { display: inline-flex; align-items: center; gap: 8px; }
-.boton--icono svg { width: 18px; height: 18px; }
+.boton--icono svg { width: 18px; height: 18px; flex: none; }
+
+/* ─── Dónde escuchar, en el teléfono ──────────────────────────────── */
+/* Tres píldoras apiladas de ancho distinto se leían como una lista, no
+   como acciones. En una fila: las dos plataformas a partes iguales y el
+   Instagram como círculo de 44. Sin «Escuchar en» ni flecha: el ícono y
+   el nombre ya lo dicen. */
+@media (max-width: 900px) {
+  .escucha { display: grid; grid-template-columns: 1fr 1fr 44px; gap: 8px; width: 100%; max-width: 420px; }
+  .cierre .escucha { margin-inline: auto; }
+  .escucha .boton { justify-content: center; padding: 0 12px; }
+  .escucha .escucha__largo { display: none; }
+  .escucha .escucha__red { width: 44px; padding: 0; }
+  /* Si sólo hay una plataforma, que no quede un hueco en medio. */
+  .escucha:has(> .boton:nth-child(2).escucha__red) { grid-template-columns: 1fr 44px; }
+}

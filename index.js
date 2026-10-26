@@ -1876,8 +1876,8 @@ app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
   // añadir la URL de Spotify ahí basta para que aparezca el botón, sin tocar
   // código. Un enlace vacío no se pinta, para no mandar a nadie a la nada.
   const plataformas = [
-    { nombre: 'YouTube', url: pod.canal },
-    { nombre: 'Spotify', url: pod.spotify }
+    { id: 'youtube', nombre: 'YouTube', url: pod.canal },
+    { id: 'spotify', nombre: 'Spotify', url: pod.spotify }
   ].filter(p => p.url);
   // Para «Sé patrocinador»: las cifras salen de lo que el canal ya publicó
   // (vistas y duración que guarda el script), no de un número escrito a mano.
