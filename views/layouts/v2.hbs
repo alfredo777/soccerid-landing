@@ -66,7 +66,9 @@
   {{!-- Menú completo: las seis secciones como lista y las redes. --}}
   <div class="menu" id="menu" role="dialog" aria-label="{{#if isEs}}Menú{{else}}Menu{{/if}}">
     <div class="menu__cab">
-      <img src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" width="132" height="30">
+      <a class="menu__logo" href="/{{lang}}" aria-label="{{#if isEs}}SOCCER iD, inicio{{else}}SOCCER iD, home{{/if}}">
+        <img src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" width="132" height="30">
+      </a>
       {{!-- La misma página en el otro idioma (`currentPath`). En un
             reportaje lleva a Media: los reportajes no son los mismos en
             los dos idiomas. --}}
@@ -75,6 +77,9 @@
       <a class="menu__x" href="#" aria-label="{{#if isEs}}Cerrar el menú{{else}}Close menu{{/if}}">{{#if isEs}}Cerrar{{else}}Close{{/if}}</a>
     </div>
     <ol class="menu__lista">
+      {{!-- El inicio va primero: en el teléfono la píldora queda tapada por
+            el menú y el logo solo no se lee como botón. --}}
+      <li><a href="/{{lang}}" class="menu__item"><span class="menu__num" aria-hidden="true">←</span><span class="menu__nombre">{{#if isEs}}Inicio{{else}}Home{{/if}}</span></a></li>
       {{#each secciones}}
       <li><a href="{{this.url}}" class="menu__item"><span class="menu__num">{{this.num}}</span><span class="menu__nombre">{{this.nombre}}</span><span class="menu__flecha" aria-hidden="true">↗</span></a></li>
       {{/each}}

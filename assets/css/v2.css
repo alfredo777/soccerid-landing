@@ -132,6 +132,8 @@ img { display: block; max-width: 100%; }
 html.con-menu, html.con-menu body { overflow: hidden; }
 .menu__cab { display: flex; align-items: center; justify-content: space-between; max-width: var(--ancho); width: 100%; margin: 0 auto; }
 .menu__cab img { height: 26px; width: auto; }
+.menu__logo { display: inline-flex; align-items: center; min-height: 44px; }
+.menu__logo:active { opacity: .7; }
 /* El idioma va junto a Cerrar, empujando desde la derecha. */
 .menu__idioma { margin-left: auto; margin-right: 8px; display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; font-size: 14px; font-weight: 800; letter-spacing: .08em; color: var(--tinta-2); border-radius: 999px; }
 .menu__idioma:active { color: var(--tinta); background: rgba(255,255,255,.12); }
