@@ -24,6 +24,7 @@ const linkPreview = require('../lib/linkPreview');
 const turnstile = require('../lib/turnstile');
 const google = require('../lib/googleAuth');
 const propuestas = require('../lib/propuestas');
+const sitioTour = require('../lib/sitioTour');
 const demoAccount = require('../lib/demoAccount');
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
@@ -3032,6 +3033,59 @@ function evDate(v) {
   const d = String(v == null ? '' : v).trim();
   return /^\d{4}-\d{2}-\d{2}$/.test(d) ? d : null;
 }
+
+// ── Sitio web › Tour ──
+// La página pública /:lang/tour, editable entera: textos por idioma, fotos y
+// logos comunes, y partido/sede/asistencia de las ediciones jugadas. La
+// lógica y los valores por defecto viven en lib/sitioTour.js. Guarda por
+// fetch (JSON): el formulario es largo y recargar perdería el lugar.
+router.get('/admin/sitio/tour', auth.requireAdmin, async (req, res, next) => {
+  try {
+    const lang = sitioTour.IDIOMAS.includes(req.query.lang) ? req.query.lang : 'es';
+    const { t, c } = await sitioTour.leer(lang);
+    res.render('panel/admin-sitio-tour', {
+      layout: 'panel',
+      title: 'Tour · Sitio web · Administración · SOCCER iD',
+      pageHeading: 'Sitio web · Tour',
+      pageSub: 'Todo lo que se ve en la página pública del Tour',
+      active: 'sitio-tour',
+      panel: buildAdminPanel(req.panelUser),
+      lang,
+      esEn: lang === 'en',
+      // Para el script del editor: va como JSON en un <script type="application/json">.
+      datos: JSON.stringify({ lang, t, c, ediciones: await sitioTour.ediciones(lang) }).replace(/</g, '\\u003c')
+    });
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/sitio/tour', auth.requireAdmin, async (req, res) => {
+  try {
+    const { lang, textos, comun } = req.body || {};
+    await sitioTour.guardar(lang, textos, comun);
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(400).json({ ok: false, error: e.message });
+  }
+});
+
+router.post('/admin/sitio/tour/edicion/:id', auth.requireAdmin, async (req, res) => {
+  try {
+    await sitioTour.guardarEdicion(req.params.id, (req.body || {}).lang, req.body || {});
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(400).json({ ok: false, error: e.message });
+  }
+});
+
+router.post('/admin/sitio/tour/restablecer', auth.requireAdmin, async (req, res) => {
+  try {
+    const lang = sitioTour.IDIOMAS.includes(req.body.lang) ? req.body.lang : 'es';
+    await sitioTour.restablecer(lang, req.body.comun === '1');
+    res.redirect(`/panel/admin/sitio/tour?lang=${lang}`);
+  } catch (e) {
+    res.redirect(`/panel/admin/sitio/tour?lang=es`);
+  }
+});
 
 // Todas las rutas /admin/evento/:id/... cuelgan de una edición. Este middleware
 // verifica UNA sola vez que la edición exista; si no, redirige en vez de crear

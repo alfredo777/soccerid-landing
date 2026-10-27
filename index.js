@@ -17,6 +17,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const knex = require('./db/knex');
 const cupEditions = require('./db/editions');
+const sitioTour = require('./lib/sitioTour');
 const project2027 = require('./lib/project2027');
 const propuestas = require('./lib/propuestas');
 
@@ -1684,24 +1685,6 @@ const FOTOS_SECCION = {
 };
 
 /**
- * La ficha de la SOCCER iD CUP, de `gallery_pages.json`. Es la que ya usaba
- * /socceridcup; la sección Tour la reaprovecha para no mantener dos copias
- * de las mismas cifras. Devuelve null si el archivo no está.
- */
-function fichaCup(lang) {
-  try {
-    const ruta = path.join(__dirname, 'contents', 'gallery_pages.json');
-    if (!fs.existsSync(ruta)) return null;
-    const todas = JSON.parse(fs.readFileSync(ruta, 'utf8'));
-    const lista = todas[lang] || todas[DEFAULT_LANG] || [];
-    return lista.find(g => g.id === 'soccer-id-cup-2027') || null;
-  } catch (e) {
-    console.error('No pude leer la ficha de la copa:', e.message);
-    return null;
-  }
-}
-
-/**
  * Publicaciones de los clubes y video de bastidores, por edición.
  *
  * Estaban escritos a mano dentro de views/socceridcup-edition.hbs, en
@@ -1805,43 +1788,16 @@ function rutaV2(slug, armar) {
   };
 }
 
+// Todo el texto, las fotos, los partidos del Tour '27 y los logos salen de
+// lib/sitioTour.js, que el admin edita en /panel/admin/sitio/tour. Los
+// nombres de los equipos NO vienen del registro de propuestas: no se publican
+// hasta el anuncio autorizado y en el admin se escriben a mano.
+// Las ediciones jugadas salen de la base, igual que sus fichas.
 app.get('/:lang/tour', rutaV2('tour', async (lang) => {
-  // Lo que viene: el Tour '27 y sus tres partidos, leídos del registro de
-  // propuestas. Lo que ya pasó: las ediciones, de la base. Nunca en la misma lista.
-  // El resto de la página (portada, cifras, alcance, momentos, prensa) sale
-  // de la misma ficha que alimenta /socceridcup, para que no haya dos
-  // verdades sobre la copa.
-  const tour = propuestas.porTipo('tour');
-  const partidos = propuestas.listar()
-    .filter(v => v.tipo === 'partido' && !v.oculta && v.id !== '2027')
-    .sort((a, b) => (a.orden || 0) - (b.orden || 0))
-    .map((v, i) => ({
-      num: i + 1,
-      // NUNCA la etiqueta de la propuesta: lleva los equipos («Cruz Azul vs.
-      // Pumas») y no se publican hasta el anuncio autorizado.
-      nombre: lang === 'en' ? 'Teams to be announced' : 'Equipos por anunciar',
-      ventana: v.ventana || (lang === 'en' ? 'Confirmed' : 'Confirmado'),
-      confirmado: !propuestas.enNegociacion(v)
-    }));
-  // La ficha de la copa: la misma de /socceridcup. Si falta el archivo la
-  // página se pinta igual, sólo sin portada ni cifras.
-  const galeria = fichaCup(lang);
-  const historia = await cupEditions.timeline(lang);
-  return {
-    galeria,
-    // Los años que todavía no son una edición jugada (la pausa del Mundial
-    // y lo que sigue). Las jugadas ya salen como fichas, con foto.
-    // 2027 está en la base sin texto: en vez de una fila muda, se dice lo
-    // que su estado ya significa.
-    pendientes: historia.filter(h => !h.link).map(h => Object.assign({}, h, {
-      match: h.match || (h.tone === 'pause'
-        ? (lang === 'en' ? 'On pause' : 'En pausa')
-        : (lang === 'en' ? 'Coming soon' : 'Próximamente')),
-      city: h.city || (lang === 'en' ? 'To be confirmed' : 'Por confirmar')
-    })),
-    tour: { nombre: tour ? tour.label : "SOCCER iD TOUR '27", url: `/${lang}/${tour ? tour.slug : 'socceridcup2027'}`, partidos },
-    ediciones: (await cupEditions.fichas(lang)).map(f => Object.assign({}, f, { url: `/${lang}/socceridcup/${f.year}` }))
-  };
+  const { t, c } = await sitioTour.leer(lang);
+  const ediciones = (await cupEditions.fichas(lang)).map(f => Object.assign({}, f, { url: `/${lang}/socceridcup/${f.year}` }));
+  const wa = `https://wa.me/${CONTACTO.whatsapp}?text=${encodeURIComponent(t.mensajeWhatsapp || '')}`;
+  return { t, c, ediciones, wa, tituloPagina: `${t.portada.titulo} · SOCCER iD`, descripcionPagina: t.portada.descripcion };
 }));
 
 app.get('/:lang/travel', rutaV2('travel', async (lang, data) => ({

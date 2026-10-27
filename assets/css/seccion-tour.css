@@ -33,11 +33,21 @@
   background: rgba(255,255,255,.06); border: 1px solid var(--vidrio-borde);
   border-radius: var(--radio-sm); padding: 16px 18px;
 }
-.tour27__num { font-size: 13px; font-weight: 800; width: 76px; opacity: .8; }
-.tour27__nombre { flex: 1; font-weight: 800; font-size: 17px; }
+/* El nombre en su renglón y fecha y estado debajo: el estado lo escribe el
+   admin y puede ser largo («Confirmado · Anuncio oficial en diciembre»); en
+   una sola fila apretaba el nombre a cuatro renglones. */
+.tour27__partido { flex-wrap: wrap; row-gap: 6px; }
+.tour27__nombre { flex-basis: 100%; font-weight: 800; font-size: 17px; }
+.tour27__ventana { margin-right: auto; }
 .tour27__ventana { font-size: 13px; opacity: .85; }
 .tour27__partido .pastilla { background: rgba(255,255,255,.1); color: var(--tinta-2); }
 .tour27__partido .pastilla--ok { background: var(--acento-chico); color: var(--negro); }
+
+/* Textos que el admin puede dejar vacíos: cada uno con su propio margen,
+   para que al faltar uno no quede un hueco. */
+.tour__texto { max-width: 760px; margin-bottom: 26px; }
+.tour__nota { font-size: 14px; color: var(--tinta-2); margin-top: 14px; }
+.tour__filas { margin-top: 26px; }
 
 .aclaracion {
   display: flex; gap: 14px; align-items: center;
@@ -59,10 +69,6 @@
 
 @media (max-width: 900px) {
   .tour27 { grid-template-columns: 1fr; padding: 26px; gap: 26px; }
-  /* El partido en dos renglones: rótulo arriba, nombre y estado abajo. En una
-     sola fila el nombre se partía en cuatro líneas. */
-  .tour27__partido { flex-wrap: wrap; row-gap: 4px; }
-  .tour27__num { width: 100%; }
   .tour27__nombre { font-size: 16px; }
   .ediciones { grid-template-columns: 1fr; }
 }

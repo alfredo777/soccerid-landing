@@ -1,0 +1,93 @@
+/* Editor de páginas del sitio público (Panel › Sitio web).
+   Lo arma assets/js/admin-sitio.js. Usa los tokens del panel (--pn-*). */
+
+.st-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+.st-back { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--pn-ink-2); }
+.st-back:hover { color: var(--pn-purple); }
+.st-top__der { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+/* Idioma que se edita: dos enlaces, el activo lleno. */
+.st-idioma { display: inline-flex; padding: 4px; border: 1px solid var(--pn-border); border-radius: 999px; background: #fff; }
+.st-idioma a { padding: 7px 14px; border-radius: 999px; font-size: 12.5px; font-weight: 800; color: var(--pn-ink-2); }
+.st-idioma a.is-activo { background: var(--pn-purple); color: #fff; }
+.st-ver { display: inline-flex; align-items: center; gap: 6px; padding: 9px 14px; border: 1px solid var(--pn-border); border-radius: 11px; background: #fff; font-size: 12.5px; font-weight: 700; color: var(--pn-purple); }
+.st-ver:hover { background: var(--pn-purple-soft); }
+
+.st-aviso { padding: 13px 18px; border-radius: 13px; background: #FFF7E6; color: #8A5A00; font-size: 13px; font-weight: 600; line-height: 1.5; margin-bottom: 18px; }
+
+.st-nav { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.st-nav a { padding: 8px 15px; border-radius: 999px; border: 1px solid var(--pn-border); background: #fff; font-size: 12.5px; font-weight: 700; color: var(--pn-ink-2); }
+.st-nav a:hover { background: var(--pn-purple-soft); color: var(--pn-purple); }
+.st-nav a.is-activa { background: var(--pn-purple); border-color: var(--pn-purple); color: #fff; }
+
+.st-sec { display: none; padding: 22px; margin-bottom: 18px; }
+.st-sec.is-activa { display: block; }
+.st-sec h3 { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+.st-h4 { font-size: 13px; font-weight: 800; margin: 26px 0 4px; padding-top: 18px; border-top: 1px solid var(--pn-border); }
+.st-sub { font-size: 12px; color: var(--pn-muted); font-weight: 600; margin-bottom: 16px; line-height: 1.5; }
+
+.st-f { margin-bottom: 15px; }
+.st-f > label { display: block; font-size: 12px; font-weight: 700; color: var(--pn-ink-2); margin-bottom: 6px; }
+.st-f input, .st-f textarea, .st-f select {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--pn-border); border-radius: 10px;
+  font-family: inherit; font-size: 14px; color: var(--pn-ink); background: #fff; box-sizing: border-box;
+}
+.st-f textarea { resize: vertical; line-height: 1.5; }
+.st-f input:focus, .st-f textarea:focus, .st-f select:focus { outline: none; border-color: var(--pn-purple); }
+.st-ayuda { font-size: 11.5px; color: var(--pn-muted); margin-top: 5px; line-height: 1.45; }
+
+/* Imagen: miniatura, ruta y botón de subir en una fila. */
+.st-img { display: flex; gap: 8px; align-items: center; }
+.st-img input { flex: 1; min-width: 0; }
+.st-img__vista { flex: none; width: 54px; height: 40px; border-radius: 8px; border: 1px solid var(--pn-border); background: #F2F2F7 center / cover no-repeat; }
+
+/* Listas: cada fila es una tarjeta con sus columnas y sus acciones. */
+.st-lista { display: flex; flex-direction: column; gap: 8px; }
+.st-fila { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1px solid var(--pn-border); border-radius: 12px; background: #FAFAFD; }
+.st-fila--simple { padding: 8px 10px; align-items: center; }
+.st-fila__celdas { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); gap: 8px; }
+.st-fila--simple .st-fila__celdas { display: block; }
+.st-celda small { display: block; font-size: 11px; font-weight: 700; color: var(--pn-muted); margin-bottom: 4px; }
+.st-celda--ancha { grid-column: 1 / -1; }
+.st-fila__acc { display: flex; gap: 4px; flex: none; }
+.st-mini { padding: 7px 10px; border: 1px solid var(--pn-border); border-radius: 9px; background: #fff; font: inherit; font-size: 12px; font-weight: 700; color: var(--pn-ink-2); cursor: pointer; white-space: nowrap; }
+.st-mini:hover:not([disabled]) { background: var(--pn-purple-soft); color: var(--pn-purple); }
+.st-mini[disabled] { opacity: .4; cursor: default; }
+.st-mini--quitar:hover:not([disabled]) { background: #FEF2F2; color: #B42318; border-color: #FCA5A5; }
+.st-mini--guardar { background: var(--pn-purple); border-color: var(--pn-purple); color: #fff; }
+.st-mini--guardar:hover:not([disabled]) { background: #0D0AA8; color: #fff; }
+.st-agregar { align-self: flex-start; padding: 8px 14px; border: 1.5px dashed var(--pn-border); border-radius: 10px; background: transparent; font: inherit; font-size: 12.5px; font-weight: 700; color: var(--pn-purple); cursor: pointer; }
+.st-agregar:hover { border-color: var(--pn-purple); background: var(--pn-purple-soft); }
+.st-vacio { font-size: 12.5px; color: var(--pn-muted); padding: 6px 2px; }
+
+/* Ediciones jugadas: año, campos y su propio botón de guardar. */
+.st-ediciones { display: flex; flex-direction: column; gap: 8px; }
+.st-edicion { display: flex; gap: 12px; align-items: flex-end; padding: 12px; border: 1px solid var(--pn-border); border-radius: 12px; }
+.st-edicion__anio { flex: none; font-size: 18px; font-weight: 900; color: var(--pn-purple); width: 52px; padding-bottom: 9px; }
+
+/* Barra de guardar pegada abajo: el formulario es largo. */
+.st-barra { position: sticky; bottom: 12px; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px 12px 18px; border-radius: 14px; background: #fff; border: 1px solid var(--pn-border); box-shadow: 0 10px 30px rgba(16, 16, 40, .12); }
+.st-barra__nota { font-size: 12px; color: var(--pn-muted); font-weight: 600; }
+.st-guardar { padding: 12px 20px; border: none; border-radius: 12px; background: var(--pn-ink-2); color: #fff; font: inherit; font-size: 13.5px; font-weight: 800; cursor: pointer; }
+.st-guardar.is-pendiente { background: var(--pn-purple); box-shadow: 0 8px 18px rgba(27, 23, 239, .25); }
+.st-guardar[disabled] { opacity: .6; }
+
+.st-restablecer { margin-top: 26px; font-size: 12px; color: var(--pn-muted); }
+.st-restablecer button { background: none; border: none; padding: 0; font: inherit; font-weight: 700; color: #B42318; cursor: pointer; text-decoration: underline; }
+
+.st-toast { position: fixed; left: 50%; bottom: 84px; transform: translate(-50%, 20px); z-index: 300; padding: 12px 18px; border-radius: 12px; background: #1A1A2E; color: #fff; font-size: 13px; font-weight: 700; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; }
+.st-toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+.st-toast.is-error { background: #B42318; }
+
+@media (max-width: 640px) {
+  .st-fila { flex-direction: column; }
+  .st-fila--simple { flex-direction: row; }
+  .st-fila__celdas { grid-template-columns: 1fr; }
+  .st-edicion { flex-direction: column; align-items: stretch; }
+  /* En el teléfono la barra es sólo el botón: la nota ya la dice el selector
+     de idioma de arriba, y el aviso sube para no taparlo. */
+  .st-barra { padding: 8px; }
+  .st-barra__nota { display: none; }
+  .st-guardar { flex: 1; }
+  .st-toast { bottom: 90px; }
+}

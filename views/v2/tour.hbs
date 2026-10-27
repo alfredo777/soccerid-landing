@@ -1,98 +1,108 @@
-{{!-- Tour · SOCCER iD CUP.
-      Trae la anatomía de la página de iD CUP (portada, cifras, alcance,
-      ediciones, qué hacemos, momentos, patrocinadores, prensa y cierre) al
-      sistema plano de v2.css. Lo que la página de iD CUP no tenía y aquí sí:
-      el bloque del Tour '27, que es lo que viene y va con candado.
+{{!-- Tour · SOCCER iD TOUR.
+      Todo lo de esta página se edita en el admin (Panel › Sitio web › Tour):
+      `t` son los textos del idioma, `c` las fotos y logos (iguales en los dos
+      idiomas). Ver lib/sitioTour.js. Las ediciones jugadas salen de la base
+      (`ediciones`), las mismas filas que pintan su ficha.
 
-      Dos listas que NUNCA se mezclan: el Tour '27 (lo que viene) y las
-      ediciones (lo que ya se jugó). --}}
+      Dos listas que NUNCA se mezclan: los próximos eventos (lo que viene) y
+      las ediciones (lo que ya se jugó). Los botones de colaborar van al
+      contacto global con el mensaje que fija el admin (`wa`). --}}
 
 <section class="portada">
-  <img class="portada__foto" src="{{galeria.banner}}" alt="{{galeria.title}}">
+  <img class="portada__foto" src="{{c.fotoPortada}}" alt="">
   <div class="portada__velo"></div>
   <div class="portada__cuerpo">
-    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Tour</p>
-    <div class="cabecera__marca">{{galeria.badge}}</div>
-    <h1 class="portada__titulo">Tour</h1>
-    <p class="portada__bajada">{{galeria.subtitle}}</p>
+    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / {{t.portada.titulo}}</p>
+    <div class="cabecera__marca">{{t.portada.marca}}</div>
+    <h1 class="portada__titulo">{{t.portada.titulo}}</h1>
+    <p class="portada__bajada">{{t.portada.descripcion}}</p>
+    {{#if t.portada.etiquetas.length}}
     <div class="portada__pastillas">
+      {{#each t.portada.etiquetas}}
       <span class="pastilla">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
-        {{galeria.date}}
+        {{#if @first}}<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>{{/if}}
+        {{#eq @index 1}}<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>{{/eq}}
+        {{this}}
       </span>
-      <span class="pastilla">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-        {{galeria.venue}}
-      </span>
+      {{/each}}
     </div>
+    {{/if}}
+    {{#if t.portada.boton}}
     <div class="portada__acciones">
-      <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{galeria.ctaMessage}}" target="_blank" rel="noopener">{{galeria.ctaText}} <span class="flecha">↗</span></a>
+      <a class="boton boton--lleno" href="{{wa}}" target="_blank" rel="noopener">{{t.portada.boton}} <span class="flecha">↗</span></a>
     </div>
+    {{/if}}
   </div>
 </section>
 
-{{!-- El evento, en números. --}}
+{{!-- Nuestros eventos, en números. --}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}El evento{{else}}The event{{/if}}</p>
-  <p class="bajada" style="max-width:760px;margin-bottom:26px">{{galeria.description}}</p>
+  <p class="rotulo">{{t.eventos.titulo}}</p>
+  {{#if t.eventos.texto}}<p class="bajada tour__texto">{{t.eventos.texto}}</p>{{/if}}
+  {{#if t.eventos.cifras.length}}
   <div class="cifras">
-    {{#each galeria.stats}}
+    {{#each t.eventos.cifras}}
     <div class="cifra">
-      <div class="cifra__valor">{{this.value}}</div>
-      <div class="cifra__etiqueta">{{this.label}}</div>
-      <div class="cifra__sub">{{this.sub}}</div>
+      <div class="cifra__valor">{{this.valor}}</div>
+      <div class="cifra__etiqueta">{{this.etiqueta}}</div>
+      {{#if this.sub}}<div class="cifra__sub">{{this.sub}}</div>{{/if}}
     </div>
     {{/each}}
   </div>
+  {{/if}}
 </section>
 
-{{!-- Alcance: las mismas cifras, con el ícono que dice de dónde salen. --}}
-{{#if galeria.reach}}
+{{!-- Nuestro alcance: cada cifra con el ícono que dice de dónde sale. --}}
+{{#if t.alcance.cifras.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}Alcance de la copa{{else}}Cup reach{{/if}}</p>
+  <p class="rotulo">{{t.alcance.titulo}}</p>
   <div class="cifras">
-    {{#each galeria.reach}}
+    {{#each t.alcance.cifras}}
     <div class="cifra">
-      <div class="cifra__icono">{{> icono-alcance icon=this.icon}}</div>
-      <div class="cifra__valor">{{this.value}}</div>
-      <div class="cifra__etiqueta">{{this.label}}</div>
+      <div class="cifra__icono">{{> icono-alcance icon=this.icono}}</div>
+      <div class="cifra__valor">{{this.valor}}</div>
+      <div class="cifra__etiqueta">{{this.etiqueta}}</div>
     </div>
     {{/each}}
   </div>
+  {{#if t.alcance.nota}}<p class="tour__nota">{{t.alcance.nota}}</p>{{/if}}
 </section>
 {{/if}}
 
-{{!-- Lo que viene: el Tour '27. Va con su rótulo propio para que nadie lo
-      confunda con una edición más. --}}
+{{!-- Próximos eventos: el Tour '27. Los equipos se escriben a mano en el
+      admin; aquí no se lee el registro de propuestas. --}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}Lo que viene{{else}}What's next{{/if}}</p>
-  <article class="tour27" style="--tour-foto:url('/assets/images/gallery/cup2025/1.jpg')">
+  <p class="rotulo">{{t.proximos.titulo}}</p>
+  <article class="tour27" style="--tour-foto:url('{{c.fotoProximos}}')">
     <div>
-      <img class="tour27__logo" src="/assets/images/logos/id-tour27-blanco.png" alt="{{tour.nombre}}">
-      <h2>{{tour.nombre}}</h2>
-      <p>{{#if isEs}}Tres partidos internacionales en Estados Unidos, en una sola temporada.{{else}}Three international matches in the United States, one season.{{/if}}</p>
-      <a class="boton boton--claro" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if isEs}}Hola!%20Quiero%20colaborar%20en%20el%20Tour%20%2727%20de%20SOCCER%20iD{{else}}Hi!%20I%27d%20like%20to%20be%20part%20of%20the%20SOCCER%20iD%20Tour%20%2727{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Quiero colaborar / ser parte{{else}}I want to collaborate / be part{{/if}} <span class="flecha">↗</span></a>
+      <img class="tour27__logo" src="/assets/images/logos/id-tour27-blanco.png" alt="">
+      <h2>{{t.proximos.nombre}}</h2>
+      <p>{{t.proximos.descripcion}}</p>
+      {{#if t.proximos.boton}}<a class="boton boton--claro" href="{{wa}}" target="_blank" rel="noopener">{{t.proximos.boton}} <span class="flecha">↗</span></a>{{/if}}
     </div>
     <ol class="tour27__partidos">
-      {{#each tour.partidos}}
+      {{#each t.proximos.partidos}}
       <li class="tour27__partido">
-        <span class="tour27__num">{{#if ../isEs}}Partido{{else}}Match{{/if}} {{this.num}}</span>
         <span class="tour27__nombre">{{this.nombre}}</span>
-        {{#if this.confirmado}}<span class="pastilla pastilla--ok">{{#if ../isEs}}Confirmado{{else}}Confirmed{{/if}}</span>{{else}}<span class="tour27__ventana">{{this.ventana}}</span>{{/if}}
+        {{#if this.fecha}}<span class="tour27__ventana">{{this.fecha}}</span>{{/if}}
+        {{#if this.estado}}<span class="pastilla pastilla--ok">{{this.estado}}</span>{{/if}}
       </li>
       {{/each}}
     </ol>
   </article>
 
+  {{#if t.proximos.aviso}}
   <div class="aclaracion">
-    <span class="pastilla">{{#if isEs}}Ojo{{else}}Note{{/if}}</span>
-    <span>{{#if isEs}}<b>El Tour '27 no es una edición más.</b> Es el proyecto de la próxima temporada. Las ediciones de abajo ya se jugaron y son su respaldo.{{else}}<b>Tour '27 is not another edition.</b> It is next season's project. The editions below have already been played and are its track record.{{/if}}</span>
+    <span class="pastilla">2027</span>
+    <span>{{t.proximos.aviso}}</span>
   </div>
+  {{/if}}
 </section>
 
-{{!-- Lo que ya se jugó: las ediciones, con foto y asistencia. --}}
+{{!-- Ediciones anteriores: las jugadas, con foto y asistencia (de la base);
+      debajo, los años que no son una edición jugada (filas del admin). --}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}Lo que ya se jugó · Ediciones{{else}}Already played · Editions{{/if}}</p>
+  <p class="rotulo">{{t.ediciones.titulo}}</p>
   <div class="ediciones">
     {{#each ediciones}}
     <a class="edicion" href="{{this.url}}">
@@ -102,24 +112,22 @@
         <div class="edicion__partido">{{this.match}}</div>
         <div class="edicion__lugar">{{this.venue}}{{#if this.city}} · {{this.city}}{{/if}}</div>
         <div class="edicion__pie">
-          <span>{{#if this.asistencia}}{{this.asistencia}} {{this.asistenciaLabel}}{{/if}}</span>
-          <span>{{#if ../isEs}}Ver edición{{else}}View{{/if}} ↗</span>
+          <span>{{#if this.asistencia}}{{this.asistencia}} {{@root.t.ediciones.asistentes}}{{/if}}</span>
+          <span>{{@root.t.ediciones.boton}} ↗</span>
         </div>
       </div>
     </a>
     {{/each}}
   </div>
 
-  {{!-- Los años que todavía no son una edición: la pausa del Mundial y lo
-        que sigue. Sólo se pintan los que no tienen ficha. --}}
-  {{#if pendientes}}
-  <div class="hitos" style="margin-top:26px">
-    {{#each pendientes}}
+  {{#if t.ediciones.filas.length}}
+  <div class="hitos tour__filas">
+    {{#each t.ediciones.filas}}
     <div class="hito hito--pendiente">
-      <span class="hito__anio">{{this.year}}</span>
+      <span class="hito__anio">{{this.anio}}</span>
       <div>
-        <div class="hito__partido">{{this.match}}</div>
-        <div class="hito__lugar">{{this.city}}</div>
+        <div class="hito__partido">{{this.titulo}}</div>
+        {{#if this.sub}}<div class="hito__lugar">{{this.sub}}</div>{{/if}}
       </div>
       <span></span>
     </div>
@@ -128,40 +136,38 @@
   {{/if}}
 </section>
 
-{{!-- Momentos. --}}
-{{#if galeria.images}}
+{{#if c.momentos.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}Momentos{{else}}Moments{{/if}}</p>
+  <p class="rotulo">{{t.momentos.titulo}}</p>
   <div class="mosaico">
-    {{#each galeria.images}}
+    {{#each c.momentos}}
     <button type="button" class="mosaico__foto" style="background-image:url('{{this.src}}')" data-ampliar="{{this.src}}" aria-label="{{this.alt}}"></button>
     {{/each}}
   </div>
 </section>
 {{/if}}
 
-{{!-- Patrocinadores. Seguros iD no va: ese servicio ya no se ofrece. --}}
+{{#if c.logos.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}Patrocinadores{{else}}Sponsors{{/if}}</p>
+  <p class="rotulo">{{t.patrocinadores.titulo}}</p>
   <div class="aliados">
-    <div class="aliado"><img src="/assets/images/sponsors/caliente.png" alt="Caliente MX"></div>
-    <div class="aliado"><img src="/assets/images/sponsors/fox-sports.png" alt="Fox Sports"></div>
-    <div class="aliado"><img src="/assets/images/sponsors/voit.png" alt="Voit"></div>
-    <div class="aliado"><img src="/assets/images/sponsors/nuestra-vision.png" alt="Nuestra Visión"></div>
+    {{#each c.logos}}
+    <div class="aliado"><img src="{{this.src}}" alt="{{this.alt}}"></div>
+    {{/each}}
   </div>
 </section>
+{{/if}}
 
-{{!-- Prensa. --}}
-{{#if galeria.mediaLinks}}
+{{#if t.medios.notas.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}En los medios{{else}}In the media{{/if}}</p>
+  <p class="rotulo">{{t.medios.titulo}}</p>
   <div class="prensa">
-    {{#each galeria.mediaLinks}}
+    {{#each t.medios.notas}}
     <a class="prensa__nota" href="{{this.url}}" target="_blank" rel="noopener">
-      {{#if this.image}}<img class="prensa__img" src="{{this.image}}" alt="" loading="lazy">{{/if}}
+      {{#if this.imagen}}<img class="prensa__img" src="{{this.imagen}}" alt="" loading="lazy">{{/if}}
       <span class="prensa__texto">
-        <span class="prensa__fuente">{{this.source}}</span>
-        <span class="prensa__titulo">{{this.title}}</span>
+        <span class="prensa__fuente">{{this.fuente}}</span>
+        <span class="prensa__titulo">{{this.titulo}}</span>
       </span>
       <span class="flecha">↗</span>
     </a>
@@ -170,13 +176,12 @@
 </section>
 {{/if}}
 
-{{!-- Cierre. --}}
 <section class="cierre">
-  <img class="cierre__foto" src="/assets/images/gallery/cup2025/5.jpg" alt="">
+  <img class="cierre__foto" src="{{c.fotoCierre}}" alt="">
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
-    <h2 class="cierre__t">{{#if isEs}}Sé parte de la experiencia{{else}}Be part of the experience{{/if}}</h2>
-    <p class="cierre__d">{{#if isEs}}Clubes, marcas y ciudades sede: hablemos del Tour '27.{{else}}Clubs, brands and host cities: let's talk about Tour '27.{{/if}}</p>
-    <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{galeria.ctaMessage}}" target="_blank" rel="noopener">{{galeria.ctaText}} <span class="flecha">↗</span></a>
+    <h2 class="cierre__t">{{t.cierre.titulo}}</h2>
+    {{#if t.cierre.descripcion}}<p class="cierre__d">{{t.cierre.descripcion}}</p>{{/if}}
+    {{#if t.cierre.boton}}<a class="boton boton--lleno" href="{{wa}}" target="_blank" rel="noopener">{{t.cierre.boton}} <span class="flecha">↗</span></a>{{/if}}
   </div>
 </section>

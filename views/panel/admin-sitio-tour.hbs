@@ -1,0 +1,107 @@
+{{!-- Panel › Sitio web › Tour. Edita la página pública /:lang/tour.
+      El formulario lo arma assets/js/admin-sitio.js a partir del esquema de
+      abajo; los datos llegan en #sitioDatos. Guardado y valores por defecto:
+      lib/sitioTour.js. --}}
+<link rel="stylesheet" href="/assets/css/admin-sitio.css?v={{version}}">
+
+<div class="st-top">
+  <a class="st-back" href="/panel/admin">← Volver al panel</a>
+  <div class="st-top__der">
+    <div class="st-idioma" role="group" aria-label="Idioma que se edita">
+      <a href="/panel/admin/sitio/tour?lang=es" class="{{#unless esEn}}is-activo{{/unless}}">Español</a>
+      <a href="/panel/admin/sitio/tour?lang=en" class="{{#if esEn}}is-activo{{/if}}">English</a>
+    </div>
+    <a class="st-ver" href="/{{lang}}/tour" target="_blank" rel="noopener">Ver la página ↗</a>
+  </div>
+</div>
+
+{{#if esEn}}
+<div class="st-aviso">Los textos en inglés todavía no están aprobados: son los que ya tenía el sitio. Cámbialos aquí cuando llegue la traducción revisada.</div>
+{{/if}}
+
+<div id="sitioEditor"></div>
+
+<form class="st-restablecer" method="POST" action="/panel/admin/sitio/tour/restablecer"
+      onsubmit="return confirm('Se pierden los textos guardados en este idioma y vuelven los de origen. ¿Seguir?')">
+  <input type="hidden" name="lang" value="{{lang}}">
+  ¿Algo se rompió? <button type="submit">Volver los textos de este idioma a los de origen</button>
+</form>
+
+<script type="application/json" id="sitioDatos">{{{datos}}}</script>
+<script>
+  window.SITIO_ESQUEMA = {
+    guardar: '/panel/admin/sitio/tour',
+    edicion: '/panel/admin/sitio/tour/edicion/:id',
+    textoEdiciones: 'Lo mismo que se ve en la ficha de cada edición. El partido se guarda en el idioma que estás editando; estadio, ciudad y asistencia, en los dos.',
+    secciones: [
+      { id: 'portada', titulo: 'Portada', sub: 'La primera pantalla: foto, nombre, descripción y botón.', campos: [
+        { k: 'c.fotoPortada', l: 'Foto de fondo', tipo: 'img' },
+        { k: 'portada.marca', l: 'Nombre superior', ej: 'SOCCER iD TOUR' },
+        { k: 'portada.titulo', l: 'Título', ej: 'Tour' },
+        { k: 'portada.descripcion', l: 'Descripción', tipo: 'area' },
+        { k: 'portada.etiquetas', l: 'Etiquetas', tipo: 'textos', max: 4, agregar: 'Agregar etiqueta', ayuda: 'La primera lleva el ícono de calendario y la segunda el de ubicación.' },
+        { k: 'portada.boton', l: 'Texto del botón', ayuda: 'Vacío = sin botón. Todos los botones de esta página van al WhatsApp del sitio.' },
+        { k: 'mensajeWhatsapp', l: 'Mensaje que llega por WhatsApp', tipo: 'area', filas: 2, ayuda: 'El texto que aparece escrito al abrir WhatsApp desde cualquier botón de esta página.' }
+      ] },
+      { id: 'eventos', titulo: 'Nuestros eventos', campos: [
+        { k: 'eventos.titulo', l: 'Título del bloque' },
+        { k: 'eventos.texto', l: 'Texto', tipo: 'area' },
+        { k: 'eventos.cifras', l: 'Cifras', tipo: 'lista', max: 6, agregar: 'Agregar cifra', cols: [
+          { c: 'valor', l: 'Cifra', ej: '3' }, { c: 'etiqueta', l: 'Etiqueta', ej: 'Ediciones' }, { c: 'sub', l: 'Detalle', ej: '2023–2025' }
+        ] }
+      ] },
+      { id: 'alcance', titulo: 'Nuestro alcance', campos: [
+        { k: 'alcance.titulo', l: 'Título del bloque' },
+        { k: 'alcance.cifras', l: 'Cifras', tipo: 'lista', max: 6, agregar: 'Agregar cifra', cols: [
+          { c: 'valor', l: 'Cifra', ej: '80K+' }, { c: 'etiqueta', l: 'Etiqueta' },
+          { c: 'icono', l: 'Ícono', tipo: 'select', opciones: [['stadium', 'Estadio'], ['tv', 'Televisión'], ['social', 'Digital']] }
+        ] },
+        { k: 'alcance.nota', l: 'Nota debajo de las cifras', ayuda: 'Vacía = sin nota.' }
+      ] },
+      { id: 'proximos', titulo: 'Próximos eventos', sub: 'Los equipos NO se publican antes del anuncio autorizado: escribe «Equipos por anunciar» hasta entonces.', campos: [
+        { k: 'proximos.titulo', l: 'Título del bloque' },
+        { k: 'c.fotoProximos', l: 'Foto de fondo del recuadro', tipo: 'img' },
+        { k: 'proximos.nombre', l: 'Nombre', ej: 'SOCCER iD TOUR ’27' },
+        { k: 'proximos.descripcion', l: 'Descripción', tipo: 'area', filas: 2 },
+        { k: 'proximos.boton', l: 'Texto del botón', ayuda: 'Vacío = sin botón.' },
+        { k: 'proximos.partidos', l: 'Partidos', tipo: 'lista', max: 8, agregar: 'Agregar partido', cols: [
+          { c: 'nombre', l: 'Nombre', ej: 'Partido 1 · Equipos por anunciar', ancho: 'ancha' },
+          { c: 'fecha', l: 'Fecha', ej: '27 de marzo de 2027' }, { c: 'estado', l: 'Estado', ej: 'Confirmado' }
+        ] },
+        { k: 'proximos.aviso', l: 'Aviso debajo del recuadro', tipo: 'area', filas: 2, ayuda: 'Vacío = sin aviso.' }
+      ] },
+      { id: 'ediciones', titulo: 'Ediciones anteriores', extra: 'ediciones', campos: [
+        { k: 'ediciones.titulo', l: 'Título del bloque' },
+        { k: 'ediciones.boton', l: 'Texto del enlace de cada tarjeta', ej: 'Ver edición' },
+        { k: 'ediciones.asistentes', l: 'Palabra después de la asistencia', ej: 'asistentes' },
+        { k: 'ediciones.filas', l: 'Años sin edición jugada', tipo: 'lista', max: 6, agregar: 'Agregar año', ayuda: 'Las filas debajo de las tarjetas: la pausa del Mundial y lo que viene.', cols: [
+          { c: 'anio', l: 'Año', ej: '2026' }, { c: 'titulo', l: 'Texto', ej: 'Pausa por el Mundial' }, { c: 'sub', l: 'Detalle' }
+        ] }
+      ] },
+      { id: 'fotos', titulo: 'Fotos y logos', sub: 'Iguales en español e inglés.', campos: [
+        { k: 'momentos.titulo', l: 'Título de la galería', ej: 'Momentos' },
+        { k: 'c.momentos', l: 'Fotos de la galería', tipo: 'lista', max: 40, agregar: 'Agregar foto', ayuda: 'Al tocarlas se abren en grande.', cols: [
+          { c: 'src', l: 'Foto', tipo: 'img', ancho: 'ancha' }, { c: 'alt', l: 'Descripción (para lectores de pantalla)' }
+        ] },
+        { k: 'patrocinadores.titulo', l: 'Título de los logos', ej: 'Patrocinadores' },
+        { k: 'c.logos', l: 'Logos', tipo: 'lista', max: 30, agregar: 'Agregar logo', ayuda: 'Se muestran en blanco, sin importar el color original.', cols: [
+          { c: 'src', l: 'Logo', tipo: 'img', ancho: 'ancha' }, { c: 'alt', l: 'Nombre de la marca' }
+        ] }
+      ] },
+      { id: 'medios', titulo: 'En los medios', campos: [
+        { k: 'medios.titulo', l: 'Título del bloque' },
+        { k: 'medios.notas', l: 'Notas', tipo: 'lista', max: 20, agregar: 'Agregar nota', ayuda: 'Una nota sin título o sin enlace no se guarda.', cols: [
+          { c: 'fuente', l: 'Medio', ej: 'TUDN' }, { c: 'url', l: 'Enlace', ej: 'https://...' },
+          { c: 'titulo', l: 'Título', tipo: 'area', filas: 2, ancho: 'ancha' }, { c: 'imagen', l: 'Miniatura', tipo: 'img', ancho: 'ancha' }
+        ] }
+      ] },
+      { id: 'cierre', titulo: 'Cierre', sub: 'La llamada final sobre foto, antes del pie.', campos: [
+        { k: 'c.fotoCierre', l: 'Foto de fondo', tipo: 'img' },
+        { k: 'cierre.titulo', l: 'Título' },
+        { k: 'cierre.descripcion', l: 'Descripción', tipo: 'area', filas: 2 },
+        { k: 'cierre.boton', l: 'Texto del botón', ayuda: 'Vacío = sin botón.' }
+      ] }
+    ]
+  };
+</script>
+<script src="/assets/js/admin-sitio.js?v={{version}}"></script>

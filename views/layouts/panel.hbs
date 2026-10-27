@@ -505,6 +505,21 @@
           </div>
         </div>
 
+        {{!-- Páginas del sitio público que se editan desde aquí. Son páginas
+              propias, no pestañas de /panel/admin: por eso van sin data-tab. --}}
+        <div class="pn-group">
+          <button class="pn-group__head" data-group>
+            Sitio web
+            <svg class="pn-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="pn-group__body">
+            <a href="/panel/admin/sitio/tour" class="pn-link {{#eq active 'sitio-tour'}}is-active{{/eq}}" title="Página del Tour">
+              <svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+              <span class="pn-label">Tour</span>
+            </a>
+          </div>
+        </div>
+
         <div class="pn-group">
           <button class="pn-group__head" data-group>
             Vista previa
