@@ -1649,22 +1649,22 @@ function seccionesV2(lang) {
   return [
     { slug: 'tour', num: '01', marca: true, color: 'tour', nombre: 'Tour', submarca: 'SOCCER iD CUP',
       linea: es ? "El Tour '27 y las ediciones que ya se jugaron." : "Tour '27 and the editions already played.",
-      lema: es ? 'Vive el fútbol como nunca antes' : 'Live football like never before', barra: '#78F750' },
+      lema: es ? 'Partidos que organizamos en Estados Unidos' : 'Live football like never before', barra: '#78F750' },
     { slug: 'travel', num: '02', marca: true, color: 'travel', nombre: 'Travel', submarca: 'SOCCER iD Travel Club',
       linea: es ? 'Partidos, palcos y viajes a cualquier estadio.' : 'Matches, suites and trips to any stadium.',
-      lema: es ? 'Destinos que vibran con el fútbol' : 'Destinations that live football', barra: '#4FD6FF' },
+      lema: es ? 'Viajes a los grandes eventos del fútbol mundial' : 'Destinations that live football', barra: '#4FD6FF' },
     { slug: 'legends', num: '03', marca: true, color: 'legends', nombre: 'Legends', submarca: 'SOCCER iD Legends',
       linea: es ? 'Las figuras que hicieron historia, de cerca.' : 'The players who made history, up close.',
-      lema: es ? 'Historias que nunca se olvidan' : 'Stories never forgotten', barra: '#FFD84D' },
+      lema: es ? 'Convive con leyendas del fútbol' : 'Stories never forgotten', barra: '#FFD84D' },
     { slug: 'podcast', num: '04', marca: true, color: 'podcast', nombre: 'Podcast', submarca: 'SOCCER iD Podcast',
       linea: es ? 'Conversaciones de fútbol, sin prisa.' : 'Football conversations, no rush.',
-      lema: es ? 'Voces que viven el deporte' : 'Voices that live the game', barra: '#FF4D4D' },
+      lema: es ? 'Charlas, entrevistas y análisis de fútbol' : 'Voices that live the game', barra: '#FF4D4D' },
     { slug: 'opiniones', num: '05', marca: false, color: 'apoyo', nombre: es ? 'Opiniones y media' : 'Reviews & media', corto: 'Media',
       linea: es ? 'Lo que dicen quienes vivieron la experiencia, y la prensa.' : 'What people and the press say.',
-      lema: es ? 'Noticias, análisis y más' : 'News, analysis and more', barra: '#FF8A3D' },
+      lema: es ? 'Apariciones en prensa y opiniones de clientes' : 'News, analysis and more', barra: '#FF8A3D' },
     { slug: 'nosotros', num: '06', marca: false, color: 'apoyo', nombre: es ? 'Quiénes somos' : 'About us', corto: es ? 'Nosotros' : 'About',
       linea: es ? 'La historia y el equipo detrás de SOCCER iD.' : 'The story and the team behind SOCCER iD.',
-      lema: es ? 'Una comunidad global' : 'A global community', barra: '#2EE6A8' }
+      lema: es ? 'Nuestra historia, equipo y reconocimientos' : 'A global community', barra: '#2EE6A8' }
   ].map(sx => Object.assign(sx, {
     url: `/${lang}/${sx.slug}`,
     foto: FOTOS_SECCION[sx.slug],
@@ -1800,11 +1800,52 @@ app.get('/:lang/tour', rutaV2('tour', async (lang) => {
   return { t, c, ediciones, wa, tituloPagina: `${t.portada.titulo} · SOCCER iD`, descripcionPagina: t.portada.descripcion };
 }));
 
-app.get('/:lang/travel', rutaV2('travel', async (lang, data) => ({
-  partidos: partidosFuturos(data.upcoming_events),
-  vip: (data.panel_templates || {}).vip || null,
-  fan: (data.panel_templates || {}).fan || null
-})));
+// Los viajes (contents/viajes.json) sólo están aprobados en español. Ojo:
+// loadViewData cae al español cuando un archivo no trae el idioma, así que
+// aquí se pide explícito; en inglés sigue el calendario de partidos.
+function viajesDe(lang) {
+  if (lang !== 'es') return null;
+  try {
+    return JSON.parse(fs.readFileSync(path.join(__dirname, 'contents', 'viajes.json'), 'utf8')).es || null;
+  } catch (e) { return null; }
+}
+
+app.get('/:lang/travel', rutaV2('travel', async (lang, data) => {
+  const viajes = viajesDe(lang);
+  return {
+    // Bandera aparte: una lista vacía es falsa en Handlebars y, si pasaran
+    // todas las fechas, el español caería en la rama del inglés.
+    conViajes: !!viajes,
+    viajes: viajes ? partidosFuturos(viajes.proximos) : null,
+    viajesPasados: viajes ? viajes.pasados || [] : null,
+    partidos: viajes ? [] : partidosFuturos(data.upcoming_events),
+    vip: (data.panel_templates || {}).vip || null,
+    fan: (data.panel_templates || {}).fan || null
+  };
+}));
+
+// Ficha de un viaje próximo. Plantilla del documento de textos: nombre,
+// fecha, «Cómo vivirlo» (tres servicios, sin botón dentro), compartir y
+// otros viajes. Sin precio: se pide cotización. El itinerario se agregará
+// cuando se edite desde el admin; el del documento es de maquetación y no
+// se publica.
+app.get('/:lang/viaje/:slug', (req, res, next) => {
+  const lang = req.params.lang;
+  const viajes = viajesDe(lang);
+  if (!viajes) return next();
+  const proximos = partidosFuturos(viajes.proximos);
+  const viaje = proximos.find(v => v.slug === req.params.slug);
+  if (!viaje) return next();
+  const data = datosV2(lang, 'travel');
+  res.render('v2/viaje', Object.assign(data, {
+    tituloPagina: `${viaje.nombre} · SOCCER iD Travel`,
+    descripcionPagina: `${viaje.nombre} · ${viaje.fechaTexto}. Viaje con acceso VIP, hotel y traslados.`,
+    rutaCanonica: `/${lang}/viaje/${viaje.slug}`,
+    viaje,
+    otros: proximos.filter(v => v.slug !== viaje.slug),
+    regresar: { url: `/${lang}/travel#viajes`, texto: 'Volver a próximos viajes' }
+  }));
+});
 
 // Próximos (de hoy en adelante, con su día y mes) y pasados, de
 // contents/legends.json. Lo de muestra lo marca la vista.
@@ -1844,8 +1885,8 @@ app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
   // añadir la URL de Spotify ahí basta para que aparezca el botón, sin tocar
   // código. Un enlace vacío no se pinta, para no mandar a nadie a la nada.
   const plataformas = [
-    { id: 'youtube', nombre: 'YouTube', url: pod.canal },
-    { id: 'spotify', nombre: 'Spotify', url: pod.spotify }
+    { id: 'youtube', nombre: 'YouTube', verboEs: 'Ver en', url: pod.canal },
+    { id: 'spotify', nombre: 'Spotify', verboEs: 'Escuchar en', url: pod.spotify }
   ].filter(p => p.url);
   // Para «Sé patrocinador»: las cifras salen de lo que el canal ya publicó
   // (vistas y duración que guarda el script), no de un número escrito a mano.
@@ -1854,7 +1895,16 @@ app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
   const horas = Math.round(crudos.reduce((t, e) => t + (e.duracion || 0), 0) / 3600);
   const compacto = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace('.0', '') + 'M'
     : n >= 1e3 ? Math.round(n / 1e3) + 'K' : String(n);
-  const cifras = [
+  // En español, las cifras aprobadas el 27/10/2026 (YouTube Analytics; el
+  // periodo está por confirmar, así que no se rotulan como históricas ni
+  // anuales). Los episodios se siguen contando solos. El inglés conserva las
+  // calculadas hasta que se apruebe su traducción.
+  const cifras = lang !== 'en' ? [
+    { valor: String(crudos.length), etiqueta: 'Episodios' },
+    { valor: '7 M', etiqueta: 'Visualizaciones' },
+    { valor: '84.8 mil h', etiqueta: 'Tiempo de visualización' },
+    { valor: '+35.3 mil', etiqueta: 'Suscriptores ganados' }
+  ] : [
     { valor: String(crudos.length), etiqueta: lang === 'en' ? 'Episodes' : 'Episodios' },
     { valor: compacto(vistas), etiqueta: lang === 'en' ? 'YouTube views' : 'Vistas en YouTube' },
     { valor: compacto(crudos.length ? Math.round(vistas / crudos.length) : 0), etiqueta: lang === 'en' ? 'Views per episode' : 'Vistas por episodio' },

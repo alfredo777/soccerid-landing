@@ -1,40 +1,47 @@
 {
   "_nota": "Legends. `proximos` va por fecha (dateISO) y sólo se pintan los de hoy en adelante; `pasados`, del más nuevo al más viejo. Todo lo que lleva \"muestra\": true es INVENTADO para ver el diseño y sale con la pastilla punteada «Muestra»: no son leyendas ni fechas confirmadas. Se reemplaza por lo real y se le quita la marca (o se borra).",
+  "_nota_es": "Español: textos aprobados el 27/10/2026. Próximos: sin invitados, sede ni hora hasta que estén confirmados («Por anunciar»). Pasados: leyendas reales; las fotos son de muestra hasta tener las del evento (`fotoMuestra`). El inglés sigue con el contenido de muestra anterior hasta que se apruebe su traducción.",
   "es": {
     "proximos": [
       {
-        "dateISO": "2026-12-05",
-        "nombre": "Meet & Greet con leyendas del fútbol mexicano",
-        "tipo": "Meet & Greet",
-        "lugar": "Ciudad de México",
-        "hora": "6:00 PM",
-        "muestra": true
+        "dateISO": "2027-03-26",
+        "nombre": "Leyendas · SOCCER iD TOUR",
+        "descripcion": "Meet & Greet y cena privada con leyendas del fútbol, previo al SOCCER iD TOUR.",
+        "invitados": "Por anunciar",
+        "sede": "Por anunciar"
+      },
+      {
+        "dateISO": "2027-03-27",
+        "nombre": "Leyendas · Nations League",
+        "descripcion": "Meet & Greet y cena privada con leyendas del fútbol, previo a la final de CONCACAF Nations League.",
+        "invitados": "Por anunciar",
+        "sede": "Por anunciar"
       }
     ],
     "pasados": [
       {
-        "titulo": "Convivencia privada con leyendas",
-        "tipo": "Convivencia privada",
-        "lugar": "Ciudad de México",
-        "fecha": "Agosto 2026",
+        "titulo": "Luis Figo",
+        "tipo": "Meet & Greet y cena",
+        "lugar": "Monterrey",
+        "fecha": "2022",
         "foto": "/assets/images/gallery/somos/6.jpg",
-        "muestra": true
+        "fotoMuestra": true
       },
       {
-        "titulo": "Meet & Greet antes de la copa",
+        "titulo": "Roberto Carlos",
         "tipo": "Meet & Greet",
-        "lugar": "Austin, Texas",
-        "fecha": "Marzo 2025",
+        "lugar": "Madrid",
+        "fecha": "2024",
         "foto": "/assets/images/gallery/cup2025/3.jpg",
-        "muestra": true
+        "fotoMuestra": true
       },
       {
-        "titulo": "Evento corporativo con una leyenda",
-        "tipo": "Corporativo",
-        "lugar": "Monterrey, N.L.",
-        "fecha": "Noviembre 2024",
+        "titulo": "Enrique Borja",
+        "tipo": "Meet & Greet",
+        "lugar": "San José",
+        "fecha": "2024",
         "foto": "/assets/images/gallery/cup2024/4.jpg",
-        "muestra": true
+        "fotoMuestra": true
       }
     ]
   },

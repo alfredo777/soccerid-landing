@@ -1,15 +1,18 @@
 {{!-- Tarjeta de algo que ya pasó (un viaje, un evento): foto, rótulo,
       título y lugar · fecha. La usan Travel y Legends. Si lleva `muestra`
       es contenido de ejemplo y lo dice con la pastilla punteada, para que
-      nadie lo confunda con algo que de verdad ocurrió. --}}
+      nadie lo confunda con algo que de verdad ocurrió. Si el contenido es
+      real pero la foto todavía no (`fotoMuestra`), la pastilla lo dice de
+      la foto. --}}
 <article class="recuerdo">
   <div class="recuerdo__foto" style="background-image:url('{{this.foto}}')">
-    {{#if this.muestra}}<span class="pastilla pastilla--muestra recuerdo__muestra">{{#if @root.isEs}}Muestra{{else}}Sample{{/if}}</span>{{/if}}
+    {{#if this.muestra}}<span class="pastilla pastilla--muestra recuerdo__muestra">{{#if @root.isEs}}Muestra{{else}}Sample{{/if}}</span>
+    {{else if this.fotoMuestra}}<span class="pastilla pastilla--muestra recuerdo__muestra">{{#if @root.isEs}}Foto de muestra{{else}}Sample photo{{/if}}</span>{{/if}}
   </div>
   <div class="recuerdo__cuerpo">
     {{#if this.tipo}}<span class="recuerdo__tipo">{{this.tipo}}</span>{{/if}}
     <h3 class="recuerdo__titulo">{{this.titulo}}</h3>
-    <p class="recuerdo__meta">{{this.lugar}}{{#if this.fecha}} · {{this.fecha}}{{/if}}</p>
+    {{#if this.lugar}}<p class="recuerdo__meta">{{this.lugar}}{{#if this.fecha}} · {{this.fecha}}{{/if}}</p>{{else if this.fecha}}<p class="recuerdo__meta">{{this.fecha}}</p>{{/if}}
     {{#if this.detalle}}<p class="recuerdo__detalle">{{this.detalle}}</p>{{/if}}
   </div>
 </article>

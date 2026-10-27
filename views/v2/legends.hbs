@@ -12,15 +12,15 @@
     <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Legends</p>
     <div class="cabecera__marca">SOCCER iD Legends</div>
     <h1 class="portada__titulo">Legends</h1>
-    <p class="portada__bajada">{{#if isEs}}Las figuras que hicieron historia en el fútbol mexicano, de cerca: meet & greets, convivencias privadas y eventos corporativos.{{else}}The players who made history in Mexican football, up close: meet & greets, private gatherings and corporate events.{{/if}}</p>
+    <p class="portada__bajada">{{#if isEs}}Convive con leyendas del fútbol mexicano e internacional en experiencias únicas. También disponibles para eventos privados y empresariales.{{else}}The players who made history in Mexican football, up close: meet & greets, private gatherings and corporate events.{{/if}}</p>
     <div class="portada__pastillas">
       <span class="pastilla">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
-        {{#if eventos.length}}{{eventos.length}} {{#eq eventos.length 1}}{{#if isEs}}fecha{{else}}date{{/if}}{{else}}{{#if isEs}}fechas{{else}}dates{{/if}}{{/eq}}{{else}}{{#if isEs}}Calendario por anunciar{{else}}Calendar to be announced{{/if}}{{/if}}
+        {{#if eventos.length}}{{eventos.length}} {{#eq eventos.length 1}}{{#if isEs}}fecha confirmada{{else}}date{{/if}}{{else}}{{#if isEs}}fechas confirmadas{{else}}dates{{/if}}{{/eq}}{{else}}{{#if isEs}}Calendario por anunciar{{else}}Calendar to be announced{{/if}}{{/if}}
       </span>
     </div>
     <div class="portada__acciones">
-      <a class="boton boton--lleno" href="#contacto">{{#if isEs}}Quiero que me avisen{{else}}Keep me posted{{/if}}</a>
+      {{#if isEs}}<a class="boton boton--lleno" href="#calendario">Ver próximos eventos</a>{{else}}<a class="boton boton--lleno" href="#contacto">Keep me posted</a>{{/if}}
     </div>
   </div>
 </section>
@@ -31,18 +31,18 @@
   <div class="pilares">
     <div class="pilar">
       <div class="pilar__num">01</div>
-      <h3>Meet &amp; Greets</h3>
-      <p>{{#if isEs}}Fotos, firmas y unas palabras con quien marcó una época. Estar cerca de la leyenda, no verla desde la grada.{{else}}Photos, autographs and a few words with the player who defined an era. Being close to the legend, not watching from the stands.{{/if}}</p>
+      <h3>{{#if isEs}}Meet &amp; Greet{{else}}Meet &amp; Greets{{/if}}</h3>
+      <p>{{#if isEs}}Conoce a tus ídolos, conversa con ellos y llévate una foto y un autógrafo.{{else}}Photos, autographs and a few words with the player who defined an era. Being close to the legend, not watching from the stands.{{/if}}</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">02</div>
-      <h3>{{#if isEs}}Convivencias privadas{{else}}Private gatherings{{/if}}</h3>
-      <p>{{#if isEs}}Una comida, una cena o una tarde de fútbol en grupo reducido, con la leyenda contando lo que no sale en las entrevistas.{{else}}A lunch, a dinner or an afternoon of football in a small group, with the legend telling what never makes the interviews.{{/if}}</p>
+      <h3>{{#if isEs}}Cenas privadas{{else}}Private gatherings{{/if}}</h3>
+      <p>{{#if isEs}}Comparte la mesa con leyendas del fútbol en una convivencia cercana y exclusiva.{{else}}A lunch, a dinner or an afternoon of football in a small group, with the legend telling what never makes the interviews.{{/if}}</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">03</div>
-      <h3>{{#if isEs}}Corporativos{{else}}Corporate{{/if}}</h3>
-      <p>{{#if isEs}}Para empresas y marcas que quieren a una leyenda en su evento, convención o campaña, con todo lo que eso implica resuelto.{{else}}For companies and brands that want a legend at their event, convention or campaign, with everything it takes handled.{{/if}}</p>
+      <h3>{{#if isEs}}Eventos especiales{{else}}Corporate{{/if}}</h3>
+      <p>{{#if isEs}}Lleva una leyenda del fútbol a tu evento privado, empresarial o de marca.{{else}}For companies and brands that want a legend at their event, convention or campaign, with everything it takes handled.{{/if}}</p>
     </div>
   </div>
 </section>
@@ -56,7 +56,12 @@
       <div class="evento__fecha"><div class="evento__dia">{{this.dia}}</div><div class="evento__mes">{{this.mes}}</div></div>
       <div>
         <div class="evento__nombre">{{this.nombre}}{{#if this.muestra}}<span class="pastilla pastilla--muestra">{{#if ../isEs}}Muestra{{else}}Sample{{/if}}</span>{{/if}}</div>
+        {{#if this.descripcion}}
+        <div class="evento__meta">{{this.descripcion}}</div>
+        <div class="evento__meta">{{#if ../isEs}}Leyendas invitadas{{else}}Guest legends{{/if}}: {{this.invitados}} · {{#if ../isEs}}Sede{{else}}Venue{{/if}}: {{this.sede}}</div>
+        {{else}}
         <div class="evento__meta">{{#if this.tipo}}{{this.tipo}} · {{/if}}{{this.lugar}}{{#if this.hora}} · {{this.hora}}{{/if}}</div>
+        {{/if}}
       </div>
       <a class="boton" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if ../isEs}}Hola!%20Quiero%20informaci%C3%B3n%20de%20{{else}}Hi!%20I%27d%20like%20info%20about%20{{/if}}{{this.nombre}}" target="_blank" rel="noopener">{{#if ../isEs}}Más información{{else}}More info{{/if}} <span class="flecha">↗</span></a>
     </article>
@@ -76,14 +81,16 @@
 </section>
 {{/if}}
 
-<div id="contacto">{{> contacto asunto='Hola!%20Quiero%20informaci%C3%B3n%20de%20SOCCER%20iD%20Legends'}}</div>
+{{!-- Dos intenciones distintas: el contacto es para ASISTIR a un encuentro;
+      el cierre, para CONTRATAR una leyenda. Cada uno llega con su mensaje. --}}
+<div id="contacto">{{> contacto asunto='Hola!%20Quiero%20informaci%C3%B3n%20de%20SOCCER%20iD%20Legends' tituloEs='Conoce a tus ídolos' textoEs='Escríbenos para conocer los próximos encuentros, precios y disponibilidad.'}}</div>
 
 <section class="cierre">
   <img class="cierre__foto" src="/assets/images/gallery/cup2024/3.jpg" alt="">
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">{{#if isEs}}¿Quieres una leyenda en tu evento?{{else}}Want a legend at your event?{{/if}}</h2>
-    <p class="cierre__d">{{#if isEs}}Marcas, clubes y ciudades: cuéntanos qué tienes en mente.{{else}}Brands, clubs and cities: tell us what you have in mind.{{/if}}</p>
-    <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if isEs}}Hola!%20Quiero%20informaci%C3%B3n%20de%20SOCCER%20iD%20Legends{{else}}Hi!%20I%27d%20like%20info%20about%20SOCCER%20iD%20Legends{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Escríbenos{{else}}Write to us{{/if}} <span class="flecha">↗</span></a>
+    <p class="cierre__d">{{#if isEs}}Creamos encuentros con figuras del fútbol para eventos privados, empresas y marcas.{{else}}Brands, clubs and cities: tell us what you have in mind.{{/if}}</p>
+    <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if isEs}}Hola!%20Quiero%20cotizar%20un%20evento%20con%20una%20leyenda%20del%20f%C3%BAtbol{{else}}Hi!%20I%27d%20like%20info%20about%20SOCCER%20iD%20Legends{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Cotizar un evento{{else}}Write to us{{/if}} <span class="flecha">↗</span></a>
   </div>
 </section>

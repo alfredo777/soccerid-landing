@@ -108,6 +108,10 @@
     .pn-link:hover { background: var(--pn-purple-soft); color: var(--pn-purple); }
     .pn-link.is-active { background: var(--pn-purple); color: #fff; box-shadow: 0 8px 18px rgba(27,23,239,.28); }
     .pn-link.is-active svg.pn-ico { stroke: #fff; }
+    /* Secciones del sitio que todavía no se editan desde el admin. */
+    .pn-link--pendiente { opacity: .55; cursor: default; }
+    .pn-link--pendiente:hover { background: none; color: inherit; }
+    .pn-pendiente { margin-left: 6px; padding: 2px 7px; border-radius: 999px; background: #F0F0F5; font-size: 10px; font-weight: 800; letter-spacing: .3px; text-transform: uppercase; color: var(--pn-muted); }
     .pn-link__badge { margin-left: auto; font-size: 11px; font-weight: 800; background:#F0F0F5; color: var(--pn-ink-2); padding: 2px 9px; border-radius: 20px; }
     .pn-link.is-active .pn-link__badge { background: rgba(255,255,255,.22); color:#fff; }
 
@@ -517,6 +521,13 @@
               <svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               <span class="pn-label">Tour</span>
             </a>
+            {{!-- Pendientes: se verán aquí cuando se puedan editar. Por ahora
+                  sus textos viven en el código (views/v2/*.hbs). --}}
+            <span class="pn-link pn-link--pendiente" title="Travel: todavía no se edita desde el admin" aria-disabled="true"><svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="pn-label">Travel <small class="pn-pendiente">Pendiente</small></span></span>
+            <span class="pn-link pn-link--pendiente" title="Legends: todavía no se edita desde el admin" aria-disabled="true"><svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="pn-label">Legends <small class="pn-pendiente">Pendiente</small></span></span>
+            <span class="pn-link pn-link--pendiente" title="Podcast: todavía no se edita desde el admin" aria-disabled="true"><svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="pn-label">Podcast <small class="pn-pendiente">Pendiente</small></span></span>
+            <span class="pn-link pn-link--pendiente" title="Media: todavía no se edita desde el admin" aria-disabled="true"><svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="pn-label">Media <small class="pn-pendiente">Pendiente</small></span></span>
+            <span class="pn-link pn-link--pendiente" title="Nosotros: todavía no se edita desde el admin" aria-disabled="true"><svg class="pn-ico" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="pn-label">Nosotros <small class="pn-pendiente">Pendiente</small></span></span>
           </div>
         </div>
 

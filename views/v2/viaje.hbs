@@ -1,0 +1,84 @@
+{{!-- Ficha de un viaje próximo de Travel (/es/viaje/:slug). Plantilla del
+      documento «Textos y cambios del sitio web»: nombre, fecha, Cómo vivirlo
+      (exactamente tres servicios, sin botón dentro), compartir, otros viajes
+      y regreso al listado. Sin precio: se pide cotización.
+
+      «Solicitar cotización» va en la portada: el documento lo saca de «Cómo
+      vivirlo» y deja pendiente dónde ponerlo. Ésta es una ubicación
+      provisional, por confirmar con León.
+
+      El itinerario por días se agrega cuando se edite desde el admin; el
+      del documento es de maquetación y no se publica. Sólo español. --}}
+
+<section class="portada portada--ficha">
+  {{#if viaje.foto}}<img class="portada__foto" src="{{viaje.foto}}" alt="">{{/if}}
+  <div class="portada__velo"></div>
+  <div class="portada__cuerpo">
+    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / <a href="/{{lang}}/travel">Travel</a> / {{viaje.nombre}}</p>
+    <div class="cabecera__marca">SOCCER iD Travel Club</div>
+    <h1 class="portada__titulo">{{viaje.nombre}}</h1>
+    <div class="portada__pastillas">
+      <span class="pastilla">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+        {{viaje.fechaTexto}}
+      </span>
+      {{#if viaje.sede}}
+      <span class="pastilla">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        {{viaje.sede}}
+      </span>
+      {{/if}}
+    </div>
+    <div class="portada__acciones">
+      <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text=Hola!%20Quiero%20cotizar%20el%20viaje%20a%20{{viaje.nombre}}%20({{viaje.fechaTexto}})" target="_blank" rel="noopener">Solicitar cotización <span class="flecha">↗</span></a>
+      {{> regresar}}
+    </div>
+  </div>
+</section>
+
+<section class="seccion envoltura">
+  <p class="rotulo">Cómo vivirlo</p>
+  <div class="pilares">
+    <div class="pilar">
+      <div class="pilar__num">01</div>
+      <h3>Acceso VIP al estadio</h3>
+      <p>Vive el partido desde zonas preferenciales y disfruta una experiencia VIP.</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">02</div>
+      <h3>Hotel y traslados</h3>
+      <p>Hospedaje y traslados organizados para que te concentres en disfrutar el viaje.</p>
+    </div>
+    <div class="pilar">
+      <div class="pilar__num">03</div>
+      <h3>Experiencias exclusivas</h3>
+      <p>Complementa el partido con actividades especiales, como cenas y convivencias con leyendas, según el paquete.</p>
+    </div>
+  </div>
+</section>
+
+<section class="seccion envoltura">
+  <p class="rotulo">Comparte este viaje</p>
+  <div class="compartir">
+    <a class="red-icono" href="https://wa.me/?text={{viaje.nombre}}%20{{baseUrl}}/{{lang}}/viaje/{{viaje.slug}}" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">{{> icono-red id="whatsapp"}}</a>
+    <a class="red-icono" href="https://www.facebook.com/sharer/sharer.php?u={{baseUrl}}/{{lang}}/viaje/{{viaje.slug}}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">{{> icono-red id="facebook"}}</a>
+  </div>
+</section>
+
+{{#if otros.length}}
+<section class="seccion envoltura">
+  <p class="rotulo">Otros viajes</p>
+  <div class="eventos">
+    {{#each otros}}
+    <article class="evento">
+      <div class="evento__fecha"><div class="evento__dia">{{this.dia}}</div><div class="evento__mes">{{this.mes}}</div></div>
+      <div>
+        <a class="evento__nombre" href="/{{../lang}}/viaje/{{this.slug}}">{{this.nombre}}</a>
+        <div class="evento__meta">{{this.fechaTexto}}</div>
+      </div>
+      <a class="boton" href="/{{../lang}}/viaje/{{this.slug}}">Ver viaje <span class="flecha">→</span></a>
+    </article>
+    {{/each}}
+  </div>
+</section>
+{{/if}}

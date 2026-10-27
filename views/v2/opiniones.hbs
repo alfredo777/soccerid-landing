@@ -13,7 +13,7 @@
     <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / {{actual.nombre}}</p>
     <div class="cabecera__marca">SOCCER iD</div>
     <h1 class="portada__titulo">Media</h1>
-    <p class="portada__bajada">{{#if isEs}}Lo que se ha publicado sobre nosotros y lo que dicen quienes ya estuvieron ahí.{{else}}What has been published about us and what the people who were there say.{{/if}}</p>
+    <p class="portada__bajada">{{#if isEs}}Nuestra historia en los medios y las opiniones de quienes han vivido nuestras experiencias.{{else}}What has been published about us and what the people who were there say.{{/if}}</p>
     <div class="portada__pastillas">
       {{#if articulos.length}}<span class="pastilla">{{articulos.length}} {{#if isEs}}reportajes{{else}}features{{/if}}</span>{{/if}}
       {{#if opiniones.length}}<span class="pastilla">{{opiniones.length}} {{#if isEs}}comentarios{{else}}comments{{/if}}</span>{{/if}}
@@ -24,7 +24,7 @@
 {{!-- Reportajes. --}}
 {{#if articulos.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}Reportajes{{else}}Features{{/if}}</p>
+  <p class="rotulo">{{#if isEs}}En los medios{{else}}Features{{/if}}</p>
   <div class="notas">
     {{#each articulos}}
     <a class="nota" href="/{{../lang}}/articulo/{{this.id}}">
@@ -42,7 +42,7 @@
 {{!-- Comentarios de influencers y clientes. --}}
 {{#if opiniones.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}Lo que dicen de nosotros{{else}}What they say about us{{/if}}</p>
+  <p class="rotulo">{{#if isEs}}Opiniones{{else}}What they say about us{{/if}}</p>
   {{!-- Carrusel: se arrastra con el dedo. El desplazamiento y la inercia los
         pone el navegador; el script de abajo sólo añade las flechas para
         quien usa ratón. Sin JavaScript sigue arrastrándose igual. --}}
@@ -78,8 +78,8 @@
   <img class="cierre__foto" src="/assets/images/gallery/socceridcup/3.jpg" alt="">
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
-    <h2 class="cierre__t">{{#if isEs}}¿Escribes sobre fútbol?{{else}}Do you write about football?{{/if}}</h2>
-    <p class="cierre__d">{{#if isEs}}Acreditaciones, material de prensa y entrevistas: escríbenos.{{else}}Credentials, press kit and interviews: write to us.{{/if}}</p>
-    <a class="boton boton--lleno" href="mailto:{{@root.contacto.correo}}?subject={{#if isEs}}Prensa{{else}}Press{{/if}}">{{@root.contacto.correo}} <span class="flecha">↗</span></a>
+    <h2 class="cierre__t">{{#if isEs}}¿Eres prensa o creador?{{else}}Do you write about football?{{/if}}</h2>
+    <p class="cierre__d">{{#if isEs}}Solicita acreditaciones, entrevistas o material de prensa.{{else}}Credentials, press kit and interviews: write to us.{{/if}}</p>
+    <a class="boton boton--lleno" href="mailto:{{@root.contacto.correo}}?subject={{#if isEs}}Prensa{{else}}Press{{/if}}">{{#if isEs}}Contacto de prensa{{else}}{{@root.contacto.correo}}{{/if}} <span class="flecha">↗</span></a>
   </div>
 </section>

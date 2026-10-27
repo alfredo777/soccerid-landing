@@ -1,6 +1,8 @@
 {{!-- Contáctanos. Lo comparten Legends y Travel; el que lo usa pasa el
       asunto (`asunto`) para que el mensaje de WhatsApp llegue con contexto
-      y no haya que preguntar de qué sección viene la persona.
+      y no haya que preguntar de qué sección viene la persona, y su título y
+      texto en español (`tituloEs`, `textoEs`). El inglés sigue genérico
+      hasta que se apruebe su traducción.
 
       Correo y WhatsApp salen de CONTACTO (index.js), el mismo de todo el
       sitio. --}}
@@ -8,8 +10,8 @@
   <p class="rotulo">{{#if isEs}}Contáctanos{{else}}Contact us{{/if}}</p>
   <div class="contacto">
     <div class="contacto__texto">
-      <h3>{{#if isEs}}¿Hablamos?{{else}}Let's talk{{/if}}</h3>
-      <p>{{#if isEs}}Escríbenos y te respondemos con fechas, precios y disponibilidad. Si representas a una marca, un club o una ciudad sede, dilo en el mensaje y te pasamos con el equipo que lleva alianzas.{{else}}Write to us and we'll come back with dates, prices and availability. If you represent a brand, a club or a host city, say so and we'll put you through to the partnerships team.{{/if}}</p>
+      <h3>{{#if @root.isEs}}{{#if tituloEs}}{{tituloEs}}{{else}}¿Hablamos?{{/if}}{{else}}Let's talk{{/if}}</h3>
+      <p>{{#if @root.isEs}}{{#if textoEs}}{{textoEs}}{{else}}Escríbenos y te respondemos con fechas, precios y disponibilidad.{{/if}}{{else}}Write to us and we'll come back with dates, prices and availability. If you represent a brand, a club or a host city, say so and we'll put you through to the partnerships team.{{/if}}</p>
     </div>
     <div class="contacto__vias">
       <a class="via" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{asunto}}" target="_blank" rel="noopener">

@@ -1,10 +1,11 @@
 {
   "_nota": "Premios y reconocimientos de SOCCER iD, para /nosotros (Historia). Del más nuevo al más viejo. Los que llevan \"muestra\": true son INVENTADOS para ver el diseño y salen con la pastilla punteada «Muestra»: se reemplazan por los reales (año, nombre, quién lo otorga) y se les quita la marca. Lista vacía = el bloque no se pinta.",
+  "_nota_es": "Español: los reales, aprobados el 27/10/2026. El inglés sigue con los de muestra hasta que se apruebe su traducción.",
   "es": {
     "lista": [
-      { "anio": "2025", "nombre": "Mejor evento deportivo internacional", "otorga": "Nombre de la organización", "muestra": true },
-      { "anio": "2024", "nombre": "Reconocimiento a la experiencia del aficionado", "otorga": "Nombre de la organización", "muestra": true },
-      { "anio": "2023", "nombre": "Empresa revelación en marketing deportivo", "otorga": "Nombre de la organización", "muestra": true }
+      { "anio": "2025", "nombre": "Empresas más distinguidas de México", "otorga": "Impulso Social de México / Líderes Trascendentales" },
+      { "anio": "2018", "nombre": "Mejor startup deportiva", "otorga": "Sports Innovation Summit" },
+      { "anio": "2016", "nombre": "5.ª generación", "otorga": "Wayra México" }
     ]
   },
   "en": {

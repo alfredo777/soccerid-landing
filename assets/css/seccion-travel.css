@@ -21,6 +21,10 @@
 .partido__torneo { text-align: right; font-size: 13px; color: var(--tinta-2); }
 .partido__torneo b { display: block; color: var(--tinta); font-size: 14px; }
 
+.travel__aclaracion { font-size: 14px; color: var(--tinta-2); margin-top: 14px; }
+/* El nombre del viaje lleva a su ficha, igual que el botón. */
+a.evento__nombre:hover { color: var(--acento-chico); }
+
 .experiencias { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
 .experiencia { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); overflow: hidden; }
 .experiencia__foto { aspect-ratio: 16 / 8; background: var(--linea) center / cover no-repeat; }

@@ -19,6 +19,15 @@
 /* Mismo caso que en Travel: el texto llega del JSON con justify en línea. */
 .somos__texto p { text-align: left !important; }
 
+/* ─── Nuestras sedes: país arriba, ciudad grande ──────────────────── */
+.sedes { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.sede { display: flex; flex-direction: column; gap: 6px; padding: 24px; background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); }
+.sede__pais { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--acento-chico); }
+.sede__ciudad { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+
+/* El cierre lleva dos botones (WhatsApp y correo), centrados. */
+.nosotros__acciones { justify-content: center; }
+
 /* ─── Premios ─────────────────────────────────────────────────────── */
 .premio__cab { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .premio__icono { width: 26px; height: 26px; color: var(--acento-chico); flex: none; }

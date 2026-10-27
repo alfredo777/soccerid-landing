@@ -12,7 +12,7 @@
     <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / {{actual.nombre}}</p>
     <div class="cabecera__marca">SOCCER iD</div>
     <h1 class="portada__titulo">{{#if isEs}}Nuestra historia{{else}}Our story{{/if}}</h1>
-    <p class="portada__bajada">{{#if isEs}}Una comunidad global de aficionados, clubes y ciudades que creen que el fútbol se vive mejor de cerca.{{else}}A global community of fans, clubs and cities who believe football is better lived up close.{{/if}}</p>
+    <p class="portada__bajada">{{#if isEs}}Partidos internacionales, viajes a los grandes eventos, convivencias con leyendas y contenido de fútbol.{{else}}A global community of fans, clubs and cities who believe football is better lived up close.{{/if}}</p>
   </div>
 </section>
 
@@ -20,7 +20,9 @@
 <section class="seccion envoltura">
   <p class="rotulo">{{#if isEs}}Quiénes somos{{else}}Who we are{{/if}}</p>
   <div class="somos">
-    <div class="somos__texto">{{{quienes.description}}}</div>
+    {{!-- En español, el párrafo aprobado el 27/10/2026 (sin la app histórica).
+          En inglés sigue el del panel hasta que se apruebe la traducción. --}}
+    <div class="somos__texto">{{#if isEs}}<p>En <b>SOCCER iD</b> hacemos del fútbol una experiencia dentro y fuera del estadio. Organizamos partidos internacionales en Estados Unidos, creamos viajes a los grandes eventos y convivencias con leyendas. En nuestro podcast, el juego sigue con entrevistas, análisis y debate.</p>{{else}}{{{quienes.description}}}{{/if}}</div>
     <div class="somos__fotos">
       {{#each quienes.gallery}}
       <button type="button" class="somos__foto" style="background-image:url('{{this.src}}')" data-ampliar="{{this.src}}" aria-label="{{this.alt}}"></button>
@@ -30,33 +32,56 @@
 </section>
 {{/if}}
 
-{{!-- Qué hacemos. Estaba en Tour, pero habla de la empresa y no de la
-      copa: su sitio es aquí. Y aquí NO van las ediciones de la SOCCER iD
-      CUP ni las cuatro marcas: las ediciones son de Tour y las marcas son
-      el índice. Esta página cuenta quiénes somos, nada más. --}}
+{{!-- Qué hacemos. En español, una tarjeta por marca que lleva a su sección
+      (documento de textos del 27/10/2026, que sustituye las cuatro de
+      Gestión de eventos, Clubes, Estrategia comercial y Medios). En inglés
+      siguen las anteriores hasta que se apruebe la traducción. --}}
 <section class="seccion envoltura">
   <p class="rotulo">{{#if isEs}}Qué hacemos{{else}}What we do{{/if}}</p>
   <div class="pilares">
+    {{#if isEs}}
+    <a class="pilar" href="/{{lang}}/tour">
+      <div class="pilar__num">01</div>
+      <h3>Tour</h3>
+      <p>Organizamos partidos entre clubes de Latinoamérica en Estados Unidos.</p>
+    </a>
+    <a class="pilar" href="/{{lang}}/travel">
+      <div class="pilar__num">02</div>
+      <h3>Travel</h3>
+      <p>Creamos viajes a los grandes eventos del fútbol con acceso VIP, hotel y experiencias exclusivas.</p>
+    </a>
+    <a class="pilar" href="/{{lang}}/legends">
+      <div class="pilar__num">03</div>
+      <h3>Legends</h3>
+      <p>Organizamos convivencias con leyendas del fútbol mexicano e internacional.</p>
+    </a>
+    <a class="pilar" href="/{{lang}}/podcast">
+      <div class="pilar__num">04</div>
+      <h3>Podcast</h3>
+      <p>Compartimos entrevistas, análisis y debate con invitados del mundo del fútbol.</p>
+    </a>
+    {{else}}
     <div class="pilar">
       <div class="pilar__num">01</div>
-      <h3>{{#if isEs}}Gestión de eventos{{else}}Event management{{/if}}</h3>
-      <p>{{#if isEs}}Damos vida a partidos internacionales mediante una planeación y ejecución especializada.{{else}}We bring international soccer matches to life through expert planning and execution.{{/if}}</p>
+      <h3>Event management</h3>
+      <p>We bring international soccer matches to life through expert planning and execution.</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">02</div>
-      <h3>{{#if isEs}}Clubes{{else}}Clubs{{/if}}</h3>
-      <p>{{#if isEs}}Trabajamos con los principales clubes profesionales de Latinoamérica.{{else}}We work with leading professional soccer clubs across Latin America.{{/if}}</p>
+      <h3>Clubs</h3>
+      <p>We work with leading professional soccer clubs across Latin America.</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">03</div>
-      <h3>{{#if isEs}}Estrategia comercial{{else}}Commercial strategy{{/if}}</h3>
-      <p>{{#if isEs}}Desarrollamos estrategias de boletaje, patrocinios y experiencias premium.{{else}}We develop ticketing, sponsorship and premium hospitality strategies.{{/if}}</p>
+      <h3>Commercial strategy</h3>
+      <p>We develop ticketing, sponsorship and premium hospitality strategies.</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">04</div>
-      <h3>{{#if isEs}}Medios{{else}}Media{{/if}}</h3>
-      <p>{{#if isEs}}Gestionamos la producción de transmisiones y el contenido digital para maximizar el alcance de cada evento.{{else}}We manage broadcast production and digital content to maximize audience reach.{{/if}}</p>
+      <h3>Media</h3>
+      <p>We manage broadcast production and digital content to maximize audience reach.</p>
     </div>
+    {{/if}}
   </div>
 </section>
 
@@ -80,12 +105,32 @@
 </section>
 {{/if}}
 
+{{!-- Nuestras sedes: ciudad y país, sin dirección (no está aprobada). Sólo
+      español por ahora. Debajo irán las marcas con las que hemos colaborado,
+      cuando lleguen los logos. --}}
+{{#if isEs}}
+<section class="seccion envoltura">
+  <p class="rotulo">Nuestras sedes</p>
+  <div class="sedes">
+    <div class="sede"><span class="sede__pais">México</span><span class="sede__ciudad">Ciudad de México</span></div>
+    <div class="sede"><span class="sede__pais">Estados Unidos</span><span class="sede__ciudad">Aventura, Florida</span></div>
+  </div>
+</section>
+{{/if}}
+
 <section class="cierre">
   <img class="cierre__foto" src="/assets/images/gallery/socceridcup/7.jpeg" alt="">
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">{{#if isEs}}Trabajemos juntos{{else}}Let's work together{{/if}}</h2>
-    <p class="cierre__d">{{#if isEs}}Clubes, marcas, ciudades y medios: aquí empieza la conversación.{{else}}Clubs, brands, cities and media: the conversation starts here.{{/if}}</p>
+    <p class="cierre__d">{{#if isEs}}Clubes, marcas, ciudades y medios: hagamos equipo.{{else}}Clubs, brands, cities and media: the conversation starts here.{{/if}}</p>
+    {{#if isEs}}
+    <div class="portada__acciones nosotros__acciones">
+      <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text=Hola!%20Quiero%20trabajar%20con%20SOCCER%20iD" target="_blank" rel="noopener">Contáctanos <span class="flecha">↗</span></a>
+      <a class="boton" href="mailto:{{@root.contacto.correo}}">{{@root.contacto.correo}} <span class="flecha">↗</span></a>
+    </div>
+    {{else}}
     <a class="boton boton--lleno" href="mailto:{{@root.contacto.correo}}">{{@root.contacto.correo}} <span class="flecha">↗</span></a>
+    {{/if}}
   </div>
 </section>

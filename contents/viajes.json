@@ -1,0 +1,55 @@
+{
+  "_nota": "Viajes del Travel Club, del documento «Textos y cambios del sitio web» (27/10/2026). Sólo español: el inglés no está aprobado y /en/travel sigue con el calendario de partidos de upcoming_events.json. `proximos`: las tarjetas y su ficha /es/viaje/:slug; no se publica precio (se pide cotización) ni sede u horario que no estén confirmados. `fechaTexto` es lo que se lee; `dateISO` ordena y da el día y el mes del recuadro. `pasados`: textos aprobados; las fotos son de muestra hasta tener las del viaje (`fotoMuestra`). El itinerario de cada viaje se editará desde el admin (pendiente).",
+  "es": {
+    "proximos": [
+      {
+        "slug": "soccerid-tour-2027",
+        "nombre": "SOCCER iD TOUR",
+        "dateISO": "2027-03-27",
+        "fechaTexto": "27 de marzo de 2027",
+        "foto": "/assets/images/gallery/cup2025/1.jpg"
+      },
+      {
+        "slug": "final-nations-league-2027",
+        "nombre": "Final de CONCACAF Nations League",
+        "dateISO": "2027-03-28",
+        "fechaTexto": "28 de marzo de 2027",
+        "foto": "/assets/images/gallery/vip/1.jpg"
+      },
+      {
+        "slug": "el-clasico-2027",
+        "nombre": "El Clásico · Real Madrid vs. Barcelona",
+        "dateISO": "2027-05-09",
+        "fechaTexto": "9 de mayo de 2027 — por confirmar",
+        "foto": "/assets/images/gallery/vip/2.jpg"
+      },
+      {
+        "slug": "final-champions-league-2027",
+        "nombre": "Final de UEFA Champions League",
+        "dateISO": "2027-06-05",
+        "fechaTexto": "5 de junio de 2027",
+        "foto": "/assets/images/gallery/vip/3.jpg"
+      }
+    ],
+    "pasados": [
+      {
+        "titulo": "Final de UEFA Champions League 2025",
+        "detalle": "Vivimos la final europea con acceso VIP, hotel, traslados y experiencias exclusivas.",
+        "foto": "/assets/images/gallery/vip/3.jpg",
+        "fotoMuestra": true
+      },
+      {
+        "titulo": "Final de Copa Libertadores 2024",
+        "detalle": "La pasión sudamericana en un viaje con boletos VIP, hospedaje, traslados y momentos únicos.",
+        "foto": "/assets/images/gallery/cup2024/2.jpg",
+        "fotoMuestra": true
+      },
+      {
+        "titulo": "Final del Mundial de Clubes 2025",
+        "detalle": "Disfrutamos la gran final con una experiencia completa: estadio VIP, hotel, traslados y actividades especiales.",
+        "foto": "/assets/images/gallery/cup2025/2.jpg",
+        "fotoMuestra": true
+      }
+    ]
+  }
+}
