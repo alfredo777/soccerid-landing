@@ -18,6 +18,8 @@ backups/
 
 # Capturas locales de revisión visual (scripts/capturas.js)
 capturas/
+# Recorridos en PDF: se comparten aparte, no viajan en el repo (12 MB cada uno)
+capturas-prod/*.pdf
 
 # Paquete original de marca: pesado y solo fuente para scripts/generar-logos.py
 assets/images/logovariantes/
