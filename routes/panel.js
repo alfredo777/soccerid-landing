@@ -25,6 +25,7 @@ const turnstile = require('../lib/turnstile');
 const google = require('../lib/googleAuth');
 const propuestas = require('../lib/propuestas');
 const sitioTour = require('../lib/sitioTour');
+const itinerarios = require('../lib/itinerarios');
 const demoAccount = require('../lib/demoAccount');
 
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } });
@@ -3084,6 +3085,31 @@ router.post('/admin/sitio/tour/restablecer', auth.requireAdmin, async (req, res)
     res.redirect(`/panel/admin/sitio/tour?lang=${lang}`);
   } catch (e) {
     res.redirect(`/panel/admin/sitio/tour?lang=es`);
+  }
+});
+
+// ── Sitio web › Itinerarios de viaje ──
+// Uno por viaje próximo de contents/viajes.json. Lógica en lib/itinerarios.js.
+router.get('/admin/sitio/itinerarios', auth.requireAdmin, async (req, res, next) => {
+  try {
+    res.render('panel/admin-sitio-itinerarios', {
+      layout: 'panel',
+      title: 'Itinerarios · Sitio web · Administración · SOCCER iD',
+      pageHeading: 'Sitio web · Itinerarios de viaje',
+      pageSub: 'El día a día de cada viaje próximo de Travel',
+      active: 'sitio-itinerarios',
+      panel: buildAdminPanel(req.panelUser),
+      datos: JSON.stringify({ lang: 'es', t: await itinerarios.todos(), c: {}, viajes: itinerarios.viajes() }).replace(/</g, '\\u003c')
+    });
+  } catch (e) { next(e); }
+});
+
+router.post('/admin/sitio/itinerarios', auth.requireAdmin, async (req, res) => {
+  try {
+    await itinerarios.guardar((req.body || {}).textos);
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(400).json({ ok: false, error: e.message });
   }
 });
 

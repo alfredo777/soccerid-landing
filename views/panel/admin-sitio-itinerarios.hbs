@@ -1,0 +1,44 @@
+{{!-- Panel › Sitio web › Itinerarios. Un bloque por viaje próximo; el
+      formulario lo arma assets/js/admin-sitio.js con el esquema que se
+      construye abajo a partir de los viajes. Lógica: lib/itinerarios.js. --}}
+<link rel="stylesheet" href="/assets/css/admin-sitio.css?v={{version}}">
+
+<div class="st-top">
+  <a class="st-back" href="/panel/admin">← Volver al panel</a>
+  <div class="st-top__der">
+    <a class="st-ver" href="/es/travel#viajes" target="_blank" rel="noopener">Ver los viajes ↗</a>
+  </div>
+</div>
+
+<div class="st-aviso">Un itinerario sólo aparece en la ficha del viaje cuando lo marcas como <b>publicado</b>. El de SOCCER iD TOUR trae el ejemplo del documento de textos: es de maquetación, sin ciudad ni horarios confirmados. Sustitúyelo por el real antes de publicarlo.</div>
+
+<div id="sitioEditor"></div>
+
+<script type="application/json" id="sitioDatos">{{{datos}}}</script>
+<script>
+  (function () {
+    var datos = JSON.parse(document.getElementById('sitioDatos').textContent);
+    window.SITIO_ESQUEMA = {
+      guardar: '/panel/admin/sitio/itinerarios',
+      nota: 'Se guardan todos los itinerarios juntos.',
+      secciones: (datos.viajes || []).map(function (v) {
+        return {
+          id: v.slug,
+          titulo: v.nombre,
+          sub: v.fechaTexto + ' · /es/viaje/' + v.slug,
+          campos: [
+            { k: v.slug + '.publicado', l: '¿Se ve en la página?', tipo: 'check', texto: 'Publicado en la ficha del viaje' },
+            { k: v.slug + '.entradas', l: 'Actividades, en orden', tipo: 'lista', max: 60, agregar: 'Agregar actividad',
+              ayuda: 'Las actividades con la misma fecha, seguidas, se agrupan en un día. La hora es opcional.',
+              cols: [
+                { c: 'fecha', l: 'Fecha', ej: '26 de marzo de 2027' }, { c: 'hora', l: 'Hora (opcional)', ej: 'Ej. 18:00' },
+                { c: 'concepto', l: 'Concepto', ej: 'Llegada y hospedaje' },
+                { c: 'detalle', l: 'Detalle', tipo: 'area', filas: 2, ancho: 'ancha' }
+              ] }
+          ]
+        };
+      })
+    };
+  })();
+</script>
+<script src="/assets/js/admin-sitio.js?v={{version}}"></script>

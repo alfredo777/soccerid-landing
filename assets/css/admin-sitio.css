@@ -36,6 +36,9 @@
 .st-f input:focus, .st-f textarea:focus, .st-f select:focus { outline: none; border-color: var(--pn-purple); }
 .st-ayuda { font-size: 11.5px; color: var(--pn-muted); margin-top: 5px; line-height: 1.45; }
 
+.st-check { display: inline-flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 700; color: var(--pn-ink); cursor: pointer; }
+.st-f .st-check input { width: 18px; height: 18px; margin: 0; }
+
 /* Imagen: miniatura, ruta y botón de subir en una fila. */
 .st-img { display: flex; gap: 8px; align-items: center; }
 .st-img input { flex: 1; min-width: 0; }

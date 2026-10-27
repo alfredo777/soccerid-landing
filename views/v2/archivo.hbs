@@ -1,0 +1,27 @@
+{{!-- Archivo completo de algo que ya pasó (hoy: los viajes del Travel
+      Club, desde «Ver todos los viajes»). Cada tarjeta con ficha enlaza a
+      ella; para agregar una al archivo basta con sumarla a su JSON. --}}
+
+<section class="cabecera envoltura">
+  <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / <a href="{{seccionUrl}}">{{seccionNombre}}</a> / {{titulo}}</p>
+  <div class="cabecera__marca">{{marca}}</div>
+  <h1 class="titular">{{titulo}}</h1>
+</section>
+
+<section class="seccion envoltura">
+  {{#if lista.length}}
+  <div class="recuerdos">
+    {{#each lista}}{{> recuerdo}}{{/each}}
+  </div>
+  {{else}}
+  <p class="vacio">Todavía no hay nada en el archivo.</p>
+  {{/if}}
+</section>
+
+<section class="cierre">
+  <div class="cierre__velo"></div>
+  <div class="cierre__cuerpo">
+    <h2 class="cierre__t">{{cierre.titulo}}</h2>
+    <a class="boton boton--lleno" href="{{cierre.url}}">{{cierre.boton}} <span class="flecha">→</span></a>
+  </div>
+</section>

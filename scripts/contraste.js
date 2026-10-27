@@ -65,6 +65,10 @@ const PAGINAS = [
   // no aparecían aquí.
   '/es/tour', '/es/travel', '/es/legends',
   '/es/podcast', '/es/opiniones', '/es/nosotros',
+  // Fichas de Travel y Legends (documento de textos del 27/10/2026).
+  '/es/viaje/el-clasico-2027', '/es/travel/viajes-pasados',
+  '/es/travel/viajes-pasados/final-champions-league-2025',
+  '/es/legends/eventos/luis-figo-monterrey-2022',
 ];
 
 // Los paneles bento de la landing, que solo existen en el DOM al abrirlos.

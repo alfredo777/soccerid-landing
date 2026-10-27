@@ -7,8 +7,9 @@
       vivirlo» y deja pendiente dónde ponerlo. Ésta es una ubicación
       provisional, por confirmar con León.
 
-      El itinerario por días se agrega cuando se edite desde el admin; el
-      del documento es de maquetación y no se publica. Sólo español. --}}
+      El itinerario por días se edita en el admin (Panel › Sitio web ›
+      Itinerarios) y sólo aparece si está marcado como publicado. Sólo
+      español. --}}
 
 <section class="portada portada--ficha">
   {{#if viaje.foto}}<img class="portada__foto" src="{{viaje.foto}}" alt="">{{/if}}
@@ -56,6 +57,28 @@
     </div>
   </div>
 </section>
+
+{{#if itinerario}}
+<section class="seccion envoltura">
+  <p class="rotulo">Itinerario de viaje</p>
+  <div class="itinerario">
+    {{#each itinerario}}
+    <div class="itinerario__dia">
+      <div class="itinerario__fecha">{{this.fecha}}</div>
+      <ol class="itinerario__pasos">
+        {{#each this.pasos}}
+        <li class="itinerario__paso">
+          {{#if this.hora}}<div class="itinerario__hora">{{this.hora}}</div>{{/if}}
+          <div class="itinerario__concepto">{{this.concepto}}</div>
+          {{#if this.detalle}}<div class="itinerario__detalle">{{this.detalle}}</div>{{/if}}
+        </li>
+        {{/each}}
+      </ol>
+    </div>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
 
 <section class="seccion envoltura">
   <p class="rotulo">Comparte este viaje</p>

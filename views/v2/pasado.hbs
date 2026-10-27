@@ -1,0 +1,94 @@
+{{!-- Ficha de algo que ya pasó: un viaje del Travel Club o un encuentro de
+      Legends. Plantilla del documento «Textos y cambios del sitio web»:
+        portada · la experiencia · qué vivimos · momentos · así lo vivieron
+        · otros · cierre · regreso
+      Los bloques sin contenido NO se pintan (momentos, testimonios, lugar y
+      fecha suelen faltar hasta tener el material real). Fotos con visor.
+      La ruta manda `p` (la ficha), `otros`, `cierre`, `regresar` y
+      `fotoReal`: la foto sólo va de fondo cuando es del evento, no de
+      muestra, para no hacerla pasar por real sin la pastilla que lo avisa. --}}
+
+<section class="portada portada--ficha">
+  {{#if fotoReal}}<img class="portada__foto" src="{{p.foto}}" alt="">{{/if}}
+  <div class="portada__velo"></div>
+  <div class="portada__cuerpo">
+    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / <a href="{{seccionUrl}}">{{seccionNombre}}</a> / {{p.titulo}}</p>
+    <div class="cabecera__marca">{{marca}}</div>
+    <h1 class="portada__titulo">{{p.titulo}}</h1>
+    {{#if p.lugar}}
+    <div class="portada__pastillas">
+      <span class="pastilla">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        {{p.lugar}}{{#if p.fecha}} · {{p.fecha}}{{/if}}
+      </span>
+      {{#if p.tipo}}<span class="pastilla">{{p.tipo}}</span>{{/if}}
+    </div>
+    {{/if}}
+    <div class="portada__acciones">{{> regresar}}</div>
+  </div>
+</section>
+
+{{#if p.ficha.experiencia}}
+<section class="seccion envoltura">
+  <p class="rotulo">La experiencia</p>
+  <p class="bajada pasado__experiencia">{{p.ficha.experiencia}}</p>
+</section>
+{{/if}}
+
+{{#if p.ficha.queVivimos.length}}
+<section class="seccion envoltura">
+  <p class="rotulo">Qué vivimos</p>
+  <div class="pilares">
+    {{#each p.ficha.queVivimos}}
+    <div class="pilar">
+      <div class="pilar__num">0{{inc @index}}</div>
+      <h3>{{this.titulo}}</h3>
+      <p>{{this.texto}}</p>
+    </div>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
+
+{{#if p.ficha.momentos.length}}
+<section class="seccion envoltura">
+  <p class="rotulo">Momentos</p>
+  <div class="mosaico">
+    {{#each p.ficha.momentos}}
+    <button type="button" class="mosaico__foto" style="background-image:url('{{this.src}}')" data-ampliar="{{this.src}}" aria-label="{{this.alt}}"></button>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
+
+{{#if p.ficha.testimonios.length}}
+<section class="seccion envoltura">
+  <p class="rotulo">Así lo vivieron</p>
+  <div class="pilares">
+    {{#each p.ficha.testimonios}}
+    <figure class="pilar pasado__testimonio">
+      <blockquote>«{{this.texto}}»</blockquote>
+      <figcaption>{{this.nombre}}</figcaption>
+    </figure>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
+
+{{#if otros.length}}
+<section class="seccion envoltura">
+  <p class="rotulo">{{otrosTitulo}}</p>
+  <div class="recuerdos">
+    {{#each otros}}{{> recuerdo}}{{/each}}
+  </div>
+</section>
+{{/if}}
+
+<section class="cierre">
+  {{#if fotoReal}}<img class="cierre__foto" src="{{p.foto}}" alt="">{{/if}}
+  <div class="cierre__velo"></div>
+  <div class="cierre__cuerpo">
+    <h2 class="cierre__t">{{cierre.titulo}}</h2>
+    <a class="boton boton--lleno" href="{{cierre.url}}">{{cierre.boton}} <span class="flecha">→</span></a>
+  </div>
+</section>

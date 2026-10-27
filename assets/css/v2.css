@@ -329,6 +329,10 @@ a.pilar:hover { border-color: var(--tinta); }
 .recuerdo__titulo { font-size: 19px; font-weight: 800; letter-spacing: -.01em; line-height: 1.25; margin: 6px 0 6px; }
 .recuerdo__meta { font-size: 14px; color: var(--tinta-2); }
 .recuerdo__detalle { font-size: 14px; color: var(--tinta-2); margin-top: 10px; }
+.recuerdo--enlace { display: block; transition: border-color .15s, transform .12s; }
+.recuerdo--enlace:hover { border-color: var(--tinta); }
+.recuerdo--enlace:active { border-color: var(--tinta); transform: scale(.985); }
+.recuerdo__ver { display: inline-block; margin-top: 12px; font-size: 14px; font-weight: 700; color: var(--acento-chico); }
 
 /* ─── Contacto ────────────────────────────────────────────────────── */
 .contacto { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: center; }
@@ -350,6 +354,8 @@ a.pilar:hover { border-color: var(--tinta); }
 .cierre__t { font-size: clamp(30px, 4.4vw, 54px); font-weight: 900; letter-spacing: -.03em; line-height: 1.04; }
 .cierre__d { font-size: 17px; color: var(--tinta-2); margin: 16px 0 28px; }
 .cierre + .pie { margin-top: 0; border-top: 0; }
+/* Sin descripción, el botón no se pega al título. */
+.cierre__t + .boton { margin-top: 26px; }
 
 /* ─── Celular y tableta para los bloques de sección ───────────────── */
 /* Mismo corte que el resto de la hoja (900 px): con 860 quedaba una franja
@@ -401,7 +407,7 @@ a.pilar:hover { border-color: var(--tinta); }
    así la primera tarjeta queda alineada con el texto y las demás se
    asoman por el borde de la pantalla, que es lo que invita a arrastrar. */
 .carrusel { position: relative; margin-inline: calc(-1 * var(--gutter)); }
-.opiniones {
+.opiniones, .invitados {
   display: flex; gap: 14px;
   padding-inline: var(--gutter); padding-block: 2px 6px;
   overflow-x: auto; overscroll-behavior-x: contain;
@@ -410,8 +416,8 @@ a.pilar:hover { border-color: var(--tinta); }
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;            /* la barra sobra: la referencia son los puntos */
 }
-.opiniones::-webkit-scrollbar { display: none; }
-.opiniones:focus-visible { outline: 2px solid var(--acento); outline-offset: 4px; }
+.opiniones::-webkit-scrollbar, .invitados::-webkit-scrollbar { display: none; }
+.opiniones:focus-visible, .invitados:focus-visible { outline: 2px solid var(--acento); outline-offset: 4px; }
 /* Flechas: sólo donde hay ratón. En táctil estorban y el dedo basta. */
 .carrusel__mandos { display: none; }
 @media (hover: hover) and (pointer: fine) {
@@ -590,3 +596,23 @@ a.pilar, .prensa__nota, .via, .entre__ir, .entre__todas, .nota, .edicion, a.alia
    las portadas de sección para que un titular largo quepa en tres líneas. */
 .portada--ficha .portada__titulo { font-size: clamp(32px, 4.4vw, 58px); line-height: 1.05; letter-spacing: -.03em; max-width: 900px; }
 .compartir { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* Ficha de algo que ya pasó (views/v2/pasado.hbs): viajes y Legends. */
+.pasado__experiencia { max-width: 760px; }
+.pasado__testimonio blockquote { font-size: 16px; line-height: 1.6; }
+.pasado__testimonio figcaption { margin-top: 12px; font-size: 14px; font-weight: 800; color: var(--acento-chico); }
+
+/* Itinerario de un viaje (views/v2/viaje.hbs): una columna por día, con la
+   línea de tiempo a la izquierda. */
+.itinerario { display: flex; flex-direction: column; gap: 22px; }
+.itinerario__dia { display: grid; grid-template-columns: 170px 1fr; gap: 24px; }
+.itinerario__fecha { font-size: 15px; font-weight: 800; color: var(--acento-chico); padding-top: 2px; }
+.itinerario__pasos { list-style: none; border-left: 2px solid var(--linea); padding-left: 22px; display: flex; flex-direction: column; gap: 16px; }
+.itinerario__paso { position: relative; }
+.itinerario__paso::before { content: ''; position: absolute; left: -29px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--acento); }
+.itinerario__hora { font-size: 13px; font-weight: 700; color: var(--tinta-2); }
+.itinerario__concepto { font-size: 17px; font-weight: 800; }
+.itinerario__detalle { font-size: 15px; color: var(--tinta-2); margin-top: 2px; }
+@media (max-width: 900px) {
+  .itinerario__dia { grid-template-columns: 1fr; gap: 10px; }
+}

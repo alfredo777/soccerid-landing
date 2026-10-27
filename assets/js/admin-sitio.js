@@ -98,6 +98,12 @@
       ta.addEventListener('input', function () { set(ta.value); });
       return ta;
     }
+    if (tipo === 'check') {
+      var cb = el('input', { type: 'checkbox' });
+      cb.checked = !!get();
+      cb.addEventListener('change', function () { set(cb.checked); });
+      return el('label', { 'class': 'st-check' }, [cb, el('span', { texto: def.texto || 'Sí' })]);
+    }
     if (tipo === 'select') {
       var s = el('select');
       (def.opciones || []).forEach(function (o) { s.appendChild(el('option', { value: o[0], texto: o[1] })); });
@@ -243,7 +249,7 @@
   raiz.appendChild(nav);
   secciones.forEach(function (s) { raiz.appendChild(s); });
   raiz.appendChild(el('div', { 'class': 'st-barra' }, [
-    el('span', { 'class': 'st-barra__nota', texto: 'Editando en ' + (datos.lang === 'en' ? 'inglés' : 'español') + '. Fotos y logos son los mismos en los dos idiomas.' }),
+    el('span', { 'class': 'st-barra__nota', texto: esquema.nota || ('Editando en ' + (datos.lang === 'en' ? 'inglés' : 'español') + '. Fotos y logos son los mismos en los dos idiomas.') }),
     guardar
   ]));
   activar((location.hash || '').slice(1));

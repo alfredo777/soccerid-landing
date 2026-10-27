@@ -1,5 +1,5 @@
 {
-  "_nota": "Viajes del Travel Club, del documento «Textos y cambios del sitio web» (27/10/2026). Sólo español: el inglés no está aprobado y /en/travel sigue con el calendario de partidos de upcoming_events.json. `proximos`: las tarjetas y su ficha /es/viaje/:slug; no se publica precio (se pide cotización) ni sede u horario que no estén confirmados. `fechaTexto` es lo que se lee; `dateISO` ordena y da el día y el mes del recuadro. `pasados`: textos aprobados; las fotos son de muestra hasta tener las del viaje (`fotoMuestra`). El itinerario de cada viaje se editará desde el admin (pendiente).",
+  "_nota": "Viajes del Travel Club, del documento «Textos y cambios del sitio web» (27/10/2026). Sólo español: el inglés no está aprobado y /en/travel sigue con el calendario de partidos de upcoming_events.json. `proximos`: las tarjetas y su ficha /es/viaje/:slug; no se publica precio (se pide cotización) ni sede u horario que no estén confirmados. `fechaTexto` es lo que se lee; `dateISO` ordena y da el día y el mes del recuadro. `pasados`: textos aprobados; las fotos son de muestra hasta tener las del viaje (`fotoMuestra`). Sólo los que traen `ficha` tienen página propia (/es/travel/viajes-pasados/:slug); el modelo aprobado es Champions 2025. Libertadores 2024 y Mundial de Clubes 2025 esperan su contenido: hasta entonces su tarjeta no enlaza. En la ficha, los bloques vacíos (momentos, testimonios, lugar, fecha) no se pintan. El itinerario de los próximos se edita en el admin (Panel › Sitio web › Itinerarios).",
   "es": {
     "proximos": [
       {
@@ -33,18 +33,31 @@
     ],
     "pasados": [
       {
+        "slug": "final-champions-league-2025",
         "titulo": "Final de UEFA Champions League 2025",
         "detalle": "Vivimos la final europea con acceso VIP, hotel, traslados y experiencias exclusivas.",
         "foto": "/assets/images/gallery/vip/3.jpg",
-        "fotoMuestra": true
+        "fotoMuestra": true,
+        "ficha": {
+          "experiencia": "Vivimos la final de la Champions con acceso VIP y un viaje que reunió fútbol, comodidad y experiencias exclusivas. Nos encargamos del hospedaje y los traslados para que nuestros viajeros disfrutaran cada momento.",
+          "queVivimos": [
+            { "titulo": "La final en VIP", "texto": "Disfrutamos el partido desde una zona preferencial del estadio." },
+            { "titulo": "Cena en el hotel de los clubes", "texto": "Compartimos una cena especial en el hotel donde se hospedaban los equipos." },
+            { "titulo": "Hotel y traslados", "texto": "Hospedaje y traslados organizados para disfrutar el viaje con comodidad." }
+          ],
+          "momentos": [],
+          "testimonios": []
+        }
       },
       {
+        "slug": "final-copa-libertadores-2024",
         "titulo": "Final de Copa Libertadores 2024",
         "detalle": "La pasión sudamericana en un viaje con boletos VIP, hospedaje, traslados y momentos únicos.",
         "foto": "/assets/images/gallery/cup2024/2.jpg",
         "fotoMuestra": true
       },
       {
+        "slug": "final-mundial-de-clubes-2025",
         "titulo": "Final del Mundial de Clubes 2025",
         "detalle": "Disfrutamos la gran final con una experiencia completa: estadio VIP, hotel, traslados y actividades especiales.",
         "foto": "/assets/images/gallery/cup2025/2.jpg",

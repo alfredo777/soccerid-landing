@@ -11,8 +11,9 @@ con los textos que ya tenía el sitio hasta que llegue la traducción.
 - **Travel, Legends, Podcast, Media y Nosotros NO son editables por ahora**
   (27/10/2026): sus textos van en el código y en el admin aparecen en
   «Sitio web» como «Pendiente».
-- **El itinerario de los viajes se editará desde el admin**, no en un JSON;
-  queda pendiente junto con el resto de Travel.
+- **El itinerario de los viajes se edita desde el admin** (Panel › Sitio
+  web › Itinerarios), aunque el resto de Travel siga en el código.
+- **Marcas colaboradoras de Nosotros: pendientes** hasta tener los logos.
 - **Inglés sin tocar**: el documento no aprueba traducciones, así que en `/en`
   sigue el contenido anterior (salvo contacto global y equipos del Tour).
 - Los nombres de los equipos del Tour '27 **no se leen del registro de
@@ -32,17 +33,20 @@ con los textos que ya tenía el sitio hasta que llegue la traducción.
 | 04 Travel: cuatro viajes próximos | Hecho | `contents/viajes.json` (sólo `es`); `upcoming_events.json` no se toca porque lo usan otras páginas |
 | 06 Ficha de viaje (sin itinerario) | Hecho | `/es/viaje/:slug`, `views/v2/viaje.hbs` |
 | 06 Ficha de viaje: dónde va «Solicitar cotización» | **Por confirmar** | puesto provisionalmente en la portada de la ficha |
-| 06–07 Itinerario por días, editable | Pendiente | admin; el del documento es dummy y no se publica |
+| 06–07 Itinerario por días, editable | Hecho | `lib/itinerarios.js`, `/panel/admin/sitio/itinerarios`; sale en la ficha sólo si está publicado. El del Tour arranca con el ejemplo del documento, SIN publicar |
 | 05 Viajes pasados: tres tarjetas aprobadas | Hecho, fotos de muestra | `contents/viajes.json`, pastilla «Foto de muestra» |
-| 05, 08 Viajes pasados: «Ver todos los viajes», listado y fichas | Pendiente | modelo aprobado: Champions 2025 |
+| 05 «Ver todos los viajes» y archivo | Hecho | `/es/travel/viajes-pasados`, `views/v2/archivo.hbs` |
+| 08 Ficha de viaje pasado | Hecho: Champions 2025 | `/es/travel/viajes-pasados/:slug`, `views/v2/pasado.hbs`. Libertadores 2024 y Mundial de Clubes 2025 esperan su contenido: su tarjeta no enlaza |
 | 09–10 Legends: portada, qué es, próximos eventos, eventos pasados, contacto, cierre | Hecho | `views/v2/legends.hbs`, `contents/legends.json`; fotos de los pasados, de muestra |
-| 11 Fichas de eventos pasados de Legends | Pendiente | modelo aprobado: Luis Figo |
+| 11 Ficha de evento pasado de Legends | Hecho: Luis Figo | `/es/legends/eventos/:slug`, la misma plantilla. Roberto Carlos y Borja esperan sus textos |
 | 12–13 Podcast: descripción, botones, cifras, formatos, cierre | Hecho | `views/v2/podcast.hbs`, cifras en la ruta de `index.js` |
-| 12 Podcast: carrusel de invitados | Pendiente | faltan fotos y el episodio de cada invitado |
+| 12 Podcast: carrusel de invitados | Hecho | `contents/podcast.json` (`invitados`); cada uno unido a su episodio por el título publicado; foto = miniatura del episodio hasta tener la suya |
+| 12 Podcast: Pepe Navarro | **Por confirmar** | el episodio #33 es de «Memo Navarro»; su tarjeta va sin botón hasta confirmar que es la misma persona |
 | 13 Podcast: periodo de las cifras (7 M, 84.8 mil h, +35.3 mil) | **Por confirmar** | no se rotulan como históricas ni anuales |
 | 14 Media: portada, títulos y cierre de prensa | Hecho | `views/v2/opiniones.hbs` |
 | 15–16 Nosotros: portada, quiénes somos, qué hacemos, premios reales, sedes, cierre | Hecho | `views/v2/nosotros.hbs`, `contents/premios.json` |
-| 17 Nosotros: marcas con las que hemos colaborado | Pendiente | faltan los archivos de los 35 logos |
+| 17 Nosotros: marcas con las que hemos colaborado | Pendiente (decisión del dueño) | faltan los archivos de los 35 logos |
+| Fotos reales de viajes y Legends | Pendiente de material | mientras la foto sea de muestra, las fichas van sin foto de fondo |
 
 ## Cómo funciona el admin del Tour
 

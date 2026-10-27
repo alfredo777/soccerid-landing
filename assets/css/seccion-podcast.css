@@ -87,6 +87,23 @@
   .lista { max-height: 460px; }
 }
 
+/* ─── Invitados destacados ────────────────────────────────────────── */
+/* La pista es la misma de las opiniones (v2.css); aquí, la tarjeta. */
+.invitado {
+  flex: 0 0 min(280px, 76%); scroll-snap-align: start;
+  display: flex; flex-direction: column;
+  background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); overflow: hidden;
+}
+.invitado__foto {
+  aspect-ratio: 16 / 10; background: var(--fondo) center / cover no-repeat;
+  display: flex; align-items: center; justify-content: center;
+}
+.invitado__inicial { font-size: 56px; font-weight: 900; color: var(--acento); }
+.invitado__cuerpo { flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 18px 20px 20px; }
+.invitado__nombre { font-size: 19px; font-weight: 800; letter-spacing: -.01em; }
+.invitado__desc { font-size: 14px; color: var(--tinta-2); flex: 1; }
+.invitado__ver { align-self: flex-start; margin-top: 10px; }
+
 /* ─── Patrocinadores ──────────────────────────────────────────────── */
 /* Sin logo, el nombre en letra; la pastilla de muestra va debajo. */
 .aliado--texto { flex-direction: column; gap: 8px; }

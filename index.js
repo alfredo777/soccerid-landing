@@ -18,6 +18,7 @@ const crypto = require('crypto');
 const knex = require('./db/knex');
 const cupEditions = require('./db/editions');
 const sitioTour = require('./lib/sitioTour');
+const itinerarios = require('./lib/itinerarios');
 const project2027 = require('./lib/project2027');
 const propuestas = require('./lib/propuestas');
 
@@ -1817,7 +1818,7 @@ app.get('/:lang/travel', rutaV2('travel', async (lang, data) => {
     // todas las fechas, el español caería en la rama del inglés.
     conViajes: !!viajes,
     viajes: viajes ? partidosFuturos(viajes.proximos) : null,
-    viajesPasados: viajes ? viajes.pasados || [] : null,
+    viajesPasados: viajes ? conFicha(viajes.pasados, `/${lang}/travel/viajes-pasados`) : null,
     partidos: viajes ? [] : partidosFuturos(data.upcoming_events),
     vip: (data.panel_templates || {}).vip || null,
     fan: (data.panel_templates || {}).fan || null
@@ -1829,7 +1830,7 @@ app.get('/:lang/travel', rutaV2('travel', async (lang, data) => {
 // otros viajes. Sin precio: se pide cotización. El itinerario se agregará
 // cuando se edite desde el admin; el del documento es de maquetación y no
 // se publica.
-app.get('/:lang/viaje/:slug', (req, res, next) => {
+app.get('/:lang/viaje/:slug', async (req, res, next) => {
   const lang = req.params.lang;
   const viajes = viajesDe(lang);
   if (!viajes) return next();
@@ -1843,14 +1844,84 @@ app.get('/:lang/viaje/:slug', (req, res, next) => {
     rutaCanonica: `/${lang}/viaje/${viaje.slug}`,
     viaje,
     otros: proximos.filter(v => v.slug !== viaje.slug),
-    regresar: { url: `/${lang}/travel#viajes`, texto: 'Volver a próximos viajes' }
+    regresar: { url: `/${lang}/travel#viajes`, texto: 'Volver a próximos viajes' },
+    itinerario: await itinerarios.publicado(viaje.slug)
+  }));
+});
+
+// Lo que ya pasó (viajes y encuentros de Legends): sólo los que traen
+// `ficha` tienen página; a esos se les pone `url` para que la tarjeta enlace.
+const conFicha = (lista, base) => (lista || []).map(x =>
+  x.ficha && x.slug ? Object.assign({}, x, { url: `${base}/${x.slug}` }) : x);
+
+// Archivo completo de viajes pasados («Ver todos los viajes»).
+app.get('/:lang/travel/viajes-pasados', (req, res, next) => {
+  const lang = req.params.lang;
+  const viajes = viajesDe(lang);
+  if (!viajes) return next();
+  const data = datosV2(lang, 'travel');
+  res.render('v2/archivo', Object.assign(data, {
+    tituloPagina: 'Viajes pasados · SOCCER iD Travel',
+    descripcionPagina: 'Los grandes eventos del fútbol que ya vivimos con el Travel Club.',
+    rutaCanonica: `/${lang}/travel/viajes-pasados`,
+    marca: 'SOCCER iD Travel Club',
+    titulo: 'Viajes pasados',
+    seccionUrl: `/${lang}/travel`, seccionNombre: 'Travel',
+    lista: conFicha(viajes.pasados, `/${lang}/travel/viajes-pasados`),
+    cierre: { titulo: 'Vive el próximo', boton: 'Ver próximos viajes', url: `/${lang}/travel#viajes` }
+  }));
+});
+
+app.get('/:lang/travel/viajes-pasados/:slug', (req, res, next) => {
+  const lang = req.params.lang;
+  const viajes = viajesDe(lang);
+  if (!viajes) return next();
+  const base = `/${lang}/travel/viajes-pasados`;
+  const todos = conFicha(viajes.pasados, base);
+  const p = todos.find(v => v.slug === req.params.slug && v.ficha);
+  if (!p) return next();
+  const data = datosV2(lang, 'travel');
+  res.render('v2/pasado', Object.assign(data, {
+    tituloPagina: `${p.titulo} · SOCCER iD Travel`,
+    descripcionPagina: p.detalle || p.titulo,
+    rutaCanonica: `${base}/${p.slug}`,
+    p, marca: 'SOCCER iD Travel Club', fotoReal: !!(p.foto && !p.fotoMuestra),
+    seccionUrl: `/${lang}/travel`, seccionNombre: 'Travel',
+    otros: todos.filter(v => v.slug !== p.slug), otrosTitulo: 'Otros viajes',
+    cierre: { titulo: 'Vive el próximo', boton: 'Ver próximos viajes', url: `/${lang}/travel#viajes` },
+    regresar: { url: base, texto: 'Volver a viajes pasados' }
+  }));
+});
+
+// Ficha de un encuentro pasado de Legends. Sólo español, como su contenido.
+app.get('/:lang/legends/eventos/:slug', (req, res, next) => {
+  const lang = req.params.lang;
+  if (lang !== 'es') return next();
+  const data = datosV2(lang, 'legends');
+  const base = `/${lang}/legends/eventos`;
+  const todos = conFicha((data.legends || {}).pasados, base);
+  const p = todos.find(v => v.slug === req.params.slug && v.ficha);
+  if (!p) return next();
+  res.render('v2/pasado', Object.assign(data, {
+    tituloPagina: `${p.titulo} · SOCCER iD Legends`,
+    descripcionPagina: p.ficha.experiencia || p.titulo,
+    rutaCanonica: `${base}/${p.slug}`,
+    p, marca: 'SOCCER iD Legends', fotoReal: !!(p.foto && !p.fotoMuestra),
+    seccionUrl: `/${lang}/legends`, seccionNombre: 'Legends',
+    otros: todos.filter(v => v.slug !== p.slug), otrosTitulo: 'Otros encuentros',
+    cierre: { titulo: 'Conoce a tus ídolos', boton: 'Ver próximos eventos', url: `/${lang}/legends#calendario` },
+    regresar: { url: `/${lang}/legends#eventos-pasados`, texto: 'Volver a eventos pasados' }
   }));
 });
 
 // Próximos (de hoy en adelante, con su día y mes) y pasados, de
 // contents/legends.json. Lo de muestra lo marca la vista.
 app.get('/:lang/legends', rutaV2('legends', async (lang, data) => ({
-  eventos: partidosFuturos((data.legends || {}).proximos)
+  eventos: partidosFuturos((data.legends || {}).proximos),
+  // En español, las tarjetas de los encuentros con ficha enlazan a ella.
+  legends: lang === 'es'
+    ? Object.assign({}, data.legends, { pasados: conFicha((data.legends || {}).pasados, `/${lang}/legends/eventos`) })
+    : data.legends
 })));
 
 app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
@@ -1910,7 +1981,18 @@ app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
     { valor: compacto(crudos.length ? Math.round(vistas / crudos.length) : 0), etiqueta: lang === 'en' ? 'Views per episode' : 'Vistas por episodio' },
     { valor: `${horas} h`, etiqueta: lang === 'en' ? 'Of conversation' : 'De conversación' }
   ];
+  // Invitados destacados (sólo español): su episodio sale de la lista por
+  // videoId, así el número y el título son los publicados, no escritos a mano.
+  const invitados = lang === 'en' ? [] : (pod.invitados || []).map(i => {
+    const ep = eps.find(e => e.videoId === i.videoId);
+    return Object.assign({}, i, {
+      inicial: (i.nombre || '?').trim().charAt(0),
+      foto: i.foto || (ep ? `https://i.ytimg.com/vi/${ep.videoId}/hqdefault.jpg` : ''),
+      ep: ep || null
+    });
+  });
   return {
+    invitados,
     plataformas, episodios: eps, ultimo: eps.length ? eps[0] : null,
     cifras, patrocinadores: pod.patrocinadores || [], instagram: pod.instagram || ''
   };

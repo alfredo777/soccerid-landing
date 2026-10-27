@@ -84,8 +84,9 @@
 </section>
 
 <script>
-  // Al tocar una fila, el reproductor cambia de episodio sin salir de la
-  // página. Si esto no corre, cada fila sigue siendo su enlace a YouTube.
+  // Al tocar una fila de la lista o el «Ver episodio» de un invitado, el
+  // reproductor cambia de episodio sin salir de la página. Si esto no
+  // corre, cada uno sigue siendo su enlace a YouTube.
   (function () {
     var caja = document.getElementById('reproductorCaja');
     var lista = document.getElementById('listaEpisodios');
@@ -95,20 +96,22 @@
 
     var palabra = rotuloNum ? rotuloNum.textContent.replace(/\s*\d+\s*$/, '').trim() : 'Episodio';
 
-    lista.addEventListener('click', function (e) {
-      var fila = e.target.closest('.fila-ep');
-      if (!fila || !fila.dataset.video) return;
+    document.addEventListener('click', function (e) {
+      var fuente = e.target.closest('[data-video]');
+      if (!fuente || !fuente.dataset.video) return;
       // Con una tecla de por medio (abrir en otra pestaña), que mande el enlace.
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
       e.preventDefault();
 
-      caja.src = 'https://www.youtube-nocookie.com/embed/' + fila.dataset.video + '?rel=0&autoplay=1';
-      caja.title = fila.dataset.titulo || 'SOCCER iD Podcast';
-      if (rotuloNum) rotuloNum.textContent = palabra + ' ' + fila.dataset.num;
-      if (rotuloTit) rotuloTit.textContent = fila.dataset.titulo || '';
+      caja.src = 'https://www.youtube-nocookie.com/embed/' + fuente.dataset.video + '?rel=0&autoplay=1';
+      caja.title = fuente.dataset.titulo || 'SOCCER iD Podcast';
+      if (rotuloNum) rotuloNum.textContent = palabra + ' ' + fuente.dataset.num;
+      if (rotuloTit) rotuloTit.textContent = fuente.dataset.titulo || '';
 
-      lista.querySelectorAll('.fila-ep').forEach(function (f) { f.classList.remove('is-activa'); });
-      fila.classList.add('is-activa');
+      // La fila de ese episodio queda marcada, venga de donde venga el toque.
+      lista.querySelectorAll('.fila-ep').forEach(function (f) {
+        f.classList.toggle('is-activa', f.dataset.video === fuente.dataset.video);
+      });
 
       // En una columna el video queda arriba de la lista y el episodio
       // arrancaba fuera de la vista. Si no se ve entero, se sube hasta él;
@@ -121,6 +124,41 @@
     });
   })();
 </script>
+{{/if}}
+
+{{!-- Invitados destacados (sólo español). Cada tarjeta carga su entrevista
+      en el reproductor de arriba; sin episodio relacionado, va sin botón.
+      Carrusel como el de opiniones: se arrastra con el dedo. --}}
+{{#if invitados.length}}
+<section class="seccion envoltura">
+  <p class="rotulo">Invitados destacados</p>
+  <div class="carrusel">
+    <div class="invitados" data-pista tabindex="0" role="region" aria-label="Invitados destacados, se arrastra para ver más">
+      {{#each invitados}}
+      <article class="invitado">
+        <div class="invitado__foto"{{#if this.foto}} style="background-image:url('{{this.foto}}')"{{/if}}>{{#unless this.foto}}<span class="invitado__inicial" aria-hidden="true">{{this.inicial}}</span>{{/unless}}</div>
+        <div class="invitado__cuerpo">
+          <h3 class="invitado__nombre">{{this.nombre}}</h3>
+          <p class="invitado__desc">{{this.descripcion}}</p>
+          {{#if this.ep}}
+          <a class="boton invitado__ver" href="{{this.ep.url}}" target="_blank" rel="noopener"
+             data-video="{{this.ep.videoId}}" data-num="{{this.ep.num}}" data-titulo="{{this.ep.titulo}}">Ver episodio <span class="flecha">↑</span></a>
+          {{/if}}
+        </div>
+      </article>
+      {{/each}}
+    </div>
+    <div class="carrusel__mandos">
+      <button type="button" class="carrusel__flecha" data-ir="-1" aria-label="Anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <button type="button" class="carrusel__flecha" data-ir="1" aria-label="Siguiente">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+{{> carrusel-js}}
 {{/if}}
 
 {{!-- Patrocinadores actuales: de contents/podcast.json. Sin logo se pinta
