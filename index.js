@@ -1798,7 +1798,12 @@ app.get('/:lang/tour', rutaV2('tour', async (lang) => {
   const { t, c } = await sitioTour.leer(lang);
   const ediciones = (await cupEditions.fichas(lang)).map(f => Object.assign({}, f, { url: `/${lang}/socceridcup/${f.year}` }));
   const wa = `https://wa.me/${CONTACTO.whatsapp}?text=${encodeURIComponent(t.mensajeWhatsapp || '')}`;
-  return { t, c, ediciones, wa, tituloPagina: `${t.portada.titulo} · SOCCER iD`, descripcionPagina: t.portada.descripcion };
+  // Prensa: los medios destacados a la vista, el resto detrás de «Ver más».
+  // Sin ninguna destacada, se ven todas.
+  const notas = (t.medios && t.medios.notas) || [];
+  const arriba = notas.filter(n => n.destacada);
+  const prensa = arriba.length ? { arriba, mas: notas.filter(n => !n.destacada) } : { arriba: notas, mas: [] };
+  return { t, c, ediciones, wa, prensa, tituloPagina: `${t.portada.titulo} · SOCCER iD`, descripcionPagina: t.portada.descripcion };
 }));
 
 // Los viajes (contents/viajes.json) sólo están aprobados en español. Ojo:

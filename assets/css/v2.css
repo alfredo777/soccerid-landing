@@ -303,6 +303,17 @@ a.pilar:hover { border-color: var(--tinta); }
    la nota se ve igual que antes. */
 .prensa__img { flex: none; width: 112px; aspect-ratio: 4 / 3; object-fit: cover; border-radius: calc(var(--radio-sm) - 4px); background: var(--linea); }
 .prensa__texto { flex: 1; min-width: 0; }
+/* El medio en su renglón, encima del título: pegados se leían como una frase. */
+.prensa__fuente, .prensa__titulo { display: block; }
+/* «Ver más»: un <details> cuyo resumen es un botón. Al abrir, el botón dice
+   «Ver menos» y las demás notas aparecen debajo. Sin flex en el <details>:
+   no todos los navegadores lo aceptan. */
+.prensa__mas { margin-top: 18px; }
+.prensa__mas > summary { list-style: none; cursor: pointer; display: inline-flex; }
+.prensa__mas > summary::-webkit-details-marker { display: none; }
+.prensa__mas[open] > .prensa { margin-top: 14px; }
+.prensa__mas-cerrar, .prensa__mas[open] .prensa__mas-abrir { display: none; }
+.prensa__mas[open] .prensa__mas-cerrar { display: inline; }
 
 /* ─── Eventos: el calendario de lo que viene ──────────────────────── */
 /* Como .partido pero sin escudos: sirve para cualquier fecha, no sólo

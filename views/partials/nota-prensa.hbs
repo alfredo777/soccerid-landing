@@ -1,0 +1,10 @@
+{{!-- Una nota de prensa: miniatura, medio y título, enlazada a la nota
+      original. La usa «En los medios» del Tour (destacadas y «Ver más»). --}}
+<a class="prensa__nota" href="{{this.url}}" target="_blank" rel="noopener">
+  {{#if this.imagen}}<img class="prensa__img" src="{{this.imagen}}" alt="" loading="lazy">{{/if}}
+  <span class="prensa__texto">
+    <span class="prensa__fuente">{{this.fuente}}</span>
+    <span class="prensa__titulo">{{this.titulo}}</span>
+  </span>
+  <span class="flecha">↗</span>
+</a>

@@ -158,21 +158,27 @@
 </section>
 {{/if}}
 
-{{#if t.medios.notas.length}}
+{{!-- En los medios: los destacados a la vista (TUDN, Medio Tiempo, Récord,
+      ESPN...) y el resto detrás de «Ver más». Es un <details>: funciona sin
+      JavaScript y el botón cambia de texto al abrir. Cuáles van arriba se
+      marca en el admin, nota por nota. --}}
+{{#if prensa.arriba.length}}
 <section class="seccion envoltura">
   <p class="rotulo">{{t.medios.titulo}}</p>
   <div class="prensa">
-    {{#each t.medios.notas}}
-    <a class="prensa__nota" href="{{this.url}}" target="_blank" rel="noopener">
-      {{#if this.imagen}}<img class="prensa__img" src="{{this.imagen}}" alt="" loading="lazy">{{/if}}
-      <span class="prensa__texto">
-        <span class="prensa__fuente">{{this.fuente}}</span>
-        <span class="prensa__titulo">{{this.titulo}}</span>
-      </span>
-      <span class="flecha">↗</span>
-    </a>
-    {{/each}}
+    {{#each prensa.arriba}}{{> nota-prensa}}{{/each}}
   </div>
+  {{#if prensa.mas.length}}
+  <details class="prensa__mas">
+    <summary class="boton">
+      <span class="prensa__mas-abrir">{{t.medios.verMas}} ({{prensa.mas.length}})</span>
+      <span class="prensa__mas-cerrar">{{t.medios.verMenos}}</span>
+    </summary>
+    <div class="prensa">
+      {{#each prensa.mas}}{{> nota-prensa}}{{/each}}
+    </div>
+  </details>
+  {{/if}}
 </section>
 {{/if}}
 

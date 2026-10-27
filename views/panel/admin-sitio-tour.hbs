@@ -88,10 +88,13 @@
           { c: 'src', l: 'Logo', tipo: 'img', ancho: 'ancha' }, { c: 'alt', l: 'Nombre de la marca' }
         ] }
       ] },
-      { id: 'medios', titulo: 'En los medios', campos: [
+      { id: 'medios', titulo: 'En los medios', sub: 'Las destacadas (los medios grandes: TUDN, Medio Tiempo, Récord, ESPN...) se ven siempre; las demás, detrás de «Ver más». Sin ninguna destacada se ven todas.', campos: [
         { k: 'medios.titulo', l: 'Título del bloque' },
-        { k: 'medios.notas', l: 'Notas', tipo: 'lista', max: 20, agregar: 'Agregar nota', ayuda: 'Una nota sin título o sin enlace no se guarda.', cols: [
+        { k: 'medios.verMas', l: 'Texto del botón «Ver más»', ej: 'Ver más notas' },
+        { k: 'medios.verMenos', l: 'Texto del botón al abrir', ej: 'Ver menos' },
+        { k: 'medios.notas', l: 'Notas, en orden', tipo: 'lista', max: 30, agregar: 'Agregar nota', ayuda: 'Una nota sin título o sin enlace no se guarda.', cols: [
           { c: 'fuente', l: 'Medio', ej: 'TUDN' }, { c: 'url', l: 'Enlace', ej: 'https://...' },
+          { c: 'destacada', l: 'Destacada', tipo: 'check', texto: 'A la vista' },
           { c: 'titulo', l: 'Título', tipo: 'area', filas: 2, ancho: 'ancha' }, { c: 'imagen', l: 'Miniatura', tipo: 'img', ancho: 'ancha' }
         ] }
       ] },
