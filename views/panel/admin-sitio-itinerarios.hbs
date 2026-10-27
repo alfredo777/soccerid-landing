@@ -10,7 +10,7 @@
   </div>
 </div>
 
-<div class="st-aviso">Un itinerario sólo aparece en la ficha del viaje cuando lo marcas como <b>publicado</b>. El de SOCCER iD TOUR trae el ejemplo del documento de textos: es de maquetación, sin ciudad ni horarios confirmados. Sustitúyelo por el real antes de publicarlo.</div>
+<div class="st-aviso">Todos los viajes arrancan con el itinerario de ejemplo del documento de textos y se ven <b>como ejemplo</b>, con su pastilla. Cuando captures el real, cámbialo a <b>Publicado</b>. Si un viaje no debe llevar itinerario, elige <b>No se muestra</b>.</div>
 
 <div id="sitioEditor"></div>
 
@@ -27,7 +27,8 @@
           titulo: v.nombre,
           sub: v.fechaTexto + ' · /es/viaje/' + v.slug,
           campos: [
-            { k: v.slug + '.publicado', l: '¿Se ve en la página?', tipo: 'check', texto: 'Publicado en la ficha del viaje' },
+            { k: v.slug + '.estado', l: '¿Cómo se ve en la ficha del viaje?', tipo: 'select',
+              opciones: [['ejemplo', 'Como ejemplo (con la pastilla «Itinerario de ejemplo»)'], ['publicado', 'Publicado: itinerario confirmado'], ['oculto', 'No se muestra']] },
             { k: v.slug + '.entradas', l: 'Actividades, en orden', tipo: 'lista', max: 60, agregar: 'Agregar actividad',
               ayuda: 'Las actividades con la misma fecha, seguidas, se agrupan en un día. La hora es opcional.',
               cols: [

@@ -33,7 +33,7 @@ con los textos que ya tenía el sitio hasta que llegue la traducción.
 | 04 Travel: cuatro viajes próximos | Hecho | `contents/viajes.json` (sólo `es`); `upcoming_events.json` no se toca porque lo usan otras páginas |
 | 06 Ficha de viaje (sin itinerario) | Hecho | `/es/viaje/:slug`, `views/v2/viaje.hbs` |
 | 06 Ficha de viaje: dónde va «Solicitar cotización» | **Por confirmar** | puesto provisionalmente en la portada de la ficha |
-| 06–07 Itinerario por días, editable | Hecho | `lib/itinerarios.js`, `/panel/admin/sitio/itinerarios`; sale en la ficha sólo si está publicado. El del Tour arranca con el ejemplo del documento, SIN publicar |
+| 06–07 Itinerario por días, editable | Hecho | `lib/itinerarios.js`, `/panel/admin/sitio/itinerarios`. Tres estados: oculto, ejemplo (con la pastilla «Itinerario de ejemplo») y publicado. Los cuatro viajes arrancan como ejemplo con el itinerario del documento; el del Tour literal, los demás con «Día 1, 2, 3» en lugar de las fechas de marzo |
 | 05 Viajes pasados: tres tarjetas aprobadas | Hecho, fotos de muestra | `contents/viajes.json`, pastilla «Foto de muestra» |
 | 05 «Ver todos los viajes» y archivo | Hecho | `/es/travel/viajes-pasados`, `views/v2/archivo.hbs` |
 | 08 Ficha de viaje pasado | Hecho: Champions 2025 | `/es/travel/viajes-pasados/:slug`, `views/v2/pasado.hbs`. Libertadores 2024 y Mundial de Clubes 2025 esperan su contenido: su tarjeta no enlaza |

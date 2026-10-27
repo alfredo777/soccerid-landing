@@ -1845,7 +1845,7 @@ app.get('/:lang/viaje/:slug', async (req, res, next) => {
     viaje,
     otros: proximos.filter(v => v.slug !== viaje.slug),
     regresar: { url: `/${lang}/travel#viajes`, texto: 'Volver a próximos viajes' },
-    itinerario: await itinerarios.publicado(viaje.slug)
+    itinerario: await itinerarios.paraFicha(viaje.slug)
   }));
 });
 

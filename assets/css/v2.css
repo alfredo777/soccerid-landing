@@ -605,6 +605,7 @@ a.pilar, .prensa__nota, .via, .entre__ir, .entre__todas, .nota, .edicion, a.alia
 /* Itinerario de un viaje (views/v2/viaje.hbs): una columna por día, con la
    línea de tiempo a la izquierda. */
 .itinerario { display: flex; flex-direction: column; gap: 22px; }
+.itinerario__aviso { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 14px; color: var(--tinta-2); margin-bottom: 22px; }
 .itinerario__dia { display: grid; grid-template-columns: 170px 1fr; gap: 24px; }
 .itinerario__fecha { font-size: 15px; font-weight: 800; color: var(--acento-chico); padding-top: 2px; }
 .itinerario__pasos { list-style: none; border-left: 2px solid var(--linea); padding-left: 22px; display: flex; flex-direction: column; gap: 16px; }

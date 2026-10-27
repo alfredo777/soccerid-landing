@@ -8,8 +8,8 @@
       provisional, por confirmar con León.
 
       El itinerario por días se edita en el admin (Panel › Sitio web ›
-      Itinerarios) y sólo aparece si está marcado como publicado. Sólo
-      español. --}}
+      Itinerarios). Según su estado no aparece, aparece como ejemplo (con
+      su pastilla) o aparece como confirmado. Sólo español. --}}
 
 <section class="portada portada--ficha">
   {{#if viaje.foto}}<img class="portada__foto" src="{{viaje.foto}}" alt="">{{/if}}
@@ -61,8 +61,11 @@
 {{#if itinerario}}
 <section class="seccion envoltura">
   <p class="rotulo">Itinerario de viaje</p>
+  {{#if itinerario.ejemplo}}
+  <p class="itinerario__aviso"><span class="pastilla pastilla--muestra">Itinerario de ejemplo</span> Fechas, horarios y servicios por confirmar.</p>
+  {{/if}}
   <div class="itinerario">
-    {{#each itinerario}}
+    {{#each itinerario.dias}}
     <div class="itinerario__dia">
       <div class="itinerario__fecha">{{this.fecha}}</div>
       <ol class="itinerario__pasos">
