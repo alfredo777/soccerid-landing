@@ -1,0 +1,62 @@
+/* 10.º aniversario (2016–2026): la insignia de boleto de los posts de
+   redes y el bloque «10 años de historia» de Nosotros.
+
+   El azul es el de la campaña del aniversario, más claro que el de marca
+   (#1B17EF): sobre el fondo oscuro el de marca casi no se ve (1.45 de
+   contraste). Va SÓLO en el borde, la línea punteada y el «10» de la
+   sección grande; los textos van en blanco. La comparten el inicio
+   (layout main) y las secciones (layout v2), por eso es una hoja aparte. */
+:root { --aniv: #3D74FF; }
+
+/* ─── Insignia de boleto ──────────────────────────────────────────── */
+.aniv {
+  display: inline-flex; align-items: center; gap: 12px;
+  padding: 8px 18px 8px 20px;
+  border: 2px solid var(--aniv); border-radius: 12px;
+  background: rgba(8, 12, 36, .62);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  color: #fff; text-decoration: none; line-height: 1;
+  /* Las muescas del boleto: dos medios círculos recortados a los lados. */
+  -webkit-mask: radial-gradient(circle 7px at 0 50%, #0000 96%, #000) left / 51% 100% no-repeat,
+                radial-gradient(circle 7px at 100% 50%, #0000 96%, #000) right / 51% 100% no-repeat;
+          mask: radial-gradient(circle 7px at 0 50%, #0000 96%, #000) left / 51% 100% no-repeat,
+                radial-gradient(circle 7px at 100% 50%, #0000 96%, #000) right / 51% 100% no-repeat;
+  transition: transform .12s, background .15s;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.aniv:hover { background: rgba(20, 30, 80, .72); }
+.aniv:active { transform: scale(.96); }
+.aniv__num { font-family: inherit; font-size: 34px; font-weight: 900; letter-spacing: -.03em; display: inline-flex; align-items: flex-start; }
+.aniv__o { font-size: .42em; font-weight: 800; margin: .1em 0 0 .06em; letter-spacing: 0; }
+.aniv__sep { align-self: stretch; border-left: 2px dashed var(--aniv); }
+.aniv__txt { display: flex; flex-direction: column; gap: 4px; }
+.aniv__txt b { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.aniv__txt span { font-size: 13px; font-weight: 600; letter-spacing: .04em; }
+
+.aniv--chico { gap: 9px; padding: 6px 14px 6px 16px; border-width: 1.5px; border-radius: 10px; }
+.aniv--chico .aniv__num { font-size: 24px; }
+.aniv--chico .aniv__sep { border-left-width: 1.5px; }
+.aniv--chico .aniv__txt b { font-size: 10.5px; }
+.aniv--chico .aniv__txt span { font-size: 11.5px; }
+
+/* ─── 10 años de historia (Nosotros) ──────────────────────────────── */
+.decada { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.4fr); gap: 48px; align-items: start; }
+.decada__marca { position: sticky; top: 110px; }
+.decada__diez { font-size: clamp(120px, 16vw, 220px); font-weight: 900; letter-spacing: -.06em; line-height: .8; color: var(--aniv); }
+.decada__titulo { font-size: clamp(28px, 3.2vw, 40px); font-weight: 900; letter-spacing: -.03em; line-height: 1.05; margin-top: 18px; }
+.decada__rango { font-size: 15px; font-weight: 700; letter-spacing: .12em; color: var(--tinta-2); margin-top: 8px; }
+.decada__lema { font-size: 16px; color: var(--tinta-2); margin-top: 16px; max-width: 360px; }
+.decada__marca .aniv { margin-top: 22px; }
+
+.decada__hitos { list-style: none; border-left: 2px dashed var(--aniv); padding-left: 26px; display: flex; flex-direction: column; gap: 22px; }
+.decada__hito { position: relative; }
+.decada__hito::before { content: ''; position: absolute; left: -34px; top: 5px; width: 14px; height: 14px; border-radius: 50%; background: var(--fondo, #0B0B14); border: 2px solid var(--aniv); }
+.decada__hito--hoy::before { background: var(--aniv); }
+.decada__anio { font-size: 13px; font-weight: 800; letter-spacing: .12em; color: var(--tinta-2); }
+.decada__que { font-size: 18px; font-weight: 800; letter-spacing: -.01em; margin-top: 2px; }
+.decada__detalle { font-size: 14px; color: var(--tinta-2); margin-top: 2px; }
+
+@media (max-width: 900px) {
+  .decada { grid-template-columns: 1fr; gap: 30px; }
+  .decada__marca { position: static; }
+}

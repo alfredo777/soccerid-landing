@@ -31,6 +31,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
   <link rel="stylesheet" href="/assets/css/v2.css?v={{version}}">
   <link rel="stylesheet" href="/assets/css/toque.css?v={{version}}">
+  <link rel="stylesheet" href="/assets/css/aniversario.css?v={{version}}">
   {{!-- Lo propio de esta sección, después de la base para poder
         afinarla sin pelear con la especificidad. --}}
   {{#if hojaSeccion}}<link rel="stylesheet" href="/assets/css/seccion-{{hojaSeccion}}.css?v={{version}}">{{/if}}
@@ -100,6 +101,7 @@
         de arriba siempre está a la mano y repetirlo aquí abajo sobraba. --}}
   <footer class="pie">
     <img class="pie__marca" src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" width="1200" height="271">
+    {{> aniversario chico=true}}
     <div class="pie__redes">
       {{#each redes}}<a class="red-icono" href="{{this.url}}" target="_blank" rel="noopener" aria-label="{{this.nombre}}" title="{{this.nombre}}">{{> icono-red id=this.id}}</a>{{/each}}
     </div>

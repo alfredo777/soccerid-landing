@@ -18,7 +18,7 @@
     '.red-icono', '.arriba', 'a.pilar', '.prensa__nota', '.via', '.entre__ir',
     '.entre__todas', '.nota', '.edicion', 'a.aliado', 'a.hito', '.fila-ep',
     '[data-ampliar]', '.bastidores', '.publicacion__escudo', '.carrusel__flecha',
-    '.puerta', '.redes-v2__chip', '.lang-btn', '.recuerdo--enlace'
+    '.puerta', '.redes-v2__chip', '.lang-btn', '.recuerdo--enlace', '.aniv'
   ].join(',');
 
   // La onda pendiente: se queda grande mientras el dedo está abajo y se

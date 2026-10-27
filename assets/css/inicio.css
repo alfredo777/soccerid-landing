@@ -33,7 +33,9 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
    lema, las seis puertas y las redes. Así no hay que bajar para elegir. */
 .hero-logo-text img { filter: drop-shadow(0 10px 30px rgba(0,0,0,0.5)); }
 .hero-section { height: auto; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 0; }
-.hero-logo-text { margin-bottom: 14px; }
+.hero-logo-text { margin-bottom: 0; }
+/* Isotipo e insignia del aniversario en una fila, centrados sobre el lema. */
+.hero-marca { display: flex; align-items: center; justify-content: center; gap: 22px; margin-bottom: 14px; }
 /* El isotipo escala con la pantalla, no se queda chico en un monitor. */
 .hero-logo-text img { width: clamp(84px, 5vw, 128px); height: auto; }
 /* Calibrado contra el mockup midiendo cielo, gradas y pasto: la foto se
@@ -158,6 +160,13 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
   /* La misma columna, con menos aire. */
   .hero-content { gap: clamp(14px, 2.4vh, 26px); padding: clamp(18px, 3.4vh, 34px) 16px clamp(16px, 2.6vh, 28px); }
   .hero-logo-text img { width: 72px; height: 72px; }
+  /* La insignia del aniversario, en su tamaño chico junto al isotipo. */
+  .hero-marca { gap: 14px; }
+  .hero-marca .aniv { gap: 9px; padding: 6px 14px 6px 16px; border-width: 1.5px; border-radius: 10px; }
+  .hero-marca .aniv__num { font-size: 26px; }
+  .hero-marca .aniv__sep { border-left-width: 1.5px; }
+  .hero-marca .aniv__txt b { font-size: 10.5px; }
+  .hero-marca .aniv__txt span { font-size: 11.5px; }
   /* Dos columnas por tres filas que llenan lo que queda de pantalla. */
   .puertas { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(3, 1fr); gap: 10px; width: 100%; max-height: none; }
   .puerta { flex: none; border-radius: 18px; }

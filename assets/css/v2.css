@@ -494,6 +494,7 @@ a.pilar:hover { border-color: var(--tinta); }
 /* Una sola columna centrada: logo, secciones, redes, avisos y copyright. */
 .pie { max-width: var(--ancho); margin: 64px auto 0; padding: 34px var(--gutter) 40px; border-top: 1px solid var(--linea); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px; }
 .pie__marca { width: 200px; height: auto; display: block; }
+.pie .aniv { margin-top: 2px; }
 .pie__redes, .pie__legales { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; font-size: 14px; font-weight: 600; }
 .pie__legales a:hover { color: var(--acento-chico); }
 .pie__redes { gap: 10px; color: var(--tinta-2); }
