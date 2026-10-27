@@ -286,6 +286,42 @@ async function ensurePortfolioSchema() {
   // cuenta en todo menos en la gráfica de capital acumulado, que ya avisa
   // cuántas quedaron fuera por no tener fecha.
   await backfillInversionesDeFicha();
+
+  // Asistencia de la edición 2023: 18,000, no 15,000 (confirmado el
+  // 27/10/2026 al aplicar el documento de textos del sitio).
+  await ajusteAsistencia2023();
+}
+
+const AJUSTE_2023_KEY = 'ajuste_asistencia_2023';
+
+// Corre UNA vez (bandera en `app_settings`) y sólo cambia lo que siga en el
+// valor viejo: si alguien ya lo editó en el admin, se respeta. Toca la
+// asistencia de la tarjeta y la cifra «15K» de la ficha, en los dos idiomas.
+async function ajusteAsistencia2023() {
+  try {
+    if (!(await knex.schema.hasTable('app_settings'))) return;
+    if (await knex('app_settings').where({ key: AJUSTE_2023_KEY }).first()) return;
+    const filas = await knex('portfolio_events').where({ year: 2023 })
+      .where(b => b.where('is_demo', false).orWhereNull('is_demo'));
+    let cambios = 0;
+    for (const r of filas) {
+      const upd = {};
+      for (const col of ['data_es', 'data_en']) {
+        let d;
+        try { d = JSON.parse(r[col] || 'null'); } catch (_) { d = null; }
+        if (!d) continue;
+        let tocado = false;
+        if (d.attendance && d.attendance.value === '15,000') { d.attendance.value = '18,000'; tocado = true; }
+        (d.stats || []).forEach(s => { if (s.value === '15K') { s.value = '18K'; tocado = true; } });
+        if (tocado) { upd[col] = JSON.stringify(d); cambios++; }
+      }
+      if (Object.keys(upd).length) await knex('portfolio_events').where({ id: r.id }).update(upd);
+    }
+    await knex('app_settings').insert({ key: AJUSTE_2023_KEY, value: String(cambios) });
+    if (cambios) console.log('  ✓ Asistencia 2023 actualizada a 18,000');
+  } catch (e) {
+    console.error('  ✗ No se pudo actualizar la asistencia 2023:', e.message);
+  }
 }
 
 const BACKFILL_KEY = 'backfill_inversion_ficha';

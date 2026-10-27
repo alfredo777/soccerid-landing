@@ -27,7 +27,7 @@ con los textos que ya tenía el sitio hasta que llegue la traducción.
 | Contacto global (`hola@soccerid.co`, `+1 231 515 8991`) | Hecho | `CONTACTO` en `index.js`; las vistas usan `{{@root.contacto.*}}` |
 | Tour: no publicar «Cruz Azul vs. Pumas» | Hecho | `index.js`, ruta `/:lang/tour` |
 | 02–03 Tour: todos los textos, cifras, partidos, filas 2026/2027, cierre | Hecho, editable | `lib/sitioTour.js` (valores por defecto) y `/panel/admin/sitio/tour` |
-| 02 Tour: asistencia 2023 (18,000 en el documento, 15,000 en la base) | **Pendiente de dato** | Se cambia en el admin del Tour › Ediciones anteriores |
+| 02 Tour: asistencia 2023 = 18,000 | Hecho | ajuste de una sola vez en `db/portfolioSchema.js` (`ajusteAsistencia2023`), y `cup_editions.json` de respaldo. La suma de las tres ediciones (61,000) contra el «80K+» sigue por conciliar |
 | 01 Inicio: descripciones de las seis tarjetas | Hecho | campo `lema` de `seccionesV2` en `index.js` |
 | 04–05 Travel: portada, experiencias, aclaración, contacto, cierre personalizado | Hecho | `views/v2/travel.hbs` |
 | 04 Travel: cuatro viajes próximos | Hecho | `contents/viajes.json` (sólo `es`); `upcoming_events.json` no se toca porque lo usan otras páginas |
