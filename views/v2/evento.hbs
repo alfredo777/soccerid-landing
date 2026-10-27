@@ -29,7 +29,7 @@
       </span>
     </div>
     <div class="portada__acciones">
-      <a class="boton boton--lleno" href="https://wa.me/12315158991?text={{#if isEs}}Hola!%20Quiero%20accesos%20VIP%20para%20{{else}}Hi!%20I%20want%20VIP%20access%20for%20{{/if}}{{evento.team1}}%20vs%20{{evento.team2}}" target="_blank" rel="noopener">{{#if isEs}}Reservar accesos VIP{{else}}Book VIP access{{/if}} <span class="flecha">↗</span></a>
+      <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if isEs}}Hola!%20Quiero%20accesos%20VIP%20para%20{{else}}Hi!%20I%20want%20VIP%20access%20for%20{{/if}}{{evento.team1}}%20vs%20{{evento.team2}}" target="_blank" rel="noopener">{{#if isEs}}Reservar accesos VIP{{else}}Book VIP access{{/if}} <span class="flecha">↗</span></a>
       {{> regresar}}
     </div>
   </div>

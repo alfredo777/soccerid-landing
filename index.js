@@ -299,6 +299,15 @@ if (isProduction) {
   app.set('trust proxy', 1);
 }
 
+// El contacto del sitio, en un solo lugar: las vistas lo leen como
+// `{{@root.contacto.correo}}` y `{{@root.contacto.whatsapp}}`. Antes cada
+// página traía el suyo escrito a mano y Tour iba a otro número.
+const CONTACTO = {
+  correo: 'hola@soccerid.co',
+  whatsapp: '12315158991',           // para wa.me, sin signos
+  whatsappTexto: '+1 231 515 8991'   // como se lee
+};
+
 // Variables globales para vistas
 app.use((req, res, next) => {
   res.locals.year = new Date().getFullYear();
@@ -306,6 +315,7 @@ app.use((req, res, next) => {
   res.locals.baseUrl = BASE_URL;
   res.locals.isProduction = isProduction;
   res.locals.turnstileSiteKey = process.env.TURNSTILE_SITE_KEY || '';
+  res.locals.contacto = CONTACTO;
   next();
 });
 
@@ -1595,7 +1605,7 @@ const REDES = [
   { id: 'youtube', nombre: 'YouTube', usuario: 'SOCCER iD', url: 'https://www.youtube.com/channel/UC4Mf2_KUFB5PVfHlKhSpkiQ' },
   { id: 'facebook', nombre: 'Facebook', usuario: 'soccerid7', url: 'https://facebook.com/soccerid7' },
   { id: 'linkedin', nombre: 'LinkedIn', usuario: 'SOCCER iD', url: 'https://www.linkedin.com/company/soccer-id/' },
-  { id: 'whatsapp', nombre: 'WhatsApp', usuario: 'Escríbenos', url: 'https://wa.me/12315158991' }
+  { id: 'whatsapp', nombre: 'WhatsApp', usuario: 'Escríbenos', url: `https://wa.me/${CONTACTO.whatsapp}` }
 ];
 
 /**
@@ -1807,7 +1817,9 @@ app.get('/:lang/tour', rutaV2('tour', async (lang) => {
     .sort((a, b) => (a.orden || 0) - (b.orden || 0))
     .map((v, i) => ({
       num: i + 1,
-      nombre: propuestas.enNegociacion(v) ? (lang === 'en' ? 'To be announced' : 'Por anunciar') : v.label,
+      // NUNCA la etiqueta de la propuesta: lleva los equipos («Cruz Azul vs.
+      // Pumas») y no se publican hasta el anuncio autorizado.
+      nombre: lang === 'en' ? 'Teams to be announced' : 'Equipos por anunciar',
       ventana: v.ventana || (lang === 'en' ? 'Confirmed' : 'Confirmado'),
       confirmado: !propuestas.enNegociacion(v)
     }));

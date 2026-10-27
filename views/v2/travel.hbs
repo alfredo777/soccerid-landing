@@ -24,7 +24,7 @@
     </div>
     <div class="portada__acciones">
       <a class="boton boton--lleno" href="#calendario">{{#if isEs}}Ver el calendario{{else}}See the calendar{{/if}}</a>
-      <a class="boton" href="https://wa.me/12315158991?text={{#if isEs}}Hola!%20Quiero%20informaci%C3%B3n%20del%20Travel%20Club{{else}}Hi!%20I%27d%20like%20info%20about%20the%20Travel%20Club{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Escríbenos{{else}}Write to us{{/if}} <span class="flecha">↗</span></a>
+      <a class="boton" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if isEs}}Hola!%20Quiero%20informaci%C3%B3n%20del%20Travel%20Club{{else}}Hi!%20I%27d%20like%20info%20about%20the%20Travel%20Club{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Escríbenos{{else}}Write to us{{/if}} <span class="flecha">↗</span></a>
     </div>
   </div>
 </section>
@@ -82,7 +82,7 @@
         <div class="partido__meta">{{this.venue}} · {{this.time}}</div>
       </div>
       <div class="partido__torneo"><b>{{this.badge}}</b>{{this.torneo}}{{#if this.jornada}} · {{this.jornada}}{{/if}}</div>
-      <a class="boton" href="https://wa.me/12315158991?text={{#if ../isEs}}Hola!%20Quiero%20accesos%20para%20{{else}}Hi!%20I%20want%20access%20for%20{{/if}}{{this.team1}}%20vs%20{{this.team2}}" target="_blank" rel="noopener">{{#if ../isEs}}Reservar{{else}}Book{{/if}} <span class="flecha">↗</span></a>
+      <a class="boton" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if ../isEs}}Hola!%20Quiero%20accesos%20para%20{{else}}Hi!%20I%20want%20access%20for%20{{/if}}{{this.team1}}%20vs%20{{this.team2}}" target="_blank" rel="noopener">{{#if ../isEs}}Reservar{{else}}Book{{/if}} <span class="flecha">↗</span></a>
     </article>
     {{else}}
     <p class="vacio">{{#if isEs}}No hay partidos publicados por ahora. Escríbenos y te avisamos en cuanto se abra el calendario.{{else}}No matches published yet. Write to us and we'll let you know as soon as the calendar opens.{{/if}}</p>
@@ -109,6 +109,6 @@
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">{{#if isEs}}Dinos a qué estadio quieres ir{{else}}Tell us which stadium you want{{/if}}</h2>
     <p class="cierre__d">{{#if isEs}}Palcos, boletos y viaje. Nosotros armamos el resto.{{else}}Suites, tickets and travel. We handle the rest.{{/if}}</p>
-    <a class="boton boton--lleno" href="https://wa.me/12315158991?text={{#if isEs}}Hola!%20Quiero%20informaci%C3%B3n%20del%20Travel%20Club{{else}}Hi!%20I%27d%20like%20info%20about%20the%20Travel%20Club{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Escríbenos{{else}}Write to us{{/if}} <span class="flecha">↗</span></a>
+    <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if isEs}}Hola!%20Quiero%20informaci%C3%B3n%20del%20Travel%20Club{{else}}Hi!%20I%27d%20like%20info%20about%20the%20Travel%20Club{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Escríbenos{{else}}Write to us{{/if}} <span class="flecha">↗</span></a>
   </div>
 </section>

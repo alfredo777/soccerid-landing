@@ -58,7 +58,7 @@
         <div class="evento__nombre">{{this.nombre}}{{#if this.muestra}}<span class="pastilla pastilla--muestra">{{#if ../isEs}}Muestra{{else}}Sample{{/if}}</span>{{/if}}</div>
         <div class="evento__meta">{{#if this.tipo}}{{this.tipo}} · {{/if}}{{this.lugar}}{{#if this.hora}} · {{this.hora}}{{/if}}</div>
       </div>
-      <a class="boton" href="https://wa.me/12315158991?text={{#if ../isEs}}Hola!%20Quiero%20informaci%C3%B3n%20de%20{{else}}Hi!%20I%27d%20like%20info%20about%20{{/if}}{{this.nombre}}" target="_blank" rel="noopener">{{#if ../isEs}}Más información{{else}}More info{{/if}} <span class="flecha">↗</span></a>
+      <a class="boton" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if ../isEs}}Hola!%20Quiero%20informaci%C3%B3n%20de%20{{else}}Hi!%20I%27d%20like%20info%20about%20{{/if}}{{this.nombre}}" target="_blank" rel="noopener">{{#if ../isEs}}Más información{{else}}More info{{/if}} <span class="flecha">↗</span></a>
     </article>
     {{else}}
     <p class="vacio">{{#if isEs}}Todavía no hay fechas publicadas. Déjanos tu contacto abajo y eres de los primeros en enterarte.{{else}}No dates published yet. Leave us your contact below and you'll be among the first to know.{{/if}}</p>
@@ -84,6 +84,6 @@
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">{{#if isEs}}¿Quieres una leyenda en tu evento?{{else}}Want a legend at your event?{{/if}}</h2>
     <p class="cierre__d">{{#if isEs}}Marcas, clubes y ciudades: cuéntanos qué tienes en mente.{{else}}Brands, clubs and cities: tell us what you have in mind.{{/if}}</p>
-    <a class="boton boton--lleno" href="https://wa.me/12315158991?text={{#if isEs}}Hola!%20Quiero%20informaci%C3%B3n%20de%20SOCCER%20iD%20Legends{{else}}Hi!%20I%27d%20like%20info%20about%20SOCCER%20iD%20Legends{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Escríbenos{{else}}Write to us{{/if}} <span class="flecha">↗</span></a>
+    <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if isEs}}Hola!%20Quiero%20informaci%C3%B3n%20de%20SOCCER%20iD%20Legends{{else}}Hi!%20I%27d%20like%20info%20about%20SOCCER%20iD%20Legends{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Escríbenos{{else}}Write to us{{/if}} <span class="flecha">↗</span></a>
   </div>
 </section>

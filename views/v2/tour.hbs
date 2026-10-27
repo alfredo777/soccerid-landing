@@ -26,7 +26,7 @@
       </span>
     </div>
     <div class="portada__acciones">
-      <a class="boton boton--lleno" href="https://wa.me/17867844303?text={{galeria.ctaMessage}}" target="_blank" rel="noopener">{{galeria.ctaText}} <span class="flecha">↗</span></a>
+      <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{galeria.ctaMessage}}" target="_blank" rel="noopener">{{galeria.ctaText}} <span class="flecha">↗</span></a>
     </div>
   </div>
 </section>
@@ -71,7 +71,7 @@
       <img class="tour27__logo" src="/assets/images/logos/id-tour27-blanco.png" alt="{{tour.nombre}}">
       <h2>{{tour.nombre}}</h2>
       <p>{{#if isEs}}Tres partidos internacionales en Estados Unidos, en una sola temporada.{{else}}Three international matches in the United States, one season.{{/if}}</p>
-      <a class="boton boton--claro" href="https://wa.me/17867844303?text={{#if isEs}}Hola!%20Quiero%20colaborar%20en%20el%20Tour%20%2727%20de%20SOCCER%20iD{{else}}Hi!%20I%27d%20like%20to%20be%20part%20of%20the%20SOCCER%20iD%20Tour%20%2727{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Quiero colaborar / ser parte{{else}}I want to collaborate / be part{{/if}} <span class="flecha">↗</span></a>
+      <a class="boton boton--claro" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if isEs}}Hola!%20Quiero%20colaborar%20en%20el%20Tour%20%2727%20de%20SOCCER%20iD{{else}}Hi!%20I%27d%20like%20to%20be%20part%20of%20the%20SOCCER%20iD%20Tour%20%2727{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Quiero colaborar / ser parte{{else}}I want to collaborate / be part{{/if}} <span class="flecha">↗</span></a>
     </div>
     <ol class="tour27__partidos">
       {{#each tour.partidos}}
@@ -177,6 +177,6 @@
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">{{#if isEs}}Sé parte de la experiencia{{else}}Be part of the experience{{/if}}</h2>
     <p class="cierre__d">{{#if isEs}}Clubes, marcas y ciudades sede: hablemos del Tour '27.{{else}}Clubs, brands and host cities: let's talk about Tour '27.{{/if}}</p>
-    <a class="boton boton--lleno" href="https://wa.me/17867844303?text={{galeria.ctaMessage}}" target="_blank" rel="noopener">{{galeria.ctaText}} <span class="flecha">↗</span></a>
+    <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{galeria.ctaMessage}}" target="_blank" rel="noopener">{{galeria.ctaText}} <span class="flecha">↗</span></a>
   </div>
 </section>

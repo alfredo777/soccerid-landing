@@ -80,6 +80,6 @@
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">{{#if isEs}}¿Escribes sobre fútbol?{{else}}Do you write about football?{{/if}}</h2>
     <p class="cierre__d">{{#if isEs}}Acreditaciones, material de prensa y entrevistas: escríbenos.{{else}}Credentials, press kit and interviews: write to us.{{/if}}</p>
-    <a class="boton boton--lleno" href="mailto:contacto@soccerid.co?subject={{#if isEs}}Prensa{{else}}Press{{/if}}">contacto@soccerid.co <span class="flecha">↗</span></a>
+    <a class="boton boton--lleno" href="mailto:{{@root.contacto.correo}}?subject={{#if isEs}}Prensa{{else}}Press{{/if}}">{{@root.contacto.correo}} <span class="flecha">↗</span></a>
   </div>
 </section>

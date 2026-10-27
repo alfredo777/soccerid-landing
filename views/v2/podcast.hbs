@@ -169,8 +169,8 @@
     </div>
   </div>
   <div class="portada__acciones" style="margin-top:22px">
-    <a class="boton boton--lleno" href="https://wa.me/12315158991?text={{#if isEs}}Hola!%20Quiero%20patrocinar%20el%20podcast%20de%20SOCCER%20iD{{else}}Hi!%20I%27d%20like%20to%20sponsor%20the%20SOCCER%20iD%20podcast{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Quiero patrocinar{{else}}I want to sponsor{{/if}} <span class="flecha">↗</span></a>
-    <a class="boton" href="mailto:contacto@soccerid.co?subject={{#if isEs}}Patrocinio%20del%20podcast{{else}}Podcast%20sponsorship{{/if}}">contacto@soccerid.co <span class="flecha">↗</span></a>
+    <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if isEs}}Hola!%20Quiero%20patrocinar%20el%20podcast%20de%20SOCCER%20iD{{else}}Hi!%20I%27d%20like%20to%20sponsor%20the%20SOCCER%20iD%20podcast{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Quiero patrocinar{{else}}I want to sponsor{{/if}} <span class="flecha">↗</span></a>
+    <a class="boton" href="mailto:{{@root.contacto.correo}}?subject={{#if isEs}}Patrocinio%20del%20podcast{{else}}Podcast%20sponsorship{{/if}}">{{@root.contacto.correo}} <span class="flecha">↗</span></a>
   </div>
 </section>
 
