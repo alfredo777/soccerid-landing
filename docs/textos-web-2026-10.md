@@ -20,6 +20,28 @@ con los textos que ya tenía el sitio hasta que llegue la traducción.
   propuestas**: se escriben a mano en el admin («Equipos por anunciar»
   hasta el anuncio autorizado).
 
+## Por confirmar con León
+
+Dudas abiertas (28/10/2026). Ninguna bloquea el sitio, pero hay que
+resolverlas antes de publicar.
+
+1. **Dónde va «Solicitar cotización»** en la ficha de viaje. El documento lo
+   saca de «Cómo vivirlo» sin decir a dónde; hoy está en la portada de la
+   ficha, provisional (`views/v2/viaje.hbs`).
+2. **Periodo de las cifras del podcast** (7 M visualizaciones, 84.8 mil h,
+   +35.3 mil suscriptores). Mientras no se sepa, no se rotulan como
+   históricas ni anuales (ruta `/:lang/podcast` en `index.js`).
+3. **Si Pepe Navarro es Memo Navarro**, el invitado del episodio #33. Su
+   tarjeta de invitado va sin botón «Ver episodio» hasta confirmarlo
+   (`contents/podcast.json`, `invitados`).
+4. **Asistencia de las ediciones:** suman 61,000 (18,000 + 30,000 + 13,000)
+   contra el «80K+» de «Nuestro alcance» en Tour. Conciliar una de las dos;
+   las dos se editan en el admin del Tour.
+5. **Logos de marcas:** 33 de los 36 son recreaciones con IA según la
+   entrega de diseño, pendientes de cotejar contra los originales. Sólo
+   Olimpus 7, Peluche Caligari y Nuestra Visión salen de archivos del
+   cliente (`contents/marcas_colaboradoras.json`, `deOriginal`).
+
 ## Estado por apartado
 
 | Apartado | Estado | Dónde |
