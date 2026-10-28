@@ -33,7 +33,6 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
   <link rel="stylesheet" href="/assets/css/v2.css?v={{version}}">
   <link rel="stylesheet" href="/assets/css/toque.css?v={{version}}">
-  <link rel="stylesheet" href="/assets/css/aniversario.css?v={{version}}">
   <link rel="stylesheet" href="/assets/css/carga.css?v={{version}}">
   {{!-- Precarga de fotos: la marca va antes de pintar para que ninguna asome
         a medio dibujar; a los 8 s, `carga-lista` lo muestra todo por si
@@ -107,9 +106,7 @@
         (1200×271) para que no se deforme. Sin lista de secciones: el menú
         de arriba siempre está a la mano y repetirlo aquí abajo sobraba. --}}
   <footer class="pie">
-    <img class="pie__marca" src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" width="1200" height="271">
-    {{> aniversario chico=true}}
-    <div class="pie__redes">
+    <img class="pie__marca" src="/assets/images/logo-horizontal-blanco.png" alt="SOCCER iD" width="1200" height="271">    <div class="pie__redes">
       {{#each redes}}<a class="red-icono" href="{{this.url}}" target="_blank" rel="noopener" aria-label="{{this.nombre}}" title="{{this.nombre}}">{{> icono-red id=this.id}}</a>{{/each}}
     </div>
     <nav class="pie__legales" aria-label="{{#if isEs}}Avisos{{else}}Legal{{/if}}">
