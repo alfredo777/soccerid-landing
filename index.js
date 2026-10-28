@@ -1676,13 +1676,16 @@ function seccionesV2(lang) {
 
 // Una foto de las que ya tiene el sitio por sección, para el home. Se ven en
 // escala de grises: el home no lleva color.
+// Fotos de la entrega de diseño del 28/10/2026 (01-Inicio), cuadradas de
+// 1254 px. El encuadre de cada una (escritorio, tableta y teléfono) vive en
+// assets/css/inicio.css, por clase `.puerta--<slug>`.
 const FOTOS_SECCION = {
-  tour: '/assets/images/idcup.jpg',               // la del panel SOCCER iD CUP original
-  travel: '/assets/images/vip2.jpg',              // la del panel Asientos VIP original
-  legends: '/assets/images/gallery/cup2023/2.jpg',
-  podcast: '/assets/images/gallery/socceridcup/1.jpg',
-  opiniones: '/assets/images/opi2.jpg',           // la del panel Reviews original
-  nosotros: '/assets/images/somoss.jpg'           // la del panel Quiénes somos original
+  tour: '/assets/images/inicio/tarjeta-tour.jpg',
+  travel: '/assets/images/inicio/tarjeta-travel.jpg',
+  legends: '/assets/images/inicio/tarjeta-legends.jpg',
+  podcast: '/assets/images/inicio/tarjeta-podcast.jpg',
+  opiniones: '/assets/images/inicio/tarjeta-media.jpg',
+  nosotros: '/assets/images/inicio/tarjeta-nosotros.jpg'
 };
 
 /**

@@ -79,7 +79,23 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 /* La foto va a plena luz, como en el mockup; sólo se oscurece el pie,
    donde va el texto. */
 .puerta::before { content: ''; position: absolute; inset: 0; z-index: -2; background: var(--foto) center / cover no-repeat; opacity: .92; transform: scale(1.04); transition: opacity .5s, transform .9s cubic-bezier(.2,.8,.2,1); }
-.puerta--tour::before { background-position: center 12%; }
+
+/* ─── Encuadre de cada foto (entrega del 28/10/2026) ──────────────── */
+/* Las seis son cuadradas. La tarjeta cambia de forma según la pantalla y
+   el recorte se piensa en cada caso, medido en capturas:
+     escritorio  alta y angosta (216×522 a 1440): se ve de arriba abajo y
+                 se recortan los lados → manda la x del protagonista.
+     tableta     ancha y baja (491×139 a 1024, 363×224 a 768): se recorta
+                 arriba y abajo → manda la y de las caras.
+     teléfono    casi cuadrada, y el texto tapa la mitad de abajo → en Tour
+                 y Nosotros la foto se acerca y se sube para que las caras
+                 queden en la parte libre, sin dejar a nadie fuera. */
+.puerta--tour::before      { background-position: 52% 50%; }  /* el duelo América–Nacional */
+.puerta--travel::before    { background-position: 50% 50%; }  /* estadio simétrico */
+.puerta--legends::before   { background-position: 52% 50%; }  /* Figo */
+.puerta--podcast::before   { background-position: 50% 50%; }  /* letrero iD y sillón central */
+.puerta--opiniones::before { background-position: 64% 50%; }  /* el teléfono con TUDN */
+.puerta--nosotros::before  { background-position: 48% 50%; }  /* el grupo, centrado */
 .puerta::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(5,4,21,0.92) 0%, rgba(5,4,21,0.70) 22%, rgba(5,4,21,0.15) 50%, rgba(5,4,21,0) 100%); }
 /* Al pasar, la card crece y se le marca el borde. Nada de halo de color:
    antes el azul de marca pintaba el borde y una sombra de 50 px, y era lo
@@ -100,6 +116,10 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 /* Dos líneas reservadas siempre, para que los seis títulos queden a la
    misma altura aunque el lema sea de una sola línea. */
 .puerta__linea { font-size: 14px; line-height: 1.3; min-height: 2.6em; color: rgba(255,255,255,0.88); max-width: 300px; }
+/* En escritorio se reservan TRES renglones: a 1280 px, y al pasar el cursor
+   (la tarjeta crece y las demás se angostan), unas descripciones caben en
+   dos y otras en tres, y los títulos quedaban a alturas distintas. */
+@media (min-width: 1025px) { .puerta__linea { min-height: 3.9em; } }
 
 /* ─── Redes ───────────────────────────────────────────────────────── */
 /* Seis círculos centrados bajo las puertas, como en el mockup. Chicos y
@@ -189,6 +209,41 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
   .footer-marca { width: 164px; }
   .footer-content { gap: 14px; padding: 24px 20px 28px; }
 }
+/* Tableta (tarjetas anchas y bajas): manda la altura de las caras. A 1024 la
+   tarjeta de Legends, centrada, enseñaba el pecho de Figo sin su cabeza, y
+   la de Podcast cortaba el letrero iD. */
+@media (max-width: 1024px) {
+  .puerta--legends::before   { background-position: 52% 18%; }
+  .puerta--podcast::before   { background-position: 50% 35%; }
+  .puerta--travel::before    { background-position: 50% 45%; }
+  .puerta--opiniones::before { background-position: 60% 50%; }
+}
+/* Teléfono (tarjetas casi cuadradas, texto sobre la mitad de abajo). Tour y
+   Nosotros tenían las caras justo detrás del título: la foto se agranda en
+   alto (150 % y 140 %; con eso siempre cubre el ancho, aun en las tarjetas
+   más anchas que altas de 375×667) y se recorre hacia abajo para que las
+   caras suban al tercio libre. Nosotros se agranda menos para que el grupo
+   completo quepa de lado a lado. */
+@media (max-width: 600px) {
+  .puerta--tour::before     { background-size: auto 150%; background-position: 35% 82%; }
+  .puerta--nosotros::before { background-size: auto 130%; background-position: 44% 100%; }
+  .puerta--legends::before  { background-position: 52% 20%; }
+  /* Cada tarjeta es su propio contenedor: así el texto se compacta según
+     el alto real de la tarjeta, no según el de la pantalla. */
+  .puerta { container-type: size; }
+}
+/* Tarjetas bajas (teléfonos chicos: 167×125 en un iPhone SE). Con el texto
+   a tamaño normal tapaba tres cuartas partes de la foto y las caras quedaban
+   detrás del título. Se compacta, sin quitar nada: la descripción sigue. */
+@container (max-height: 150px) {
+  .puerta__nombre { font-size: 1.05rem; }
+  .puerta__barra { margin: 3px 0 4px; }
+  .puerta__linea { font-size: 11px; line-height: 1.25; min-height: 2.5em; }
+  .puerta__cuerpo { bottom: 9px; }
+  .puerta__icono { width: 28px; height: 28px; top: 8px; left: 8px; }
+  .puerta__icono svg { width: 14px; height: 14px; }
+}
+
 /* ─── Toque ───────────────────────────────────────────────────────── */
 /* Sin hover en el teléfono, la card tiene que responder al bajar el dedo:
    se hunde apenas y se marca el borde, como un botón del sistema. El
