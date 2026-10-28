@@ -279,10 +279,19 @@ a.pilar { transition: border-color .15s; }
 a.pilar:hover { border-color: var(--tinta); }
 
 /* ─── Mosaico: la galería ─────────────────────────────────────────── */
-.mosaico { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+/* minmax(0, 1fr) y no 1fr: con celdas de proporción fija, 1fr dejaba crecer
+   las columnas y la galería se salía ~20 px del ancho del contenido. */
+.mosaico { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
 .mosaico__foto { aspect-ratio: 1; border-radius: var(--radio-sm); background: var(--superficie) center / cover no-repeat; border: 1px solid var(--linea); }
 /* La primera y la sexta van dobles: rompe la retícula y evita el muestrario. */
 .mosaico__foto:nth-child(1), .mosaico__foto:nth-child(6) { grid-column: span 2; aspect-ratio: 2 / 1; }
+/* Con 8 fotos (la galería del Tour y las de cada edición) la última fila
+   quedaba con dos celdas vacías: las dos últimas van dobles y la cuadrícula
+   cierra en tres filas parejas (2+1+1 · 1+1+2 · 2+2). */
+@media (min-width: 901px) {
+  .mosaico:has(> .mosaico__foto:nth-child(8):last-child) > .mosaico__foto:nth-child(7),
+  .mosaico:has(> .mosaico__foto:nth-child(8):last-child) > .mosaico__foto:nth-child(8) { grid-column: span 2; aspect-ratio: 2 / 1; }
+}
 
 /* ─── Aliados: los logos de quien respalda ────────────────────────── */
 .aliados { display: flex; flex-wrap: wrap; gap: 12px; }
@@ -374,7 +383,14 @@ a.pilar:hover { border-color: var(--tinta); }
    de celular. */
 @media (max-width: 900px) {
   .portada { margin-top: -92px; min-height: clamp(380px, 62vh, 560px); }
-  .portada__cuerpo { padding-top: 120px; }
+  /* Encabezado centrado en el teléfono (indicaciones de la entrega de
+     diseño, 28/10/2026): sin hueco a la izquierda. El velo deja de
+     oscurecer sólo ese lado y pasa a ser vertical, parejo de lado a lado. */
+  .portada__cuerpo { padding-top: 120px; text-align: center; }
+  .portada__velo { background: linear-gradient(180deg, rgba(18,20,24,.84) 0%, rgba(18,20,24,.46) 34%, rgba(18,20,24,.66) 62%, rgba(18,20,24,.9) 86%, var(--fondo) 100%); }
+  .portada__bajada { margin-inline: auto; }
+  .portada__pastillas, .portada__acciones, .duelo { justify-content: center; }
+  .portada .escucha { margin-inline: auto; }
   /* La galería se arrastra, no se apila: ocho fotos en dos columnas son
      cuatro pantallas de scroll vertical en un teléfono, y además rompen el
      ritmo de la página. En fila, con una foto y pico a la vista, se ven

@@ -1,6 +1,6 @@
 {
   "_nota": "Legends. `proximos` va por fecha (dateISO) y sólo se pintan los de hoy en adelante; `pasados`, del más nuevo al más viejo. Todo lo que lleva \"muestra\": true es INVENTADO para ver el diseño y sale con la pastilla punteada «Muestra»: no son leyendas ni fechas confirmadas. Se reemplaza por lo real y se le quita la marca (o se borra).",
-  "_nota_es": "Español: textos aprobados el 27/10/2026. Próximos: sin invitados, sede ni hora hasta que estén confirmados («Por anunciar»). Pasados: leyendas reales; las fotos son de muestra hasta tener las del evento (`fotoMuestra`). Sólo los que traen `ficha` tienen página propia (/es/legends/eventos/:slug); el modelo aprobado es Luis Figo. Roberto Carlos y Enrique Borja esperan sus textos: hasta entonces su tarjeta no enlaza. No copiar actividades de una ficha a otra sin confirmación. El inglés sigue con el contenido de muestra anterior hasta que se apruebe su traducción.",
+  "_nota_es": "Español: textos aprobados el 27/10/2026. Próximos: sin invitados, sede ni hora hasta que estén confirmados («Por anunciar»). Pasados: leyendas reales; fotos de la entrega de diseño del 28/10/2026: `foto` (tarjeta), `portada` y `cierre` (ficha; el mismo cierre para todas). Sólo los que traen `ficha` tienen página propia (/es/legends/eventos/:slug); el modelo aprobado es Luis Figo. Roberto Carlos y Enrique Borja esperan sus textos: hasta entonces su tarjeta no enlaza. No copiar actividades de una ficha a otra sin confirmación. El inglés sigue con el contenido de muestra anterior hasta que se apruebe su traducción.",
   "es": {
     "proximos": [
       {
@@ -25,18 +25,28 @@
         "tipo": "Meet & Greet y cena",
         "lugar": "Monterrey",
         "fecha": "2022",
-        "foto": "/assets/images/gallery/somos/6.jpg",
-        "fotoMuestra": true,
+        "foto": "/assets/images/secciones/legends/tarjeta-figo.jpg",
         "ficha": {
           "experiencia": "Compartimos un encuentro con Luis Figo que combinó un Meet & Greet y una cena para convivir de cerca con una leyenda del fútbol.",
           "queVivimos": [
-            { "titulo": "Foto con una leyenda", "texto": "Cada asistente tuvo la oportunidad de tomarse una foto con Luis Figo." },
-            { "titulo": "Firma de autógrafos", "texto": "Un recuerdo firmado por una de las grandes figuras del fútbol." },
-            { "titulo": "Cena y charla", "texto": "Compartimos la mesa con Figo en una convivencia cercana, entre anécdotas y conversaciones de fútbol." }
+            {
+              "titulo": "Foto con una leyenda",
+              "texto": "Cada asistente tuvo la oportunidad de tomarse una foto con Luis Figo."
+            },
+            {
+              "titulo": "Firma de autógrafos",
+              "texto": "Un recuerdo firmado por una de las grandes figuras del fútbol."
+            },
+            {
+              "titulo": "Cena y charla",
+              "texto": "Compartimos la mesa con Figo en una convivencia cercana, entre anécdotas y conversaciones de fútbol."
+            }
           ],
           "momentos": [],
           "testimonios": []
-        }
+        },
+        "portada": "/assets/images/secciones/legends/portada-figo.jpg",
+        "cierre": "/assets/images/secciones/legends/cierre.jpg"
       },
       {
         "slug": "roberto-carlos-madrid-2024",
@@ -44,8 +54,9 @@
         "tipo": "Meet & Greet",
         "lugar": "Madrid",
         "fecha": "2024",
-        "foto": "/assets/images/gallery/cup2025/3.jpg",
-        "fotoMuestra": true
+        "foto": "/assets/images/secciones/legends/tarjeta-roberto-carlos.jpg",
+        "portada": "/assets/images/secciones/legends/roberto-carlos-portada.jpg",
+        "cierre": "/assets/images/secciones/legends/cierre.jpg"
       },
       {
         "slug": "enrique-borja-san-jose-2024",
@@ -53,8 +64,9 @@
         "tipo": "Meet & Greet",
         "lugar": "San José",
         "fecha": "2024",
-        "foto": "/assets/images/gallery/cup2024/4.jpg",
-        "fotoMuestra": true
+        "foto": "/assets/images/secciones/legends/tarjeta-enrique-borja.jpg",
+        "portada": "/assets/images/secciones/legends/enrique-borja-portada.jpg",
+        "cierre": "/assets/images/secciones/legends/cierre.jpg"
       }
     ]
   },

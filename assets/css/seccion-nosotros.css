@@ -25,6 +25,44 @@
 .sede__pais { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--acento-chico); }
 .sede__ciudad { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
 
+/* ─── Marcas con las que hemos colaborado: marquesina ─────────────── */
+/* Dos filas que avanzan solas en sentidos opuestos, a todo lo ancho, sin
+   cajas: en cuadrícula 36 logos se amontonaban. Cada fila trae su lista dos
+   veces seguidas y se recorre la mitad (una lista entera), así el giro no
+   tiene corte. Los bordes se desvanecen con una máscara. Los logos ya son
+   blancos y traen su tamaño de pantalla (width/height del <img>). */
+.marcas-sec .rotulo { margin-bottom: 26px; }
+.marquesina {
+  display: flex; flex-direction: column; gap: 34px; overflow: hidden; padding-block: 6px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 9%, #000 91%, transparent);
+}
+.marquesina:focus-visible { outline: 2px solid var(--acento-chico); outline-offset: 4px; }
+.marquesina__fila { display: flex; width: max-content; animation: marquesina 80s linear infinite; }
+.marquesina__fila--reversa { animation-direction: reverse; animation-duration: 90s; }
+.marquesina__pista { list-style: none; flex: none; display: flex; align-items: center; gap: 72px; padding-right: 72px; }
+.marquesina__logo { flex: none; display: flex; align-items: center; height: 64px; }
+.marquesina__logo img { display: block; opacity: .82; transition: opacity .2s; }
+.marquesina__logo img:hover { opacity: 1; }
+/* Se detiene para mirarla: con el cursor encima, al enfocarla o al tocarla. */
+.marquesina:hover .marquesina__fila,
+.marquesina:focus-within .marquesina__fila,
+.marquesina:active .marquesina__fila { animation-play-state: paused; }
+@keyframes marquesina { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (max-width: 600px) {
+  .marquesina { gap: 26px; }
+  .marquesina__pista { gap: 48px; padding-right: 48px; }
+  /* Un poco más chicos en el teléfono, sin perder la proporción de cada uno. */
+  .marquesina__logo { height: 52px; }
+  .marquesina__logo img { transform: scale(.82); }
+}
+/* Sin movimiento: filas quietas que se recorren con el dedo, sin la copia. */
+@media (prefers-reduced-motion: reduce) {
+  .marquesina__fila { animation: none; }
+  .marquesina__fila { width: auto; overflow-x: auto; scrollbar-width: none; }
+  .marquesina__pista[aria-hidden="true"] { display: none; }
+}
+
 /* El cierre lleva dos botones (WhatsApp y correo), centrados. */
 .nosotros__acciones { justify-content: center; }
 

@@ -1492,7 +1492,12 @@ app.get('/:lang/socceridcup/:year', async (req, res, next) => {
     // La ficha vive DENTRO de Tour: hereda su menú y su sección activa, pero
     // manda su propio título y su propia canónica (ver views/layouts/v2.hbs).
     const data = datosV2(lang, 'tour');
+    // Portada y cierre: los del admin del Tour (entrega de diseño); si no
+    // hay, el banner de la edición, como antes.
+    const fotos = await sitioTour.fotosEdicion(year);
     Object.assign(data, {
+      fotoPortada: fotos.portada || edition.banner,
+      fotoCierre: fotos.cierre || edition.banner,
       tituloPagina: edition.title + ' · SOCCER iD',
       descripcionPagina: edition.description,
       rutaCanonica: `/${lang}/socceridcup/${year}`,
@@ -1799,7 +1804,12 @@ function rutaV2(slug, armar) {
 // Las ediciones jugadas salen de la base, igual que sus fichas.
 app.get('/:lang/tour', rutaV2('tour', async (lang) => {
   const { t, c } = await sitioTour.leer(lang);
-  const ediciones = (await cupEditions.fichas(lang)).map(f => Object.assign({}, f, { url: `/${lang}/socceridcup/${f.year}` }));
+  // La foto de cada tarjeta: la que fija el admin del Tour; si no hay, la de
+  // la edición, como antes.
+  const fotoTarjeta = anio => ((c.ediciones || []).find(e => String(e.anio) === String(anio)) || {}).tarjeta;
+  const ediciones = (await cupEditions.fichas(lang)).map(f => Object.assign({}, f, {
+    url: `/${lang}/socceridcup/${f.year}`, imagen: fotoTarjeta(f.year) || f.imagen
+  }));
   const wa = `https://wa.me/${CONTACTO.whatsapp}?text=${encodeURIComponent(t.mensajeWhatsapp || '')}`;
   // Prensa: los medios destacados a la vista, el resto detrás de «Ver más».
   // Sin ninguna destacada, se ven todas.
@@ -1862,6 +1872,14 @@ app.get('/:lang/viaje/:slug', async (req, res, next) => {
 const conFicha = (lista, base) => (lista || []).map(x =>
   x.ficha && x.slug ? Object.assign({}, x, { url: `${base}/${x.slug}` }) : x);
 
+// Fondos de la ficha: su portada y su cierre propios (entrega de diseño); si
+// no los trae, la foto de la tarjeta, pero nunca una de muestra: pasaría por
+// real sin la pastilla que lo avisa.
+const fotosFicha = p => {
+  const real = p.foto && !p.fotoMuestra ? p.foto : null;
+  return { fotoPortada: p.portada || real, fotoCierre: p.cierre || real };
+};
+
 // Archivo completo de viajes pasados («Ver todos los viajes»).
 app.get('/:lang/travel/viajes-pasados', (req, res, next) => {
   const lang = req.params.lang;
@@ -1893,7 +1911,7 @@ app.get('/:lang/travel/viajes-pasados/:slug', (req, res, next) => {
     tituloPagina: `${p.titulo} · SOCCER iD Travel`,
     descripcionPagina: p.detalle || p.titulo,
     rutaCanonica: `${base}/${p.slug}`,
-    p, marca: 'SOCCER iD Travel Club', fotoReal: !!(p.foto && !p.fotoMuestra),
+    p, marca: 'SOCCER iD Travel Club', ...fotosFicha(p),
     seccionUrl: `/${lang}/travel`, seccionNombre: 'Travel',
     otros: todos.filter(v => v.slug !== p.slug), otrosTitulo: 'Otros viajes',
     cierre: { titulo: 'Vive el próximo', boton: 'Ver próximos viajes', url: `/${lang}/travel#viajes` },
@@ -1914,7 +1932,7 @@ app.get('/:lang/legends/eventos/:slug', (req, res, next) => {
     tituloPagina: `${p.titulo} · SOCCER iD Legends`,
     descripcionPagina: p.ficha.experiencia || p.titulo,
     rutaCanonica: `${base}/${p.slug}`,
-    p, marca: 'SOCCER iD Legends', fotoReal: !!(p.foto && !p.fotoMuestra),
+    p, marca: 'SOCCER iD Legends', ...fotosFicha(p),
     seccionUrl: `/${lang}/legends`, seccionNombre: 'Legends',
     otros: todos.filter(v => v.slug !== p.slug), otrosTitulo: 'Otros encuentros',
     cierre: { titulo: 'Conoce a tus ídolos', boton: 'Ver próximos eventos', url: `/${lang}/legends#calendario` },
@@ -2019,7 +2037,12 @@ app.get('/:lang/opiniones', rutaV2('opiniones', async (lang, data) => {
 
 app.get('/:lang/nosotros', rutaV2('nosotros', async (lang, data) => {
   const q = (data.panel_templates || {}).quienes || null;
+  // Las marcas van en marquesina, en dos filas que corren en sentidos
+  // opuestos: se parten a la mitad, en el orden del documento.
+  const marcas = ((data.marcas_colaboradoras || {}).lista) || [];
+  const mitad = Math.ceil(marcas.length / 2);
   return {
+    marcasFilas: marcas.length ? [marcas.slice(0, mitad), marcas.slice(mitad)] : [],
     // Cuatro fotos: con más, la columna de imágenes dobla en alto al texto.
     quienes: q ? Object.assign({}, q, { gallery: (q.gallery || []).slice(0, 4) }) : null
     // Las ediciones de la copa NO se pintan aquí: son de Tour. Esta página

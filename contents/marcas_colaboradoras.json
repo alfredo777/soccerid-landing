@@ -1,0 +1,257 @@
+{
+  "_nota": "Marcas con las que SOCCER iD ha colaborado (Nosotros, bloque antes de Trabajemos juntos). Orden del documento de textos del 27/10/2026; Nuestra Visión se agregó en la entrega de diseño del 28/10. Logos blancos de la entrega, recortados y reducidos (assets/images/marcas). ancho/alto = tamaño en pantalla para que todos pesen igual (misma área). deOriginal=false: la entrega dice que son recreaciones con IA pendientes de cotejar contra los originales; no presentarlos como archivos oficiales descargados. No son patrocinadores actuales.",
+  "lista": [
+    {
+      "nombre": "Nike",
+      "logo": "/assets/images/marcas/01-nike.png",
+      "ancho": 119,
+      "alto": 44,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Adidas",
+      "logo": "/assets/images/marcas/02-adidas.png",
+      "ancho": 87,
+      "alto": 60,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Under Armour",
+      "logo": "/assets/images/marcas/03-under-armour.png",
+      "ancho": 93,
+      "alto": 56,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Powerade",
+      "logo": "/assets/images/marcas/04-powerade.png",
+      "ancho": 110,
+      "alto": 47,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Sporade",
+      "logo": "/assets/images/marcas/05-sporade.png",
+      "ancho": 121,
+      "alto": 43,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Gatorade",
+      "logo": "/assets/images/marcas/06-gatorade.png",
+      "ancho": 72,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Caliente",
+      "logo": "/assets/images/marcas/07-caliente.png",
+      "ancho": 122,
+      "alto": 43,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Roshfrans",
+      "logo": "/assets/images/marcas/08-roshfrans.png",
+      "ancho": 84,
+      "alto": 62,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Tecate",
+      "logo": "/assets/images/marcas/09-tecate.png",
+      "ancho": 82,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Heineken",
+      "logo": "/assets/images/marcas/10-heineken.png",
+      "ancho": 101,
+      "alto": 52,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Corona",
+      "logo": "/assets/images/marcas/11-corona.png",
+      "ancho": 90,
+      "alto": 58,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Récord",
+      "logo": "/assets/images/marcas/12-record.png",
+      "ancho": 127,
+      "alto": 41,
+      "deOriginal": false
+    },
+    {
+      "nombre": "FMF",
+      "logo": "/assets/images/marcas/13-fmf.png",
+      "ancho": 45,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Olimpus 7",
+      "logo": "/assets/images/marcas/14-olimpus-7.png",
+      "ancho": 88,
+      "alto": 59,
+      "deOriginal": true
+    },
+    {
+      "nombre": "Movistar",
+      "logo": "/assets/images/marcas/15-movistar.png",
+      "ancho": 78,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Smart Fit",
+      "logo": "/assets/images/marcas/16-smart-fit.png",
+      "ancho": 58,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Cinépolis",
+      "logo": "/assets/images/marcas/17-cinepolis.png",
+      "ancho": 87,
+      "alto": 60,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Estadio Azteca",
+      "logo": "/assets/images/marcas/18-estadio-azteca.png",
+      "ancho": 93,
+      "alto": 56,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Voit",
+      "logo": "/assets/images/marcas/19-voit.png",
+      "ancho": 88,
+      "alto": 59,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Boost",
+      "logo": "/assets/images/marcas/20-boost.png",
+      "ancho": 97,
+      "alto": 54,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Hi Sports",
+      "logo": "/assets/images/marcas/21-hi-sports.png",
+      "ancho": 89,
+      "alto": 59,
+      "deOriginal": false
+    },
+    {
+      "nombre": "WeWork",
+      "logo": "/assets/images/marcas/22-wework.png",
+      "ancho": 144,
+      "alto": 36,
+      "deOriginal": false
+    },
+    {
+      "nombre": "La Ke Buena",
+      "logo": "/assets/images/marcas/23-la-ke-buena.png",
+      "ancho": 138,
+      "alto": 38,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Toluca FC",
+      "logo": "/assets/images/marcas/24-toluca-fc.png",
+      "ancho": 64,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Club América",
+      "logo": "/assets/images/marcas/25-club-america.png",
+      "ancho": 65,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Pumas",
+      "logo": "/assets/images/marcas/26-pumas.png",
+      "ancho": 59,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Tigres",
+      "logo": "/assets/images/marcas/27-tigres.png",
+      "ancho": 48,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Atlético Nacional",
+      "logo": "/assets/images/marcas/28-atletico-nacional.png",
+      "ancho": 44,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Comunicaciones",
+      "logo": "/assets/images/marcas/29-comunicaciones.png",
+      "ancho": 59,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Peoples League",
+      "logo": "/assets/images/marcas/30-peoples-league.png",
+      "ancho": 73,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Kings League",
+      "logo": "/assets/images/marcas/31-kings-league.png",
+      "ancho": 55,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Peluche Caligari",
+      "logo": "/assets/images/marcas/32-peluche-caligari.png",
+      "ancho": 52,
+      "alto": 64,
+      "deOriginal": true
+    },
+    {
+      "nombre": "Totalplay",
+      "logo": "/assets/images/marcas/33-totalplay.png",
+      "ancho": 146,
+      "alto": 36,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Latinoamericana de Seguros",
+      "logo": "/assets/images/marcas/34-latinoamericana-de-seguros.png",
+      "ancho": 67,
+      "alto": 64,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Chubb",
+      "logo": "/assets/images/marcas/35-chubb.png",
+      "ancho": 170,
+      "alto": 22,
+      "deOriginal": false
+    },
+    {
+      "nombre": "Nuestra Visión",
+      "logo": "/assets/images/marcas/36-nuestra-vision.png",
+      "ancho": 67,
+      "alto": 64,
+      "deOriginal": true
+    }
+  ]
+}

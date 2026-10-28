@@ -83,6 +83,12 @@
         { k: 'c.momentos', l: 'Fotos de la galería', tipo: 'lista', max: 40, agregar: 'Agregar foto', ayuda: 'Al tocarlas se abren en grande.', cols: [
           { c: 'src', l: 'Foto', tipo: 'img', ancho: 'ancha' }, { c: 'alt', l: 'Descripción (para lectores de pantalla)' }
         ] },
+        { k: 'c.ediciones', l: 'Fotos de cada edición jugada', tipo: 'lista', max: 12, agregar: 'Agregar edición',
+          ayuda: 'La tarjeta es la foto en «Ediciones anteriores»; portada y cierre, las de la ficha de esa edición. Vacía = la de la edición.', cols: [
+          { c: 'anio', l: 'Año', ej: '2023' },
+          { c: 'tarjeta', l: 'Tarjeta', tipo: 'img', ancho: 'ancha' }, { c: 'portada', l: 'Portada de la ficha', tipo: 'img', ancho: 'ancha' },
+          { c: 'cierre', l: 'Cierre de la ficha', tipo: 'img', ancho: 'ancha' }
+        ] },
         { k: 'patrocinadores.titulo', l: 'Título de los logos', ej: 'Patrocinadores' },
         { k: 'c.logos', l: 'Logos', tipo: 'lista', max: 30, agregar: 'Agregar logo', ayuda: 'Se muestran en blanco, sin importar el color original.', cols: [
           { c: 'src', l: 'Logo', tipo: 'img', ancho: 'ancha' }, { c: 'alt', l: 'Nombre de la marca' }

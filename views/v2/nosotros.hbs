@@ -6,7 +6,7 @@
       Tour, para que ningún año se cuente de dos maneras distintas. --}}
 
 <section class="portada">
-  <img class="portada__foto" src="/assets/images/somoss.jpg" alt="">
+  <img class="portada__foto" src="/assets/images/secciones/nosotros/portada.jpg" alt="">
   <div class="portada__velo"></div>
   <div class="portada__cuerpo">
     <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / {{actual.nombre}}</p>
@@ -23,10 +23,13 @@
     {{!-- En español, el párrafo aprobado el 27/10/2026 (sin la app histórica).
           En inglés sigue el del panel hasta que se apruebe la traducción. --}}
     <div class="somos__texto">{{#if isEs}}<p>En <b>SOCCER iD</b> hacemos del fútbol una experiencia dentro y fuera del estadio. Organizamos partidos internacionales en Estados Unidos, creamos viajes a los grandes eventos y convivencias con leyendas. En nuestro podcast, el juego sigue con entrevistas, análisis y debate.</p>{{else}}{{{quienes.description}}}{{/if}}</div>
+    {{!-- Mosaico de la entrega de diseño (28/10/2026): una foto por marca.
+          La cuarta es Podcast, el mismo archivo que su tarjeta del inicio. --}}
     <div class="somos__fotos">
-      {{#each quienes.gallery}}
-      <button type="button" class="somos__foto" style="background-image:url('{{this.src}}')" data-ampliar="{{this.src}}" aria-label="{{this.alt}}"></button>
-      {{/each}}
+      <button type="button" class="somos__foto" style="background-image:url('/assets/images/secciones/nosotros/mosaico-tour.jpg')" data-ampliar="/assets/images/secciones/nosotros/mosaico-tour.jpg" aria-label="Tour: América y Atlético Nacional salen del túnel"></button>
+      <button type="button" class="somos__foto" style="background-image:url('/assets/images/secciones/nosotros/mosaico-travel.jpg')" data-ampliar="/assets/images/secciones/nosotros/mosaico-travel.jpg" aria-label="Travel: ceremonia de la final de Champions"></button>
+      <button type="button" class="somos__foto" style="background-image:url('/assets/images/secciones/nosotros/mosaico-legends.jpg')" data-ampliar="/assets/images/secciones/nosotros/mosaico-legends.jpg" aria-label="Legends: Luis Figo firma una playera"></button>
+      <button type="button" class="somos__foto" style="background-image:url('/assets/images/inicio/tarjeta-podcast.jpg')" data-ampliar="/assets/images/inicio/tarjeta-podcast.jpg" aria-label="Podcast: el estudio de SOCCER iD"></button>
     </div>
   </div>
 </section>
@@ -165,10 +168,39 @@
     <div class="sede"><span class="sede__pais">Estados Unidos</span><span class="sede__ciudad">Aventura, Florida</span></div>
   </div>
 </section>
+
+{{!-- Marcas con las que hemos colaborado (contents/marcas_colaboradoras.json;
+      no se llama `marcas` porque así se llama la lista del menú). No son
+      patrocinadores actuales.
+
+      Marquesina: dos filas que avanzan solas en sentidos opuestos, sin
+      cajas, con los bordes desvanecidos. Cada fila se pinta dos veces para
+      que el giro no tenga corte; la copia va con aria-hidden y alt vacío
+      para que un lector de pantalla diga cada marca una sola vez. Se detiene
+      al pasar el cursor o al tocarla, y con «reducir movimiento» queda quieta
+      y se recorre con el dedo. Cada logo trae su tamaño para que todos pesen
+      igual. --}}
+{{#if marcasFilas.length}}
+<section class="seccion marcas-sec" aria-labelledby="marcasTitulo">
+  <div class="envoltura"><p class="rotulo" id="marcasTitulo">Marcas con las que hemos colaborado</p></div>
+  <div class="marquesina" tabindex="0" role="region" aria-label="Marcas con las que hemos colaborado">
+    {{#each marcasFilas}}
+    <div class="marquesina__fila{{#if @index}} marquesina__fila--reversa{{/if}}">
+      <ul class="marquesina__pista">
+        {{#each this}}<li class="marquesina__logo"><img src="{{this.logo}}" alt="{{this.nombre}}" width="{{this.ancho}}" height="{{this.alto}}" loading="lazy" decoding="async"></li>{{/each}}
+      </ul>
+      <ul class="marquesina__pista" aria-hidden="true">
+        {{#each this}}<li class="marquesina__logo"><img src="{{this.logo}}" alt="" width="{{this.ancho}}" height="{{this.alto}}" loading="lazy" decoding="async"></li>{{/each}}
+      </ul>
+    </div>
+    {{/each}}
+  </div>
+</section>
+{{/if}}
 {{/if}}
 
 <section class="cierre">
-  <img class="cierre__foto" src="/assets/images/gallery/socceridcup/7.jpeg" alt="">
+  <img class="cierre__foto" src="/assets/images/secciones/nosotros/cierre.jpg" alt="">
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">{{#if isEs}}Trabajemos juntos{{else}}Let's work together{{/if}}</h2>

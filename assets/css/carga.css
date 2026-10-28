@@ -1,0 +1,28 @@
+/* Precarga de fotos (assets/js/carga.js). Sólo actúa con `html.js-carga`,
+   que pone el <head>; con `carga-lista` (el seguro de 8 s) todo se ve. */
+
+/* <img>: invisibles hasta estar completas, y luego un fundido. */
+.js-carga:not(.carga-lista) :is(.portada__foto, .cierre__foto, .prensa__img, .opinion__foto, .marquesina__logo img, .revista__pagina img, .fila-ep__mini img):not(.is-cargada) { opacity: 0; }
+:is(.portada__foto, .cierre__foto, .prensa__img, .opinion__foto, .marquesina__logo img, .revista__pagina img, .fila-ep__mini img).is-cargada { animation: carga-aparece .45s ease-out both; }
+
+/* Fondos: sin foto y con un brillo que recorre el hueco mientras baja.
+   El !important le gana al background-image en línea, a propósito. */
+.js-carga:not(.carga-lista) :is(.mosaico__foto, .edicion__foto, .recuerdo__foto, .experiencia__foto, .somos__foto, .nota__foto, .invitado__foto, .bastidores):not(.is-cargada) {
+  background-image: linear-gradient(100deg, rgba(255,255,255,0) 30%, rgba(255,255,255,.07) 50%, rgba(255,255,255,0) 70%) !important;
+  background-color: var(--superficie, #13131F);
+  background-size: 220% 100% !important;
+  animation: carga-brillo 1.3s linear infinite;
+}
+:is(.mosaico__foto, .edicion__foto, .recuerdo__foto, .experiencia__foto, .somos__foto, .nota__foto, .invitado__foto, .bastidores).is-cargada { animation: carga-aparece .45s ease-out both; }
+
+@keyframes carga-brillo { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+@keyframes carga-aparece { from { opacity: 0; } to { opacity: 1; } }
+
+/* Las fotos de portada y cierre llevan su velo encima: el fundido va un
+   poco más lento para que la entrada se lea como una sola. */
+:is(.portada__foto, .cierre__foto).is-cargada { animation-duration: .7s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js-carga :is(.mosaico__foto, .edicion__foto, .recuerdo__foto, .experiencia__foto, .somos__foto, .nota__foto, .invitado__foto, .bastidores):not(.is-cargada) { animation: none; }
+  .is-cargada { animation: none !important; }
+}

@@ -4,12 +4,12 @@
         · otros · cierre · regreso
       Los bloques sin contenido NO se pintan (momentos, testimonios, lugar y
       fecha suelen faltar hasta tener el material real). Fotos con visor.
-      La ruta manda `p` (la ficha), `otros`, `cierre`, `regresar` y
-      `fotoReal`: la foto sólo va de fondo cuando es del evento, no de
-      muestra, para no hacerla pasar por real sin la pastilla que lo avisa. --}}
+      La ruta manda `p` (la ficha), `otros`, `cierre`, `regresar`,
+      `fotoPortada` y `fotoCierre` (ver fotosFicha en index.js: nunca una
+      foto de muestra de fondo). --}}
 
 <section class="portada portada--ficha">
-  {{#if fotoReal}}<img class="portada__foto" src="{{p.foto}}" alt="">{{/if}}
+  {{#if fotoPortada}}<img class="portada__foto" src="{{fotoPortada}}" alt="">{{/if}}
   <div class="portada__velo"></div>
   <div class="portada__cuerpo">
     <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / <a href="{{seccionUrl}}">{{seccionNombre}}</a> / {{p.titulo}}</p>
@@ -85,7 +85,7 @@
 {{/if}}
 
 <section class="cierre">
-  {{#if fotoReal}}<img class="cierre__foto" src="{{p.foto}}" alt="">{{/if}}
+  {{#if fotoCierre}}<img class="cierre__foto" src="{{fotoCierre}}" alt="">{{/if}}
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">{{cierre.titulo}}</h2>
