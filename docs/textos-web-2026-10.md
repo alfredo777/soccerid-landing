@@ -45,8 +45,9 @@ con los textos que ya tenía el sitio hasta que llegue la traducción.
 | 13 Podcast: periodo de las cifras (7 M, 84.8 mil h, +35.3 mil) | **Por confirmar** | no se rotulan como históricas ni anuales |
 | 14 Media: portada, títulos y cierre de prensa | Hecho | `views/v2/opiniones.hbs` |
 | 15–16 Nosotros: portada, quiénes somos, qué hacemos, premios reales, sedes, cierre | Hecho | `views/v2/nosotros.hbs`, `contents/premios.json` |
-| 17 Nosotros: marcas con las que hemos colaborado | Pendiente (decisión del dueño) | faltan los archivos de los 35 logos |
-| Fotos reales de viajes y Legends | Pendiente de material | mientras la foto sea de muestra, las fichas van sin foto de fondo |
+| 17 Nosotros: marcas con las que hemos colaborado | Hecho, en marquesina | 36 logos de la entrega del 28/10; 33 son recreaciones con IA **por cotejar** contra los originales |
+| Fotos de viajes y Legends | Hecho | entrega de diseño del 28/10 |
+| **Texto de las fichas de Libertadores 2024, Mundial de Clubes 2025, Roberto Carlos y Enrique Borja** | **Pendiente: llevan lorem ipsum** | publicadas para ver el diseño, con la pastilla «Texto pendiente» en la ficha y en su tarjeta, y `noindex` para que los buscadores no las guarden. Al llegar el texto: reemplazar `ficha` y quitar `textoPendiente` en `contents/viajes.json` / `contents/legends.json` |
 
 ## Cómo funciona el admin del Tour
 

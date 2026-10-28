@@ -65,7 +65,27 @@
         "detalle": "La pasión sudamericana en un viaje con boletos VIP, hospedaje, traslados y momentos únicos.",
         "foto": "/assets/images/secciones/travel/pasado-libertadores-2024.jpg",
         "portada": "/assets/images/secciones/travel/pasado-libertadores-2024-portada.jpg",
-        "cierre": "/assets/images/secciones/travel/pasados-cierre.jpg"
+        "cierre": "/assets/images/secciones/travel/pasados-cierre.jpg",
+        "ficha": {
+          "experiencia": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+          "queVivimos": [
+            {
+              "titulo": "Lorem ipsum dolor",
+              "texto": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+            },
+            {
+              "titulo": "Consectetur adipiscing",
+              "texto": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            },
+            {
+              "titulo": "Sed do eiusmod",
+              "texto": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo."
+            }
+          ],
+          "momentos": [],
+          "testimonios": []
+        },
+        "textoPendiente": true
       },
       {
         "slug": "final-mundial-de-clubes-2025",
@@ -73,7 +93,27 @@
         "detalle": "Disfrutamos la gran final con una experiencia completa: estadio VIP, hotel, traslados y actividades especiales.",
         "foto": "/assets/images/secciones/travel/pasado-mundial-de-clubes-2025.jpg",
         "portada": "/assets/images/secciones/travel/pasado-mundial-de-clubes-2025-portada.jpg",
-        "cierre": "/assets/images/secciones/travel/pasados-cierre.jpg"
+        "cierre": "/assets/images/secciones/travel/pasados-cierre.jpg",
+        "ficha": {
+          "experiencia": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+          "queVivimos": [
+            {
+              "titulo": "Lorem ipsum dolor",
+              "texto": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+            },
+            {
+              "titulo": "Consectetur adipiscing",
+              "texto": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            },
+            {
+              "titulo": "Sed do eiusmod",
+              "texto": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo."
+            }
+          ],
+          "momentos": [],
+          "testimonios": []
+        },
+        "textoPendiente": true
       }
     ]
   }

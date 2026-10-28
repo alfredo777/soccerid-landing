@@ -8,7 +8,8 @@
 {{#if this.url}}<a class="recuerdo recuerdo--enlace" href="{{this.url}}">{{else}}<article class="recuerdo">{{/if}}
   <div class="recuerdo__foto" style="background-image:url('{{this.foto}}')">
     {{#if this.muestra}}<span class="pastilla pastilla--muestra recuerdo__muestra">{{#if @root.isEs}}Muestra{{else}}Sample{{/if}}</span>
-    {{else if this.fotoMuestra}}<span class="pastilla pastilla--muestra recuerdo__muestra">{{#if @root.isEs}}Foto de muestra{{else}}Sample photo{{/if}}</span>{{/if}}
+    {{else if this.fotoMuestra}}<span class="pastilla pastilla--muestra recuerdo__muestra">{{#if @root.isEs}}Foto de muestra{{else}}Sample photo{{/if}}</span>
+    {{else if this.textoPendiente}}<span class="pastilla pastilla--muestra recuerdo__muestra">Texto pendiente</span>{{/if}}
   </div>
   <div class="recuerdo__cuerpo">
     {{#if this.tipo}}<span class="recuerdo__tipo">{{this.tipo}}</span>{{/if}}

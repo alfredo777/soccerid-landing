@@ -15,6 +15,7 @@
     <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / <a href="{{seccionUrl}}">{{seccionNombre}}</a> / {{p.titulo}}</p>
     <div class="cabecera__marca">{{marca}}</div>
     <h1 class="portada__titulo">{{p.titulo}}</h1>
+    {{#if p.textoPendiente}}<p class="pasado__pendiente"><span class="pastilla pastilla--muestra">Texto pendiente</span> El texto de esta ficha es de relleno (lorem ipsum) mientras llega el definitivo.</p>{{/if}}
     {{#if p.lugar}}
     <div class="portada__pastillas">
       <span class="pastilla">

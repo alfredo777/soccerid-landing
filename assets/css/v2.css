@@ -627,6 +627,8 @@ a.pilar, .prensa__nota, .via, .entre__ir, .entre__todas, .nota, .edicion, a.alia
 
 /* Ficha de algo que ya pasó (views/v2/pasado.hbs): viajes y Legends. */
 .pasado__experiencia { max-width: 760px; }
+.pasado__pendiente { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 16px; font-size: 14px; color: var(--tinta-2); }
+@media (max-width: 900px) { .pasado__pendiente { justify-content: center; } }
 .pasado__testimonio blockquote { font-size: 16px; line-height: 1.6; }
 .pasado__testimonio figcaption { margin-top: 12px; font-size: 14px; font-weight: 800; color: var(--acento-chico); }
 

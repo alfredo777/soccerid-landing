@@ -9,6 +9,8 @@
         no salir las tres ediciones como «Tour · SOCCER iD». --}}
   <title>{{#if tituloPagina}}{{tituloPagina}}{{else}}{{#if actual}}{{actual.nombre}} · SOCCER iD{{else}}SOCCER iD{{/if}}{{/if}}</title>
   <meta name="description" content="{{#if descripcionPagina}}{{descripcionPagina}}{{else}}{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}{{/if}}">
+  {{!-- Fichas con texto de relleno: que los buscadores no las guarden. --}}
+  {{#if noIndexar}}<meta name="robots" content="noindex">{{/if}}
   <link rel="canonical" href="{{baseUrl}}{{#if rutaCanonica}}{{rutaCanonica}}{{else}}/{{lang}}{{#if actual}}/{{actual.slug}}{{/if}}{{/if}}">
   {{!-- Vista previa al compartir. Sólo la piden las páginas que se mandan
         por WhatsApp con su propia foto (un partido, un reportaje). --}}
