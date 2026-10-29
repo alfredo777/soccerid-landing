@@ -74,7 +74,7 @@ resolverlas antes de publicar.
 | 17 Nosotros: marcas con las que hemos colaborado | Hecho, en marquesina | 36 logos de la entrega del 28/10; 33 son recreaciones con IA **por cotejar** contra los originales |
 | Fotos de viajes y Legends | Hecho | entrega de diseño del 28/10 |
 | Fichas de Legends y viajes pasados | Hecho (entrega Legends/Travel, 28/10) | seis encuentros (Figo, Roberto Carlos, Borja en **Miami**, América, Atlético Nacional, Tigres **2025**) y tres viajes (Champions 2025, Libertadores **2023**, Mundial de Clubes 2025) con texto final; sin relleno ni `noindex`. Las direcciones viejas de Borja y Libertadores redirigen (301) |
-| El Clásico | Hecho | sin «por confirmar», con «Madrid, España»; su itinerario de ejemplo queda **oculto** hasta tener el real |
+| El Clásico | Hecho | sin «por confirmar», con «Madrid, España»; itinerario visible como ejemplo (el dueño pidió no ocultarlo, 29/10) |
 | Detrás de cámaras (fichas de la copa) | Hecho | mismo ancho que el video principal |
 | Logo de Nuestra Visión | Hecho | `assets/images/sponsors/nuestra-vision.png` reemplazado por el aprobado (estaba incompleto) |
 
