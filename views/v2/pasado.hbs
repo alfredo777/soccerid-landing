@@ -8,8 +8,11 @@
       `fotoPortada` y `fotoCierre` (ver fotosFicha en index.js: nunca una
       foto de muestra de fondo). --}}
 
-<section class="portada portada--ficha">
-  {{#if fotoPortada}}<img class="portada__foto" src="{{fotoPortada}}" alt="">{{/if}}
+{{!-- `portadaCompleta`: fotos de grupo con gente hasta las orillas. En el
+      teléfono el recorte vertical dejaba fuera a los de los lados, así que
+      ahí la foto va entera arriba y el título debajo. --}}
+<section class="portada portada--ficha{{#if p.portadaCompleta}} portada--foto-completa{{/if}}">
+  {{#if fotoPortada}}<img class="portada__foto" src="{{fotoPortada}}" alt="{{p.alt}}">{{/if}}
   <div class="portada__velo"></div>
   <div class="portada__cuerpo">
     <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / <a href="{{seccionUrl}}">{{seccionNombre}}</a> / {{p.titulo}}</p>

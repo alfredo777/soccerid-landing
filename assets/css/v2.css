@@ -339,7 +339,9 @@ a.pilar:hover { border-color: var(--tinta); }
 .evento__nombre .pastilla--muestra { margin-left: 8px; vertical-align: middle; }
 
 /* ─── Recuerdos: lo que ya pasó (viajes, eventos). Partial `recuerdo` ── */
-.recuerdos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+/* Tres por fila como máximo (seis encuentros de Legends = 3 + 3; con
+   auto-fit puro salían 4 + 2); en pantallas angostas bajan a 2 y a 1. */
+.recuerdos { display: grid; grid-template-columns: repeat(auto-fit, minmax(max(260px, calc((100% - 28px) / 3)), 1fr)); gap: 14px; }
 .recuerdo { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); overflow: hidden; }
 .recuerdo__foto { position: relative; aspect-ratio: 16 / 10; background: var(--linea) center / cover no-repeat; }
 /* La pastilla de muestra va sobre la foto: necesita su propio fondo para leerse. */
@@ -625,6 +627,19 @@ a.pilar, .prensa__nota, .via, .entre__ir, .entre__todas, .nota, .edicion, a.alia
 
 /* Ficha de algo que ya pasó (views/v2/pasado.hbs): viajes y Legends. */
 .pasado__experiencia { max-width: 760px; }
+/* Portada con la foto entera en el teléfono (fotos de grupo). La foto va
+   debajo del menú en su proporción real, se funde con el fondo por abajo y
+   el título sigue debajo. En escritorio la portada es la de siempre. */
+@media (max-width: 900px) {
+  .portada--foto-completa { display: block; min-height: 0; padding-top: 92px; }
+  .portada--foto-completa .portada__foto {
+    position: relative; inset: auto; display: block; width: 100%; height: auto;
+    -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent);
+            mask-image: linear-gradient(180deg, #000 72%, transparent);
+  }
+  .portada--foto-completa .portada__velo { display: none; }
+  .portada--foto-completa .portada__cuerpo { padding-top: 6px; }
+}
 .pasado__pendiente { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 16px; font-size: 14px; color: var(--tinta-2); }
 @media (max-width: 900px) { .pasado__pendiente { justify-content: center; } }
 .pasado__testimonio blockquote { font-size: 16px; line-height: 1.6; }

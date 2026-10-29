@@ -1880,6 +1880,20 @@ const fotosFicha = p => {
   return { fotoPortada: p.portada || real, fotoCierre: p.cierre || real };
 };
 
+// Direcciones que cambiaron con los datos corregidos (entrega del 28/10/2026):
+// Borja fue en Miami, no San José; la final de Libertadores fue 2023, no 2024.
+// Redirección permanente para no romper enlaces ya compartidos.
+const FICHAS_MOVIDAS = {
+  '/legends/eventos/enrique-borja-san-jose-2024': '/legends/eventos/enrique-borja-miami-2024',
+  '/travel/viajes-pasados/final-copa-libertadores-2024': '/travel/viajes-pasados/final-copa-libertadores-2023'
+};
+app.get(['/:lang/legends/eventos/:slug', '/:lang/travel/viajes-pasados/:slug'], (req, res, next) => {
+  const resto = req.path.slice(req.params.lang.length + 1);
+  const nueva = FICHAS_MOVIDAS[resto];
+  if (!nueva || !SUPPORTED_LANGS.includes(req.params.lang)) return next();
+  res.redirect(301, `/${req.params.lang}${nueva}`);
+});
+
 // Archivo completo de viajes pasados («Ver todos los viajes»).
 app.get('/:lang/travel/viajes-pasados', (req, res, next) => {
   const lang = req.params.lang;

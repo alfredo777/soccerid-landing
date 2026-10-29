@@ -37,11 +37,13 @@
 .publicacion__escudo:focus-visible { outline: 2px solid var(--acento-chico); outline-offset: -4px; }
 
 /* Detrás de cámaras: un póster que lleva al video, que está en Facebook y
-   no se puede embeber. */
+   no se puede embeber. Mismo ancho y proporción que el video principal
+   (.video, 16:9 a todo el contenedor). Antes llevaba un tope de 460 px de
+   alto que lo encogía a 818 px y lo dejaba pegado a la izquierda. */
 .bastidores {
-  position: relative; display: block; overflow: hidden;
+  position: relative; display: block; width: 100%; overflow: hidden;
   border: 1px solid var(--linea); border-radius: var(--radio);
-  aspect-ratio: 16 / 9; max-height: 460px;
+  aspect-ratio: 16 / 9;
   background: var(--superficie) center / cover no-repeat;
 }
 .bastidores__velo { position: absolute; inset: 0; background: rgba(18,20,24,.52); transition: background .2s; }

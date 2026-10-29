@@ -1,6 +1,6 @@
 {
   "_nota": "Legends. `proximos` va por fecha (dateISO) y sólo se pintan los de hoy en adelante; `pasados`, del más nuevo al más viejo. Todo lo que lleva \"muestra\": true es INVENTADO para ver el diseño y sale con la pastilla punteada «Muestra»: no son leyendas ni fechas confirmadas. Se reemplaza por lo real y se le quita la marca (o se borra).",
-  "_nota_es": "Español: textos aprobados el 27/10/2026. Próximos: sin invitados, sede ni hora hasta que estén confirmados («Por anunciar»). Pasados: leyendas reales; fotos de la entrega de diseño del 28/10/2026: `foto` (tarjeta), `portada` y `cierre` (ficha; el mismo cierre para todas). Sólo los que traen `ficha` tienen página propia (/es/legends/eventos/:slug); el modelo aprobado es Luis Figo. Roberto Carlos y Enrique Borja esperan sus textos: hasta entonces su tarjeta no enlaza. No copiar actividades de una ficha a otra sin confirmación. El inglés sigue con el contenido de muestra anterior hasta que se apruebe su traducción.",
+  "_nota_es": "Español: textos finales de la entrega «Textos y ajustes para el programador» (28/10/2026). Próximos: sin invitados, sede ni hora hasta confirmarse («Por anunciar»). Pasados: seis encuentros, todos con ficha (/es/legends/eventos/:slug). Borja pasó de San José a Miami (la dirección vieja redirige). No añadir testimonios, fechas exactas ni lugares no confirmados. El inglés sigue con el contenido de muestra anterior.",
   "es": {
     "proximos": [
       {
@@ -23,90 +23,183 @@
         "slug": "luis-figo-monterrey-2022",
         "titulo": "Luis Figo",
         "tipo": "Meet & Greet y cena",
-        "lugar": "Monterrey",
+        "lugar": "Monterrey, México",
         "fecha": "2022",
+        "detalle": "Dos experiencias para convivir con Luis Figo: Meet & Greet y cena, ambas con foto y firma de autógrafos.",
         "foto": "/assets/images/secciones/legends/tarjeta-figo.jpg",
+        "portada": "/assets/images/secciones/legends/portada-figo.jpg",
+        "cierre": "/assets/images/secciones/legends/cierre.jpg",
         "ficha": {
-          "experiencia": "Compartimos un encuentro con Luis Figo que combinó un Meet & Greet y una cena para convivir de cerca con una leyenda del fútbol.",
+          "experiencia": "Vivimos dos encuentros con Luis Figo en Monterrey: un Meet & Greet en Agencia Fashion Drive y una cena en el Hotel Quinta Real Monterrey. Ambas experiencias incluyeron foto y firma de autógrafos para llevarse un recuerdo de una leyenda del fútbol.",
           "queVivimos": [
             {
-              "titulo": "Foto con una leyenda",
-              "texto": "Cada asistente tuvo la oportunidad de tomarse una foto con Luis Figo."
+              "titulo": "Meet & Greet",
+              "texto": "Un encuentro con Luis Figo en Agencia Fashion Drive, con foto y firma de autógrafos."
             },
             {
-              "titulo": "Firma de autógrafos",
-              "texto": "Un recuerdo firmado por una de las grandes figuras del fútbol."
+              "titulo": "Cena con una leyenda",
+              "texto": "Una cena en el Hotel Quinta Real Monterrey para convivir de cerca con el exfutbolista."
             },
             {
-              "titulo": "Cena y charla",
-              "texto": "Compartimos la mesa con Figo en una convivencia cercana, entre anécdotas y conversaciones de fútbol."
+              "titulo": "Un recuerdo personal",
+              "texto": "Los asistentes a ambas experiencias pudieron fotografiarse con Figo y obtener su autógrafo."
             }
           ],
           "momentos": [],
           "testimonios": []
-        },
-        "portada": "/assets/images/secciones/legends/portada-figo.jpg",
-        "cierre": "/assets/images/secciones/legends/cierre.jpg"
+        }
       },
       {
         "slug": "roberto-carlos-madrid-2024",
         "titulo": "Roberto Carlos",
-        "tipo": "Meet & Greet",
-        "lugar": "Madrid",
+        "tipo": "Cena privada y convivencia",
+        "lugar": "Madrid, España",
         "fecha": "2024",
+        "detalle": "Una cena privada con Roberto Carlos en Madrid, con foto y firma de autógrafos.",
         "foto": "/assets/images/secciones/legends/tarjeta-roberto-carlos.jpg",
         "portada": "/assets/images/secciones/legends/roberto-carlos-portada.jpg",
         "cierre": "/assets/images/secciones/legends/cierre.jpg",
         "ficha": {
-          "experiencia": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+          "experiencia": "Compartimos una cena privada con Roberto Carlos en un restaurante de Madrid. Una oportunidad para convivir con una leyenda del fútbol, tomarse una foto y llevarse un recuerdo autografiado del encuentro.",
           "queVivimos": [
             {
-              "titulo": "Lorem ipsum dolor",
-              "texto": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+              "titulo": "Cena privada",
+              "texto": "Una experiencia en un restaurante de Madrid para compartir la mesa con Roberto Carlos."
             },
             {
-              "titulo": "Consectetur adipiscing",
-              "texto": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+              "titulo": "Foto con una leyenda",
+              "texto": "Los asistentes pudieron tomarse una foto con el exfutbolista."
             },
             {
-              "titulo": "Sed do eiusmod",
-              "texto": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo."
+              "titulo": "Firma de autógrafos",
+              "texto": "Un recuerdo firmado para conservar este encuentro fuera de la cancha."
             }
           ],
           "momentos": [],
           "testimonios": []
-        },
-        "textoPendiente": true
+        }
       },
       {
-        "slug": "enrique-borja-san-jose-2024",
+        "slug": "enrique-borja-miami-2024",
         "titulo": "Enrique Borja",
-        "tipo": "Meet & Greet",
-        "lugar": "San José",
+        "tipo": "Comida y firma de autógrafos",
+        "lugar": "Miami, Estados Unidos",
         "fecha": "2024",
+        "detalle": "Una comida con Enrique Borja en Miami y la oportunidad de llevarse su autógrafo.",
         "foto": "/assets/images/secciones/legends/tarjeta-enrique-borja.jpg",
         "portada": "/assets/images/secciones/legends/enrique-borja-portada.jpg",
         "cierre": "/assets/images/secciones/legends/cierre.jpg",
         "ficha": {
-          "experiencia": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+          "experiencia": "Nos reunimos con Enrique Borja en un restaurante de Miami para compartir una comida y una firma de autógrafos. Un encuentro cercano con una figura del fútbol mexicano, en un ambiente de convivencia entre aficionados.",
           "queVivimos": [
             {
-              "titulo": "Lorem ipsum dolor",
-              "texto": "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+              "titulo": "Comida con una leyenda",
+              "texto": "Compartimos una comida con Enrique Borja en un restaurante de Miami."
             },
             {
-              "titulo": "Consectetur adipiscing",
-              "texto": "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+              "titulo": "Firma de autógrafos",
+              "texto": "Los asistentes pudieron llevarse un recuerdo firmado por el exfutbolista."
+            }
+          ],
+          "momentos": [],
+          "testimonios": []
+        }
+      },
+      {
+        "slug": "america-orlando-2024",
+        "titulo": "Meet & Greet con Club América",
+        "tipo": "Meet & Greet",
+        "lugar": "Orlando, Estados Unidos",
+        "fecha": "2024",
+        "detalle": "Convivimos con jugadores del América en su hotel de concentración, con fotos y firma de autógrafos.",
+        "foto": "/assets/images/secciones/legends/america-orlando-2024.jpg",
+        "portada": "/assets/images/secciones/legends/america-orlando-2024.jpg",
+        "cierre": "/assets/images/secciones/legends/cierre.jpg",
+        "alt": "Encuentro con jugadores del Club América en Orlando, 2024.",
+        "ficha": {
+          "experiencia": "En Orlando acercamos a los aficionados a los jugadores del Club América con un Meet & Greet en su hotel de concentración. Un encuentro para compartir la pasión por el equipo, tomarse fotos y conseguir autógrafos.",
+          "queVivimos": [
+            {
+              "titulo": "Encuentro con el equipo",
+              "texto": "Convivimos con jugadores del América en su hotel de concentración."
             },
             {
-              "titulo": "Sed do eiusmod",
-              "texto": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo."
+              "titulo": "Fotos con los jugadores",
+              "texto": "Los asistentes pudieron guardar una imagen de este encuentro con sus ídolos."
+            },
+            {
+              "titulo": "Firma de autógrafos",
+              "texto": "Una oportunidad para llevarse recuerdos firmados por los jugadores."
             }
           ],
           "momentos": [],
           "testimonios": []
         },
-        "textoPendiente": true
+        "portadaCompleta": true
+      },
+      {
+        "slug": "atletico-nacional-orlando-2024",
+        "titulo": "Meet & Greet con Atlético Nacional",
+        "tipo": "Meet & Greet",
+        "lugar": "Orlando, Estados Unidos",
+        "fecha": "2024",
+        "detalle": "Un encuentro con jugadores de Atlético Nacional en Orlando, con fotos y firma de autógrafos.",
+        "foto": "/assets/images/secciones/legends/atletico-nacional-orlando-2024.jpg",
+        "portada": "/assets/images/secciones/legends/atletico-nacional-orlando-2024.jpg",
+        "cierre": "/assets/images/secciones/legends/cierre.jpg",
+        "alt": "Aficionada con jugadores de Atlético Nacional en Orlando, 2024.",
+        "ficha": {
+          "experiencia": "Vivimos un Meet & Greet con jugadores de Atlético Nacional en su hotel de concentración en Orlando. Los aficionados pudieron convivir con ellos, tomarse fotos y llevarse autógrafos como recuerdo de una experiencia cercana al equipo.",
+          "queVivimos": [
+            {
+              "titulo": "Cerca del equipo",
+              "texto": "Un encuentro con jugadores de Atlético Nacional en su hotel de concentración."
+            },
+            {
+              "titulo": "Fotos con los jugadores",
+              "texto": "Un momento para posar junto a sus ídolos y conservar el recuerdo."
+            },
+            {
+              "titulo": "Firma de autógrafos",
+              "texto": "Los asistentes pudieron obtener firmas de los jugadores durante la convivencia."
+            }
+          ],
+          "momentos": [],
+          "testimonios": []
+        },
+        "portadaCompleta": true
+      },
+      {
+        "slug": "tigres-austin-2025",
+        "titulo": "Meet & Greet con Tigres",
+        "tipo": "Meet & Greet",
+        "lugar": "Austin, Estados Unidos",
+        "fecha": "2025",
+        "detalle": "Fotos y autógrafos con jugadores de Tigres, además de recuerdos junto a la mascota y los trofeos del club.",
+        "foto": "/assets/images/secciones/legends/tigres-austin-2025.jpg",
+        "portada": "/assets/images/secciones/legends/tigres-austin-2025.jpg",
+        "cierre": "/assets/images/secciones/legends/cierre.jpg",
+        "alt": "Aficionados de Tigres con la mascota y los trofeos del club en Austin, 2025.",
+        "ficha": {
+          "experiencia": "En Austin vivimos un Meet & Greet con jugadores de Tigres en su hotel de concentración. Además de fotos y firma de autógrafos con los jugadores, los aficionados pudieron fotografiarse con la mascota y los trofeos del club.",
+          "queVivimos": [
+            {
+              "titulo": "Encuentro con los jugadores",
+              "texto": "Convivimos con jugadores de Tigres y nos tomamos fotos con ellos."
+            },
+            {
+              "titulo": "Firma de autógrafos",
+              "texto": "Los asistentes se llevaron recuerdos firmados por los jugadores."
+            },
+            {
+              "titulo": "Mascota y trofeos",
+              "texto": "Una oportunidad para posar con la mascota y los trofeos de Tigres."
+            }
+          ],
+          "momentos": [],
+          "testimonios": []
+        },
+        "portadaCompleta": true
       }
     ]
   },

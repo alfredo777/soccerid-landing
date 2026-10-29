@@ -22,7 +22,7 @@ con los textos que ya tenía el sitio hasta que llegue la traducción.
 
 ## Por confirmar con León
 
-Dudas abiertas (28/10/2026). Ninguna bloquea el sitio, pero hay que
+Dudas abiertas (28–29/10/2026). Ninguna bloquea el sitio, pero hay que
 resolverlas antes de publicar.
 
 1. **Dónde va «Solicitar cotización»** en la ficha de viaje. El documento lo
@@ -37,6 +37,10 @@ resolverlas antes de publicar.
 4. **Asistencia de las ediciones:** suman 61,000 (18,000 + 30,000 + 13,000)
    contra el «80K+» de «Nuestro alcance» en Tour. Conciliar una de las dos;
    las dos se editan en el admin del Tour.
+6. **Foto de Libertadores:** el viaje fue en 2023, no 2024. La foto que
+   tiene (de la entrega del 28/10) no se puede fechar desde aquí; si es de
+   otra edición, hay que pedir a León una del viaje de 2023 (entrega
+   Legends/Travel, punto 8).
 5. **Logos de marcas:** 33 de los 36 son recreaciones con IA según la
    entrega de diseño, pendientes de cotejar contra los originales. Sólo
    Olimpus 7, Peluche Caligari y Nuestra Visión salen de archivos del
@@ -69,7 +73,10 @@ resolverlas antes de publicar.
 | 15–16 Nosotros: portada, quiénes somos, qué hacemos, premios reales, sedes, cierre | Hecho | `views/v2/nosotros.hbs`, `contents/premios.json` |
 | 17 Nosotros: marcas con las que hemos colaborado | Hecho, en marquesina | 36 logos de la entrega del 28/10; 33 son recreaciones con IA **por cotejar** contra los originales |
 | Fotos de viajes y Legends | Hecho | entrega de diseño del 28/10 |
-| **Texto de las fichas de Libertadores 2024, Mundial de Clubes 2025, Roberto Carlos y Enrique Borja** | **Pendiente: llevan lorem ipsum** | publicadas para ver el diseño, con la pastilla «Texto pendiente» en la ficha y en su tarjeta, y `noindex` para que los buscadores no las guarden. Al llegar el texto: reemplazar `ficha` y quitar `textoPendiente` en `contents/viajes.json` / `contents/legends.json` |
+| Fichas de Legends y viajes pasados | Hecho (entrega Legends/Travel, 28/10) | seis encuentros (Figo, Roberto Carlos, Borja en **Miami**, América, Atlético Nacional, Tigres **2025**) y tres viajes (Champions 2025, Libertadores **2023**, Mundial de Clubes 2025) con texto final; sin relleno ni `noindex`. Las direcciones viejas de Borja y Libertadores redirigen (301) |
+| El Clásico | Hecho | sin «por confirmar», con «Madrid, España»; su itinerario de ejemplo queda **oculto** hasta tener el real |
+| Detrás de cámaras (fichas de la copa) | Hecho | mismo ancho que el video principal |
+| Logo de Nuestra Visión | Hecho | `assets/images/sponsors/nuestra-vision.png` reemplazado por el aprobado (estaba incompleto) |
 
 ## Cómo funciona el admin del Tour
 

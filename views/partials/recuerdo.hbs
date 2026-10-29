@@ -6,7 +6,7 @@
       la foto. Con `url` (la pone la ruta cuando hay ficha), la tarjeta
       entera es el enlace. --}}
 {{#if this.url}}<a class="recuerdo recuerdo--enlace" href="{{this.url}}">{{else}}<article class="recuerdo">{{/if}}
-  <div class="recuerdo__foto" style="background-image:url('{{this.foto}}')">
+  <div class="recuerdo__foto" style="background-image:url('{{this.foto}}')"{{#if this.alt}} role="img" aria-label="{{this.alt}}"{{/if}}>
     {{#if this.muestra}}<span class="pastilla pastilla--muestra recuerdo__muestra">{{#if @root.isEs}}Muestra{{else}}Sample{{/if}}</span>
     {{else if this.fotoMuestra}}<span class="pastilla pastilla--muestra recuerdo__muestra">{{#if @root.isEs}}Foto de muestra{{else}}Sample photo{{/if}}</span>
     {{else if this.textoPendiente}}<span class="pastilla pastilla--muestra recuerdo__muestra">Texto pendiente</span>{{/if}}
