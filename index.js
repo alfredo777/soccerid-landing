@@ -310,6 +310,15 @@ const CONTACTO = {
   whatsappTexto: '+1 231 515 8991'   // como se lee
 };
 
+// Imagen para compartir (Open Graph) de una foto del sitio: su versión de
+// 1200×630 en assets/images/og/ si existe (la genera scripts/og-imagenes.ps1),
+// si no, la foto tal cual. Así cada página comparte su propia portada.
+function ogDe(foto) {
+  if (!foto || !foto.startsWith('/assets/images/')) return foto || null;
+  const og = '/assets/images/og/' + foto.slice('/assets/images/'.length);
+  return fs.existsSync(path.join(__dirname, og)) ? og : foto;
+}
+
 // Variables globales para vistas
 app.use((req, res, next) => {
   res.locals.year = new Date().getFullYear();
@@ -1497,6 +1506,7 @@ app.get('/:lang/socceridcup/:year', async (req, res, next) => {
     const fotos = await sitioTour.fotosEdicion(year);
     Object.assign(data, {
       fotoPortada: fotos.portada || edition.banner,
+      ogImagen: ogDe(fotos.portada || edition.banner),
       fotoCierre: fotos.cierre || edition.banner,
       tituloPagina: edition.title + ' · SOCCER iD',
       descripcionPagina: edition.description,
@@ -1782,6 +1792,16 @@ function partidosFuturos(lista) {
     });
 }
 
+// La foto de portada de cada sección, para la vista previa al compartir. Debe
+// coincidir con la <img class="portada__foto"> de su vista.
+const PORTADA_SECCION = {
+  travel: '/assets/images/secciones/travel/portada.jpg',
+  legends: '/assets/images/secciones/legends/portada-figo.jpg',
+  podcast: '/assets/images/secciones/podcast/portada.jpg',
+  opiniones: '/assets/images/secciones/media/portada.jpg',
+  nosotros: '/assets/images/secciones/nosotros/portada.jpg'
+};
+
 function rutaV2(slug, armar) {
   return async (req, res, next) => {
     const lang = req.params.lang;
@@ -1789,6 +1809,8 @@ function rutaV2(slug, armar) {
     try {
       const data = datosV2(lang, slug);
       if (armar) Object.assign(data, await armar(lang, data));
+      // Imagen para compartir: la portada de la sección (Tour manda la suya).
+      if (!data.ogImagen) data.ogImagen = ogDe(PORTADA_SECCION[slug]);
       res.render(slug ? `v2/${slug}` : 'v2/inicio', data);
     } catch (e) {
       console.error('Error en la sección ' + (slug || 'inicio') + ':', e);
@@ -1816,7 +1838,7 @@ app.get('/:lang/tour', rutaV2('tour', async (lang) => {
   const notas = (t.medios && t.medios.notas) || [];
   const arriba = notas.filter(n => n.destacada);
   const prensa = arriba.length ? { arriba, mas: notas.filter(n => !n.destacada) } : { arriba: notas, mas: [] };
-  return { t, c, ediciones, wa, prensa, tituloPagina: `${t.portada.titulo} · SOCCER iD`, descripcionPagina: t.portada.descripcion };
+  return { t, c, ediciones, wa, prensa, ogImagen: ogDe(c.fotoPortada), tituloPagina: `${t.portada.titulo} · SOCCER iD`, descripcionPagina: t.portada.descripcion };
 }));
 
 // Los viajes (contents/viajes.json) sólo están aprobados en español. Ojo:
@@ -1860,6 +1882,7 @@ app.get('/:lang/viaje/:slug', async (req, res, next) => {
     tituloPagina: `${viaje.nombre} · SOCCER iD Travel`,
     descripcionPagina: `${viaje.nombre} · ${viaje.fechaTexto}. Viaje con acceso VIP, hotel y traslados.`,
     rutaCanonica: `/${lang}/viaje/${viaje.slug}`,
+    ogImagen: ogDe(viaje.foto),
     viaje,
     otros: proximos.filter(v => v.slug !== viaje.slug),
     regresar: { url: `/${lang}/travel#viajes`, texto: 'Volver a próximos viajes' },
@@ -1904,6 +1927,7 @@ app.get('/:lang/travel/viajes-pasados', (req, res, next) => {
     tituloPagina: 'Viajes pasados · SOCCER iD Travel',
     descripcionPagina: 'Los grandes eventos del fútbol que ya vivimos con el Travel Club.',
     rutaCanonica: `/${lang}/travel/viajes-pasados`,
+    ogImagen: ogDe(PORTADA_SECCION.travel),
     marca: 'SOCCER iD Travel Club',
     titulo: 'Viajes pasados',
     seccionUrl: `/${lang}/travel`, seccionNombre: 'Travel',
@@ -1925,7 +1949,7 @@ app.get('/:lang/travel/viajes-pasados/:slug', (req, res, next) => {
     tituloPagina: `${p.titulo} · SOCCER iD Travel`,
     descripcionPagina: p.detalle || p.titulo,
     rutaCanonica: `${base}/${p.slug}`,
-    p, marca: 'SOCCER iD Travel Club', ...fotosFicha(p), noIndexar: !!p.textoPendiente,
+    p, marca: 'SOCCER iD Travel Club', ...fotosFicha(p), ogImagen: ogDe(fotosFicha(p).fotoPortada), noIndexar: !!p.textoPendiente,
     seccionUrl: `/${lang}/travel`, seccionNombre: 'Travel',
     otros: todos.filter(v => v.slug !== p.slug), otrosTitulo: 'Otros viajes',
     cierre: { titulo: 'Vive el próximo', boton: 'Ver próximos viajes', url: `/${lang}/travel#viajes` },
@@ -1944,9 +1968,11 @@ app.get('/:lang/legends/eventos/:slug', (req, res, next) => {
   if (!p) return next();
   res.render('v2/pasado', Object.assign(data, {
     tituloPagina: `${p.titulo} · SOCCER iD Legends`,
-    descripcionPagina: p.ficha.experiencia || p.titulo,
+    // El texto corto de la tarjeta: la experiencia completa pasa de 200
+    // caracteres y WhatsApp la corta en la vista previa.
+    descripcionPagina: p.detalle || p.ficha.experiencia || p.titulo,
     rutaCanonica: `${base}/${p.slug}`,
-    p, marca: 'SOCCER iD Legends', ...fotosFicha(p), noIndexar: !!p.textoPendiente,
+    p, marca: 'SOCCER iD Legends', ...fotosFicha(p), ogImagen: ogDe(fotosFicha(p).fotoPortada), noIndexar: !!p.textoPendiente,
     seccionUrl: `/${lang}/legends`, seccionNombre: 'Legends',
     otros: todos.filter(v => v.slug !== p.slug), otrosTitulo: 'Otros encuentros',
     cierre: { titulo: 'Conoce a tus ídolos', boton: 'Ver próximos eventos', url: `/${lang}/legends#calendario` },

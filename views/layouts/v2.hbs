@@ -12,23 +12,24 @@
   {{!-- Fichas con texto de relleno: que los buscadores no las guarden. --}}
   {{#if noIndexar}}<meta name="robots" content="noindex">{{/if}}
   <link rel="canonical" href="{{baseUrl}}{{#if rutaCanonica}}{{rutaCanonica}}{{else}}/{{lang}}{{#if actual}}/{{actual.slug}}{{/if}}{{/if}}">
-  {{!-- Vista previa al compartir. Sólo la piden las páginas que se mandan
-        por WhatsApp con su propia foto (un partido, un reportaje). --}}
-  {{#if ogImage}}
+  {{!-- Vista previa al compartir (WhatsApp, Facebook, LinkedIn, X), en TODAS
+        las páginas. Título, descripción y dirección son los mismos de arriba.
+        Imagen: la que manda la página (`ogImage`: un partido, un reportaje),
+        si no la portada de la página en 1200×630 (`ogImagen`, ver ogDe en
+        index.js), y si no la general del sitio. --}}
   <meta property="og:type" content="website">
-  <meta property="og:url" content="{{baseUrl}}{{rutaCanonica}}">
-  <meta property="og:title" content="{{ogTitle}}">
-  <meta property="og:description" content="{{ogDescription}}">
-  <meta property="og:image" content="{{baseUrl}}{{ogImage}}">
+  <meta property="og:site_name" content="SOCCER iD">
+  <meta property="og:locale" content="{{#if isEs}}es_MX{{else}}en_US{{/if}}">
+  <meta property="og:url" content="{{baseUrl}}{{#if rutaCanonica}}{{rutaCanonica}}{{else}}/{{lang}}{{#if actual}}/{{actual.slug}}{{/if}}{{/if}}">
+  <meta property="og:title" content="{{#if tituloPagina}}{{tituloPagina}}{{else}}{{#if actual}}{{actual.nombre}} · SOCCER iD{{else}}SOCCER iD{{/if}}{{/if}}">
+  <meta property="og:description" content="{{#if descripcionPagina}}{{descripcionPagina}}{{else}}{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}{{/if}}">
+  <meta property="og:image" content="{{baseUrl}}{{#if ogImage}}{{ogImage}}{{else}}{{#if ogImagen}}{{ogImagen}}{{else}}/assets/images/og-image.jpg{{/if}}{{/if}}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:site_name" content="SOCCER iD">
-  <meta property="og:locale" content="{{ogLocale}}">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{{ogTitle}}">
-  <meta name="twitter:description" content="{{ogDescription}}">
-  <meta name="twitter:image" content="{{baseUrl}}{{ogImage}}">
-  {{/if}}
+  <meta name="twitter:title" content="{{#if tituloPagina}}{{tituloPagina}}{{else}}{{#if actual}}{{actual.nombre}} · SOCCER iD{{else}}SOCCER iD{{/if}}{{/if}}">
+  <meta name="twitter:description" content="{{#if descripcionPagina}}{{descripcionPagina}}{{else}}{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}{{/if}}">
+  <meta name="twitter:image" content="{{baseUrl}}{{#if ogImage}}{{ogImage}}{{else}}{{#if ogImagen}}{{ogImagen}}{{else}}/assets/images/og-image.jpg{{/if}}{{/if}}">
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
   <link rel="stylesheet" href="/assets/css/v2.css?v={{version}}">
