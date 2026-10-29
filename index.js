@@ -265,6 +265,14 @@ const hbs = require('express-handlebars').create({
       return `${baseUrl}/${targetLang}${currentPath}`;
     },
     
+    // La misma página en otro idioma, absoluta y sin barra final en el
+    // inicio (/es, no /es/): la que se enlaza en todo el sitio.
+    urlIdioma: function(targetLang, options) {
+      const currentPath = options.data.root.currentPath || '/';
+      const baseUrl = options.data.root.baseUrl || BASE_URL;
+      return `${baseUrl}/${targetLang}${currentPath === '/' ? '' : currentPath}`;
+    },
+
     // Helper para URL canónica completa
     canonicalUrl: function(options) {
       const lang = options.data.root.lang || DEFAULT_LANG;
@@ -752,6 +760,9 @@ app.get('/:lang/articulo/:id', (req, res, next) => {
       tituloPagina: ogTitle,
       descripcionPagina: ogDesc,
       rutaCanonica: `/${lang}/articulo/${articleId}`,
+      currentPath: `/articulo/${articleId}`,
+      // Algún artículo cambia de id en inglés: sin par, sin hreflang.
+      sinAlternas: !((panels[lang === 'es' ? 'en' : 'es'] || {}).media || { articles: [] }).articles.some(a => a.id === articleId),
       ogTitle: ogTitle,
       ogDescription: ogDesc,
       ogImage: ogImage,
@@ -1882,6 +1893,7 @@ app.get('/:lang/viaje/:slug', async (req, res, next) => {
     tituloPagina: `${viaje.nombre} · SOCCER iD Travel`,
     descripcionPagina: `${viaje.nombre} · ${viaje.fechaTexto}. Viaje con acceso VIP, hotel y traslados.`,
     rutaCanonica: `/${lang}/viaje/${viaje.slug}`,
+    sinAlternas: true,
     ogImagen: ogDe(viaje.foto),
     viaje,
     otros: proximos.filter(v => v.slug !== viaje.slug),
@@ -1927,6 +1939,7 @@ app.get('/:lang/travel/viajes-pasados', (req, res, next) => {
     tituloPagina: 'Viajes pasados · SOCCER iD Travel',
     descripcionPagina: 'Los grandes eventos del fútbol que ya vivimos con el Travel Club.',
     rutaCanonica: `/${lang}/travel/viajes-pasados`,
+    sinAlternas: true,
     ogImagen: ogDe(PORTADA_SECCION.travel),
     marca: 'SOCCER iD Travel Club',
     titulo: 'Viajes pasados',
@@ -1948,7 +1961,7 @@ app.get('/:lang/travel/viajes-pasados/:slug', (req, res, next) => {
   res.render('v2/pasado', Object.assign(data, {
     tituloPagina: `${p.titulo} · SOCCER iD Travel`,
     descripcionPagina: p.detalle || p.titulo,
-    rutaCanonica: `${base}/${p.slug}`,
+    rutaCanonica: `${base}/${p.slug}`, sinAlternas: true,
     p, marca: 'SOCCER iD Travel Club', ...fotosFicha(p), ogImagen: ogDe(fotosFicha(p).fotoPortada), noIndexar: !!p.textoPendiente,
     seccionUrl: `/${lang}/travel`, seccionNombre: 'Travel',
     otros: todos.filter(v => v.slug !== p.slug), otrosTitulo: 'Otros viajes',
@@ -1971,7 +1984,7 @@ app.get('/:lang/legends/eventos/:slug', (req, res, next) => {
     // El texto corto de la tarjeta: la experiencia completa pasa de 200
     // caracteres y WhatsApp la corta en la vista previa.
     descripcionPagina: p.detalle || p.ficha.experiencia || p.titulo,
-    rutaCanonica: `${base}/${p.slug}`,
+    rutaCanonica: `${base}/${p.slug}`, sinAlternas: true,
     p, marca: 'SOCCER iD Legends', ...fotosFicha(p), ogImagen: ogDe(fotosFicha(p).fotoPortada), noIndexar: !!p.textoPendiente,
     seccionUrl: `/${lang}/legends`, seccionNombre: 'Legends',
     otros: todos.filter(v => v.slug !== p.slug), otrosTitulo: 'Otros encuentros',
@@ -2090,6 +2103,87 @@ app.get('/:lang/nosotros', rutaV2('nosotros', async (lang, data) => {
   };
 }));
 
+// ============================================================
+// INDEXACIÓN: robots.txt y sitemap.xml
+// ============================================================
+// Sólo el dominio de producción se deja indexar. La dirección de Heroku
+// (*.herokuapp.com), un túnel de ngrok o el servidor local responden
+// «Disallow: /» para que Google no indexe una copia del sitio con otro nombre.
+app.get('/robots.txt', (req, res) => {
+  const lineas = /^(www\.)?soccerid\.co$/.test(req.hostname)
+    ? ['User-agent: *', 'Allow: /', 'Disallow: /panel', 'Disallow: /admin', 'Disallow: /api/', 'Disallow: /contents/', '', `Sitemap: ${BASE_URL}/sitemap.xml`]
+    : ['User-agent: *', 'Disallow: /'];
+  res.type('text/plain').send(lineas.join('\n') + '\n');
+});
+
+// Las páginas públicas, con su par en el otro idioma cuando existe. Fuera:
+// las propuestas (llevan candado y noindex), el panel, las fichas con
+// «Texto pendiente» (noindex hasta tener su texto) y las direcciones viejas
+// que redirigen.
+async function paginasSitemap() {
+  const xml = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const paginas = [];
+  // Bilingüe: la misma ruta en los dos idiomas, cada una apunta a la otra.
+  const ambos = (ruta, prioridad) => SUPPORTED_LANGS.forEach(l =>
+    paginas.push({ url: `/${l}${ruta}`, prioridad, alternas: SUPPORTED_LANGS.map(o => ({ lang: o, url: `/${o}${ruta}` })).concat({ lang: 'x-default', url: `/${DEFAULT_LANG}${ruta}` }) }));
+  const soloEs = (ruta, prioridad) => paginas.push({ url: `/es${ruta}`, prioridad });
+
+  ambos('', '1.0');
+  seccionesV2(DEFAULT_LANG).forEach(sx => ambos(`/${sx.slug}`, '0.9'));
+
+  const fichas = await cupEditions.fichas(DEFAULT_LANG);
+  fichas.forEach(f => ambos(`/socceridcup/${f.year}`, '0.7'));
+
+  const eventos = JSON.parse(fs.readFileSync(path.join(__dirname, 'contents', 'upcoming_events.json'), 'utf8'));
+  const idsEn = new Set((eventos.en || []).map(e => e.id));
+  partidosFuturos(eventos[DEFAULT_LANG]).forEach(e =>
+    idsEn.has(e.id) ? ambos(`/evento/${e.id}`, '0.6') : soloEs(`/evento/${e.id}`, '0.6'));
+
+  // Los artículos cambian de id entre idiomas en algún caso: sólo se emparejan
+  // los que comparten id.
+  const paneles = JSON.parse(fs.readFileSync(path.join(__dirname, 'contents', 'panel_templates.json'), 'utf8'));
+  const articulos = l => (((paneles[l] || {}).media || {}).articles || []).map(a => a.id);
+  const enEs = articulos('es'), enEn = articulos('en');
+  enEs.filter(id => enEn.includes(id)).forEach(id => ambos(`/articulo/${id}`, '0.5'));
+  enEs.filter(id => !enEn.includes(id)).forEach(id => soloEs(`/articulo/${id}`, '0.5'));
+  enEn.filter(id => !enEs.includes(id)).forEach(id => paginas.push({ url: `/en/articulo/${id}`, prioridad: '0.5' }));
+
+  // Fichas de Travel y Legends: sólo en español, como su contenido.
+  const viajes = viajesDe('es') || {};
+  partidosFuturos(viajes.proximos).forEach(v => soloEs(`/viaje/${v.slug}`, '0.8'));
+  soloEs('/travel/viajes-pasados', '0.6');
+  const conPagina = lista => (lista || []).filter(x => x.ficha && x.slug && !x.textoPendiente);
+  conPagina(viajes.pasados).forEach(v => soloEs(`/travel/viajes-pasados/${v.slug}`, '0.5'));
+  const legends = JSON.parse(fs.readFileSync(path.join(__dirname, 'contents', 'legends.json'), 'utf8')).es || {};
+  conPagina(legends.pasados).forEach(p => soloEs(`/legends/eventos/${p.slug}`, '0.5'));
+
+  ambos('/terms', '0.2');
+  ambos('/privacy', '0.2');
+
+  return paginas.map(p => [
+    '  <url>',
+    `    <loc>${xml(BASE_URL + p.url)}</loc>`,
+    ...(p.alternas || []).map(a => `    <xhtml:link rel="alternate" hreflang="${a.lang}" href="${xml(BASE_URL + a.url)}"/>`),
+    `    <priority>${p.prioridad}</priority>`,
+    '  </url>'
+  ].join('\n'));
+}
+
+app.get('/sitemap.xml', async (req, res, next) => {
+  try {
+    const urls = await paginasSitemap();
+    res.type('application/xml').send([
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+      ...urls,
+      '</urlset>'
+    ].join('\n') + '\n');
+  } catch (e) {
+    console.error('Error armando el sitemap:', e);
+    next(e);
+  }
+});
+
 // Otras páginas con idioma
 app.get('/:lang/:page', (req, res, next) => {
   const { lang, page } = req.params;
@@ -2105,7 +2199,11 @@ app.get('/:lang/:page', (req, res, next) => {
   const viewPath = path.join(__dirname, 'views', page + '.hbs');
   
   if (fs.existsSync(viewPath)) {
-    res.cookie('lang', lang, { 
+    // Estas vistas son plantillas de otras rutas (el home anterior, la
+    // galería, la propuesta vieja) servidas sin sus datos: se pueden abrir
+    // para comparar, pero no son páginas para el buscador.
+    res.set('X-Robots-Tag', 'noindex');
+    res.cookie('lang', lang, {
       maxAge: 365 * 24 * 60 * 60 * 1000, 
       httpOnly: false,
       domain: isProduction ? '.soccerid.co' : undefined

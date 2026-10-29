@@ -10,8 +10,13 @@
   <title>{{#if tituloPagina}}{{tituloPagina}}{{else}}{{#if actual}}{{actual.nombre}} · SOCCER iD{{else}}SOCCER iD{{/if}}{{/if}}</title>
   <meta name="description" content="{{#if descripcionPagina}}{{descripcionPagina}}{{else}}{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}{{/if}}">
   {{!-- Fichas con texto de relleno: que los buscadores no las guarden. --}}
-  {{#if noIndexar}}<meta name="robots" content="noindex">{{/if}}
+  <meta name="robots" content="{{#if noIndexar}}noindex, follow{{else}}index, follow, max-image-preview:large{{/if}}">
   <link rel="canonical" href="{{baseUrl}}{{#if rutaCanonica}}{{rutaCanonica}}{{else}}/{{lang}}{{#if actual}}/{{actual.slug}}{{/if}}{{/if}}">
+  {{#unless sinAlternas}}
+  <link rel="alternate" hreflang="es" href="{{urlIdioma "es"}}">
+  <link rel="alternate" hreflang="en" href="{{urlIdioma "en"}}">
+  <link rel="alternate" hreflang="x-default" href="{{urlIdioma "es"}}">
+  {{/unless}}
   {{!-- Vista previa al compartir (WhatsApp, Facebook, LinkedIn, X), en TODAS
         las páginas. Título, descripción y dirección son los mismos de arriba.
         Imagen: la que manda la página (`ogImage`: un partido, un reportaje),

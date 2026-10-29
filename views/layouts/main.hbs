@@ -15,14 +15,14 @@
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   
   <!-- Canonical y alternate para SEO multiidioma -->
-  <link rel="canonical" href="{{baseUrl}}/{{lang}}{{currentPath}}">
-  <link rel="alternate" hreflang="es" href="{{baseUrl}}/es{{currentPath}}">
-  <link rel="alternate" hreflang="en" href="{{baseUrl}}/en{{currentPath}}">
-  <link rel="alternate" hreflang="x-default" href="{{baseUrl}}/es{{currentPath}}">
-  
+  <link rel="canonical" href="{{urlIdioma lang}}">
+  <link rel="alternate" hreflang="es" href="{{urlIdioma "es"}}">
+  <link rel="alternate" hreflang="en" href="{{urlIdioma "en"}}">
+  <link rel="alternate" hreflang="x-default" href="{{urlIdioma "es"}}">
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="{{baseUrl}}/{{lang}}{{currentPath}}">
+  <meta property="og:url" content="{{urlIdioma lang}}">
   <meta property="og:title" content="{{ogTitle}}">
   <meta property="og:description" content="{{ogDescription}}">
   <meta property="og:image" content="{{baseUrl}}{{img '/assets/images/og-image.jpg'}}">
@@ -38,7 +38,7 @@
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="{{baseUrl}}/{{lang}}{{currentPath}}">
+  <meta name="twitter:url" content="{{urlIdioma lang}}">
   <meta name="twitter:title" content="{{twitterTitle}}">
   <meta name="twitter:description" content="{{twitterDescription}}">
   <meta name="twitter:image" content="{{baseUrl}}{{img '/assets/images/og-image.jpg'}}">
