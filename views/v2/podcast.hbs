@@ -18,7 +18,7 @@
   <div class="portada__cuerpo">
     <div class="cabecera__marca">SOCCER iD Podcast</div>
     <h1 class="portada__titulo">Podcast</h1>
-    <p class="portada__bajada">{{#if isEs}}<strong>Charlas, entrevistas y análisis</strong> para entender y disfrutar el fútbol, con las voces de quienes lo viven <strong>dentro y fuera de la cancha</strong>.{{else}}Football conversations, no rush. Long talks with the people who live the game from the inside: players, executives, reporters and everyone who makes a match happen.{{/if}}</p>
+    <p class="portada__bajada">{{#if isEs}}<strong>Charlas, entrevistas y análisis</strong> para entender y disfrutar el fútbol, con las voces de quienes lo viven <strong>dentro y fuera de la cancha</strong>.{{else}}<strong>Talks, interviews and analysis</strong> to understand and enjoy football, with the voices of those who live it <strong>on and off the pitch</strong>.{{/if}}</p>
     <div class="portada__pastillas">
       <span class="pastilla">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10-6.5z"/></svg>
@@ -126,14 +126,14 @@
 </script>
 {{/if}}
 
-{{!-- Invitados destacados (sólo español). Cada tarjeta carga su entrevista
+{{!-- Invitados destacados. Cada tarjeta carga su entrevista
       en el reproductor de arriba; sin episodio relacionado, va sin botón.
       Carrusel como el de opiniones: se arrastra con el dedo. --}}
 {{#if invitados.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">Invitados destacados</p>
+  <p class="rotulo">{{#if isEs}}Invitados destacados{{else}}Featured guests{{/if}}</p>
   <div class="carrusel">
-    <div class="invitados" data-pista tabindex="0" role="region" aria-label="Invitados destacados, se arrastra para ver más">
+    <div class="invitados" data-pista tabindex="0" role="region" aria-label="{{#if isEs}}Invitados destacados, se arrastra para ver más{{else}}Featured guests, drag to see more{{/if}}">
       {{#each invitados}}
       <article class="invitado">
         <div class="invitado__foto"{{#if this.foto}} style="background-image:url('{{this.foto}}')"{{/if}}>{{#unless this.foto}}<span class="invitado__inicial" aria-hidden="true">{{this.inicial}}</span>{{/unless}}</div>
@@ -142,17 +142,17 @@
           <p class="invitado__desc">{{this.descripcion}}</p>
           {{#if this.ep}}
           <a class="boton invitado__ver" href="{{this.ep.url}}" target="_blank" rel="noopener"
-             data-video="{{this.ep.videoId}}" data-num="{{this.ep.num}}" data-titulo="{{this.ep.titulo}}">Ver episodio <span class="flecha">↑</span></a>
+             data-video="{{this.ep.videoId}}" data-num="{{this.ep.num}}" data-titulo="{{this.ep.titulo}}">{{#if @root.isEs}}Ver episodio{{else}}Watch episode{{/if}} <span class="flecha">↑</span></a>
           {{/if}}
         </div>
       </article>
       {{/each}}
     </div>
     <div class="carrusel__mandos">
-      <button type="button" class="carrusel__flecha" data-ir="-1" aria-label="Anterior">
+      <button type="button" class="carrusel__flecha" data-ir="-1" aria-label="{{#if isEs}}Anterior{{else}}Previous{{/if}}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-      <button type="button" class="carrusel__flecha" data-ir="1" aria-label="Siguiente">
+      <button type="button" class="carrusel__flecha" data-ir="1" aria-label="{{#if isEs}}Siguiente{{else}}Next{{/if}}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
       </button>
     </div>
@@ -180,7 +180,7 @@
 {{!-- Sé patrocinador: las cifras del canal y lo que una marca puede tener. --}}
 <section class="seccion envoltura" id="patrocina">
   <p class="rotulo">{{#if isEs}}Sé patrocinador{{else}}Become a sponsor{{/if}}</p>
-  <p class="bajada" style="max-width:760px;margin-bottom:26px">{{#if isEs}}<strong>Conecta tu marca con la afición</strong> a través de nuestras conversaciones, invitados y contenido de fútbol.{{else}}Your brand inside the football conversation fans actually listen to in full: long episodes, every week, with guests from the game.{{/if}}</p>
+  <p class="bajada" style="max-width:760px;margin-bottom:26px">{{#if isEs}}<strong>Conecta tu marca con la afición</strong> a través de nuestras conversaciones, invitados y contenido de fútbol.{{else}}<strong>Connect your brand with the fans</strong> through our conversations, guests and football content.{{/if}}</p>
   <div class="cifras">
     {{#each cifras}}
     <div class="cifra">
@@ -192,18 +192,18 @@
   <div class="pilares" style="margin-top:14px">
     <div class="pilar">
       <div class="pilar__num">01</div>
-      <h3>{{#if isEs}}Menciones de marca{{else}}In-episode mention{{/if}}</h3>
-      <p>{{#if isEs}}Los conductores presentan tu marca <strong>de forma natural durante el episodio</strong>.{{else}}The hosts present your brand in their own words, at the start or mid-show.{{/if}}</p>
+      <h3>{{#if isEs}}Menciones de marca{{else}}Brand mentions{{/if}}</h3>
+      <p>{{#if isEs}}Los conductores presentan tu marca <strong>de forma natural durante el episodio</strong>.{{else}}The hosts present your brand <strong>naturally during the episode</strong>.{{/if}}</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">02</div>
       <h3>{{#if isEs}}Sección patrocinada{{else}}Sponsored segment{{/if}}</h3>
-      <p>{{#if isEs}}<strong>Tu marca da nombre</strong> a un espacio de análisis, debate o entretenimiento.{{else}}A recurring segment named after your brand: the prediction, the ideal XI, the week's big debate.{{/if}}</p>
+      <p>{{#if isEs}}<strong>Tu marca da nombre</strong> a un espacio de análisis, debate o entretenimiento.{{else}}<strong>Your brand names</strong> an analysis, debate or entertainment segment.{{/if}}</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">03</div>
       <h3>{{#if isEs}}Presencia en pantalla{{else}}On-screen presence{{/if}}</h3>
-      <p>{{#if isEs}}Integramos tu <strong>logo o producto</strong> en el set y en el contenido del programa.{{else}}Your logo on set and on screen, and your product in the hosts' hands.{{/if}}</p>
+      <p>{{#if isEs}}Integramos tu <strong>logo o producto</strong> en el set y en el contenido del programa.{{else}}We feature your <strong>logo or product</strong> on set and in the show's content.{{/if}}</p>
     </div>
   </div>
   <div class="portada__acciones" style="margin-top:22px">
@@ -216,8 +216,8 @@
   <img class="cierre__foto" src="/assets/images/secciones/podcast/cierre.jpg" alt="">
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
-    <h2 class="cierre__t">{{#if isEs}}Míralo o escúchalo donde quieras{{else}}Listen where you already listen{{/if}}</h2>
-    <p class="cierre__d">{{#if isEs}}Disfruta los episodios en <strong>YouTube y Spotify</strong>, y los mejores momentos en <strong>Instagram</strong>.{{else}}Subscribe and every new episode reaches you.{{/if}}</p>
+    <h2 class="cierre__t">{{#if isEs}}Míralo o escúchalo donde quieras{{else}}Watch or listen wherever you like{{/if}}</h2>
+    <p class="cierre__d">{{#if isEs}}Disfruta los episodios en <strong>YouTube y Spotify</strong>, y los mejores momentos en <strong>Instagram</strong>.{{else}}Enjoy the episodes on <strong>YouTube and Spotify</strong>, and the best moments on <strong>Instagram</strong>.{{/if}}</p>
     <div class="portada__acciones escucha" style="justify-content:center">
       {{#each plataformas}}
       <a class="boton boton--icono {{#if @first}}boton--lleno{{/if}}" href="{{this.url}}" target="_blank" rel="noopener">{{> icono-red id=this.id}}{{this.nombre}} <span class="flecha escucha__largo">↗</span></a>

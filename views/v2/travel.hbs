@@ -1,10 +1,10 @@
 {{!-- Travel Club · la misma anatomía que Tour y Legends: portada, lo que
       la marca ofrece, lo que viene, lo que ya pasó, contacto y cierre.
 
-      Español: los textos y los cuatro viajes del documento «Textos y cambios
-      del sitio web» (27/10/2026), de contents/viajes.json (`viajes`).
-      Inglés: sin traducción aprobada, sigue como estaba: el calendario de
-      partidos de upcoming_events.json (`partidos`). --}}
+      Los textos y los viajes son los del documento «Textos y cambios del
+      sitio web» (27/10/2026) con los cambios del 30/10/2026, de
+      contents/viajes.json (`viajes`, `viajesPasados`). El inglés es su
+      traducción, con la misma estructura. --}}
 
 <section class="portada">
   <img class="portada__foto" src="/assets/images/secciones/travel/portada.jpg" alt="SOCCER iD Travel Club">
@@ -12,107 +12,57 @@
   <div class="portada__cuerpo">
     <div class="cabecera__marca">SOCCER iD Travel Club</div>
     <h1 class="portada__titulo">Travel</h1>
-    {{#if conViajes}}
-    <p class="portada__bajada">Viaja a los <strong>grandes eventos del fútbol mundial</strong> con acceso VIP, hotel, traslados y experiencias exclusivas.</p>
+    <p class="portada__bajada">{{#if isEs}}Viaja a los <strong>grandes eventos del fútbol mundial</strong> con acceso VIP, hotel, traslados y experiencias exclusivas.{{else}}Travel to the <strong>biggest events in world football</strong> with VIP access, hotel, transfers and exclusive experiences.{{/if}}</p>
     {{#if viajes.length}}
     <div class="portada__pastillas">
       <span class="pastilla">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
-        {{viajes.length}} {{#eq viajes.length 1}}fecha abierta{{else}}fechas abiertas{{/eq}}
+        {{viajes.length}} {{#if isEs}}{{#eq viajes.length 1}}fecha abierta{{else}}fechas abiertas{{/eq}}{{else}}{{#eq viajes.length 1}}open date{{else}}open dates{{/eq}}{{/if}}
       </span>
     </div>
     {{/if}}
     <div class="portada__acciones">
-      <a class="boton boton--lleno" href="#viajes">Ver próximos viajes</a>
-      <a class="boton" href="https://wa.me/{{@root.contacto.whatsapp}}?text=Hola!%20Quiero%20informaci%C3%B3n%20del%20Travel%20Club" target="_blank" rel="noopener">Escríbenos <span class="flecha">↗</span></a>
+      <a class="boton boton--lleno" href="#viajes">{{#if isEs}}Ver próximos viajes{{else}}See upcoming trips{{/if}}</a>
+      <a class="boton" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if isEs}}Hola!%20Quiero%20informaci%C3%B3n%20del%20Travel%20Club{{else}}Hi!%20I%27d%20like%20info%20about%20the%20Travel%20Club{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Escríbenos{{else}}Write to us{{/if}} <span class="flecha">↗</span></a>
     </div>
-    {{else}}
-    <p class="portada__bajada">We take you to any stadium. Liga MX suites, trips with flights and lodging, and experiences to live the match up close.</p>
-    <div class="portada__pastillas">
-      <span class="pastilla">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
-        {{#if partidos.length}}{{partidos.length}} open dates{{else}}Calendar to be published{{/if}}
-      </span>
-      <span class="pastilla">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-        Any stadium
-      </span>
-    </div>
-    <div class="portada__acciones">
-      <a class="boton boton--lleno" href="#calendario">See the calendar</a>
-      <a class="boton" href="https://wa.me/{{@root.contacto.whatsapp}}?text=Hi!%20I%27d%20like%20info%20about%20the%20Travel%20Club" target="_blank" rel="noopener">Write to us <span class="flecha">↗</span></a>
-    </div>
-    {{/if}}
   </div>
 </section>
 
 {{!-- Experiencias: lo que la marca ofrece, antes de las fechas. --}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if conViajes}}Experiencias{{else}}Experiences{{/if}}</p>
+  <p class="rotulo">{{#if isEs}}Experiencias{{else}}Experiences{{/if}}</p>
   <div class="experiencias">
-    {{#if conViajes}}
     <article class="experiencia">
       <div class="experiencia__foto" style="background-image:url('/assets/images/secciones/travel/experiencia-acceso.jpg')"></div>
       <div class="experiencia__cuerpo">
         <span class="pastilla">VIP</span>
-        <h3>Acceso al estadio</h3>
-        <p>Vive el partido desde <strong>zonas VIP</strong> en los grandes escenarios del fútbol mundial.</p>
+        <h3>{{#if isEs}}Acceso al estadio{{else}}Stadium access{{/if}}</h3>
+        <p>{{#if isEs}}Vive el partido desde <strong>zonas VIP</strong> en los grandes escenarios del fútbol mundial.{{else}}Watch the match from <strong>VIP areas</strong> at the great stages of world football.{{/if}}</p>
       </div>
     </article>
     <article class="experiencia">
       <div class="experiencia__foto" style="background-image:url('/assets/images/secciones/travel/experiencia-convivencia.jpg')"></div>
       <div class="experiencia__cuerpo">
-        <span class="pastilla">Exclusivo</span>
-        <h3>Convivencias con leyendas</h3>
-        <p>Comparte <strong>cenas y encuentros con figuras del fútbol</strong> como parte de tu viaje.</p>
+        <span class="pastilla">{{#if isEs}}Exclusivo{{else}}Exclusive{{/if}}</span>
+        <h3>{{#if isEs}}Convivencias con leyendas{{else}}Meet-ups with legends{{/if}}</h3>
+        <p>{{#if isEs}}Comparte <strong>cenas y encuentros con figuras del fútbol</strong> como parte de tu viaje.{{else}}Share <strong>dinners and get-togethers with football greats</strong> as part of your trip.{{/if}}</p>
       </div>
     </article>
     <article class="experiencia">
       <div class="experiencia__foto" style="background-image:url('/assets/images/secciones/travel/experiencia-hotel-traslados.jpg')"></div>
       <div class="experiencia__cuerpo">
-        <span class="pastilla">Tu viaje</span>
-        <h3>Hotel y traslados</h3>
-        <p>Disfruta la experiencia con <strong>hospedaje y traslados incluidos</strong> en tu paquete.</p>
+        <span class="pastilla">{{#if isEs}}Tu viaje{{else}}Your trip{{/if}}</span>
+        <h3>{{#if isEs}}Hotel y traslados{{else}}Hotel and transfers{{/if}}</h3>
+        <p>{{#if isEs}}Disfruta la experiencia con <strong>hospedaje y traslados incluidos</strong> en tu paquete.{{else}}Enjoy the experience with <strong>accommodation and transfers included</strong> in your package.{{/if}}</p>
       </div>
     </article>
-    {{else}}
-    {{#if vip}}
-    <article class="experiencia">
-      <div class="experiencia__foto" style="background-image:url('/assets/images/secciones/travel/experiencia-acceso.jpg')"></div>
-      <div class="experiencia__cuerpo">
-        <span class="pastilla">{{vip.tag}}</span>
-        <h3>VIP seats</h3>
-        {{{vip.description}}}
-      </div>
-    </article>
-    {{/if}}
-    {{#if fan}}
-    <article class="experiencia">
-      <div class="experiencia__foto" style="background-image:url('/assets/images/gallery/fan/1@2x.png')"></div>
-      <div class="experiencia__cuerpo">
-        <span class="pastilla">{{fan.tag}}</span>
-        <h3>Fan Experience</h3>
-        {{{fan.description}}}
-      </div>
-    </article>
-    {{/if}}
-    <article class="experiencia">
-      <div class="experiencia__foto" style="background-image:url('/assets/images/secciones/travel/experiencia-hotel-traslados.jpg')"></div>
-      <div class="experiencia__cuerpo">
-        <span class="pastilla">Full trip</span>
-        <h3>Flight and lodging</h3>
-        <p>We take you to the match from your city: flight, a hotel near the stadium, transfers and your seat in the stands or the suite. You just show up and enjoy.</p>
-      </div>
-    </article>
-    {{/if}}
   </div>
-  {{#if conViajes}}<p class="travel__aclaracion">Las experiencias y servicios incluidos <strong>varían según el paquete</strong>.</p>{{/if}}
+  <p class="travel__aclaracion">{{#if isEs}}Las experiencias y servicios incluidos <strong>varían según el paquete</strong>.{{else}}Included experiences and services <strong>vary by package</strong>.{{/if}}</p>
 </section>
 
-{{#if conViajes}}
 {{!-- Próximos viajes: cada tarjeta lleva a su ficha. --}}
 <section class="seccion envoltura" id="viajes">
-  <p class="rotulo">Próximos viajes</p>
+  <p class="rotulo">{{#if isEs}}Próximos viajes{{else}}Upcoming trips{{/if}}</p>
   <div class="eventos">
     {{#each viajes}}
     <article class="evento">
@@ -121,82 +71,35 @@
         <a class="evento__nombre" href="/{{../lang}}/viaje/{{this.slug}}">{{this.nombre}}</a>
         <div class="evento__meta">{{this.fechaTexto}}</div>
       </div>
-      <a class="boton" href="/{{../lang}}/viaje/{{this.slug}}">Ver viaje <span class="flecha">→</span></a>
+      <a class="boton" href="/{{../lang}}/viaje/{{this.slug}}">{{#if ../isEs}}Ver viaje{{else}}View trip{{/if}} <span class="flecha">→</span></a>
     </article>
     {{else}}
-    <p class="vacio">No hay viajes publicados por ahora. Escríbenos y te avisamos en cuanto se abra una fecha.</p>
+    <p class="vacio">{{#if isEs}}No hay viajes publicados por ahora. Escríbenos y te avisamos en cuanto se abra una fecha.{{else}}No trips published right now. Write to us and we'll let you know as soon as a date opens.{{/if}}</p>
     {{/each}}
   </div>
 </section>
 
 {{#if viajesPasados.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">Viajes pasados</p>
+  <p class="rotulo">{{#if isEs}}Viajes pasados{{else}}Past trips{{/if}}</p>
   <div class="recuerdos">
     {{#each viajesPasados}}{{> recuerdo}}{{/each}}
   </div>
   <div class="portada__acciones travel__todos">
-    <a class="boton" href="/{{lang}}/travel/viajes-pasados">Ver todos los viajes <span class="flecha">→</span></a>
+    <a class="boton" href="/{{lang}}/travel/viajes-pasados">{{#if isEs}}Ver todos los viajes{{else}}See all trips{{/if}} <span class="flecha">→</span></a>
   </div>
 </section>
 {{/if}}
 
-{{> contacto asunto='Hola!%20Quiero%20informaci%C3%B3n%20del%20Travel%20Club' tituloEs='¿Planeamos tu próximo viaje?' textoEs='Escríbenos para conocer <strong>paquetes, precios y disponibilidad</strong>.'}}
+{{> contacto asunto='Hola!%20Quiero%20informaci%C3%B3n%20del%20Travel%20Club' tituloEs='¿Planeamos tu próximo viaje?' textoEs='Escríbenos para conocer <strong>paquetes, precios y disponibilidad</strong>.' tituloEn='Shall we plan your next trip?' textoEn='Write to us to learn about <strong>packages, prices and availability</strong>.'}}
 
 {{!-- Cierre: viajes a la medida, para lo que no está en el calendario. --}}
 <section class="cierre">
   <img class="cierre__foto" src="/assets/images/secciones/travel/cierre.jpg" alt="">
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
-    <h2 class="cierre__t">¿Qué partido sueñas vivir?</h2>
-    <p class="cierre__d">Cuéntanos a dónde quieres ir y <strong>diseñamos una experiencia para ti</strong>.</p>
-    <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text=Hola!%20Quiero%20solicitar%20un%20viaje%20personalizado" target="_blank" rel="noopener">Solicitar viaje personalizado <span class="flecha">↗</span></a>
+    <h2 class="cierre__t">{{#if isEs}}¿Qué partido sueñas vivir?{{else}}Which match do you dream of seeing?{{/if}}</h2>
+    <p class="cierre__d">{{#if isEs}}Cuéntanos a dónde quieres ir y <strong>diseñamos una experiencia para ti</strong>.{{else}}Tell us where you want to go and <strong>we'll design an experience for you</strong>.{{/if}}</p>
+    <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if isEs}}Hola!%20Quiero%20solicitar%20un%20viaje%20personalizado{{else}}Hi!%20I%27d%20like%20to%20request%20a%20custom%20trip{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Solicitar viaje personalizado{{else}}Request a custom trip{{/if}} <span class="flecha">↗</span></a>
   </div>
 </section>
-
-{{else}}
-{{!-- Inglés: el calendario de partidos, como estaba. --}}
-<section class="seccion envoltura" id="calendario">
-  <p class="rotulo">Upcoming matches</p>
-  <div class="partidos">
-    {{#each partidos}}
-    <article class="partido">
-      <div class="partido__fecha"><div class="partido__dia">{{this.dia}}</div><div class="partido__mes">{{this.mes}}</div></div>
-      <div>
-        <a class="partido__equipos" href="/{{../lang}}/evento/{{this.id}}">
-          <img class="partido__escudo" src="{{this.team1Icon}}" alt="">{{this.team1}}
-          <span class="partido__vs">vs</span>
-          <img class="partido__escudo" src="{{this.team2Icon}}" alt="">{{this.team2}}
-        </a>
-        <div class="partido__meta">{{this.venue}} · {{this.time}}</div>
-      </div>
-      <div class="partido__torneo"><b>{{this.badge}}</b>{{this.torneo}}{{#if this.jornada}} · {{this.jornada}}{{/if}}</div>
-      <a class="boton" href="https://wa.me/{{@root.contacto.whatsapp}}?text=Hi!%20I%20want%20access%20for%20{{this.team1}}%20vs%20{{this.team2}}" target="_blank" rel="noopener">Book <span class="flecha">↗</span></a>
-    </article>
-    {{else}}
-    <p class="vacio">No matches published yet. Write to us and we'll let you know as soon as the calendar opens.</p>
-    {{/each}}
-  </div>
-</section>
-
-{{#if travel.pasados.length}}
-<section class="seccion envoltura">
-  <p class="rotulo">Past trips</p>
-  <div class="recuerdos">
-    {{#each travel.pasados}}{{> recuerdo}}{{/each}}
-  </div>
-</section>
-{{/if}}
-
-{{> contacto asunto='Hola!%20Quiero%20informaci%C3%B3n%20del%20Travel%20Club'}}
-
-<section class="cierre">
-  <img class="cierre__foto" src="/assets/images/secciones/travel/cierre.jpg" alt="">
-  <div class="cierre__velo"></div>
-  <div class="cierre__cuerpo">
-    <h2 class="cierre__t">Tell us which stadium you want</h2>
-    <p class="cierre__d">Suites, tickets and travel. We handle the rest.</p>
-    <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text=Hi!%20I%27d%20like%20info%20about%20the%20Travel%20Club" target="_blank" rel="noopener">Write to us <span class="flecha">↗</span></a>
-  </div>
-</section>
-{{/if}}

@@ -1,4 +1,4 @@
-{{!-- Ficha de un viaje próximo de Travel (/es/viaje/:slug). Plantilla del
+{{!-- Ficha de un viaje próximo de Travel (/:lang/viaje/:slug). Plantilla del
       documento «Textos y cambios del sitio web»: nombre, fecha, Cómo vivirlo
       (exactamente tres servicios, sin botón dentro), compartir, otros viajes
       y regreso al listado. Sin precio: se pide cotización.
@@ -9,7 +9,8 @@
 
       El itinerario por días se edita en el admin (Panel › Sitio web ›
       Itinerarios). Según su estado no aparece, aparece como ejemplo (con
-      su pastilla) o aparece como confirmado. Sólo español. --}}
+      sin su pastilla, 30/10/2026) o aparece como confirmado. Se captura en
+      español: en inglés no se pinta hasta tener traducción. --}}
 
 <section class="portada portada--ficha">
   {{#if viaje.foto}}<img class="portada__foto" src="{{viaje.foto}}" alt="">{{/if}}
@@ -30,29 +31,29 @@
       {{/if}}
     </div>
     <div class="portada__acciones">
-      <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text=Hola!%20Quiero%20cotizar%20el%20viaje%20a%20{{viaje.nombre}}%20({{viaje.fechaTexto}})" target="_blank" rel="noopener">Solicitar cotización <span class="flecha">↗</span></a>
+      <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if isEs}}Hola!%20Quiero%20cotizar%20el%20viaje%20a%20{{else}}Hi!%20I%27d%20like%20a%20quote%20for%20the%20trip%20to%20{{/if}}{{viaje.nombre}}%20({{viaje.fechaTexto}})" target="_blank" rel="noopener">{{#if isEs}}Solicitar cotización{{else}}Request a quote{{/if}} <span class="flecha">↗</span></a>
       {{> regresar}}
     </div>
   </div>
 </section>
 
 <section class="seccion envoltura">
-  <p class="rotulo">Cómo vivirlo</p>
+  <p class="rotulo">{{#if isEs}}Cómo vivirlo{{else}}How to experience it{{/if}}</p>
   <div class="pilares">
     <div class="pilar">
       <div class="pilar__num">01</div>
-      <h3>Acceso VIP al estadio</h3>
-      <p>Vive el partido desde <strong>zonas preferenciales</strong> y disfruta una experiencia VIP.</p>
+      <h3>{{#if isEs}}Acceso VIP al estadio{{else}}VIP stadium access{{/if}}</h3>
+      <p>{{#if isEs}}Vive el partido desde <strong>zonas preferenciales</strong> y disfruta una experiencia VIP.{{else}}Watch the match from <strong>premium areas</strong> and enjoy a VIP experience.{{/if}}</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">02</div>
-      <h3>Hotel y traslados</h3>
-      <p>Hospedaje y traslados organizados para que <strong>te concentres en disfrutar el viaje</strong>.</p>
+      <h3>{{#if isEs}}Hotel y traslados{{else}}Hotel and transfers{{/if}}</h3>
+      <p>{{#if isEs}}Hospedaje y traslados organizados para que <strong>te concentres en disfrutar el viaje</strong>.{{else}}Accommodation and transfers arranged so <strong>you can focus on enjoying the trip</strong>.{{/if}}</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">03</div>
-      <h3>Experiencias exclusivas</h3>
-      <p>Complementa el partido con actividades especiales, como <strong>cenas y convivencias con leyendas, según el paquete</strong>.</p>
+      <h3>{{#if isEs}}Experiencias exclusivas{{else}}Exclusive experiences{{/if}}</h3>
+      <p>{{#if isEs}}Complementa el partido con actividades especiales, como <strong>cenas y convivencias con leyendas, según el paquete</strong>.{{else}}Round off the match with special activities, such as <strong>dinners and meet-ups with legends, depending on the package</strong>.{{/if}}</p>
     </div>
   </div>
 </section>
@@ -85,7 +86,7 @@
 {{/if}}
 
 <section class="seccion envoltura">
-  <p class="rotulo">Comparte este viaje</p>
+  <p class="rotulo">{{#if isEs}}Comparte este viaje{{else}}Share this trip{{/if}}</p>
   <div class="compartir">
     <a class="red-icono" href="https://wa.me/?text={{viaje.nombre}}%20{{baseUrl}}/{{lang}}/viaje/{{viaje.slug}}" target="_blank" rel="noopener" aria-label="WhatsApp" title="WhatsApp">{{> icono-red id="whatsapp"}}</a>
     <a class="red-icono" href="https://www.facebook.com/sharer/sharer.php?u={{baseUrl}}/{{lang}}/viaje/{{viaje.slug}}" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">{{> icono-red id="facebook"}}</a>
@@ -94,7 +95,7 @@
 
 {{#if otros.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">Otros viajes</p>
+  <p class="rotulo">{{#if isEs}}Otros viajes{{else}}Other trips{{/if}}</p>
   <div class="relacionados">
     {{#each otros}}{{> relacionado}}{{/each}}
   </div>

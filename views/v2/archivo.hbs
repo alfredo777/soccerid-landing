@@ -13,7 +13,7 @@
     {{#each lista}}{{> recuerdo}}{{/each}}
   </div>
   {{else}}
-  <p class="vacio">Todavía no hay nada en el archivo.</p>
+  <p class="vacio">{{#if isEs}}Todavía no hay nada en el archivo.{{else}}Nothing in the archive yet.{{/if}}</p>
   {{/if}}
 </section>
 

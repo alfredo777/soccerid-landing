@@ -12,14 +12,14 @@
   <div class="portada__cuerpo">
     <div class="cabecera__marca">SOCCER iD</div>
     <h1 class="portada__titulo">Media</h1>
-    <p class="portada__bajada">{{#if isEs}}Nuestra historia <strong>en los medios</strong> y las <strong>opiniones de quienes han vivido nuestras experiencias</strong>.{{else}}What has been published about us and what the people who were there say.{{/if}}</p>
+    <p class="portada__bajada">{{#if isEs}}Nuestra historia <strong>en los medios</strong> y las <strong>opiniones de quienes han vivido nuestras experiencias</strong>.{{else}}Our story <strong>in the media</strong> and the <strong>reviews of people who have lived our experiences</strong>.{{/if}}</p>
   </div>
 </section>
 
 {{!-- Reportajes. --}}
 {{#if articulos.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}En los medios{{else}}Features{{/if}}</p>
+  <p class="rotulo">{{#if isEs}}En los medios{{else}}In the media{{/if}}</p>
   <div class="notas">
     {{#each articulos}}
     <a class="nota" href="/{{../lang}}/articulo/{{this.id}}">
@@ -37,7 +37,7 @@
 {{!-- Comentarios de influencers y clientes. --}}
 {{#if opiniones.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">{{#if isEs}}Opiniones{{else}}What they say about us{{/if}}</p>
+  <p class="rotulo">{{#if isEs}}Opiniones{{else}}Reviews{{/if}}</p>
   {{!-- Carrusel: se arrastra con el dedo. El desplazamiento y la inercia los
         pone el navegador; el script de abajo sólo añade las flechas para
         quien usa ratón. Sin JavaScript sigue arrastrándose igual. --}}
@@ -73,8 +73,8 @@
   <img class="cierre__foto" src="/assets/images/secciones/media/cierre.jpg" alt="">
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
-    <h2 class="cierre__t">{{#if isEs}}¿Eres prensa o creador?{{else}}Do you write about football?{{/if}}</h2>
-    <p class="cierre__d">{{#if isEs}}Solicita <strong>acreditaciones, entrevistas o material de prensa</strong>.{{else}}Credentials, press kit and interviews: write to us.{{/if}}</p>
-    <a class="boton boton--lleno" href="mailto:{{@root.contacto.correo}}?subject={{#if isEs}}Prensa{{else}}Press{{/if}}">{{#if isEs}}Contacto de prensa{{else}}{{@root.contacto.correo}}{{/if}} <span class="flecha">↗</span></a>
+    <h2 class="cierre__t">{{#if isEs}}¿Eres prensa o creador?{{else}}Press or content creator?{{/if}}</h2>
+    <p class="cierre__d">{{#if isEs}}Solicita <strong>acreditaciones, entrevistas o material de prensa</strong>.{{else}}Request <strong>accreditation, interviews or press materials</strong>.{{/if}}</p>
+    <a class="boton boton--lleno" href="mailto:{{@root.contacto.correo}}?subject={{#if isEs}}Prensa{{else}}Press{{/if}}">{{#if isEs}}Contacto de prensa{{else}}Press contact{{/if}} <span class="flecha">↗</span></a>
   </div>
 </section>

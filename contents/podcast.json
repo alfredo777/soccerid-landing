@@ -18,37 +18,44 @@
     {
       "nombre": "Werevertumorro",
       "descripcion": "El mayor creador de contenido de México.",
-      "videoId": "8Qim8pHt8Dg"
+      "videoId": "8Qim8pHt8Dg",
+      "descripcionEn": "The biggest content creator in Mexico."
     },
     {
       "nombre": "Enrique Borja",
       "descripcion": "Leyenda del fútbol mexicano",
-      "videoId": "aM7MoWc11hE"
+      "videoId": "aM7MoWc11hE",
+      "descripcionEn": "Mexican football legend"
     },
     {
       "nombre": "Andy Guillaumin",
       "descripcion": "Creador de contenido deportivo",
-      "videoId": "_OfmyXbft14"
+      "videoId": "_OfmyXbft14",
+      "descripcionEn": "Sports content creator"
     },
     {
       "nombre": "Pepe del Bosque",
       "descripcion": "Analista y comentarista de fútbol",
-      "videoId": "lCqXbWyjsqQ"
+      "videoId": "lCqXbWyjsqQ",
+      "descripcionEn": "Football analyst and commentator"
     },
     {
       "nombre": "Mich Oficial (FAN10)",
       "descripcion": "Creador de contenido de fútbol",
-      "videoId": "US64H15OCFU"
+      "videoId": "US64H15OCFU",
+      "descripcionEn": "Football content creator"
     },
     {
       "nombre": "Memo Navarro",
       "descripcion": "Comentarista de Premier League y Champions League",
-      "videoId": "N_70A_yp1Us"
+      "videoId": "N_70A_yp1Us",
+      "descripcionEn": "Premier League and Champions League commentator"
     },
     {
       "nombre": "Mark del Águila",
       "descripcion": "Creador de contenido deportivo",
-      "videoId": "the1PGYO71M"
+      "videoId": "the1PGYO71M",
+      "descripcionEn": "Sports content creator"
     }
   ],
   "episodios": [

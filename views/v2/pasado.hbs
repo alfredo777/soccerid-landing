@@ -33,14 +33,14 @@
 
 {{#if p.ficha.experiencia}}
 <section class="seccion envoltura">
-  <p class="rotulo">La experiencia</p>
+  <p class="rotulo">{{#if isEs}}La experiencia{{else}}The experience{{/if}}</p>
   <p class="bajada pasado__experiencia">{{negritas p.ficha.experiencia}}</p>
 </section>
 {{/if}}
 
 {{#if p.ficha.queVivimos.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">Qué vivimos</p>
+  <p class="rotulo">{{#if isEs}}Qué vivimos{{else}}What we lived{{/if}}</p>
   <div class="pilares">
     {{#each p.ficha.queVivimos}}
     <div class="pilar">
@@ -55,7 +55,7 @@
 
 {{#if p.ficha.momentos.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">Momentos</p>
+  <p class="rotulo">{{#if isEs}}Momentos{{else}}Moments{{/if}}</p>
   <div class="mosaico">
     {{#each p.ficha.momentos}}
     <button type="button" class="mosaico__foto" style="background-image:url('{{this.src}}')" data-ampliar="{{this.src}}" aria-label="{{this.alt}}"></button>
@@ -66,7 +66,7 @@
 
 {{#if p.ficha.testimonios.length}}
 <section class="seccion envoltura">
-  <p class="rotulo">Así lo vivieron</p>
+  <p class="rotulo">{{#if isEs}}Así lo vivieron{{else}}In their words{{/if}}</p>
   <div class="pilares">
     {{#each p.ficha.testimonios}}
     <figure class="pilar pasado__testimonio">

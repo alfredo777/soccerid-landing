@@ -1,6 +1,6 @@
 {
-  "_nota": "Legends. `proximos` va por fecha (dateISO) y sólo se pintan los de hoy en adelante; `pasados`, del más nuevo al más viejo. Todo lo que lleva \"muestra\": true es INVENTADO para ver el diseño y sale con la pastilla punteada «Muestra»: no son leyendas ni fechas confirmadas. Se reemplaza por lo real y se le quita la marca (o se borra).",
-  "_nota_es": "Español: textos finales de la entrega «Textos y ajustes para el programador» (28/10/2026). Próximos: sin invitados, sede ni hora hasta confirmarse («Por anunciar»). Pasados: seis encuentros, todos con ficha (/es/legends/eventos/:slug). Borja pasó de San José a Miami (la dirección vieja redirige). No añadir testimonios, fechas exactas ni lugares no confirmados. El inglés sigue con el contenido de muestra anterior.",
+  "_nota": "Legends. `proximos` va por fecha (dateISO) y sólo se pintan los de hoy en adelante; `pasados`, en el orden aprobado por León el 30/10/2026 (Figo, América, Tigres, Roberto Carlos, Borja, Atlético Nacional).",
+  "_nota_es": "Español: textos finales de la entrega «Textos y ajustes para el programador» (28/10/2026). Próximos: sin invitados, sede ni hora hasta confirmarse («Por anunciar»). Pasados: seis encuentros, todos con ficha (/:lang/legends/eventos/:slug). Borja pasó de San José a Miami (la dirección vieja redirige). No añadir testimonios, fechas exactas ni lugares no confirmados. El bloque `en` es su traducción (30/10/2026), con las mismas fotos y fichas (/en/legends/eventos/:slug).",
   "es": {
     "proximos": [
       {
@@ -206,38 +206,202 @@
   "en": {
     "proximos": [
       {
-        "dateISO": "2026-12-05",
-        "nombre": "Meet & Greet with Mexican football legends",
-        "tipo": "Meet & Greet",
-        "lugar": "Mexico City",
-        "hora": "6:00 PM",
-        "muestra": true
+        "dateISO": "2027-03-26",
+        "nombre": "Legends · SOCCER iD TOUR",
+        "descripcion": "**Meet & Greet and private dinner** with football legends, ahead of the SOCCER iD TOUR.",
+        "invitados": "To be announced",
+        "sede": "To be announced"
+      },
+      {
+        "dateISO": "2027-03-27",
+        "nombre": "Legends · Nations League",
+        "descripcion": "**Meet & Greet and private dinner** with football legends, ahead of the CONCACAF Nations League final.",
+        "invitados": "To be announced",
+        "sede": "To be announced"
       }
     ],
     "pasados": [
       {
-        "titulo": "Private gathering with legends",
-        "tipo": "Private gathering",
-        "lugar": "Mexico City",
-        "fecha": "August 2026",
-        "foto": "/assets/images/gallery/somos/6.jpg",
-        "muestra": true
+        "slug": "luis-figo-monterrey-2022",
+        "titulo": "Luis Figo",
+        "tipo": "Meet & Greet and dinner",
+        "lugar": "Monterrey, Mexico",
+        "fecha": "2022",
+        "detalle": "Two experiences to spend time with Luis Figo: a **Meet & Greet and a dinner**, both with photos and autographs.",
+        "foto": "/assets/images/secciones/legends/tarjeta-figo.jpg",
+        "portada": "/assets/images/secciones/legends/portada-figo.jpg",
+        "cierre": "/assets/images/secciones/legends/cierre.jpg",
+        "ficha": {
+          "experiencia": "We hosted two get-togethers with Luis Figo in Monterrey: a **Meet & Greet at Agencia Fashion Drive** and a **dinner at Hotel Quinta Real Monterrey**. Both experiences included a photo and autographs, a keepsake from a football legend.",
+          "queVivimos": [
+            {
+              "titulo": "Meet & Greet",
+              "texto": "A meeting with Luis Figo at Agencia Fashion Drive, with photos and autographs."
+            },
+            {
+              "titulo": "Dinner with a legend",
+              "texto": "A dinner at Hotel Quinta Real Monterrey to spend time up close with the former player."
+            },
+            {
+              "titulo": "A personal keepsake",
+              "texto": "Guests at both experiences could take a photo with Figo and get his autograph."
+            }
+          ],
+          "momentos": [],
+          "testimonios": []
+        }
       },
       {
-        "titulo": "Meet & Greet before the cup",
+        "slug": "america-orlando-2024",
+        "titulo": "Meet & Greet with Club América",
         "tipo": "Meet & Greet",
-        "lugar": "Austin, Texas",
-        "fecha": "March 2025",
-        "foto": "/assets/images/gallery/cup2025/3.jpg",
-        "muestra": true
+        "lugar": "Orlando, United States",
+        "fecha": "2024",
+        "detalle": "We spent time with América players at their **team hotel**, with photos and autographs.",
+        "foto": "/assets/images/secciones/legends/america-orlando-2024.jpg",
+        "portada": "/assets/images/secciones/legends/america-orlando-2024.jpg",
+        "cierre": "/assets/images/secciones/legends/cierre.jpg",
+        "alt": "Meeting with Club América players in Orlando, 2024.",
+        "ficha": {
+          "experiencia": "In Orlando we brought fans closer to the Club América players with a **Meet & Greet at their team hotel**. A meeting to share the passion for the club, **take photos and get autographs**.",
+          "queVivimos": [
+            {
+              "titulo": "Meeting the team",
+              "texto": "We spent time with América players at their team hotel."
+            },
+            {
+              "titulo": "Photos with the players",
+              "texto": "Guests could keep a picture of this meeting with their idols."
+            },
+            {
+              "titulo": "Autograph signing",
+              "texto": "A chance to take home keepsakes signed by the players."
+            }
+          ],
+          "momentos": [],
+          "testimonios": []
+        },
+        "portadaCompleta": true
       },
       {
-        "titulo": "Corporate event with a legend",
-        "tipo": "Corporate",
-        "lugar": "Monterrey, N.L.",
-        "fecha": "November 2024",
-        "foto": "/assets/images/gallery/cup2024/4.jpg",
-        "muestra": true
+        "slug": "tigres-austin-2025",
+        "titulo": "Meet & Greet with Tigres",
+        "tipo": "Meet & Greet",
+        "lugar": "Austin, United States",
+        "fecha": "2025",
+        "detalle": "Photos and autographs with Tigres players, plus keepsakes with **the club mascot and trophies**.",
+        "foto": "/assets/images/secciones/legends/tigres-austin-2025.jpg",
+        "portada": "/assets/images/secciones/legends/tigres-austin-2025.jpg",
+        "cierre": "/assets/images/secciones/legends/cierre.jpg",
+        "alt": "Tigres fans with the club mascot and trophies in Austin, 2025.",
+        "ficha": {
+          "experiencia": "In Austin we held a **Meet & Greet with Tigres players** at their team hotel. Besides photos and autographs with the players, fans could take pictures with **the club mascot and trophies**.",
+          "queVivimos": [
+            {
+              "titulo": "Meeting the players",
+              "texto": "We spent time with Tigres players and took photos with them."
+            },
+            {
+              "titulo": "Autograph signing",
+              "texto": "Guests took home keepsakes signed by the players."
+            },
+            {
+              "titulo": "Mascot and trophies",
+              "texto": "A chance to pose with the Tigres mascot and trophies."
+            }
+          ],
+          "momentos": [],
+          "testimonios": []
+        },
+        "portadaCompleta": true
+      },
+      {
+        "slug": "roberto-carlos-madrid-2024",
+        "titulo": "Roberto Carlos",
+        "tipo": "Private dinner and get-together",
+        "lugar": "Madrid, Spain",
+        "fecha": "2024",
+        "detalle": "A **private dinner with Roberto Carlos** in Madrid, with a photo and autographs.",
+        "foto": "/assets/images/secciones/legends/tarjeta-roberto-carlos.jpg",
+        "portada": "/assets/images/secciones/legends/roberto-carlos-portada.jpg",
+        "cierre": "/assets/images/secciones/legends/cierre.jpg",
+        "ficha": {
+          "experiencia": "We shared a **private dinner with Roberto Carlos** at a restaurant in Madrid. A chance to spend time with a football legend, **take a photo and take home a signed keepsake** of the evening.",
+          "queVivimos": [
+            {
+              "titulo": "Private dinner",
+              "texto": "An evening at a restaurant in Madrid sharing the table with Roberto Carlos."
+            },
+            {
+              "titulo": "Photo with a legend",
+              "texto": "Guests could take a photo with the former player."
+            },
+            {
+              "titulo": "Autograph signing",
+              "texto": "A signed keepsake to remember this meeting off the pitch."
+            }
+          ],
+          "momentos": [],
+          "testimonios": []
+        }
+      },
+      {
+        "slug": "enrique-borja-miami-2024",
+        "titulo": "Enrique Borja",
+        "tipo": "Lunch and autograph signing",
+        "lugar": "Miami, United States",
+        "fecha": "2024",
+        "detalle": "A **lunch with Enrique Borja** in Miami and the chance to get his autograph.",
+        "foto": "/assets/images/secciones/legends/tarjeta-enrique-borja.jpg",
+        "portada": "/assets/images/secciones/legends/enrique-borja-portada.jpg",
+        "cierre": "/assets/images/secciones/legends/cierre.jpg",
+        "ficha": {
+          "experiencia": "We met Enrique Borja at a restaurant in Miami to share **a lunch and an autograph signing**. A close encounter with a Mexican football great, in a relaxed get-together among fans.",
+          "queVivimos": [
+            {
+              "titulo": "Lunch with a legend",
+              "texto": "We shared a lunch with Enrique Borja at a restaurant in Miami."
+            },
+            {
+              "titulo": "Autograph signing",
+              "texto": "Guests could take home a keepsake signed by the former player."
+            }
+          ],
+          "momentos": [],
+          "testimonios": []
+        }
+      },
+      {
+        "slug": "atletico-nacional-orlando-2024",
+        "titulo": "Meet & Greet with Atlético Nacional",
+        "tipo": "Meet & Greet",
+        "lugar": "Orlando, United States",
+        "fecha": "2024",
+        "detalle": "A meeting with Atlético Nacional players in Orlando, with **photos and autographs**.",
+        "foto": "/assets/images/secciones/legends/atletico-nacional-orlando-2024.jpg",
+        "portada": "/assets/images/secciones/legends/atletico-nacional-orlando-2024.jpg",
+        "cierre": "/assets/images/secciones/legends/cierre.jpg",
+        "alt": "A fan with Atlético Nacional players in Orlando, 2024.",
+        "ficha": {
+          "experiencia": "We held a **Meet & Greet with Atlético Nacional players** at their team hotel in Orlando. Fans could spend time with them, **take photos and get autographs** as a keepsake of a close-up experience with the team.",
+          "queVivimos": [
+            {
+              "titulo": "Close to the team",
+              "texto": "A meeting with Atlético Nacional players at their team hotel."
+            },
+            {
+              "titulo": "Photos with the players",
+              "texto": "A moment to pose next to their idols and keep the memory."
+            },
+            {
+              "titulo": "Autograph signing",
+              "texto": "Guests could get the players' signatures during the get-together."
+            }
+          ],
+          "momentos": [],
+          "testimonios": []
+        },
+        "portadaCompleta": true
       }
     ]
   }

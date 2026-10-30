@@ -320,6 +320,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(require('cookie-parser')());
 
+// Prueba visual de grises (pendiente de revisión con León, 30/10/2026):
+// ?prueba=grises la enciende para ese navegador y ?prueba=normal la apaga.
+// Sólo carga assets/css/prueba-grises.css encima del diseño de siempre.
+app.use((req, res, next) => {
+  const q = req.query && req.query.prueba;
+  if (q === 'grises') res.cookie('prueba', 'grises', { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'lax' });
+  if (q === 'normal') res.clearCookie('prueba');
+  res.locals.pruebaGrises = q === 'grises' || (q !== 'normal' && req.cookies && req.cookies.prueba === 'grises');
+  next();
+});
+
 // Trust proxy para obtener IP real detrás de reverse proxy (producción)
 if (isProduction) {
   app.set('trust proxy', 1);
@@ -710,7 +721,7 @@ app.get('/:lang/evento/:id', (req, res, next) => {
     // Con el diseño nuevo, como una página más de Travel: su menú, su
     // color y su regreso al calendario. Debajo, los siguientes partidos.
     const data = datosV2(lang, 'travel');
-    const otros = partidosFuturos(langEvents).filter(e => e.id !== eventId).slice(0, 3);
+    const otros = partidosFuturos(langEvents, lang).filter(e => e.id !== eventId).slice(0, 3);
     res.render('v2/evento', Object.assign(data, {
       tituloPagina: ogTitle,
       descripcionPagina: ogDesc,
@@ -1658,7 +1669,7 @@ const REDES = [
   { id: 'youtube', nombre: 'YouTube', usuario: 'SOCCER iD', url: 'https://www.youtube.com/channel/UC4Mf2_KUFB5PVfHlKhSpkiQ' },
   { id: 'facebook', nombre: 'Facebook', usuario: 'soccerid7', url: 'https://facebook.com/soccerid7' },
   { id: 'linkedin', nombre: 'LinkedIn', usuario: 'SOCCER iD', url: 'https://www.linkedin.com/company/soccer-id/' },
-  { id: 'whatsapp', nombre: 'WhatsApp', usuario: 'Escríbenos', url: `https://wa.me/${CONTACTO.whatsapp}` }
+  { id: 'whatsapp', nombre: 'WhatsApp', usuario: 'Escríbenos', usuarioEn: 'Message us', url: `https://wa.me/${CONTACTO.whatsapp}` }
 ];
 
 /**
@@ -1701,22 +1712,22 @@ function seccionesV2(lang) {
   return [
     { slug: 'tour', num: '01', marca: true, color: 'tour', nombre: 'Tour', submarca: 'SOCCER iD CUP',
       linea: es ? "El Tour '27 y las ediciones que ya se jugaron." : "Tour '27 and the editions already played.",
-      lema: es ? 'Partidos que organizamos en Estados Unidos' : 'Live football like never before', barra: '#78F750' },
+      lema: es ? 'Partidos que organizamos en Estados Unidos' : 'Matches we organize in the United States', barra: '#78F750' },
     { slug: 'travel', num: '02', marca: true, color: 'travel', nombre: 'Travel', submarca: 'SOCCER iD Travel Club',
       linea: es ? 'Partidos, palcos y viajes a cualquier estadio.' : 'Matches, suites and trips to any stadium.',
-      lema: es ? 'Viajes a los grandes eventos del fútbol mundial' : 'Destinations that live football', barra: '#4FD6FF' },
+      lema: es ? 'Viajes a los grandes eventos del fútbol mundial' : 'Trips to the biggest events in world football', barra: '#4FD6FF' },
     { slug: 'legends', num: '03', marca: true, color: 'legends', nombre: 'Legends', submarca: 'SOCCER iD Legends',
       linea: es ? 'Las figuras que hicieron historia, de cerca.' : 'The players who made history, up close.',
-      lema: es ? 'Convive con leyendas del fútbol' : 'Stories never forgotten', barra: '#FFD84D' },
+      lema: es ? 'Convive con leyendas del fútbol' : 'Meet football legends', barra: '#FFD84D' },
     { slug: 'podcast', num: '04', marca: true, color: 'podcast', nombre: 'Podcast', submarca: 'SOCCER iD Podcast',
       linea: es ? 'Conversaciones de fútbol, sin prisa.' : 'Football conversations, no rush.',
-      lema: es ? 'Charlas, entrevistas y análisis de fútbol' : 'Voices that live the game', barra: '#FF4D4D' },
+      lema: es ? 'Charlas, entrevistas y análisis de fútbol' : 'Football talks, interviews and analysis', barra: '#FF4D4D' },
     { slug: 'opiniones', num: '05', marca: false, color: 'apoyo', nombre: es ? 'Opiniones y media' : 'Reviews & media', corto: 'Media',
       linea: es ? 'Lo que dicen quienes vivieron la experiencia, y la prensa.' : 'What people and the press say.',
-      lema: es ? 'Apariciones en prensa y opiniones de clientes' : 'News, analysis and more', barra: '#FF8A3D' },
+      lema: es ? 'Apariciones en prensa y opiniones de clientes' : 'Press coverage and customer reviews', barra: '#FF8A3D' },
     { slug: 'nosotros', num: '06', marca: false, color: 'apoyo', nombre: es ? 'Quiénes somos' : 'About us', corto: es ? 'Nosotros' : 'About',
       linea: es ? 'La historia y el equipo detrás de SOCCER iD.' : 'The story and the team behind SOCCER iD.',
-      lema: es ? 'Nuestra historia, equipo y reconocimientos' : 'A global community', barra: '#2EE6A8' }
+      lema: es ? 'Nuestra historia, equipo y reconocimientos' : 'Our story, team and recognition', barra: '#2EE6A8' }
   ].map(sx => Object.assign(sx, {
     url: `/${lang}/${sx.slug}`,
     foto: FOTOS_SECCION[sx.slug],
@@ -1808,13 +1819,13 @@ function datosV2(lang, slug) {
     apoyo: secciones.filter(sx => !sx.marca),
     actual,
     hojaSeccion: HOJA_DE_SECCION[slug] || null,
-    redes: REDES,
+    redes: REDES.map(r => lang === 'en' && r.usuarioEn ? Object.assign({}, r, { usuario: r.usuarioEn }) : r),
     ['es_' + (slug || 'inicio')]: true
   });
 }
 
 /** Partidos de hoy en adelante, en orden. Los que ya pasaron no se venden. */
-function partidosFuturos(lista) {
+function partidosFuturos(lista, lang) {
   const hoy = new Date().toISOString().slice(0, 10);
   return (Array.isArray(lista) ? lista : [])
     .filter(p => (p.dateISO || '') >= hoy)
@@ -1823,7 +1834,7 @@ function partidosFuturos(lista) {
       const d = new Date(p.dateISO + 'T12:00:00');
       return Object.assign({}, p, {
         dia: String(d.getDate()).padStart(2, '0'),
-        mes: d.toLocaleDateString('es-MX', { month: 'short' }).replace('.', '').toUpperCase()
+        mes: d.toLocaleDateString(lang === 'en' ? 'en-US' : 'es-MX', { month: 'short' }).replace('.', '').toUpperCase()
       });
     });
 }
@@ -1877,53 +1888,71 @@ app.get('/:lang/tour', rutaV2('tour', async (lang) => {
   return { t, c, ediciones, wa, prensa, ogImagen: ogDe(c.fotoPortada), tituloPagina: `${t.portada.titulo} · SOCCER iD`, descripcionPagina: t.portada.descripcion };
 }));
 
-// Los viajes (contents/viajes.json) sólo están aprobados en español. Ojo:
-// loadViewData cae al español cuando un archivo no trae el idioma, así que
-// aquí se pide explícito; en inglés sigue el calendario de partidos.
+// Los viajes de contents/viajes.json, en el idioma de la página. El inglés es
+// la traducción del español consolidado (30/10/2026). Ojo: loadViewData cae
+// al español cuando un archivo no trae el idioma, así que aquí se pide
+// explícito.
 function viajesDe(lang) {
-  if (lang !== 'es') return null;
   try {
-    return JSON.parse(fs.readFileSync(path.join(__dirname, 'contents', 'viajes.json'), 'utf8')).es || null;
+    return JSON.parse(fs.readFileSync(path.join(__dirname, 'contents', 'viajes.json'), 'utf8'))[lang] || null;
   } catch (e) { return null; }
 }
 
+// Lo que dicen las rutas de Travel y Legends, por idioma.
+const TEXTOS_FICHAS = {
+  es: {
+    viajeDescripcion: v => `${v.nombre} · ${v.fechaTexto}. Viaje con acceso VIP, hotel y traslados.`,
+    volverProximos: 'Volver a próximos viajes',
+    viajesPasados: 'Viajes pasados', viajesPasadosDesc: 'Los grandes eventos del fútbol que ya vivimos con el Travel Club.',
+    volverPasados: 'Volver a viajes pasados', otrosViajes: 'Otros viajes',
+    cierreTravel: { titulo: 'Vive el próximo', boton: 'Ver próximos viajes' },
+    otrosEncuentros: 'Otros encuentros', volverEventos: 'Volver a eventos pasados',
+    cierreLegends: { titulo: 'Conoce a tus ídolos', boton: 'Ver próximos eventos' }
+  },
+  en: {
+    viajeDescripcion: v => `${v.nombre} · ${v.fechaTexto}. A trip with VIP access, hotel and transfers.`,
+    volverProximos: 'Back to upcoming trips',
+    viajesPasados: 'Past trips', viajesPasadosDesc: 'The biggest football events we have already lived with the Travel Club.',
+    volverPasados: 'Back to past trips', otrosViajes: 'Other trips',
+    cierreTravel: { titulo: 'Join the next one', boton: 'See upcoming trips' },
+    otrosEncuentros: 'Other meet-ups', volverEventos: 'Back to past events',
+    cierreLegends: { titulo: 'Meet your idols', boton: 'See upcoming events' }
+  }
+};
+const textosFicha = lang => TEXTOS_FICHAS[lang] || TEXTOS_FICHAS.es;
+
 app.get('/:lang/travel', rutaV2('travel', async (lang, data) => {
-  const viajes = viajesDe(lang);
+  const viajes = viajesDe(lang) || { proximos: [], pasados: [] };
   return {
-    // Bandera aparte: una lista vacía es falsa en Handlebars y, si pasaran
-    // todas las fechas, el español caería en la rama del inglés.
-    conViajes: !!viajes,
-    viajes: viajes ? partidosFuturos(viajes.proximos) : null,
-    viajesPasados: viajes ? conFicha(viajes.pasados, `/${lang}/travel/viajes-pasados`) : null,
-    partidos: viajes ? [] : partidosFuturos(data.upcoming_events),
-    vip: (data.panel_templates || {}).vip || null,
-    fan: (data.panel_templates || {}).fan || null
+    viajes: partidosFuturos(viajes.proximos, lang),
+    viajesPasados: conFicha(viajes.pasados, `/${lang}/travel/viajes-pasados`)
   };
 }));
 
 // Ficha de un viaje próximo. Plantilla del documento de textos: nombre,
-// fecha, «Cómo vivirlo» (tres servicios, sin botón dentro), compartir y
-// otros viajes. Sin precio: se pide cotización. El itinerario se agregará
-// cuando se edite desde el admin; el del documento es de maquetación y no
-// se publica.
+// fecha, «Cómo vivirlo» (tres servicios, sin botón dentro), itinerario,
+// compartir y otros viajes. Sin precio: se pide cotización.
 app.get('/:lang/viaje/:slug', async (req, res, next) => {
   const lang = req.params.lang;
   const viajes = viajesDe(lang);
   if (!viajes) return next();
-  const proximos = partidosFuturos(viajes.proximos);
+  const proximos = partidosFuturos(viajes.proximos, lang);
   const viaje = proximos.find(v => v.slug === req.params.slug);
   if (!viaje) return next();
+  const tx = textosFicha(lang);
   const data = datosV2(lang, 'travel');
   res.render('v2/viaje', Object.assign(data, {
     tituloPagina: `${viaje.nombre} · SOCCER iD Travel`,
-    descripcionPagina: `${viaje.nombre} · ${viaje.fechaTexto}. Viaje con acceso VIP, hotel y traslados.`,
+    descripcionPagina: tx.viajeDescripcion(viaje),
     rutaCanonica: `/${lang}/viaje/${viaje.slug}`,
-    sinAlternas: true,
+    currentPath: `/viaje/${viaje.slug}`,
     ogImagen: ogDe(viaje.foto),
     viaje,
     otros: proximos.filter(v => v.slug !== viaje.slug).map(v => Object.assign({}, v, { url: `/${lang}/viaje/${v.slug}` })),
-    regresar: { url: `/${lang}/travel#viajes`, texto: 'Volver a próximos viajes' },
-    itinerario: await itinerarios.paraFicha(viaje.slug)
+    regresar: { url: `/${lang}/travel#viajes`, texto: tx.volverProximos },
+    // El itinerario se captura en español en el admin: en inglés no se pinta
+    // hasta que tenga su traducción.
+    itinerario: lang === 'es' ? await itinerarios.paraFicha(viaje.slug) : null
   }));
 });
 
@@ -1959,18 +1988,19 @@ app.get('/:lang/travel/viajes-pasados', (req, res, next) => {
   const lang = req.params.lang;
   const viajes = viajesDe(lang);
   if (!viajes) return next();
+  const tx = textosFicha(lang);
   const data = datosV2(lang, 'travel');
   res.render('v2/archivo', Object.assign(data, {
-    tituloPagina: 'Viajes pasados · SOCCER iD Travel',
-    descripcionPagina: 'Los grandes eventos del fútbol que ya vivimos con el Travel Club.',
+    tituloPagina: `${tx.viajesPasados} · SOCCER iD Travel`,
+    descripcionPagina: tx.viajesPasadosDesc,
     rutaCanonica: `/${lang}/travel/viajes-pasados`,
-    sinAlternas: true,
+    currentPath: '/travel/viajes-pasados',
     ogImagen: ogDe(PORTADA_SECCION.travel),
     marca: 'SOCCER iD Travel Club',
-    titulo: 'Viajes pasados',
+    titulo: tx.viajesPasados,
     seccionUrl: `/${lang}/travel`, seccionNombre: 'Travel',
     lista: conFicha(viajes.pasados, `/${lang}/travel/viajes-pasados`),
-    cierre: { titulo: 'Vive el próximo', boton: 'Ver próximos viajes', url: `/${lang}/travel#viajes` }
+    cierre: Object.assign({ url: `/${lang}/travel#viajes` }, tx.cierreTravel)
   }));
 });
 
@@ -1982,50 +2012,52 @@ app.get('/:lang/travel/viajes-pasados/:slug', (req, res, next) => {
   const todos = conFicha(viajes.pasados, base);
   const p = todos.find(v => v.slug === req.params.slug && v.ficha);
   if (!p) return next();
+  const tx = textosFicha(lang);
   const data = datosV2(lang, 'travel');
   res.render('v2/pasado', Object.assign(data, {
     tituloPagina: `${p.titulo} · SOCCER iD Travel`,
     descripcionPagina: p.detalle || p.titulo,
-    rutaCanonica: `${base}/${p.slug}`, sinAlternas: true,
+    rutaCanonica: `${base}/${p.slug}`,
+    currentPath: `/travel/viajes-pasados/${p.slug}`,
     p, marca: 'SOCCER iD Travel Club', ...fotosFicha(p), ogImagen: ogDe(fotosFicha(p).fotoPortada), noIndexar: !!p.textoPendiente,
     seccionUrl: `/${lang}/travel`, seccionNombre: 'Travel',
-    otros: todos.filter(v => v.slug !== p.slug), otrosTitulo: 'Otros viajes',
-    cierre: { titulo: 'Vive el próximo', boton: 'Ver próximos viajes', url: `/${lang}/travel#viajes` },
-    regresar: { url: base, texto: 'Volver a viajes pasados' }
+    otros: todos.filter(v => v.slug !== p.slug), otrosTitulo: tx.otrosViajes,
+    cierre: Object.assign({ url: `/${lang}/travel#viajes` }, tx.cierreTravel),
+    regresar: { url: base, texto: tx.volverPasados }
   }));
 });
 
-// Ficha de un encuentro pasado de Legends. Sólo español, como su contenido.
+// Ficha de un encuentro pasado de Legends.
 app.get('/:lang/legends/eventos/:slug', (req, res, next) => {
   const lang = req.params.lang;
-  if (lang !== 'es') return next();
+  if (!SUPPORTED_LANGS.includes(lang)) return next();
   const data = datosV2(lang, 'legends');
   const base = `/${lang}/legends/eventos`;
   const todos = conFicha((data.legends || {}).pasados, base);
   const p = todos.find(v => v.slug === req.params.slug && v.ficha);
   if (!p) return next();
+  const tx = textosFicha(lang);
   res.render('v2/pasado', Object.assign(data, {
     tituloPagina: `${p.titulo} · SOCCER iD Legends`,
     // El texto corto de la tarjeta: la experiencia completa pasa de 200
     // caracteres y WhatsApp la corta en la vista previa.
     descripcionPagina: p.detalle || p.ficha.experiencia || p.titulo,
-    rutaCanonica: `${base}/${p.slug}`, sinAlternas: true,
+    rutaCanonica: `${base}/${p.slug}`,
+    currentPath: `/legends/eventos/${p.slug}`,
     p, marca: 'SOCCER iD Legends', ...fotosFicha(p), ogImagen: ogDe(fotosFicha(p).fotoPortada), noIndexar: !!p.textoPendiente,
     seccionUrl: `/${lang}/legends`, seccionNombre: 'Legends',
-    otros: todos.filter(v => v.slug !== p.slug), otrosTitulo: 'Otros encuentros',
-    cierre: { titulo: 'Conoce a tus ídolos', boton: 'Ver próximos eventos', url: `/${lang}/legends#calendario` },
-    regresar: { url: `/${lang}/legends#eventos-pasados`, texto: 'Volver a eventos pasados' }
+    otros: todos.filter(v => v.slug !== p.slug), otrosTitulo: tx.otrosEncuentros,
+    cierre: Object.assign({ url: `/${lang}/legends#calendario` }, tx.cierreLegends),
+    regresar: { url: `/${lang}/legends#eventos-pasados`, texto: tx.volverEventos }
   }));
 });
 
 // Próximos (de hoy en adelante, con su día y mes) y pasados, de
-// contents/legends.json. Lo de muestra lo marca la vista.
+// contents/legends.json. Las tarjetas de los encuentros con ficha enlazan a
+// ella. Lo de muestra lo marca la vista.
 app.get('/:lang/legends', rutaV2('legends', async (lang, data) => ({
-  eventos: partidosFuturos((data.legends || {}).proximos),
-  // En español, las tarjetas de los encuentros con ficha enlazan a ella.
-  legends: lang === 'es'
-    ? Object.assign({}, data.legends, { pasados: conFicha((data.legends || {}).pasados, `/${lang}/legends/eventos`) })
-    : data.legends
+  eventos: partidosFuturos((data.legends || {}).proximos, lang),
+  legends: Object.assign({}, data.legends, { pasados: conFicha((data.legends || {}).pasados, `/${lang}/legends/eventos`) })
 })));
 
 app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
@@ -2070,26 +2102,27 @@ app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
   const horas = Math.round(crudos.reduce((t, e) => t + (e.duracion || 0), 0) / 3600);
   const compacto = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace('.0', '') + 'M'
     : n >= 1e3 ? Math.round(n / 1e3) + 'K' : String(n);
-  // En español, las cifras aprobadas el 27/10/2026 (YouTube Analytics; el
-  // periodo está por confirmar, así que no se rotulan como históricas ni
-  // anuales). Los episodios se siguen contando solos. El inglés conserva las
-  // calculadas hasta que se apruebe su traducción.
+  // Las cifras aprobadas el 27/10/2026 (YouTube Analytics; el periodo está
+  // por confirmar, así que no se rotulan como históricas ni anuales), en los
+  // dos idiomas. Los episodios se siguen contando solos.
   const cifras = lang !== 'en' ? [
     { valor: String(crudos.length), etiqueta: 'Episodios' },
     { valor: '7 M', etiqueta: 'Visualizaciones' },
     { valor: '84.8 mil h', etiqueta: 'Tiempo de visualización' },
     { valor: '+35.3 mil', etiqueta: 'Suscriptores ganados' }
   ] : [
-    { valor: String(crudos.length), etiqueta: lang === 'en' ? 'Episodes' : 'Episodios' },
-    { valor: compacto(vistas), etiqueta: lang === 'en' ? 'YouTube views' : 'Vistas en YouTube' },
-    { valor: compacto(crudos.length ? Math.round(vistas / crudos.length) : 0), etiqueta: lang === 'en' ? 'Views per episode' : 'Vistas por episodio' },
-    { valor: `${horas} h`, etiqueta: lang === 'en' ? 'Of conversation' : 'De conversación' }
+    { valor: String(crudos.length), etiqueta: 'Episodes' },
+    { valor: '7M', etiqueta: 'Views' },
+    { valor: '84.8K h', etiqueta: 'Watch time' },
+    { valor: '+35.3K', etiqueta: 'Subscribers gained' }
   ];
-  // Invitados destacados (sólo español): su episodio sale de la lista por
-  // videoId, así el número y el título son los publicados, no escritos a mano.
-  const invitados = lang === 'en' ? [] : (pod.invitados || []).map(i => {
+  // Invitados destacados: su episodio sale de la lista por videoId, así el
+  // número y el título son los publicados, no escritos a mano. En inglés, la
+  // descripción traducida (descripcionEn).
+  const invitados = (pod.invitados || []).map(i => {
     const ep = eps.find(e => e.videoId === i.videoId);
     return Object.assign({}, i, {
+      descripcion: lang === 'en' && i.descripcionEn ? i.descripcionEn : i.descripcion,
       inicial: (i.nombre || '?').trim().charAt(0),
       foto: i.foto || (ep ? `https://i.ytimg.com/vi/${ep.videoId}/hqdefault.jpg` : ''),
       ep: ep || null
@@ -2214,14 +2247,14 @@ async function paginasSitemap() {
   enEs.filter(id => !enEn.includes(id)).forEach(id => soloEs(`/articulo/${id}`, '0.5'));
   enEn.filter(id => !enEs.includes(id)).forEach(id => paginas.push({ url: `/en/articulo/${id}`, prioridad: '0.5' }));
 
-  // Fichas de Travel y Legends: sólo en español, como su contenido.
+  // Fichas de Travel y Legends, en los dos idiomas (mismos slugs).
   const viajes = viajesDe('es') || {};
-  partidosFuturos(viajes.proximos).forEach(v => soloEs(`/viaje/${v.slug}`, '0.8'));
-  soloEs('/travel/viajes-pasados', '0.6');
+  partidosFuturos(viajes.proximos).forEach(v => ambos(`/viaje/${v.slug}`, '0.8'));
+  ambos('/travel/viajes-pasados', '0.6');
   const conPagina = lista => (lista || []).filter(x => x.ficha && x.slug && !x.textoPendiente);
-  conPagina(viajes.pasados).forEach(v => soloEs(`/travel/viajes-pasados/${v.slug}`, '0.5'));
+  conPagina(viajes.pasados).forEach(v => ambos(`/travel/viajes-pasados/${v.slug}`, '0.5'));
   const legends = JSON.parse(fs.readFileSync(path.join(__dirname, 'contents', 'legends.json'), 'utf8')).es || {};
-  conPagina(legends.pasados).forEach(p => soloEs(`/legends/eventos/${p.slug}`, '0.5'));
+  conPagina(legends.pasados).forEach(p => ambos(`/legends/eventos/${p.slug}`, '0.5'));
 
   ambos('/terms', '0.2');
   ambos('/privacy', '0.2');
