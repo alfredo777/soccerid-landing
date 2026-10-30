@@ -673,3 +673,13 @@ a.relacionado:hover { border-color: var(--tinta); }
 @media (max-width: 640px) {
   .relacionados { grid-template-columns: 1fr; }
 }
+
+/* ─── Recuadros centrados en el teléfono ──────────────────────────── */
+/* Cifras y pilares (las tarjetas de «01 · título · texto») se centran en
+   el teléfono en todas las páginas (León, 30/10/2026); en escritorio siguen
+   alineados a la izquierda. */
+@media (max-width: 720px) {
+  .cifra, .pilar { text-align: center; }
+  .cifra__icono { margin-inline: auto; }
+  .premio__cab { justify-content: center; }
+}

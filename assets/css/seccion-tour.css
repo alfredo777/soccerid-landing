@@ -78,8 +78,8 @@
    30/10/2026: alineado a la izquierda se veía desordenado). En escritorio
    sigue a la izquierda. */
 @media (max-width: 720px) {
-  .cifra, .tour27, .edicion__cuerpo { text-align: center; }
-  .cifra__icono, .tour27__logo, .tour27 p { margin-inline: auto; }
+  .tour27, .edicion__cuerpo { text-align: center; }
+  .tour27__logo, .tour27 p { margin-inline: auto; }
   .tour27__partido { justify-content: center; text-align: center; }
   .tour27__ventana { margin-right: 0; }
   .aclaracion { flex-direction: column; text-align: center; gap: 10px; }
