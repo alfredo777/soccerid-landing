@@ -1,18 +1,42 @@
 {
   "_nota": "Premios y reconocimientos de SOCCER iD, para /nosotros (Historia). Del más nuevo al más viejo. Los que llevan \"muestra\": true son INVENTADOS para ver el diseño y salen con la pastilla punteada «Muestra»: se reemplazan por los reales (año, nombre, quién lo otorga) y se les quita la marca. Lista vacía = el bloque no se pinta.",
-  "_nota_es": "Español: los reales, aprobados el 27/10/2026. El inglés sigue con los de muestra hasta que se apruebe su traducción.",
+  "_nota_es": "Español: los reales, aprobados el 27/10/2026. Inglés: su traducción (30/10/2026); los de muestra se quitaron.",
   "es": {
     "lista": [
-      { "anio": "2025", "nombre": "Empresas más distinguidas de México", "otorga": "Impulso Social de México / Líderes Trascendentales" },
-      { "anio": "2018", "nombre": "Mejor startup deportiva", "otorga": "Sports Innovation Summit" },
-      { "anio": "2016", "nombre": "5.ª generación", "otorga": "Wayra México" }
+      {
+        "anio": "2025",
+        "nombre": "Empresas más distinguidas de México",
+        "otorga": "Impulso Social de México / Líderes Trascendentales"
+      },
+      {
+        "anio": "2018",
+        "nombre": "Mejor startup deportiva",
+        "otorga": "Sports Innovation Summit"
+      },
+      {
+        "anio": "2016",
+        "nombre": "5.ª generación",
+        "otorga": "Wayra México"
+      }
     ]
   },
   "en": {
     "lista": [
-      { "anio": "2025", "nombre": "Best international sporting event", "otorga": "Awarding organization", "muestra": true },
-      { "anio": "2024", "nombre": "Fan experience recognition", "otorga": "Awarding organization", "muestra": true },
-      { "anio": "2023", "nombre": "Breakthrough company in sports marketing", "otorga": "Awarding organization", "muestra": true }
+      {
+        "anio": "2025",
+        "nombre": "Most Distinguished Companies in Mexico",
+        "otorga": "Impulso Social de México / Líderes Trascendentales"
+      },
+      {
+        "anio": "2018",
+        "nombre": "Best sports startup",
+        "otorga": "Sports Innovation Summit"
+      },
+      {
+        "anio": "2016",
+        "nombre": "5th cohort",
+        "otorga": "Wayra México"
+      }
     ]
   }
 }
