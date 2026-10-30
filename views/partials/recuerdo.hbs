@@ -15,7 +15,7 @@
     {{#if this.tipo}}<span class="recuerdo__tipo">{{this.tipo}}</span>{{/if}}
     <h3 class="recuerdo__titulo">{{this.titulo}}</h3>
     {{#if this.lugar}}<p class="recuerdo__meta">{{this.lugar}}{{#if this.fecha}} · {{this.fecha}}{{/if}}</p>{{else if this.fecha}}<p class="recuerdo__meta">{{this.fecha}}</p>{{/if}}
-    {{#if this.detalle}}<p class="recuerdo__detalle">{{this.detalle}}</p>{{/if}}
+    {{#if this.detalle}}<p class="recuerdo__detalle">{{negritas this.detalle}}</p>{{/if}}
     {{#if this.url}}<span class="recuerdo__ver">{{#if @root.isEs}}Ver ficha{{else}}View{{/if}} →</span>{{/if}}
   </div>
 {{#if this.url}}</a>{{else}}</article>{{/if}}

@@ -10,14 +10,9 @@
   <img class="portada__foto" src="/assets/images/secciones/media/portada.jpg" alt="">
   <div class="portada__velo"></div>
   <div class="portada__cuerpo">
-    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / {{actual.nombre}}</p>
     <div class="cabecera__marca">SOCCER iD</div>
     <h1 class="portada__titulo">Media</h1>
-    <p class="portada__bajada">{{#if isEs}}Nuestra historia en los medios y las opiniones de quienes han vivido nuestras experiencias.{{else}}What has been published about us and what the people who were there say.{{/if}}</p>
-    <div class="portada__pastillas">
-      {{#if articulos.length}}<span class="pastilla">{{articulos.length}} {{#if isEs}}reportajes{{else}}features{{/if}}</span>{{/if}}
-      {{#if opiniones.length}}<span class="pastilla">{{opiniones.length}} {{#if isEs}}comentarios{{else}}comments{{/if}}</span>{{/if}}
-    </div>
+    <p class="portada__bajada">{{#if isEs}}Nuestra historia <strong>en los medios</strong> y las <strong>opiniones de quienes han vivido nuestras experiencias</strong>.{{else}}What has been published about us and what the people who were there say.{{/if}}</p>
   </div>
 </section>
 
@@ -79,7 +74,7 @@
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">{{#if isEs}}¿Eres prensa o creador?{{else}}Do you write about football?{{/if}}</h2>
-    <p class="cierre__d">{{#if isEs}}Solicita acreditaciones, entrevistas o material de prensa.{{else}}Credentials, press kit and interviews: write to us.{{/if}}</p>
+    <p class="cierre__d">{{#if isEs}}Solicita <strong>acreditaciones, entrevistas o material de prensa</strong>.{{else}}Credentials, press kit and interviews: write to us.{{/if}}</p>
     <a class="boton boton--lleno" href="mailto:{{@root.contacto.correo}}?subject={{#if isEs}}Prensa{{else}}Press{{/if}}">{{#if isEs}}Contacto de prensa{{else}}{{@root.contacto.correo}}{{/if}} <span class="flecha">↗</span></a>
   </div>
 </section>

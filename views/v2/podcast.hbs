@@ -16,10 +16,9 @@
   <img class="portada__foto" src="/assets/images/secciones/podcast/portada.jpg" alt="Estudio del SOCCER iD Podcast">
   <div class="portada__velo"></div>
   <div class="portada__cuerpo">
-    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Podcast</p>
     <div class="cabecera__marca">SOCCER iD Podcast</div>
     <h1 class="portada__titulo">Podcast</h1>
-    <p class="portada__bajada">{{#if isEs}}Charlas, entrevistas y análisis para entender y disfrutar el fútbol, con las voces de quienes lo viven dentro y fuera de la cancha.{{else}}Football conversations, no rush. Long talks with the people who live the game from the inside: players, executives, reporters and everyone who makes a match happen.{{/if}}</p>
+    <p class="portada__bajada">{{#if isEs}}<strong>Charlas, entrevistas y análisis</strong> para entender y disfrutar el fútbol, con las voces de quienes lo viven <strong>dentro y fuera de la cancha</strong>.{{else}}Football conversations, no rush. Long talks with the people who live the game from the inside: players, executives, reporters and everyone who makes a match happen.{{/if}}</p>
     <div class="portada__pastillas">
       <span class="pastilla">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10-6.5z"/></svg>
@@ -169,7 +168,7 @@
   <p class="rotulo">{{#if isEs}}Patrocinadores{{else}}Sponsors{{/if}}</p>
   <div class="aliados">
     {{#each patrocinadores}}
-    <{{#if this.url}}a href="{{this.url}}" target="_blank" rel="noopener"{{else}}div{{/if}} class="aliado aliado--texto">
+    <{{#if this.url}}a href="{{this.url}}" target="_blank" rel="noopener"{{else}}div{{/if}} class="aliado aliado--texto aliado--patrocinador">
       {{#if this.logo}}<img src="{{this.logo}}" alt="{{this.nombre}}">{{else}}<span class="aliado__nombre">{{this.nombre}}</span>{{/if}}
       {{#if this.muestra}}<span class="pastilla pastilla--muestra">{{#if ../isEs}}Muestra{{else}}Sample{{/if}}</span>{{/if}}
     </{{#if this.url}}a{{else}}div{{/if}}>
@@ -181,7 +180,7 @@
 {{!-- Sé patrocinador: las cifras del canal y lo que una marca puede tener. --}}
 <section class="seccion envoltura" id="patrocina">
   <p class="rotulo">{{#if isEs}}Sé patrocinador{{else}}Become a sponsor{{/if}}</p>
-  <p class="bajada" style="max-width:760px;margin-bottom:26px">{{#if isEs}}Conecta tu marca con la afición a través de nuestras conversaciones, invitados y contenido de fútbol.{{else}}Your brand inside the football conversation fans actually listen to in full: long episodes, every week, with guests from the game.{{/if}}</p>
+  <p class="bajada" style="max-width:760px;margin-bottom:26px">{{#if isEs}}<strong>Conecta tu marca con la afición</strong> a través de nuestras conversaciones, invitados y contenido de fútbol.{{else}}Your brand inside the football conversation fans actually listen to in full: long episodes, every week, with guests from the game.{{/if}}</p>
   <div class="cifras">
     {{#each cifras}}
     <div class="cifra">
@@ -194,17 +193,17 @@
     <div class="pilar">
       <div class="pilar__num">01</div>
       <h3>{{#if isEs}}Menciones de marca{{else}}In-episode mention{{/if}}</h3>
-      <p>{{#if isEs}}Los conductores presentan tu marca de forma natural durante el episodio.{{else}}The hosts present your brand in their own words, at the start or mid-show.{{/if}}</p>
+      <p>{{#if isEs}}Los conductores presentan tu marca <strong>de forma natural durante el episodio</strong>.{{else}}The hosts present your brand in their own words, at the start or mid-show.{{/if}}</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">02</div>
       <h3>{{#if isEs}}Sección patrocinada{{else}}Sponsored segment{{/if}}</h3>
-      <p>{{#if isEs}}Tu marca da nombre a un espacio de análisis, debate o entretenimiento.{{else}}A recurring segment named after your brand: the prediction, the ideal XI, the week's big debate.{{/if}}</p>
+      <p>{{#if isEs}}<strong>Tu marca da nombre</strong> a un espacio de análisis, debate o entretenimiento.{{else}}A recurring segment named after your brand: the prediction, the ideal XI, the week's big debate.{{/if}}</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">03</div>
       <h3>{{#if isEs}}Presencia en pantalla{{else}}On-screen presence{{/if}}</h3>
-      <p>{{#if isEs}}Integramos tu logo o producto en el set y en el contenido del programa.{{else}}Your logo on set and on screen, and your product in the hosts' hands.{{/if}}</p>
+      <p>{{#if isEs}}Integramos tu <strong>logo o producto</strong> en el set y en el contenido del programa.{{else}}Your logo on set and on screen, and your product in the hosts' hands.{{/if}}</p>
     </div>
   </div>
   <div class="portada__acciones" style="margin-top:22px">
@@ -218,7 +217,7 @@
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">{{#if isEs}}Míralo o escúchalo donde quieras{{else}}Listen where you already listen{{/if}}</h2>
-    <p class="cierre__d">{{#if isEs}}Disfruta los episodios en YouTube y Spotify, y los mejores momentos en Instagram.{{else}}Subscribe and every new episode reaches you.{{/if}}</p>
+    <p class="cierre__d">{{#if isEs}}Disfruta los episodios en <strong>YouTube y Spotify</strong>, y los mejores momentos en <strong>Instagram</strong>.{{else}}Subscribe and every new episode reaches you.{{/if}}</p>
     <div class="portada__acciones escucha" style="justify-content:center">
       {{#each plataformas}}
       <a class="boton boton--icono {{#if @first}}boton--lleno{{/if}}" href="{{this.url}}" target="_blank" rel="noopener">{{> icono-red id=this.id}}{{this.nombre}} <span class="flecha escucha__largo">↗</span></a>

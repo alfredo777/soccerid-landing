@@ -10,8 +10,8 @@
   <p class="rotulo">{{#if isEs}}Contáctanos{{else}}Contact us{{/if}}</p>
   <div class="contacto">
     <div class="contacto__texto">
-      <h3>{{#if @root.isEs}}{{#if tituloEs}}{{tituloEs}}{{else}}¿Hablamos?{{/if}}{{else}}Let's talk{{/if}}</h3>
-      <p>{{#if @root.isEs}}{{#if textoEs}}{{textoEs}}{{else}}Escríbenos y te respondemos con fechas, precios y disponibilidad.{{/if}}{{else}}Write to us and we'll come back with dates, prices and availability. If you represent a brand, a club or a host city, say so and we'll put you through to the partnerships team.{{/if}}</p>
+      <h3>{{#if @root.isEs}}{{#if tituloEs}}{{tituloEs}}{{else}}¿Hablamos?{{/if}}{{else}}{{#if tituloEn}}{{tituloEn}}{{else}}Let's talk{{/if}}{{/if}}</h3>
+      <p>{{#if @root.isEs}}{{#if textoEs}}{{{textoEs}}}{{else}}Escríbenos y te respondemos con fechas, precios y disponibilidad.{{/if}}{{else}}{{#if textoEn}}{{{textoEn}}}{{else}}Write to us and we'll come back with dates, prices and availability.{{/if}}{{/if}}</p>
     </div>
     <div class="contacto__vias">
       <a class="via" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{asunto}}" target="_blank" rel="noopener">

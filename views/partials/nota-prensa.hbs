@@ -1,6 +1,7 @@
 {{!-- Una nota de prensa: miniatura, medio y título, enlazada a la nota
-      original. La usa «En los medios» del Tour (destacadas y «Ver más»). --}}
-<a class="prensa__nota" href="{{this.url}}" target="_blank" rel="noopener">
+      original. La usa «En los medios» del Tour; `extra` marca las que quedan
+      detrás de «Ver más notas». --}}
+<a class="prensa__nota{{#if extra}} prensa__nota--extra{{/if}}" href="{{this.url}}" target="_blank" rel="noopener">
   {{#if this.imagen}}<img class="prensa__img" src="{{this.imagen}}" alt="" loading="lazy">{{/if}}
   <span class="prensa__texto">
     <span class="prensa__fuente">{{this.fuente}}</span>

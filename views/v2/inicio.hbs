@@ -39,7 +39,9 @@
   <div class="hero-content">
     <div class="hero-cabecera">
       <div class="hero-logo-text"><img src="{{img '/assets/images/logo-iso-blanco.png'}}" width="100" height="100" alt="SOCCER iD"></div>
-      <h1 class="hero-tagline">AMAMOS TANTO EL DEPORTE<br>QUE NOS ATREVIMOS <em>A REINVENTARLO</em></h1>
+      {{!-- Slogan aprobado el 30/10/2026. El destacado va en Black Italic real
+            (raleway-900-italic.ttf), no en la cursiva que inventa el navegador. --}}
+      <h1 class="hero-tagline">{{#if isEs}}Amamos tanto el fútbol que <em>reinventamos la forma de vivirlo.</em>{{else}}We love football so much that <em>we reinvented the way to live it.</em>{{/if}}</h1>
     </div>
 
     <nav class="puertas" id="secciones" aria-label="{{#if isEs}}Secciones{{else}}Sections{{/if}}">

@@ -8,7 +8,7 @@
         de una edición— los manda con `tituloPagina` y `rutaCanonica`, para
         no salir las tres ediciones como «Tour · SOCCER iD». --}}
   <title>{{#if tituloPagina}}{{tituloPagina}}{{else}}{{#if actual}}{{actual.nombre}} · SOCCER iD{{else}}SOCCER iD{{/if}}{{/if}}</title>
-  <meta name="description" content="{{#if descripcionPagina}}{{descripcionPagina}}{{else}}{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}{{/if}}">
+  <meta name="description" content="{{#if descripcionPagina}}{{sinNegritas descripcionPagina}}{{else}}{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}{{/if}}">
   {{!-- Fichas con texto de relleno: que los buscadores no las guarden. --}}
   <meta name="robots" content="{{#if noIndexar}}noindex, follow{{else}}index, follow, max-image-preview:large{{/if}}">
   <link rel="canonical" href="{{baseUrl}}{{#if rutaCanonica}}{{rutaCanonica}}{{else}}/{{lang}}{{#if actual}}/{{actual.slug}}{{/if}}{{/if}}">
@@ -27,16 +27,15 @@
   <meta property="og:locale" content="{{#if isEs}}es_MX{{else}}en_US{{/if}}">
   <meta property="og:url" content="{{baseUrl}}{{#if rutaCanonica}}{{rutaCanonica}}{{else}}/{{lang}}{{#if actual}}/{{actual.slug}}{{/if}}{{/if}}">
   <meta property="og:title" content="{{#if tituloPagina}}{{tituloPagina}}{{else}}{{#if actual}}{{actual.nombre}} · SOCCER iD{{else}}SOCCER iD{{/if}}{{/if}}">
-  <meta property="og:description" content="{{#if descripcionPagina}}{{descripcionPagina}}{{else}}{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}{{/if}}">
+  <meta property="og:description" content="{{#if descripcionPagina}}{{sinNegritas descripcionPagina}}{{else}}{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}{{/if}}">
   <meta property="og:image" content="{{baseUrl}}{{#if ogImage}}{{ogImage}}{{else}}{{#if ogImagen}}{{ogImagen}}{{else}}/assets/images/og-image.jpg{{/if}}{{/if}}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{#if tituloPagina}}{{tituloPagina}}{{else}}{{#if actual}}{{actual.nombre}} · SOCCER iD{{else}}SOCCER iD{{/if}}{{/if}}">
-  <meta name="twitter:description" content="{{#if descripcionPagina}}{{descripcionPagina}}{{else}}{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}{{/if}}">
+  <meta name="twitter:description" content="{{#if descripcionPagina}}{{sinNegritas descripcionPagina}}{{else}}{{#if actual}}{{actual.linea}}{{else}}{{description}}{{/if}}{{/if}}">
   <meta name="twitter:image" content="{{baseUrl}}{{#if ogImage}}{{ogImage}}{{else}}{{#if ogImagen}}{{ogImagen}}{{else}}/assets/images/og-image.jpg{{/if}}{{/if}}">
-  <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+  {{> favicon}}
   <link rel="stylesheet" href="/assets/css/v2.css?v={{version}}">
   <link rel="stylesheet" href="/assets/css/toque.css?v={{version}}">
   <link rel="stylesheet" href="/assets/css/carga.css?v={{version}}">

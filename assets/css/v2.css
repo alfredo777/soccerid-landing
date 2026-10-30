@@ -66,6 +66,9 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
+/* Negritas editoriales: Bold real (700), mismo tamaño, familia y color que
+   el párrafo. Nunca otro color. */
+strong { font-weight: 700; color: inherit; }
 body {
   font-family: 'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--fondo);
@@ -203,8 +206,6 @@ html.con-menu, html.con-menu body { overflow: hidden; }
 
 /* ─── Cabecera de cada sección ────────────────────────────────────── */
 .cabecera { padding-block: 40px 8px; }
-.cabecera__miga { font-size: 13px; font-weight: 600; color: var(--tinta-2); margin-bottom: 18px; }
-.cabecera__miga a:hover { color: var(--acento-chico); }
 .cabecera__fila { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
 .cabecera__marca { display: inline-flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 10px; }
 /* El cuadrito de la marca es el acento de la sección, igual que la barra
@@ -231,16 +232,15 @@ html.con-menu, html.con-menu body { overflow: hidden; }
 /* Mate, con el mismo tratamiento que el hero del index: desaturada y
    apenas cálida, para que acompañe y no compita con el texto. */
 .portada__foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.62) brightness(1.02) sepia(.18); }
-/* Dos velos encima de la foto. El vertical: denso arriba (ahí va la píldora
-   del menú) y abajo (ahí muere en el fondo), ligero en medio para que la
-   foto respire. El horizontal: oscurece sólo la mitad izquierda, que es
-   donde va el texto, y deja la derecha de la foto a la vista. Sin él, la
-   bajada cruzaba por encima de los jugadores y costaba leerla. */
-.portada__velo { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(18,20,24,.82) 0%, rgba(18,20,24,.48) 46%, rgba(18,20,24,0) 86%), linear-gradient(180deg, rgba(18,20,24,.86) 0%, rgba(18,20,24,.36) 38%, rgba(18,20,24,.72) 72%, var(--fondo) 100%); }
+/* El velo oscurece la foto entera (indicación de León, 30/10/2026: partir
+   del 85 % y ajustar hasta que el texto se lea claro) para que acompañe al
+   contenido sin competir. Negro neutro, sin tinte azul. Es una capa CSS: las
+   fotos aprobadas se conservan sin oscurecer. Abajo muere en el fondo. */
+.portada__velo { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,8,10,.84) 0%, rgba(8,8,10,.72) 38%, rgba(8,8,10,.8) 70%, var(--fondo) 100%); }
 .portada__cuerpo { position: relative; z-index: 2; width: 100%; max-width: var(--ancho); margin: 0 auto; padding: 140px var(--gutter) clamp(34px, 5vh, 56px); }
 .portada__titulo { font-size: clamp(46px, 7.2vw, 96px); font-weight: 900; letter-spacing: -.04em; line-height: .95; }
 .portada__titulo em { font-style: normal; color: var(--acento); }
-.portada__bajada { font-size: clamp(16px, 1.25vw, 20px); color: var(--tinta-2); max-width: 640px; margin-top: 18px; }
+.portada__bajada { font-size: clamp(16px, 1.25vw, 20px); color: #fff; max-width: 640px; margin-top: 18px; }
 .portada__pastillas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
 .portada__pastillas .pastilla { background: rgba(255,255,255,.12); color: var(--tinta); display: inline-flex; align-items: center; gap: 8px; }
 .portada__pastillas svg { width: 14px; height: 14px; }
@@ -314,15 +314,13 @@ a.pilar:hover { border-color: var(--tinta); }
 .prensa__texto { flex: 1; min-width: 0; }
 /* El medio en su renglón, encima del título: pegados se leían como una frase. */
 .prensa__fuente, .prensa__titulo { display: block; }
-/* «Ver más»: un <details> cuyo resumen es un botón. Al abrir, el botón dice
-   «Ver menos» y las demás notas aparecen debajo. Sin flex en el <details>:
-   no todos los navegadores lo aceptan. */
-.prensa__mas { margin-top: 18px; }
-.prensa__mas > summary { list-style: none; cursor: pointer; display: inline-flex; }
-.prensa__mas > summary::-webkit-details-marker { display: none; }
-.prensa__mas[open] > .prensa { margin-top: 14px; }
-.prensa__mas-cerrar, .prensa__mas[open] .prensa__mas-abrir { display: none; }
-.prensa__mas[open] .prensa__mas-cerrar { display: inline; }
+/* «Ver más notas»: las demás notas siguen en la misma lista y se esconden
+   hasta pulsar el botón, que va solo, centrado debajo (assets/js/ver-mas.js).
+   Sin JavaScript no se recorta nada. */
+.prensa.is-recortada .prensa__nota--extra { display: none; }
+.prensa__mas { display: flex; justify-content: center; margin-top: 18px; }
+.prensa__boton { min-height: 44px; padding: 10px 22px; border: 1.5px solid var(--linea); border-radius: 999px; background: none; color: var(--tinta); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; transition: border-color .15s; }
+.prensa__boton:hover { border-color: var(--tinta); }
 
 /* ─── Eventos: el calendario de lo que viene ──────────────────────── */
 /* Como .partido pero sin escudos: sirve para cualquier fecha, no sólo
@@ -389,7 +387,7 @@ a.pilar:hover { border-color: var(--tinta); }
      diseño, 28/10/2026): sin hueco a la izquierda. El velo deja de
      oscurecer sólo ese lado y pasa a ser vertical, parejo de lado a lado. */
   .portada__cuerpo { padding-top: 120px; text-align: center; }
-  .portada__velo { background: linear-gradient(180deg, rgba(18,20,24,.84) 0%, rgba(18,20,24,.46) 34%, rgba(18,20,24,.66) 62%, rgba(18,20,24,.9) 86%, var(--fondo) 100%); }
+  .portada__velo { background: linear-gradient(180deg, rgba(8,8,10,.86) 0%, rgba(8,8,10,.74) 34%, rgba(8,8,10,.82) 70%, var(--fondo) 100%); }
   .portada__bajada { margin-inline: auto; }
   .portada__pastillas, .portada__acciones, .duelo { justify-content: center; }
   .portada .escucha { margin-inline: auto; }
@@ -565,7 +563,7 @@ a, button, [role="button"] { touch-action: manipulation; -webkit-tap-highlight-c
 .nav__link:active { background: rgba(255,255,255,.12); color: var(--tinta); }
 .menu__item:active .menu__nombre { color: var(--acento); }
 .menu__item:active { border-bottom-color: var(--acento); }
-a.pilar:active, .prensa__nota:active, .via:active, .entre__ir:active, .entre__todas:active,
+a.pilar:active, .prensa__nota:active, a.relacionado:active, .prensa__boton:active, .via:active, .entre__ir:active, .entre__todas:active,
 .nota:active, .edicion:active, a.aliado:active {
   border-color: var(--tinta); background-color: rgba(255,255,255,.07); transform: scale(.985);
 }
@@ -574,7 +572,7 @@ a.hito:active .hito__flecha { color: var(--acento); }
 .fila-ep:active { background: rgba(255,255,255,.1); }
 [data-ampliar]:active { transform: scale(.97); opacity: .85; }
 .bastidores:active .bastidores__velo { background: rgba(18,20,24,.3); }
-.pie__legales a:active, .cabecera__miga a:active { color: var(--acento-chico); }
+.pie__legales a:active { color: var(--acento-chico); }
 a.pilar, .prensa__nota, .via, .entre__ir, .entre__todas, .nota, .edicion, a.aliado {
   transition: border-color .15s, background-color .15s, transform .12s;
 }
@@ -659,4 +657,19 @@ a.pilar, .prensa__nota, .via, .entre__ir, .entre__todas, .nota, .edicion, a.alia
 .itinerario__detalle { font-size: 15px; color: var(--tinta-2); margin-top: 2px; }
 @media (max-width: 900px) {
   .itinerario__dia { grid-template-columns: 1fr; gap: 10px; }
+}
+
+/* ─── Relacionados: «Otros viajes» / «Otros encuentros» en una ficha ─ */
+/* Filas compactas (León, 30/10/2026): sin foto grande ni descripción, para
+   que la lista sea secundaria frente al evento que se está viendo. */
+.relacionados { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.relacionado { display: flex; align-items: center; gap: 14px; min-height: 64px; padding: 10px 18px 10px 10px; background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio-sm); transition: border-color .15s; }
+a.relacionado:hover { border-color: var(--tinta); }
+.relacionado__mini { flex: none; width: 64px; height: 48px; object-fit: cover; border-radius: calc(var(--radio-sm) - 4px); background: var(--linea); }
+.relacionado__texto { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.relacionado__titulo { font-size: 15px; font-weight: 700; line-height: 1.3; }
+.relacionado__meta { font-size: 13px; color: var(--tinta-2); }
+.relacionado .flecha { flex: none; color: var(--tinta-2); }
+@media (max-width: 640px) {
+  .relacionados { grid-template-columns: 1fr; }
 }

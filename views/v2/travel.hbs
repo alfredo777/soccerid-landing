@@ -10,11 +10,10 @@
   <img class="portada__foto" src="/assets/images/secciones/travel/portada.jpg" alt="SOCCER iD Travel Club">
   <div class="portada__velo"></div>
   <div class="portada__cuerpo">
-    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / Travel</p>
     <div class="cabecera__marca">SOCCER iD Travel Club</div>
     <h1 class="portada__titulo">Travel</h1>
     {{#if conViajes}}
-    <p class="portada__bajada">Viaja a los grandes eventos del fútbol mundial con acceso VIP, hotel, traslados y experiencias exclusivas.</p>
+    <p class="portada__bajada">Viaja a los <strong>grandes eventos del fútbol mundial</strong> con acceso VIP, hotel, traslados y experiencias exclusivas.</p>
     {{#if viajes.length}}
     <div class="portada__pastillas">
       <span class="pastilla">
@@ -57,7 +56,7 @@
       <div class="experiencia__cuerpo">
         <span class="pastilla">VIP</span>
         <h3>Acceso al estadio</h3>
-        <p>Vive el partido desde zonas VIP en los grandes escenarios del fútbol mundial.</p>
+        <p>Vive el partido desde <strong>zonas VIP</strong> en los grandes escenarios del fútbol mundial.</p>
       </div>
     </article>
     <article class="experiencia">
@@ -65,7 +64,7 @@
       <div class="experiencia__cuerpo">
         <span class="pastilla">Exclusivo</span>
         <h3>Convivencias con leyendas</h3>
-        <p>Comparte cenas y encuentros con figuras del fútbol como parte de tu viaje.</p>
+        <p>Comparte <strong>cenas y encuentros con figuras del fútbol</strong> como parte de tu viaje.</p>
       </div>
     </article>
     <article class="experiencia">
@@ -73,7 +72,7 @@
       <div class="experiencia__cuerpo">
         <span class="pastilla">Tu viaje</span>
         <h3>Hotel y traslados</h3>
-        <p>Disfruta la experiencia con hospedaje y traslados incluidos en tu paquete.</p>
+        <p>Disfruta la experiencia con <strong>hospedaje y traslados incluidos</strong> en tu paquete.</p>
       </div>
     </article>
     {{else}}
@@ -107,7 +106,7 @@
     </article>
     {{/if}}
   </div>
-  {{#if conViajes}}<p class="travel__aclaracion">Las experiencias y servicios incluidos varían según el paquete.</p>{{/if}}
+  {{#if conViajes}}<p class="travel__aclaracion">Las experiencias y servicios incluidos <strong>varían según el paquete</strong>.</p>{{/if}}
 </section>
 
 {{#if conViajes}}
@@ -142,7 +141,7 @@
 </section>
 {{/if}}
 
-{{> contacto asunto='Hola!%20Quiero%20informaci%C3%B3n%20del%20Travel%20Club' tituloEs='¿Planeamos tu próximo viaje?' textoEs='Escríbenos para conocer paquetes, precios y disponibilidad.'}}
+{{> contacto asunto='Hola!%20Quiero%20informaci%C3%B3n%20del%20Travel%20Club' tituloEs='¿Planeamos tu próximo viaje?' textoEs='Escríbenos para conocer <strong>paquetes, precios y disponibilidad</strong>.'}}
 
 {{!-- Cierre: viajes a la medida, para lo que no está en el calendario. --}}
 <section class="cierre">
@@ -150,7 +149,7 @@
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">¿Qué partido sueñas vivir?</h2>
-    <p class="cierre__d">Cuéntanos a dónde quieres ir y diseñamos una experiencia para ti.</p>
+    <p class="cierre__d">Cuéntanos a dónde quieres ir y <strong>diseñamos una experiencia para ti</strong>.</p>
     <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text=Hola!%20Quiero%20solicitar%20un%20viaje%20personalizado" target="_blank" rel="noopener">Solicitar viaje personalizado <span class="flecha">↗</span></a>
   </div>
 </section>

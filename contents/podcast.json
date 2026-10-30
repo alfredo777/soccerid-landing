@@ -9,19 +9,47 @@
   "patrocinadores": [
     {
       "nombre": "Caliente",
-      "logo": "/assets/images/sponsors/caliente.png",
+      "logo": "/assets/images/sponsors/caliente-recortado.png",
       "url": "https://www.caliente.mx"
     }
   ],
-  "_nota_invitados": "Invitados destacados (carrusel de /es/podcast, sólo español). Descripciones aprobadas por León el 27/10/2026; la de Werevertumorro es su redacción, no un ranking verificado. `videoId` une a cada invitado con su episodio y se tomó del título publicado en YouTube (Borja #3, Werever #6, Mich de Fan10 #7, Marck del Aguila #14, Pepe Del Bosque #26, Andy Guillaumin #31). Pepe Navarro va sin episodio: el #33 es de «Memo Navarro» y falta confirmar si es la misma persona. Sin `foto` se usa la miniatura del episodio; sin episodio, la inicial.",
+  "_nota_invitados": "Invitados destacados (carrusel de /es/podcast, sólo español). Orden aprobado por León el 30/10/2026: Werever, Borja, Andy, Pepe del Bosque, Mich, Memo Navarro y Mark al final. Descripciones aprobadas el 27/10/2026; la de Werevertumorro es su redacción, no un ranking verificado; la de Memo Navarro sale de la descripción de su episodio en YouTube («comentarista de Premier League y Champions League»). `videoId` une a cada invitado con su episodio, tomado del título publicado (Borja #3, Werever #6, Mich de Fan10 #7, Marck del Aguila #14, Pepe Del Bosque #26, Andy Guillaumin #31, Memo Navarro, 22/10/2026). Sin `foto` se usa la miniatura del episodio.",
   "invitados": [
-    { "nombre": "Enrique Borja", "descripcion": "Leyenda del fútbol mexicano", "videoId": "aM7MoWc11hE" },
-    { "nombre": "Mich Oficial (FAN10)", "descripcion": "Creador de contenido de fútbol", "videoId": "US64H15OCFU" },
-    { "nombre": "Werevertumorro", "descripcion": "El mayor creador de contenido de México.", "videoId": "8Qim8pHt8Dg" },
-    { "nombre": "Mark del Águila", "descripcion": "Creador de contenido deportivo", "videoId": "the1PGYO71M" },
-    { "nombre": "Pepe del Bosque", "descripcion": "Analista y comentarista de fútbol", "videoId": "lCqXbWyjsqQ" },
-    { "nombre": "Andy Guillaumin", "descripcion": "Creador de contenido deportivo", "videoId": "_OfmyXbft14" },
-    { "nombre": "Pepe Navarro", "descripcion": "Analista deportivo", "videoId": "" }
+    {
+      "nombre": "Werevertumorro",
+      "descripcion": "El mayor creador de contenido de México.",
+      "videoId": "8Qim8pHt8Dg"
+    },
+    {
+      "nombre": "Enrique Borja",
+      "descripcion": "Leyenda del fútbol mexicano",
+      "videoId": "aM7MoWc11hE"
+    },
+    {
+      "nombre": "Andy Guillaumin",
+      "descripcion": "Creador de contenido deportivo",
+      "videoId": "_OfmyXbft14"
+    },
+    {
+      "nombre": "Pepe del Bosque",
+      "descripcion": "Analista y comentarista de fútbol",
+      "videoId": "lCqXbWyjsqQ"
+    },
+    {
+      "nombre": "Mich Oficial (FAN10)",
+      "descripcion": "Creador de contenido de fútbol",
+      "videoId": "US64H15OCFU"
+    },
+    {
+      "nombre": "Memo Navarro",
+      "descripcion": "Comentarista de Premier League y Champions League",
+      "videoId": "N_70A_yp1Us"
+    },
+    {
+      "nombre": "Mark del Águila",
+      "descripcion": "Creador de contenido deportivo",
+      "videoId": "the1PGYO71M"
+    }
   ],
   "episodios": [
     {

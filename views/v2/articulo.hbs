@@ -10,10 +10,9 @@
   <img class="portada__foto" src="{{articulo.image}}" alt="">
   <div class="portada__velo"></div>
   <div class="portada__cuerpo">
-    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / <a href="/{{lang}}/opiniones">Media</a> / {{#if isEs}}Reportajes{{else}}Features{{/if}}</p>
     <div class="cabecera__marca">{{articulo.source}}{{#if articulo.typeBadge}} · {{articulo.typeBadge}}{{/if}}</div>
     <h1 class="portada__titulo">{{articulo.title}}</h1>
-    {{#if articulo.excerpt}}<p class="portada__bajada">{{articulo.excerpt}}</p>{{/if}}
+    {{#if articulo.excerpt}}<p class="portada__bajada">{{negritas articulo.excerpt}}</p>{{/if}}
     <div class="portada__acciones">
       {{#eq articulo.type "link"}}
       <a class="boton boton--lleno" href="{{articulo.url}}" target="_blank" rel="noopener">{{#if isEs}}Leer el artículo completo{{else}}Read the full article{{/if}} <span class="flecha">↗</span></a>

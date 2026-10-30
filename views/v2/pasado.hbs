@@ -15,7 +15,6 @@
   {{#if fotoPortada}}<img class="portada__foto" src="{{fotoPortada}}" alt="{{p.alt}}">{{/if}}
   <div class="portada__velo"></div>
   <div class="portada__cuerpo">
-    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / <a href="{{seccionUrl}}">{{seccionNombre}}</a> / {{p.titulo}}</p>
     <div class="cabecera__marca">{{marca}}</div>
     <h1 class="portada__titulo">{{p.titulo}}</h1>
     {{#if p.textoPendiente}}<p class="pasado__pendiente"><span class="pastilla pastilla--muestra">Texto pendiente</span> El texto de esta ficha es de relleno (lorem ipsum) mientras llega el definitivo.</p>{{/if}}
@@ -35,7 +34,7 @@
 {{#if p.ficha.experiencia}}
 <section class="seccion envoltura">
   <p class="rotulo">La experiencia</p>
-  <p class="bajada pasado__experiencia">{{p.ficha.experiencia}}</p>
+  <p class="bajada pasado__experiencia">{{negritas p.ficha.experiencia}}</p>
 </section>
 {{/if}}
 
@@ -47,7 +46,7 @@
     <div class="pilar">
       <div class="pilar__num">0{{inc @index}}</div>
       <h3>{{this.titulo}}</h3>
-      <p>{{this.texto}}</p>
+      <p>{{negritas this.texto}}</p>
     </div>
     {{/each}}
   </div>
@@ -82,8 +81,8 @@
 {{#if otros.length}}
 <section class="seccion envoltura">
   <p class="rotulo">{{otrosTitulo}}</p>
-  <div class="recuerdos">
-    {{#each otros}}{{> recuerdo}}{{/each}}
+  <div class="relacionados">
+    {{#each otros}}{{> relacionado}}{{/each}}
   </div>
 </section>
 {{/if}}

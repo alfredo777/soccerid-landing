@@ -2,7 +2,7 @@
   "es": {
     "meta": {
       "title": "SOCCER iD",
-      "description": "AMAMOS TANTO EL DEPORTE QUE NOS ATREVIMOS A REINVENTARLO",
+      "description": "Amamos tanto el fútbol que reinventamos la forma de vivirlo.",
       "ogTitle": "SOCCER iD - Tu experiencia deportiva premium",
       "ogDescription": "Vive el deporte como nunca antes. Eventos exclusivos, experiencias VIP y mucho más.",
       "twitterTitle": "SOCCER iD - Tu experiencia deportiva premium",
@@ -14,7 +14,7 @@
       "loading": "Cargando..."
     },
     "hero": {
-      "tagline": "AMAMOS TANTO EL DEPORTE<br>QUE NOS ATREVIMOS <em>A REINVENTARLO</em>",
+      "tagline": "Amamos tanto el fútbol que <em>reinventamos la forma de vivirlo.</em>",
       "scroll": "Desliza"
     },
     "events": {
@@ -38,7 +38,7 @@
       "eventMessage": "Hola SOCCER iD, me interesa:"
     },
     "footer": {
-      "tagline": "Amamos tanto el deporte que nos atrevimos a reinventarlo.",
+      "tagline": "Amamos tanto el fútbol que reinventamos la forma de vivirlo.",
       "followUs": "Síguenos",
       "navigation": "Navegación",
       "backToTop": "Volver al Inicio",
@@ -50,15 +50,13 @@
       "back": "Volver",
       "learnMore": "Conoce más",
       "requestAdvisory": "Solicitar Asesoría",
-      "featuredVideo": "Videos Destacados",
+      "featuredVideo": "Video Destacado",
       "magazine": "Revista",
-      "video": "Video",
-      "featuredVideo": "Video Destacado"
+      "video": "Video"
     },
     "lightbox": {
       "close": "Cerrar",
       "notSupported": "Tu navegador no soporta la reproducción de video."
-
     },
     "video": {
       "close": "Cerrar",
@@ -73,20 +71,19 @@
   "en": {
     "meta": {
       "title": "SOCCER iD",
-      "description": "WE LOVE SPORTS SO MUCH THAT WE DARED TO REINVENT IT",
+      "description": "We love football so much that we reinvented the way to live it.",
       "ogTitle": "SOCCER iD - Your premium sports experience",
       "ogDescription": "Experience sports like never before. Exclusive events, VIP experiences and much more.",
       "twitterTitle": "SOCCER iD - Your premium sports experience",
       "twitterDescription": "Experience sports like never before. Exclusive events, VIP experiences and much more.",
       "keywords": "soccer id, soccerid, soccer id cup, vip experiences, id insurance, liga mx, sports, football, vip access",
       "ogImage": "/assets/images/share.jpg"
-
     },
     "preloader": {
       "loading": "Loading..."
     },
     "hero": {
-      "tagline": "WE LOVE SPORTS SO MUCH<br>THAT WE DARED <em>TO REINVENT IT</em>",
+      "tagline": "We love football so much that <em>we reinvented the way to live it.</em>",
       "scroll": "Scroll"
     },
     "events": {
@@ -110,7 +107,7 @@
       "eventMessage": "Hello SOCCER iD, I'm interested in:"
     },
     "footer": {
-      "tagline": "We love sports so much that we dared to reinvent it.",
+      "tagline": "We love football so much that we reinvented the way to live it.",
       "followUs": "Follow Us",
       "navigation": "Navigation",
       "backToTop": "Back to Top",
@@ -122,15 +119,13 @@
       "back": "Back",
       "learnMore": "Learn more",
       "requestAdvisory": "Request Advisory",
-      "featuredVideo": "Featured Videos",
+      "featuredVideo": "Featured Video",
       "magazine": "Magazine",
-      "video": "Video",
-      "featuredVideo": "Featured Video"
+      "video": "Video"
     },
     "lightbox": {
       "close": "Close",
       "notSupported": "Your browser does not support video playback."
-
     },
     "video": {
       "close": "Close",

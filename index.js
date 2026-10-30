@@ -158,6 +158,9 @@ app.use(session({
 // ============================================================
 // HANDLEBARS CON HELPERS DE IDIOMA
 // ============================================================
+/** Quita las marcas de negrita (**) de un texto para metas y vistas previas. */
+const sinNegritas = t => String(t == null ? '' : t).replace(/\*\*/g, '');
+
 const hbs = require('express-handlebars').create({
   extname: '.hbs',
   defaultLayout: 'main',
@@ -231,6 +234,19 @@ const hbs = require('express-handlebars').create({
       return (sinIdioma === base || sinIdioma.indexOf(base + '/') === 0) ? '' : attrs;
     },
     
+    /**
+     * Las negritas editoriales aprobadas (Negritas-aprobadas.txt): el texto
+     * se guarda con **segmento** y aquí se escapa y se convierte en
+     * <strong>. Así el contenido sigue siendo texto plano en el JSON y en el
+     * admin, y los asteriscos nunca llegan a la página. Para metas y vistas
+     * previas al compartir va `sinNegritas`, que sólo quita los asteriscos.
+     */
+    negritas: function (texto) {
+      const esc = hbs.handlebars.escapeExpression(String(texto == null ? '' : texto));
+      return new hbs.handlebars.SafeString(esc.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'));
+    },
+    sinNegritas: texto => sinNegritas(texto),
+
     // Helpers para cache busting
     version: () => APP_VERSION,
     asset: (url) => `${url}?v=${APP_VERSION}`,
@@ -1499,6 +1515,14 @@ app.post('/api/project2027/verify', async (req, res) => {
 // ============================================================
 // PÁGINA DE EDICIÓN SOCCER iD CUP (socceridcup/:year)
 // ============================================================
+// Negritas aprobadas en la descripción de cada edición. La descripción vive
+// en la base y la lee también el panel de inversionistas, así que no se le
+// meten asteriscos: el énfasis se marca aquí, sobre la frase exacta.
+const ENFASIS_EDICION = {
+  2024: { es: 'los clubes más grandes de México y Colombia', en: 'the biggest clubs from Mexico and Colombia' }
+};
+const conEnfasis = (texto, frase) => (texto && frase && texto.includes(frase)) ? texto.replace(frase, '**' + frase + '**') : texto;
+
 app.get('/:lang/socceridcup/:year', async (req, res, next) => {
   const lang = SUPPORTED_LANGS.includes(req.params.lang) ? req.params.lang : DEFAULT_LANG;
   const year = req.params.year;
@@ -1521,6 +1545,7 @@ app.get('/:lang/socceridcup/:year', async (req, res, next) => {
       fotoCierre: fotos.cierre || edition.banner,
       tituloPagina: edition.title + ' · SOCCER iD',
       descripcionPagina: edition.description,
+      descripcionEdicion: conEnfasis(edition.description, (ENFASIS_EDICION[String(year)] || {})[lang]),
       rutaCanonica: `/${lang}/socceridcup/${year}`,
       currentPath: `/socceridcup/${year}`,
       // Vive dentro de Tour pero sus bloques son otros: su propia hoja.
@@ -1896,7 +1921,7 @@ app.get('/:lang/viaje/:slug', async (req, res, next) => {
     sinAlternas: true,
     ogImagen: ogDe(viaje.foto),
     viaje,
-    otros: proximos.filter(v => v.slug !== viaje.slug),
+    otros: proximos.filter(v => v.slug !== viaje.slug).map(v => Object.assign({}, v, { url: `/${lang}/viaje/${v.slug}` })),
     regresar: { url: `/${lang}/travel#viajes`, texto: 'Volver a próximos viajes' },
     itinerario: await itinerarios.paraFicha(viaje.slug)
   }));
@@ -2077,6 +2102,14 @@ app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
   };
 }));
 
+// Orden de las notas de Media (León, 30/10/2026): primero Central FOX,
+// después la revista y después una nota de SOCCER iD CUP (elegida de entre
+// las del catálogo: la de Esto sobre la edición 2025, un evento ya jugado).
+// El resto conserva su orden.
+const MEDIA_PRIMERO = ['boletaje-digital-fraudes-central-fox', 'impulso-social-2025', 'soccer-id-cup'];
+const ordenMedia = lista => MEDIA_PRIMERO.map(id => lista.find(a => a.id === id)).filter(Boolean)
+  .concat(lista.filter(a => !MEDIA_PRIMERO.includes(a.id)));
+
 app.get('/:lang/opiniones', rutaV2('opiniones', async (lang, data) => {
   const t = data.panel_templates || {};
   return {
@@ -2084,9 +2117,31 @@ app.get('/:lang/opiniones', rutaV2('opiniones', async (lang, data) => {
     // servicio que ya no se ofrece. Se filtra aquí y el JSON queda intacto.
     opiniones: ((t.opiniones || {}).testimonials || []).filter(o => !/seguros\s*id/i.test(o.text || '')),
     // Todos: Media es el sitio de los reportajes generales, no un resumen.
-    articulos: (t.media || {}).articles || []
+    articulos: ordenMedia((t.media || {}).articles || [])
   };
 }));
+
+// La cronología resumida de Nosotros (aprobada el 30/10/2026), con sus
+// negritas. Sustituye a la anterior (Wayra, el premio de 2018 y una entrada
+// por edición de la copa).
+const CRONOLOGIA = {
+  es: [
+    { anio: '2016', titulo: 'Comienza la historia', texto: 'Lanzamiento junto a la **Selección Mexicana y Movistar**.' },
+    { anio: '2018', titulo: 'Conectamos al fútbol', texto: 'La app para futbolistas **más usada de México**.' },
+    { anio: '2020', titulo: 'El juego continúa', texto: 'El torneo de eSports **más relevante del país** durante la pandemia.' },
+    { anio: '2022', titulo: 'Nuevas experiencias', texto: 'Lanzamos **seguros, palcos, viajes y Meet & Greets**.' },
+    { anio: '2023', titulo: 'Nace SOCCER iD CUP', texto: 'Primera edición de nuestros partidos internacionales.' },
+    { anio: '2026', titulo: 'Diez años. Nueva etapa.', texto: 'Nos despedimos de las apps y damos paso a **Tour, Travel, Legends y Podcast**.' }
+  ],
+  en: [
+    { anio: '2016', titulo: 'The story begins', texto: 'Launched alongside the **Mexican National Team and Movistar**.' },
+    { anio: '2018', titulo: 'Connecting football', texto: 'The **most-used app for footballers in Mexico**.' },
+    { anio: '2020', titulo: 'The game goes on', texto: 'The **most relevant eSports tournament in the country** during the pandemic.' },
+    { anio: '2022', titulo: 'New experiences', texto: 'We launched **insurance, suites, trips and Meet & Greets**.' },
+    { anio: '2023', titulo: 'SOCCER iD CUP is born', texto: 'The first edition of our international matches.' },
+    { anio: '2026', titulo: 'Ten years. A new chapter.', texto: 'We said goodbye to the apps and made way for **Tour, Travel, Legends and Podcast**.' }
+  ]
+};
 
 app.get('/:lang/nosotros', rutaV2('nosotros', async (lang, data) => {
   const q = (data.panel_templates || {}).quienes || null;
@@ -2095,6 +2150,7 @@ app.get('/:lang/nosotros', rutaV2('nosotros', async (lang, data) => {
   const marcas = ((data.marcas_colaboradoras || {}).lista) || [];
   const mitad = Math.ceil(marcas.length / 2);
   return {
+    cronologia: CRONOLOGIA[lang] || CRONOLOGIA.es,
     marcasFilas: marcas.length ? [marcas.slice(0, mitad), marcas.slice(mitad)] : [],
     // Cuatro fotos: con más, la columna de imágenes dobla en alto al texto.
     quienes: q ? Object.assign({}, q, { gallery: (q.gallery || []).slice(0, 4) }) : null
@@ -2114,6 +2170,16 @@ app.get('/robots.txt', (req, res) => {
     ? ['User-agent: *', 'Allow: /', 'Disallow: /panel', 'Disallow: /admin', 'Disallow: /api/', 'Disallow: /contents/', '', `Sitemap: ${BASE_URL}/sitemap.xml`]
     : ['User-agent: *', 'Disallow: /'];
   res.type('text/plain').send(lineas.join('\n') + '\n');
+});
+
+// El favicon aprobado (scripts/favicon.ps1 lo exporta del PNG maestro). Los
+// navegadores lo piden en la raíz aunque la página no lo enlace.
+app.get('/favicon.ico', (req, res) => {
+  res.set('Cache-Control', 'public, max-age=604800');
+  res.sendFile(path.join(__dirname, 'assets', 'images', 'favicon.ico'));
+});
+app.get('/site.webmanifest', (req, res) => {
+  res.type('application/manifest+json').sendFile(path.join(__dirname, 'assets', 'site.webmanifest'));
 });
 
 // Las páginas públicas, con su par en el otro idioma cuando existe. Fuera:

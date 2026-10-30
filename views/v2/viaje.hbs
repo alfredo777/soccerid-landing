@@ -15,7 +15,6 @@
   {{#if viaje.foto}}<img class="portada__foto" src="{{viaje.foto}}" alt="">{{/if}}
   <div class="portada__velo"></div>
   <div class="portada__cuerpo">
-    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / <a href="/{{lang}}/travel">Travel</a> / {{viaje.nombre}}</p>
     <div class="cabecera__marca">SOCCER iD Travel Club</div>
     <h1 class="portada__titulo">{{viaje.nombre}}</h1>
     <div class="portada__pastillas">
@@ -43,17 +42,17 @@
     <div class="pilar">
       <div class="pilar__num">01</div>
       <h3>Acceso VIP al estadio</h3>
-      <p>Vive el partido desde zonas preferenciales y disfruta una experiencia VIP.</p>
+      <p>Vive el partido desde <strong>zonas preferenciales</strong> y disfruta una experiencia VIP.</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">02</div>
       <h3>Hotel y traslados</h3>
-      <p>Hospedaje y traslados organizados para que te concentres en disfrutar el viaje.</p>
+      <p>Hospedaje y traslados organizados para que <strong>te concentres en disfrutar el viaje</strong>.</p>
     </div>
     <div class="pilar">
       <div class="pilar__num">03</div>
       <h3>Experiencias exclusivas</h3>
-      <p>Complementa el partido con actividades especiales, como cenas y convivencias con leyendas, según el paquete.</p>
+      <p>Complementa el partido con actividades especiales, como <strong>cenas y convivencias con leyendas, según el paquete</strong>.</p>
     </div>
   </div>
 </section>
@@ -62,7 +61,9 @@
 <section class="seccion envoltura">
   <p class="rotulo">Itinerario de viaje</p>
   {{#if itinerario.ejemplo}}
-  <p class="itinerario__aviso"><span class="pastilla pastilla--muestra">Itinerario de ejemplo</span> Fechas, horarios y servicios por confirmar.</p>
+  {{!-- Sin la pastilla «Itinerario de ejemplo» (León, 30/10/2026): el
+        itinerario se ve, pero los datos siguen por confirmar y se dice. --}}
+  <p class="itinerario__aviso">Fechas, horarios y servicios por confirmar.</p>
   {{/if}}
   <div class="itinerario">
     {{#each itinerario.dias}}
@@ -94,17 +95,8 @@
 {{#if otros.length}}
 <section class="seccion envoltura">
   <p class="rotulo">Otros viajes</p>
-  <div class="eventos">
-    {{#each otros}}
-    <article class="evento">
-      <div class="evento__fecha"><div class="evento__dia">{{this.dia}}</div><div class="evento__mes">{{this.mes}}</div></div>
-      <div>
-        <a class="evento__nombre" href="/{{../lang}}/viaje/{{this.slug}}">{{this.nombre}}</a>
-        <div class="evento__meta">{{this.fechaTexto}}</div>
-      </div>
-      <a class="boton" href="/{{../lang}}/viaje/{{this.slug}}">Ver viaje <span class="flecha">→</span></a>
-    </article>
-    {{/each}}
+  <div class="relacionados">
+    {{#each otros}}{{> relacionado}}{{/each}}
   </div>
 </section>
 {{/if}}

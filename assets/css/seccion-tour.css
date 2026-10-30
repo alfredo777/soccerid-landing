@@ -46,7 +46,6 @@
 /* Textos que el admin puede dejar vacíos: cada uno con su propio margen,
    para que al faltar uno no quede un hueco. */
 .tour__texto { max-width: 760px; margin-bottom: 26px; }
-.tour__nota { font-size: 14px; color: var(--tinta-2); margin-top: 14px; }
 .tour__filas { margin-top: 26px; }
 
 .aclaracion {
@@ -56,6 +55,8 @@
   font-size: 14px; color: var(--tinta-2);
 }
 .aclaracion b { color: var(--tinta); }
+/* La de las cifras acumuladas va pegada a los recuadros de alcance. */
+.aclaracion--cifras { margin: 14px 0 0; text-wrap: balance; }
 
 .ediciones { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .edicion { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); overflow: hidden; transition: border-color .15s; }
@@ -71,4 +72,16 @@
   .tour27 { grid-template-columns: 1fr; padding: 26px; gap: 26px; }
   .tour27__nombre { font-size: 16px; }
   .ediciones { grid-template-columns: 1fr; }
+}
+
+/* En el teléfono, todo lo que va dentro de un recuadro se centra (León,
+   30/10/2026: alineado a la izquierda se veía desordenado). En escritorio
+   sigue a la izquierda. */
+@media (max-width: 720px) {
+  .cifra, .tour27, .edicion__cuerpo { text-align: center; }
+  .cifra__icono, .tour27__logo, .tour27 p { margin-inline: auto; }
+  .tour27__partido { justify-content: center; text-align: center; }
+  .tour27__ventana { margin-right: 0; }
+  .aclaracion { flex-direction: column; text-align: center; gap: 10px; }
+  .edicion__pie { justify-content: center; gap: 18px; flex-wrap: wrap; }
 }

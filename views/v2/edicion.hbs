@@ -12,7 +12,6 @@
   <img class="portada__foto" src="{{fotoPortada}}" alt="{{edition.title}}">
   <div class="portada__velo"></div>
   <div class="portada__cuerpo">
-    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / <a href="/{{lang}}/tour">Tour</a> / {{edition.year}}</p>
     <div class="cabecera__marca">SOCCER iD CUP</div>
     <h1 class="portada__titulo">{{edition.year}}</h1>
     <p class="portada__bajada">{{edition.match}}</p>
@@ -38,7 +37,7 @@
 {{!-- La edición, en números. --}}
 <section class="seccion envoltura">
   <p class="rotulo">{{#if isEs}}La edición{{else}}The edition{{/if}}</p>
-  <p class="bajada" style="max-width:760px;margin-bottom:26px">{{edition.description}}</p>
+  <p class="bajada" style="max-width:760px;margin-bottom:26px">{{negritas descripcionEdicion}}</p>
   {{#if edition.stats}}
   <div class="cifras">
     {{#each edition.stats}}
@@ -152,7 +151,8 @@
 </section>
 {{/if}}
 
-{{!-- Paso a la edición anterior o siguiente. --}}
+{{!-- Paso a la edición anterior o siguiente: compacto y en una fila, con
+      «Anterior»/«Siguiente» y el año (León, 30/10/2026). --}}
 <section class="seccion envoltura">
   <p class="rotulo">{{#if isEs}}Otras ediciones{{else}}Other editions{{/if}}</p>
   <div class="entre">
@@ -162,7 +162,6 @@
       <span style="min-width:0">
         <span class="entre__que">{{#if isEs}}Anterior{{else}}Previous{{/if}}</span>
         <span class="entre__anio" style="display:block">{{prevEdition.year}}</span>
-        <span class="entre__partido" style="display:block">{{prevEdition.match}}</span>
       </span>
     </a>
     {{else}}<span></span>{{/if}}
@@ -176,7 +175,6 @@
       <span style="min-width:0">
         <span class="entre__que">{{#if isEs}}Siguiente{{else}}Next{{/if}}</span>
         <span class="entre__anio" style="display:block">{{nextEdition.year}}</span>
-        <span class="entre__partido" style="display:block">{{nextEdition.match}}</span>
       </span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="18" height="18" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
     </a>
@@ -189,7 +187,7 @@
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">{{#if isEs}}Sé parte de la experiencia{{else}}Be part of the experience{{/if}}</h2>
-    <p class="cierre__d">{{#if isEs}}La siguiente edición es el Tour '27. Hablemos.{{else}}The next one is Tour '27. Let's talk.{{/if}}</p>
+    <p class="cierre__d">{{#if isEs}}La siguiente edición es el <strong>Tour ’27</strong>. Hablemos.{{else}}The next one is Tour '27. Let's talk.{{/if}}</p>
     <a class="boton boton--lleno" href="/{{lang}}/tour">{{#if isEs}}Ver el Tour{{else}}See the Tour{{/if}} <span class="flecha">↗</span></a>
   </div>
 </section>

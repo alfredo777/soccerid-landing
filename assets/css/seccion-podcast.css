@@ -127,3 +127,14 @@
   /* Si sólo hay una plataforma, que no quede un hueco en medio. */
   .escucha:has(> .boton:nth-child(2).escucha__red) { grid-template-columns: 1fr 44px; }
 }
+
+/* El patrocinador del podcast (Caliente) se lee como patrocinador, no como
+   un logo más de una lista: más alto y con su proporción. El archivo va
+   recortado a su área visible; el original traía tanto margen transparente
+   que a 38 px el logo quedaba en 15. */
+.aliado--patrocinador { flex: 0 1 420px; min-height: 140px; padding: 28px 40px; }
+.aliado--patrocinador img { max-height: 84px; max-width: 100%; height: auto; }
+@media (max-width: 640px) {
+  .aliado--patrocinador { flex-basis: 100%; min-height: 112px; padding: 22px 28px; }
+  .aliado--patrocinador img { max-height: 60px; }
+}

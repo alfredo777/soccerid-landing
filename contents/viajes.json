@@ -7,18 +7,18 @@
         "nombre": "SOCCER iD TOUR",
         "dateISO": "2027-03-27",
         "fechaTexto": "27 de marzo de 2027",
-        "foto": "/assets/images/gallery/cup2025/1.jpg"
+        "foto": "/assets/images/secciones/travel/viaje-soccerid-tour-2027.jpg"
       },
       {
         "slug": "final-nations-league-2027",
         "nombre": "Final de CONCACAF Nations League",
         "dateISO": "2027-03-28",
         "fechaTexto": "28 de marzo de 2027",
-        "foto": "/assets/images/gallery/vip/1.jpg"
+        "foto": "/assets/images/secciones/travel/viaje-nations-league-2027.jpg"
       },
       {
         "slug": "el-clasico-2027",
-        "nombre": "El Clásico · Real Madrid vs. Barcelona",
+        "nombre": "El Clásico · Real Madrid vs Barcelona",
         "dateISO": "2027-05-09",
         "fechaTexto": "9 de mayo de 2027",
         "foto": "/assets/images/secciones/travel/el-clasico-portada.jpg",
@@ -29,19 +29,19 @@
         "nombre": "Final de UEFA Champions League",
         "dateISO": "2027-06-05",
         "fechaTexto": "5 de junio de 2027",
-        "foto": "/assets/images/gallery/vip/3.jpg"
+        "foto": "/assets/images/secciones/travel/viaje-champions-2027.jpg"
       }
     ],
     "pasados": [
       {
         "slug": "final-champions-league-2025",
         "titulo": "Final de UEFA Champions League 2025",
-        "detalle": "Acceso VIP a la final, cena en el hotel de los equipos, hospedaje y traslados en un viaje para vivir la Champions de cerca.",
+        "detalle": "Acceso VIP a la final, **cena en el hotel de los equipos**, hospedaje y traslados en un viaje para vivir la Champions de cerca.",
         "foto": "/assets/images/secciones/travel/pasado-champions-2025.jpg",
         "portada": "/assets/images/secciones/travel/pasado-champions-2025-portada.jpg",
         "cierre": "/assets/images/secciones/travel/pasados-cierre.jpg",
         "ficha": {
-          "experiencia": "Vivimos la final de la Champions League 2025 con acceso VIP y una cena en el hotel donde se hospedaban los equipos. Con hospedaje y traslados organizados, nuestros viajeros pudieron concentrarse en disfrutar una de las grandes citas del fútbol europeo.",
+          "experiencia": "Vivimos la final de la Champions League 2025 con **acceso VIP** y una **cena en el hotel donde se hospedaban los equipos**. Con hospedaje y traslados organizados, nuestros viajeros pudieron concentrarse en disfrutar una de las grandes citas del fútbol europeo.",
           "queVivimos": [
             {
               "titulo": "La final en VIP",
@@ -63,12 +63,12 @@
       {
         "slug": "final-copa-libertadores-2023",
         "titulo": "Final de Copa Libertadores 2023",
-        "detalle": "Fútbol y automovilismo en un mismo viaje: final de Libertadores en VIP, tour por Río y F1 en São Paulo al día siguiente.",
+        "detalle": "**Fútbol y automovilismo en un mismo viaje**: final de Libertadores en VIP, tour por Río y F1 en São Paulo al día siguiente.",
         "foto": "/assets/images/secciones/travel/pasado-libertadores-2024.jpg",
         "portada": "/assets/images/secciones/travel/pasado-libertadores-2024-portada.jpg",
         "cierre": "/assets/images/secciones/travel/pasados-cierre.jpg",
         "ficha": {
-          "experiencia": "Vivimos la final de la Copa Libertadores 2023 con entradas VIP y un tour por Río de Janeiro. Al día siguiente de la final, la experiencia continuó con entradas al Gran Premio de F1 en São Paulo. Un viaje que reunió dos grandes pasiones, con hospedaje y traslados incluidos.",
+          "experiencia": "Vivimos la final de la Copa Libertadores 2023 con **entradas VIP** y un **tour por Río de Janeiro**. Al día siguiente de la final, la experiencia continuó con entradas al **Gran Premio de F1 en São Paulo**. Un viaje que reunió dos grandes pasiones, con hospedaje y traslados incluidos.",
           "queVivimos": [
             {
               "titulo": "Libertadores en VIP",
@@ -94,16 +94,16 @@
       {
         "slug": "final-mundial-de-clubes-2025",
         "titulo": "Final del Mundial de Clubes 2025",
-        "detalle": "La final con hospitality en el MetLife Stadium, hospedaje, traslado y un tour por Manhattan al día siguiente.",
+        "detalle": "La final con **hospitality en el MetLife Stadium**, hospedaje, traslado y un **tour por Manhattan** al día siguiente.",
         "foto": "/assets/images/secciones/travel/pasado-mundial-de-clubes-2025.jpg",
         "portada": "/assets/images/secciones/travel/pasado-mundial-de-clubes-2025-portada.jpg",
         "cierre": "/assets/images/secciones/travel/pasados-cierre.jpg",
         "ficha": {
-          "experiencia": "Disfrutamos la final del Mundial de Clubes 2025 con hospitality en el MetLife Stadium: alimentos, bebidas y acceso a un salón exclusivo. La experiencia incluyó hospedaje, traslado y un tour por Manhattan, Nueva York, al día siguiente de la final.",
+          "experiencia": "Disfrutamos la final del Mundial de Clubes 2025 con hospitality en el MetLife Stadium: **alimentos, bebidas y acceso a un salón exclusivo**. La experiencia incluyó hospedaje, traslado y un **tour por Manhattan, Nueva York**, al día siguiente de la final.",
           "queVivimos": [
             {
               "titulo": "La final con hospitality",
-              "texto": "Vivimos el partido con alimentos, bebidas y acceso a un salón exclusivo en el MetLife Stadium."
+              "texto": "Vivimos el partido con **alimentos, bebidas y acceso a un salón exclusivo** en el MetLife Stadium."
             },
             {
               "titulo": "Hospedaje y traslado",

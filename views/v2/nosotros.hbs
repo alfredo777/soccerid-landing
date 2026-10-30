@@ -1,28 +1,20 @@
-{{!-- Quiénes somos · nuestra historia.
-
-      El texto es el que ya administra el panel (`quienes`), no una versión
-      paralela que se quede vieja. Debajo, la historia contada por años:
-      son las ediciones reales de la copa, la misma fuente que alimenta
-      Tour, para que ningún año se cuente de dos maneras distintas. --}}
+{{!-- Quiénes somos · nuestra historia. Textos aprobados (27/10 y 30/10/2026)
+      en español, con sus negritas, y su traducción al inglés. --}}
 
 <section class="portada">
   <img class="portada__foto" src="/assets/images/secciones/nosotros/portada.jpg" alt="">
   <div class="portada__velo"></div>
   <div class="portada__cuerpo">
-    <p class="cabecera__miga"><a href="/{{lang}}">SOCCER iD</a> / {{actual.nombre}}</p>
     <div class="cabecera__marca">SOCCER iD</div>
     <h1 class="portada__titulo">{{#if isEs}}Nuestra historia{{else}}Our story{{/if}}</h1>
-    <p class="portada__bajada">{{#if isEs}}Partidos internacionales, viajes a los grandes eventos, convivencias con leyendas y contenido de fútbol.{{else}}A global community of fans, clubs and cities who believe football is better lived up close.{{/if}}</p>
+    <p class="portada__bajada">{{#if isEs}}<strong>Partidos internacionales</strong>, viajes a los grandes eventos, <strong>convivencias con leyendas</strong> y contenido de fútbol.{{else}}<strong>International matches</strong>, trips to the biggest events, <strong>meet-ups with legends</strong> and football content.{{/if}}</p>
   </div>
 </section>
 
-{{#if quienes}}
 <section class="seccion envoltura">
   <p class="rotulo">{{#if isEs}}Quiénes somos{{else}}Who we are{{/if}}</p>
   <div class="somos">
-    {{!-- En español, el párrafo aprobado el 27/10/2026 (sin la app histórica).
-          En inglés sigue el del panel hasta que se apruebe la traducción. --}}
-    <div class="somos__texto">{{#if isEs}}<p>En <b>SOCCER iD</b> hacemos del fútbol una experiencia dentro y fuera del estadio. Organizamos partidos internacionales en Estados Unidos, creamos viajes a los grandes eventos y convivencias con leyendas. En nuestro podcast, el juego sigue con entrevistas, análisis y debate.</p>{{else}}{{{quienes.description}}}{{/if}}</div>
+    <div class="somos__texto">{{#if isEs}}<p>En SOCCER iD hacemos del fútbol <strong>una experiencia dentro y fuera del estadio</strong>. Organizamos <strong>partidos internacionales en Estados Unidos</strong>, creamos viajes a los grandes eventos y convivencias con leyendas. En nuestro podcast, el juego sigue con entrevistas, análisis y debate.</p>{{else}}<p>At SOCCER iD we make football <strong>an experience inside and outside the stadium</strong>. We organize <strong>international matches in the United States</strong>, create trips to the biggest events and meet-ups with legends. On our podcast, the game goes on with interviews, analysis and debate.</p>{{/if}}</div>
     {{!-- Mosaico de la entrega de diseño (28/10/2026): una foto por marca.
           La cuarta es Podcast, el mismo archivo que su tarjeta del inicio. --}}
     <div class="somos__fotos">
@@ -33,107 +25,56 @@
     </div>
   </div>
 </section>
-{{/if}}
 
-{{!-- 10 años de historia (2016–2026), del 10.º aniversario. Los hitos son
-      los que el sitio ya publica: los premios (contents/premios.json) y las
-      ediciones de la copa. El lema es el de los posts de la campaña. Sólo
-      español, como el resto de los textos nuevos. --}}
-{{#if isEs}}
+{{!-- 10 años de historia (2016–2026): la cronología resumida aprobada el
+      30/10/2026 (`cronologia`, en index.js), seis hitos en este orden. Los de
+      2024 y 2025 no van aquí como entradas aparte: siguen en Tour y en sus
+      fichas. Los hitos y las afirmaciones de liderazgo los dio León. --}}
 <section class="seccion envoltura" id="aniversario">
-  <p class="rotulo">10.º aniversario</p>
+  <p class="rotulo">{{#if isEs}}10.º aniversario{{else}}10th anniversary{{/if}}</p>
   <div class="decada">
     <div class="decada__marca">
       <div class="decada__diez" aria-hidden="true">10</div>
-      <h2 class="decada__titulo">años de historia</h2>
+      <h2 class="decada__titulo">{{#if isEs}}años de historia{{else}}years of history{{/if}}</h2>
       <p class="decada__rango">2016 — 2026</p>
-      <p class="decada__lema">Partidos, viajes, convivencias y contenido para vivir el futbol más cerca.</p>
+      <p class="decada__lema">{{#if isEs}}Partidos, viajes, convivencias y contenido para <strong>vivir el fútbol más cerca</strong>.{{else}}Matches, trips, meet-ups and content to <strong>live football up close</strong>.{{/if}}</p>
     </div>
     <ol class="decada__hitos">
-      <li class="decada__hito">
-        <div class="decada__anio">2016</div>
-        <div class="decada__que">5.ª generación de Wayra México</div>
+      {{#each cronologia}}
+      <li class="decada__hito{{#if @last}} decada__hito--hoy{{/if}}">
+        <div class="decada__anio">{{this.anio}}</div>
+        <div class="decada__que">{{this.titulo}}</div>
+        <div class="decada__detalle">{{negritas this.texto}}</div>
       </li>
-      <li class="decada__hito">
-        <div class="decada__anio">2018</div>
-        <div class="decada__que">Mejor startup deportiva</div>
-        <div class="decada__detalle">Sports Innovation Summit</div>
-      </li>
-      <li class="decada__hito">
-        <div class="decada__anio">2023</div>
-        <div class="decada__que">Primera SOCCER iD CUP</div>
-        <div class="decada__detalle">Pumas vs. Comunicaciones · PayPal Park, San José</div>
-      </li>
-      <li class="decada__hito">
-        <div class="decada__anio">2024</div>
-        <div class="decada__que">SOCCER iD CUP en Orlando</div>
-        <div class="decada__detalle">América vs. Atlético Nacional · Camping World Stadium</div>
-      </li>
-      <li class="decada__hito">
-        <div class="decada__anio">2025</div>
-        <div class="decada__que">SOCCER iD CUP en Austin</div>
-        <div class="decada__detalle">Tigres vs. Pumas · Q2 Stadium. Y entre las Empresas más distinguidas de México</div>
-      </li>
-      <li class="decada__hito decada__hito--hoy">
-        <div class="decada__anio">2026</div>
-        <div class="decada__que">10 años</div>
-        <div class="decada__detalle">Y lo que sigue: el SOCCER iD TOUR en 2027</div>
-      </li>
+      {{/each}}
     </ol>
   </div>
 </section>
-{{/if}}
 
-{{!-- Qué hacemos. En español, una tarjeta por marca que lleva a su sección
-      (documento de textos del 27/10/2026, que sustituye las cuatro de
-      Gestión de eventos, Clubes, Estrategia comercial y Medios). En inglés
-      siguen las anteriores hasta que se apruebe la traducción. --}}
+{{!-- Qué hacemos: una tarjeta por marca que lleva a su sección. --}}
 <section class="seccion envoltura">
   <p class="rotulo">{{#if isEs}}Qué hacemos{{else}}What we do{{/if}}</p>
   <div class="pilares">
-    {{#if isEs}}
     <a class="pilar" href="/{{lang}}/tour">
       <div class="pilar__num">01</div>
       <h3>Tour</h3>
-      <p>Organizamos partidos entre clubes de Latinoamérica en Estados Unidos.</p>
+      <p>{{#if isEs}}Organizamos partidos entre <strong>los clubes más grandes de Latinoamérica</strong> en Estados Unidos.{{else}}We organize matches between <strong>the biggest clubs in Latin America</strong> in the United States.{{/if}}</p>
     </a>
     <a class="pilar" href="/{{lang}}/travel">
       <div class="pilar__num">02</div>
       <h3>Travel</h3>
-      <p>Creamos viajes a los grandes eventos del fútbol con acceso VIP, hotel y experiencias exclusivas.</p>
+      <p>{{#if isEs}}Creamos viajes a los grandes eventos del fútbol con <strong>acceso VIP, hotel y experiencias exclusivas</strong>.{{else}}We create trips to the biggest football events with <strong>VIP access, hotel and exclusive experiences</strong>.{{/if}}</p>
     </a>
     <a class="pilar" href="/{{lang}}/legends">
       <div class="pilar__num">03</div>
       <h3>Legends</h3>
-      <p>Organizamos convivencias con leyendas del fútbol mexicano e internacional.</p>
+      <p>{{#if isEs}}Organizamos <strong>convivencias con leyendas</strong> del fútbol mexicano e internacional.{{else}}We organize <strong>meet-ups with legends</strong> of Mexican and international football.{{/if}}</p>
     </a>
     <a class="pilar" href="/{{lang}}/podcast">
       <div class="pilar__num">04</div>
       <h3>Podcast</h3>
-      <p>Compartimos entrevistas, análisis y debate con invitados del mundo del fútbol.</p>
+      <p>{{#if isEs}}Compartimos <strong>entrevistas, análisis y debate</strong> con invitados del mundo del fútbol.{{else}}We share <strong>interviews, analysis and debate</strong> with guests from the football world.{{/if}}</p>
     </a>
-    {{else}}
-    <div class="pilar">
-      <div class="pilar__num">01</div>
-      <h3>Event management</h3>
-      <p>We bring international soccer matches to life through expert planning and execution.</p>
-    </div>
-    <div class="pilar">
-      <div class="pilar__num">02</div>
-      <h3>Clubs</h3>
-      <p>We work with leading professional soccer clubs across Latin America.</p>
-    </div>
-    <div class="pilar">
-      <div class="pilar__num">03</div>
-      <h3>Commercial strategy</h3>
-      <p>We develop ticketing, sponsorship and premium hospitality strategies.</p>
-    </div>
-    <div class="pilar">
-      <div class="pilar__num">04</div>
-      <h3>Media</h3>
-      <p>We manage broadcast production and digital content to maximize audience reach.</p>
-    </div>
-    {{/if}}
   </div>
 </section>
 
@@ -157,15 +98,43 @@
 </section>
 {{/if}}
 
-{{!-- Nuestras sedes: ciudad y país, sin dirección (no está aprobada). Sólo
-      español por ahora. Debajo irán las marcas con las que hemos colaborado,
-      cuando lleguen los logos. --}}
-{{#if isEs}}
+{{!-- Nuestras sedes (30/10/2026): país y ciudad, sin dirección ni «Cómo
+      llegar» hasta confirmar que se recibe público. --}}
 <section class="seccion envoltura">
-  <p class="rotulo">Nuestras sedes</p>
+  <p class="rotulo">{{#if isEs}}Nuestras sedes{{else}}Our locations{{/if}}</p>
+  <p class="bajada sedes__intro">{{#if isEs}}Desde <strong>México y Estados Unidos</strong>, acercamos el fútbol a su afición.{{else}}From <strong>Mexico and the United States</strong>, we bring football closer to its fans.{{/if}}</p>
   <div class="sedes">
-    <div class="sede"><span class="sede__pais">México</span><span class="sede__ciudad">Ciudad de México</span></div>
-    <div class="sede"><span class="sede__pais">Estados Unidos</span><span class="sede__ciudad">Aventura, Florida</span></div>
+    <div class="sede">
+      <svg class="sede__icono" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      <span class="sede__pais">{{#if isEs}}México{{else}}Mexico{{/if}}</span>
+      <span class="sede__ciudad">{{#if isEs}}Ciudad de México{{else}}Mexico City{{/if}}</span>
+    </div>
+    <div class="sede">
+      <svg class="sede__icono" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+      <span class="sede__pais">{{#if isEs}}Estados Unidos{{else}}United States{{/if}}</span>
+      <span class="sede__ciudad">Aventura, Florida</span>
+    </div>
+  </div>
+</section>
+
+{{!-- Redes y alcance (30/10/2026), antes de las marcas: sólo estas dos
+      cifras, con su texto literal. Las dio León: 332 mil suma cuentas de
+      todas las redes (no personas únicas) y los 6 millones son el alcance
+      mensual de las cuentas de Instagram; no se verificaron por separado. --}}
+<section class="seccion envoltura">
+  <div class="alcance-redes">
+    <h2 class="alcance-redes__titulo">{{#if isEs}}La pasión también se comparte{{else}}Passion is meant to be shared{{/if}}</h2>
+    <p class="bajada alcance-redes__intro">{{#if isEs}}Nuestra comunidad vive el fútbol <strong>dentro y fuera del estadio</strong>. Compartimos historias, conversaciones y experiencias que conectan a <strong>cientos de miles de aficionados</strong> con el deporte que amamos.{{else}}Our community lives football <strong>inside and outside the stadium</strong>. We share stories, conversations and experiences that connect <strong>hundreds of thousands of fans</strong> with the sport we love.{{/if}}</p>
+    <div class="alcance-redes__cifras">
+      <div class="cifra">
+        <div class="cifra__valor">{{#if isEs}}+332 MIL{{else}}+332K{{/if}}</div>
+        <div class="cifra__sub">{{#if isEs}}Seguidores y suscriptores en nuestras redes{{else}}Followers and subscribers across our channels{{/if}}</div>
+      </div>
+      <div class="cifra">
+        <div class="cifra__valor">{{#if isEs}}+6 MILLONES{{else}}+6 MILLION{{/if}}</div>
+        <div class="cifra__sub">{{#if isEs}}De cuentas alcanzadas al mes{{else}}Accounts reached per month{{/if}}</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -182,8 +151,8 @@
       igual. --}}
 {{#if marcasFilas.length}}
 <section class="seccion marcas-sec" aria-labelledby="marcasTitulo">
-  <div class="envoltura"><p class="rotulo" id="marcasTitulo">Marcas con las que hemos colaborado</p></div>
-  <div class="marquesina" tabindex="0" role="region" aria-label="Marcas con las que hemos colaborado">
+  <div class="envoltura"><p class="rotulo" id="marcasTitulo">{{#if isEs}}Marcas con las que hemos colaborado{{else}}Brands we have worked with{{/if}}</p></div>
+  <div class="marquesina" tabindex="0" role="region" aria-label="{{#if isEs}}Marcas con las que hemos colaborado{{else}}Brands we have worked with{{/if}}">
     {{#each marcasFilas}}
     <div class="marquesina__fila{{#if @index}} marquesina__fila--reversa{{/if}}">
       <ul class="marquesina__pista">
@@ -197,21 +166,16 @@
   </div>
 </section>
 {{/if}}
-{{/if}}
 
 <section class="cierre">
   <img class="cierre__foto" src="/assets/images/secciones/nosotros/cierre.jpg" alt="">
   <div class="cierre__velo"></div>
   <div class="cierre__cuerpo">
     <h2 class="cierre__t">{{#if isEs}}Trabajemos juntos{{else}}Let's work together{{/if}}</h2>
-    <p class="cierre__d">{{#if isEs}}Clubes, marcas, ciudades y medios: hagamos equipo.{{else}}Clubs, brands, cities and media: the conversation starts here.{{/if}}</p>
-    {{#if isEs}}
+    <p class="cierre__d">{{#if isEs}}Clubes, marcas, ciudades y medios: <strong>hagamos equipo</strong>.{{else}}Clubs, brands, cities and media: <strong>let's team up</strong>.{{/if}}</p>
     <div class="portada__acciones nosotros__acciones">
-      <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text=Hola!%20Quiero%20trabajar%20con%20SOCCER%20iD" target="_blank" rel="noopener">Contáctanos <span class="flecha">↗</span></a>
+      <a class="boton boton--lleno" href="https://wa.me/{{@root.contacto.whatsapp}}?text={{#if isEs}}Hola!%20Quiero%20trabajar%20con%20SOCCER%20iD{{else}}Hi!%20I%27d%20like%20to%20work%20with%20SOCCER%20iD{{/if}}" target="_blank" rel="noopener">{{#if isEs}}Contáctanos{{else}}Contact us{{/if}} <span class="flecha">↗</span></a>
       <a class="boton" href="mailto:{{@root.contacto.correo}}">{{@root.contacto.correo}} <span class="flecha">↗</span></a>
     </div>
-    {{else}}
-    <a class="boton boton--lleno" href="mailto:{{@root.contacto.correo}}">{{@root.contacto.correo}} <span class="flecha">↗</span></a>
-    {{/if}}
   </div>
 </section>

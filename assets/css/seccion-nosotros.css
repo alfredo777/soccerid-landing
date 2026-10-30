@@ -20,10 +20,28 @@
 .somos__texto p { text-align: left !important; }
 
 /* ─── Nuestras sedes: país arriba, ciudad grande ──────────────────── */
-.sedes { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-.sede { display: flex; flex-direction: column; gap: 6px; padding: 24px; background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); }
-.sede__pais { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--acento-chico); }
-.sede__ciudad { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
+/* Dos bloques iguales, lado a lado en escritorio y apilados en el teléfono:
+   gris oscuro, borde sutil, mucho aire y un ícono chico de ubicación. */
+.sedes__intro { margin-bottom: 22px; }
+.sedes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.sede { display: flex; flex-direction: column; gap: 8px; padding: 34px 32px; background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); }
+.sede__icono { width: 22px; height: 22px; color: var(--acento-chico); margin-bottom: 8px; }
+.sede__pais { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--tinta-2); }
+.sede__ciudad { font-size: clamp(26px, 3vw, 36px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; }
+@media (max-width: 640px) {
+  .sedes { grid-template-columns: 1fr; }
+  .sede { padding: 26px 24px; }
+}
+
+/* ─── Redes y alcance: título, intro y dos cifras grandes ─────────── */
+.alcance-redes { text-align: center; max-width: 860px; margin-inline: auto; }
+.alcance-redes__titulo { font-size: clamp(30px, 4vw, 48px); font-weight: 900; letter-spacing: -.03em; line-height: 1.05; }
+.alcance-redes__intro { margin: 16px auto 30px; max-width: 680px; }
+.alcance-redes__cifras { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.alcance-redes .cifra__sub { font-size: 15px; margin-top: 10px; }
+@media (max-width: 640px) {
+  .alcance-redes__cifras { grid-template-columns: 1fr; }
+}
 
 /* ─── Marcas con las que hemos colaborado: marquesina ─────────────── */
 /* Dos filas que avanzan solas en sentidos opuestos, a todo lo ancho, sin

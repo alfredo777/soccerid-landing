@@ -1,0 +1,13 @@
+{{!-- Una fila de «Otros viajes» / «Otros encuentros» dentro de una ficha:
+      compacta, como las notas de prensa del Tour, para que no compita con
+      el evento que se está viendo. Miniatura chica (nunca una foto de
+      muestra), nombre y, debajo, lugar · año. Con `url`, la fila entera es
+      el enlace. --}}
+{{#if this.url}}<a class="relacionado" href="{{this.url}}">{{else}}<div class="relacionado">{{/if}}
+  {{#if this.foto}}{{#unless this.fotoMuestra}}<img class="relacionado__mini" src="{{this.foto}}" alt="" loading="lazy">{{/unless}}{{/if}}
+  <span class="relacionado__texto">
+    <span class="relacionado__titulo">{{this.titulo}}{{this.nombre}}</span>
+    {{#if this.lugar}}<span class="relacionado__meta">{{this.lugar}}{{#if this.fecha}} · {{this.fecha}}{{/if}}</span>{{else if this.fechaTexto}}<span class="relacionado__meta">{{this.fechaTexto}}</span>{{/if}}
+  </span>
+  {{#if this.url}}<span class="flecha" aria-hidden="true">→</span>{{/if}}
+{{#if this.url}}</a>{{else}}</div>{{/if}}

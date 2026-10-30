@@ -45,7 +45,11 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 /* El tamaño del lema en celular ya está calibrado en main.css (dos líneas
    exactas); sólo se toca en escritorio. */
 @media (min-width: 1025px) { .hero-tagline { font-size: clamp(1.6rem, 2vw, 2.6rem); margin-bottom: 0; line-height: 1.35; } }
-.hero-section .hero-tagline em { font-style: italic; color: var(--brand-lime); }
+/* El destacado del slogan: blanco y Black Italic con su archivo propio. Los
+   iconos de las puertas también van en blanco: el verde no es el color de
+   SOCCER iD en el home y cada sección ya trae el suyo en su barra. */
+@font-face { font-family: "Raleway"; src: url("/assets/fonts/raleway-900-italic.ttf") format("truetype"); font-weight: 900; font-style: italic; font-display: swap; }
+.hero-section .hero-tagline em { font-style: italic; font-weight: 900; color: #fff; }
 
 /* ─── La columna de la primera pantalla ───────────────────────────── */
 /* Tres piezas en vertical: cabecera (marca y lema), las seis puertas y las
@@ -104,7 +108,7 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 .puerta__icono {
   position: absolute; top: 16px; left: 16px; z-index: 2;
   width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  background: rgba(8,12,24,0.55); border: 1px solid rgba(255,255,255,0.3); color: var(--brand-lime);
+  background: rgba(8,12,24,0.55); border: 1px solid rgba(255,255,255,0.3); color: #fff;
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
 }
 .puerta__icono svg { width: 20px; height: 20px; }
@@ -134,7 +138,7 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 }
 .redes-v2__chip svg { width: 16px; height: 16px; }
 .redes-v2__chip span, .redes-v2__chip small { display: none; }
-.redes-v2__chip:hover { transform: translateY(-3px); background: var(--brand-lime); border-color: var(--brand-lime); color: #0b1020; }
+.redes-v2__chip:hover { transform: translateY(-3px); background: #fff; border-color: #fff; color: #0b1020; }
 /* ─── Pie ────────────────────────────────────────── */
 /* Una sola columna centrada: logo completo, enlaces y aviso, en ese orden. */
 /* Los grises del pie los subió el auditor de contraste: a 13px la regla de
@@ -148,7 +152,7 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 .footer-marca { width: 200px; height: auto; display: block; }
 .footer-content .footer-links { margin-bottom: 0; gap: 10px 24px; }
 .footer-link { color: rgba(255,255,255,0.82); font-size: 13px; }
-.footer-link:hover { color: var(--brand-lime, #78F750); }
+.footer-link:hover { color: #fff; }
 .footer-legal { margin: 0; }
 
 /* ─── Sin menú lateral ───────────────────────────────────────────── */
@@ -244,7 +248,7 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 .puerta, .redes-v2__chip, body .lang-btn { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .puerta { transition: flex .55s cubic-bezier(.2,.8,.2,1), border-color .3s, box-shadow .3s, scale .12s; }
 .puerta:active { scale: .97; border-color: rgba(255,255,255,0.6); }
-.redes-v2__chip:active { background: var(--brand-lime); border-color: var(--brand-lime); color: #0b1020; scale: .92; }
+.redes-v2__chip:active { background: #fff; border-color: #fff; color: #0b1020; scale: .92; }
 body .lang-btn:active { background: rgba(255,255,255,0.16); }
 
 /* Áreas de toque de 44 px en celular sin agrandar lo que se ve: los

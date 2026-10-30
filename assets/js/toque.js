@@ -15,7 +15,7 @@
 
   var TOCABLES = [
     '.boton', '.nav__menu', '.nav__link', '.menu__item', '.menu__x', '.menu__idioma',
-    '.red-icono', '.arriba', 'a.pilar', '.prensa__nota', '.via', '.entre__ir',
+    '.red-icono', '.arriba', 'a.pilar', '.prensa__nota', '.prensa__boton', 'a.relacionado', '.via', '.entre__ir',
     '.entre__todas', '.nota', '.edicion', 'a.aliado', 'a.hito', '.fila-ep',
     '[data-ampliar]', '.bastidores', '.publicacion__escudo', '.carrusel__flecha',
     '.puerta', '.redes-v2__chip', '.lang-btn', '.recuerdo--enlace'
