@@ -84,3 +84,10 @@
 @media (max-width: 900px) {
   .publicacion__embed { height: 420px; }
 }
+
+/* En el teléfono, las cifras de la edición se centran dentro de su recuadro,
+   igual que en Tour (León, 30/10/2026). En escritorio, a la izquierda. */
+@media (max-width: 720px) {
+  .cifra { text-align: center; }
+  .cifra__icono { margin-inline: auto; }
+}
