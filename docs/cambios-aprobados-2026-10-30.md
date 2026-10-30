@@ -13,7 +13,7 @@ Paquete «SOCCER-iD-Cambios-aprobados» (Indicaciones.txt + Negritas-aprobadas.t
 | 7 | Tour: «Anuncio en Diciembre 2026» | Hecho |
 | 8 | Paginación entre ediciones compacta | Hecho |
 | 9 | Inglés | Hecho sobre el español consolidado; fichas de viajes y Legends ya existen en inglés. El itinerario no se pinta en inglés (se captura en español) |
-| 10 | Itinerarios de próximos viajes | **Pendiente de datos de León** |
+| 10 | Itinerarios de próximos viajes | Se quedan los de ejemplo (Día 1 salida, etc.) hasta tener datos; decisión del 30/10/2026 |
 | 11 | Imágenes aprobadas de Travel | Hecho (tarjeta y header) |
 | 13 | Nosotros: redes y alcance | Hecho |
 | 14 | Nosotros: cronología resumida | Hecho (`CRONOLOGIA` en index.js) |
@@ -31,7 +31,7 @@ Paquete «SOCCER-iD-Cambios-aprobados» (Indicaciones.txt + Negritas-aprobadas.t
 
 ## Pendiente
 
-- Itinerarios reales: por viaje hacen falta fechas por día, hotel, vuelos/traslados, horarios, comidas, accesos y qué es incluido u opcional.
+- Itinerarios reales: por ahora no hay datos; siguen los de ejemplo, editables en Panel › Sitio web › Itinerarios.
 - Revisar la prueba de grises con León antes de hacerla definitiva.
 - Negritas de testimonios completos (falta elegir la frase literal).
 - La sede de la final de Champions 2027 no se dedujo de la foto del Bernabéu: la ficha no muestra sede.
