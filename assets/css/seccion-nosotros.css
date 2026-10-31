@@ -89,7 +89,7 @@
 /* El azul de la campaña del aniversario, más claro que el de marca
    (#1B17EF, que sobre el fondo oscuro casi no se ve): sólo en el «10», la
    línea punteada y los puntos; los textos van en blanco y gris. */
-.decada { --aniv: #3D74FF; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.4fr); gap: 48px; align-items: start; }
+.decada { --aniv: #4F81FF; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.4fr); gap: 48px; align-items: start; }
 .decada__marca { position: sticky; top: 110px; }
 .decada__diez { font-size: clamp(120px, 16vw, 220px); font-weight: 900; letter-spacing: -.06em; line-height: .8; color: var(--aniv); }
 .decada__titulo { font-size: clamp(28px, 3.2vw, 40px); font-weight: 900; letter-spacing: -.03em; line-height: 1.05; margin-top: 18px; }

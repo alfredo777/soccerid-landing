@@ -11,14 +11,16 @@
    MATE Y VERDE, el mismo estándar que el index (21/10/2026). Antes el azul
    de marca pintaba las superficies —botones, el menú, el panel del Tour— y
    las secciones se veían de otra casa que el home. Ya no:
-     fondo   #0B0B14  casi negro, tirando a azul
-     vidrio  rgba(10,10,26,.42) + borde blanco al 12 %: la tarjeta del index,
-             translúcida y mate. ES la superficie. Nada de bloques saturados.
+     fondo   #16181B  gris oscuro neutro: el del home y el de la presentación
+                      de TOUR y CUP (aprobado por León el 30/10/2026; antes
+                      #0B0B14, casi negro tirando a azul)
+     tarjeta #1F2226  gris un poco más claro para distinguir superficies
+     vidrio  rgba(22,24,27,.55) + borde blanco al 12 %: translúcido y mate.
      verde   #78F750  el acento Y la acción: botones llenos, el chip activo
              del menú, los números, los íconos.
      azul    #1B17EF  SÓLO marca (el logo). NO se usa como superficie ni como
              texto: sobre el fondo oscuro da 1.45 de contraste.
-   Sobre el verde la letra va en negro (#0B0B14); sobre el fondo, en blanco.
+   Sobre el verde la letra va en negro (#16181B); sobre el fondo, en blanco.
    Las fotos van mate: desaturadas y con velo, como el hero del index.
    La regla de contraste está en docs/variables-del-proyecto.md, sección 1c,
    y la vigila `node scripts/contraste.js`.
@@ -47,15 +49,15 @@
   --acento: var(--acento);                /* superficies y texto de 16px o más */
   --acento-chico: var(--acento);          /* texto de menos de 16px */
   /* El vidrio del index: translúcido, mate, con un borde apenas visible. */
-  --vidrio: rgba(10, 10, 26, 0.42);
+  --vidrio: rgba(22, 24, 27, 0.55);
   --vidrio-borde: rgba(255, 255, 255, 0.12);
   --lima: #78F750;
   --tinta: #FFFFFF;                     /* la letra */
-  --tinta-2: #B8B9C9;                   /* 8.9 sobre el fondo: secundario */
-  --fondo: #0B0B14;
-  --superficie: #13131F;
-  --linea: rgba(255, 255, 255, 0.13);
-  --negro: #0B0B14;                     /* texto sobre verde y sobre blanco */
+  --tinta-2: #C3C5CA;                   /* 9.6 sobre el fondo, 8.4 sobre la tarjeta */
+  --fondo: #16181B;
+  --superficie: #1F2226;
+  --linea: rgba(255, 255, 255, 0.12);
+  --negro: #16181B;                     /* texto sobre verde y sobre blanco */
 
 
   --radio: 22px;
@@ -123,7 +125,7 @@ img { display: block; max-width: 100%; }
 .menu {
   position: fixed; inset: 0; z-index: 80;
   /* Mate, como el index: casi negro con un desenfoque detrás. */
-  background: rgba(11, 11, 20, 0.94); color: #fff;
+  background: rgba(22, 24, 27, 0.95); color: #fff;
   backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
   display: flex; flex-direction: column;
   padding: 28px var(--gutter) 32px;
@@ -236,7 +238,7 @@ html.con-menu, html.con-menu body { overflow: hidden; }
    del 85 % y ajustar hasta que el texto se lea claro) para que acompañe al
    contenido sin competir. Negro neutro, sin tinte azul. Es una capa CSS: las
    fotos aprobadas se conservan sin oscurecer. Abajo muere en el fondo. */
-.portada__velo { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,8,10,.84) 0%, rgba(8,8,10,.72) 38%, rgba(8,8,10,.8) 70%, var(--fondo) 100%); }
+.portada__velo { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.70) 38%, rgba(0,0,0,.78) 70%, var(--fondo) 100%); }
 .portada__cuerpo { position: relative; z-index: 2; width: 100%; max-width: var(--ancho); margin: 0 auto; padding: 140px var(--gutter) clamp(34px, 5vh, 56px); }
 .portada__titulo { font-size: clamp(46px, 7.2vw, 96px); font-weight: 900; letter-spacing: -.04em; line-height: .95; }
 .portada__titulo em { font-style: normal; color: var(--acento); }
@@ -343,7 +345,7 @@ a.pilar:hover { border-color: var(--tinta); }
 .recuerdo { background: var(--superficie); border: 1px solid var(--linea); border-radius: var(--radio); overflow: hidden; }
 .recuerdo__foto { position: relative; aspect-ratio: 16 / 10; background: var(--linea) center / cover no-repeat; }
 /* La pastilla de muestra va sobre la foto: necesita su propio fondo para leerse. */
-.recuerdo__muestra { position: absolute; top: 12px; left: 12px; background: rgba(11,11,20,.78); color: #fff; border-color: rgba(255,255,255,.7); }
+.recuerdo__muestra { position: absolute; top: 12px; left: 12px; background: rgba(22,24,27,.8); color: #fff; border-color: rgba(255,255,255,.7); }
 .recuerdo__cuerpo { padding: 18px 20px 22px; }
 .recuerdo__tipo { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--acento-chico); }
 .recuerdo__titulo { font-size: 19px; font-weight: 800; letter-spacing: -.01em; line-height: 1.25; margin: 6px 0 6px; }
@@ -387,7 +389,7 @@ a.pilar:hover { border-color: var(--tinta); }
      diseño, 28/10/2026): sin hueco a la izquierda. El velo deja de
      oscurecer sólo ese lado y pasa a ser vertical, parejo de lado a lado. */
   .portada__cuerpo { padding-top: 120px; text-align: center; }
-  .portada__velo { background: linear-gradient(180deg, rgba(8,8,10,.86) 0%, rgba(8,8,10,.74) 34%, rgba(8,8,10,.82) 70%, var(--fondo) 100%); }
+  .portada__velo { background: linear-gradient(180deg, rgba(0,0,0,.84) 0%, rgba(0,0,0,.72) 34%, rgba(0,0,0,.8) 70%, var(--fondo) 100%); }
   .portada__bajada { margin-inline: auto; }
   .portada__pastillas, .portada__acciones, .duelo { justify-content: center; }
   .portada .escucha { margin-inline: auto; }

@@ -9,7 +9,7 @@
    El !important le gana al background-image en línea, a propósito. */
 .js-carga:not(.carga-lista) :is(.mosaico__foto, .edicion__foto, .recuerdo__foto, .experiencia__foto, .somos__foto, .nota__foto, .invitado__foto, .bastidores):not(.is-cargada) {
   background-image: linear-gradient(100deg, rgba(255,255,255,0) 30%, rgba(255,255,255,.07) 50%, rgba(255,255,255,0) 70%) !important;
-  background-color: var(--superficie, #13131F);
+  background-color: var(--superficie, #1F2226);
   background-size: 220% 100% !important;
   animation: carga-brillo 1.3s linear infinite;
 }

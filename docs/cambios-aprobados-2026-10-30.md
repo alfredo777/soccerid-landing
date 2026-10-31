@@ -27,11 +27,10 @@ Paquete «SOCCER-iD-Cambios-aprobados» (Indicaciones.txt + Negritas-aprobadas.t
 | 22 | Relacionados compactos en fichas | Hecho (partial `relacionado.hbs`); listados principales intactos |
 | 23 | «Real Madrid vs Barcelona» sin punto | Hecho |
 | 24 | Nuestras sedes | Hecho |
-| 25 | Prueba de grises | Lista para revisar: `?prueba=grises` (se recuerda en cookie), `?prueba=normal` la apaga. `assets/css/prueba-grises.css` |
+| 25 | Grises | Aprobada y definitiva (30/10/2026): fondo #16181B, tarjetas #1F2226, velos negros neutros, en `v2.css`. Se quitó el interruptor `?prueba=`. |
 
 ## Pendiente
 
 - Itinerarios reales: por ahora no hay datos; siguen los de ejemplo, editables en Panel › Sitio web › Itinerarios.
-- Revisar la prueba de grises con León antes de hacerla definitiva.
 - Negritas de testimonios completos (falta elegir la frase literal).
 - La sede de la final de Champions 2027 no se dedujo de la foto del Bernabéu: la ficha no muestra sede.

@@ -320,17 +320,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(require('cookie-parser')());
 
-// Prueba visual de grises (pendiente de revisión con León, 30/10/2026):
-// ?prueba=grises la enciende para ese navegador y ?prueba=normal la apaga.
-// Sólo carga assets/css/prueba-grises.css encima del diseño de siempre.
-app.use((req, res, next) => {
-  const q = req.query && req.query.prueba;
-  if (q === 'grises') res.cookie('prueba', 'grises', { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: 'lax' });
-  if (q === 'normal') res.clearCookie('prueba');
-  res.locals.pruebaGrises = q === 'grises' || (q !== 'normal' && req.cookies && req.cookies.prueba === 'grises');
-  next();
-});
-
 // Trust proxy para obtener IP real detrás de reverse proxy (producción)
 if (isProduction) {
   app.set('trust proxy', 1);
@@ -1685,7 +1674,7 @@ const REDES = [
  * por ciento hasta que pasa. Los cuatro que ya cumplen salen intactos.
  */
 function acentoLegible(hex) {
-  const FONDOS = ['#0B0B14', '#13131F'];   // el fondo y la superficie
+  const FONDOS = ['#16181B', '#1F2226'];   // el fondo y la superficie
   const canales = h => [1, 3, 5].map(i => parseInt(h.substr(i, 2), 16));
   const luz = h => {
     const c = canales(h).map(v => v / 255).map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));

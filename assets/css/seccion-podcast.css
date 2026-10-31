@@ -64,7 +64,7 @@
 .fila-ep__mini img { width: 120px; height: 68px; object-fit: cover; border-radius: 9px; background: var(--fondo); }
 .fila-ep__reloj {
   position: absolute; right: 5px; bottom: 5px;
-  background: rgba(11,11,20,.88); color: #fff;
+  background: rgba(22,24,27,.88); color: #fff;
   font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums;
   padding: 2px 5px; border-radius: 5px;
 }
