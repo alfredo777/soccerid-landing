@@ -49,3 +49,9 @@ a.evento__nombre:hover { color: var(--acento-chico); }
 .duelo__equipo img { width: clamp(40px, 5vw, 68px); height: clamp(40px, 5vw, 68px); object-fit: contain; }
 .duelo__vs { font-size: .42em; font-weight: 700; color: var(--tinta-2); }
 a.partido__equipos:hover { color: var(--acento-chico); }
+
+/* Tabletas y plegables: las tres experiencias en una fila desde 700 px;
+   antes quedaban 2 + 1. */
+@media (min-width: 700px) and (max-width: 1100px) {
+  .experiencias { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

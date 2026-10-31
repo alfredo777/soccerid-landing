@@ -140,7 +140,7 @@
 }
 
 /* Las cifras del podcast son más largas que las demás («84.8 mil h»,
-   «+35.3 mil»): un poco más chicas y en un solo renglón, para que no se
-   partan dentro del recuadro. */
-.cifra__valor { white-space: nowrap; font-size: clamp(32px, 3.1vw, 44px); }
-@media (max-width: 720px) { .cifra__valor { font-size: 44px; } }
+   «+35.3 mil»): en un solo renglón y del tamaño que permite el ancho de su
+   recuadro (unidades cqi), para que nunca se salgan, en ningún equipo. */
+.cifra { container-type: inline-size; }
+.cifra__valor { white-space: nowrap; font-size: clamp(26px, 16cqi, 44px); }

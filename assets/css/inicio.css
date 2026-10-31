@@ -218,9 +218,14 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
    más anchas que altas de 375×667) y se recorre hacia abajo para que las
    caras suban al tercio libre. Nosotros se agranda menos para que el grupo
    completo quepa de lado a lado. */
-@media (max-width: 600px) {
+/* Sólo en teléfonos de hasta 460 px: en el Surface Duo (540) las tarjetas
+   son más anchas que altas y la foto agrandada en alto ya no llenaba el
+   ancho. */
+@media (max-width: 460px) {
   .puerta--tour::before     { background-size: auto 150%; background-position: 35% 82%; }
   .puerta--nosotros::before { background-size: auto 130%; background-position: 44% 100%; }
+}
+@media (max-width: 600px) {
   .puerta--legends::before  { background-position: 52% 20%; }
   /* Cada tarjeta es su propio contenedor: así el texto se compacta según
      el alto real de la tarjeta, no según el de la pantalla. */
@@ -263,3 +268,14 @@ body .lang-btn:active { background: rgba(255,255,255,0.16); }
   .puerta { animation: none; opacity: 1; transform: none; }
   .puerta, .redes-v2__chip { transition: none; }
 }
+
+/* ─── Tabletas y plegables (iPad, Surface Duo, Galaxy Fold) ───────── */
+/* Entre 601 y 1024 px en horizontal, seis tarjetas en dos columnas
+   quedaban muy anchas y bajas: van en tres columnas y dos filas. */
+@media (min-width: 601px) and (max-width: 1024px) and (orientation: landscape) {
+  .puertas { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); }
+}
+/* Cada tarjeta mide su propio alto: cuando es baja, el ícono (decorativo)
+   se encimaba en el nombre de la sección, así que se oculta. */
+@media (max-width: 1024px) { .puerta { container-type: size; } }
+@container (max-height: 210px) { .puerta__icono { display: none; } }

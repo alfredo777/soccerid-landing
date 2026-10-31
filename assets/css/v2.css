@@ -708,3 +708,22 @@ a.relacionado:hover { border-color: var(--tinta); }
 @media (max-width: 720px) {
   .aclaracion { flex-direction: column; text-align: center; gap: 10px; }
 }
+
+/* ─── Rejillas sin tarjetas sueltas (tabletas y plegables) ────────── */
+/* Con el ajuste automático, en anchos intermedios (iPad, Surface Duo,
+   Galaxy Fold abierto) quedaban filas de 3+1 o 2+1. Según cuántas
+   tarjetas haya, la rejilla elige un reparto parejo. */
+@media (min-width: 561px) and (max-width: 1100px) {
+  .cifras:has(> :nth-child(4):last-child),
+  .pilares:has(> :nth-child(4):last-child) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 561px) and (max-width: 699px) {
+  .cifras:has(> :nth-child(3):last-child),
+  .pilares:has(> :nth-child(3):last-child),
+  .recuerdos:has(> :nth-child(3):last-child) { grid-template-columns: minmax(0, 1fr); }
+}
+@media (min-width: 700px) and (max-width: 1100px) {
+  .cifras:has(> :nth-child(3):last-child),
+  .pilares:has(> :nth-child(3):last-child),
+  .recuerdos:has(> :nth-child(3):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
