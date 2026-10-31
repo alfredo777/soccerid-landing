@@ -11,7 +11,7 @@
 Add-Type -AssemblyName System.Drawing
 $raiz = Split-Path $PSScriptRoot -Parent
 $img = Join-Path $raiz 'assets\images'
-$fuentes = @(Get-ChildItem (Join-Path $img 'secciones') -Recurse -Filter *.jpg | Where-Object { $_.Name -match 'portada|^(america|atletico|tigres)-' })
+$fuentes = @(Get-ChildItem (Join-Path $img 'secciones') -Recurse -Filter *.jpg | Where-Object { $_.Name -match 'portada|^(america|atletico|tigres|viaje)-' })
 $fuentes += 'gallery\cup2025\1.jpg', 'gallery\vip\1.jpg', 'gallery\vip\3.jpg' | ForEach-Object { Get-Item (Join-Path $img $_) }
 $W = 1200; $H = 630
 $codec = [Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object MimeType -eq 'image/jpeg'
