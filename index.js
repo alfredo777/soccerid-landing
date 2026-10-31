@@ -1872,8 +1872,15 @@ app.get('/:lang/tour', rutaV2('tour', async (lang) => {
   // Prensa: los medios destacados a la vista, el resto detrás de «Ver más».
   // Sin ninguna destacada, se ven todas.
   const notas = (t.medios && t.medios.notas) || [];
-  const arriba = notas.filter(n => n.destacada);
-  const prensa = arriba.length ? { arriba, mas: notas.filter(n => !n.destacada) } : { arriba: notas, mas: [] };
+  // A la vista van seis como máximo (tres filas parejas de dos, sin una
+  // nota suelta al final); las destacadas que sobren pasan a «Ver más».
+  const VISIBLES = 6;
+  const destacadas = notas.filter(n => n.destacada);
+  const base = destacadas.length ? destacadas : notas;
+  const prensa = {
+    arriba: base.slice(0, VISIBLES),
+    mas: base.slice(VISIBLES).concat(destacadas.length ? notas.filter(n => !n.destacada) : [])
+  };
   return { t, c, ediciones, wa, prensa, ogImagen: ogDe(c.fotoPortada), tituloPagina: `${t.portada.titulo} · SOCCER iD`, descripcionPagina: t.portada.descripcion };
 }));
 
