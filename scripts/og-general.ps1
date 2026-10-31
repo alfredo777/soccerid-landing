@@ -1,6 +1,6 @@
 # Imagen general para compartir (og-image.jpg): la foto aprobada del
 # SOCCER iD TOUR al atardecer, a 1200 × 630, con el logo blanco de SOCCER iD
-# en la esquina superior izquierda.
+# en la esquina superior derecha.
 #
 # Uso:  pwsh scripts/og-general.ps1
 #
@@ -19,11 +19,11 @@ $g.SmoothingMode = [Drawing.Drawing2D.SmoothingMode]::HighQuality
 $g.DrawImage($foto, 0, 0, 1200, 630)
 
 # Sombra: un degradado oscuro desde la esquina, apenas visible.
-$sombra = New-Object Drawing.Drawing2D.LinearGradientBrush (New-Object Drawing.Point 0, 0), (New-Object Drawing.Point 620, 260), ([Drawing.Color]::FromArgb(150, 0, 0, 0)), ([Drawing.Color]::FromArgb(0, 0, 0, 0))
-$g.FillRectangle($sombra, 0, 0, 620, 260)
+$sombra = New-Object Drawing.Drawing2D.LinearGradientBrush (New-Object Drawing.Point 1200, 0), (New-Object Drawing.Point 580, 260), ([Drawing.Color]::FromArgb(150, 0, 0, 0)), ([Drawing.Color]::FromArgb(0, 0, 0, 0))
+$g.FillRectangle($sombra, 580, 0, 620, 260)
 
 $ancho = 300; $alto = [int]($logo.Height * $ancho / $logo.Width); $margen = 48
-$g.DrawImage($logo, $margen, $margen, $ancho, $alto)
+$g.DrawImage($logo, 1200 - $margen - $ancho, $margen, $ancho, $alto)
 
 $codec = [Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object MimeType -eq 'image/jpeg'
 $par = New-Object Drawing.Imaging.EncoderParameters 1
