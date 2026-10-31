@@ -92,7 +92,7 @@ img { display: block; max-width: 100%; }
 .nav__pildora {
   pointer-events: auto;
   display: flex; align-items: center; gap: 8px;
-  background: rgba(19, 19, 31, 0.92);
+  background: rgba(31, 34, 38, 0.92);
   border: 1px solid var(--linea);
   border-radius: 999px;
   padding: 7px 7px 7px 22px;
@@ -506,7 +506,7 @@ a.pilar:hover { border-color: var(--tinta); }
   right: 18px; bottom: calc(18px + env(safe-area-inset-bottom, 0px));
   width: 48px; height: 48px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(19, 19, 31, 0.92); color: var(--tinta);
+  background: rgba(31, 34, 38, 0.92); color: var(--tinta);
   border: 1px solid var(--linea);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   transition: background .15s, border-color .15s, color .15s, transform .15s;
