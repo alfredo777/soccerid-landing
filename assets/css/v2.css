@@ -646,7 +646,6 @@ a.pilar, .prensa__nota, .via, .entre__ir, .entre__todas, .nota, .edicion, a.alia
 /* Itinerario de un viaje (views/v2/viaje.hbs): una columna por día, con la
    línea de tiempo a la izquierda. */
 .itinerario { display: flex; flex-direction: column; gap: 22px; }
-.itinerario__aviso { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; font-size: 14px; color: var(--tinta-2); margin-bottom: 22px; }
 .itinerario__dia { display: grid; grid-template-columns: 170px 1fr; gap: 24px; }
 .itinerario__fecha { font-size: 15px; font-weight: 800; color: var(--acento-chico); padding-top: 2px; }
 .itinerario__pasos { list-style: none; border-left: 2px solid var(--linea); padding-left: 22px; display: flex; flex-direction: column; gap: 16px; }
@@ -682,4 +681,24 @@ a.relacionado:hover { border-color: var(--tinta); }
   .cifra, .pilar { text-align: center; }
   .cifra__icono { margin-inline: auto; }
   .premio__cab { justify-content: center; }
+}
+
+/* ─── Aclaración: la nota que va debajo de un bloque ──────────────── */
+/* Recuadro punteado con una pastilla y el texto, el de «En 2027, SOCCER iD
+   CUP evoluciona a SOCCER iD TOUR». Todas las notas de ese tipo lo usan
+   (León, 30/10/2026), nunca como texto suelto. En el teléfono, centrada. */
+.aclaracion {
+  display: flex; gap: 14px; align-items: center;
+  margin: 26px 0; padding: 16px 20px;
+  border: 1.5px dashed var(--linea); border-radius: var(--radio-sm);
+  font-size: 14px; color: var(--tinta-2); text-wrap: pretty;
+}
+.aclaracion .pastilla { flex: none; }
+.aclaracion b { color: var(--tinta); }
+/* Pegada al bloque que aclara. */
+.aclaracion--pegada { margin: 14px 0 0; }
+/* La primera cosa de su bloque (el aviso del itinerario). */
+.aclaracion--arriba { margin: 0 0 22px; }
+@media (max-width: 720px) {
+  .aclaracion { flex-direction: column; text-align: center; gap: 10px; }
 }
