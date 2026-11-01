@@ -4,7 +4,7 @@
 |---|---|---|
 | 01 | Home · Legends: «Encuentros exclusivos con leyendas del fútbol» | Hecho (EN: «Exclusive meet-ups with football legends») |
 | 02 | Nosotros · Quiénes somos en dos párrafos con sus negritas | Hecho, con su traducción |
-| 03 | Tour · Nuestros eventos | Hecho (default de `lib/sitioTour.js`; si se guardó texto en el admin, manda el admin) |
+| 03 | Tour · Nuestros eventos | Hecho; reemplazado el 01/11/2026 por «**Hacemos que cada partido suceda**. Coordinamos logística, comercialización y distribución…» (default de `lib/sitioTour.js`; si se guarda texto en el admin, manda el admin) |
 | 04 | EN · «What’s your dream match to watch live?» | Hecho (cierre de Travel) |
 | 05 | EN · botón «Become a sponsor» | Hecho (Podcast) |
 | 06 | Vista previa general: título, descripción e imagen | Hecho: `ui_translations.json` (og/twitter). Imagen: la del SOCCER iD TOUR al atardecer con la lona iD en media cancha y el logo arriba a la derecha (`scripts/og-general.ps1`); el usuario la prefirió a la del header de Tour (01/11/2026) |
