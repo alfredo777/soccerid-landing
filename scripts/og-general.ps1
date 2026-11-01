@@ -1,6 +1,6 @@
-# Imagen general para compartir (og-image.jpg): la foto del header de Tour
-# (jugadores de espaldas frente a su afición; aprobada por León el
-# 31/10/2026), a 1200 × 630, con el logo blanco de SOCCER iD
+# Imagen general para compartir (og-image.jpg): la foto aprobada del
+# SOCCER iD TOUR al atardecer, con la lona iD en media cancha (la elegida
+# para compartir, 01/11/2026), a 1200 × 630, con el logo blanco de SOCCER iD
 # en la esquina superior derecha.
 #
 # Uso:  pwsh scripts/og-general.ps1
@@ -11,7 +11,7 @@
 Add-Type -AssemblyName System.Drawing
 $raiz = Split-Path $PSScriptRoot -Parent
 $img = Join-Path $raiz 'assets\images'
-$foto = [Drawing.Image]::FromFile((Join-Path $img 'og\secciones\tour\portada.jpg'))
+$foto = [Drawing.Image]::FromFile((Join-Path $img 'og\secciones\travel\viaje-soccerid-tour-2027.jpg'))
 $logo = [Drawing.Image]::FromFile((Join-Path $img 'logo-horizontal-blanco.png'))
 $b = New-Object Drawing.Bitmap 1200, 630
 $g = [Drawing.Graphics]::FromImage($b)

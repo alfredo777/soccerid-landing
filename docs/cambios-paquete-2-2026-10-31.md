@@ -7,7 +7,7 @@
 | 03 | Tour · Nuestros eventos | Hecho (default de `lib/sitioTour.js`; si se guardó texto en el admin, manda el admin) |
 | 04 | EN · «What’s your dream match to watch live?» | Hecho (cierre de Travel) |
 | 05 | EN · botón «Become a sponsor» | Hecho (Podcast) |
-| 06 | Vista previa general: título, descripción e imagen | Hecho: `ui_translations.json` (og/twitter) y `og-image.jpg` desde la foto del header de Tour (`scripts/og-general.ps1`, con el logo en la esquina superior derecha) |
+| 06 | Vista previa general: título, descripción e imagen | Hecho: `ui_translations.json` (og/twitter). Imagen: la del SOCCER iD TOUR al atardecer con la lona iD en media cancha y el logo arriba a la derecha (`scripts/og-general.ps1`); el usuario la prefirió a la del header de Tour (01/11/2026) |
 | 07 | Podcast · párrafo de «Sé patrocinador» a todo el ancho | Hecho (se quitó el tope de 760 px) |
 | 08 | Podcast · 84.8K h y +35.3K en español | Hecho |
 | 09 | Responsive iPhone Duo | Revisado en emulación; falta el dispositivo real |
