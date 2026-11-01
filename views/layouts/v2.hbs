@@ -92,9 +92,9 @@
     <ol class="menu__lista">
       {{!-- El inicio va primero: en el teléfono la píldora queda tapada por
             el menú y el logo solo no se lee como botón. --}}
-      <li><a href="/{{lang}}" class="menu__item"><span class="menu__num" aria-hidden="true">←</span><span class="menu__nombre">{{#if isEs}}Inicio{{else}}Home{{/if}}</span></a></li>
+      <li><a href="/{{lang}}" class="menu__item"><span class="menu__nombre">{{#if isEs}}Inicio{{else}}Home{{/if}}</span></a></li>
       {{#each secciones}}
-      <li><a href="{{this.url}}" class="menu__item"><span class="menu__num">{{this.num}}</span><span class="menu__nombre">{{this.nombre}}</span><span class="menu__flecha" aria-hidden="true">↗</span></a></li>
+      <li><a href="{{this.url}}" class="menu__item"><span class="menu__nombre">{{this.nombre}}</span><span class="menu__flecha" aria-hidden="true">↗</span></a></li>
       {{/each}}
     </ol>
     <div class="menu__redes">

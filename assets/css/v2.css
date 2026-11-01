@@ -152,7 +152,6 @@ html.con-menu, html.con-menu body { overflow: hidden; }
   display: flex; align-items: baseline; gap: 22px;
   padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.22);
 }
-.menu__num { font-size: 14px; font-weight: 700; color: var(--acento-chico); width: 28px; }
 .menu__nombre { font-size: clamp(30px, 6vw, 56px); font-weight: 800; letter-spacing: -.02em; line-height: 1.05; flex: 1; }
 .menu__flecha { font-size: 24px; opacity: .7; }
 .menu__item:hover .menu__nombre { color: var(--acento); }
@@ -729,13 +728,10 @@ a.relacionado:hover { border-color: var(--tinta); }
 }
 
 /* ─── Menú completo en pantallas bajas y plegables ────────────────── */
-/* Los números iban alineados a la línea de base del nombre (que es mucho
-   más grande) y quedaban caídos, despegados de él: ahora van centrados en
-   su renglón. El nombre se mide también con el alto de la pantalla, para
-   que el menú quepa en horizontal (iPhone Duo, Fold, iPad) sin tener que
-   desplazarlo. */
+/* Sin números (31/10/2026): sólo el nombre de cada sección. El nombre se
+   mide también con el alto de la pantalla, para que el menú quepa en
+   horizontal (iPhone Duo, Fold, iPad) sin tener que desplazarlo. */
 .menu__item { align-items: center; }
-.menu__num { flex: none; font-variant-numeric: tabular-nums; }
 .menu__nombre { font-size: clamp(24px, min(max(30px, 6vw), 7.2vh), 56px); }
 @media (max-height: 640px) {
   .menu__lista { margin-top: 20px; }
