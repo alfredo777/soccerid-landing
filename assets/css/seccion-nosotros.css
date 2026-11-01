@@ -110,3 +110,4 @@
 /* ─── Premios ─────────────────────────────────────────────────────── */
 .premio__cab { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .premio__icono { width: 26px; height: 26px; color: var(--acento-chico); flex: none; }
+.somos__texto p + p { margin-top: 1em; }

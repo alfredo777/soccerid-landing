@@ -74,3 +74,10 @@
   .tour27__ventana { margin-right: 0; }
   .edicion__pie { justify-content: center; gap: 18px; flex-wrap: wrap; }
 }
+
+/* Tabletas, plegables y el iPhone Duo abierto (700–900 px): las tres
+   ediciones en una fila; en una sola columna las fotos quedaban enormes. */
+@media (min-width: 700px) and (max-width: 900px) {
+  .ediciones { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .edicion__anio { font-size: 34px; }
+}

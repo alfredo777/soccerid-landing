@@ -144,3 +144,8 @@
    recuadro (unidades cqi), para que nunca se salgan, en ningún equipo. */
 .cifra { container-type: inline-size; }
 .cifra__valor { white-space: nowrap; font-size: clamp(26px, 16cqi, 44px); }
+
+/* «Sé patrocinador»: el párrafo usa todo el ancho de la sección (antes
+   llevaba un tope de 760 px y bajaba de línea con espacio libre a la
+   derecha, 31/10/2026). Los saltos sólo cuando el ancho lo pide. */
+.podcast__patrocinio-intro { max-width: none; margin-bottom: 26px; }

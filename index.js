@@ -1707,7 +1707,7 @@ function seccionesV2(lang) {
       lema: es ? 'Viajes a los grandes eventos del fútbol mundial' : 'Trips to the biggest events in world football', barra: '#4FD6FF' },
     { slug: 'legends', num: '03', marca: true, color: 'legends', nombre: 'Legends', submarca: 'SOCCER iD Legends',
       linea: es ? 'Las figuras que hicieron historia, de cerca.' : 'The players who made history, up close.',
-      lema: es ? 'Convive con leyendas del fútbol' : 'Meet football legends', barra: '#FFD84D' },
+      lema: es ? 'Encuentros exclusivos con leyendas del fútbol' : 'Exclusive meet-ups with football legends', barra: '#FFD84D' },
     { slug: 'podcast', num: '04', marca: true, color: 'podcast', nombre: 'Podcast', submarca: 'SOCCER iD Podcast',
       linea: es ? 'Conversaciones de fútbol, sin prisa.' : 'Football conversations, no rush.',
       lema: es ? 'Charlas, entrevistas y análisis de fútbol' : 'Football talks, interviews and analysis', barra: '#FF4D4D' },
@@ -2104,8 +2104,8 @@ app.get('/:lang/podcast', rutaV2('podcast', async (lang, data) => {
   const cifras = lang !== 'en' ? [
     { valor: String(crudos.length), etiqueta: 'Episodios' },
     { valor: '7 M', etiqueta: 'Visualizaciones' },
-    { valor: '84.8 mil h', etiqueta: 'Tiempo de visualización' },
-    { valor: '+35.3 mil', etiqueta: 'Suscriptores ganados' }
+    { valor: '84.8K h', etiqueta: 'Tiempo de visualización' },
+    { valor: '+35.3K', etiqueta: 'Suscriptores ganados' }
   ] : [
     { valor: String(crudos.length), etiqueta: 'Episodes' },
     { valor: '7M', etiqueta: 'Views' },
