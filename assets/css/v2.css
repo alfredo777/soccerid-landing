@@ -727,3 +727,18 @@ a.relacionado:hover { border-color: var(--tinta); }
   .pilares:has(> :nth-child(3):last-child),
   .recuerdos:has(> :nth-child(3):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
+/* ─── Menú completo en pantallas bajas y plegables ────────────────── */
+/* Los números iban alineados a la línea de base del nombre (que es mucho
+   más grande) y quedaban caídos, despegados de él: ahora van centrados en
+   su renglón. El nombre se mide también con el alto de la pantalla, para
+   que el menú quepa en horizontal (iPhone Duo, Fold, iPad) sin tener que
+   desplazarlo. */
+.menu__item { align-items: center; }
+.menu__num { flex: none; font-variant-numeric: tabular-nums; }
+.menu__nombre { font-size: clamp(24px, min(max(30px, 6vw), 7.2vh), 56px); }
+@media (max-height: 640px) {
+  .menu__lista { margin-top: 20px; }
+  .menu__item { padding: 11px 0; }
+  .menu__redes { padding-top: 20px; }
+}
