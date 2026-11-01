@@ -75,7 +75,7 @@
 <section class="seccion envoltura" id="eventos-pasados">
   <p class="rotulo">{{#if isEs}}Eventos pasados{{else}}Past events{{/if}}</p>
   <div class="recuerdos">
-    {{#each legends.pasados}}{{> recuerdo}}{{/each}}
+    {{#each legends.pasados}}{{> recuerdo sinDetalle=true}}{{/each}}
   </div>
 </section>
 {{/if}}
