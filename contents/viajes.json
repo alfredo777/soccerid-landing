@@ -7,14 +7,16 @@
         "nombre": "SOCCER iD TOUR",
         "dateISO": "2027-03-27",
         "fechaTexto": "27 de marzo de 2027",
-        "foto": "/assets/images/secciones/travel/viaje-soccerid-tour-2027.jpg"
+        "foto": "/assets/images/secciones/travel/viaje-soccerid-tour-2027.jpg",
+        "sede": "Houston, Estados Unidos"
       },
       {
         "slug": "final-nations-league-2027",
         "nombre": "Final de CONCACAF Nations League",
         "dateISO": "2027-03-28",
         "fechaTexto": "28 de marzo de 2027",
-        "foto": "/assets/images/secciones/travel/viaje-nations-league-2027.jpg"
+        "foto": "/assets/images/secciones/travel/viaje-nations-league-2027.jpg",
+        "sede": "Los Ángeles, Estados Unidos"
       },
       {
         "slug": "el-clasico-2027",
@@ -29,7 +31,8 @@
         "nombre": "Final de UEFA Champions League",
         "dateISO": "2027-06-05",
         "fechaTexto": "5 de junio de 2027",
-        "foto": "/assets/images/secciones/travel/viaje-champions-2027.jpg"
+        "foto": "/assets/images/secciones/travel/viaje-champions-2027.jpg",
+        "sede": "Madrid, España"
       }
     ],
     "pasados": [
@@ -58,7 +61,9 @@
           ],
           "momentos": [],
           "testimonios": []
-        }
+        },
+        "lugar": "Múnich, Alemania",
+        "fecha": "2025"
       },
       {
         "slug": "final-copa-libertadores-2023",
@@ -89,7 +94,9 @@
           ],
           "momentos": [],
           "testimonios": []
-        }
+        },
+        "lugar": "Río de Janeiro, Brasil",
+        "fecha": "2023"
       },
       {
         "slug": "final-mundial-de-clubes-2025",
@@ -116,7 +123,9 @@
           ],
           "momentos": [],
           "testimonios": []
-        }
+        },
+        "lugar": "Nueva Jersey, Estados Unidos",
+        "fecha": "2025"
       }
     ]
   },
@@ -127,14 +136,16 @@
         "nombre": "SOCCER iD TOUR",
         "dateISO": "2027-03-27",
         "fechaTexto": "March 27, 2027",
-        "foto": "/assets/images/secciones/travel/viaje-soccerid-tour-2027.jpg"
+        "foto": "/assets/images/secciones/travel/viaje-soccerid-tour-2027.jpg",
+        "sede": "Houston, United States"
       },
       {
         "slug": "final-nations-league-2027",
         "nombre": "CONCACAF Nations League Final",
         "dateISO": "2027-03-28",
         "fechaTexto": "March 28, 2027",
-        "foto": "/assets/images/secciones/travel/viaje-nations-league-2027.jpg"
+        "foto": "/assets/images/secciones/travel/viaje-nations-league-2027.jpg",
+        "sede": "Los Angeles, United States"
       },
       {
         "slug": "el-clasico-2027",
@@ -149,7 +160,8 @@
         "nombre": "UEFA Champions League Final",
         "dateISO": "2027-06-05",
         "fechaTexto": "June 5, 2027",
-        "foto": "/assets/images/secciones/travel/viaje-champions-2027.jpg"
+        "foto": "/assets/images/secciones/travel/viaje-champions-2027.jpg",
+        "sede": "Madrid, Spain"
       }
     ],
     "pasados": [
@@ -178,7 +190,9 @@
           ],
           "momentos": [],
           "testimonios": []
-        }
+        },
+        "lugar": "Munich, Germany",
+        "fecha": "2025"
       },
       {
         "slug": "final-copa-libertadores-2023",
@@ -209,7 +223,9 @@
           ],
           "momentos": [],
           "testimonios": []
-        }
+        },
+        "lugar": "Rio de Janeiro, Brazil",
+        "fecha": "2023"
       },
       {
         "slug": "final-mundial-de-clubes-2025",
@@ -236,7 +252,9 @@
           ],
           "momentos": [],
           "testimonios": []
-        }
+        },
+        "lugar": "New Jersey, United States",
+        "fecha": "2025"
       }
     ]
   }

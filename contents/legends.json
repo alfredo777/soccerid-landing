@@ -7,15 +7,17 @@
         "dateISO": "2027-03-26",
         "nombre": "Leyendas · SOCCER iD TOUR",
         "descripcion": "**Meet & Greet y cena privada** con leyendas del fútbol, previo al SOCCER iD TOUR.",
-        "invitados": "Por anunciar",
-        "sede": "Por anunciar"
+        "invitados": "por anunciar",
+        "sede": "por anunciar",
+        "formato": "Meet & Greet y cena privada"
       },
       {
         "dateISO": "2027-03-27",
         "nombre": "Leyendas · Nations League",
         "descripcion": "**Meet & Greet y cena privada** con leyendas del fútbol, previo a la final de CONCACAF Nations League.",
-        "invitados": "Por anunciar",
-        "sede": "Por anunciar"
+        "invitados": "por anunciar",
+        "sede": "por anunciar",
+        "formato": "Meet & Greet y cena privada"
       }
     ],
     "pasados": [
@@ -209,15 +211,17 @@
         "dateISO": "2027-03-26",
         "nombre": "Legends · SOCCER iD TOUR",
         "descripcion": "**Meet & Greet and private dinner** with football legends, ahead of the SOCCER iD TOUR.",
-        "invitados": "To be announced",
-        "sede": "To be announced"
+        "invitados": "to be announced",
+        "sede": "to be announced",
+        "formato": "Meet & Greet and private dinner"
       },
       {
         "dateISO": "2027-03-27",
         "nombre": "Legends · Nations League",
         "descripcion": "**Meet & Greet and private dinner** with football legends, ahead of the CONCACAF Nations League final.",
-        "invitados": "To be announced",
-        "sede": "To be announced"
+        "invitados": "to be announced",
+        "sede": "to be announced",
+        "formato": "Meet & Greet and private dinner"
       }
     ],
     "pasados": [

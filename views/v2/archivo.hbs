@@ -10,7 +10,7 @@
 <section class="seccion envoltura">
   {{#if lista.length}}
   <div class="recuerdos">
-    {{#each lista}}{{> recuerdo}}{{/each}}
+    {{#each lista}}{{> recuerdo sinDetalle=true}}{{/each}}
   </div>
   {{else}}
   <p class="vacio">{{#if isEs}}Todavía no hay nada en el archivo.{{else}}Nothing in the archive yet.{{/if}}</p>

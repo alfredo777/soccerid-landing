@@ -69,7 +69,8 @@
       <div class="evento__fecha"><div class="evento__dia">{{this.dia}}</div><div class="evento__mes">{{this.mes}}</div></div>
       <div>
         <a class="evento__nombre" href="/{{../lang}}/viaje/{{this.slug}}">{{this.nombre}}</a>
-        <div class="evento__meta">{{this.fechaTexto}}</div>
+        {{!-- La fecha ya va en el recuadro: aquí, la sede (01/11/2026). --}}
+        <div class="evento__meta">{{#if this.sede}}{{this.sede}}{{else}}{{this.fechaTexto}}{{/if}}</div>
       </div>
       <a class="boton" href="/{{../lang}}/viaje/{{this.slug}}">{{#if ../isEs}}Ver viaje{{else}}View trip{{/if}} <span class="flecha">→</span></a>
     </article>
@@ -83,7 +84,7 @@
 <section class="seccion envoltura">
   <p class="rotulo">{{#if isEs}}Viajes pasados{{else}}Past trips{{/if}}</p>
   <div class="recuerdos">
-    {{#each viajesPasados}}{{> recuerdo}}{{/each}}
+    {{#each viajesPasados}}{{> recuerdo sinDetalle=true}}{{/each}}
   </div>
   <div class="portada__acciones travel__todos">
     <a class="boton" href="/{{lang}}/travel/viajes-pasados">{{#if isEs}}Ver todos los viajes{{else}}See all trips{{/if}} <span class="flecha">→</span></a>

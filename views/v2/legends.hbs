@@ -55,9 +55,13 @@
       <div class="evento__fecha"><div class="evento__dia">{{this.dia}}</div><div class="evento__mes">{{this.mes}}</div></div>
       <div>
         <div class="evento__nombre">{{this.nombre}}{{#if this.muestra}}<span class="pastilla pastilla--muestra">{{#if ../isEs}}Muestra{{else}}Sample{{/if}}</span>{{/if}}</div>
-        {{#if this.descripcion}}
-        <div class="evento__meta">{{negritas this.descripcion}}</div>
-        <div class="evento__meta">{{#if ../isEs}}Leyendas invitadas{{else}}Guest legends{{/if}}: {{this.invitados}} · {{#if ../isEs}}Sede{{else}}Venue{{/if}}: {{this.sede}}</div>
+        {{#if this.formato}}
+        {{!-- Sólo lo esencial (01/11/2026): formato, leyendas y sede. --}}
+        <ul class="evento__datos">
+          <li><strong>{{this.formato}}</strong></li>
+          <li><strong>{{#if ../isEs}}Leyendas{{else}}Legends{{/if}}</strong> {{this.invitados}}</li>
+          <li><strong>{{#if ../isEs}}Sede{{else}}Venue{{/if}}</strong> {{this.sede}}</li>
+        </ul>
         {{else}}
         <div class="evento__meta">{{#if this.tipo}}{{this.tipo}} · {{/if}}{{this.lugar}}{{#if this.hora}} · {{this.hora}}{{/if}}</div>
         {{/if}}
