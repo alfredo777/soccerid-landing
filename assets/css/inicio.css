@@ -169,7 +169,7 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
    mismo velo se veía viva y contrastada. Velo propio, calibrado midiendo
    cielo, gradas y pasto contra la captura de web, para que quede igual
    de mate. */
-@media (max-width: 1024px) {
+@media (max-width: 1024px), (hover: none) {
   /* Más mate que en web: menos saturación y contraste, y un velo gris
      casi parejo, para que el fondo acompañe y no compita con las cards. */
   .hero-image { filter: saturate(0.45) brightness(0.95) contrast(0.85) sepia(0.15); }
@@ -178,7 +178,7 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 /* La misma idea que en escritorio: isotipo, lema y las seis puertas en la
    primera pantalla, en dos columnas y tres filas. La banda de abajo es de
    la píldora del partido. */
-@media (max-width: 1024px) {
+@media (max-width: 1024px), (hover: none) {
   /* La misma columna, con menos aire. */
   .hero-content { gap: clamp(14px, 2.4vh, 26px); padding: clamp(18px, 3.4vh, 34px) 16px clamp(16px, 2.6vh, 28px); }
   .hero-logo-text img { width: 72px; height: 72px; }  /* Dos columnas por tres filas que llenan lo que queda de pantalla. */
@@ -206,7 +206,7 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 /* Tableta (tarjetas anchas y bajas): manda la altura de las caras. A 1024 la
    tarjeta de Legends, centrada, enseñaba el pecho de Figo sin su cabeza, y
    la de Podcast cortaba el letrero iD. */
-@media (max-width: 1024px) {
+@media (max-width: 1024px), (hover: none) {
   .puerta--legends::before   { background-position: 52% 18%; }
   .puerta--podcast::before   { background-position: 50% 35%; }
   .puerta--travel::before    { background-position: 50% 45%; }
@@ -269,7 +269,7 @@ body .lang-btn:active { background: rgba(255,255,255,0.16); }
 
 /* Áreas de toque de 44 px en celular sin agrandar lo que se ve: los
    círculos de redes miden 30 y los botones de idioma 25 de alto. */
-@media (max-width: 1024px) {
+@media (max-width: 1024px), (hover: none) {
   .redes-v2__chip, body .lang-btn { position: relative; }
   .redes-v2__chip::after { content: ''; position: absolute; inset: -7px; }
   body .lang-btn::after { content: ''; position: absolute; inset: -10px -2px; }
@@ -283,21 +283,21 @@ body .lang-btn:active { background: rgba(255,255,255,0.16); }
 /* ─── Tabletas y plegables (iPad, Surface Duo, Galaxy Fold) ───────── */
 /* Entre 601 y 1024 px en horizontal, seis tarjetas en dos columnas
    quedaban muy anchas y bajas: van en tres columnas y dos filas. */
-@media (min-width: 601px) and (max-width: 1024px) and (orientation: landscape) {
+@media (min-width: 820px) and (orientation: landscape) {
   .puertas { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); }
 }
 /* Cada tarjeta mide su propio alto: cuando es baja, el ícono (decorativo)
    se encimaba en el nombre de la sección, así que se oculta. */
-@media (max-width: 1024px) { .puerta { container-type: size; } }
+@media (max-width: 1024px), (hover: none) { .puerta { container-type: size; } }
 @container (max-height: 210px) { .puerta__icono { display: none; } }
 
 /* Pantallas bajas (iPhone Duo cerrado, iPhone SE, Galaxy Fold cerrado): las
    tarjetas no bajan de 140 px de alto. Antes se encogían hasta ~90 px para
    caber en una pantalla y el texto tapaba casi toda la foto; ahora, si no
    caben, la página baja un poco. En horizontal (3 × 2) el mínimo es 120. */
-@media (max-width: 1024px) {
+@media (max-width: 1024px), (hover: none) {
   .puertas { flex: 1 0 auto; grid-template-rows: repeat(3, minmax(140px, 1fr)); }
 }
-@media (min-width: 601px) and (max-width: 1024px) and (orientation: landscape) {
+@media (min-width: 820px) and (orientation: landscape) {
   .puertas { grid-template-rows: repeat(2, minmax(120px, 1fr)); }
 }
