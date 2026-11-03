@@ -12,18 +12,20 @@
     
     <style>
         /* --- Importación de la Fuente --- */
-        @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700;900&display=swap');
+                @font-face { font-family: 'Raleway'; src: url('/assets/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaooCP.ttf') format('truetype'); font-weight: 400; font-display: swap; }
+        @font-face { font-family: 'Raleway'; src: url('/assets/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVs9pYCP.ttf') format('truetype'); font-weight: 700; font-display: swap; }
+        @font-face { font-family: 'Raleway'; src: url('/assets/fonts/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVtzpYCP.ttf') format('truetype'); font-weight: 900; font-display: swap; }
 
         /* --- Variables de Color y Configuración General --- */
         :root {
-            --color-purple: #0E0D4C;
-            --color-background: #0a0a0a;
-            --color-surface: rgba(26, 26, 26, 0.85); /* Ligeramente más opaco para legibilidad */
+            --color-purple: #1F2226;
+            --color-background: #16181B;
+            --color-surface: #1F2226; /* Ligeramente más opaco para legibilidad */
             --color-primary-text: #ffffff;
-            --color-secondary-text: #a0a0a0;
-            --color-border: #333333;
+            --color-secondary-text: #C3C5CA;
+            --color-border: rgba(255, 255, 255, 0.12);
             --color-accent: #ffffff;
-            --color-link: #6E6CE4; /* Un color de enlace que resalte */
+            --color-link: #8F8CFF; /* enlace legible sobre el gris */
         }
 
         * {
@@ -33,7 +35,7 @@
         }
 
         body {
-            font-family: 'Raleway', sans-serif;
+            font-family: 'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             color: var(--color-primary-text);
             display: flex;
             justify-content: center;
@@ -41,9 +43,7 @@
             min-height: 100vh;
             padding: 4rem 0; /* Espacio vertical para scroll */
             overflow-x: hidden;
-            background: radial-gradient(ellipse at center, var(--color-purple), var(--color-background));
-            background-size: 200% 200%;
-            animation: background-pan 25s linear infinite;
+            background: var(--color-background);
         }
 
         /* --- Contenedor Principal --- */
