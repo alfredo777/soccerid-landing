@@ -6,7 +6,7 @@
       {
         "dateISO": "2027-03-26",
         "nombre": "Leyendas · SOCCER iD TOUR",
-        "descripcion": "**Meet & Greet y cena privada** con leyendas del fútbol, previo al SOCCER iD TOUR.",
+        "descripcion": "**Meet & Greet y cena privada** con leyendas del futbol, previo al SOCCER iD TOUR.",
         "invitados": "por anunciar",
         "sede": "por anunciar",
         "formato": "Meet & Greet y cena privada"
@@ -14,7 +14,7 @@
       {
         "dateISO": "2027-03-27",
         "nombre": "Leyendas · Nations League",
-        "descripcion": "**Meet & Greet y cena privada** con leyendas del fútbol, previo a la final de CONCACAF Nations League.",
+        "descripcion": "**Meet & Greet y cena privada** con leyendas del futbol, previo a la final de CONCACAF Nations League.",
         "invitados": "por anunciar",
         "sede": "por anunciar",
         "formato": "Meet & Greet y cena privada"
@@ -32,7 +32,7 @@
         "portada": "/assets/images/secciones/legends/portada-figo.jpg",
         "cierre": "/assets/images/secciones/legends/cierre.jpg",
         "ficha": {
-          "experiencia": "Vivimos dos encuentros con Luis Figo en Monterrey: un **Meet & Greet en Agencia Fashion Drive** y una **cena en el Hotel Quinta Real Monterrey**. Ambas experiencias incluyeron foto y firma de autógrafos para llevarse un recuerdo de una leyenda del fútbol.",
+          "experiencia": "Vivimos dos encuentros con Luis Figo en Monterrey: un **Meet & Greet en Agencia Fashion Drive** y una **cena en el Hotel Quinta Real Monterrey**. Ambas experiencias incluyeron foto y firma de autógrafos para llevarse un recuerdo de una leyenda del futbol.",
           "queVivimos": [
             {
               "titulo": "Meet & Greet",
@@ -126,7 +126,7 @@
         "portada": "/assets/images/secciones/legends/roberto-carlos-portada.jpg",
         "cierre": "/assets/images/secciones/legends/cierre.jpg",
         "ficha": {
-          "experiencia": "Compartimos una **cena privada con Roberto Carlos** en un restaurante de Madrid. Una oportunidad para convivir con una leyenda del fútbol, **tomarse una foto y llevarse un recuerdo autografiado** del encuentro.",
+          "experiencia": "Compartimos una **cena privada con Roberto Carlos** en un restaurante de Madrid. Una oportunidad para convivir con una leyenda del futbol, **tomarse una foto y llevarse un recuerdo autografiado** del encuentro.",
           "queVivimos": [
             {
               "titulo": "Cena privada",
@@ -156,7 +156,7 @@
         "portada": "/assets/images/secciones/legends/enrique-borja-portada.jpg",
         "cierre": "/assets/images/secciones/legends/cierre.jpg",
         "ficha": {
-          "experiencia": "Nos reunimos con Enrique Borja en un restaurante de Miami para compartir **una comida y una firma de autógrafos**. Un encuentro cercano con una figura del fútbol mexicano, en un ambiente de convivencia entre aficionados.",
+          "experiencia": "Nos reunimos con Enrique Borja en un restaurante de Miami para compartir **una comida y una firma de autógrafos**. Un encuentro cercano con una figura del futbol mexicano, en un ambiente de convivencia entre aficionados.",
           "queVivimos": [
             {
               "titulo": "Comida con una leyenda",

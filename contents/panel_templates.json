@@ -8,7 +8,7 @@
       "alt": "Deportistas",
       "gallery": [
         { "src": "/assets/images/gallery/somos/1.PNG?w=600", "alt": "Estadio lleno" },
-        { "src": "/assets/images/gallery/somos/2.png?w=600", "alt": "Partido de fútbol" },
+        { "src": "/assets/images/gallery/somos/2.png?w=600", "alt": "Partido de futbol" },
         { "src": "/assets/images/gallery/somos/3.png?w=600", "alt": "Aficionados celebrando" },
         { "src": "/assets/images/gallery/somos/4.JPG?w=600", "alt": "Campo de juego" },
         { "src": "/assets/images/gallery/somos/5.JPG?w=600", "alt": "Gol celebración" },
@@ -88,8 +88,8 @@
           "id": "futbol-amateur-liga-mx-visibilidad",
           "image": "/assets/images/news/futbol-amateur-visibilidad.jpg",
           "source": "cionoticias.tv",
-          "title": "Del fútbol amateur a la Liga MX: ¿por qué la visibilidad es el mayor obstáculo para los jóvenes?",
-          "excerpt": "Cada año miles de jóvenes mexicanos sueñan con llegar al fútbol profesional, pero el desafío no comienza cuando un visor los observa, sino en el acceso a espacios de formación y a competir de manera constante.",
+          "title": "Del futbol amateur a la Liga MX: ¿por qué la visibilidad es el mayor obstáculo para los jóvenes?",
+          "excerpt": "Cada año miles de jóvenes mexicanos sueñan con llegar al futbol profesional, pero el desafío no comienza cuando un visor los observa, sino en el acceso a espacios de formación y a competir de manera constante.",
           "type": "link",
           "url": "https://cionoticias.tv/2026/08/12/del-futbol-amateur-a-la-liga-mx-por-que-la-visibilidad-es-el-mayor-obstaculo-para-los-jovenes/"
         },
@@ -142,7 +142,7 @@
           "id": "soccer-id-cup-2",
           "image": "/assets/images/news/hackingfifa2026.png",
           "source": "www.publimetro.com.mx",
-          "title": "Mundial 2026: la pasión de la afición y el reto de vivir el fútbol de cerca en México",
+          "title": "Mundial 2026: la pasión de la afición y el reto de vivir el futbol de cerca en México",
           "excerpt": "Especialistas advierten que el problema no solo radica en el número de víctimas, sino en la sofisticación de los esquemas, que operan bajo estructuras organizadas y con apariencia de legalidad.",
           "type": "link",
           "url": "https://www.publimetro.com.mx/deportes/2026/04/14/ciberfraudes-por-boletos-del-mundial-2026-crecen-sitios-clonados-y-redes-falsas/"
@@ -164,7 +164,7 @@
           "image": "/assets/images/news/reporte-indigo-logo.png",
           "source": "Reporte Índigo",
           "title": "Reporte Índigo datos sobre la Copa del Mundo 2026",
-          "excerpt": "Entrevista exclusiva con Reporte Índigo, sobre la experiencia deportiva y preparando a los aficionados mexicanos para el Mundial 2026, el evento más grande en la historia del fútbol.",
+          "excerpt": "Entrevista exclusiva con Reporte Índigo, sobre la experiencia deportiva y preparando a los aficionados mexicanos para el Mundial 2026, el evento más grande en la historia del futbol.",
           "type": "video",
           "videoUrl": "https://soccerid-content.s3.us-east-2.amazonaws.com/SoccerID_ReporteI%CC%81ndigo_240326.mp4",
           "url": "https://soccerid-content.s3.us-east-2.amazonaws.com/SoccerID_ReporteI%CC%81ndigo_240326.mp4"

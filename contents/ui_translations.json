@@ -2,19 +2,19 @@
   "es": {
     "meta": {
       "title": "SOCCER iD",
-      "description": "Amamos tanto el fútbol que reinventamos la forma de vivirlo.",
-      "ogTitle": "SOCCER iD | Amamos tanto el fútbol que reinventamos la forma de vivirlo.",
-      "ogDescription": "Partidos, viajes, leyendas y podcast. Vive tu pasión por el fútbol con SOCCER iD.",
-      "twitterTitle": "SOCCER iD | Amamos tanto el fútbol que reinventamos la forma de vivirlo.",
-      "twitterDescription": "Partidos, viajes, leyendas y podcast. Vive tu pasión por el fútbol con SOCCER iD.",
-      "keywords": "soccer id, soccerid, soccer id cup, experiencias vip, seguros id, liga mx, deportes, fútbol, accesos vip",
+      "description": "Amamos tanto el futbol que reinventamos la forma de vivirlo.",
+      "ogTitle": "SOCCER iD | Amamos tanto el futbol que reinventamos la forma de vivirlo.",
+      "ogDescription": "Partidos, viajes, leyendas y podcast. Vive tu pasión por el futbol con SOCCER iD.",
+      "twitterTitle": "SOCCER iD | Amamos tanto el futbol que reinventamos la forma de vivirlo.",
+      "twitterDescription": "Partidos, viajes, leyendas y podcast. Vive tu pasión por el futbol con SOCCER iD.",
+      "keywords": "soccer id, soccerid, soccer id cup, experiencias vip, seguros id, liga mx, deportes, futbol, accesos vip",
       "ogImage": "/assets/images/share.jpg"
     },
     "preloader": {
       "loading": "Cargando..."
     },
     "hero": {
-      "tagline": "Amamos tanto el fútbol que <em>reinventamos la forma de vivirlo.</em>",
+      "tagline": "Amamos tanto el futbol que <em>reinventamos la forma de vivirlo.</em>",
       "scroll": "Desliza"
     },
     "events": {
@@ -38,7 +38,7 @@
       "eventMessage": "Hola SOCCER iD, me interesa:"
     },
     "footer": {
-      "tagline": "Amamos tanto el fútbol que reinventamos la forma de vivirlo.",
+      "tagline": "Amamos tanto el futbol que reinventamos la forma de vivirlo.",
       "followUs": "Síguenos",
       "navigation": "Navegación",
       "backToTop": "Volver al Inicio",

@@ -44,7 +44,7 @@
         "portada": "/assets/images/secciones/travel/pasado-champions-2025-portada.jpg",
         "cierre": "/assets/images/secciones/travel/pasados-cierre.jpg",
         "ficha": {
-          "experiencia": "Vivimos la final de la Champions League 2025 con **acceso VIP** y una **cena en el hotel donde se hospedaban los equipos**. Con hospedaje y traslados organizados, nuestros viajeros pudieron concentrarse en disfrutar una de las grandes citas del fútbol europeo.",
+          "experiencia": "Vivimos la final de la Champions League 2025 con **acceso VIP** y una **cena en el hotel donde se hospedaban los equipos**. Con hospedaje y traslados organizados, nuestros viajeros pudieron concentrarse en disfrutar una de las grandes citas del futbol europeo.",
           "queVivimos": [
             {
               "titulo": "La final en VIP",
@@ -68,7 +68,7 @@
       {
         "slug": "final-copa-libertadores-2023",
         "titulo": "Final de Copa Libertadores 2023",
-        "detalle": "**Fútbol y automovilismo en un mismo viaje**: final de Libertadores en VIP, tour por Río y F1 en São Paulo al día siguiente.",
+        "detalle": "**Futbol y automovilismo en un mismo viaje**: final de Libertadores en VIP, tour por Río y F1 en São Paulo al día siguiente.",
         "foto": "/assets/images/secciones/travel/pasado-libertadores-2024.jpg",
         "portada": "/assets/images/secciones/travel/pasado-libertadores-2024-portada.jpg",
         "cierre": "/assets/images/secciones/travel/pasados-cierre.jpg",
