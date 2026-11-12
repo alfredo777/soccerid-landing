@@ -74,10 +74,15 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
   background: rgba(10, 10, 26, 0.42); border: 1px solid rgba(255,255,255,0.12);
   backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 10px 40px rgba(0,0,0,0.35);
-  opacity: 0; transform: translateY(26px); animation: puertaEntra .7s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay: calc(var(--i) * 80ms + 200ms);
+  animation: puertaEntra .7s cubic-bezier(.34,1.56,.64,1) backwards; animation-delay: calc(var(--i) * 80ms + 200ms);
   transition: flex .55s cubic-bezier(.2,.8,.2,1), border-color .3s, box-shadow .3s;
 }
-@keyframes puertaEntra { to { opacity: 1; transform: none; } }
+/* La card queda en su sitio por sí misma; la animación sólo pinta la
+   entrada (`backwards` la sostiene abajo durante el retraso). Antes era al
+   revés: la card vivía 26 px abajo y la subía el `forwards`, y en Safari de
+   iOS, al tocar, el `scale` del `:active` soltaba ese relleno y la card se
+   quedaba caída, encimada sobre la de abajo. */
+@keyframes puertaEntra { from { opacity: 0; transform: translateY(26px); } }
 /* La foto va a plena luz, como en el mockup; sólo se oscurece el pie,
    donde va el texto. */
 .puerta::before { content: ''; position: absolute; inset: 0; z-index: -2; background: var(--foto) center / cover no-repeat; opacity: .92; transform: scale(1.04); transition: opacity .5s, transform .9s cubic-bezier(.2,.8,.2,1); }
@@ -258,9 +263,8 @@ body .lang-btn:not(.active) .lang-flag { filter: grayscale(1) opacity(0.6); }
 /* Sin hover en el teléfono, la card tiene que responder al bajar el dedo:
    se hunde apenas y se marca el borde, como un botón del sistema. El
    `transform` va en `.puerta` y no en `::before` para que la foto y el
-   texto se muevan juntos. Se declara tras `animation`: la animación de
-   entrada termina en `transform: none` con `forwards`, y por eso el
-   hundido va con `scale` (propiedad aparte), que la animación no pisa. */
+   texto se muevan juntos. El hundido va con `scale` (propiedad aparte)
+   para no chocar con el `transform` de la animación de entrada. */
 .puerta, .redes-v2__chip, body .lang-btn { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .puerta { transition: flex .55s cubic-bezier(.2,.8,.2,1), border-color .3s, box-shadow .3s, scale .12s; }
 .puerta:active { scale: .97; border-color: rgba(255,255,255,0.6); }
